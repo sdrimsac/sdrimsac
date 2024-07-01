@@ -1,5 +1,7 @@
 <template> 
-    <el-dialog :title="title" class="text-left" :visible="showDialog"   @opened="create" @close="close" :close-on-click-modal="false">
+    <el-dialog :title="title" class="text-left" :visible="showDialog"   @opened="create" @close="close" :close-on-click-modal="false"
+    append-to-body 
+    >
         <!-- <p class="text-center">* Se recomienda resoluciones 700x300.</p> -->
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body"> 

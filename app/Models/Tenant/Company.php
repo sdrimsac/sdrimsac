@@ -10,6 +10,7 @@ class Company extends ModelTenant
 {
     protected $with = ['identity_document_type'];
     protected $fillable = [
+        'is_prico',
         'file_nuevo_dolares_img',
         'account_img_trade_name_max',
         'backgroud_image_document',

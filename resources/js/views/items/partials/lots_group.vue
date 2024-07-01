@@ -51,15 +51,10 @@
                                 </td>
                                 <td>
                                     <div class="form-group mb-2 mr-2">
-                                        <el-select v-model="row.state">
-                                            <el-option
-                                                v-for="(option,
-                                                index) in states"
-                                                :key="index"
-                                                :value="option"
-                                                :label="option"
-                                            ></el-option>
-                                        </el-select>
+                                        <el-input
+                                            v-model="row.quantity"
+                                            type="number"
+                                        ></el-input>
                                     </div>
                                 </td>
                                 <td>
@@ -188,7 +183,7 @@ export default {
             let error = 0;
 
             await this.lotsGroup.forEach(element => {
-                if (element.Lotes == null) {
+                if (element.code == null) {
                     error++;
                 }
             });

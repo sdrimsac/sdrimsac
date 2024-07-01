@@ -162,7 +162,6 @@ class PrintEvent implements ShouldBroadcast
             $user_establishment_id = $user_area->establishment_id;
         }
 
-
         $this->data = array(
             'document_type' => $document_type,
             'printer' => $printer,

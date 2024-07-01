@@ -79,10 +79,10 @@ class PurchaseController extends Controller
     public function create($purchase_order_id = null)
     {
         $is_arca = auth()->user()->is_arca;
-        if(!$is_arca){
-        $is_arca = RoleService::isArcaUserId(auth()->id());
+        if (!$is_arca) {
+            $is_arca = RoleService::isArcaUserId(auth()->id());
         }
-            
+
 
         return view('tenant.purchases.form', compact('purchase_order_id', 'is_arca'));
     }
@@ -432,13 +432,27 @@ class PurchaseController extends Controller
 
                     if (array_key_exists('item', $row)) {
                         if ($row['item']['lots_enabled'] == true) {
-                            ItemLotsGroup::create([
-                                'code' => $row['lot_code'],
-                                'quantity' => $row['quantity'],
-                                'date_of_due' => $row['date_of_due'],
-                                'item_id' => $row['item_id'],
-                                'warehouse_id' => $row['warehouse_id'],
-                            ]);
+                            if (isset($row['lot_code'])) {
+                                ItemLotsGroup::create([
+                                    'code' => $row['lot_code'],
+                                    'quantity' => $row['quantity'],
+                                    'date_of_due' => $row['date_of_due'],
+                                    'item_id' => $row['item_id'],
+                                    'warehouse_id' => $row['warehouse_id'],
+                                ]);
+                            }
+                            $lots = $row['item']['lots_group'];
+                            if (count($lots) > 0) {
+                                foreach ($lots as $lot) {
+                                    ItemLotsGroup::create([
+                                        'code' => $lot['code'],
+                                        'quantity' => $lot['quantity'],
+                                        'date_of_due' => $lot['date_of_due'],
+                                        'item_id' => $row['item_id'],
+                                        'warehouse_id' => $row['warehouse_id'],
+                                    ]);
+                                }
+                            }
                         }
                     }
                 }

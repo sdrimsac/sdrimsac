@@ -3060,9 +3060,9 @@ export default {
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].value =
                 "";
-                if(this.configuration.all_items_pos){
-                    this.search_items();
-                }
+            if (this.configuration.all_items_pos) {
+                this.search_items();
+            }
         },
         add_customer(value) {
             this.value = value;
@@ -3324,16 +3324,27 @@ export default {
             return price;
         },
         async insertItemFromNoteSales() {},
+        checkDetractionItems(item){
+            let {item:{subject_to_detraction}} = item;
+            let ordenHasDetraction = this.localOrden.some(o => o.food.item.subject_to_detraction);
+            if(subject_to_detraction == 1 && (!ordenHasDetraction && this.localOrden.length > 0)){
+                this.$toast.error("Este producto esta sujeto a detracción, y existen productos que no lo están");
+                return false;
+            }
+            if(subject_to_detraction == 0 && ordenHasDetraction){
+                this.$toast.error("Este producto no esta sujeto a detracción, y existen productos que si lo están");
+                return false;
+            }
+
+            return true;
+        },
         insertOrden(orden, food_id, type, selectSerie = false) {
-            //esto ya no me puede traer solo uno
-            //ya que podré agregar más de una vez un producto
-            // let ordenAdded = _.filter(this.localOrden, {
-            //     id: food_id
-            // });
+            let {food:item} = orden;
+            let passDetraction = this.checkDetractionItems(item);
+            if(!passDetraction){
+                return;
+            }
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
-
-            //si el producto no existe en el listado en ninguna presentacion
-
             if (ordenAdded.length == 0) {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
@@ -4176,6 +4187,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
+                detraction:{amount:0,bank_account:this.company.detraction_account},
                 vacate: false,
                 afectar_caja: true,
                 orden_id: null,
@@ -5559,8 +5571,6 @@ export default {
                 price: this.selectedFood.price,
                 quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
             };
-           
-
             this.insertOrden(this.currentFood, this.selectedFood.id, type);
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
@@ -5579,7 +5589,7 @@ export default {
             this.selectedFood = null;
             this.item = null;
             this.input_item = null;
-            if(this.configuration.all_items_pos){
+            if (this.configuration.all_items_pos) {
                 this.search_items(null);
             }
             //this.setFalse();
@@ -5662,7 +5672,8 @@ export default {
                 let area_id = e.data.area_id;
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
-
+                let sameAreas = this.configuration
+                    .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
                 let canPrint = true;
                 if (isHotels) {
@@ -5670,6 +5681,11 @@ export default {
                         canPrint = true;
                     } else {
                         canPrint = false;
+                    }
+                }
+                if (sameAreas) {
+                    if (area_id != this.area_id) {
+                        return;
                     }
                 }
 

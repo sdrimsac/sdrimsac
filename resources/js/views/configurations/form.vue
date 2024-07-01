@@ -1021,7 +1021,12 @@
                                                                                             <i
                                                                                                 class="fas fa-percentage tab-icon"
                                                                                             ></i>
-                                                                                            Mostrar Nombre secundario - Código externo
+                                                                                            Mostrar
+                                                                                            Nombre
+                                                                                            secundario
+                                                                                            -
+                                                                                            Código
+                                                                                            externo
                                                                                             <el-tooltip
                                                                                                 content="Mostrar Nombre secundario - Código externo en el formulario de productos"
                                                                                             >
@@ -1042,12 +1047,60 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
-                                                                             
+
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fas fa-percentage tab-icon"
+                                                                                            ></i>
+                                                                                            Detraccion
+                                                                                            por
+                                                                                            defecto
+                                                                                            <el-tooltip
+                                                                                                content="Se elegirá la detracción por defecto al momento de crear un comprobante de venta"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-select
+                                                                                            v-model="
+                                                                                                form.detraction_type_id
+                                                                                            "
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                            filterable
+                                                                                            clearable
+                                                                                        >
+                                                                                            <el-option
+                                                                                                v-for="option in detraction_types"
+                                                                                                :key="
+                                                                                                    option.id
+                                                                                                "
+                                                                                                :value="
+                                                                                                    option.id
+                                                                                                "
+                                                                                                :label="
+                                                                                                    `${option.percentage}% ${option.description}`
+                                                                                                "
+                                                                                            ></el-option>
+                                                                                        </el-select>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </el-card>
-                                                            </el-col>
+                                                                    </el-card>
+                                                                </el-col>
 
                                                             <!-- Seccion Caja -->
                                                             <el-col :span="12">
@@ -3306,6 +3359,7 @@ export default {
             searchQueryModes: "",
             searchQueryAccounting: "",
             searchQueryVisual: "",
+            detraction_types: [],
             /*  */
             /* activeTab: 'modes',
             searchQuery: '', */
@@ -3358,7 +3412,6 @@ export default {
     async created() {
         await this.loadTables();
         await this.initForm();
-        console.log(this.isArca);
         await this.$http.get(`/${this.resource}/record`).then(response => {
             if (response.data !== "") {
                 this.form = response.data.data;
@@ -3471,6 +3524,7 @@ export default {
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 this.affectation_igv_types =
                     response.data.affectation_igv_types;
+                this.detraction_types = response.data.detraction_types;
                 this.items = response.data.items;
                 if (response.data.item) {
                     this.form.item_variation_id = response.data.item.id;

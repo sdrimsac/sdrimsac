@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'detraction_type_id',
+        'print_direct_just_different_areas',
         'show_second_name_external_code',
         'user_series_independientes_caja',
         'all_items_pos',
@@ -184,6 +186,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'print_direct_just_different_areas' => 'boolean',
         'show_second_name_external_code' => 'boolean',
         'all_items_pos' => 'boolean',
         'pass_final_balance_cash_principal' => 'boolean',
@@ -309,6 +312,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'detraction_type_id' => $this->detraction_type_id,
+            'print_direct_just_different_areas' => (bool)$this->print_direct_just_different_areas,
             'promotions_cant_purchase' => $this->promotions_cant_purchase,
             'all_items_pos' => (bool)$this->all_items_pos,
             'pass_final_balance_cash_principal' => (bool)$this->pass_final_balance_cash_principal,

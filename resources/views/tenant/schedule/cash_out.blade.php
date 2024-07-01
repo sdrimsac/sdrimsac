@@ -387,7 +387,7 @@
             <td width="48%">
                 <div class="text-center">
                     ______________________________
-                </div>
+                </div>b
                 <div class="text-center description">
                     CLIENTE
                 </div>

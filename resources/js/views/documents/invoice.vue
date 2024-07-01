@@ -3366,6 +3366,9 @@ export default {
         },
 
         async submit() {
+            if(this.form.detraction && this.form.detraction.amount == 0){
+                delete this.form.detraction
+            }
             if (this.form.has_prepayment || this.prepayment_deduction) {
                 let error_prepayment = await this.validateAffectationTypePrepayment();
                 if (!error_prepayment.success) {

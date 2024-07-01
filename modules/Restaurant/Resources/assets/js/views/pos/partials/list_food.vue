@@ -965,8 +965,13 @@ export default {
                 type,
                 selectSerie
             );
-            console.log("🚀 ~ addFood ~ this.currentFood:", JSON.stringify(this.currentFood))
-
+            // console.log("🚀 ~ addFood ~ this.currentFood:", JSON.stringify(this.currentFood))
+            let {
+                item
+            } = this.selectedFood;
+            if(item.subject_to_detraction == 1){
+                this.$toast.warning("Este producto esta sujeto a detracción");
+            }
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,

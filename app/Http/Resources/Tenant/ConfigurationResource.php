@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'detraction_type_id' => $this->detraction_type_id,
             'show_second_name_external_code' => (bool) $this->show_second_name_external_code,
             'user_series_independientes_caja' => (bool) $this->user_series_independientes_caja,
             'all_items_pos' => (bool) $this->all_items_pos,

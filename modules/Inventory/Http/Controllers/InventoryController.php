@@ -405,7 +405,8 @@ class InventoryController extends Controller
                         'code'  => $lot_code,
                         'quantity'  => $quantity,
                         'date_of_due'  => $request->date_of_due,
-                        'item_id' => $item_id
+                        'item_id' => $item_id,
+                        'warehouse_id' => $warehouse_id
                     ]);
                 }
             } else {

@@ -32,292 +32,310 @@
                         <div class="mb-2">
                             <div class="card bg-light">
                                 <div class="card-body">
-                            
-
-                                <div class="row" v-if="configuration.college">
-                                    <el-checkbox
-                                        @change="chageRegister"
-                                        v-model="notRegister"
-                                        >No registrado</el-checkbox
+                                    <div
+                                        class="row"
+                                        v-if="configuration.college"
                                     >
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-5 col-sm-6">
-                                        <label class="control-label fw-bold"
-                                            >Comprobante de Pago
-                                        </label>
-                                        <div class="form-group">
-                                            <el-radio-group
-                                                v-model="form.document_type_id"
-                                                size="small"
-                                                @change="filterSeries()"
-                                            >
-                                                <template v-if="!isInterno">
-                                                    <el-radio-button
-                                                        v-if="invoice"
-                                                        label="01"
-                                                        >FACTURA
-                                                    </el-radio-button>
-                                                    <el-radio-button
-                                                        v-if="receipt"
-                                                        label="03"
-                                                    >
-                                                        BOLETA
-                                                    </el-radio-button>
-                                                </template>
-                                                <el-radio-button
-                                                    v-if="
-                                                        !variation &&
-                                                            sale_note &&
-                                                            !clientSaleNoteNumber
+                                        <el-checkbox
+                                            @change="chageRegister"
+                                            v-model="notRegister"
+                                            >No registrado</el-checkbox
+                                        >
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-5 col-sm-6">
+                                            <label class="control-label fw-bold"
+                                                >Comprobante de Pago
+                                            </label>
+                                            <div class="form-group">
+                                                <el-radio-group
+                                                    v-model="
+                                                        form.document_type_id
                                                     "
-                                                    label="80"
+                                                    size="small"
+                                                    @change="filterSeries()"
                                                 >
-                                                    N. VENTA
-                                                </el-radio-button>
-                                            </el-radio-group>
+                                                    <template v-if="!isInterno">
+                                                        <el-radio-button
+                                                            v-if="invoice"
+                                                            label="01"
+                                                            >FACTURA
+                                                        </el-radio-button>
+                                                        <el-radio-button
+                                                            v-if="receipt"
+                                                            label="03"
+                                                        >
+                                                            BOLETA
+                                                        </el-radio-button>
+                                                    </template>
+                                                    <el-radio-button
+                                                        v-if="
+                                                            !variation &&
+                                                                sale_note &&
+                                                                !clientSaleNoteNumber
+                                                        "
+                                                        label="80"
+                                                    >
+                                                        N. VENTA
+                                                    </el-radio-button>
+                                                </el-radio-group>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-6 col-md-3 col-lg-3 col-xl-3"
+                                        >
+                                            <label
+                                                class="control-label fw-bold"
+                                            >
+                                                Serie
+                                            </label>
+                                            <div class="form-group">
+                                                <el-select
+                                                    v-model="form.series_id"
+                                                    class="w-100"
+                                                >
+                                                    <el-option
+                                                        style="z-index:2000 !important;"
+                                                        v-for="option in series"
+                                                        :key="option.id"
+                                                        :label="
+                                                            option.full_number
+                                                        "
+                                                        :value="option.id"
+                                                    >
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6 col-md-4 col-lg-4 ">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label fw-bold"
+                                                    >Fecha de Emisión</label
+                                                >
+                                                <el-date-picker
+                                                    style="width:100%;"
+                                                    v-model="form.date_of_issue"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="false"
+                                                    format="dd-MM-yyyy"
+                                                    :readonly="
+                                                        this.configuration
+                                                            .restrict_receipt_date
+                                                    "
+                                                    @change="changeDateOfIssue"
+                                                >
+                                                </el-date-picker>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-6 ">
+                                            <div class="form-group">
+                                                <template>
+                                                    <div
+                                                        class="el-input el-input-group col-md-6 "
+                                                        style="margin-bottom:3px;"
+                                                    >
+                                                        <label
+                                                            class="control-label fw-bold"
+                                                            style="margin-right:3px;"
+                                                            >Cliente</label
+                                                        >
+                                                        <el-button
+                                                            :disabled="
+                                                                !value ||
+                                                                    isClientesVarios()
+                                                            "
+                                                            @click="
+                                                                openDialogPerson
+                                                            "
+                                                            >Editar
+                                                            cliente</el-button
+                                                        >
+                                                        <el-button
+                                                            v-if="
+                                                                !configuration.college ||
+                                                                    notRegister
+                                                            "
+                                                            @click="
+                                                                createClient
+                                                            "
+                                                            class="fw-bold"
+                                                            >Nuevo
+                                                            cliente</el-button
+                                                        >
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-8 col-lg-6">
+                                            <el-select
+                                                class="col-md-6"
+                                                ref="select_person"
+                                                v-model="value"
+                                                filterable
+                                                clearable
+                                                size="small"
+                                                placeholder="Cliente"
+                                                :disabled="loading"
+                                                @change="changeCustomer"
+                                                @keyup.native="keyupCustomer"
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in customers"
+                                                    :key="idx"
+                                                    :label="option.description"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        v-if="students.length != 0"
+                                        class="row col-lg-6 col-xl-12"
+                                    >
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Estudiante</label
+                                            >
+                                            <el-select
+                                                @change="changeStudent"
+                                                v-model="form.student_id"
+                                            >
+                                                <el-option
+                                                    v-for="(student,
+                                                    idx) in students"
+                                                    :key="idx"
+                                                    :label="
+                                                        `${student.name} - ${student.class}`
+                                                    "
+                                                    :value="student.id"
+                                                >
+                                                </el-option>
+                                            </el-select>
                                         </div>
                                     </div>
                                     <div
-                                        class="col-6 col-md-3 col-lg-3 col-xl-3"
+                                        class="row"
+                                        v-if="configuration.seller_caja"
                                     >
-                                        <label class="control-label fw-bold">
-                                            Serie
-                                        </label>
-                                        <div class="form-group">
-                                            <el-select
-                                                v-model="form.series_id"
-                                                class="w-100"
-                                            >
+                                        <div class="col-md-4 col-12">
+                                            <label for="seller">Vendedor</label>
+                                            <el-select v-model="form.seller_id">
                                                 <el-option
-                                                    style="z-index:2000 !important;"
-                                                    v-for="option in series"
-                                                    :key="option.id"
-                                                    :label="option.full_number"
+                                                    v-for="(option,
+                                                    idx) in sellers"
+                                                    :key="idx"
+                                                    :label="option.name"
                                                     :value="option.id"
                                                 >
                                                 </el-option>
                                             </el-select>
                                         </div>
                                     </div>
-
-                                    <div class="col-6 col-md-4 col-lg-4 ">
+                                    <div class="row col-lg-12 col-xl-12">
                                         <div class="form-group">
                                             <label class="control-label fw-bold"
-                                                >Fecha de Emisión</label
+                                                >Observaciones</label
                                             >
-                                            <el-date-picker
-                                                style="width:100%;"
-                                                v-model="form.date_of_issue"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                                :clearable="false"
-                                                format="dd-MM-yyyy"
-                                                :readonly="
-                                                    this.configuration
-                                                        .restrict_receipt_date
-                                                "
-                                                @change="changeDateOfIssue"
-                                            >
-                                            </el-date-picker>
+                                            <el-input
+                                                ref="observation"
+                                                type="textarea"
+                                                :rows="2"
+                                                :placeholder="bank"
+                                                v-model="form.observation"
+                                            ></el-input>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row ">
-                                    <div class="col-lg-6 ">
-                                        <div class="form-group">
-                                            <template>
-                                                <div
-                                                    class="el-input el-input-group col-md-6 "
-                                                    style="margin-bottom:3px;"
-                                                >
-                                                    <label
-                                                        class="control-label fw-bold"
-                                                        style="margin-right:3px;"
-                                                        >Cliente</label
-                                                    >
-                                                    <el-button
-                                                        :disabled="
-                                                            !value ||
-                                                                isClientesVarios()
-                                                        "
-                                                        @click="
-                                                            openDialogPerson
-                                                        "
-                                                        >Editar
-                                                        cliente</el-button
-                                                    >
-                                                    <el-button
-                                                        v-if="
-                                                            !configuration.college ||
-                                                                notRegister
-                                                        "
-                                                        @click="createClient"
-                                                        class="fw-bold">Nuevo
-                                                        cliente</el-button
-                                                    >
-                                                </div>
+                                    <template
+                                        v-if="
+                                            configuration.show_coins_to_receive
+                                        "
+                                    >
+                                        <div
+                                            class="m-2 d-flex justify-content-center align-items"
+                                        >
+                                            <template
+                                                v-if="sumCoins.length == 0"
+                                            >
+                                                Billetes/Monedas a recibir
+                                            </template>
+                                            <template v-else>
+                                                {{ formatSumCoins }}
                                             </template>
                                         </div>
-                                    </div>
-                                    <div class="col-12 col-sm-8 col-lg-6">
-                                        <el-select
-                                            class="col-md-6"
-                                            ref="select_person"
-                                            v-model="value"
-                                            filterable
-                                            clearable
-                                            size="small"
-                                            placeholder="Cliente"
-                                            :disabled="loading"
-                                            @change="changeCustomer"
-                                            @keyup.native="keyupCustomer"
+                                        <div
+                                            class="d-flex justify-content-center align-items-center"
                                         >
-                                            <el-option
-                                                v-for="(option,
-                                                idx) in customers"
-                                                :key="idx"
-                                                :label="option.description"
-                                                :value="option.id"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
+                                            <el-button-group
+                                                class="d-flex flex-wrap justify-content-center"
+                                            >
+                                                <el-button
+                                                    v-for="(coin, idx) in coins"
+                                                    type="primary"
+                                                    :key="idx"
+                                                    @click="addCoin(coin.id)"
+                                                    size="small"
+                                                    round
+                                                >
+                                                    {{ coin.id }}</el-button
+                                                >
+                                                <!-- un boton con el icono de tacho de basura que al dar click setee sumCoins a null -->
+                                                <el-button
+                                                    type="danger"
+                                                    @click="clearSumCoins"
+                                                    size="small"
+                                                    round
+                                                >
+                                                    <i class="fas fa-trash"></i>
+                                                </el-button>
+                                            </el-button-group>
+                                        </div>
+                                    </template>
 
-                                <div
-                                    v-if="students.length != 0"
-                                    class="row col-lg-6 col-xl-12"
-                                >
-                                    <div class="form-group">
-                                        <label class="control-label w-100"
-                                            >Estudiante</label
-                                        >
-                                        <el-select
-                                            @change="changeStudent"
-                                            v-model="form.student_id"
-                                        >
-                                            <el-option
-                                                v-for="(student,
-                                                idx) in students"
-                                                :key="idx"
-                                                :label="
-                                                    `${student.name} - ${student.class}`
-                                                "
-                                                :value="student.id"
-                                            >
-                                            </el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div
-                                    class="row"
-                                    v-if="configuration.seller_caja"
-                                >
-                                    <div class="col-md-4 col-12">
-                                        <label for="seller">Vendedor</label>
-                                        <el-select v-model="form.seller_id">
-                                            <el-option
-                                                v-for="(option, idx) in sellers"
-                                                :key="idx"
-                                                :label="option.name"
-                                                :value="option.id"
-                                            >
-                                            </el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="row col-lg-12 col-xl-12">
-                                    <div class="form-group">
-                                        <label class="control-label fw-bold"
-                                            >Observaciones</label
-                                        >
-                                        <el-input
-                                            ref="observation"
-                                            type="textarea"
-                                            :rows="2"
-                                            :placeholder="bank"
-                                            v-model="form.observation"
-                                        ></el-input>
-                                    </div>
-                                </div>
-                                <template
-                                    v-if="configuration.show_coins_to_receive"
-                                >
-                                    <div
-                                        class="m-2 d-flex justify-content-center align-items"
+                                    <template
+                                        v-if="conf.show_discounts_payment"
                                     >
-                                        <template v-if="sumCoins.length == 0">
-                                            Billetes/Monedas a recibir
-                                        </template>
-                                        <template v-else>
-                                            {{ formatSumCoins }}
-                                        </template>
-                                    </div>
-                                    <div
-                                        class="d-flex justify-content-center align-items-center"
-                                    >
-                                        <el-button-group
-                                            class="d-flex flex-wrap justify-content-center"
-                                        >
-                                            <el-button
-                                                v-for="(coin, idx) in coins"
-                                                type="primary"
-                                                :key="idx"
-                                                @click="addCoin(coin.id)"
-                                                size="small"
-                                                round
+                                        <div class="col-md-4 form-group">
+                                            <label class="control-label fw-bold"
+                                                >Monto Descuento</label
                                             >
-                                                {{ coin.id }}</el-button
+                                            <el-input-number
+                                                :min="0"
+                                                controls-position="right"
+                                                @change="inputDiscountAmount"
+                                                class="w-100"
+                                                v-model="discount_amount"
+                                            ></el-input-number>
+                                        </div>
+                                        <div
+                                            v-if="
+                                                configuration.affectation_igv_type_id ==
+                                                    '10'
+                                            "
+                                            class="col-md-4 form-group"
+                                        >
+                                            <label class="control-label fw-bold"
+                                                >Tipo de descuento</label
                                             >
-                                            <!-- un boton con el icono de tacho de basura que al dar click setee sumCoins a null -->
-                                            <el-button
-                                                type="danger"
-                                                @click="clearSumCoins"
-                                                size="small"
-                                                round
+                                            <el-checkbox
+                                                v-model="discountTotal"
+                                                @change="reCalculateTotal"
                                             >
-                                                <i class="fas fa-trash"></i>
-                                            </el-button>
-                                        </el-button-group>
-                                    </div>
-                                </template>
-
-                                <template v-if="conf.show_discounts_payment">
-                                    <div class="col-md-4 form-group">
-                                        <label class="control-label fw-bold"
-                                            >Monto Descuento</label
-                                        >
-                                        <el-input-number
-                                            :min="0"
-                                            controls-position="right"
-                                            @change="inputDiscountAmount"
-                                            class="w-100"
-                                            v-model="discount_amount"
-                                        ></el-input-number>
-                                    </div>
-                                    <div
-                                        v-if="
-                                            configuration.affectation_igv_type_id ==
-                                                '10'
-                                        "
-                                        class="col-md-4 form-group"
-                                    >
-                                        <label class="control-label fw-bold"
-                                            >Tipo de descuento</label
-                                        >
-                                        <el-checkbox
-                                            v-model="discountTotal"
-                                            @change="reCalculateTotal"
-                                        >
-                                            {{
-                                                discountTotal
-                                                    ? "Descuento del total"
-                                                    : "Descuento a la base"
-                                            }}
-                                        </el-checkbox>
-                                    </div>
-                                </template>
-                            </div>
+                                                {{
+                                                    discountTotal
+                                                        ? "Descuento del total"
+                                                        : "Descuento a la base"
+                                                }}
+                                            </el-checkbox>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -674,7 +692,7 @@
                                             </el-input>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row p-2">
                                         <div class="col-lg-4 col-md-5 col-xl-6">
                                             <label
                                                 class="control-label text-left  d-flex align-items-start justify-content-start"
@@ -751,6 +769,45 @@
                                                     >
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row p-2" v-if="hasDetraction">
+                                        <div class="col-md-4">
+                                            <label for="account"
+                                                >Cta Bancaria
+
+                                                <a
+                                                    href="#"
+                                                    @click="
+                                                        showDialogDocumentDetraction = true
+                                                    "
+                                                    ><i
+                                                        class="fa fa-info
+                                                text-primary"
+                                                    ></i>
+                                                    Detalles
+                                                </a>
+                                            </label>
+                                            <el-input
+                                                class="w-100"
+                                                v-model="
+                                                    company.detraction_account
+                                                "
+                                                readonly
+                                            ></el-input>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="account">Monto</label>
+                                            <template>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.detraction.amount
+                                                    "
+                                                    readonly
+                                                ></el-input>
+                                            </template>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -837,203 +894,231 @@
                         <div class="mb-2">
                             <div class=" card  bg-light ">
                                 <div class="card-body">
-                                <div class="row">
-                                    <div
-                                        class=" col-xl-4"
-                                        style="margin-top: 10px;padding-top: 5px;"
-                                        :class="{
-                                            'has-danger': form.difference < 0
-                                        }"
-                                    >
-                                        <label class="control-label h1"
-                                            >Total a cobrar: </label
-                                        ><br />
-                                        <span
-                                            class="control-label font-weight-semibold text-center h3"
-                                        >
-                                            S/ {{ " " + form.total }}
-                                        </span>
-                                    </div>
-                                    <div
-                                        class="col-xl-8"
-                                        v-if="
-                                            form_payment.payment_method_type_id ==
-                                                '01'
-                                        "
-                                    >
+                                    <div class="row">
                                         <div
-                                            class="btn-group btn-group-square m-0 flex-wrap justify-content-around"
-                                            role="group"
-                                            style="padding-top: 12px"
+                                            class=" col-xl-4"
+                                            style="margin-top: 10px;padding-top: 5px;"
+                                            :class="{
+                                                'has-danger':
+                                                    form.difference < 0
+                                            }"
                                         >
-                                            <label class="control-label fw-bold"
-                                                >Ingrese monto</label
+                                            <label class="control-label h1"
+                                                >Total a cobrar: </label
+                                            ><br />
+                                            <span
+                                                class="control-label font-weight-semibold text-center h3"
                                             >
+                                                S/ {{ " " + form.total }}
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="col-xl-8"
+                                            v-if="
+                                                form_payment.payment_method_type_id ==
+                                                    '01'
+                                            "
+                                        >
                                             <div
-                                                class="d-flex flex-wrap justify-content-around"
+                                                class="btn-group btn-group-square m-0 flex-wrap justify-content-around"
+                                                role="group"
+                                                style="padding-top: 12px"
                                             >
-                                                <div
-                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                <label
+                                                    class="control-label fw-bold"
+                                                    >Ingrese monto</label
                                                 >
-                                                    <button
-                                                        class="btn btn-outline-primary  m-2 fw-bold"
-                                                        @click="
-                                                            setAmountCash(10)
-                                                        "
-                                                    >
-                                                        10
-                                                    </button>
-                                                </div>
                                                 <div
-                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                    class="d-flex flex-wrap justify-content-around"
                                                 >
-                                                    <button
-                                                        class="btn btn-outline-primary  m-2 fw-bold"
-                                                        @click="
-                                                            setAmountCash(20)
-                                                        "
+                                                    <div
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                     >
-                                                        20
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="col-3  col-lg-2 col-md-2  col-xl-2"
-                                                >
-                                                    <button
-                                                        class="btn btn-outline-primary  m-2 fw-bold"
-                                                        @click="
-                                                            setAmountCash(50)
-                                                        "
-                                                    >
-                                                        50
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
-                                                >
-                                                    <button
-                                                        class="btn btn-outline-primary  m-2 fw-bold"
-                                                        @click="
-                                                            setAmountCash(100)
-                                                        "
-                                                    >
-                                                        100
-                                                    </button>
-                                                </div>
-                                                <div
-                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
-                                                >
-                                                    <button
-                                                        class="btn btn-outline-primary m-2 fw-bold"
-                                                        @click="
-                                                            setAmountCash(200)
-                                                        "
-                                                    >
-                                                        200
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="row col-xl-12 col-12">
-                                                <div
-                                                    class=" col-xl-6 col-md-3 col-lg-3 col-12"
-                                                >
-                                                    <el-input
-                                                        id="inputTotal"
-                                                        ref="enter_amount"
-                                                        v-model="
-                                                            form.enter_amount
-                                                        "
-                                                        @blur="diferen()"
-                                                        @input="enterAmount()"
-                                                    >
-                                                        <template
-                                                            slot="prepend"
-                                                            >{{
-                                                                currencyTypeActive.symbol
-                                                            }}</template
+                                                        <button
+                                                            class="btn btn-outline-primary  m-2 fw-bold"
+                                                            @click="
+                                                                setAmountCash(
+                                                                    10
+                                                                )
+                                                            "
                                                         >
-                                                    </el-input>
+                                                            10
+                                                        </button>
+                                                    </div>
+                                                    <div
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                    >
+                                                        <button
+                                                            class="btn btn-outline-primary  m-2 fw-bold"
+                                                            @click="
+                                                                setAmountCash(
+                                                                    20
+                                                                )
+                                                            "
+                                                        >
+                                                            20
+                                                        </button>
+                                                    </div>
+                                                    <div
+                                                        class="col-3  col-lg-2 col-md-2  col-xl-2"
+                                                    >
+                                                        <button
+                                                            class="btn btn-outline-primary  m-2 fw-bold"
+                                                            @click="
+                                                                setAmountCash(
+                                                                    50
+                                                                )
+                                                            "
+                                                        >
+                                                            50
+                                                        </button>
+                                                    </div>
+                                                    <div
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                    >
+                                                        <button
+                                                            class="btn btn-outline-primary  m-2 fw-bold"
+                                                            @click="
+                                                                setAmountCash(
+                                                                    100
+                                                                )
+                                                            "
+                                                        >
+                                                            100
+                                                        </button>
+                                                    </div>
+                                                    <div
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                    >
+                                                        <button
+                                                            class="btn btn-outline-primary m-2 fw-bold"
+                                                            @click="
+                                                                setAmountCash(
+                                                                    200
+                                                                )
+                                                            "
+                                                        >
+                                                            200
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <template v-if="conf.show_payment_method">
                                                 <div
-                                                    class="col-xl-2 col-md-2 col-lg-2 col-6"
+                                                    class="row col-xl-12 col-12"
                                                 >
-                                                    <el-button
-                                                        type="primary"
-                                                        @click="addPayment"
-                                                        :disabled="
-                                                            disabledAddPayment()
+                                                    <div
+                                                        class=" col-xl-6 col-md-3 col-lg-3 col-12"
+                                                    >
+                                                        <el-input
+                                                            id="inputTotal"
+                                                            ref="enter_amount"
+                                                            v-model="
+                                                                form.enter_amount
+                                                            "
+                                                            @blur="diferen()"
+                                                            @input="
+                                                                enterAmount()
+                                                            "
+                                                        >
+                                                            <template
+                                                                slot="prepend"
+                                                                >{{
+                                                                    currencyTypeActive.symbol
+                                                                }}</template
+                                                            >
+                                                        </el-input>
+                                                    </div>
+                                                    <template
+                                                        v-if="
+                                                            conf.show_payment_method
                                                         "
                                                     >
-                                                        <span
+                                                        <div
+                                                            class="col-xl-2 col-md-2 col-lg-2 col-6"
+                                                        >
+                                                            <el-button
+                                                                type="primary"
+                                                                @click="
+                                                                    addPayment
+                                                                "
+                                                                :disabled="
+                                                                    disabledAddPayment()
+                                                                "
+                                                            >
+                                                                <span
+                                                                    v-if="
+                                                                        form.payment_condition_id ==
+                                                                            '01'
+                                                                    "
+                                                                >
+                                                                    Agregar
+                                                                </span>
+                                                                <span v-else>
+                                                                    Agregar
+                                                                    cuota
+                                                                </span>
+                                                            </el-button>
+                                                        </div>
+                                                        <div
                                                             v-if="
                                                                 form.payment_condition_id ==
                                                                     '01'
                                                             "
+                                                            class="col-xl-3 col-md-3 col-lg-3 col-6 "
                                                         >
-                                                            Agregar
-                                                        </span>
-                                                        <span v-else>
-                                                            Agregar cuota
-                                                        </span>
-                                                    </el-button>
+                                                            <el-button
+                                                                type="success"
+                                                                @click="
+                                                                    showSplitPayment = true
+                                                                "
+                                                                >Dividir
+                                                                pago</el-button
+                                                            >
+                                                        </div>
+                                                    </template>
                                                 </div>
-                                                <div
-                                                    v-if="
-                                                        form.payment_condition_id ==
-                                                            '01'
-                                                    "
-                                                    class="col-xl-3 col-md-3 col-lg-3 col-6 "
-                                                >
-                                                    <el-button
-                                                        type="success"
-                                                        @click="
-                                                            showSplitPayment = true
-                                                        "
-                                                        >Dividir pago</el-button
-                                                    >
-                                                </div>
-                                                </template>
                                             </div>
                                         </div>
+                                        <div class=" row col-xl-4">
+                                            <div
+                                                class="col-xl-5"
+                                                style="margin-bottom: 10px"
+                                            ></div>
+                                        </div>
                                     </div>
-                                    <div class=" row col-xl-4">
+                                    <div class="row">
+                                        <div class="col-xl-3"></div>
+                                        <div class="col-xl-2"></div>
                                         <div
-                                            class="col-xl-5"
-                                            style="margin-bottom: 10px"
-                                        ></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xl-3"></div>
-                                    <div class="col-xl-2"></div>
-                                    <div class="col-xl-3"
-                                    v-show="conf.show_payment_method"
-                                    >
-                                        <el-select
-                                            v-if="
-                                                form.document_type_id == '01' ||
-                                                    form.document_type_id ==
-                                                        '03'
-                                            "
-                                            v-model="form.payment_condition_id"
+                                            class="col-xl-3"
+                                            v-show="conf.show_payment_method"
                                         >
-                                            <el-option
-                                                value="01"
-                                                label="Contado"
+                                            <el-select
+                                                v-if="
+                                                    form.document_type_id ==
+                                                        '01' ||
+                                                        form.document_type_id ==
+                                                            '03'
+                                                "
+                                                v-model="
+                                                    form.payment_condition_id
+                                                "
                                             >
-                                            </el-option>
-                                            <el-option
-                                                value="02"
-                                                label="Crédito"
-                                            >
-                                            </el-option>
-                                            <el-option
-                                                value="03"
-                                                label="Crédito a cuotas"
-                                            ></el-option>
-                                        </el-select>
-                                        <!-- <el-switch
+                                                <el-option
+                                                    value="01"
+                                                    label="Contado"
+                                                >
+                                                </el-option>
+                                                <el-option
+                                                    value="02"
+                                                    label="Crédito"
+                                                >
+                                                </el-option>
+                                                <el-option
+                                                    value="03"
+                                                    label="Crédito a cuotas"
+                                                ></el-option>
+                                            </el-select>
+                                            <!-- <el-switch
                                                 v-if="
                                                     form.document_type_id ==
                                                         '01' ||
@@ -1044,65 +1129,68 @@
                                                 inactive-text="Contado"
                                                 v-model="form.is_credit"
                                             ></el-switch> -->
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <div
+                                                class="form-group d-flex flex-row align-items-end"
+                                                :class="{
+                                                    'has-danger':
+                                                        form.difference < 0
+                                                }"
+                                            >
+                                                <label
+                                                    :class="
+                                                        `${
+                                                            form.difference < 0
+                                                                ? 'text-danger'
+                                                                : ''
+                                                        }`
+                                                    "
+                                                    class="control-label fs-4"
+                                                    v-text="
+                                                        form.difference < 0
+                                                            ? 'Faltante: '
+                                                            : 'Vuelto: '
+                                                    "
+                                                ></label>
+                                                <span
+                                                    :class="
+                                                        `${
+                                                            form.difference < 0
+                                                                ? 'text-danger'
+                                                                : ''
+                                                        }`
+                                                    "
+                                                    class="control-label font-weight-semibold text-center fs-4"
+                                                >
+                                                    {{
+                                                        currencyTypeActive.symbol
+                                                    }}{{
+                                                        form.difference
+                                                            .toFixed(2)
+                                                            .replace("-", "")
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-xl-4">
-                                        <div
-                                            class="form-group d-flex flex-row align-items-end"
-                                            :class="{
-                                                'has-danger':
-                                                    form.difference < 0
-                                            }"
-                                        >
-                                            <label
-                                                :class="
-                                                    `${
-                                                        form.difference < 0
-                                                            ? 'text-danger'
-                                                            : ''
-                                                    }`
-                                                "
-                                                class="control-label fs-4"
-                                                v-text="
-                                                    form.difference < 0
-                                                        ? 'Faltante: '
-                                                        : 'Vuelto: '
-                                                "
-                                            ></label>
-                                            <span
-                                                :class="
-                                                    `${
-                                                        form.difference < 0
-                                                            ? 'text-danger'
-                                                            : ''
-                                                    }`
-                                                "
-                                                class="control-label font-weight-semibold text-center fs-4"
-                                            >
-                                                {{ currencyTypeActive.symbol
-                                                }}{{
-                                                    form.difference
-                                                        .toFixed(2)
-                                                        .replace("-", "")
-                                                }}</span
-                                            >
+                                    <div
+                                        v-if="hasExceedBank"
+                                        class="d-flex justify-content-center"
+                                    >
+                                        <div class="col-12 text-center">
+                                            <span class="text-danger">
+                                                Recuerde que debido al monto
+                                                deberá hacer esta operación
+                                                mediante Bancarización, y en el
+                                                campo <br />
+                                                "Observaciones" ingresar el
+                                                numero de voucher o numero de
+                                                operación.
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    v-if="hasExceedBank"
-                                    class="d-flex justify-content-center"
-                                >
-                                    <div class="col-12 text-center">
-                                        <span class="text-danger">
-                                            Recuerde que debido al monto deberá
-                                            hacer esta operación mediante
-                                            Bancarización, y en el campo <br />
-                                            "Observaciones" ingresar el numero
-                                            de voucher o numero de operación.
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
                             </div>
                         </div>
                     </div>
@@ -1240,22 +1328,24 @@
                         </div>
                     </template>
                     <div
-                        class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center">
+                        class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center"
+                    >
                         <div>
                             <button
                                 class="btn btn-block btn-primary"
                                 @click="sendPayment"
                                 :disabled="button_payment"
-                                >
+                            >
                                 <i class="fas fa-money-bill-alt"></i>
                                 PAGAR
                             </button>
                         </div>
-                        <br>
+                        <br />
                         <div>
                             <button
                                 class="btn btn-block btn-dark"
-                                @click="back(false)">
+                                @click="back(false)"
+                            >
                                 <i class="fa fa-reply"></i> Cerrar
                             </button>
                         </div>
@@ -1311,7 +1401,16 @@
             :recordId="collegePersonId"
         >
         </person-college-form>
-
+        <document-detraction
+            v-if="form && form.total > 0"
+            :currency-type-id-active="form.currency_type_id"
+            :detraction="form.detraction"
+            :exchange-rate-sale="form.exchange_rate_sale"
+            :operation-type-id="form.operation_type_id"
+            :showDialog.sync="showDialogDocumentDetraction"
+            :total="form.total"
+            @addDocumentDetraction="addDocumentDetraction"
+        ></document-detraction>
         <list-items :showDialog.sync="showListItems" :form="form"> </list-items>
     </el-dialog>
 </template>
@@ -1363,6 +1462,10 @@ const PersonCollegeForm = () =>
     import(
         "../../../../../../../College/Resources/assets/js/views/persons/form.vue"
     );
+const DocumentDetraction = () =>
+    import(
+        "../../../../../../../../resources/js/views/documents/partials/detraction.vue"
+    );
 export default {
     components: {
         ListItems,
@@ -1370,10 +1473,12 @@ export default {
         CardBrandsForm,
         MultiplePaymentForm,
         PersonForm,
-        ShowSplitPaymentForm
+        ShowSplitPaymentForm,
+        DocumentDetraction
     },
 
     props: [
+        "company",
         "quotationId",
         "clientSaleNoteNumber",
         "clientSaleNoteDiscount",
@@ -1418,6 +1523,8 @@ export default {
     },
     data() {
         return {
+            showDialogDocumentDetraction: false,
+            hasDetraction: false,
             methodsValidate: [
                 "Yape",
                 "PLIN",
@@ -1545,6 +1652,7 @@ export default {
             amount: 0,
             operation_number: null,
             printerOn: 0,
+            detraction_types: [],
             button_payment: false,
             input_item: "",
             form_payment: {
@@ -1561,6 +1669,7 @@ export default {
             sale_note: true,
             last_date: null,
             customers: [],
+            cat_payment_method_types: [],
             datEmision: {
                 disabledDate(time) {
                     return time.getTime() > moment();
@@ -1593,6 +1702,11 @@ export default {
         }
     },
     async created() {
+        await this.$http.get(`/documents/detraction/tables`).then(response => {
+            this.detraction_types = response.data.detraction_types;
+            this.cat_payment_method_types =
+                response.data.cat_payment_method_types;
+        });
         this.$eventHub.$on("initInputPerson", () => {
             this.initInputPerson();
         });
@@ -1682,6 +1796,19 @@ export default {
     },
     mounted() {},
     methods: {
+        addDocumentDetraction(detraction) {
+            console.log("🚀 ~ addDocumentDetraction ~ detraction:", detraction);
+            //si  detraction no es objecto vacio
+            if (Object.keys(detraction).length === 0) {
+                return;
+            }
+            this.form.detraction = detraction;
+
+            // this.has_data_detraction = (detraction.pay_constancy || detraction.detraction_type_id || detraction.payment_method_id || (detraction.amount && detraction.amount >0)) ? true:false
+            this.has_data_detraction = detraction
+                ? detraction.has_data_detraction
+                : false;
+        },
         initInputPerson() {
             this.input_person = {
                 number: null,
@@ -2007,7 +2134,7 @@ export default {
         },
         createClient() {
             this.value = null;
-            
+
             this.form.customer_id = null;
             this.showDialogNewPerson = true;
         },
@@ -2379,6 +2506,32 @@ export default {
                 this.printerOn = this.configuration.print_in_pos ? 1 : 0;
             }
             this.filterSeries();
+            this.hasDetraction = this.checkDetraction();
+            if (this.hasDetraction && this.company.detraction_account && this.form.total > 700) {
+                let { detraction_type_id } = this.configuration;
+                if (detraction_type_id) {
+                    let detraction = this.detraction_types.find(
+                        d => d.id == detraction_type_id
+                    );
+                    if (detraction) {
+                        let amount =
+                            this.form.total * (detraction.percentage / 100);
+                        amount = Math.round(amount * 100) / 100;
+                        this.form.detraction = {
+                            amount,
+                            bank_account: this.company.detraction_account,
+                            detraction_type_id: detraction.id,
+                            percentage: detraction.percentage,
+                            payment_method_id: "001",
+                            has_data_detraction: true
+                        };
+                    }
+                }
+            }
+        },
+        checkDetraction() {
+            let { items } = this.form;
+            return items.some(i => i.subject_to_detraction == 1);
         },
         checkCustomerDocument(type) {
             let { customer_id } = this.form;
@@ -3247,6 +3400,7 @@ export default {
             if (this.conf.pos_quick_sale) {
                 form.printerOn = form.printDocument;
             }
+            form.detraction = this.form.detraction;
             await this.clickPayment(form);
 
             if (this.formVariation.items.length != 0) {
@@ -3609,7 +3763,7 @@ export default {
                     form
                 );
                 let { data } = response;
-                console.log("🚀 ~ clickPayment ~ data:", data)
+                console.log("🚀 ~ clickPayment ~ data:", data);
                 if (response.status == 200 && data.data) {
                     let format = null;
                     let data = response.data.data;
@@ -3626,7 +3780,6 @@ export default {
                     }
                     if (this.printer && format && this.printerOn == 1) {
                         // this.printerDocument(this.printer,format)
-                        
                         //this.$emit("printer",this.printer,format,1);
                     }
                     this.operation_number = null;
@@ -3885,7 +4038,6 @@ export default {
             );
         },
         back(val = false) {
-            
             let { is_advance, hotel_rent_id } = this.form;
             if (is_advance && hotel_rent_id && !val) {
                 this.$emit("limpiarForm");

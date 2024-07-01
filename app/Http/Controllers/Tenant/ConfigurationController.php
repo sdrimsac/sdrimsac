@@ -14,6 +14,7 @@ use App\Models\Tenant\FormatTemplate;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
+use App\Models\Tenant\Catalogs\DetractionType;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Services\RoleService;
@@ -213,11 +214,12 @@ class ConfigurationController extends Controller
         $items = new ItemCollection(Item::where('id', '<>', null)->take(15)->get());
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $item_id = Configuration::first()->item_variation_id;
+        $detraction_types = DetractionType::all();
         $item = null;
         if ($item_id) {
             $item = Item::find($item_id);
         }
-        return compact('affectation_igv_types', 'items', 'item');
+        return compact('affectation_igv_types', 'items', 'item', 'detraction_types');
     }
 
     public function visualDefaults()

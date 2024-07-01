@@ -1635,15 +1635,11 @@ class BoxesController extends Controller
         $sales_cash = Box::where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_cash_records = $sales_cash->get();
         $sales_cash_sum = 0;
-        // $sales_cash_sum = $sales_cash->sum('amount');
         foreach ($sales_cash_records as $ringreso) {
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
                 $coins = $this->get_to_carry($sale_note);
                 if ($coins) {
-                    // $deliveries[] = 
-                    // $coins["coins"];
-                    //insertar en $deliveries cada elemento de $coins["coins"]
                     foreach ($coins["coins"] as $coin) {
                         $deliveries[] = $coin;
                     }
@@ -1651,11 +1647,20 @@ class BoxesController extends Controller
                 if ($ringreso["sale_note_payment_id"]) {
                     $sales_cash_sum += $ringreso["amount"];
                 } else {
+                    $to_sum = 0;
                     if ($sale_note->total > $ringreso["amount"]) {
-                        $sales_cash_sum += $ringreso["amount"];
+
+                        $to_sum = $ringreso["amount"];
                     } else {
-                        $sales_cash_sum += $sale_note->total;
+                        $to_sum = $sale_note->total;
                     }
+                    $boxes_ringreso = Box::where('sale_note_id', $sale_note->id)->where('id', '<>', $ringreso["id"]);
+                    $count = $boxes_ringreso->count();
+                    if ($count > 0) {
+                        $sum = $boxes_ringreso->sum('amount');
+                        $to_sum = $sale_note->total - $sum;
+                    }
+                    $sales_cash_sum += $to_sum;
                     if ($sale_note->total_discount) {
                         $total_discount += $sale_note->total_discount;
                     }
@@ -1670,11 +1675,19 @@ class BoxesController extends Controller
                         $deliveries[] = $coin;
                     }
                 }
+                $to_sum = 0;
                 if ($document->total > $ringreso["amount"]) {
-                    $sales_cash_sum +=  $ringreso["amount"];
+                    $to_sum =  $ringreso["amount"];
                 } else {
-                    $sales_cash_sum += $document->total;
+                    $to_sum = $document->total;
                 }
+                $boxes_ringreso = Box::where('document_id', $document->id)->where('id', '<>', $ringreso["id"]);
+                $count = $boxes_ringreso->count();
+                if ($count > 0) {
+                    $sum = $boxes_ringreso->sum('amount');
+                    $to_sum = $document->total - $sum;
+                }
+                $sales_cash_sum += $to_sum;
                 if ($document->total_discount) {
                     $total_discount += $document->total_discount;
                 }
@@ -1695,65 +1708,10 @@ class BoxesController extends Controller
         }
 
         $coinsReceive = array_values($sumArray);
-        //ordenar por value
         usort($coinsReceive, function ($a, $b) {
             return $a->value < $b->value;
         });
-        // $sales_izypay = Box::where('type', '1')->where('method', 'TARJETA: IZYPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_izypay_sum = $sales_izypay->sum('amount');
-        // $sales_izypay_quantity = $sales_izypay->count();
 
-        // $sales_niubiz = Box::where('type', '1')->where('method', 'TARJETA: NIUBIZ')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_niubiz_sum = $sales_niubiz->sum('amount');
-        // $sales_niubiz_quantity = $sales_niubiz->count();
-
-
-        // $sales_openpay = Box::where('type', '1')->where('method', 'TARJETA: OPENPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_openpay_sum = $sales_openpay->sum('amount');
-        // $sales_openpay_quantity = $sales_openpay->count();
-
-        // $sales_transfer = Box::where('type', '1')->where('method', 'Transferencia')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_transfer_sum = $sales_transfer->sum('amount');
-        // $sales_transfer_quantity = $sales_transfer->count();
-
-        // $sales_bank = Box::where('type', '1')->where('method', 'Deposito Bancario')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_bank_sum = $sales_bank->sum('amount');
-        // $sales_bank_quantity = $sales_bank->count();
-
-        // $sales_card = Box::where('type', '1')->where('method', 'Tarjeta')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_card_sum = $sales_card->sum('amount');
-        // $sales_card_quantity = $sales_card->count();
-
-
-        // $sales_yape = Box::where('type', '1')->where('method', 'Yape')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_yape_sum = $sales_yape->sum('amount');
-        // $sales_yape_quantity = $sales_yape->count();
-
-        // $sales_plin = Box::where('type', '1')->where('method', 'PLIN')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_plin_sum = $sales_plin->sum('amount');
-        // $sales_plin_quantity = $sales_plin->count();
-
-        // $sales_culqui = Box::where('type', '1')->where('method', 'Culqui')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_culqui_sum = $sales_culqui->sum('amount');
-        // $sales_culqui_quantity = $sales_culqui->count();
-
-        // $sales_bbva = Box::where('type', '1')->where('method', 'BBVA')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_bbva_sum = $sales_bbva->sum('amount');
-        // $sales_bbva_quantity = $sales_bbva->count();
-
-        // $sales_bcp = Box::where('type', '1')->where('method', 'BCP')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_bcp_sum = $sales_bcp->sum('amount');
-        // $sales_bcp_quantity = $sales_bcp->count();
-
-
-        // $sales_nacion = Box::where('type', '1')->where('method', 'BCO NACION')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_nacion_sum = $sales_nacion->sum('amount');
-        // $sales_nacion_quantity = $sales_nacion->count();
-
-
-        // $sales_scotiabank = Box::where('type', '1')->where('method', 'Scotiabank')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        // $sales_scotiabank_sum = $sales_scotiabank->sum('amount');
-        // $sales_scotiabank_quantity = $sales_scotiabank->count();
         $all_methods = [
             'TARJETA: IZYPAY',
             'TARJETA: NIUBIZ',

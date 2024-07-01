@@ -30,6 +30,7 @@ class ItemResource extends JsonResource
         }
 
         return [
+            'subject_to_detraction' => (bool) $this->subject_to_detraction,
             'commercial_treatments' => $this->commercial_treatments->transform(function ($row, $key) {
                 return [
                     'id' => $row->id,

@@ -260,6 +260,31 @@
                                         ></small>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.is_prico
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label font-weight-bold h5"
+                                        >
+                                        <i class="fas fa-check"></i>
+                                            Es prico
+                                        </label>
+<br>
+                                        <el-checkbox
+                                            v-model="form.is_prico"
+                                        ></el-checkbox>
+
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.is_prico"
+                                            v-text="errors.is_prico[0]"
+                                        ></small>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6 mt-4" v-show="false">
@@ -596,7 +621,7 @@
                                                 `/storage/uploads/logos/${form.account_img_trade_name_max}`
                                             " style="  max-height: 100px;" />
                                 </div>
-                                <!-- agregado para la otra imagen del trademanemax
+                             agregado para la otra imagen del trademanemax
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="control-label">Imagen Dolares plantilla trade_name_max </label>

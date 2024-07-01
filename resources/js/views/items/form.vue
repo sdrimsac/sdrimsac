@@ -1,501 +1,1048 @@
 <!-- Modal de Creación de Productos -->
 <template>
-<el-dialog  width="70%" 
-            :title="titleDialog" 
-            :visible="showDialog" 
-            :close-on-click-modal="false" 
-            @close="close" 
-            @open="create" 
-            append-to-body 
-            top="7vh" 
-            v-loading="loading" 
-            class="rounded-dialog">
+    <el-dialog
+        width="70%"
+        :title="titleDialog"
+        :visible="showDialog"
+        :close-on-click-modal="false"
+        @close="close"
+        @open="create"
+        append-to-body
+        top="7vh"
+        v-loading="loading"
+        class="rounded-dialog"
+    >
+        <form autocomplete="off" @submit.prevent="submit">
+            <div class="form-body">
+                <!-- Panel General -->
+                <el-tabs tab-position="top">
+                    <el-tab-pane label="General">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <!-- <div class="col-lg-6 col-xl-3"> -->
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.internal_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-barcode"></i>
+                                        Código Interno
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Código interno de la empresa para el control de sus productos"
+                                            placement="top-start"
+                                        >
+                                            <i class="fas fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
 
-    <form autocomplete="off" @submit.prevent="submit">
-        <div class="form-body">
-            <!-- Panel General -->
-            <el-tabs tab-position="top">
-                <el-tab-pane label="General">
-                    <div class="row">
-                        <div class="col-12 col-lg-6 col-xl-3">
-                            <!-- <div class="col-lg-6 col-xl-3"> -->
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.internal_id
-                                            }">
-
-                                <label class="control-label">
-                                    <i class="fas fa-barcode"></i>
-                                    Código Interno
-                                    <el-tooltip class="item" effect="dark" content="Código interno de la empresa para el control de sus productos" placement="top-start">
-                                        <i class="fas fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-
-                                <el-input ref="internal_id" v-model="form.internal_id" dusk="internal_id">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.internal_id" v-text="errors.internal_id[0]"></small>
+                                    <el-input
+                                        ref="internal_id"
+                                        v-model="form.internal_id"
+                                        dusk="internal_id"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.internal_id"
+                                        v-text="errors.internal_id[0]"
+                                    ></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.show_second_name_external_code">
-                            <div class="form-group" :class="{ 'has-danger': errors.barcode }">
-                                <label class="control-label">Código Externo
-                                    <el-tooltip class="item" effect="dark" content="Código Barra de la empresa para el control de sus productos" placement="top-start">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-                                <el-input v-model="form.barcode" dusk="barcode">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.barcode" v-text="errors.barcode[0]"></small>
+                            <div
+                                class="col-12 col-lg-6 col-xl-3"
+                                v-if="
+                                    configuration.show_second_name_external_code
+                                "
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.barcode }"
+                                >
+                                    <label class="control-label"
+                                        >Código Externo
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Código Barra de la empresa para el control de sus productos"
+                                            placement="top-start"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        v-model="form.barcode"
+                                        dusk="barcode"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.barcode"
+                                        v-text="errors.barcode[0]"
+                                    ></small>
+                                </div>
                             </div>
-                        </div>
-                        <div :class="`col-12 col-lg-6 ${configuration.show_second_name_external_code ?  'col-xl-3':'col-xl-9'}`">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.description
-                                            }">
-                                <label class="control-label font-weight-bold">
-                                    <i class="fas fa-tag"></i>
-                                    Nombre
-                                    <el-tooltip content="Campo Obligatorio, aqui se ingresa el nombre del producto o servicio">
-                                        <span class="text-danger">
-                                            <i class="fas fa-exclamation-circle"></i>
-                                        </span>
-                                    </el-tooltip>
-                                </label>
+                            <div
+                                :class="
+                                    `col-12 col-lg-6 ${
+                                        configuration.show_second_name_external_code
+                                            ? 'col-xl-3'
+                                            : 'col-xl-9'
+                                    }`
+                                "
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.description
+                                    }"
+                                >
+                                    <label
+                                        class="control-label font-weight-bold"
+                                    >
+                                        <i class="fas fa-tag"></i>
+                                        Nombre
+                                        <el-tooltip
+                                            content="Campo Obligatorio, aqui se ingresa el nombre del producto o servicio"
+                                        >
+                                            <span class="text-danger">
+                                                <i
+                                                    class="fas fa-exclamation-circle"
+                                                ></i>
+                                            </span>
+                                        </el-tooltip>
+                                    </label>
 
-                                <el-input v-model="form.description" dusk="description">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i>
-                                </el-input>
-                                <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
+                                    <el-input
+                                        v-model="form.description"
+                                        dusk="description"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i>
+                                    </el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.description"
+                                        v-text="errors.description[0]"
+                                    ></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.show_second_name_external_code">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.second_name
-                                            }">
-                                <label class="control-label">
-                                    <i class="fas fa-user-tag"></i>
-                                    <i class="fas fa-tag"></i>
-                                    Nombre secundario
-                                </label>
-                                <el-input v-model="form.second_name" dusk="second_name">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.second_name" v-text="errors.second_name[0]"></small>
+                            <div
+                                class="col-12 col-lg-6 col-xl-3"
+                                v-if="
+                                    configuration.show_second_name_external_code
+                                "
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.second_name
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-user-tag"></i>
+                                        <i class="fas fa-tag"></i>
+                                        Nombre secundario
+                                    </label>
+                                    <el-input
+                                        v-model="form.second_name"
+                                        dusk="second_name"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.second_name"
+                                        v-text="errors.second_name[0]"
+                                    ></small>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-12 col-lg-6 col-xl-3">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.category_id
-                                            }">
-                                <label class="control-label">
-                                    <i class="fas fa-folder"></i>
-                                    Categoría
-                                    <el-tooltip content="Campo Obligatorio">
-                                        <span class="text-danger">
-                                            <i class="fas fa-exclamation-circle"></i>
-                                        </span>
-                                    </el-tooltip>
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.category_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-folder"></i>
+                                        Categoría
+                                        <el-tooltip content="Campo Obligatorio">
+                                            <span class="text-danger">
+                                                <i
+                                                    class="fas fa-exclamation-circle"
+                                                ></i>
+                                            </span>
+                                        </el-tooltip>
+                                    </label>
+                                    <a
+                                        href="#"
+                                        v-if="form_category.add == false"
+                                        class="control-label font-weight-bold text-info"
+                                        @click="form_category.add = true"
+                                    >
+                                        <i class="fas fa-plus-circle"></i> Nuevo
+                                    </a>
+                                    <a
+                                        href="#"
+                                        v-if="form_category.add == true"
+                                        class="control-label font-weight-bold text-info"
+                                        @click="saveCategory()"
+                                    >
+                                        <i class="fas fa-save fa-lg"></i>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        v-if="form_category.add == true"
+                                        class="control-label font-weight-bold text-danger"
+                                        @click="form_category.add = false"
+                                    >
+                                        <i class="fas fa-times fa-lg"></i>
+                                    </a>
+                                    <el-input
+                                        v-if="form_category.add == true"
+                                        v-model="form_category.name"
+                                        dusk="item_code"
+                                        style="margin-bottom:1.5%;"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
 
-                                </label>
-                                <a href="#" v-if="form_category.add == false" class="control-label font-weight-bold text-info" @click="form_category.add = true">
-                                    <i class="fas fa-plus-circle"></i> Nuevo
-                                </a>
-                                <a href="#" v-if="form_category.add == true" class="control-label font-weight-bold text-info" @click="saveCategory()">
-                                    <i class="fas fa-save fa-lg"></i>
-                                </a>
-                                <a href="#" v-if="form_category.add == true" class="control-label font-weight-bold text-danger" @click="form_category.add = false">
-                                    <i class="fas fa-times fa-lg"></i>
-                                </a>
-                                <el-input v-if="form_category.add == true" v-model="form_category.name" dusk="item_code" style="margin-bottom:1.5%;">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-
-                                <el-select v-if="form_category.add == false" v-model="form.category_id" filterable clearable>
-                                    <el-option v-for="option in categories" :key="option.id" :value="option.id" :label="option.name"></el-option>
-                                </el-select>
-                                <small class="text-danger" v-if="errors.category_id" v-text="errors.category_id[0]"></small>
+                                    <el-select
+                                        v-if="form_category.add == false"
+                                        v-model="form.category_id"
+                                        filterable
+                                        clearable
+                                    >
+                                        <el-option
+                                            v-for="option in categories"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.name"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.category_id"
+                                        v-text="errors.category_id[0]"
+                                    ></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-3">
-                            <div class="form-group" :class="{
-                                                'has-danger':
-                                                    errors.sale_affectation_igv_type_id
-                                            }">
-                                <label class="control-label">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Zona
-                                    <el-tooltip class="item" effect="dark" content="Lugar en donde se despacha el producto" placement="top-start">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-                                <el-select :disabled="configuration.college" v-model="form.area_id">
-                                    <el-option v-for="option in areas" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small class="form-control-feedback" v-if="
-                                                    errors.sale_affectation_igv_type_id
-                                                " v-text="
-                                                    errors
-                                                        .sale_affectation_igv_type_id[0]
-                                                ">
-                                </small>
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger':
+                                            errors.sale_affectation_igv_type_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Zona
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Lugar en donde se despacha el producto"
+                                            placement="top-start"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-select
+                                        :disabled="configuration.college!=0"
+                                        v-model="form.area_id"
+                                    >
+                                        <el-option
+                                            v-for="option in areas"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="
+                                            errors.sale_affectation_igv_type_id
+                                        "
+                                        v-text="
+                                            errors
+                                                .sale_affectation_igv_type_id[0]
+                                        "
+                                    >
+                                    </small>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- <div v-show="form.unit_type_id !='ZZ'" class="col-md-3 center-el-checkbox">
+                            <!-- <div v-if="form.unit_type_id !='ZZ'" class="col-md-3 center-el-checkbox">
                                         <div class="form-group" :class="{'has-danger': errors.calculate_quantity}">
                                             <el-checkbox v-model="form.calculate_quantity">Calcular cantidad por precio</el-checkbox><br>
                                             <small class="text-danger" v-if="errors.calculate_quantity" v-text="errors.calculate_quantity[0]"></small>
                                         </div>
                                     </div> -->
 
-                        <div class="col-xl-2 col-lg-4">
-                            <div class="form-group" :class="{ 'has-danger': errors.location }">
-                                <label class="control-label">
-                                    <i class="fas fa-hand-pointer"></i>
-                                    Ubicación
-                                </label>
-                                <el-input v-model="form.location" dusk="name"></el-input>
-                                <small class="text-danger" v-if="errors.location" v-text="errors.location[0]"></small>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-2 col-lg-4">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.unit_type_id
-                                            }">
-                                <label class="control-label">
-                                    <i class="fas fa-ruler"></i>
-                                    Unidad</label>
-                                <el-select v-model="form.unit_type_id" dusk="unit_type_id">
-                                    <el-option v-for="option in unit_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small class="text-danger" v-if="errors.unit_type_id" v-text="errors.unit_type_id[0]"></small>
-                            </div>
-                        </div>
-                        <div class="col-xl-2 col-lg-4">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.currency_type_id
-                                            }">
-                                <label class="control-label">
-                                    <i class="fas fas fa-coins"></i>
-                                    Moneda</label>
-                                <el-select v-model="form.currency_type_id" dusk="currency_type_id">
-                                    <el-option v-for="option in currency_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small class="text-danger" v-if="errors.currency_type_id" v-text="errors.currency_type_id[0]"></small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-4">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.sale_unit_price
-                                            }">
-                                <label class="control-label">
-                                    <i class="fa fa-tag fa-lg"></i>
-                                    P. Venta
-                                    <el-tooltip content="Campo Obligatorio, aqui se ingresa el precio unitario de venta">
-                                        <span class="text-danger">
-                                            <i class="fas fa-exclamation-circle"></i>
-                                        </span>
-                                    </el-tooltip>
-
-                                </label>
-
-                                <el-input v-model="form.sale_unit_price" dusk="sale_unit_price" @input="
-                                                    calculatePercentageOfProfitBySale
-                                                ">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.sale_unit_price" v-text="errors.sale_unit_price[0]"></small>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6 col-xl-4">
-                            <div class="form-group" :class="{
-                                                'has-danger':
-                                                    errors.sale_affectation_igv_type_id
-                                            }">
-                                <label class="control-label">Afectación</label>
-                                <el-select v-model="
-                                                    form.sale_affectation_igv_type_id
-                                                " @change="changeAffectationIgvType">
-                                    <el-option v-for="option in affectation_igv_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small v-show="show_has_igv">
-                                    <el-checkbox v-model="form.has_igv">Incluye Igv
-                                        {{
-                                                    configuration.include_igv
-                                                }}</el-checkbox>
-                                </small>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-4 col-lg-6" v-show="recordId == null">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.warehouse_id
-                                            }">
-                                <label class="control-label">
-                                    <i class="fas fa-warehouse red-icon fa-lg"></i>
-                                    Almacén
-                                    <el-tooltip class="item" effect="dark" content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento" placement="top">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-                                <el-select :disabled="
-                                                    configuration.college ||
-                                                        allEstablishment
-                                                " @change="changeWarehouse" v-model="form.warehouse_id">
-                                    <el-option v-for="option in warehouses" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small v-if="!recordId">
-                                    <el-checkbox v-model="allEstablishment">
-                                        Todos los almacenes
-                                    </el-checkbox>
-                                </small>
-
-                            </div>
-
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-2" v-show="
-                                            recordId == null &&
-                                                form.unit_type_id != 'ZZ'
-                                        ">
-                            <div class="form-group" :class="{ 'has-danger': errors.stock }">
-                                <label v-if="!allEstablishment" class="control-label">
-                                    <i class="fa fa-boxes fa-lg"></i>
-                                    Stock Inicial</label>
-                                <label v-else class="control-label">
-                                    Stock Inicial en cada establecimiento
-                                </label>
-                                <el-input :disabled="
-                                                    configuration.init_stock == 1
-                                                " v-model="form.stock">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.stock" v-text="errors.stock[0]"></small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-2" v-show="form.unit_type_id != 'ZZ'">
-                            <div class="form-group" :class="{ 'has-danger': errors.stock_min }">
-                                <label class="control-label">
-                                    <i class="fa fa-exclamation-circle fa-lg"></i> Stock Mínimo
-                                </label>
-                                <el-input v-model="form.stock_min">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.stock_min" v-text="errors.stock_min[0]"></small>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6 col-xl-2" v-show="
-                                            form.unit_type_id != 'ZZ' &&
-                                                !form.has_color_size
-                                        ">
-                            <div class="form-group">
-                                <label class="control-label">
-                                    <i class="fa fa-tachometer-alt fa-lg"></i>
-                                    Cant.Máx
-                                    <el-tooltip class="item" effect="dark" content="La cantidad máxima representada en el envase/contenedor" placement="top">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-                                <el-input :disabled="
-                                                    form.item_unit_types.length != 0
-                                                " v-model="form.max_quantity"></el-input>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6 col-xl-4" v-show="
-                                            form.unit_type_id != 'ZZ' &&
-                                                !form.has_color_size
-                                        ">
-                            <div class="form-group">
-                                <label class="control-label">
-                                    <i class="fa fa-box fa-lg"></i> Contenedor de Productos
-                                    <el-tooltip class="item" effect="dark" content="Nombre del contenedor de la cantidad máxima Ej. Botella(s), Caja(s), Saco(s)" placement="top">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-                                <el-input :disabled="!form.max_quantity" v-model="form.max_quantity_description"></el-input>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-lg-6 col-xl-2" v-show="form.unit_type_id != 'ZZ'">
-                            <div class="form-group">
-                                <label class="control-label">
-                                    <i class="fa fa-motorcycle fa-lg "></i>
-
-                                    Add. Delivery
-                                    <el-tooltip class="item" effect="dark" content="Valor agregado en SOLES al enviar el producto por delivery" placement="top">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
-                                <el-input v-model="form.delivery_cost"></el-input>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-12 col-xl-12">
-                            <div class="form-group" :class="{
-                                                        'has-danger':
-                                                            errors.brand_id
-                                                    }">
-                                <label class="control-label">
-                                    Marca
-                                </label>
-                                <!-- Nuevo, Guardar y Cancelar Marca -->
-                                <a href="#" v-if="form_brand.add == false" class="control-label font-weight-bold text-info" @click="form_brand.add = true">
-                                    <i class="fas fa-plus-circle"></i>
-                                    Nuevo
-                                </a>
-
-                                <a href="#" v-if="form_brand.add == true" class="control-label font-weight-bold text-info" @click="saveBrand()">
-                                    <i class="fas fa-save fa-lg"></i>
-                                </a>
-                                <a href="#" v-if=" form_brand.add == true" class="control-label font-weight-bold text-danger" @click="form_brand.add = false">
-                                    <i class="fas fa-times fa-lg"></i>
-                                </a>
-
-                                <el-input v-if="form_category.add == true" v-model="form_category.name" dusk="item_code" style="margin-bottom:1.5%;">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i>
-                                </el-input>
-                                <el-input v-if="form_brand.add == true" v-model="form_brand.name" dusk="item_code" style="margin-bottom:1.5%;">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-
-                                <el-select v-if="
-                                                            form_brand.add == false
-                                                        " v-model="form.brand_id" filterable clearable>
-                                    <el-option v-for="option in brands" :key="option.id" :value="option.id" :label="option.name"></el-option>
-                                </el-select>
-                                <small class="text-danger" v-if="errors.brand_id" v-text="errors.brand_id[0]"></small>
-                            </div>
-                        </div>
-
-                        <!-- **** -->
-                        <div class="d-flex row" v-if="showSeries">
-                            <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.series_enabled">
-                                <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
-                                    <div class="form-group">
-                                        <el-checkbox v-model="form.series_enabled" @change="changeLotsEnabled">
-                                            ¿Maneja series?
-                                            <el-tooltip class="item" effect="dark" content="Agregar Series" placement="top">
-                                                <i class="fa fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </el-checkbox><br />
-                                    </div>
+                            <div class="col-xl-2 col-lg-4">
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.location }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-hand-pointer"></i>
+                                        Ubicación
+                                    </label>
+                                    <el-input
+                                        v-model="form.location"
+                                        dusk="name"
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.location"
+                                        v-text="errors.location[0]"
+                                    ></small>
                                 </div>
-                                <div class="col-md-4 d-flex align-items-end" v-if="
-                                                    form.unit_type_id != 'ZZ' &&
-                                                        form.series_enabled &&
-                                                        recordId == null
-                                                ">
-                                    <div class="form-group " :class="{
-                                                        'has-danger': errors.lot_code
-                                                    }">
-                                        <!-- <label class="control-label">series
+                            </div>
+
+                            <div class="col-xl-2 col-lg-4">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.unit_type_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-ruler"></i>
+                                        Unidad</label
+                                    >
+                                    <el-select
+                                        v-model="form.unit_type_id"
+                                        dusk="unit_type_id"
+                                    >
+                                        <el-option
+                                            v-for="option in unit_types"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.unit_type_id"
+                                        v-text="errors.unit_type_id[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-4">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.currency_type_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fas fa-coins"></i>
+                                        Moneda</label
+                                    >
+                                    <el-select
+                                        v-model="form.currency_type_id"
+                                        dusk="currency_type_id"
+                                    >
+                                        <el-option
+                                            v-for="option in currency_types"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.currency_type_id"
+                                        v-text="errors.currency_type_id[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 col-xl-4">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.sale_unit_price
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i class="fa fa-tag fa-lg"></i>
+                                        P. Venta
+                                        <el-tooltip
+                                            content="Campo Obligatorio, aqui se ingresa el precio unitario de venta"
+                                        >
+                                            <span class="text-danger">
+                                                <i
+                                                    class="fas fa-exclamation-circle"
+                                                ></i>
+                                            </span>
+                                        </el-tooltip>
+                                    </label>
+
+                                    <el-input
+                                        v-model="form.sale_unit_price"
+                                        dusk="sale_unit_price"
+                                        @input="
+                                            calculatePercentageOfProfitBySale
+                                        "
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.sale_unit_price"
+                                        v-text="errors.sale_unit_price[0]"
+                                    ></small>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 col-xl-4">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger':
+                                            errors.sale_affectation_igv_type_id
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        >Afectación</label
+                                    >
+                                    <el-select
+                                        v-model="
+                                            form.sale_affectation_igv_type_id
+                                        "
+                                        @change="changeAffectationIgvType"
+                                    >
+                                        <el-option
+                                            v-for="option in affectation_igv_types"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                    <small v-if="show_has_igv">
+                                        <el-checkbox v-model="form.has_igv"
+                                            >Incluye Igv
+                                            {{
+                                                configuration.include_igv
+                                            }}</el-checkbox
+                                        >
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div
+                                class="col-xl-4 col-lg-6"
+                                v-if="recordId == null"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.warehouse_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <i
+                                            class="fas fa-warehouse red-icon fa-lg"
+                                        ></i>
+                                        Almacén
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-select
+                                        :disabled="
+                                            configuration.college ||
+                                                allEstablishment
+                                        "
+                                        @change="changeWarehouse"
+                                        v-model="form.warehouse_id"
+                                    >
+                                        <el-option
+                                            v-for="option in warehouses"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                    <small v-if="!recordId">
+                                        <el-checkbox v-model="allEstablishment">
+                                            Todos los almacenes
+                                        </el-checkbox>
+                                    </small>
+                                </div>
+                            </div>
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                v-if="
+                                    recordId == null &&
+                                        form.unit_type_id != 'ZZ'
+                                "
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.stock }"
+                                >
+                                    <label
+                                        v-if="!allEstablishment"
+                                        class="control-label"
+                                    >
+                                        <i class="fa fa-boxes fa-lg"></i>
+                                        Stock Inicial</label
+                                    >
+                                    <label v-else class="control-label">
+                                        Stock Inicial en cada establecimiento
+                                    </label>
+                                    <el-input
+                                        :disabled="
+                                            configuration.init_stock == 1
+                                        "
+                                        v-model="form.stock"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.stock"
+                                        v-text="errors.stock[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                v-if="form.unit_type_id != 'ZZ'"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.stock_min }"
+                                >
+                                    <label class="control-label">
+                                        <i
+                                            class="fa fa-exclamation-circle fa-lg"
+                                        ></i>
+                                        Stock Mínimo
+                                    </label>
+                                    <el-input v-model="form.stock_min">
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.stock_min"
+                                        v-text="errors.stock_min[0]"
+                                    ></small>
+                                </div>
+                            </div>
+
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                v-if="
+                                    form.unit_type_id != 'ZZ' &&
+                                        !form.has_color_size
+                                "
+                            >
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <i
+                                            class="fa fa-tachometer-alt fa-lg"
+                                        ></i>
+                                        Cant.Máx
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="La cantidad máxima representada en el envase/contenedor"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        :disabled="
+                                            form.item_unit_types.length != 0
+                                        "
+                                        v-model="form.max_quantity"
+                                    ></el-input>
+                                </div>
+                            </div>
+
+                            <div
+                                class="col-12 col-lg-6 col-xl-4"
+                                v-if="
+                                    form.unit_type_id != 'ZZ' &&
+                                        !form.has_color_size
+                                "
+                            >
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <i class="fa fa-box fa-lg"></i>
+                                        Contenedor de Productos
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Nombre del contenedor de la cantidad máxima Ej. Botella(s), Caja(s), Saco(s)"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        :disabled="
+                                            form.max_quantity == 0 ||
+                                                form.max_quantity == null
+                                        "
+                                        v-model="form.max_quantity_description"
+                                    ></el-input>
+                                </div>
+                            </div>
+
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                v-if="form.unit_type_id != 'ZZ'"
+                            >
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <i class="fa fa-motorcycle fa-lg "></i>
+
+                                        Add. Delivery
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Valor agregado en SOLES al enviar el producto por delivery"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        v-model="form.delivery_cost"
+                                    ></el-input>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-12 col-xl-12">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.brand_id
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        Marca
+                                    </label>
+                                    <!-- Nuevo, Guardar y Cancelar Marca -->
+                                    <a
+                                        href="#"
+                                        v-if="form_brand.add == false"
+                                        class="control-label font-weight-bold text-info"
+                                        @click="form_brand.add = true"
+                                    >
+                                        <i class="fas fa-plus-circle"></i>
+                                        Nuevo
+                                    </a>
+
+                                    <a
+                                        href="#"
+                                        v-if="form_brand.add == true"
+                                        class="control-label font-weight-bold text-info"
+                                        @click="saveBrand()"
+                                    >
+                                        <i class="fas fa-save fa-lg"></i>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        v-if="form_brand.add == true"
+                                        class="control-label font-weight-bold text-danger"
+                                        @click="form_brand.add = false"
+                                    >
+                                        <i class="fas fa-times fa-lg"></i>
+                                    </a>
+
+                                    <el-input
+                                        v-if="form_category.add == true"
+                                        v-model="form_category.name"
+                                        dusk="item_code"
+                                        style="margin-bottom:1.5%;"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i>
+                                    </el-input>
+                                    <el-input
+                                        v-if="form_brand.add == true"
+                                        v-model="form_brand.name"
+                                        dusk="item_code"
+                                        style="margin-bottom:1.5%;"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+
+                                    <el-select
+                                        v-if="form_brand.add == false"
+                                        v-model="form.brand_id"
+                                        filterable
+                                        clearable
+                                    >
+                                        <el-option
+                                            v-for="option in brands"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.name"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.brand_id"
+                                        v-text="errors.brand_id[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 center-el-checkbox">
+                                <div class="form-group">
+                                    <el-checkbox
+                                        v-model="form.subject_to_detraction"
+                                    >
+                                        Sujecto a detracción
+                                    </el-checkbox>
+                                </div>
+                            </div>
+                            <!-- **** -->
+                            <div class="d-flex row" v-if="showSeries">
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3"
+                                    v-if="configuration.series_enabled"
+                                >
+                                    <div
+                                        v-if="form.unit_type_id != 'ZZ'"
+                                        class="col-md-3 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.series_enabled"
+                                                @change="changeLotsEnabled"
+                                            >
+                                                ¿Maneja series?
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Agregar Series"
+                                                    placement="top"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip> </el-checkbox
+                                            ><br />
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-md-4 d-flex align-items-end"
+                                        v-if="
+                                            form.unit_type_id != 'ZZ' &&
+                                                form.series_enabled &&
+                                                recordId == null
+                                        "
+                                    >
+                                        <div
+                                            class="form-group "
+                                            :class="{
+                                                'has-danger': errors.lot_code
+                                            }"
+                                        >
+                                            <!-- <label class="control-label">series
                                                 <el-tooltip class="item" effect="dark" content="ingrese series de productos" placement="top">
                                                     <i class="fa fa-info-circle"></i>
                                                 </el-tooltip>
                                                 <el-button style="margin-top:2%;margin-left:15px;" type="primary" icon="el-icon-edit-outline" @click.prevent="clickLotcode"></el-button>
                                             </label> -->
-                                        <el-button style="margin-top:2%;margin-left:15px;" type="primary" icon="el-icon-edit-outline" @click.prevent="clickLotcode">
-                                        </el-button>
+                                            <el-button
+                                                style="margin-top:2%;margin-left:15px;"
+                                                type="primary"
+                                                icon="el-icon-edit-outline"
+                                                @click.prevent="clickLotcode"
+                                            >
+                                            </el-button>
 
-                                        <small class="text-danger" v-if="errors.lot_code" v-text="errors.lot_code[0]"></small>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.lot_code"
+                                                v-text="errors.lot_code[0]"
+                                            ></small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.lots_enabled">
-                                <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
-                                    <div class="form-group">
-                                        <el-checkbox v-model="form.lots_enabled" @change="changeLotsEnabled">¿Maneja lotes?</el-checkbox><br />
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3"
+                                    v-if="configuration.lots_enabled"
+                                >
+                                    <div
+                                        v-if="form.unit_type_id != 'ZZ'"
+                                        class="col-md-3 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.lots_enabled"
+                                                @change="changeLotsEnabled"
+                                                >¿Maneja lotes?</el-checkbox
+                                            ><br />
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-md-12"
+                                        v-if="
+                                            form.unit_type_id != 'ZZ' &&
+                                                form.lots_enabled
+                                        "
+                                    >
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.lot_code
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                >Código lote</label
+                                            >
+                                            <el-input v-model="form.lot_code">
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i
+                                            ></el-input>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.lot_code"
+                                                v-text="errors.lot_code[0]"
+                                            ></small>
+                                        </div>
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.date_of_due
+                                            }"
+                                            v-if="form.unit_type_id != 'ZZ'"
+                                        >
+                                            <label class="control-label"
+                                                >Fecha de Vencimiento
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Fecha Vencimiento del lote"
+                                                    placement="top"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+                                            <el-date-picker
+                                                class="col-md-12"
+                                                v-model="form.date_of_due"
+                                                type="date"
+                                                value-format="yyyy-MM-dd"
+                                                :clearable="true"
+                                            ></el-date-picker>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.date_of_due"
+                                                v-text="errors.date_of_due[0]"
+                                            ></small>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12" v-show="form.unit_type_id != 'ZZ' && form.lots_enabled">
-                                    <div class="form-group" :class="{'has-danger': errors.lot_code}">
-                                        <label class="control-label">Código lote</label>
-                                        <el-input v-model="form.lot_code">
-                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                        <small class="text-danger" v-if="errors.lot_code" v-text="errors.lot_code[0]"></small>
-                                    </div>
-                                    <div class="form-group" :class="{'has-danger': errors.date_of_due}" v-show="form.unit_type_id != 'ZZ'">
-                                        <label class="control-label">Fecha de Vencimiento
-                                            <el-tooltip class="item" effect="dark" content="Fecha Vencimiento del lote" placement="top">
-                                                <i class="fa fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </label>
-                                        <el-date-picker class="col-md-12" v-model="form.date_of_due" type="date" value-format="yyyy-MM-dd" :clearable="true"></el-date-picker>
-                                        <small class="text-danger" v-if="errors.date_of_due" v-text="errors.date_of_due[0]"></small>
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3"
+                                    v-if="configuration.color_size_enabled"
+                                >
+                                    <div
+                                        v-if="form.unit_type_id != 'ZZ'"
+                                        class="col-md-4 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                :disabled="recordId != null"
+                                                v-model="form.has_color_size"
+                                                >¿Maneja Color y Talla ?
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="ingresa talla y color del producto"
+                                                    placement="top"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip> </el-checkbox
+                                            ><br />
+                                        </div>
+                                        <div
+                                            class="d-flex align-items-end"
+                                            v-if="
+                                                form.unit_type_id != 'ZZ' &&
+                                                    form.has_color_size &&
+                                                    recordId == null
+                                            "
+                                        >
+                                            <div
+                                                class="form-group "
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.has_color_size
+                                                }"
+                                            >
+                                                <el-button
+                                                    style="margin-top:2%;margin-left:15px;"
+                                                    type="primary"
+                                                    icon="el-icon-edit-outline"
+                                                    @click.prevent="
+                                                        clickColorSize
+                                                    "
+                                                ></el-button>
+
+                                                <small
+                                                    class="text-danger"
+                                                    v-if="errors.has_color_size"
+                                                    v-text="
+                                                        errors.has_color_size[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.color_size_enabled">
-                                <div v-show="form.unit_type_id != 'ZZ'" class="col-md-4 center-el-checkbox">
-                                    <div class="form-group">
-                                        <el-checkbox :disabled="recordId != null" v-model="form.has_color_size">¿Maneja Color y Talla
-                                            ?
-                                            <el-tooltip class="item" effect="dark" content="ingresa talla y color del producto" placement="top">
-                                                <i class="fa fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </el-checkbox><br />
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3"
+                                    v-if="configuration.transform_item"
+                                >
+                                    <div
+                                        v-if="form.unit_type_id != 'ZZ'"
+                                        class="col-md-3 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.is_manufactured"
+                                                >¿Se fabrica?
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Producto principal para transformación"
+                                                    placement="top"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </el-checkbox>
+                                        </div>
                                     </div>
-                                    <div class="d-flex align-items-end" v-if="
-                                                        form.unit_type_id != 'ZZ' &&
-                                                            form.has_color_size &&
-                                                            recordId == null
-                                                    ">
-                                        <div class="form-group " :class="{
-                                                            'has-danger':
-                                                                errors.has_color_size
-                                                        }">
-
-                                            <el-button style="margin-top:2%;margin-left:15px;" type="primary" icon="el-icon-edit-outline" @click.prevent="
-                                                                clickColorSize"></el-button>
-
-                                            <small class="text-danger" v-if="errors.has_color_size" v-text="
-                                                                errors.has_color_size[0]
-                                                            "></small>
+                                </div>
+                                <div
+                                    class="col-xl-2 col-lg-4"
+                                    v-if="configuration.promotions_sell"
+                                >
+                                    <div
+                                        v-if="form.unit_type_id != 'ZZ'"
+                                        class="col-md-3 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.is_promotion"
+                                                >¿Maneja Promoción?
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Ingrese cantidad Promoción"
+                                                    placement="top"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip> </el-checkbox
+                                            ><br />
+                                        </div>
+                                    </div>
+                                    <!-- Sólo muestra este div si form.is_promotion es true -->
+                                    <div
+                                        class="col-xl-6  col-lg-12"
+                                        v-if="
+                                            form.unit_type_id != 'ZZ' &&
+                                                form.is_promotion
+                                        "
+                                    >
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.promotion_count
+                                            }"
+                                        >
+                                            <el-input
+                                                v-model="form.promotion_count"
+                                                type="number"
+                                            >
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i>
+                                            </el-input>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.promotion_count"
+                                                v-text="
+                                                    errors.promotion_count[0]
+                                                "
+                                            ></small>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.transform_item">
-                                <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
-                                    <div class="form-group">
-                                        <el-checkbox v-model="form.is_manufactured">¿Se fabrica?
-                                            <el-tooltip class="item" effect="dark" content="Producto principal para transformación" placement="top">
-                                                <i class="fa fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </el-checkbox>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4" v-if="configuration.promotions_sell">
-                                <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
-                                    <div class="form-group">
-                                        <el-checkbox v-model="form.is_promotion">¿Maneja Promoción?
-                                            <el-tooltip class="item" effect="dark" content="Ingrese cantidad Promoción" placement="top">
-                                                <i class="fa fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </el-checkbox><br />
-                                    </div>
-                                </div>
-                                <!-- Sólo muestra este div si form.is_promotion es true -->
-                                <div class="col-xl-6  col-lg-12" v-show="form.unit_type_id != 'ZZ' && form.is_promotion">
-                                    <div class="form-group" :class="{'has-danger': errors.promotion_count}">
-
-                                        <el-input v-model="form.promotion_count" type="number">
-                                            <i slot="prefix" class="el-icon-edit-outline"></i>
-                                        </el-input>
-                                        <small class="text-danger" v-if="errors.promotion_count" v-text="errors.promotion_count[0]"></small>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <br>
-                        <div class="col-md-12">
-                            <!-- <h6 class="separator-title">
+                        <div class="row">
+                            <br />
+                            <div class="col-md-12">
+                                <!-- <h6 class="separator-title">
                                     Campos adicionales
                                 </h6> -->
-                        </div>
-                        <div class="row col-md-12">
-                            <!-- <div class="col-md-3">
+                            </div>
+                            <div class="row col-md-12">
+                                <!-- <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="control-label">Imágen
                                             <span class="text-danger"></span></label>
@@ -506,187 +1053,316 @@
                                     </div>
                                 </div> -->
 
-                            <div v-if="attribute_types.length > 0" class="col-12 col-lg-12 col-xl-12">
-                                <h6 class="separator-title ">
-                                    Atributos
-                                    <el-tooltip class="item" effect="dark" content="Diferentes presentaciones para la venta del producto" placement="top">
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                    <a href="#" class="control-label font-weight-bold text-info" @click.prevent="
-                                                            clickAddAttribute
-                                                        ">[+ Agregar]</a>
-                                </h6>
+                                <div
+                                    v-if="attribute_types.length > 0"
+                                    class="col-12 col-lg-12 col-xl-12"
+                                >
+                                    <h6 class="separator-title ">
+                                        Atributos
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Diferentes presentaciones para la venta del producto"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                        <a
+                                            href="#"
+                                            class="control-label font-weight-bold text-info"
+                                            @click.prevent="clickAddAttribute"
+                                            >[+ Agregar]</a
+                                        >
+                                    </h6>
 
-                                <div v-if="form.attributes.length > 0">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr slot="heading" class="bg-primary">
-                                                    <th class="text-white">Tipo</th>
-                                                    <th class="text-white">Descripción</th>
-                                                    <th class="text-white"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(row,
-                                                                index) in form.attributes" :key="index">
-                                                    <td>
-                                                        <el-select v-model="
-                                                                            row.attribute_type_id
-                                                                        " filterable @change="
-                                                                            changeAttributeType(
-                                                                                index
-                                                                            )
-                                                                        ">
-                                                            <el-option v-for="option in attribute_types" :key="
-                                                                                option.id
-                                                                            " :value="
-                                                                                option.id
-                                                                            " :label="
-                                                                                option.description
-                                                                            ">
-                                                            </el-option>
-                                                        </el-select>
-                                                    </td>
-                                                    <td>
-                                                        <el-input v-model="
-                                                                            row.value
-                                                                        ">
-                                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                    </td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-danger" @click.prevent="
-                                                                            clickRemoveAttribute(
-                                                                                index
-                                                                            )
-                                                                        ">
-                                                            x
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div v-if="form.attributes.length > 0">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr
+                                                        slot="heading"
+                                                        class="bg-primary"
+                                                    >
+                                                        <th class="text-white">
+                                                            Tipo
+                                                        </th>
+                                                        <th class="text-white">
+                                                            Descripción
+                                                        </th>
+                                                        <th
+                                                            class="text-white"
+                                                        ></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        v-for="(row,
+                                                        index) in form.attributes"
+                                                        :key="index"
+                                                    >
+                                                        <td>
+                                                            <el-select
+                                                                v-model="
+                                                                    row.attribute_type_id
+                                                                "
+                                                                filterable
+                                                                @change="
+                                                                    changeAttributeType(
+                                                                        index
+                                                                    )
+                                                                "
+                                                            >
+                                                                <el-option
+                                                                    v-for="option in attribute_types"
+                                                                    :key="
+                                                                        option.id
+                                                                    "
+                                                                    :value="
+                                                                        option.id
+                                                                    "
+                                                                    :label="
+                                                                        option.description
+                                                                    "
+                                                                >
+                                                                </el-option>
+                                                            </el-select>
+                                                        </td>
+                                                        <td>
+                                                            <el-input
+                                                                v-model="
+                                                                    row.value
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i
+                                                            ></el-input>
+                                                        </td>
+                                                        <td>
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-danger"
+                                                                @click.prevent="
+                                                                    clickRemoveAttribute(
+                                                                        index
+                                                                    )
+                                                                "
+                                                            >
+                                                                x
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Imágen
+                                            <span class="text-danger"></span
+                                        ></label>
+                                        <el-upload
+                                            class="avatar-uploader"
+                                            :data="{ type: 'items' }"
+                                            :headers="headers"
+                                            :action="`/${resource}/uploads`"
+                                            :show-file-list="false"
+                                            :on-success="onSuccess"
+                                        >
+                                            <img
+                                                v-if="form.image_url"
+                                                :src="form.image_url"
+                                                class="avatar"
+                                            />
+                                            <i
+                                                v-else
+                                                class="el-icon-plus avatar-uploader-icon"
+                                            ></i>
+                                        </el-upload>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="control-label">Imágen
-                                        <span class="text-danger"></span></label>
-                                    <el-upload class="avatar-uploader" :data="{ type: 'items' }" :headers="headers" :action="`/${resource}/uploads`" :show-file-list="false" :on-success="onSuccess">
-                                        <img v-if="form.image_url" :src="form.image_url" class="avatar" />
-                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    </el-upload>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane v-if="form.unit_type_id != 'ZZ'" label="Almacenes">
-                    <div class="row">
-                        <div class="col-12">
-
-                            <h4 class="separator-title mt-0">
-                                <strong>Precios por Almacén</strong>
-                            </h4>
-                            <!-- <h4  class="separator-title mt-0">
+                    </el-tab-pane>
+                    <el-tab-pane
+                        v-if="form.unit_type_id != 'ZZ'"
+                        label="Almacenes"
+                    >
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="separator-title mt-0">
+                                    <strong>Precios por Almacén</strong>
+                                </h4>
+                                <!-- <h4  class="separator-title mt-0">
                                 Precios por Almacén
                             </h4> -->
-                            <table>
-                                <tbody>
-                                    <tr v-for="w in form.warehouse_prices" :key="w.id">
-                                        <td width="60%">
-                                            <h5>{{ w.warehouse }}</h5>
-                                        </td>
-                                        <td>
-                                            <el-input v-model="w.price" @input="$forceUpdate()" placeholder="Precio de almacen">
-                                            </el-input>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                <table>
+                                    <tbody>
+                                        <tr
+                                            v-for="w in form.warehouse_prices"
+                                            :key="w.id"
+                                        >
+                                            <td width="60%">
+                                                <h5>{{ w.warehouse }}</h5>
+                                            </td>
+                                            <td>
+                                                <el-input
+                                                    v-model="w.price"
+                                                    @input="$forceUpdate()"
+                                                    placeholder="Precio de almacen"
+                                                >
+                                                </el-input>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="Lista de Precios">
-                    <div class="row">
-                        <div v-show="form.unit_type_id != 'ZZ'" class="col-md-12">
-                            <h6 class="separator-title ">
-                                <i class="fa-solid fa-money-bill-transfer"></i>
-                                Política de precios
-                                <el-tooltip class="item" effect="dark" content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades" placement="top">
-                                    <i class="fa fa-info-circle"></i>
-                                </el-tooltip>
-                                <a href="#" class="control-label font-weight-bold text-info" @click="clickAddRow">
-                                    [ + Nuevo]</a>
-                            </h6>
-                        </div>
-                        <div v-show="form.unit_type_id != 'ZZ'" class="col-md-12" v-if="form.item_unit_types.length > 0">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr slot="heading" class="bg-primary">
-                                            <th width="12%" class="text-white text-center">
-                                                Unidad de <br>
-                                                Medida
-                                            </th>
-                                            <th width="20%" class="text-white text-center">
-                                                Descripción
-                                            </th>
-                                            <th width="8%" class="text-white text-center">
-                                                Cantidad
-                                                <el-tooltip class="item" effect="dark" content="Cantidad de unidades" placement="top">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </el-tooltip>
-                                            </th>
-                                            <th width="13%" class="text-white text-center">
-                                                Precio
-                                                <br />
-                                                unitario
-                                            </th>
-                                            <th width="10%" class="text-white text-center">
-                                                Total
-                                            </th>
-                                            <th class="text-white text-center">
-                                                Almacén
-                                            </th>
-                                            <!-- <th class="text-center">
+                    </el-tab-pane>
+                    <el-tab-pane label="Lista de Precios">
+                        <div class="row">
+                            <div
+                                v-if="form.unit_type_id != 'ZZ'"
+                                class="col-md-12"
+                            >
+                                <h6 class="separator-title ">
+                                    <i
+                                        class="fa-solid fa-money-bill-transfer"
+                                    ></i>
+                                    Política de precios
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
+                                        placement="top"
+                                    >
+                                        <i class="fa fa-info-circle"></i>
+                                    </el-tooltip>
+                                    <a
+                                        href="#"
+                                        class="control-label font-weight-bold text-info"
+                                        @click="clickAddRow"
+                                    >
+                                        [ + Nuevo]</a
+                                    >
+                                </h6>
+                            </div>
+                            <div
+                                v-if="form.unit_type_id != 'ZZ' && form.item_unit_types.length > 0"
+                                class="col-md-12"
+                            >
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr
+                                                slot="heading"
+                                                class="bg-primary"
+                                            >
+                                                <th
+                                                    width="12%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Unidad de <br />
+                                                    Medida
+                                                </th>
+                                                <th
+                                                    width="20%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Descripción
+                                                </th>
+                                                <th
+                                                    width="8%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Cantidad
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Cantidad de unidades"
+                                                        placement="top"
+                                                    >
+                                                        <i
+                                                            class="fa fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </th>
+                                                <th
+                                                    width="13%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Precio
+                                                    <br />
+                                                    unitario
+                                                </th>
+                                                <th
+                                                    width="10%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Total
+                                                </th>
+                                                <th
+                                                    class="text-white text-center"
+                                                >
+                                                    Almacén
+                                                </th>
+                                                <!-- <th class="text-center">
                                                             P. Defecto
                                                         </th> -->
-                                            <th class="text-white">
-                                                MAX
-                                                <el-tooltip class="item" effect="dark" content="Check para indicar que es la Maxima cantdad en su presentación" placement="top">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </el-tooltip>
-                                            </th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(row,
-                                                        index) in form.item_unit_types" :key="index">
-                                            <template v-if="row.id">
-                                                <td class="text-center">
-                                                    {{ row.unit_type_id }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ row.description }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ row.quantity_unit }}
-                                                </td>
-                                                <td class="text-center">
-                                                    <el-input v-model="row.price2" @input="
-                                                                        undToTotal(
-                                                                            index,
-                                                                            row.price2,
-                                                                            row.quantity_unit
-                                                                        )
-                                                                    ">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
+                                                <th class="text-white">
+                                                    MAX
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Check para indicar que es la Maxima cantdad en su presentación"
+                                                        placement="top"
+                                                    >
+                                                        <i
+                                                            class="fa fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="(row,
+                                                index) in form.item_unit_types"
+                                                :key="index"
+                                            >
+                                                <template v-if="row.id">
+                                                    <td class="text-center">
+                                                        {{ row.unit_type_id }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ row.description }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ row.quantity_unit }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <el-input
+                                                            v-model="row.price2"
+                                                            @input="
+                                                                undToTotal(
+                                                                    index,
+                                                                    row.price2,
+                                                                    row.quantity_unit
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                slot="prefix"
+                                                                class="el-icon-edit-outline"
+                                                            ></i
+                                                        ></el-input>
+                                                    </td>
 
-                                                <!-- <td class="text-center">
+                                                    <!-- <td class="text-center">
     <el-input
         v-model="row.total"
         placeholder="0.00"
@@ -706,241 +1382,411 @@
     <div v-if="row.error" class="error-message">Solo se aceptan números</div>
 </td> -->
 
-                                                <td class="text-center">
-                                                    <el-input v-model="row.total" @input=" totalToUnd(index,row.total,row.quantity_unit)" type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i>
-                                                    </el-input>
-                                                </td>
-                                                <td>
-                                                    <el-select clearable v-model="
-                                                                        row.warehouse_id
-                                                                    ">
-                                                        <el-option v-for="w in warehouses" :key="w.id" :value="w.id" :label="
-                                                                            w.description
-                                                                        "></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td class="text-center">
-                                                    <el-checkbox v-model="
-                                                                        row.selected
-                                                                    " @change="
-                                                                        selectedMax(
-                                                                            index
-                                                                        )
-                                                                    "></el-checkbox>
-                                                </td>
-
-                                                <td class="series-table-actions text-end">
-                                                    <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="
-                                                                        clickDelete(
-                                                                            row.id
-                                                                        )
-                                                                    ">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </template>
-                                            <template v-else>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <el-select v-model="
-                                                                            row.unit_type_id
-                                                                        " dusk="item_unit_type.unit_type_id">
-                                                            <el-option v-for="option in unit_types" :key="
-                                                                                option.id
-                                                                            " :value="
-                                                                                option.id
-                                                                            " :label="
-                                                                                option.description
-                                                                            "></el-option>
+                                                    <td class="text-center">
+                                                        <el-input
+                                                            v-model="row.total"
+                                                            @input="
+                                                                totalToUnd(
+                                                                    index,
+                                                                    row.total,
+                                                                    row.quantity_unit
+                                                                )
+                                                            "
+                                                            type="number"
+                                                            step="0.01"
+                                                            pattern="^\d*(\.\d{0,2})?$"
+                                                        >
+                                                            <i
+                                                                slot="prefix"
+                                                                class="el-icon-edit-outline"
+                                                            ></i>
+                                                        </el-input>
+                                                    </td>
+                                                    <td>
+                                                        <el-select
+                                                            clearable
+                                                            v-model="
+                                                                row.warehouse_id
+                                                            "
+                                                        >
+                                                            <el-option
+                                                                v-for="w in warehouses"
+                                                                :key="w.id"
+                                                                :value="w.id"
+                                                                :label="
+                                                                    w.description
+                                                                "
+                                                            ></el-option>
                                                         </el-select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <el-input v-model="
-                                                                            row.description
-                                                                        ">
-                                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <el-input @input="
-                                                                            undToTotal(
-                                                                                index,
-                                                                                row.price2,
-                                                                                row.quantity_unit
-                                                                            )
-                                                                        " v-model="
-                                                                            row.quantity_unit
-                                                                        ">
-                                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <el-input v-model="
-                                                                            row.price2
-                                                                        " @input="
-                                                                            undToTotal(
-                                                                                index,
-                                                                                row.price2,
-                                                                                row.quantity_unit
-                                                                            )
-                                                                        ">
-                                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <el-input v-model="
-                                                                            row.total
-                                                                        " @input="
-                                                                            totalToUnd(
-                                                                                index,
-                                                                                row.total,
-                                                                                row.quantity_unit
-                                                                            )
-                                                                        ">
-                                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <el-select clearable v-model="
-                                                                        row.warehouse_id
-                                                                    ">
-                                                        <el-option v-for="w in warehouses" :key="w.id" :value="w.id" :label="
-                                                                            w.description
-                                                                        "></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-checkbox v-model="
-                                                                        row.selected
-                                                                    " @change="
-                                                                        selectedMax(
-                                                                            index
-                                                                        )
-                                                                    "></el-checkbox>
-                                                </td>
-                                                <td class="series-table-actions text-end">
-                                                    <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="
-                                                                        clickCancel(
-                                                                            index
-                                                                        )
-                                                                    ">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </template>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <el-checkbox
+                                                            v-model="
+                                                                row.selected
+                                                            "
+                                                            @change="
+                                                                selectedMax(
+                                                                    index
+                                                                )
+                                                            "
+                                                        ></el-checkbox>
+                                                    </td>
+
+                                                    <td
+                                                        class="series-table-actions text-end"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-sm btn-danger"
+                                                            @click.prevent="
+                                                                clickDelete(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fa fa-trash"
+                                                            ></i>
+                                                        </button>
+                                                    </td>
+                                                </template>
+                                                <template v-else>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <el-select
+                                                                v-model="
+                                                                    row.unit_type_id
+                                                                "
+                                                                dusk="item_unit_type.unit_type_id"
+                                                            >
+                                                                <el-option
+                                                                    v-for="option in unit_types"
+                                                                    :key="
+                                                                        option.id
+                                                                    "
+                                                                    :value="
+                                                                        option.id
+                                                                    "
+                                                                    :label="
+                                                                        option.description
+                                                                    "
+                                                                ></el-option>
+                                                            </el-select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.description
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i
+                                                            ></el-input>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <el-input
+                                                                @input="
+                                                                    undToTotal(
+                                                                        index,
+                                                                        row.price2,
+                                                                        row.quantity_unit
+                                                                    )
+                                                                "
+                                                                v-model="
+                                                                    row.quantity_unit
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i
+                                                            ></el-input>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.price2
+                                                                "
+                                                                @input="
+                                                                    undToTotal(
+                                                                        index,
+                                                                        row.price2,
+                                                                        row.quantity_unit
+                                                                    )
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i
+                                                            ></el-input>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.total
+                                                                "
+                                                                @input="
+                                                                    totalToUnd(
+                                                                        index,
+                                                                        row.total,
+                                                                        row.quantity_unit
+                                                                    )
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i
+                                                            ></el-input>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <el-select
+                                                            clearable
+                                                            v-model="
+                                                                row.warehouse_id
+                                                            "
+                                                        >
+                                                            <el-option
+                                                                v-for="w in warehouses"
+                                                                :key="w.id"
+                                                                :value="w.id"
+                                                                :label="
+                                                                    w.description
+                                                                "
+                                                            ></el-option>
+                                                        </el-select>
+                                                    </td>
+                                                    <td>
+                                                        <el-checkbox
+                                                            v-model="
+                                                                row.selected
+                                                            "
+                                                            @change="
+                                                                selectedMax(
+                                                                    index
+                                                                )
+                                                            "
+                                                        ></el-checkbox>
+                                                    </td>
+                                                    <td
+                                                        class="series-table-actions text-end"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-sm btn-danger"
+                                                            @click.prevent="
+                                                                clickCancel(
+                                                                    index
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fa fa-trash"
+                                                            ></i>
+                                                        </button>
+                                                    </td>
+                                                </template>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane v-if="configuration.commercial_treatment_items" label="Tratamiento Comercial">
-                    <div class="row m-2">
-                        <table>
-                            <tbody>
-                                <tr v-for="(commercial_treatment_item,
-                                                index) in form.commercial_treatments" :key="`${index}treatment`">
-                                    <td>
-                                        {{
-                                                        commercial_treatment_item.commercial_treatment_description
-                                                    }}
-                                    </td>
-                                    <td width="15%">
-                                        <el-input @input="
-                                                            updateCommercialTreatmentItem(
-                                                                index
-                                                            )
-                                                        " type="number" v-model="
-                                                            commercial_treatment_item.amount
-                                                        "></el-input>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="Compras">
-                    <div class="row">
-                        <div class="col-12 col-lg-6 col-xl-6">
-                            <div class="form-group" :class="{
-                                                'has-danger':
-                                                    errors.purchase_affectation_igv_type_id
-                                            }">
-                                <label class="control-label">Tipo de afectación (Compra)</label>
-                                <el-select v-model="
-                                                    form.purchase_affectation_igv_type_id
-                                                ">
-                                    <el-option v-for="option in affectation_igv_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small class="text-danger" v-if="
-                                                    errors.purchase_affectation_igv_type_id
-                                                " v-text="
-                                                    errors
-                                                        .purchase_affectation_igv_type_id[0]
-                                                "></small>
+                    </el-tab-pane>
+                    <el-tab-pane
+                        v-if="configuration.commercial_treatment_items"
+                        label="Tratamiento Comercial"
+                    >
+                        <div class="row m-2">
+                            <table>
+                                <tbody>
+                                    <tr
+                                        v-for="(commercial_treatment_item,
+                                        index) in form.commercial_treatments"
+                                        :key="`${index}treatment`"
+                                    >
+                                        <td>
+                                            {{
+                                                commercial_treatment_item.commercial_treatment_description
+                                            }}
+                                        </td>
+                                        <td width="15%">
+                                            <el-input
+                                                @input="
+                                                    updateCommercialTreatmentItem(
+                                                        index
+                                                    )
+                                                "
+                                                type="number"
+                                                v-model="
+                                                    commercial_treatment_item.amount
+                                                "
+                                            ></el-input>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="Compras">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 col-xl-6">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger':
+                                            errors.purchase_affectation_igv_type_id
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        >Tipo de afectación (Compra)</label
+                                    >
+                                    <el-select
+                                        v-model="
+                                            form.purchase_affectation_igv_type_id
+                                        "
+                                    >
+                                        <el-option
+                                            v-for="option in affectation_igv_types"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="text-danger"
+                                        v-if="
+                                            errors.purchase_affectation_igv_type_id
+                                        "
+                                        v-text="
+                                            errors
+                                                .purchase_affectation_igv_type_id[0]
+                                        "
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 col-xl-6">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.purchase_unit_price
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        >Precio Unitario (Compra)</label
+                                    >
+                                    <el-input
+                                        v-model="form.purchase_unit_price"
+                                        dusk="purchase_unit_price"
+                                        @input="
+                                            calculatePercentageOfProfitByPurchase
+                                        "
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.purchase_unit_price"
+                                        v-text="errors.purchase_unit_price[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <!-- <div class="short-div col-md-4"> -->
+                            <div class="col-12 col-lg-6 col-xl-6">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger':
+                                            errors.percentage_of_profit
+                                    }"
+                                >
+                                    <label class="control-label">
+                                        <el-checkbox
+                                            v-model="
+                                                enabled_percentage_of_profit
+                                            "
+                                            @change="
+                                                changeEnabledPercentageOfProfit
+                                            "
+                                        ></el-checkbox>
+                                        Porcentaje de ganancia (%)
+                                    </label>
+                                    <el-input
+                                        v-model="form.percentage_of_profit"
+                                        :disabled="
+                                            !enabled_percentage_of_profit
+                                        "
+                                        @input="
+                                            calculatePercentageOfProfitByPercentage
+                                        "
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.percentage_of_profit"
+                                        v-text="errors.percentage_of_profit[0]"
+                                    ></small>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-xl-6">
-                            <div class="form-group" :class="{
-                                                'has-danger': errors.purchase_unit_price
-                                            }">
-                                <label class="control-label">Precio Unitario (Compra)</label>
-                                <el-input v-model="form.purchase_unit_price" dusk="purchase_unit_price" @input="
-                                                    calculatePercentageOfProfitByPurchase
-                                                ">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.purchase_unit_price" v-text="errors.purchase_unit_price[0]"></small>
-                            </div>
-                        </div>
-                        <!-- <div class="short-div col-md-4"> -->
-                        <div class="col-12 col-lg-6 col-xl-6">
-                            <div class="form-group" :class="{
-                                                'has-danger':
-                                                    errors.percentage_of_profit
-                                            }">
-                                <label class="control-label">
-                                    <el-checkbox v-model="
-                                                        enabled_percentage_of_profit
-                                                    " @change="
-                                                        changeEnabledPercentageOfProfit
-                                                    "></el-checkbox>
-                                    Porcentaje de ganancia (%)
-                                </label>
-                                <el-input v-model="form.percentage_of_profit" :disabled="
-                                                    !enabled_percentage_of_profit
-                                                " @input="
-                                                    calculatePercentageOfProfitByPercentage
-                                                ">
-                                    <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                <small class="text-danger" v-if="errors.percentage_of_profit" v-text="errors.percentage_of_profit[0]"></small>
-                            </div>
-                        </div>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
-        </div>
-        <div class="form-actions text-end pt-2 pb-2">
-            <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
-            <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
-        </div>
-    </form>
-    <!-- <percentage-perception
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+            <div class="form-actions text-end pt-2 pb-2">
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
+                    Cancelar</el-button
+                >
+                <el-button
+                    icon="fas fa-save fa-lg"
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                >
+                    Guardar</el-button
+                >
+            </div>
+        </form>
+        <!-- <percentage-perception
                         :showDialog.sync="showPercentagePerception"
                         :percentage_perception="percentage_perception">
                 </percentage-perception> -->
 
-    <lots-form :showDialog.sync="showDialogLots" :stock="form.stock" :recordId="recordId" :lots="form.lots" @addRowLot="addRowLot">
-    </lots-form>
-    <color-size :showDialog.sync="showDialogColorSize" :recordId="recordId" :colorSizes="form.color_sizes" @addRowColorSize="addRowColorSize" :stock="form.stock">
-    </color-size>
-</el-dialog>
+        <lots-form
+            :showDialog.sync="showDialogLots"
+            :stock="form.stock"
+            :recordId="recordId"
+            :lots="form.lots"
+            @addRowLot="addRowLot"
+        >
+        </lots-form>
+        <color-size
+            :showDialog.sync="showDialogColorSize"
+            :recordId="recordId"
+            :colorSizes="form.color_sizes"
+            @addRowColorSize="addRowColorSize"
+            :stock="form.stock"
+        >
+        </color-size>
+    </el-dialog>
 </template>
 
 <style>
@@ -1065,20 +1911,20 @@ export default {
             this.areas = response.data.areas;
 
             this.form.sale_affectation_igv_type_id =
-                this.affectation_igv_types.length > 0 ?
-                this.affectation_igv_types[0].id :
-                null;
+                this.affectation_igv_types.length > 0
+                    ? this.affectation_igv_types[0].id
+                    : null;
             this.form.purchase_affectation_igv_type_id =
-                this.affectation_igv_types.length > 0 ?
-                this.affectation_igv_types[0].id :
-                null;
+                this.affectation_igv_types.length > 0
+                    ? this.affectation_igv_types[0].id
+                    : null;
 
             if (!this.configuration.restaurant) {
                 this.areas = this.areas.filter(
                     a =>
-                    !["BARRA", "COCINA", "MOZO", "MESA"].some(
-                        p => p == a.description
-                    )
+                        !["BARRA", "COCINA", "MOZO", "MESA"].some(
+                            p => p == a.description
+                        )
                 );
             }
             //agregar opciones para entorno restaurante
@@ -1115,10 +1961,12 @@ export default {
         },
         addRowColorSize(color_sizes) {
             this.form.color_sizes = color_sizes;
-            if(this.form.stock == 0){
-                this.form.stock = color_sizes.reduce((acc, color_size) => acc + Number(color_size.stock), 0)
+            if (this.form.stock == 0) {
+                this.form.stock = color_sizes.reduce(
+                    (acc, color_size) => acc + Number(color_size.stock),
+                    0
+                );
             }
-
         },
         clickColorSize() {
             this.showDialogColorSize = true;
@@ -1158,9 +2006,9 @@ export default {
             }
         },
         setDefaultConfiguration() {
-            this.form.sale_affectation_igv_type_id = this.configuration ?
-                this.configuration.affectation_igv_type_id :
-                "10";
+            this.form.sale_affectation_igv_type_id = this.configuration
+                ? this.configuration.affectation_igv_type_id
+                : "10";
 
             this.$http.get(`/configurations/record`).then(response => {
                 this.form.has_igv = response.data.data.include_igv;
@@ -1190,13 +2038,13 @@ export default {
                 this.brands = response.data.brands;
 
                 this.form.sale_affectation_igv_type_id =
-                    this.affectation_igv_types.length > 0 ?
-                    this.affectation_igv_types[0].id :
-                    null;
+                    this.affectation_igv_types.length > 0
+                        ? this.affectation_igv_types[0].id
+                        : null;
                 this.form.purchase_affectation_igv_type_id =
-                    this.affectation_igv_types.length > 0 ?
-                    this.affectation_igv_types[0].id :
-                    null;
+                    this.affectation_igv_types.length > 0
+                        ? this.affectation_igv_types[0].id
+                        : null;
             });
         },
         changeLotsEnabled() {
@@ -1265,6 +2113,7 @@ export default {
         initForm() {
             (this.loading_submit = false), (this.errors = {});
             this.form = {
+                subject_to_detraction: false,
                 is_manufactured: false,
                 id: null,
                 color_sizes: [],
@@ -1348,13 +2197,13 @@ export default {
         resetForm() {
             this.initForm();
             this.form.sale_affectation_igv_type_id =
-                this.affectation_igv_types.length > 0 ?
-                this.affectation_igv_types[0].id :
-                null;
+                this.affectation_igv_types.length > 0
+                    ? this.affectation_igv_types[0].id
+                    : null;
             this.form.purchase_affectation_igv_type_id =
-                this.affectation_igv_types.length > 0 ?
-                this.affectation_igv_types[0].id :
-                null;
+                this.affectation_igv_types.length > 0
+                    ? this.affectation_igv_types[0].id
+                    : null;
             this.setDefaultConfiguration();
         },
         async generateCode() {
@@ -1364,9 +2213,13 @@ export default {
             this.loading = false;
         },
         async create() {
-            this.titleDialog = this.recordId ?
-                "Editar Producto" :
-                "Nuevo Producto";
+            console.log("🚀 ~ create ~ this.configuration:", this.configuration)
+            console.log("🚀 ~ create ~ this.configuration:", this.allEstablishment)
+
+
+            this.titleDialog = this.recordId
+                ? "Editar Producto"
+                : "Nuevo Producto";
 
             if (this.recordId) {
                 this.$http
@@ -1411,9 +2264,9 @@ export default {
                             this.restoreUnitTypes();
                         }
                         this.has_percentage_perception = this.form
-                            .percentage_perception ?
-                            true :
-                            false;
+                            .percentage_perception
+                            ? true
+                            : false;
                         this.changeAffectationIgvType();
                         this.showSeries = true;
 
@@ -1500,9 +2353,9 @@ export default {
             } else {
                 if (this.enabled_percentage_of_profit)
                     this.form.percentage_of_profit =
-                    (difference /
-                        parseFloat(this.form.purchase_unit_price)) *
-                    100;
+                        (difference /
+                            parseFloat(this.form.purchase_unit_price)) *
+                        100;
             }
         },
         calculatePercentageOfProfitByPurchase() {
@@ -1512,9 +2365,9 @@ export default {
 
             if (this.enabled_percentage_of_profit)
                 this.form.sale_unit_price =
-                (this.form.purchase_unit_price *
-                    (100 + parseFloat(this.form.percentage_of_profit))) /
-                100;
+                    (this.form.purchase_unit_price *
+                        (100 + parseFloat(this.form.percentage_of_profit))) /
+                    100;
         },
         calculatePercentageOfProfitByPercentage() {
             if (this.form.percentage_of_profit === "") {
@@ -1523,9 +2376,9 @@ export default {
 
             if (this.enabled_percentage_of_profit)
                 this.form.sale_unit_price =
-                (this.form.purchase_unit_price *
-                    (100 + parseFloat(this.form.percentage_of_profit))) /
-                100;
+                    (this.form.purchase_unit_price *
+                        (100 + parseFloat(this.form.percentage_of_profit))) /
+                    100;
         },
         async submit() {
             if (this.form.max_quantity && !this.form.max_quantity_description) {

@@ -303,7 +303,7 @@
                             </li>
                         @endif
 
-                        @if ($has_lotes && $config->lots_enabled)
+                        @if ($config->lots_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('lotes') }}">
