@@ -1490,7 +1490,6 @@ class BoxesController extends Controller
             &$max_03_document_id
         ) {
             foreach ($documents as $document) {
-                dump($document->id);
                 $document = Document::select(['id', 'document_type_id', 'total'])
                     ->with('items')
                     ->find($document->id);
