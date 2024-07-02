@@ -1409,7 +1409,7 @@ class SaleNoteController extends Controller
                 if (!$paid && $configuration->sale_note_credit_cash) {
                     $saleNoteUpdate->credit_cash = true;
                 }
-                $saleNoteUpdate->paid = $paid;
+                $saleNoteUpdate->paid = $paid ?? $saleNoteUpdate->paid;
                 $saleNoteUpdate->save();
             });
 
