@@ -41,7 +41,7 @@ class Item extends ModelTenant
         'system_isc_type_id',
         'percentage_isc',
         'suggested_price',
-
+        'subject_to_detraction',
         'sale_affectation_igv_type_id',
         'purchase_affectation_igv_type_id',
         'calculate_quantity',
