@@ -259,21 +259,21 @@
                                                     CREDITO</b></h5>
                                         </td>
                                     </tr>
-                                    @if($data->sale_note_id)
-                                    @foreach ($data->sale_note->items as $item)
-                                        <tr>
-                                            <td class="negrita">{{ $item->quantity }}</td>
-                                            <td>{{ $item->item->description }}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if ($data->sale_note_id)
+                                        @foreach ($data->sale_note->items as $item)
+                                            <tr>
+                                                <td class="negrita">{{ $item->quantity }}</td>
+                                                <td>{{ $item->item->description }}</td>
+                                            </tr>
+                                        @endforeach
                                     @endif
-                                    @if($data->document_id)
-                                    @foreach ($data->document->items as $item)
-                                        <tr>
-                                            <td class="negrita">{{ $item->quantity }}</td>
-                                            <td>{{ $item->item->description }}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if ($data->document_id)
+                                        @foreach ($data->document->items as $item)
+                                            <tr>
+                                                <td class="negrita">{{ $item->quantity }}</td>
+                                                <td>{{ $item->item->description }}</td>
+                                            </tr>
+                                        @endforeach
                                     @endif
                                 </table>
                             </div>
@@ -298,12 +298,12 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-                                                    @php
-                                                // dump($data->sale_note->total);
-                                                // dump($data->sale_note->advances);
-                                                // dump($interes);
-                                                    @endphp
-                                                        {{ number_format(($data->sale_note->total - $data->sale_note->advances )+ $interes, 2) }}
+                                                        @php
+                                                            // dump($data->sale_note->total);
+                                                            // dump($data->sale_note->advances);
+                                                            // dump($interes);
+                                                        @endphp
+                                                        {{ number_format($data->sale_note->total - $data->sale_note->advances + $interes, 2) }}
                                                         <?php
                                                         //dd($data->amount);
                                                         ?>
@@ -343,9 +343,14 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
+                                                    @if ($penalties == 0)
+                                                    {{ number_format($deuda + $interes, 2) }}
+                                                    {{-- {{ number_format($deuda, 2) }} --}}
+                                                @else
+                                                    {{ number_format($deuda + $interes+ $penalties, 2) }}
+                                                @endif
 
-
-                                                        {{ number_format($deuda + $interes, 2) }}
+                                                    
                                                     </span></b>
                                             </td>
                                         </tr>
@@ -430,9 +435,9 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-
-
-                                                        {{ number_format($deuda, 2) }}
+                                                    
+                                                            {{ number_format($deuda, 2) }}
+                                                        
                                                     </span></b>
                                             </td>
                                         </tr>

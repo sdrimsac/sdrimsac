@@ -62,7 +62,12 @@ class ReceiptController extends Controller
         $company = Company::first();
         $user = User::findOrFail($data->user_id);
         $establishment = Establishment::find($user->establishment_id);
+        $penalties =0;
+        if($data->sale_note_id){
+            $penalties = Payment::where('sale_note_id', $data->sale_note_id)->where('paid', 0)->sum('penalty_amount');
+        }
         $recibo = PDF::loadView('tenant.receipt.index', [
+            'penalties'=>$penalties,
             'payment_method_type' => $payment_method_type,
             'data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user
         ]);
