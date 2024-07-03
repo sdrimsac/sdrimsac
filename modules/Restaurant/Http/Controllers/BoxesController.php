@@ -37,6 +37,7 @@ use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use App\Models\Tenant\SaleNotePromotion;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Report\Exports\BoxesExport;
 use Modules\Restaurant\Models\OrdenItem;
@@ -595,7 +596,7 @@ class BoxesController extends Controller
                         foreach ($items as $item) {
                             if ($item) {
                                 $item_db = Item::find($item->item_id);
-                                if ($item_db) {
+                                if ($item_db && $item_db->category_id) {
                                     $category_id = $item_db->category_id;
                                     $category = CategoryItem::find($category_id);
                                     $category_name = $category->name;
@@ -632,6 +633,8 @@ class BoxesController extends Controller
                                             ];
                                         }
                                     }
+                                }else{
+                                    Log::info("Item no tiene categoria: ".$item->item_id);
                                 }
                             }
                         }
