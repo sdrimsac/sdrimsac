@@ -596,7 +596,9 @@ class BoxesController extends Controller
                             if ($item) {
                                 $item_db = Item::find($item->item_id);
                                 if ($item_db) {
-                                    $category_name = $item_db->category->name;
+                                    $category_id = $item_db->category_id;
+                                    $category = CategoryItem::find($category_id);
+                                    $category_name = $category->name;
                                     if (array_key_exists($category_name, $categories)) {
                                         $categories[$category_name] += $item->total;
                                     } else {
