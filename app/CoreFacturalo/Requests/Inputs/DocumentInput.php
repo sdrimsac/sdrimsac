@@ -119,10 +119,10 @@ class DocumentInput
         }
         $total_payment =  Functions::valueKeyInArray($inputs, 'total_payment', 0.0);
         $detraction  = self::detraction($inputs);
-        if ($detraction) {
-            $amount = $detraction['amount'];
-            $total_payment = $total_payment - $amount;
-        }
+        // if ($detraction) {
+        //     $amount = $detraction['amount'];
+        //     $total_payment = $total_payment - $amount;
+        // }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
             'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),

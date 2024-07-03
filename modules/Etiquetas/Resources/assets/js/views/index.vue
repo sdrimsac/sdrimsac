@@ -801,25 +801,25 @@ export default {
                 return;
             }
 
-            if (
-                this.sale_code == undefined ||
-                this.purchase_code == undefined
-            ) {
-                this.$toast.error(
-                    "Los códigos de venta y compra son obligatorios"
-                );
-                return;
-            } else {
-                if (
-                    this.sale_code.length == 0 ||
-                    this.purchase_code.length == 0
-                ) {
-                    this.$toast.error(
-                        "Los códigos de venta y compra son obligatorios"
-                    );
-                    return;
-                }
-            }
+            // if (
+            //     this.sale_code == undefined ||
+            //     this.purchase_code == undefined
+            // ) {
+            //     this.$toast.error(
+            //         "Los códigos de venta y compra son obligatorios"
+            //     );
+            //     return;
+            // } else {
+            //     if (
+            //         this.sale_code.length == 0 ||
+            //         this.purchase_code.length == 0
+            //     ) {
+            //         this.$toast.error(
+            //             "Los códigos de venta y compra son obligatorios"
+            //         );
+            //         return;
+            //     }
+            // }
             if (this.quantity > 100) {
                 try {
                     await this.$confirm(

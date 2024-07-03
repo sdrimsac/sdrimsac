@@ -208,7 +208,6 @@ if ($hostname) {
                 });
                 Route::post('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'store']);
                 Route::post('sale_note_payments', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'store']);
-                Route::post('document_payments', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'store']);
                 Route::post('persons', [App\Http\Controllers\Tenant\PersonController::class, 'store']);
                 Route::get('pos/table/{table}', [App\Http\Controllers\Tenant\PosController::class, 'table']);
                 Route::get('companies/record', [App\Http\Controllers\Tenant\CompanyController::class, 'record']);
@@ -438,6 +437,13 @@ if ($hostname) {
                 Route::get('documents/search/customer/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomerById']);
 
                 Route::get('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'index'])->name('tenant.documents.index')->middleware(['just.admin']);
+                Route::prefix('documents_detraction')
+                    ->group(function () {
+                        Route::get('', [App\Http\Controllers\Tenant\DocumentController::class, 'index_detraction'])->name('tenant.detractions.index')->middleware(['just.admin']);
+                        Route::get('columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns_detraction']);
+                        Route::get('records', [App\Http\Controllers\Tenant\DocumentController::class, 'records_detraction']);
+                        Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
+                    });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
 
                 Route::get('documents/create/{documents?}', [App\Http\Controllers\Tenant\DocumentController::class, 'create'])->name('tenant.documents.create')->middleware('just.admin');
@@ -453,8 +459,7 @@ if ($hostname) {
                 Route::post('documents/email', [App\Http\Controllers\Tenant\DocumentController::class, 'email']);
                 Route::get('documents/note/{document}', [App\Http\Controllers\Tenant\NoteController::class, 'create']);
                 Route::get('documents/note/record/{document}', [App\Http\Controllers\Tenant\NoteController::class, 'record']);
-                Route::get('documents/note_other', 'Tenant\NoteController@createOther')->name('tenant.documents.note_other');
-                ;
+                Route::get('documents/note_other', 'Tenant\NoteController@createOther')->name('tenant.documents.note_other');;
                 Route::get('documents/item/tables', [App\Http\Controllers\Tenant\DocumentController::class, 'item_tables']);
                 Route::get('documents/table/{table}', [App\Http\Controllers\Tenant\DocumentController::class, 'table']);
                 Route::get('documents/re_store/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'reStore']);
@@ -462,15 +467,24 @@ if ($hostname) {
                 Route::get('documents/locked_emission', [App\Http\Controllers\Tenant\DocumentController::class, 'messageLockedEmission']);
                 Route::get('documents/validate/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'validar_cpe']);
                 Route::get('documents/totals', [App\Http\Controllers\Tenant\DocumentController::class, 'totals']);
+                Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
                 Route::get('document_payments/records/{document_id}', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'records']);
                 Route::get('document_payments/document/{document_id}', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'document']);
                 Route::get('document_payments/tables', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'tables']);
-                Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
-
+                Route::post('document_payments', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'store']);
                 Route::delete('document_payments/{document_payment}', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'destroy']);
                 Route::get('document_payments/initialize_balance', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'initialize_balance']);
                 Route::get('document_payments/report/{start}/{end}', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'report']);
-
+                
+                Route::prefix('detraction_payments')->group(function(){
+                    Route::get('records/{document_id}', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'records']);
+                    Route::get('document/{document_id}', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'document']);
+                    Route::get('tables', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'tables']);
+                    Route::post('', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'store']);
+                    Route::delete('{document_payment}', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'destroy']);
+                    Route::get('initialize_balance', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'initialize_balance']);
+                    Route::get('report/{start}/{end}', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'report']);
+                });
 
                 Route::get('documents/send_server/{document}/{query?}', [App\Http\Controllers\Tenant\DocumentController::class, 'sendServer']);
                 Route::get('documents/check_server/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'checkServer']);

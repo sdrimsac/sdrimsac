@@ -1787,7 +1787,7 @@
                                             style="padding-left: 20px;"
                                         >
                                             {{ currency_type.symbol }}
-                                            <template v-if="form.detraction">
+                                            <!-- <template v-if="form.detraction">
                                                 {{
                                                     Number(form.total_payment) -
                                                         Number(
@@ -1795,12 +1795,10 @@
                                                                 .amount
                                                         )
                                                 }}
-                                            </template>
-                                            <template v-else>
+                                            </template> -->
                                                 <h4>
                                                     {{ form.total_payment }}
                                                 </h4>
-                                            </template>
                                         </td>
                                     </tr>
                                 </table>

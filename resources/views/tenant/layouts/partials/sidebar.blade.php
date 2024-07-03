@@ -152,7 +152,7 @@
                         <li>
                             <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.unit_types.index') }}">
-                                <i class="fa fa-solid fa-ruler"></i> Unidad de medida 
+                                <i class="fa fa-solid fa-ruler"></i> Unidad de medida
                             </a>
                         </li>
 
@@ -411,6 +411,13 @@
                                 <i class="icofont-list"></i> Listado
                             </a>
                         </li>
+
+                        <li>
+                            <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
+                                href="{{ route('tenant.detractions.index') }}">
+                                <i class="icofont-list"></i> Detracciones
+                            </a>
+                        </li>
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.not_sent') }}">
@@ -551,7 +558,7 @@
             </li>
         @endif
 
-        @if (!$roleService->isArca() || $user->is_arca) 
+        @if (!$roleService->isArca() || $user->is_arca)
             <li>
                 <a href="#reporte" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"
@@ -624,7 +631,7 @@
                                 Ganancias
                             </a>
                         </li>
-                    
+
                         <li>
                             <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
                                 href="{{ route('reports.products-clients.index') }}">
@@ -677,32 +684,32 @@
                 </ul>
             </li>
         @endif
-        @if($config->credits && $user->is_arca)
-        <li>
-            <a href="#compras" data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
-                class="{{ $path[0] === 'purchases' ? 'active' : '' }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
-                data-clicked="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}">
-                <i class="icofont-shopping-cart icon-parent"></i>
-                <span class="label">Cartera presupuestaria</span>
-            </a>
+        @if ($config->credits && $user->is_arca)
+            <li>
+                <a href="#compras" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
+                    class="{{ $path[0] === 'purchases' ? 'active' : '' }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}">
+                    <i class="icofont-shopping-cart icon-parent"></i>
+                    <span class="label">Cartera presupuestaria</span>
+                </a>
 
-            <ul id="compras" class="collapse ">
-                <li>
-                    <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
-                        href="{{ route('caja.cash_transfer') }}">
-                        <i class="icofont-list"></i> Traslados (desembolso de efectivo S/)
-                    </a>
-                </li>
-                <li>
-                    <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
-                        href="{{ route('caja.cash_transfer_report') }}">
-                        <i class="icofont-credit-card"></i> Reporte de traslados
-                    </a>
-                </li>
+                <ul id="compras" class="collapse ">
+                    <li>
+                        <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('caja.cash_transfer') }}">
+                            <i class="icofont-list"></i> Traslados (desembolso de efectivo S/)
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                            href="{{ route('caja.cash_transfer_report') }}">
+                            <i class="icofont-credit-card"></i> Reporte de traslados
+                        </a>
+                    </li>
 
-            </ul>
-        </li>
+                </ul>
+            </li>
         @endif
 
         @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)

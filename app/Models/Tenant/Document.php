@@ -109,7 +109,7 @@ class Document extends ModelTenant
         'dispatch_id',
         'ref'
 
-  
+
     ];
 
     protected $casts = [
@@ -122,19 +122,19 @@ class Document extends ModelTenant
         parent::boot();
         //created
         static::created(function ($model) {
-            try{
+            try {
                 $serie = $model->series;
                 $number = $model->number;
                 $soap_type_id = $model->soap_type_id;
-                $exist = $model->hasDuplicate($serie,$number,$soap_type_id);
-                if($exist){
+                $exist = $model->hasDuplicate($serie, $number, $soap_type_id);
+                if ($exist) {
                     $company = Company::first();
                     $company_name = $company->name;
-                    
+
                     $message = "🚨🚨🚨⚠️⚠️⚠️ ATENCIÓN ⚠️⚠️⚠️🚨🚨🚨 \n\nSe ha detectado una duplicidad de comprobante en la empresa $company_name \n\nSerie: $serie \nNúmero: $number.";
                     (new WhatsappController)->sendSupportMessage($message);
                 }
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 $message = $e->getMessage();
                 Log::error($message);
             }
@@ -170,45 +170,48 @@ class Document extends ModelTenant
 
         );
     }
-    public function hasDuplicate($serie,$number,$soap_type_id){
-        $count = Document::where('series',$serie)->where('number',$number)->where('soap_type_id',$soap_type_id)->count();
+    public function hasDuplicate($serie, $number, $soap_type_id)
+    {
+        $count = Document::where('series', $serie)->where('number', $number)->where('soap_type_id', $soap_type_id)->count();
         return $count > 1;
-      
     }
 
-  
-  public function comercial_treatment(){
-    return $this->belongsTo(CommercialTreatment::class);
-  }
-  public function canceled(){
-    $boxes = Box::where('document_id', $this->id)->sum('amount');
-    if($boxes > 0){
-        if($boxes == $this->total){
-            $this->total_canceled = true;
-            $this->save();
+
+    public function comercial_treatment()
+    {
+        return $this->belongsTo(CommercialTreatment::class);
+    }
+    public function canceled()
+    {
+        $boxes = Box::where('document_id', $this->id)->sum('amount');
+        if ($boxes > 0) {
+            if ($boxes == $this->total) {
+                $this->total_canceled = true;
+                $this->save();
+            }
         }
     }
-  }
-  public function getGlobalDiscountsNoBase()
-    { 
+    public function getGlobalDiscountsNoBase()
+    {
 
         //descuentos globales que no afectan la base
         $allowance_total_amount = 0;
-    
-        if($this->discounts){
-            
-            $allowance_total_amount = collect($this->discounts)->sum(function($discount){
+
+        if ($this->discounts) {
+
+            $allowance_total_amount = collect($this->discounts)->sum(function ($discount) {
                 return (in_array($discount->discount_type_id, ['03', '63'])) ? $discount->amount : 0;
             });
-
         }
 
         return $allowance_total_amount;
     }
-    public function boxes(){
-        return $this->hasMany(Box::class,'document_id');
+    public function boxes()
+    {
+        return $this->hasMany(Box::class, 'document_id');
     }
-    public function get_document_type(){
+    public function get_document_type()
+    {
         $document_type_id = $this->document_type_id;
         return $document_type_id == "03" ? "BOLETA" : "FACTURA";
     }
@@ -407,6 +410,10 @@ class Document extends ModelTenant
         return $this->hasMany(Kardex::class);
     }
 
+    public function detraction_payments()
+    {
+        return $this->hasMany(DetractionPayment::class);
+    }
     public function payments()
     {
         return $this->hasMany(DocumentPayment::class);
@@ -421,8 +428,9 @@ class Document extends ModelTenant
     {
         return $this->morphMany(InventoryKardex::class, 'inventory_kardexable');
     }
-    public function sale_note_related(){
-        return $this->hasMany(SaleNote::class,'document_id');
+    public function sale_note_related()
+    {
+        return $this->hasMany(SaleNote::class, 'document_id');
     }
     public function quotation()
     {

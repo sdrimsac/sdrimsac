@@ -672,6 +672,7 @@ class ItemController extends Controller
         $item->item_type_id = '01';
         $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
         $item->fill($request->all());
+        
         $temp_path = $request->input('temp_path');
         $id = $request->input('id');
         $food = Food::firstOrNew(['item_id' => $id]);

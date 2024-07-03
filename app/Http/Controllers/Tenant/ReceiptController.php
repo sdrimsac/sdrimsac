@@ -42,6 +42,9 @@ class ReceiptController extends Controller
             $payment = $data->sale_note_payment;
         } else {
             $payment = $data->document_payment;
+            if($payment ==  null){
+                $payment 
+            }
         }
         $payment_method_type = $payment->payment_method_type->description;
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();

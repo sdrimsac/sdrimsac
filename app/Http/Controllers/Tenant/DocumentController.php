@@ -78,6 +78,7 @@ use  Modules\Inventory\Models\InventoryConfiguration;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\DocumentExport;
+use App\Http\Resources\Tenant\DocumentDetractionCollection;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
@@ -355,6 +356,12 @@ class DocumentController extends Controller
             'total_pending_paid_pen' => number_format($total_pending_paid_pen, 2, ".", "")
         ];
     }
+    public function index_detraction()
+    {
+        $configuration = Configuration::first();
+        $company = Company::first();
+        return view('tenant.documents.detractions', compact('company', 'configuration'));
+    }
     public function index()
     {
         $roleService = new RoleService();
@@ -382,7 +389,13 @@ class DocumentController extends Controller
         //return view('restaurant::restaurant', compact('configuration'));
         return view('restaurant::documents.list', compact('is_client', 'import_documents', 'import_documents_second', 'configuration'));
     }
-
+    public function columns_detraction()
+    {
+        return [
+            'number' => 'Número',
+            'date_of_issue' => 'Fecha de emisión'
+        ];
+    }
     public function columns()
     {
         return [
@@ -420,6 +433,12 @@ class DocumentController extends Controller
         }
     }
 
+    public function records_detraction(Request $request)
+    {
+        $records = $this->getRecordsDetraction($request);
+
+        return new DocumentDetractionCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function records(Request $request)
     {
 
@@ -1746,7 +1765,62 @@ class DocumentController extends Controller
         ];
     }
 
-    public function getRecords($request)
+    public function getRecordsDetraction($request)
+    {
+        $d_end = $request->d_end;
+        $d_start = $request->d_start;
+        $date_of_issue = $request->date_of_issue;
+        $document_type_id = $request->document_type_id;
+        $state_type_id = $request->state_type_id;
+        $seller_id = $request->seller_id;
+        $number = $request->number;
+        $series = $request->series;
+        $company = Company::first();
+        $soap_type_id = $company->soap_type_id;
+        $customer_id = $request->customer_id;
+        $item_id = $request->item_id;
+        $category_id = $request->category_id;
+        $records = Document::query();
+        $records = $records->whereNotNull('detraction');
+        $records = $records->where('soap_type_id', '=', $soap_type_id)
+            ->where('document_type_id', 'like', '%' . $document_type_id . '%')
+            ->where('state_type_id', 'like', '%' . $state_type_id . '%')
+            ->where('series', 'like', '%' . $series . '%')
+            ->where('number', 'like', '%' . $number . '%')
+            ->orderBy('id', 'desc')
+            ->orderBy('number', 'desc')
+            ->latest();
+        if ($d_start && $d_end) {
+            $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
+        } else {
+            $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
+        }
+        if ($customer_id) {
+            $records = $records->where('customer_id', $customer_id);
+        }
+
+
+        if ($item_id) {
+            $records = $records->whereHas('items', function ($query) use ($item_id) {
+                $query->where('item_id', $item_id);
+            });
+        }
+        if ($seller_id) {
+            $records = $records->where('seller_id', $seller_id);
+        }
+        if ($category_id) {
+
+            $records = $records->whereHas('items', function ($query) use ($category_id) {
+                $query->whereHas('relation_item', function ($q) use ($category_id) {
+                    $q->where('category_id', $category_id);
+                });
+            });
+        }
+        $records = $records->orderBy('date_of_issue', 'desc');
+
+        return $records;
+    }
+    public function getRecords($request, $detraction = false)
     {
         $d_end = $request->d_end;
         $d_start = $request->d_start;
@@ -1762,9 +1836,13 @@ class DocumentController extends Controller
         $customer_id = $request->customer_id;
         $item_id = $request->item_id;
         $category_id = $request->category_id;
+        $records = Document::query();
+        if ($detraction) {
+            $records = $records->whereNotNull('detraction');
+        }
         $payment_condition_id = $request->payment_condition_id;
         if ($d_start && $d_end) {
-            $records = Document::where('document_type_id', 'like', '%' . $document_type_id . '%')
+            $records = $records->where('document_type_id', 'like', '%' . $document_type_id . '%')
                 ->where('soap_type_id', '=', $soap_type_id)
                 ->where('series', 'like', '%' . $series . '%')
                 ->where('number', 'like', '%' . $number . '%')
@@ -1776,7 +1854,7 @@ class DocumentController extends Controller
                 ->OrderBy('number', 'desc')
                 ->latest();
         } else {
-            $records = Document::where('date_of_issue', 'like', '%' . $date_of_issue . '%')
+            $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%')
                 // ->where('establishment_id', auth()->user()->establishment_id)
                 ->where('soap_type_id', '=', $soap_type_id)
                 ->where('document_type_id', 'like', '%' . $document_type_id . '%')
@@ -1880,15 +1958,14 @@ class DocumentController extends Controller
         $state_types = StateType::get();
         $document_types = DocumentType::whereIn('id', ['01', '03', '07', '08'])->get();
         $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get()
-        ->transform(function ($series)
-        {
-            return [
-                'id' => $series->id,
-                'number' => $series->number,
-                'document_type_id' => $series->document_type_id,
-                'label' => $series->number.' '.$series->establishment->description
-            ];
-        });
+            ->transform(function ($series) {
+                return [
+                    'id' => $series->id,
+                    'number' => $series->number,
+                    'document_type_id' => $series->document_type_id,
+                    'label' => $series->number . ' ' . $series->establishment->description
+                ];
+            });
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
         $payment_conditions = PaymentCondition::all();
         return compact('customers', 'sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');

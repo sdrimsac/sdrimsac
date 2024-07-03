@@ -56,5 +56,8 @@ class Receipt extends ModelTenant
     {
         return $this->belongsTo(DocumentPayment::class);
     }
-
+    public function detraction_payment()
+    {
+        return $this->belongsTo(DetractionPayment::class);
+    }
 }
