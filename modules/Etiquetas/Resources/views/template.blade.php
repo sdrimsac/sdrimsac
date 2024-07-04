@@ -152,9 +152,9 @@
                                         {{ $barcode }}
                                     </td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <td class="text-right font-lg">S/. {{ $price }}</td>
-                                </tr>
+                                </tr> --}}
                             </table>
                           </td>
                             @endif
