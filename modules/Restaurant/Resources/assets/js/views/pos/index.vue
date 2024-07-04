@@ -330,6 +330,7 @@
                         >
                             <div class="col-md-12 p-1">
                                 <ListFood
+                                    :loadingItems.sync="loadingItems"
                                     :localOrden="localOrden"
                                     :blockAdd.sync="blockCart"
                                     ref="list_foods"
@@ -1552,6 +1553,7 @@
                 </div>
                 <template>
                     <list-food-mobiles
+                        :loadingItems.sync="loadingItems"
                         :localOrden="localOrden"
                         :blockAdd.sync="blockCart"
                         ref="list_foods"
@@ -1627,6 +1629,7 @@
                 :formVariation="formVariation"
                 :customer_variation="customer_variation"
                 :affectation_igv_types="affectation_igv_types"
+                @reloadItems="getFoods"
             >
             </payment-form>
         </template>
@@ -1906,6 +1909,7 @@ export default {
 
     data() {
         return {
+            loadingItems: false,
             allLocalFoods: [],
             cotIdentifier: null,
             isSeller: false,
@@ -3324,24 +3328,35 @@ export default {
             return price;
         },
         async insertItemFromNoteSales() {},
-        checkDetractionItems(item){
-            let {item:{subject_to_detraction}} = item;
-            let ordenHasDetraction = this.localOrden.some(o => o.food.item.subject_to_detraction);
-            if(subject_to_detraction == 1 && (!ordenHasDetraction && this.localOrden.length > 0)){
-                this.$toast.error("Este producto esta sujeto a detracción, y existen productos que no lo están");
+        checkDetractionItems(item) {
+            let {
+                item: { subject_to_detraction }
+            } = item;
+            let ordenHasDetraction = this.localOrden.some(
+                o => o.food.item.subject_to_detraction
+            );
+            if (
+                subject_to_detraction == 1 &&
+                !ordenHasDetraction && this.localOrden.length > 0
+            ) {
+                this.$toast.error(
+                    "Este producto esta sujeto a detracción, y existen productos que no lo están"
+                );
                 return false;
             }
-            if(subject_to_detraction == 0 && ordenHasDetraction){
-                this.$toast.error("Este producto no esta sujeto a detracción, y existen productos que si lo están");
+            if (subject_to_detraction == 0 && ordenHasDetraction) {
+                this.$toast.error(
+                    "Este producto no esta sujeto a detracción, y existen productos que si lo están"
+                );
                 return false;
             }
 
             return true;
         },
         insertOrden(orden, food_id, type, selectSerie = false) {
-            let {food:item} = orden;
+            let { food: item } = orden;
             let passDetraction = this.checkDetractionItems(item);
-            if(!passDetraction){
+            if (!passDetraction) {
                 return;
             }
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
@@ -4187,7 +4202,10 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
-                detraction:{amount:0,bank_account:this.company.detraction_account},
+                detraction: {
+                    amount: 0,
+                    bank_account: this.company.detraction_account
+                },
                 vacate: false,
                 afectar_caja: true,
                 orden_id: null,
@@ -4997,7 +5015,7 @@ export default {
         },
         async getFoods(query = "") {
             try {
-                this.loading = true;
+                this.loadingItems = true;
                 const response = await this.$http.get(
                     `${this.resource}/foods?${query}`
                 );
@@ -5022,13 +5040,13 @@ export default {
                     this.pagination = meta;
 
                     this.selectOption = 4;
-                    this.loading = false;
+                    this.loadingItems = false;
                 }
             } catch (e) {
                 console.log(e);
-                this.loading = false;
+                this.loadingItems = false;
             } finally {
-                this.loading = false;
+                this.loadingItems = false;
             }
         },
         async getTablesToLeave() {

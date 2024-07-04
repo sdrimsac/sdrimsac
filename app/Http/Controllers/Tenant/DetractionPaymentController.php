@@ -113,21 +113,9 @@ class DetractionPaymentController extends Controller
                 if ($cash) {
                     $cash_id = $cash["cash_id"];
                 }
-                $method_payment = PaymentMethodType::where('id', $request->payment_method_type_id)->first();
-                $boxes = new Box;
-                $company = Company::first();
-                $boxes->group_id = 1;
-                $boxes->category_id = 1;
-                $boxes->subcategory_id = 1;
-                $boxes->amount = $request->input('payment');
-                $boxes->date = Carbon::parse($request->input('date_of_payment'))->format('Y-m-d');
-                $boxes->type = '1';
-                $boxes->state = '1';
-                $boxes->cash_id = $cash_id;
-                $boxes->method = $method_payment->description;
-                $boxes->document_id = $request->document_id;
-                $boxes->document_payment_id = $record->id;
-                $boxes->user_id = auth()->user()->id;
+            
+                // $company = Company::first();
+            
                 $document_save = Document::where('id', $request->document_id)->first();
                 switch ($document_save->document_type_id) {
                     case "01":
@@ -145,11 +133,8 @@ class DetractionPaymentController extends Controller
                         $type_document = "NOTA DE DEBITO";
                         break;
                 }
-                $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
-                $boxes->description = "PAGO DE " . $documents_rows;
-                $boxes->soap_type_id = $company->soap_type_id;
-
-                $boxes->save();
+                // $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+        
                 $document_save->canceled();
             }
         });

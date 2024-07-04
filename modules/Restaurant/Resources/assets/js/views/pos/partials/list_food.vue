@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="row p-2">
+    <div class="row p-2" v-loading="loadingItems">
         <h2 class="small-title">Productos</h2>
         <template v-if="listFoods.length == 0">
             <div class="col-12 text-center font-weight-bold">
@@ -516,6 +516,7 @@
 <script>
 export default {
     props: [
+        "loadingItems",
         "foods",
         "configuration",
         "worker",

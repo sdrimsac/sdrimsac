@@ -3799,6 +3799,11 @@ export default {
                         this.documentNewId = response.data.data.id;
 
                         if (response.data.success == true) {
+                            if(this.configuration.all_items_pos){
+                                this.$emit("reloadItems");
+                                console.log("recargando items");
+
+                            }
                             /* let customer = this.all_customers.find(
                                 c => c.id == form.customer_id
                             ); */
