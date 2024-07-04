@@ -252,6 +252,7 @@ if ($hostname) {
                 Route::delete('card_brands/{card_brand}', [App\Http\Controllers\Tenant\CardBrandController::class, 'destroy']);
 
                 //Configurations
+                Route::post('configurations/etiquetas', [App\Http\Controllers\Tenant\ConfigurationController::class, 'etiquetas']);
                 Route::get('configurations/addSeeder', [App\Http\Controllers\Tenant\ConfigurationController::class, 'addSeeder']);
                 Route::get('configurations/getFormats', [App\Http\Controllers\Tenant\ConfigurationController::class, 'getFormats']);
                 Route::get('configurations/create', [App\Http\Controllers\Tenant\ConfigurationController::class, 'create'])->name('tenant.configurations.create')->middleware('just.admin');

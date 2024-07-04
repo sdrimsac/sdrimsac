@@ -29,6 +29,42 @@ class ConfigurationController extends Controller
     public function app()
     {
     }
+    public function etiquetas(Request $request)
+    {
+        $configuration = Configuration::first();
+        $etiquetas = $configuration->config_etiquetas;
+        if (!$etiquetas) {
+            $etiquetas = [];
+        }
+
+        // Convertir el request a un array
+        $newEtiqueta = json_decode(json_encode($request->all()), true);
+
+        $found = false;
+        foreach ($etiquetas as $index => $etiqueta) {
+            if (!is_array($etiqueta)) {
+                continue;
+            }
+            if (
+                $etiqueta['QSticker'] == $newEtiqueta['QSticker'] &&
+                $etiqueta['modelType'] == $newEtiqueta['modelType'] && $etiqueta['paperType'] == $newEtiqueta['paperType']
+            ) {
+                $etiquetas[$index] = $newEtiqueta; // Reemplazar el objeto existente
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            $etiquetas[] = $newEtiqueta; // Si no se encontró un objeto existente, agregar el nuevo objeto
+        }
+
+        $configuration->config_etiquetas = $etiquetas;
+        $configuration->save();
+        return [
+            'success' => true,
+            'message' => 'Configuración actualizada'
+        ];
+    }
     public function addSeeder()
     {
         $reiniciar =  DB::connection('tenant')->table('format_templates')

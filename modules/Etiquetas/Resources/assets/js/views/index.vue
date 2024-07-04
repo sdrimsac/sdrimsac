@@ -21,7 +21,8 @@
         <div class="card" v-loading="loading">
             <div class="card-header bg-primary">
                 <h4 class="my-0 text-white">
-                    <i class="el-icon-collection-tag"></i> Preparación de Etiquetas
+                    <i class="el-icon-collection-tag"></i> Preparación de
+                    Etiquetas
                 </h4>
             </div>
             <div class="card-body">
@@ -81,14 +82,14 @@
                     <div
                         class="col-12 col-lg-6 col-md-6 col-sm-12 d-flex flex-column align-items-center mb-2"
                     >
-                    <div>
-
-                    <label for="productSearch">Ingrese el Nombre del Producto:</label>
-                    </div>
-                        <div
-                        
-                            class="el-input el-input-group el-input-group--append mb-2"
+                        <div>
+                            <label for="productSearch"
+                                >Ingrese el Nombre del Producto:</label
                             >
+                        </div>
+                        <div
+                            class="el-input el-input-group el-input-group--append mb-2"
+                        >
                             <el-select
                                 v-if="!lector_barcode"
                                 v-model="product_id"
@@ -100,7 +101,6 @@
                                 :remote-method="searchRemoteItems"
                                 :loading="loading_search"
                             >
-                           
                                 <el-option
                                     v-for="option in items"
                                     :key="option.id"
@@ -110,17 +110,16 @@
                             </el-select>
                             <el-input
                                 v-else
-                                 ref="input_barcode"
+                                ref="input_barcode"
                                 v-model="item_for_barcode"
                                 @input="searchItems"
                                 placeholder="Buscar producto"
                                 popper-class="el-select-items"
                             ></el-input>
-                            
-                                <el-checkbox v-model="lector_barcode">
-                                    Lector de código de barras
-                                </el-checkbox>
-                                
+
+                            <el-checkbox v-model="lector_barcode">
+                                Lector de código de barras
+                            </el-checkbox>
                         </div>
 
                         <div
@@ -555,7 +554,7 @@
                         </div>
                     </div>
                 </div>
-                <template v-if="typeUser == 'superadmin'">
+                <template>
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <label for="density">Densidad</label>
@@ -686,8 +685,9 @@ export default {
             company_name: null,
             items: [],
             resource: "etiquetas",
-            modelType:1,
-            timer: null
+            modelType: 1,
+            timer: null,
+            configSave: {}
         };
     },
     async created() {
@@ -720,10 +720,61 @@ export default {
     },
     async mounted() {
         await this.getTables();
+        this.changeConfig();
     },
     methods: {
-        changeModel(type){
+        initConfig() {
+            this.config = {
+                scaleContent: false,
+                density: 200,
+                orientation: "portrait",
+                margins: {
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }
+            };
+        },
+        changeConfig() {
+            let { config_etiquetas } = this.configuration;
+            if (config_etiquetas && config_etiquetas.length > 0) {
+                let config = config_etiquetas.find(
+                    c =>
+                        c.paperType == this.paperType &&
+                        c.modelType == this.modelType &&
+                        c.QSticker == this.QSticker
+                );
+                if (config) {
+                    this.config = config;
+                }else{
+                    this.initConfig();
+                }
+            }
+        },
+        saveConfig() {
+            let config = {
+                ...this.config,
+                QSticker: this.QSticker,
+                paperType: this.paperType,
+                modelType: this.modelType
+            };
+
+            this.$http
+                .post("/configurations/etiquetas", config)
+                .then(response => {
+                    // this.$toast.success('Configuración guardada');
+                })
+                .catch(e => {
+                    const {
+                        data: { message }
+                    } = e.response;
+                    this.$toast.error(message);
+                });
+        },
+        changeModel(type) {
             this.modelType = type;
+            this.changeConfig();
         },
         async delete_image() {
             try {
@@ -801,25 +852,6 @@ export default {
                 return;
             }
 
-            // if (
-            //     this.sale_code == undefined ||
-            //     this.purchase_code == undefined
-            // ) {
-            //     this.$toast.error(
-            //         "Los códigos de venta y compra son obligatorios"
-            //     );
-            //     return;
-            // } else {
-            //     if (
-            //         this.sale_code.length == 0 ||
-            //         this.purchase_code.length == 0
-            //     ) {
-            //         this.$toast.error(
-            //             "Los códigos de venta y compra son obligatorios"
-            //         );
-            //         return;
-            //     }
-            // }
             if (this.quantity > 100) {
                 try {
                     await this.$confirm(
@@ -857,6 +889,7 @@ export default {
                 `;
                 let { print_direct } = this.configuration;
                 let { etiquetadora } = this.establishment;
+                this.saveConfig();
                 if (print_direct && etiquetadora) {
                     this.Printer(etiquetadora, endPoint);
                 } else {
@@ -881,9 +914,9 @@ export default {
                 this.$toast.error(message);
                 this.loading = false;
             }
-            if(this.lector_barcode){
-                 this.$refs.input_barcode.focus();
-                 this.item_for_barcode = null;
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
             }
         },
         async Printer(Printer, linkpdf) {
@@ -922,9 +955,11 @@ export default {
                 return;
             }
             this.QSticker = quantity;
+            this.changeConfig();
         },
         changePaper(type) {
             this.paperType = type;
+            this.changeConfig();
         },
         async changeImage() {
             let files = this.$refs.file.files;
@@ -1087,35 +1122,35 @@ export default {
             }
         },
         async searchItems() {
-           if(this.timer){
-               clearTimeout(this.timer);
-           }
-           this.timer = setTimeout(async () => {
-             let input = this.item_for_barcode;
-            if (input.length > 2) {
-                this.loading_search = true;
-                let parameters = `input=${input}`;
-                try {
-                    let response = await this.$http.get(
-                        `/${this.resource}/items/?${parameters}`
-                    );
-                    let { items } = response.data;
-                    this.items = items;
-                    if (items.length == 1) {
-                        this.product_id = items[0].id;
-                        this.changeItem();
-                    }
-
-                    this.loading_search = false;
-                } catch (e) {
-                    const {
-                        data: { message }
-                    } = e.response;
-                    this.$toast.error(message);
-                    this.loading = false;
-                }
+            if (this.timer) {
+                clearTimeout(this.timer);
             }
-           }, 300);
+            this.timer = setTimeout(async () => {
+                let input = this.item_for_barcode;
+                if (input.length > 2) {
+                    this.loading_search = true;
+                    let parameters = `input=${input}`;
+                    try {
+                        let response = await this.$http.get(
+                            `/${this.resource}/items/?${parameters}`
+                        );
+                        let { items } = response.data;
+                        this.items = items;
+                        if (items.length == 1) {
+                            this.product_id = items[0].id;
+                            this.changeItem();
+                        }
+
+                        this.loading_search = false;
+                    } catch (e) {
+                        const {
+                            data: { message }
+                        } = e.response;
+                        this.$toast.error(message);
+                        this.loading = false;
+                    }
+                }
+            }, 300);
         }
     }
 };
