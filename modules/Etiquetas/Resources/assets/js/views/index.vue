@@ -554,7 +554,7 @@
                         </div>
                     </div>
                 </div>
-                <template>
+                <template v-if="typeUser == 'superadmin'">
                     <div class="row">
                         <div class="col-md-6 col-12">
                             <label for="density">Densidad</label>
