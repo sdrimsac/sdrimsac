@@ -1912,7 +1912,7 @@ class DocumentController extends Controller
                 });
             });
         }
-        $records = $records->orderBy('date_of_issue', 'desc');
+        $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
 
         return $records;
     }
