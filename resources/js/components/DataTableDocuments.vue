@@ -299,7 +299,7 @@
                     id="scroll2"
                     style="overflow-x: auto"
                 >
-                    <table class="table">
+                    <table class="table" v-loading="loading"> 
                         <thead>
                             <slot name="heading"></slot>
                         </thead>
@@ -351,6 +351,7 @@ export default {
         return {
             loading_submit: false,
             columns: [],
+            loading:false,
             records: [],
             customers: [],
             all_customers: [],
@@ -388,7 +389,7 @@ export default {
         });
     },
     async mounted() {
-        await this.$http.get(`/${this.resource}/data_table`).then(response => {
+        this.$http.get(`/${this.resource}/data_table`).then(response => {
             this.sellers = response.data.sellers;
             this.all_customers = response.data.customers;
             this.all_items = response.data.items;
@@ -501,6 +502,8 @@ export default {
             window.open(`/${this.resource}/excel?${parameters}`, '_blank');
         },
         getRecords() {
+            this.loading_submit = true;
+            this.loading = true;
             return this.$http
                 .get(`/${this.resource}/records?${this.getQueryParameters()}`)
                 .then(response => {
@@ -510,7 +513,9 @@ export default {
                     this.pagination.per_page = parseInt(
                         response.data.meta.per_page
                     );
+                }).finally(() => {
                     this.loading_submit = false;
+                    this.loading = false;
                 });
         },
         getQueryParameters() {

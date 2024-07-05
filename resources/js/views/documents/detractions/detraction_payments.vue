@@ -1,5 +1,6 @@
 <template>
     <el-dialog
+    
         :title="title"
         :visible="showDialog"
         @close="close"
@@ -75,7 +76,7 @@
                                         <td
                                             class="series-table-actions text-end"
                                         >
-                                            <button
+                                            <!-- <button
                                                 v-if="row.receipt_file"
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-success"
@@ -87,7 +88,7 @@
                                                 "
                                             >
                                                 Recibo
-                                            </button>
+                                            </button> -->
                                             <button
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-danger"
@@ -353,6 +354,7 @@
         </div>
     </el-dialog>
 </template>
+
 
 <script>
 import { deletable } from "../../../mixins/deletable";

@@ -25,6 +25,7 @@ use App\Http\Resources\Tenant\BoxCollection;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\CashIncomePrincipal;
 use App\Models\Tenant\CreditList;
+use App\Models\Tenant\DetractionPayment;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
@@ -46,6 +47,7 @@ use Modules\Restaurant\Models\WorkersType;
 use Modules\Report\Exports\BoxesResumenExportPos;
 use Modules\Report\Exports\BoxesExportBancarioPos;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
+use Modules\Finance\Models\GlobalPayment;
 use Modules\Item\Models\CategoryItem;
 use Modules\Item\Models\PrincipalCategory;
 use Modules\Restaurant\Models\BoxesDetail;
@@ -65,7 +67,9 @@ class BoxesController extends Controller
     function get_receipts($cash_id)
     {
         $receipts = [];
-        $receipts = Receipt::where('cash_id', $cash_id)->get()
+        $receipts = Receipt::where('cash_id', $cash_id)
+        ->whereNull('detraction_payment_id')
+        ->get()
             ->transform(function ($row) {
                 $number = "RC01-" . $row->number;
                 $time = Carbon::parse($row->hour)->format('H:m:s');
@@ -633,8 +637,8 @@ class BoxesController extends Controller
                                             ];
                                         }
                                     }
-                                }else{
-                                    Log::info("Item no tiene categoria: ".$item->item_id);
+                                } else {
+                                    Log::info("Item no tiene categoria: " . $item->item_id);
                                 }
                             }
                         }
@@ -2109,12 +2113,16 @@ class BoxesController extends Controller
         $invoices_credit = $this->get_invoice_credit($cash_id);
         $all_credit_invoices_items = $invoices_credit['items'];
         $all_credit_invoices_documents = $invoices_credit['documents'];
-
+        $detraction_payments = [];
+        if ($configuration->detraction) {
+            $detraction_payments = $this->get_detraction_payments($cash_id);
+        }
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
         $bill_series = $this->format_bill_series($cash->bill_series);
         ini_restore('memory_limit');
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "detraction_payments",
                 "advances_sale_note_credit",
                 "credit_cash_expense",
                 "bill_series",
@@ -2162,6 +2170,21 @@ class BoxesController extends Controller
         // $pdf->save(storage_path('app/public/report_resumen_pdf_pos.pdf'));
 
         return $pdf->stream('pdf_file.pdf');
+    }
+    function get_detraction_payments($cash_id)
+    {
+        $global_payments = GlobalPayment::where('destination_id', $cash_id)->where('destination_type', Cash::class)
+            ->where('payment_type', DetractionPayment::class)->get();
+        $payments = $global_payments->transform(function ($row) {
+            $detraction_payment = DetractionPayment::find($row->payment_id);
+            $document = Document::find($detraction_payment->document_id);
+            return [
+                "document" => $document->number_full,
+                "amount" => $detraction_payment->payment,
+            ];
+        })->toArray();
+
+        return $payments;
     }
     function format_bill_series($bill_series)
     {

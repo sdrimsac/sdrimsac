@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'detraction',
         'config_etiquetas',
         'detraction_type_id',
         'print_direct_just_different_areas',
@@ -187,6 +188,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'detraction' => 'boolean',
         'config_etiquetas' => 'array',
         'print_direct_just_different_areas' => 'boolean',
         'show_second_name_external_code' => 'boolean',
@@ -314,6 +316,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'detraction' => $this->detraction,
             'config_etiquetas' => $this->config_etiquetas,
             'detraction_type_id' => $this->detraction_type_id,
             'print_direct_just_different_areas' => (bool)$this->print_direct_just_different_areas,

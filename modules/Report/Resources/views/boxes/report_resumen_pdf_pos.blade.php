@@ -146,9 +146,11 @@
             font-family: arial;
 
         }
-        .text-end{
+
+        .text-end {
             text-align: right;
         }
+
         footer {
             position: fixed;
             bottom: 10px;
@@ -756,6 +758,27 @@
 
                         </tbody>
                     </table>
+                    @if (count($detraction_payments) > 0)
+                        <table class="border" style="margin-top:4px;">
+                            <thead>
+                                <tr>
+                                    <th class="thead" colspan="2">
+                                        <span class="f12">DETALLES DETRACCIONES</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($detraction_payments as $detail)
+                                    <tr>
+                                        <td class="f12">{{ strtoupper($detail['document']) }}</td>
+                                        <td class="f12 right">{{ number_format($detail['amount'], 2) }}</td>
+                                    </tr>
+                                @endforeach
+
+
+                            </tbody>
+                        </table>
+                    @endif
                     @if (isset($coinsReceive) && count($coinsReceive) > 0)
                         <div>
                             <br>

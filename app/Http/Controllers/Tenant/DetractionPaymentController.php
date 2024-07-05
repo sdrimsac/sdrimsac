@@ -49,9 +49,9 @@ class DetractionPaymentController extends Controller
         if ($total_paid == 0) {
             $total = $detraction->amount;
         } else {
-            $total = $detraction->amount - $total_paid;
+            $total = round($detraction->amount - $total_paid, 2);
         }
-        $total_difference = round($total - $total_paid, 2);
+        $total_difference = round($detraction->amount - $total_paid, 2);
         
         return [
             'detraction' => $detraction,

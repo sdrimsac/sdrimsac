@@ -1868,8 +1868,7 @@
                                                                                         </el-select>
                                                                                     </div>
                                                                                 </div>
-                                                                                
-                                                                                            <div
+    <div
                                                                                     class="col-md-4 mt-4"
                                                                                 >
                                                                                     <div
@@ -1881,8 +1880,36 @@
                                                                                             <i
                                                                                                 class="fas fa-percentage tab-icon"
                                                                                             ></i>
-                                                                                            Impresión en areas diferentes
-                                                                                        
+                                                                                            Detracciones
+                                                                                        </label>
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.detraction
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fas fa-percentage tab-icon"
+                                                                                            ></i>
+                                                                                            Impresión
+                                                                                            en
+                                                                                            areas
+                                                                                            diferentes
                                                                                         </label>
                                                                                         <el-switch
                                                                                             v-model="
@@ -1896,6 +1923,8 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
+
+                                                                            
                                                                             </div>
                                                                         </div>
                                                                     </el-card>

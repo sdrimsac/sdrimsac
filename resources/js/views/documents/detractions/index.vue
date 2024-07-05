@@ -85,11 +85,15 @@
                                         {{ row.detraction_description }}
                                     </td>
                                     <td class="text-end">
-                                        {{ row.percentage }}
+                                        {{ row.percentage }}%
                                     </td>
                                     <td class="text-end">{{ row.amount }}</td>
-                                    <td class="text-end"></td>
-                                    <td class="text-end"></td>
+                                    <td class="text-end">
+                                        {{ row.paid}}
+                                    </td>
+                                    <td class="text-end">
+                                        {{row.pending_payment}}
+                                    </td>
                                     <td class="text-end">
                                         <el-button
                                             type="primary"
@@ -127,13 +131,6 @@ import DetractionPayments from "./detraction_payments.vue";
 export default {
     mixins: [deletable],
     props: [
-        "company",
-        "isAccountant",
-        "isClient",
-        "typeUser",
-        "import_documents",
-        "import_documents_second",
-        "configuration"
     ],
     components: {
         DataTable,

@@ -411,13 +411,14 @@
                                 <i class="icofont-list"></i> Listado
                             </a>
                         </li>
-
+                        @if($config->detraction)
                         <li>
                             <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
                                 href="{{ route('tenant.detractions.index') }}">
                                 <i class="icofont-list"></i> Detracciones
                             </a>
                         </li>
+                        @endif
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.not_sent') }}">

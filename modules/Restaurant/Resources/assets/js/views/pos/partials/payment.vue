@@ -2530,6 +2530,7 @@ export default {
             }
         },
         checkDetraction() {
+            if(!this.configuration.detraction) return false;
             let { items } = this.form;
             return items.some(i => i.subject_to_detraction == 1);
         },

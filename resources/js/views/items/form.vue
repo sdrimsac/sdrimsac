@@ -733,12 +733,12 @@
                                     ></small>
                                 </div>
                             </div>
-                            <div class="col-md-3 center-el-checkbox">
+                            <div class="col-md-3 center-el-checkbox" v-if="configuration.detraction">
                                 <div class="form-group">
                                     <el-checkbox
                                         v-model="form.subject_to_detraction"
                                     >
-                                        Sujecto a detracción
+                                        Sujeto a detracción
                                     </el-checkbox>
                                 </div>
                             </div>

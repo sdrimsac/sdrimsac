@@ -1793,6 +1793,9 @@
         >
             <x-report-credit-daily-cash></x-report-credit-daily-cash>
         </el-dialog>
+        <detraction-payment
+        :showDialog.sync="showDialogDetraction"
+        ></detraction-payment>
     </div>
 </template>
 
@@ -1835,6 +1838,9 @@ const WarehousesDetail = () =>
     import(
         "../../../../../../../resources/js/views/items/partials/warehouses.vue"
     );
+const DetractionPayment = () =>
+    import(
+        "./partials/detraction_payment.vue");
 const Tables = () => import("./partials/tables.vue");
 const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
@@ -1880,6 +1886,7 @@ export default {
         "areaId"
     ],
     components: {
+        DetractionPayment,
         ItemSet,
         ProductsDue,
         ConsignmentList,
@@ -1909,6 +1916,7 @@ export default {
 
     data() {
         return {
+            showDialogDetraction: false,
             loadingItems: false,
             allLocalFoods: [],
             cotIdentifier: null,
@@ -2285,6 +2293,12 @@ export default {
         },
         setMenuOptions() {
             this.optionsMenu = [
+                {
+                    id:97,
+                    title: ["Pagos","Detracciones"],
+                    icon: "fas fa-money-check-alt",
+                    visible: this.configuration.detraction,
+                },
                 {
                     id: 1,
                     title: ["Comprobantes"],
@@ -2935,6 +2949,8 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 97:
+                    this.showDialogDetraction = true;
                 case 195:
                     this.showSaleNoteCreditCash = true;
                     break;
@@ -3329,6 +3345,7 @@ export default {
         },
         async insertItemFromNoteSales() {},
         checkDetractionItems(item) {
+            if(!this.configuration.detraction) return;
             let {
                 item: { subject_to_detraction }
             } = item;
