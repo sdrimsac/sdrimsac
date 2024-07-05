@@ -3345,7 +3345,7 @@ export default {
         },
         async insertItemFromNoteSales() {},
         checkDetractionItems(item) {
-            if(!this.configuration.detraction) return;
+            if(!this.configuration.detraction) return false;
             let {
                 item: { subject_to_detraction }
             } = item;
@@ -3373,7 +3373,7 @@ export default {
         insertOrden(orden, food_id, type, selectSerie = false) {
             let { food: item } = orden;
             let passDetraction = this.checkDetractionItems(item);
-            if (!passDetraction) {
+            if (!passDetraction && this.configuration.detraction) {
                 return;
             }
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
