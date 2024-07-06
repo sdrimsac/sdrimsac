@@ -60,7 +60,7 @@
                                 <td>
                                     <div class="form-group mb-2 mr-2">
                                         <el-date-picker
-                                            v-model="row.date"
+                                            v-model="row.date_of_due"
                                             type="date"
                                             value-format="yyyy-MM-dd"
                                             :clearable="false"
@@ -147,7 +147,7 @@ export default {
                         id: null,
                         item_id: null,
                         code: null,
-                        date: moment().format("YYYY-MM-DD"),
+                        date_of_due: moment().format("YYYY-MM-DD"),
                         state: "Activo"
                     }
                 ];
@@ -216,7 +216,7 @@ export default {
                 id: null,
                 item_id: null,
                 Lotes: null,
-                date: moment().format("YYYY-MM-DD"),
+                date_of_due: moment().format("YYYY-MM-DD"),
                 state: "Activo"
             });
             this.lotsGroup_splice = this.lotsGroup.slice(0, 20);

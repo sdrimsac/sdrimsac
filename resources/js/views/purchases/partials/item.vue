@@ -7,14 +7,14 @@
         @close="close"
         :close-on-click-modal="false"
     >
-    <br>
+        <br />
         <form
             autocomplete="off"
             @submit.prevent="clickAddItem"
             @keydown.enter.prevent
         >
             <div class="form-body">
-                <br>
+                <br />
                 <div class="row">
                     <div class="col-md-8">
                         <div
@@ -59,7 +59,13 @@
                                 >
                                     <div class="el-input-group__append">
                                         <a>stock</a>
-                                        <span> {{ parseFloat(selectedProductStock).toFixed(2) }}</span>
+                                        <span>
+                                            {{
+                                                parseFloat(
+                                                    selectedProductStock
+                                                ).toFixed(2)
+                                            }}</span
+                                        >
                                         <!-- <el-button
                                          :disabled="!form.item_id"
                                             @click.prevent="
@@ -79,9 +85,8 @@
                             >
                             </el-input>
                             <el-checkbox v-model="barcode_lector">
-                                    Lector de código de barras
-                            </el-checkbox
-                            >
+                                Lector de código de barras
+                            </el-checkbox>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -245,9 +250,7 @@
                         </small>
                     </div>
                     <div class="col-md-3">
-                        <label class="control-label">
-                            
-                            Precio de venta</label>
+                        <label class="control-label"> Precio de venta</label>
                         <el-input
                             style="width:100%;"
                             v-model="form.sale_unit_price"
@@ -311,26 +314,30 @@
                             ></small>
                         </div>
                     </div> -->
-                    <div class="col-md-3"
-                                        v-if="form.item && form.item.lots_enabled"
+                    <div
+                        class="col-md-3"
+                        v-if="form.item && form.item.lots_enabled"
                     >
-                    <el-button
-                        style="margin-top:2%;"
-                        type="primary"
-                        icon="fas fa-sign-in-alt icon"
-                        @click.prevent="clickLotGroupCode"
-                    >
-                    Ingresar lotes
-                    </el-button>
+                        <el-button
+                            style="margin-top:2%;"
+                            type="primary"
+                            icon="fas fa-sign-in-alt icon"
+                            @click.prevent="clickLotGroupCode"
+                        >
+                            Ingresar lotes
+                        </el-button>
                     </div>
                     <div v-show="form.item_id" class="col-md-3">
-                        <div class="form-group" :class="{ 'has-danger': errors.has_color_size }"
-                            v-if="form.item.has_color_size">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.has_color_size }"
+                            v-if="form.item.has_color_size"
+                        >
                             <div>
-                                <div >
+                                <div>
                                     <label class="control-label w-100">
                                         <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
-                                        <i class="fas fa-tshirt"></i> 
+                                        <i class="fas fa-tshirt"></i>
                                         <i class="fas fa-palette"></i>
                                         Ingrese color & talla
                                     </label>
@@ -355,13 +362,15 @@
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.has_color_size }"
-                            v-if="form.item.has_color_size">
-                            <div>  
+                            v-if="form.item.has_color_size"
+                        >
+                            <div>
                                 <div>
                                     <label class="control-label w-100">
                                         Subir excel
-                                        <a href="/formats/color_talla_compras.xlsx">
-
+                                        <a
+                                            href="/formats/color_talla_compras.xlsx"
+                                        >
                                             Descargar formato
                                         </a>
                                     </label>
@@ -377,17 +386,19 @@
                                         @change="uploadExcelColorSize"
                                         style="visibility:hidden;"
                                         ref="file"
-                                        accept=".xlsx,.xls"/>
+                                        accept=".xlsx,.xls"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-3" v-show="form.item_id">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.lot_code }"
-                            v-if="form.item.series_enabled">
+                            v-if="form.item.series_enabled"
+                        >
                             <div>
                                 <div>
                                     <label class="control-label w-100">
@@ -417,7 +428,8 @@
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.lot_code }"
-                            v-if="form.item.series_enabled">
+                            v-if="form.item.series_enabled"
+                        >
                             <div>
                                 <div>
                                     <label class="control-label w-100">
@@ -517,9 +529,15 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cerrar</el-button>
-                <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit"
-                    > Agregar</el-button
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
+                    Cerrar</el-button
+                >
+                <el-button
+                    icon="fas fa-save fa-lg"
+                    type="primary"
+                    native-type="submit"
+                >
+                    Agregar</el-button
                 >
             </div>
         </form>
@@ -539,8 +557,8 @@
         <lots-group-form
             :showDialog.sync="showDialogLotsGroup"
             :stock="form.quantity"
-            @addRowLotGroup="addRowLotGroup"
-            ></lots-group-form>
+            @addRowLot="addRowLotGroup"
+        ></lots-group-form>
         <color-size-form
             :showDialog.sync="showColorSize"
             :stock="form.quantity"
@@ -580,10 +598,17 @@ export default {
         "includes",
         "percentage_igv"
     ],
-    components: { itemForm, LotsForm, ColorSizeForm, WarehousesDetail,LotsGroupForm },
+    components: {
+        itemForm,
+        LotsForm,
+        ColorSizeForm,
+        WarehousesDetail,
+        LotsGroupForm
+    },
     data() {
         return {
-            showDialogLotsGroup:false,
+            showDialogLotsGroup: false,
+
             colorSizes: [],
             changing_name: false,
             input_barcode: null,
@@ -615,7 +640,8 @@ export default {
             color_size: [],
             showWarehousesDetail: false,
             warehousesDetail: [],
-            selectedProductStock:0,
+            selectedProductStock: 0,
+            lotsGroup: []
         };
     },
     created() {
@@ -626,10 +652,10 @@ export default {
         });
     },
     methods: {
-        addRowLotGroup(lotsgroup){
-
+        addRowLotGroup(lotsgroup) {
+            this.lotsGroup = lotsgroup;
         },
-        clickLotGroupCode(){
+        clickLotGroupCode() {
             this.showDialogLotsGroup = true;
         },
         clickWarehouseDetail() {
@@ -673,7 +699,6 @@ export default {
                     let size = row[1];
                     let stock = row[2];
                     let price = row[3];
-
 
                     return {
                         color,
@@ -969,12 +994,16 @@ export default {
                 id: this.form.item_id
             }).item_unit_types;
             // agregado para mostrar stock de producto en la vista iten
-            if (this.form.item.warehouses && this.form.item.warehouses.length > 0) {
-                this.selectedProductStock = this.form.item.warehouses.reduce((acc, warehouse) => acc + warehouse.stock, 0);
-
-            }
-            else{
-                this.selectedProductStock = 'Stock no disponible'; 
+            if (
+                this.form.item.warehouses &&
+                this.form.item.warehouses.length > 0
+            ) {
+                this.selectedProductStock = this.form.item.warehouses.reduce(
+                    (acc, warehouse) => acc + warehouse.stock,
+                    0
+                );
+            } else {
+                this.selectedProductStock = "Stock no disponible";
             }
         },
         async clickAddItem() {
@@ -1022,8 +1051,12 @@ export default {
             }
             this.row.sale_unit_price = this.form.sale_unit_price;
             this.row.lot_code = await this.lot_code;
+            this.row.lots_group = await this.lotsGroup;
+            this.row.item.lots_group = await this.lotsGroup;
             this.row.lots = await this.lots;
+            this.row.item.lots = await this.lots;
             this.row.color_size = this.color_size;
+            this.row.item.color_size = this.color_size;
 
             this.row = this.changeWarehouse(this.row);
 

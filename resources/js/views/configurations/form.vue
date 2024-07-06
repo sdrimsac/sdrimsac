@@ -1923,7 +1923,80 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
+<div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Impresión Directa</label>
+            <el-switch v-model="form.print_direct" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Vender con stock</label>
+            <el-switch v-model="form.sales_stock" active-text="Si" inactive-text="No" @change="
+                 submit(); stock_control(); "></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Mostrar politica precios ticket
+            </label>
+            <el-switch v-model=" form.show_unit_types_ticket
+             " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Usar número personal (whatsapp)
+            </label>
+            <el-switch v-model="form.personal_phone" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Imprimir referencia en ticket
+            </label>
+            <el-switch v-model="form.reference_ticket" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Imprimir gastos/ingresos
+            </label>
+            <el-switch v-model=" form.print_incomes_expenses " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Enviar whatsapp al ver venta
+                diaria
+            </label>
+            <el-switch v-model=" form.send_whatsapp_daily_cash " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Observación al hacer ajuste de
+                stock
 
+                <el-tooltip content="Obligar a dar razón del traslado">
+                    <i class="fa fa-info-circle"></i>
+                </el-tooltip>
+            </label>
+            <el-switch v-model=" form.observation_translate " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4">
+        <div class="form-group">
+            <label class="control-label w-100">Enviar whatsapp por pagos
+                YAPE/PLIN
+                <el-tooltip class="item" effect="dark" content="Enviar un whastapp al número del dueño por cada pago con YAPE/PLIN" placement="top-start">
+                    <i class="fa fa-info-circle"></i>
+                </el-tooltip>
+            </label>
+
+            <el-switch v-model=" form.send_whatsapp_digital_pay " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+        </div>
+    </div>
                                                                             
                                                                             </div>
                                                                         </div>

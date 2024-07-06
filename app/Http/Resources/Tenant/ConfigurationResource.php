@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'print_direct_just_different_areas' => (bool) $this->print_direct_just_different_areas,
             'detraction' => (bool)$this->detraction,
             'detraction_type_id' => $this->detraction_type_id,
             'show_second_name_external_code' => (bool) $this->show_second_name_external_code,
