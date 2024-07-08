@@ -1058,9 +1058,23 @@
                                                         <h3
                                                             class="lead font-weight-light fw-bold"
                                                         >
-                                                            {{
-                                                                ord.food.description.toUpperCase()
-                                                            }}
+                                                            <template
+                                                                v-if="
+                                                                    ord.food
+                                                                        .item
+                                                                        .name_product_pdf
+                                                                "
+                                                            >
+                                                                {{
+                                                                    ord.food.item.name_product_pdf.toUpperCase()
+                                                                }}
+                                                            </template>
+                                                            <template v-else>
+                                                                {{
+                                                                    ord.food.description.toUpperCase()
+                                                                }}
+                                                            </template>
+
                                                             <span
                                                                 v-if="
                                                                     ord.type_id
@@ -1650,7 +1664,8 @@
                                                                             class="custom_input"
                                                                             :disabled="
                                                                                 (order_pend.type_id !=
-                                                                                    null && !configuration.change_price_product) ||
+                                                                                    null &&
+                                                                                    !configuration.change_price_product) ||
                                                                                     configuration.edit_price_sales ==
                                                                                         false
                                                                             "
@@ -2739,7 +2754,7 @@ export default {
                         commercial_treatment_id: this.commercialTreatmentId
                     };
                 }
-                if(type_id){
+                if (type_id) {
                     url = `/items/update_price_cash_unit_type`;
                     form = {
                         sale_unit_price: price,
@@ -2751,8 +2766,7 @@ export default {
                 if (response.status == 200) {
                     this.$toast.success("Precio guardado");
                     this.$emit("reloadProduct");
-                    console.log("🚀 ~ savePriceProduct ~ reloadProduct:")
-
+                    console.log("🚀 ~ savePriceProduct ~ reloadProduct:");
                 }
             } catch (e) {
                 console.log("🚀 ~ savePriceProduct ~ e:", e);
@@ -4016,7 +4030,24 @@ export default {
             }
             return hasError;
         },
+        checkIfHasZeroTotal(){
+            let { localOrden } = this;
+            let  pass = true;
+            for (let ord of localOrden) {
+                let {food:{item}} = ord;
+                let is15 = item.sale_affectation_igv_type_id == "15" || item.sale_affectation_igv_type_id == 15;
+                if ((ord.price == 0 || ord.quantity == 0 ) && !is15) {
+                    pass = false;
+                    break;
+                }
+            }
+            return pass;
+        },
         async payOrden() {
+            if(!this.checkIfHasZeroTotal()){
+                this.$toast.error("No puede realizar una venta de productos con total 0");
+                return;
+            }
             if (this.checkIsExistSerie()) {
                 this.$toast.error("Producto sin serie seleccionada");
                 return;

@@ -36,6 +36,7 @@ class OrdenItemCollection extends ResourceCollection
                 'food'               => $row->food,
                 'status_orden_id'    => $row->status_orden_id,
                 'user'               => $user,
+                'name_product_pdf'  => $row->name_product_pdf,
             ];
         });
     }

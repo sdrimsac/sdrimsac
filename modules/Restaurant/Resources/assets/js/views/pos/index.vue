@@ -2911,6 +2911,9 @@ export default {
             this.ordensItems = [
                 ...orden.orden_items.map(o => {
                     let orden = o;
+                    if(orden.name_product_pdf){
+                        orden.food.item.name_product_pdf = orden.name_product_pdf;
+                    }
                     orden.price = Number(orden.price).toFixed(2);
                     if (orden.unit_type_id) {
                         let { item } = orden.food;

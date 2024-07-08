@@ -106,6 +106,7 @@ class QuotationController extends Controller
                 $orden_item->date = Carbon::today();
                 $orden_item->time = date('H:i:s');
                 $orden_item->area_id = $item['food']['area_id'];
+                $orden_item->name_product_pdf = $it->name_product_pdf;
                 $orden_item->save();
                 $orden_items_ids[] = $orden_item->id;
                 $orden_items_ids_for_kitchen[] = [

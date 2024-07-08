@@ -17,6 +17,7 @@ class OrdenItem extends ModelTenant
     protected $with = ['food'];
 
     protected $fillable = [
+        'name_product_pdf',
         'date',
         'time',
         'observations',
