@@ -3,28 +3,33 @@
     $customer = $document->customer;
     $invoice = $document->invoice;
     $document_base = $document->note ? $document->note : null;
-    
+
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $accounts = \App\Models\Tenant\BankAccount::all();
     $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     if ($document_base) {
-        $affected_document_number = $document_base->affected_document ? $document_base->affected_document->series . '-' . str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT) : $document_base->data_affected_document->series . '-' . str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
+        $affected_document_number = $document_base->affected_document
+            ? $document_base->affected_document->series .
+                '-' .
+                str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT)
+            : $document_base->data_affected_document->series .
+                '-' .
+                str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
     } else {
         $affected_document_number = null;
     }
-    
+
     $payments = $document->payments;
     $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
     $total_payment = $document->payments->sum('payment');
     $balance = $document->total - $total_payment - $document->payments->sum('change');
-    
+
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
             $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
-            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
-
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
 @endphp
@@ -151,25 +156,14 @@
                     <td width="120px" height="20px"><b>FECHA DE EMISIÓN</b></td>
                     <td width="8px" height="20px">:</td>
                     <td>{{ $document->date_of_issue }} {{ $document->time_of_issue }}</td>
-                    @if ($document->detraction)
-                        <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
-                        <td width="8px" height="20px">:</td>
-                        <td>{{ $document->detraction->bank_account }}</td>
-                    @endif
+
                     <td width="120px" height="20px"><b>FORMA DE PAGO</b></td>
                     <td width="8px" height="20px">:</td>
                     <td>{{ strtoupper($document->payment_condition->name) }}</td>
                 </tr>
 
 
-                @if ($document->detraction)
-                    <td width="140px" height="20px"><b>B/S SUJETO A DETRACCIÓN</b></td>
-                    <td width="8px" height="20px">:</td>
-                    @inject('detractionType', 'App\Services\DetractionTypeService')
-                    <td width="220px" height="20px">{{ $document->detraction->detraction_type_id }} -
-                        {{ $detractionType->getDetractionTypeDescription($document->detraction->detraction_type_id) }}
-                    </td>
-                @endif
+
                 <tr>
                     <td height="20px"><b>{{ $customer->identity_document_type->description }}</b></td>
                     <td height="20px">:</td>
@@ -178,13 +172,7 @@
                     <td height="20px">:</td>
                     <td height="20px">{{ $customer->name }}</td>
 
-                    @if ($document->detraction)
-                        <td width="120px"><b>MÉTODO DE PAGO</b></td>
-                        <td width="8px">:</td>
-                        <td width="220px">
-                            {{ $detractionType->getPaymentMethodTypeDescription($document->detraction->payment_method_id) }}
-                        </td>
-                    @endif
+
 
                 </tr>
 
@@ -234,11 +222,7 @@
                             {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
                             {{ $customer->department_id !== '-' ? '- ' . $customer->department->description : '' }}
                         </td>
-                        @if ($document->detraction)
-                            <td width="120px" height="20px">MONTO DETRACCIÓN</td>
-                            <td width="8px" height="20px">:</td>
-                            <td>{{ $document->currency_type->symbol }} {{ $document->detraction->amount }}</td>
-                        @endif
+
                     </tr>
                 @endif
 
@@ -277,7 +261,7 @@
         @if ($hotel_rent)
             @php
                 $hotel_rent_items = $hotel_rent->items;
-                
+
             @endphp
             <table>
                 @foreach ($hotel_rent_items as $hri)
@@ -822,6 +806,42 @@
 
         </table>
 
+        @if ($document->detraction)
+        <br>
+            <table class="border" class="full-width bordes_datos_clientes "
+                style="page-break-inside: avoid; border-collapse: collapse; border: 1px solid #000;"
+            >
+                <tr>
+                    <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
+                    <td width="8px" height="20px">:</td>
+                    <td>{{ $document->detraction->bank_account }}</td>
+                </tr>
+                <tr>
+                    <td width="140px" height="20px"><b>B/S SUJETO A DETRACCIÓN</b></td>
+                    <td width="8px" height="20px">:</td>
+                    @inject('detractionType', 'App\Services\DetractionTypeService')
+                    <td width="220px" height="20px">{{ $document->detraction->detraction_type_id }} -
+                        {{ $detractionType->getDetractionTypeDescription($document->detraction->detraction_type_id) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120px"><b>MÉTODO DE PAGO</b></td>
+                    <td width="8px">:</td>
+                    <td width="220px">
+                        {{ $detractionType->getPaymentMethodTypeDescription($document->detraction->payment_method_id) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="120px" height="20px">
+                        <b>
+                            MONTO DETRACCIÓN
+                        </b>
+                    </td>
+                    <td width="8px" height="20px">:</td>
+                    <td>{{ $document->currency_type->symbol }} {{ $document->detraction->amount }}</td>
+                </tr>
+            </table>
+        @endif
         @if ($document->user)
             <br>
             <table class="full-width">
