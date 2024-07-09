@@ -11,6 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 
+
+Route::middleware('auth:api')->get('/productos', function (Request $request) {
+    return $request->user();
+});
+
 // Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
 Route::get('qz/crt/override', function () {
 

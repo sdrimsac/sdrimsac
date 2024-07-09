@@ -3,7 +3,10 @@
     $customer = $document->customer;
     $invoice = $document->invoice;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
-    $conf_establishment = \App\Models\Tenant\ConfEstablishment::where('establishment_id', $document->establishment_id)->first();
+    $conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
+        'establishment_id',
+        $document->establishment_id,
+    )->first();
     $print_company_address = false;
     if ($conf_establishment) {
         $print_company_address = $conf_establishment->company_address;
@@ -14,26 +17,36 @@
     $document_base = $document->note ? $document->note : null;
     $payments = $document->payments;
     $paymet2 = $document->payment;
-    
+
     $is_chifa_china = $company->number == '15609876309';
     if ($document_base) {
-        $affected_document_number = $document_base->affected_document ? $document_base->affected_document->series . '-' . str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT) : $document_base->data_affected_document->series . '-' . str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
+        $affected_document_number = $document_base->affected_document
+            ? $document_base->affected_document->series .
+                '-' .
+                str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT)
+            : $document_base->data_affected_document->series .
+                '-' .
+                str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
     } else {
         $affected_document_number = null;
     }
-    $configuration = \App\Models\Tenant\Configuration::select(['show_logo_in_documents','show_internal_code_ticket'])->first();
+    $configuration = \App\Models\Tenant\Configuration::select([
+        'show_logo_in_documents',
+        'show_internal_code_ticket',
+        'correo_red_salud_ticket',
+        'numero_accion_independiente_admin',
+    ])->first();
     $total_payment = $document->payments->sum('payment');
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('document_id', $document->id)->first();
-        
+
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
             $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
-            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
-
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
 @endphp
@@ -53,12 +66,12 @@
                     @if ($stablishment->document_logo)
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-    contain"
+                                contain"
                             style=" max-width: 400px;max-height: 150px">
                     @else
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-    contain"
+                                contain"
                             style=" max-width: 400px;max-height: 150px">
                     @endif
                 </div>
@@ -80,12 +93,12 @@
                         @if ($company->document_logo)
                             <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
                                 alt="{{ $company->trade_name }}" class="
-        contain"
+                                    contain"
                                 style=" max-width: 400px;max-height: 150px">
                         @else
                             <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
                                 alt="{{ $company->trade_name }}" class="
-        contain"
+                                    contain"
                                 style=" max-width: 400px;max-height: 150px">
                         @endif
                     </div>
@@ -175,26 +188,33 @@
                 </tr>
             @endisset
         @endif
-        <tr>
-            <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}</td>
-        </tr>
-        <tr>
-            <td class="text-center">
-                <svg width="15px" height="15px" viewBox="0 0 24 24" version="1.1" id="svg8"
-                    inkscape:version="0.92.4 (5da689c313, 2019-01-14)" sodipodi:docname="1881161.svg"
-                    xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
-                    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-                    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-                    xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
-                    <path id="path4" inkscape:connector-curvature="0"
-                        d="M16.6,14c-0.2-0.1-1.5-0.7-1.7-0.8c-0.2-0.1-0.4-0.1-0.6,0.1c-0.2,0.2-0.6,0.8-0.8,1c-0.1,0.2-0.3,0.2-0.5,0.1c-0.7-0.3-1.4-0.7-2-1.2c-0.5-0.5-1-1.1-1.4-1.7c-0.1-0.2,0-0.4,0.1-0.5c0.1-0.1,0.2-0.3,0.4-0.4c0.1-0.1,0.2-0.3,0.2-0.4c0.1-0.1,0.1-0.3,0-0.4c-0.1-0.1-0.6-1.3-0.8-1.8C9.4,7.3,9.2,7.3,9,7.3c-0.1,0-0.3,0-0.5,0C8.3,7.3,8,7.5,7.9,7.6C7.3,8.2,7,8.9,7,9.7c0.1,0.9,0.4,1.8,1,2.6c1.1,1.6,2.5,2.9,4.2,3.7c0.5,0.2,0.9,0.4,1.4,0.5c0.5,0.2,1,0.2,1.6,0.1c0.7-0.1,1.3-0.6,1.7-1.2c0.2-0.4,0.2-0.8,0.1-1.2C17,14.2,16.8,14.1,16.6,14 M19.1,4.9C15.2,1,8.9,1,5,4.9c-3.2,3.2-3.8,8.1-1.6,12L2,22l5.3-1.4c1.5,0.8,3.1,1.2,4.7,1.2h0c5.5,0,9.9-4.4,9.9-9.9C22,9.3,20.9,6.8,19.1,4.9 M16.4,18.9c-1.3,0.8-2.8,1.3-4.4,1.3h0c-1.5,0-2.9-0.4-4.2-1.1l-0.3-0.2l-3.1,0.8l0.8-3l-0.2-0.3C2.6,12.4,3.8,7.4,7.7,4.9S16.6,3.7,19,7.5C21.4,11.4,20.3,16.5,16.4,18.9" />
-                </svg>
 
-                {{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}
-            </td>
+        <tr>
+            @unless ($configuration->correo_red_salud_ticket)
+                <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}
+                </td>
+            @endunless
         </tr>
+        <tr>
+            @unless ($configuration->numero_accion_independiente_admin)
+                <td class="text-center">
+                    <svg width="15px" height="15px" viewBox="0 0 24 24" version="1.1" id="svg8"
+                        inkscape:version="0.92.4 (5da689c313, 2019-01-14)" sodipodi:docname="1881161.svg"
+                        xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                        xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                        <path id="path4" inkscape:connector-curvature="0"
+                            d="M16.6,14c-0.2-0.1-1.5-0.7-1.7-0.8c-0.2-0.1-0.4-0.1-0.6,0.1c-0.2,0.2-0.6,0.8-0.8,1c-0.1,0.2-0.3,0.2-0.5,0.1c-0.7-0.3-1.4-0.7-2-1.2c-0.5-0.5-1-1.1-1.4-1.7c-0.1-0.2,0-0.4,0.1-0.5c0.1-0.1,0.2-0.3,0.4-0.4c0.1-0.1,0.2-0.3,0.2-0.4c0.1-0.1,0.1-0.3,0-0.4c-0.1-0.1-0.6-1.3-0.8-1.8C9.4,7.3,9.2,7.3,9,7.3c-0.1,0-0.3,0-0.5,0C8.3,7.3,8,7.5,7.9,7.6C7.3,8.2,7,8.9,7,9.7c0.1,0.9,0.4,1.8,1,2.6c1.1,1.6,2.5,2.9,4.2,3.7c0.5,0.2,0.9,0.4,1.4,0.5c0.5,0.2,1,0.2,1.6,0.1c0.7-0.1,1.3-0.6,1.7-1.2c0.2-0.4,0.2-0.8,0.1-1.2C17,14.2,16.8,14.1,16.6,14 M19.1,4.9C15.2,1,8.9,1,5,4.9c-3.2,3.2-3.8,8.1-1.6,12L2,22l5.3-1.4c1.5,0.8,3.1,1.2,4.7,1.2h0c5.5,0,9.9-4.4,9.9-9.9C22,9.3,20.9,6.8,19.1,4.9 M16.4,18.9c-1.3,0.8-2.8,1.3-4.4,1.3h0c-1.5,0-2.9-0.4-4.2-1.1l-0.3-0.2l-3.1,0.8l0.8-3l-0.2-0.3C2.6,12.4,3.8,7.4,7.7,4.9S16.6,3.7,19,7.5C21.4,11.4,20.3,16.5,16.4,18.9" />
+                    </svg>
+
+                    {{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}
+                </td>
+            @endunless
+        </tr>
+
 
         @isset($establishment->web_address)
             <tr>
@@ -294,7 +314,7 @@
                             $txt .= '(S/ ' . $coin->value . ') ' . $coin->quantity . ' | ';
                         }
                         $txt = substr($txt, 0, -2);
-                        
+
                     @endphp
                     <p class="desc">
                         {{ $txt }}
@@ -344,7 +364,7 @@
         @if ($hotel_rent)
             @php
                 $hotel_rent_items = $hotel_rent->items;
-                
+
             @endphp
             @foreach ($hotel_rent_items as $hri)
                 <tr>
@@ -383,7 +403,7 @@
         @if ($hotel_rent_advance)
             @php
                 $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
-                
+
             @endphp
             @foreach ($hotel_rent_items as $hri)
                 @if ($hri->is_reserve)
@@ -416,7 +436,7 @@
                 $observation_hotel = '';
                 if (count($advances) > 0) {
                     $observation_hotel = 'Adelantos : ';
-                
+
                     foreach ($advances as $adv) {
                         if ($adv['is_advance']) {
                             $document_hotel = $adv['document'] ?? $adv['sale_note'];
@@ -445,12 +465,12 @@
                 @endisset
             </td>
         </tr>
-        @if($document->comercial_treatment)
-        <tr>
-            <td colspan="2" class="align-top">
-                <b>Tratamiento Comercial:</b> {{ $document->comercial_treatment->description }}
-            </td>
-        </tr>
+        @if ($document->comercial_treatment)
+            <tr>
+                <td colspan="2" class="align-top">
+                    <b>Tratamiento Comercial:</b> {{ $document->comercial_treatment->description }}
+                </td>
+            </tr>
         @endif
         @if ($document->detraction)
             {{-- <strong>Operación sujeta a detracción</strong> --}}
@@ -617,10 +637,10 @@
                         @endif
                     </td>
                     <td class="text-center desc-9 align-top">
-                        {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id )}}
+                        {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                     </td>
                     <td class="text-left desc-9 align-top">
-                        @if($configuration->show_internal_code_ticket)
+                        @if ($configuration->show_internal_code_ticket)
                             @if (isset($row->item->internal_id))
                                 {{ $row->item->internal_id }} <br>
                             @endif

@@ -43,7 +43,8 @@ mix.webpackConfig({
             "@viewsModuleExpense": path.resolve(
                 __dirname,
                 "modules/Expense/Resources/assets/js/views"
-            )
+            ),
+           
         }
     },
     

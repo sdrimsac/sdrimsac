@@ -192,6 +192,10 @@ const app = new Vue({
     el: "#main",
 
     components: {
+        "tenant-productos-index": () =>
+            import("../js/views/productos/index.vue"),
+        /* "tenant-reports-productos": () =>
+            import("../js/views/reports/productos/index.vue"), */
         "whatsapp-index": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/whatsapp/index.vue"
@@ -208,6 +212,11 @@ const app = new Vue({
             import(
                 "../../modules/inventory/Resources/assets/js/inventory/inventory.vue"
             ),
+
+        /* "productos-index": () =>
+            import(
+                "../../modules/Inventory/Resources/assets/js/inventory/productos.vue"
+            ), */
         "restaurant-food-list": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/food/index.vue"

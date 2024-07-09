@@ -1,4 +1,5 @@
-<!-- Listado de Inventario -->
+<!-- Listado de Inventario  todo este modulo no esta en uso por que se uso para prueba-->
+
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -44,7 +45,7 @@
                         <i class="fas fa-truck-loading"></i>
                         Listado de {{ title }}</h4>
                 </div>
-                <div class="data-table-visible-columns">
+                <!-- <div class="data-table-visible-columns">
                         <el-button type="primary" 
                                     class="btn btn-success button-margin" 
                                     href="javascript:void(0)" 
@@ -62,7 +63,7 @@
                               <i class="fa fa-arrow-circle-up fa-lg"></i>
                                 Salida
                         </el-button>
-                </div>
+                </div> -->
 
                 <div class="card-body">
                     <data-table :resource="resource" ref="dataTable">

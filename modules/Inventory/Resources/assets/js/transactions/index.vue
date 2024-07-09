@@ -103,7 +103,7 @@
 </style>
 
 <script>
-import DataTable from "../../../../../../resources/js/components/DataTableTransactions.vue";
+/* import DataTable from "../../../../modules/Inventory/Resources/assets/components/DataTableTransaction.vue"; */
 import {
     deletable
 } from "../../../../../../resources/js/mixins/deletable";

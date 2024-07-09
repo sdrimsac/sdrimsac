@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Inventory\Models\InventoryTransaction;
 
 class ItemWarehouse extends ModelTenant
 {
@@ -12,6 +13,8 @@ class ItemWarehouse extends ModelTenant
         'item_id',
         'warehouse_id',
         'stock',
+        'type',
+        
     ];
 
     public function warehouse()
@@ -22,5 +25,13 @@ class ItemWarehouse extends ModelTenant
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+    public function Inventory()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+    public function transaction ()
+    {
+        return $this->hasMany(InventoryTransaction::class);
     }
 }

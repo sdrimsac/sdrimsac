@@ -27,7 +27,7 @@
                             <el-input v-model="form.quantity_remove"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                         </div>
                     </div>
-                    <div class="col-md-4 mt-4" v-if="form.item_id && form.warehouse_id && form.lots_enabled"> 
+                    <div class="col-md-4 mt-4" v-if="form.item_id && form.warehouse_id && form.lots_enabled && form.item.has_color_size"> 
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
                         <a href="#"  class="text-center font-weight-bold text-info" @click.prevent="clickLotcodeOutput">[&#10004; Seleccionar series]</a>
                     </div> 

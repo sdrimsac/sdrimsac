@@ -50,17 +50,6 @@
                             @change="getRecords"
                         >
                         </el-date-picker>
-
-                        <!-- <template v-else>
-                            <el-input
-                                placeholder="Buscar"
-                                v-model="search.value"
-                                style="width: 100%;"
-                                prefix-icon="el-icon-search"
-                                @input="getRecords"
-                            >
-                            </el-input>
-                        </template> -->
                     </div>
                     <div class="col-md-2 col-lg-3">
                         <label for="date_end">Fecha final</label>

@@ -138,6 +138,8 @@ if ($hostname) {
                 });
 
                 Route::get('fix_models', [InventoryController::class, 'fix_models']);
+                    /* agregado para la ruta de salida de productos */
+                    /* Route::get('fix_models', [SalidaproductoController::class, 'fix_models']) */;
                 Route::get('toll', [TollController::class, 'index'])->name('toll.index');
                 Route::get('toll/records', [TollController::class, 'records']);
                 Route::get('toll/items/{warehouse_id}', [TollController::class, 'items']);
@@ -598,6 +600,32 @@ if ($hostname) {
                 Route::post('banks', [App\Http\Controllers\Tenant\BankController::class, 'store']);
                 Route::delete('banks/{bank_id}/delete-image', [App\Http\Controllers\Tenant\BankController::class, 'deleteImage']);
                 Route::delete('banks/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'destroy']);
+
+                /* salida y entrada de productos  */
+
+                /* Route::get('productos', [App\Http\Controllers\Tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
+                Route::get('productos/records', [App\Http\Controllers\Tenant\ProductosController::class, 'records']);
+                Route::get('productos/record/{productos}', [App\Http\Controllers\Tenant\ProductosController::class, 'record']);
+                Route::post('productos', [App\Http\Controllers\Tenant\ProductosController::class, 'store']);
+                Route::delete('productos/{productos}', [App\Http\Controllers\Tenant\ProductosController::class, 'destroy']);
+                Route::get('/columns', [App\Http\Controllers\tenant\ProductosController::class, 'columns']);
+                Route::get('/tables', [App\Http\Controllers\tenant\ProductosController::class, 'tables']);
+                Route::post('/move', [App\Http\Controllers\tenant\ProductosController::class, 'move']);
+                Route::post('/remove', [App\Http\Controllers\tenant\ProductosController::class, 'remove']); */
+                Route::prefix('productos')->group(function () {
+                    Route::get('/', [App\Http\Controllers\tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
+                    Route::get('/records', [App\Http\Controllers\tenant\ProductosController::class, 'records']);
+                    Route::get('/record/{id}', [App\Http\Controllers\tenant\ProductosController::class, 'record']);
+                    Route::post('/', [App\Http\Controllers\tenant\ProductosController::class, 'store']);
+                    Route::delete('/{productos}', [App\Http\Controllers\tenant\ProductosController::class, 'destroy']);
+                    Route::get('/columns', [App\Http\Controllers\tenant\ProductosController::class, 'columns']);
+                    Route::get('/tables', [App\Http\Controllers\tenant\ProductosController::class, 'tables']);
+                    Route::post('/move', [App\Http\Controllers\tenant\ProductosController::class, 'move']);
+                    Route::post('/remove', [App\Http\Controllers\tenant\ProductosController::class, 'remove']);
+                    Route::get('/excel', [App\Http\Controllers\tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');
+                    Route::get('/pdf', [App\Http\Controllers\Tenant\ProductosController::class, 'pdf'])->name('tenant.productos.report_pdf');
+                });
+
 
                 //Exchange Rates
                 Route::get('exchange_rates/records', [App\Http\Controllers\Tenant\ExchangeRateController::class, 'records']);

@@ -3,6 +3,8 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Inventory\Models\InventoryTransaction;
+use React\Http\Io\Transaction;
 
 class Inventory extends ModelTenant
 {
@@ -14,9 +16,13 @@ class Inventory extends ModelTenant
         'warehouse_id',
         'warehouse_destination_id',
         'quantity',
+        'internal_id',
         "real_stock",
-        "system_stock"
+        "system_stock",
+        'inventory_transaction_id',
+        'created_at'
     ];
+    protected $table = 'inventories';
 
     public function warehouse()
     {
@@ -36,5 +42,9 @@ class Inventory extends ModelTenant
     public function inventory_kardex()
     {
         return $this->morphMany(InventoryKardex::class, 'inventory_kardexable');
+    }
+    public function inventoryTransaction()
+    {
+        return $this->belongsTo(InventoryTransaction::class, 'inventory_transaction_id');
     }
 }

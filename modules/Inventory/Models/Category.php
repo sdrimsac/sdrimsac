@@ -12,6 +12,7 @@ class Category extends ModelTenant
     protected $fillable = [ 
         'name',
         'icono',
+        'name'
     ];
  
     public function items()

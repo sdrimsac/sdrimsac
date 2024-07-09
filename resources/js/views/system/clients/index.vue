@@ -599,7 +599,7 @@ import ClientPayments from "./partials/payments.vue";
 import AccountStatus from "./partials/account_status.vue";
 import ClientDelete from "./partials/delete.vue";
 import DataLimitNotification from "./partials/DataLimitNotification.vue";
-import DataTable from "../../../components/DataTable2"
+import DataTable from "../../../components/DataTable2.vue"
 
 export default {
     mixins: [deletable, changeable],

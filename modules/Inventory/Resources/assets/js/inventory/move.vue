@@ -43,7 +43,7 @@
                             <small class="form-control-feedback" v-if="errors.detail" v-text="errors.detail[0]"></small>
                         </div>
                     </div>
-                    <div class="col-md-4 mt-4" v-if="form.item_id && form.warehouse_id && form.lots_enabled">
+                    <div class="col-md-4 mt-4" v-if="form.item_id && form.warehouse_id && form.lots_enabled && form.item.has_color_size">
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
                         <a href="#"  class="text-center font-weight-bold text-info" @click.prevent="clickLotcodeOutput">[&#10004; Seleccionar series]</a>
                     </div>
@@ -65,15 +65,17 @@
 
 <script>
     import OutputLotsForm from './partials/lots.vue'
+    import OutputColor_size from './partials/color_size.vue'
 
     export default {
-        components: {OutputLotsForm},
+        components: {OutputLotsForm, OutputColor_size},
         props: ['showDialog', 'recordId'],
         data() {
             return {
                 loading_submit: false,
                 titleDialog: null,
                 showDialogLotsOutput:false,
+                showDialogColor_sizeOutput:false,
                 resource: 'inventory',
                 errors: {},
                 form: {},
@@ -91,9 +93,17 @@
             addRowOutputLot(lots){
                 this.form.lots = lots
             },
+            addRowOutputColor_size(color_size){
+                this.form.color_size = color_size
+            },
             clickLotcodeOutput(){
                 this.showDialogLotsOutput = true
+                this.showDialogColor_sizeOutput = true
             },
+            /* clickLotcodeOutput(){
+                this.showDialogColor_sizeOutput = true
+            }, */
+
             initForm() {
                 this.errors = {}
                 this.form = {
@@ -107,6 +117,8 @@
                     quantity_move: null,
                     lots_enabled:false,
                     lots:[],
+                    color_size_enabled:false,
+                    color_size:[],
                     detail:null
                 }
             },
@@ -116,16 +128,24 @@
                     .then(response => {
                         this.form = response.data.data
                         this.form.lots = Object.values(response.data.data.lots)
+                        this.form.color_size = Object.values(response.data.data.color_size)
                     })
             },
             async submit() {
 
+                if(this.form.color_size_enabled){
+                    let select_color_size = await _.filter(this.form.color_size, {'has_sale':true})
+                    if(select_color_size.length != this.form.quantity_move){
+                        return this.$toast.error('La cantidad ingresada es diferente a al stock ');
+                    }
+                }
                 if(this.form.lots_enabled){
                     let select_lots = await _.filter(this.form.lots, {'has_sale':true})
                     if(select_lots.length != this.form.quantity_move){
                         return this.$toast.error('La cantidad ingresada es diferente a las series seleccionadas');
                     }
                 }
+
 
                 this.loading_submit = true
                 await this.$http.post(`/${this.resource}/move`, this.form)

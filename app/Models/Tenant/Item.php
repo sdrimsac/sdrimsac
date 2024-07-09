@@ -537,8 +537,8 @@ class Item extends ModelTenant
 
     public function category()
     {
-        return $this->belongsTo(CategoryItem::class);
-    }
+        return $this->belongsTo(CategoryItem::class , 'category_id');
+    } 
 
     public function color_size(){
         return $this->hasMany(ItemColorSize::class, 'item_id');

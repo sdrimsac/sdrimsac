@@ -978,6 +978,7 @@ class CashController extends Controller
         $seriesIds = $user->series()->pluck('user_id');
 
         $hasSeriesAssigned = $seriesIds->count() > 0;
+         
         $model = null;
         switch ($type_document) {
             case 'documents':

@@ -166,8 +166,6 @@
                     this.loading_submit = false
                     // this.initTotals()
                 });
-
-
             },
             getQueryParameters() {
                 return queryString.stringify({

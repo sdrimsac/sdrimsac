@@ -79,7 +79,7 @@
                             <th class="text-white text-center">Moneda</th>
                             <th class="text-white text-end" v-if="columns.total_exportation.visible">T.Exportación</th>
                             <th class="text-white text-end" v-if="columns.total_free.visible"> T.Gratuito</th>
-                            <th class="text-white text-end"v-if="columns.total_unaffected.visible">T.Inafecta</th>
+                            <th class="text-white text-end" v-if="columns.total_unaffected.visible">T.Inafecta</th>
                             <th class="text-white ext-end" v-if="columns.total_exonerated.visible"> T.Exonerado</th>
                             <th class="text-white text-end" v-if="columns.total_taxed.visible">T.Gravado</th>
                             <th class="text-white text-end" v-if="columns.total_igv.visible">T.Igv</th>
@@ -360,10 +360,9 @@
                             </td>
                             <td>
                                 <template
-                                    v-for="(document, i) in row.documents"
-                                >
+                                    v-for="(document, i) in row.documents">
                                     <label
-                                        ::key="i"
+                                        :key="i"
                                         v-text="document.number_full"
                                         class="d-block"
                                     ></label>

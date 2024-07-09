@@ -58,6 +58,7 @@ class InventoryController extends Controller
 
         //        dd($records);
         return new InventoryCollection($records->paginate(config('tenant.items_per_page')));
+        dump($records);
     }
 
     public function tables()

@@ -18,6 +18,8 @@ class ConfigurationResource extends JsonResource
             'print_direct_just_different_areas' => (bool) $this->print_direct_just_different_areas,
             'detraction' => (bool)$this->detraction,
             'detraction_type_id' => $this->detraction_type_id,
+            'correo_red_salud_ticket' => (bool) $this->correo_red_salud_ticket,
+            'numero_accion_independiente_admin' => (bool) $this->numero_accion_independiente_admin,
             'show_second_name_external_code' => (bool) $this->show_second_name_external_code,
             'user_series_independientes_caja' => (bool) $this->user_series_independientes_caja,
             'all_items_pos' => (bool) $this->all_items_pos,

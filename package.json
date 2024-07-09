@@ -14,7 +14,6 @@
         "axios": "^0.18.1",
         "bootstrap": "^4.6.1",
         "cross-env": "^5.1",
-        "cypress": "^12.9.0",
         "jquery": "^3.4.1",
         "laravel-echo": "^1.11.3",
         "laravel-mix": "^3.0.0",
@@ -28,7 +27,7 @@
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^20.0.0",
         "@pencilpix/vue2-clock-picker": "^0.1.6",
-        "apexcharts": "^3.49.1",
+        "apexcharts": "^3.49.2",
         "chart.js": "^2.7.3",
         "element-ui": "^2.15.6",
         "hooper": "^0.3.4",

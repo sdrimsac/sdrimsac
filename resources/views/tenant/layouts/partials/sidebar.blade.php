@@ -325,11 +325,10 @@
                                 </a>
                             </li>
                         @endif
-
                         <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
-                                href="{{ route('reports.inventory.index') }}">
-                                <i class="icofont-box"></i> Stock Producto
+                            <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
+                                href="{{ route('tenant.productos.index') }}">
+                                <i class="icofont-box"></i> Ingreso y Salida de Productos
                             </a>
                         </li>
 
@@ -657,6 +656,12 @@
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
                             href="{{ route('reports.stockmin.index') }}">
                             <i class="fas fa-boxes"> </i> Stock Minimo
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
+                            href="{{ route('reports.inventory.index') }}">
+                            <i class="icofont-box"></i> Stock Producto
                         </a>
                     </li>
                     <li>

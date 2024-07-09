@@ -9,7 +9,7 @@
         :append-to-body="true"
         width="850px"
         top="2vh"
-        :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
+        :title="`MODULO DE COBRO AA ${variation ? '- Variación' : ''}`"
         class="algunaClase"
     >
         <div v-loading="loading" class=" mb-0">

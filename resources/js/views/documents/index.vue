@@ -309,6 +309,8 @@
                                                 row.state_type_id === '11'
                                         }">
                                     {{ row.date_of_issue }}
+                                    <br>
+                                    {{ row.time_of_issue }}
                                 </td>
                                 <td class="text-center" v-if="columns.date_of_due.visible" :class="{
                                             'text-dark':
@@ -335,13 +337,13 @@
                                 <td v-if="columns.sale_note.visible">
                                     <template v-for="(row,
                                             index) in row.sale_note_related">
-                                        <small class="d-block" ::key="index">{{ row.number }}</small>
+                                        <small class="d-block" :key="index">{{ row.number }}</small>
                                     </template>
                                 </td>
                                 <td v-if="columns.dispatch.visible">
                                     <template v-for="(row,
                                             index) in row.dispatches">
-                                        <small class="d-block" ::key="index">{{ row.description }}</small>
+                                        <small class="d-block" :key="index">{{ row.description }}</small>
                                     </template>
                                 </td>
                                 <td :class="{
@@ -349,7 +351,7 @@
                                                 row.state_type_id === '11'
                                         }" v-if="columns.notes.visible">
                                     <template v-for="(row, index) in row.notes">
-                                        <label class="d-block" ::key="index">{{
+                                        <label class="d-block" :key="index">{{
                                                     row.note_type_description
                                                 }}: {{ row.description }}</label>
                                     </template>

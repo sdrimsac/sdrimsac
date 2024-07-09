@@ -14,6 +14,8 @@ class Configuration extends ModelTenant
         'config_etiquetas',
         'detraction_type_id',
         'print_direct_just_different_areas',
+        'correo_red_salud_ticket',
+        'numero_accion_independiente_admin',
         'show_second_name_external_code',
         'user_series_independientes_caja',
         'all_items_pos',
@@ -188,6 +190,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'correo_red_salud_ticket' => 'boolean',
+        'numero_accion_independiente_admin' => 'boolean',
         'detraction' => 'boolean',
         'config_etiquetas' => 'array',
         'print_direct_just_different_areas' => 'boolean',
@@ -600,7 +604,8 @@ class Configuration extends ModelTenant
 
         ];
     }
-    public  function hasAffectationIgv(): ?bool{
+    public  function hasAffectationIgv(): ?bool
+    {
         $int_affectation_igv_type_id =  intval($this->affectation_igv_type_id);
         return $int_affectation_igv_type_id < 20;
     }
