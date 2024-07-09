@@ -128,6 +128,7 @@ class SaleNotePaymentController extends Controller
             'total' => $total + $interes + $penalty,
             'total_difference' => $total_difference + $interes + $penalty,
             'paid' => (bool) $sale_note->paid,
+            'penalties_payed' => $penalties_payed,
 
         ];
     }
