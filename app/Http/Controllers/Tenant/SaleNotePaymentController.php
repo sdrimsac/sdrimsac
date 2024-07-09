@@ -81,8 +81,10 @@ class SaleNotePaymentController extends Controller
 
         if ($total_difference < 0.01) {
             $sale_note->paid = true;
-            $sale_note->save();
+        }else{
+            $sale_note->paid = false;
         }
+        $sale_note->save();
         $num_schedule = Payment::where('sale_note_id', $sale_note_id)->where('paid', 0)->count();
         ///the first  payment by id with paid 0
         $all_payment = Payment::where('sale_note_id', $sale_note_id)
@@ -123,7 +125,7 @@ class SaleNotePaymentController extends Controller
             'total_paid' => $total_paid,
             'total' => $total + $interes + $penalty,
             'total_difference' => $total_difference + $interes + $penalty,
-            'paid' => $sale_note->paid,
+            'paid' => (bool) $sale_note->paid,
 
         ];
     }
