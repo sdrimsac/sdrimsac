@@ -60,6 +60,9 @@ class ReportCreditCollection extends ResourceCollection
             // $amount_due -= $advances + $payments_records;
             $payment = Payment::where('sale_note_id', $row->id)
                 ->where('paid', 0);
+            $penalties_payed = Payment::where('sale_note_id', $row->id)
+                ->where('paid', 1)
+                ->sum('penalty_amount');
             $int = 0;
             if ($payment->count() > 0) {
                 $payment_first = $payment->first();
@@ -69,7 +72,7 @@ class ReportCreditCollection extends ResourceCollection
             if ($row->paid == true) {
                 $to_due = 0;
             } else {
-                $to_due =  floatval($row->total + $row->total_discount - $advances + $int)  - (floatval($payments_records));
+                $to_due =  floatval($row->total + $row->total_discount - $advances + $int)  - (floatval($payments_records - $penalties_payed));
             }
             $show_formats = true;
             // $user_id = auth()->user()->id;
