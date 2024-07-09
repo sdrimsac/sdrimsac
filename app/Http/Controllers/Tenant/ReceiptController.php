@@ -43,7 +43,7 @@ class ReceiptController extends Controller
         } else {
             $payment = $data->document_payment;
             if($payment ==  null){
-                $payment 
+                // $payment 
             }
         }
         $payment_method_type = $payment->payment_method_type->description;

@@ -613,7 +613,7 @@ if ($hostname) {
                 Route::post('/move', [App\Http\Controllers\tenant\ProductosController::class, 'move']);
                 Route::post('/remove', [App\Http\Controllers\tenant\ProductosController::class, 'remove']); */
                 Route::prefix('productos')->group(function () {
-                    Route::get('/', [App\Http\Controllers\tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
+                    Route::get('/', [App\Http\Controllers\Tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
                     Route::get('/records', [App\Http\Controllers\Tenant\ProductosController::class, 'records']);
                     Route::get('/record/{id}', [App\Http\Controllers\Tenant\ProductosController::class, 'record']);
                     Route::post('/', [App\Http\Controllers\Tenant\ProductosController::class, 'store']);
