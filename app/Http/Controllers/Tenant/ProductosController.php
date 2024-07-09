@@ -21,7 +21,7 @@ class ProductosController extends Controller
 {
     public function index()
     {
-        return view('tenant.Productos.index');
+        return view('tenant.productos.index');
     }
 
     public function columns()
