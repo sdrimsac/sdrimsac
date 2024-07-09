@@ -20,7 +20,8 @@ class Inventory extends ModelTenant
         "real_stock",
         "system_stock",
         'inventory_transaction_id',
-        'created_at'
+        'created_at',
+        
     ];
     protected $table = 'inventories';
 

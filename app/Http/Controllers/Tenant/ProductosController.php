@@ -54,7 +54,7 @@ class ProductosController extends Controller
                 }
             })
 
-            ->select(['id', 'inventory_transaction_id', 'quantity', 'item_id', 'warehouse_id', 'created_at', 'lot_code', 'lots'])
+            ->select(['id', 'inventory_transaction_id', 'quantity', 'item_id', 'warehouse_id', 'created_at', 'lot_code', 'lots','color_size'])
             ->with([
                 'inventoryTransaction:id,type',
                 'item:id,description,internal_id,category_id',
@@ -68,12 +68,6 @@ class ProductosController extends Controller
 
         $records = $records->orderBy('updated_at', 'desc');
 
-        /* if ($item_description) {
-            $records->whereHas('item', function ($query) use ($item_description) {
-                $query->where('description', 'like', '%' . $item_description . '%');
-            });
-        } */
-
         if ($date_start || $date_end) {
             if ($date_start && $date_end) {
                 $records = $records->whereBetween('created_at', [$date_start, $date_end]);
@@ -81,7 +75,6 @@ class ProductosController extends Controller
                 $records = $records->where('created_at', $date_start ?? $date_end);
             }
         }
-
         return $records;
     }
 
@@ -92,9 +85,6 @@ class ProductosController extends Controller
 
         return new ProductosCollection($records->paginate(config('tenant.items_per_page')));
     }
-
-
-
     public function store(Request $request)
     {
         $result = DB::connection('tenant')->transaction(function () use ($request) {

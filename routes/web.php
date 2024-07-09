@@ -623,7 +623,7 @@ if ($hostname) {
                     Route::post('/move', [App\Http\Controllers\Tenant\ProductosController::class, 'move']);
                     Route::post('/remove', [App\Http\Controllers\Tenant\ProductosController::class, 'remove']);
                     Route::get('/excel', [App\Http\Controllers\Tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');
-                    Route::get('/pdf', [App\Http\Controllers\Tenant\ProductosController::class, 'pdf'])->name('tenant.productos.report_pdf');
+                    /* Route::get('/pdf', [App\Http\Controllers\Tenant\ProductosController::class, 'pdf'])->name('tenant.productos.report_pdf'); */
                 });
 
 

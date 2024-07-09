@@ -96,7 +96,7 @@
                                 </table>
                             </template>
                             <template v-if="
-                                        row.has_color_size &&
+                                        row.color_size &&
                                             row.color_size.length != 0
                                     ">
                                 <table class="table table-responsive table-striped ">
@@ -105,12 +105,11 @@
                                             <th class="text-white">COLOR</th>
                                             <th class="text-white">TALLA</th>
                                             <th class="text-white">PRECIO</th>
-                                            <th class="text-white">STOCK</th>
+                                            <!-- <th class="text-white">STOCK</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(color_size,
-                                                idx) in row.color_size" :key="idx">
+                                        <tr v-for="color_size in row.color_size" :key="color_size.id">
                                             <td>
                                                 {{ color_size.color }}
                                             </td>
@@ -120,9 +119,9 @@
                                             <td>
                                                 {{ color_size.price }}
                                             </td>
-                                            <td>
+                                            <!-- <td>
                                                 {{ color_size.stock }}
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     </tbody>
                                 </table>

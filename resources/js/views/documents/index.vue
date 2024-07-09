@@ -335,26 +335,26 @@
                                     <small class="badge bg-dark" v-if="row.affected_document" v-text="row.affected_document"></small>
                                 </td>
                                 <td v-if="columns.sale_note.visible">
-                                    <template v-for="(row,
-                                            index) in row.sale_note_related">
-                                        <small class="d-block" :key="index">{{ row.number }}</small>
-                                    </template>
+                                    <div v-for="(row,
+                                            index) in row.sale_note_related" :key="index">
+                                        <small class="d-block" >{{ row.number }}</small>
+                                    </div>
                                 </td>
                                 <td v-if="columns.dispatch.visible">
-                                    <template v-for="(row,
-                                            index) in row.dispatches">
-                                        <small class="d-block" :key="index">{{ row.description }}</small>
-                                    </template>
+                                    <div v-for="(row,
+                                            index) in row.dispatches" :key="index">
+                                        <small class="d-block" >{{ row.description }}</small>
+                                    </div>
                                 </td>
                                 <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
                                         }" v-if="columns.notes.visible">
-                                    <template v-for="(row, index) in row.notes">
-                                        <label class="d-block" :key="index">{{
+                                    <div v-for="(row, index) in row.notes" :key="index">
+                                        <label class="d-block" >{{
                                                     row.note_type_description
                                                 }}: {{ row.description }}</label>
-                                    </template>
+                                    </div>
                                 </td>
 
                                 <!-- <td>

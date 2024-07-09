@@ -71,7 +71,9 @@
                     @foreach ($records as $key => $value)
                         @php
                 
+                      
                             $lots = json_decode($value->lots, true);
+                            /* $color_size = json_decode($value->$color_size, true); */
                         @endphp
                         <tr>
                             <td style="text-align: center; border: 2px solid black;">{{ $key + 1 }}</td>
@@ -87,7 +89,17 @@
                                             </p>
                                         @endforeach
                                     @endif
-                                @endisset 
+                                @endisset
+                                {{-- @isset($color_size)
+                                    @if (count($color_size) > 0)
+                                        @foreach ($color_size as $color)
+                                            <p>
+                                                <small>{{ $color['color'] }}</small>
+                                                <small>{{ $color['size'] }}</small>
+                                            </p>
+                                        @endforeach
+                                    @endif
+                                @endisset --}}
                             </td>
                             <td style="text-align: center; border: 2px solid black;">
                                 {{ $value->warehouse->description }}

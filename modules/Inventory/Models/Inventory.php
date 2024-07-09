@@ -24,9 +24,13 @@ class Inventory extends ModelTenant
         'inventories_transfer_id',
         "real_stock",
         "system_stock",
-        'lots'
+        'lots',
+        'color_size',
     ];
 
+    protected $casts = [
+        // 'color_size' => 'array',
+    ];
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
@@ -35,7 +39,14 @@ class Inventory extends ModelTenant
     {
         return (is_null($value)) ? null : json_decode($value);
     }
-
+    public function getColorSizeAttribute($value)
+    {
+        return (is_null($value)) ? null : json_decode($value);
+    }
+    public function setColorSizeAttribute($value)
+    {
+        $this->attributes['color_size'] = (is_null($value)) ? null : json_encode($value);
+    }
     public function setLotsAttribute($value)
     {
         $this->attributes['lots'] = (is_null($value)) ? null : json_encode($value);

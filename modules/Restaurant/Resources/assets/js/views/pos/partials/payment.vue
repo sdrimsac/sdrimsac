@@ -7,7 +7,7 @@
         :modal-append-to-body="true"
         :show-close="false"
         :append-to-body="true"
-        width="850px"
+        width="1000px"
         top="2vh"
         :title="`MODULO DE COBRO AA ${variation ? '- Variación' : ''}`"
         class="algunaClase"

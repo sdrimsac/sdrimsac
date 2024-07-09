@@ -34,10 +34,10 @@ class ProductosCollection extends ResourceCollection
         });
 
         return $filtered->map(function ($inventory)  {
-            $lots = json_decode($inventory->lots, true); 
-
+            $lots = json_decode($inventory->lots, true);
+            $color_size =json_decode($inventory->color_size, true);
             return [
-
+                'color_size' => $color_size,
                 'id' => $inventory->id,
                 'inventory_transaction_id' => $inventory->inventoryTransaction->id,
                 'type' => $inventory->inventoryTransaction->type == 'input' ? 'input' : 'output',
