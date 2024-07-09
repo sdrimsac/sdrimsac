@@ -56,7 +56,7 @@ class SaleNotePaymentController extends Controller
         $penalties_payed = Payment::where('sale_note_id', $sale_note_id)
             ->where('paid', 1)
             ->sum('penalty_amount');
-        $total_paid -= $penalties_payed;
+        // $total_paid -= $penalties_payed;
         $payment = Payment::where('sale_note_id', $sale_note_id);
         $payment_tasa = $payment->first();
         $schedule = $payment->count();
@@ -78,8 +78,9 @@ class SaleNotePaymentController extends Controller
             $total = $sale_note->total_payment - $sale_note->advances;
         }
         $total_difference = round($total - $total_paid, 2);
+        $total_difference_document = round($total - $total_paid - $penalties_payed, 2);
 
-        if ($total_difference < 0.01) {
+        if ($total_difference_document < 0.01) {
             $sale_note->paid = true;
         }else{
             $sale_note->paid = false;
