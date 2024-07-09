@@ -614,15 +614,15 @@ if ($hostname) {
                 Route::post('/remove', [App\Http\Controllers\tenant\ProductosController::class, 'remove']); */
                 Route::prefix('productos')->group(function () {
                     Route::get('/', [App\Http\Controllers\tenant\ProductosController::class, 'index'])->name('tenant.productos.index')->middleware('just.admin');
-                    Route::get('/records', [App\Http\Controllers\tenant\ProductosController::class, 'records']);
-                    Route::get('/record/{id}', [App\Http\Controllers\tenant\ProductosController::class, 'record']);
-                    Route::post('/', [App\Http\Controllers\tenant\ProductosController::class, 'store']);
-                    Route::delete('/{productos}', [App\Http\Controllers\tenant\ProductosController::class, 'destroy']);
-                    Route::get('/columns', [App\Http\Controllers\tenant\ProductosController::class, 'columns']);
-                    Route::get('/tables', [App\Http\Controllers\tenant\ProductosController::class, 'tables']);
-                    Route::post('/move', [App\Http\Controllers\tenant\ProductosController::class, 'move']);
-                    Route::post('/remove', [App\Http\Controllers\tenant\ProductosController::class, 'remove']);
-                    Route::get('/excel', [App\Http\Controllers\tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');
+                    Route::get('/records', [App\Http\Controllers\Tenant\ProductosController::class, 'records']);
+                    Route::get('/record/{id}', [App\Http\Controllers\Tenant\ProductosController::class, 'record']);
+                    Route::post('/', [App\Http\Controllers\Tenant\ProductosController::class, 'store']);
+                    Route::delete('/{productos}', [App\Http\Controllers\Tenant\ProductosController::class, 'destroy']);
+                    Route::get('/columns', [App\Http\Controllers\Tenant\ProductosController::class, 'columns']);
+                    Route::get('/tables', [App\Http\Controllers\Tenant\ProductosController::class, 'tables']);
+                    Route::post('/move', [App\Http\Controllers\Tenant\ProductosController::class, 'move']);
+                    Route::post('/remove', [App\Http\Controllers\Tenant\ProductosController::class, 'remove']);
+                    Route::get('/excel', [App\Http\Controllers\Tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');
                     Route::get('/pdf', [App\Http\Controllers\Tenant\ProductosController::class, 'pdf'])->name('tenant.productos.report_pdf');
                 });
 
