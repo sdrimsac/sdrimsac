@@ -15,11 +15,8 @@ use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
 use App\Http\Controllers\Tenant\SellerController;
-use App\Models\Tenant\CommercialTreatment;
-use App\Models\Tenant\Dispatch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Http\Controllers\CashController;
 use Modules\Inventory\Http\Controllers\TransferPlaceController;
 use Modules\Restaurant\Http\Controllers\IncomesController;
@@ -35,7 +32,7 @@ if ($hostname) {
             ]);
             Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
             Route::get('check-documents', [TenantDocumentController::class, 'checkDocuments']);
-
+            Route::get('purchases/print/{external_id}/{format?}', 'Tenant\PurchaseController@toPrint');
             Route::get('credit-list/receipt/{id}/ticket', [CreditListController::class, 'receipt']);
             Route::get('buscar', [App\Http\Controllers\Tenant\SearchController::class, 'index'])->name('search.index');
             Route::get('search/tables', [App\Http\Controllers\Tenant\SearchController::class, 'tables']);

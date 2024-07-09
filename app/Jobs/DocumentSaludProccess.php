@@ -28,13 +28,15 @@ class DocumentSaludProccess implements ShouldQueue
     use  Dispatchable, InteractsWithQueue, Queueable, SerializesModels, JobReportTrait;
 
     protected $website_id;
+    protected $user_id;
     protected $store_path;
 
 
-    public function __construct($website_id, $store_path)
+    public function __construct($website_id, $store_path,$user_id)
     {
         $this->website_id = $website_id;
         $this->store_path = $store_path;
+        $this->user_id = $user_id;
     }
 
     function items($inputs)
@@ -108,7 +110,7 @@ class DocumentSaludProccess implements ShouldQueue
         // $totals = $inputs['totales'];
         $inputs_transform = [
             'series' => Functions::valueKeyInArray($document, 'serie'),
-            'user_id' => Functions::valueKeyInArray($inputs, 1),
+            'user_id' =>$this->user_id,
             'afectar_caja' => false,
             'method_pay' => 'Efectivo',
             'printerOn' => false,

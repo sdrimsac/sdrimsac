@@ -37,11 +37,11 @@
                 </thead>
                 <tbody>
                     <tr v-for="(colorsize, idx) in color_size" :key="idx">
-                        <td>{{ customIndex(idx) }}</td>
-                        <td>{{ colorsize.color }}</td>
-                        <td>{{ colorsize.size }}</td>
-                        <td class="text-end">{{ colorsize.stock }}</td>
-                        <td>
+                        <td width="15%">{{ customIndex(idx) }}</td>
+                        <td width="25%">{{ colorsize.color }}</td>
+                        <td width="20%">{{ colorsize.size }}</td>
+                        <td width="15%" class="text-end">{{ colorsize.stock }}</td>
+                        <td width="10%">
                             <el-input
                                 type="number"
                                 v-model="colorsize.quantity"

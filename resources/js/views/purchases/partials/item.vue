@@ -870,6 +870,8 @@ export default {
 
             this.item_unit_type = {};
             this.lots = [];
+            this.color_size = [];
+            this.lotsGroup = [];
             this.lot_code = null;
         },
         // initializeFields() {

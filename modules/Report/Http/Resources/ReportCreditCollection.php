@@ -21,6 +21,14 @@ class ReportCreditCollection extends ResourceCollection
             $advances  = $row->advances;
             $paid = $row->paid;
             $payment = Payment::where('sale_note_id', $row->id);
+            $payment_to_due = Payment::where('sale_note_id', $row->id)
+                ->where('paid', 0)
+                ->first();
+            if ($payment_to_due) {
+                $paid = false;
+                $row->paid = false;
+                $row->save();
+            }
             $payment_not_paid = $payment->where('paid', 0)
                 ->where('date_payment', '<=', Carbon::now()->startOfDay())
                 ->orderBy('date_payment', 'desc');
@@ -128,7 +136,5 @@ class ReportCreditCollection extends ResourceCollection
                 'observation' => $observation,
             ];
         });
-
-
     }
 }

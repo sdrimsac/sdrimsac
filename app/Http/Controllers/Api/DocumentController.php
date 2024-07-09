@@ -162,7 +162,8 @@ class DocumentController extends Controller
                 $zip->close();
                 $store_path = 'app/public/red_salud/' . $name;
                 $website = $this->getTenantWebsite();
-                DocumentSaludProccess::dispatch($website->id, $store_path);
+                $user_id = auth()->user()->id;
+                DocumentSaludProccess::dispatch($website->id, $store_path,$user_id);
                 // $files = scandir(storage_path($store_path));
 
                 // $files = array_diff($files, array('.', '..'));

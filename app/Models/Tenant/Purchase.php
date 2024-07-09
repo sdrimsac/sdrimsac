@@ -50,7 +50,7 @@ class Purchase extends ModelTenant
         'total_perception',
         'perception_number',
         'perception_date',
-
+        'filename',
         'charges',
         'discounts',
         'prepayments',
@@ -194,6 +194,10 @@ class Purchase extends ModelTenant
         return $this->belongsTo(StateType::class);
     }
 
+
+    public function establishment(){
+        return $this->belongsTo(Establishment::class);
+    }
     public function group()
     {
         return $this->belongsTo(Group::class);

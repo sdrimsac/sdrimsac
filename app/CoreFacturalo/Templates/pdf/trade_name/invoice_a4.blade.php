@@ -807,10 +807,9 @@
         </table>
 
         @if ($document->detraction)
-        <br>
+            <br>
             <table class="border" class="full-width bordes_datos_clientes "
-                style="page-break-inside: avoid; border-collapse: collapse; border: 1px solid #000;"
-            >
+                style="page-break-inside: avoid; border-collapse: collapse; border: 1px solid #000;">
                 <tr>
                     <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
                     <td width="8px" height="20px">:</td>

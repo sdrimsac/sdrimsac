@@ -11,22 +11,23 @@ trait StorageDocument
 
     public function uploadStorage($filename, $file_content, $file_type, $root = null)
     {
+        dump("xdd");
         $this->setData($filename, $file_type, $root);
-        Storage::disk('tenant')->put($this->_folder.DIRECTORY_SEPARATOR.$this->_filename, $file_content);
+        Storage::disk('tenant')->put($this->_folder . DIRECTORY_SEPARATOR . $this->_filename, $file_content);
     }
 
     public function downloadStorage($filename, $file_type, $root = null)
     {
         $this->setData($filename, $file_type, $root);
-      //dd($this->_folder.DIRECTORY_SEPARATOR.$this->_filename,$filename, $file_type);
+        //dd($this->_folder.DIRECTORY_SEPARATOR.$this->_filename,$filename, $file_type);
 
-        return Storage::disk('tenant')->download($this->_folder.DIRECTORY_SEPARATOR.$this->_filename);
+        return Storage::disk('tenant')->download($this->_folder . DIRECTORY_SEPARATOR . $this->_filename);
     }
 
     public function getStorage($filename, $file_type, $root = null)
     {
         $this->setData($filename, $file_type, $root);
-        return Storage::disk('tenant')->get($this->_folder.DIRECTORY_SEPARATOR.$this->_filename);
+        return Storage::disk('tenant')->get($this->_folder . DIRECTORY_SEPARATOR . $this->_filename);
     }
 
     private function setData($filename, $file_type, $root)
@@ -47,7 +48,7 @@ trait StorageDocument
                 $extension = 'pdf';
                 break;
             case 'cdr':
-                $filename = 'R-'.$filename;
+                $filename = 'R-' . $filename;
                 $extension = 'zip';
                 break;
             case 'purchase_quotation':
@@ -62,6 +63,9 @@ trait StorageDocument
             case 'order_note':
                 $extension = 'pdf';
                 break;
+            case 'purchase':
+                $extension = 'pdf';
+                break;
             case 'sale_opportunity':
                 $extension = 'pdf';
                 break;
@@ -69,7 +73,8 @@ trait StorageDocument
                 $extension = 'pdf';
                 break;
         }
-        $this->_filename = $filename.'.'.$extension;
-        $this->_folder = ($root)?$root.DIRECTORY_SEPARATOR.$file_type:$file_type;
+        $this->_filename = $filename . '.' . $extension;
+        
+        $this->_folder = ($root) ? $root . DIRECTORY_SEPARATOR . $file_type : $file_type;
     }
 }
