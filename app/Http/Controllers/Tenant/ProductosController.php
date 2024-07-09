@@ -238,7 +238,6 @@ class ProductosController extends Controller
         $establishment = Establishment::first();
         $category_id = $request->category_id;
         $reports = $this->get_records($request)->get();
-        dump($request->all());
 
         return Excel::download((new ProductosExport())
                 ->records($reports)

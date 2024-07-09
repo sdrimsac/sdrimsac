@@ -210,7 +210,7 @@ const app = new Vue({
 
         "inventory-index": () =>
             import(
-                "../../modules/inventory/Resources/assets/js/inventory/inventory.vue"
+                "../../modules/Inventory/Resources/assets/js/inventory/inventory.vue"
             ),
 
         /* "productos-index": () =>

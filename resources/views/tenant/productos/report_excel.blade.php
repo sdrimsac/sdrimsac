@@ -70,9 +70,7 @@
                 <tbody>
                     @foreach ($records as $key => $value)
                         @php
-                            if ($key == 0) {
-                                dump($value);
-                            }
+                
                             $lots = json_decode($value->lots, true);
                         @endphp
                         <tr>

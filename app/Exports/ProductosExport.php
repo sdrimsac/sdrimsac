@@ -41,7 +41,6 @@ class ProductosExport implements FromView, ShouldAutoSize
 
     public function view(): View
     {
-        dump($this->records);
         return view('tenant.productos.report_excel', [
             'records' => $this->records,
             'company' => $this->company,

@@ -11,7 +11,6 @@ trait StorageDocument
 
     public function uploadStorage($filename, $file_content, $file_type, $root = null)
     {
-        dump("xdd");
         $this->setData($filename, $file_type, $root);
         Storage::disk('tenant')->put($this->_folder . DIRECTORY_SEPARATOR . $this->_filename, $file_content);
     }
