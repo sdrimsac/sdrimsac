@@ -116,7 +116,7 @@
                             </td>
                         @else
                         <td style="text-align:center;">
-                            <table width="80%" autosize="1">
+                            <table width="70%" autosize="1">
                                 <tr>
                                     <td id="image">
 
