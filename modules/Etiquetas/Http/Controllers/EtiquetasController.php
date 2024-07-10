@@ -24,7 +24,7 @@ class EtiquetasController extends Controller
      */
     public function index()
     {
-        
+
         return view('etiquetas::index');
     }
 
@@ -47,15 +47,17 @@ class EtiquetasController extends Controller
             $location = $request->location;
             $barcode = $request->barcode;
             $template = $format == '1' ? 'template' : ($format == '2' ? 'template2' : 'template4');
+            if ($format == '1' && $paper == '2') {
+                $template = 'template3';
+            }
 
 
-
-            $record = Item::where('description',$description)->first();
+            $record = Item::where('description', $description)->first();
 
             $company = Company::first();
 
             $price = $record->sale_unit_price;
-            $price = number_format($price,0, ".", "");
+            $price = number_format($price, 0, ".", "");
 
             $margin_top = 0;
             $margin_left = 0;
@@ -73,16 +75,16 @@ class EtiquetasController extends Controller
                 }
             }
             $stock = $request->stock ?? 0;
-            if($company->etiqueta != null ){
+            if ($company->etiqueta != null) {
                 $image = asset('storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . explode("/", $company->etiqueta)[2]);
-            }else{
-                $image = null ; 
+            } else {
+                $image = null;
             }
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
-                    $paper ==  1 ? 50 :  150,
-                    25
+                    $paper ==  1 ? 50 :  65,
+                    $paper == 1 ? 25 : 20
                 ],
 
                 'margin_top' => $margin_top,
@@ -92,7 +94,7 @@ class EtiquetasController extends Controller
             ]);
 
 
-            $pdf->shrink_tables_to_fit=0;
+            $pdf->shrink_tables_to_fit = 0;
             $html = view('etiquetas::' . $template, compact(
                 // $html = view('etiquetas::templatetest', compact(
                 'type',
@@ -148,7 +150,8 @@ class EtiquetasController extends Controller
         }
     }
 
-    public function delete_image(){
+    public function delete_image()
+    {
         $company = Company::first();
         if ($company->etiqueta != null) {
             $image_path = $company->etiqueta;
@@ -194,17 +197,17 @@ class EtiquetasController extends Controller
             $etiqueta = asset('storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . explode("/", $company->etiqueta)[2]);
         }
 
-        return compact('palabras', 'codigos', 'company_name', 'etiqueta','establishment');
+        return compact('palabras', 'codigos', 'company_name', 'etiqueta', 'establishment');
     }
     public function items(Request $request)
-    {   
+    {
         $establishment_id = auth()->user()->establishment_id;
         $input = $request->input("input");
-        $items = Item::where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input){
+        $items = Item::where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input) {
             $subquery->where("internal_id", "like", "%" . $input . "%")->orWhere("barcode", "like", "%" . $input . "%");
         })
-    
-        ->take(15)->get()
+
+            ->take(15)->get()
             ->transform(function ($row) {
                 if ($row->internal_id != null && $row->type_barcode == "EAN-8") {
                     $row->internal_id = substr($row->internal_id, 0, -1);
