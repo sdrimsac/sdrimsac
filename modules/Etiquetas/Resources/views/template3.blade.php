@@ -48,7 +48,7 @@
         }
 
         .font-xs {
-            font-size: 8px;
+            font-size: 6px;
         }
 
         .font-md {
@@ -78,14 +78,14 @@
 
                                     @php
                                         if ($jj - 1 < $stock) {
-                                            echo '<img style="height: 30px; " src=' . $image . '>';
+                                            echo '<img style="height: 25px; " src=' . $image . '>';
                                         }
                                     @endphp
 
 
                             </div>
 
-                            <div class="text-center font-sm">
+                            <div class="text-center font-xs">
                                 {{ $description }}
 
                             </div>
@@ -109,7 +109,7 @@
 
                             </div>
 
-                            <div class="text-center font-sm">
+                            <div class="text-center font-xs">
                                 {{ $barcode }}
 
                             </div>
