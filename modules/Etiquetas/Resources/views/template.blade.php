@@ -54,7 +54,7 @@
 
 <body>
     @if (!empty($image))
-        <table width="100%" style="">
+        <table width="100%" autosize="1">
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -115,14 +115,14 @@
                                 </table>
                             </td>
                         @else
-                        <td>
-                            <table width="100%">
+                        <td style="text-align:center;">
+                            <table width="80%" autosize="1">
                                 <tr>
                                     <td id="image">
 
                                         @php
                                             if ($jj - 1 < $stock) {
-                                                echo '<img style="height: 120px; max-width:100%;" src=' . $image . '>';
+                                                echo '<img style="height: 60px; " src=' . $image . '>';
                                             }
                                         @endphp
 
@@ -141,7 +141,7 @@
                                                 $colour = [0, 0, 0];
                                                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
                                             
-                                                echo '<img   style="width:100%;"  src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8)) . '">';
+                                                echo '<img   style="width:160px;height: 40px;"  src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8)) . '">';
                                             }
                                         @endphp
                                        
@@ -152,9 +152,7 @@
                                         {{ $barcode }}
                                     </td>
                                 </tr>
-                                {{-- <tr>
-                                    <td class="text-right font-lg">S/. {{ $price }}</td>
-                                </tr> --}}
+                        
                             </table>
                           </td>
                             @endif
