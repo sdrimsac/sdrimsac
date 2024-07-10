@@ -73,7 +73,7 @@
                     @php
                         $jj++;
                     @endphp
-                    <div style="width: 47%; float: left;padding:0px 2px;">
+                    <div style="width: 50%; float: left;">
                         <div id="image">
 
                             @php
@@ -85,18 +85,18 @@
 
                         </div>
 
-                        <div class="text-center font-xs">
+                        <div class="text-center font-xs" style="width:90%">
                             {{ $description }}
 
                         </div>
 
-                        <div class="text-center">
+                        <div class="text-center" style="width:90%">
                             @php
                                 if ($jj - 1 != $stock) {
                                     $colour = [0, 0, 0];
                                     $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                    echo '<img   style="width:50px;height: 15px;"  src="data:image/png;base64,' .
+                                    echo '<img   style="width:100px;height: 15px;"  src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
                                                 $barcode,
