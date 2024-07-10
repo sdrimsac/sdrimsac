@@ -122,7 +122,7 @@
 
                                         @php
                                             if ($jj - 1 < $stock) {
-                                                echo '<img style="height: 60px; " src=' . $image . '>';
+                                                echo '<img style="height: 90px; " src=' . $image . '>';
                                             }
                                         @endphp
 
