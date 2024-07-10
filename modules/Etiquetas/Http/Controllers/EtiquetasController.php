@@ -81,8 +81,8 @@ class EtiquetasController extends Controller
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
-                    $paper ==  1 ? 50 :  106,
-                    25
+                    $paper ==  1 ? 50 :  65,
+                    $paper == 1 ? 25 : 20
                 ],
 
                 'margin_top' => $margin_top,
@@ -92,7 +92,7 @@ class EtiquetasController extends Controller
             ]);
 
 
-            
+            $pdf->shrink_tables_to_fit=0;
             $html = view('etiquetas::' . $template, compact(
                 // $html = view('etiquetas::templatetest', compact(
                 'type',
