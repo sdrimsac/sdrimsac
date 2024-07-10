@@ -691,6 +691,8 @@ const app = new Vue({
         "worker-maintenance": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue"
-            )
+            ),
+        /* "tenant-etiquetas-index": () =>
+            import("./views/etiquetas/index.vue") */
     }
 });

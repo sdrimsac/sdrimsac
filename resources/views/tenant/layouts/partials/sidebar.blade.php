@@ -155,6 +155,12 @@
                                 <i class="fa fa-solid fa-ruler"></i> Unidad de medida
                             </a>
                         </li>
+                        {{-- <li>
+                            <a class="{{ $path[0] === 'etiquetas' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.etiquetas.index') }}">
+                                <i class="fa fa-solid fa-ruler"></i> Prueba Etiquetas
+                            </a>
+                        </li> --}}
 
 
                         <!-- @if ($config->restaurant)

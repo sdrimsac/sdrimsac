@@ -1175,7 +1175,7 @@
                                                                             <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">
-                                                                                        No Mostrar Modulo de Etiquetas
+                                                                                         Mostrar Modulo de Etiquetas
                                                                                         <el-tooltip class="item" effect="dark" content="aqui podemos decidir si queremos mostrar o no el modulo de etiquetas" placement="top-start">
                                                                                             <i class="fa fa-info-circle"></i>
                                                                                         </el-tooltip>
