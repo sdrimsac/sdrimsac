@@ -82,7 +82,7 @@ class EtiquetasController extends Controller
                 'mode' => 'utf-8',
                 'format' => [
                     $paper ==  1 ? 50 :  65,
-                    $paper == 1 ? 25 : 35
+                    $paper == 1 ? 25 : 3
                 ],
 
                 'margin_top' => $margin_top,
