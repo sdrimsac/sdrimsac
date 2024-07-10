@@ -73,48 +73,49 @@
                     @php
                         $jj++;
                     @endphp
-                  <div style="width: 47%; float: left;">
-                            <div id="image">
+                    <div style="width: 47%; float: left;padding:0px 2px;">
+                        <div id="image">
 
-                                    @php
-                                        if ($jj - 1 < $stock) {
-                                            echo '<img style="height: 25px; " src=' . $image . '>';
-                                        }
-                                    @endphp
+                            @php
+                                if ($jj - 1 < $stock) {
+                                    echo '<img style="height: 25px; " src=' . $image . '>';
+                                }
+                            @endphp
 
-
-                            </div>
-
-                            <div class="text-center font-xs">
-                                {{ $description }}
-
-                            </div>
-
-                            <div class="text-center">
-                                @php
-                                    if ($jj - 1 != $stock) {
-                                        $colour = [0, 0, 0];
-                                        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-
-                                        echo '<img   style="width:50px;height: 15px;"  src="data:image/png;base64,' .
-                                            base64_encode(
-                                                $generator->getBarcode(
-                                                    $barcode,
-                                                    $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8,
-                                                ),
-                                            ) .
-                                            '">';
-                                    }
-                                @endphp
-
-                            </div>
-
-                            <div class="text-center font-xs">
-                                {{ $barcode }}
-
-                            </div>
 
                         </div>
+
+                        <div class="text-center font-xs">
+                            {{ $description }}
+
+                        </div>
+
+                        <div class="text-center">
+                            @php
+                                if ($jj - 1 != $stock) {
+                                    $colour = [0, 0, 0];
+                                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+
+                                    echo '<img   style="width:50px;height: 15px;"  src="data:image/png;base64,' .
+                                        base64_encode(
+                                            $generator->getBarcode(
+                                                $barcode,
+                                                $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8,
+                                            ),
+                                        ) .
+                                        '">';
+                                }
+                            @endphp
+
+                        </div>
+
+                        <div class="text-center font-xs">
+                            {{ $barcode }}
+
+                        </div>
+
+                    </div>
+                
                 @endfor
             @endfor
         </div>
