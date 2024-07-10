@@ -14,7 +14,6 @@
 
         #image {
             width: 125px;
-            margin: auto;
             text-align: center;
         }
 
@@ -74,7 +73,9 @@
                         $jj++;
                     @endphp
                     <div style="width: 50%; float: left;">
-                        <div id="image">
+                        <div style="width:100%;" 
+                        
+                        >
 
                             @php
                                 if ($jj - 1 < $stock) {
