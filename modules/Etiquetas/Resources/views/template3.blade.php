@@ -73,7 +73,7 @@
                     @php
                         $jj++;
                     @endphp
-                  <div style="width: 50%; float: left;">
+                  <div style="width: 47%; float: left;">
                             <div id="image">
 
                                     @php
