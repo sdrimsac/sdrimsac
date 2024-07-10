@@ -950,7 +950,7 @@
                                                                                             "></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-3 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Números
                                                                                         de
@@ -1006,7 +1006,7 @@
                                                                                             "></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-3 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Enviar
                                                                                         XML
@@ -1098,20 +1098,20 @@
                                                                                             "></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Impresión Directa</label>
                                                                                     <el-switch v-model="form.print_direct" active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Vender con stock</label>
                                                                                     <el-switch v-model="form.sales_stock" active-text="Si" inactive-text="No" @change="
                  submit(); stock_control(); "></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Mostrar politica precios ticket
                                                                                     </label>
@@ -1119,28 +1119,28 @@
              " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Usar número personal (whatsapp)
                                                                                     </label>
                                                                                     <el-switch v-model="form.personal_phone" active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Imprimir referencia en ticket
                                                                                     </label>
                                                                                     <el-switch v-model="form.reference_ticket" active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Imprimir gastos/ingresos
                                                                                     </label>
                                                                                     <el-switch v-model=" form.print_incomes_expenses " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Enviar whatsapp al ver venta
                                                                                         diaria
@@ -1148,7 +1148,7 @@
                                                                                     <el-switch v-model=" form.send_whatsapp_daily_cash " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Observación al hacer ajuste de
                                                                                         stock
@@ -1160,7 +1160,7 @@
                                                                                     <el-switch v-model=" form.observation_translate " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-6 mt-4">
+                                                                            <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
                                                                                     <label class="control-label w-100">Enviar whatsapp por pagos
                                                                                         YAPE/PLIN
@@ -1172,9 +1172,18 @@
                                                                                     <el-switch v-model=" form.send_whatsapp_digital_pay " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
+                                                                            <div class="col-md-4 mt-4">
+                                                                                <div class="form-group">
+                                                                                    <label class="control-label w-100">
+                                                                                        No Mostrar Modulo de Etiquetas
+                                                                                        <el-tooltip class="item" effect="dark" content="aqui podemos decidir si queremos mostrar o no el modulo de etiquetas" placement="top-start">
+                                                                                            <i class="fa fa-info-circle"></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
 
-                                                                            =======
-                                                                            >>>>>>> Stashed changes
+                                                                                    <el-switch v-model=" form.ver_etiqueta_logistica" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </el-card>
@@ -1409,13 +1418,12 @@
                                                                             <div class="col-md-3 mt-4">
                                                                                 <label class="control-label">Editar nombre de productos</label>
                                                                                 <div class="form-group" :class="{
-                        'has-danger':
-                            errors.edit_name_product
-                    }">
+                                                                                    'has-danger':
+                                                                                    errors.edit_name_product}">
                                                                                     <el-switch v-model="form.edit_name_product" active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                     <small class="text-danger" v-if="errors.edit_name_product" v-text="
-                            errors.edit_name_product[0]
-                        "></small>
+                                                                                        errors.edit_name_product[0]
+                                                                                    "></small>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -2236,7 +2244,7 @@
                                                         form.show_internal_code_ticket
                                                     " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                         </div>
-                                        <div class="col-md-4 mt-4">
+                                        <div class="col-md-3 mt-2">
                                             <div class="form-group">
                                                 <label class="control-label w-100">
                                                     Recibir Productos

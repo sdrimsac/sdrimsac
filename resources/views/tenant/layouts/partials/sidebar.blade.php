@@ -339,15 +339,14 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}"
-                                href="{{ route('etiquetas.index') }}">
-                                <i class="icofont-label"></i> Etiquetas
-                            </a>
-                        </li>
-
-
-
+                        @if ($config->ver_etiqueta_logistica)
+                            <li>
+                                <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}"
+                                    href="{{ route('etiquetas.index') }}">
+                                    <i class="icofont-label"></i> Etiquetas
+                                </a>
+                            </li>
+                        @endif
                     @endif
                     {{-- @if ($has_series)
                         <li>
@@ -410,13 +409,13 @@
                                 <i class="icofont-list"></i> Listado
                             </a>
                         </li>
-                        @if($config->detraction)
-                        <li>
-                            <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
-                                href="{{ route('tenant.detractions.index') }}">
-                                <i class="icofont-list"></i> Detracciones
-                            </a>
-                        </li>
+                        @if ($config->detraction)
+                            <li>
+                                <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
+                                    href="{{ route('tenant.detractions.index') }}">
+                                    <i class="icofont-list"></i> Detracciones
+                                </a>
+                            </li>
                         @endif
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"

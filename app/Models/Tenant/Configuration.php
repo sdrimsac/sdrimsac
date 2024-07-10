@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'ver_etiqueta_logistica',
         'detraction',
         'config_etiquetas',
         'detraction_type_id',
@@ -190,6 +191,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'ver_etiqueta_logistica' => 'boolean',
         'correo_red_salud_ticket' => 'boolean',
         'numero_accion_independiente_admin' => 'boolean',
         'detraction' => 'boolean',
@@ -320,6 +322,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'ver_etiqueta_logistica' => $this->ver_etiqueta_logistica,
             'detraction' => $this->detraction,
             'config_etiquetas' => $this->config_etiquetas,
             'detraction_type_id' => $this->detraction_type_id,

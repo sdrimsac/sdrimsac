@@ -7,9 +7,9 @@
         :modal-append-to-body="true"
         :show-close="false"
         :append-to-body="true"
-        width="1000px"
+        width="850px"
         top="2vh"
-        :title="`MODULO DE COBRO AA ${variation ? '- Variación' : ''}`"
+        :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
         class="algunaClase"
     >
         <div v-loading="loading" class=" mb-0">
@@ -55,11 +55,11 @@
                                                     size="small"
                                                     @change="filterSeries()"
                                                 >
-                                                    <template v-if="!isInterno">
+                                                    <template v-if="!isInterno" class="fw-bold">
                                                         <el-radio-button
                                                             v-if="invoice"
-                                                            label="01"
-                                                            >FACTURA
+                                                            label="01">
+                                                            FACTURA
                                                         </el-radio-button>
                                                         <el-radio-button
                                                             v-if="receipt"
@@ -108,7 +108,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-6 col-md-4 col-lg-4 ">
+                                        <div class="col-4 col-md-4 col-lg-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label fw-bold"
@@ -136,13 +136,13 @@
                                             <div class="form-group">
                                                 <template>
                                                     <div
-                                                        class="el-input el-input-group col-md-6 "
+                                                        class="el-input el-input-group col-md-6"
                                                         style="margin-bottom:3px;"
                                                     >
                                                         <label
                                                             class="control-label fw-bold"
                                                             style="margin-right:3px;"
-                                                            >Cliente</label
+                                                            ><i class="fas fa-regular fa-user"></i>Cliente</label
                                                         >
                                                         <el-button
                                                             :disabled="
@@ -152,8 +152,10 @@
                                                             @click="
                                                                 openDialogPerson
                                                             "
-                                                            >Editar
-                                                            cliente</el-button
+                                                            >
+                                                            <i class="fas fa-edit tab-icon"></i>
+                                                            Editar
+                                                            </el-button
                                                         >
                                                         <el-button
                                                             v-if="
@@ -164,8 +166,10 @@
                                                                 createClient
                                                             "
                                                             class="fw-bold"
-                                                            >Nuevo
-                                                            cliente</el-button
+                                                            > 
+                                                            <i class="fas fa-solid fa-plus"></i>
+                                                            Nuevo
+                                                             </el-button
                                                         >
                                                     </div>
                                                 </template>
@@ -236,9 +240,10 @@
                                                 >
                                                 </el-option>
                                             </el-select>
-                                        </div>
+                                        </div>  
                                     </div>
-                                    <div class="row col-lg-12 col-xl-12">
+                                    <!-- <div class="row"> -->
+                                        <div class="row col-lg-12 col-xl-12">
                                         <div class="form-group">
                                             <label class="control-label fw-bold"
                                                 >Observaciones</label
@@ -252,6 +257,28 @@
                                             ></el-input>
                                         </div>
                                     </div>
+                                    <!-- <div class="col-lg-4 col-md-4 col-xl-4">
+                                            <label
+                                                class="control-label text-left  d-flex align-items-start justify-content-start"
+                                            >
+                                                Ingrese Nro Celular
+                                            </label>
+                                            <el-input
+                                                v-model="
+                                                    form.customer_telephone
+                                                "
+                                                maxlength="9"
+                                                show-word-limit>
+                                                <template slot="prepend"
+                                                    ><i
+                                                        class="fab fa-whatsapp fa-2x bg-success"
+                                                    ></i>
+                                                </template>
+                                            </el-input>
+                                        </div>
+                                    </div> -->
+                                    
+                                    
                                     <template
                                         v-if="
                                             configuration.show_coins_to_receive
@@ -340,10 +367,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-12">
                     <div class=" mb-2" v-if="conf.show_payment_method">
-                        <div class=" text-center text-dark card  bg-light  ">
+                        <div class=" text-center text-dark card  bg-light">
                             <div class="row">
                                 <div class="  col-lg-6 ">
                                     <div class=" align-items-start ">
@@ -384,9 +410,7 @@
                                                 ></label>
                                             </div>
                                         </div>
-                                        <div
-                                            class="input-container2 border rounded-sm"
-                                        >
+                                        <div class="input-container2 border rounded-sm">
                                             <input
                                                 :disabled="form_payment.is_bank"
                                                 id="culqui"
@@ -412,9 +436,8 @@
                                                 ></label>
                                             </div>
                                         </div>
-                                        <div
-                                            class="input-container2 border rounded-sm"
-                                        >
+                                        <div class="input-container2 border rounded-sm" >
+                                            
                                             <input
                                                 :disabled="form_payment.is_bank"
                                                 id="plin"
@@ -426,9 +449,7 @@
                                                 @change="
                                                     method_payment(
                                                         'TARJETA: IZYPAY'
-                                                    )
-                                                "
-                                            />
+                                                    )"/>
                                             <div
                                                 class="radio-tile2"
                                                 style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
@@ -441,6 +462,7 @@
                                                     class="radio-tile-label2"
                                                 ></label>
                                             </div>
+                                        
                                         </div>
                                         <div
                                             class="input-container2 border rounded-sm"
@@ -706,7 +728,7 @@
                                             >
                                                 <template slot="prepend"
                                                     ><i
-                                                        class="fab fa-whatsapp fa-2x"
+                                                        class="fab fa-whatsapp fa-2x bg-success"
                                                     ></i>
                                                 </template>
                                             </el-input>
