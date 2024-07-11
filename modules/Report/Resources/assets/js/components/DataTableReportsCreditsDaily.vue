@@ -190,11 +190,12 @@
                             <tr>
                                 <td
                                     :colspan="
-                                        resource == 'reports/sales' ? 7 : 8
+                                        resource == 'reports/sales' ? 6 : 7
                                     "
                                 ></td>
                                 <td class="text-end"><strong>Totales</strong></td>
-                                <td class="text-end">{{ totals.acum_unpaid }}</td>
+                                <td class="text-end">{{ totals.acum_quote.toFixed(2) }}</td>
+                                <td class="text-end">{{ totals.acum_unpaid.toFixed(2) }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -337,6 +338,7 @@ export default {
 
             records.forEach(row => {
                 this.totals.acum_unpaid += parseFloat(row.amount_due);
+                this.totals.acum_quote += parseFloat(row.quote_payment);
 
             });
         },
@@ -366,6 +368,7 @@ export default {
         initTotals() {
             this.totals = {
                 acum_unpaid: 0,
+                acum_quote:0,
             }
         },
         customIndex(index) {

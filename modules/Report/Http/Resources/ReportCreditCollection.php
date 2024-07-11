@@ -110,7 +110,7 @@ class ReportCreditCollection extends ResourceCollection
                 $observation .= " " . $observation_credit;
             }
             return [
-                'quote_payment' => $quote_payment,
+                'quote_payment' => number_format($quote_payment,2),
                 'state_type_id' => $row->state_type_id,
                 'quotes' => $quotes,
                 'schedules' => $schedules,
