@@ -1,94 +1,110 @@
 <template>
-<v-stage ref="stage" :config="config" @click="addText">
-    <v-layer ref="layer">
-        <v-rect :config="{
-            x: 0,
-            y: 0,
-            width: config.width,
-            height: config.height,
-            fill: 'white'
-          }" />
-        <v-text v-for="(text, index) in texts" :key="index" :config="text" @dblclick="editText(index)" draggable />
-        <v-image v-for="(image, index) in images" :key="index" :config="image" draggable />
-    </v-layer>
-</v-stage>
+<div class="card">
+    <div class="card body">
+        <div>
+            <el-tooltip content="Top center" placement="top">
+                <el-button>Texto</el-button>
+            </el-tooltip>
+            <el-tooltip content="Top center" placement="top">
+                <el-img > Imagenes</el-img>
+            </el-tooltip>
+            <el-tooltip content="Top center" placement="top">
+                <el-button>Dark</el-button>
+            </el-tooltip>
+            <el-tooltip content="Top center" placement="top">
+                <el-button>Dark</el-button>
+            </el-tooltip>
+            <el-tooltip content="Top center" placement="top">
+                <el-button>Dark</el-button>
+            </el-tooltip>
+            <el-tooltip content="Top center" placement="top">
+                <el-button>Dark</el-button>
+            </el-tooltip>
+        </div>
+        <div ref="canvasContainer" class="canvas-container">
+            <canvas ref="canvas"></canvas>
+        </div>
+    </div>
+</div>
 </template>
 
-  
 <script>
-import {
-    Stage,
-    Layer,
-    Rect,
-    Text,
-    Image
-} from 'vue-konva';
-import Konva from 'konva';
-
 export default {
     name: 'PaintCanvas',
-    components: {
-        'v-stage': Stage,
-        'v-layer': Layer,
-        'v-rect': Rect,
-        'v-text': Text,
-        'v-image': Image,
-    },
     data() {
         return {
-            config: {
-                width: window.innerWidth,
-                height: window.innerHeight,
+            isDrawing: false,
+            ctx: null,
+            lastPos: {
+                x: 0,
+                y: 0
             },
-            texts: [],
-            images: [],
+            currentColor: '#000000',
+            lineWidth: 5,
         };
     },
+    mounted() {
+        const canvas = this.$refs.canvas;
+        const canvasContainer = this.$refs.canvasContainer;
+        canvas.width = canvasContainer.clientWidth;
+        canvas.height = canvasContainer.clientHeight;
+        this.ctx = canvas.getContext('2d');
+
+        canvas.addEventListener('mousedown', this.startDrawing);
+        canvas.addEventListener('mousemove', this.draw);
+        canvas.addEventListener('mouseup', this.stopDrawing);
+        canvas.addEventListener('mouseout', this.stopDrawing);
+    },
     methods: {
-        addText() {
-            const text = {
-                x: this.config.width / 2,
-                y: this.config.height / 2,
-                text: 'Double click to edit text',
-                fontSize: 20,
-                draggable: true,
-                fill: 'black',
+        startDrawing(event) {
+            this.isDrawing = true;
+            this.lastPos = this.getMousePos(event);
+        },
+        draw(event) {
+            if (!this.isDrawing) return;
+
+            const mousePos = this.getMousePos(event);
+            this.ctx.strokeStyle = this.currentColor;
+            this.ctx.lineWidth = this.lineWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.lastPos.x, this.lastPos.y);
+            this.ctx.lineTo(mousePos.x, mousePos.y);
+            this.ctx.stroke();
+            this.lastPos = mousePos;
+        },
+        stopDrawing() {
+            this.isDrawing = false;
+        },
+        getMousePos(event) {
+            const rect = this.$refs.canvas.getBoundingClientRect();
+            return {
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top,
             };
-            this.texts.push(text);
         },
-        editText(index) {
-            const newText = prompt('Edit text:', this.texts[index].text);
-            if (newText) {
-                this.$set(this.texts, index, {
-                    ...this.texts[index],
-                    text: newText
-                });
-            }
+        setColor(color) {
+            this.currentColor = color;
         },
-        addImage() {
-            const imageObj = new Image();
-            imageObj.onload = () => {
-                const konvaImage = new Konva.Image({
-                    x: 50,
-                    y: 50,
-                    image: imageObj,
-                    width: 100,
-                    height: 100,
-                    draggable: true,
-                });
-                this.images.push(konvaImage);
-            };
-            imageObj.src = 'URL_DE_LA_IMAGEN'; // Reemplaza con la URL de tu imagen
+        setLineWidth(width) {
+            this.lineWidth = width;
         },
+        clearCanvas() {
+            this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+        }
     },
 };
 </script>
 
-  
 <style>
 .canvas-container {
     width: 100%;
     height: 100%;
+    border: 1px solid #000;
     position: relative;
+}
+
+canvas {
+    display: block;
 }
 </style>

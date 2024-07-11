@@ -160,7 +160,7 @@
                                 href="{{ route('tenant.etiquetas.index') }}">
                                 <i class="fa fa-solid fa-ruler"></i> Prueba Etiquetas
                             </a>
-                        </li> --}}
+                        </li> --}} 
 
 
                         <!-- @if ($config->restaurant)

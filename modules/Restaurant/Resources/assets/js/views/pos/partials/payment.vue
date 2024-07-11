@@ -243,7 +243,7 @@
                                         </div>  
                                     </div>
                                     <!-- <div class="row"> -->
-                                        <div class="row col-lg-12 col-xl-12">
+                                    <div class="row col-lg-12 col-xl-12">
                                         <div class="form-group">
                                             <label class="control-label fw-bold"
                                                 >Observaciones</label
@@ -1818,6 +1818,11 @@ export default {
     },
     mounted() {},
     methods: {
+        focusObservation() {
+            this.$nextTick(() => {
+                this.$refs.observation.focus();
+            });
+        },
         addDocumentDetraction(detraction) {
             console.log("🚀 ~ addDocumentDetraction ~ detraction:", detraction);
             //si  detraction no es objecto vacio
