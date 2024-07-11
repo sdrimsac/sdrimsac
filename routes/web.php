@@ -593,7 +593,7 @@ if ($hostname) {
                 Route::delete('detraction_types/{code}', [App\Http\Controllers\Tenant\DetractionTypeController::class, 'destroy']);
 
                 /* prueba de etiquetas  */
-                Route::get('etiquetas', [App\Http\Controllers\Tenant\EtiquetasController::class, 'index'])->name('tenant.etiquetas.index')->middleware('just.admin');
+                // Route::get('etiquetas', [App\Http\Controllers\Tenant\EtiquetasController::class, 'index'])->name('tenant.etiquetas.index')->middleware('just.admin');
 
 
                 //Banks
