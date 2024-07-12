@@ -159,6 +159,11 @@ class PosController extends Controller
         $establishment = Establishment::find($establishment_id);
         $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
         $warehouse_id = $warehouse->id;
+        $warehouse_product_id = auth()->user()->warehouse_product_id;
+        if ($warehouse_product_id) {
+            $warehouse_id = $warehouse_product_id;
+        }
+        
         $textoIntoArray =  explode(' ', $value);
 
 
