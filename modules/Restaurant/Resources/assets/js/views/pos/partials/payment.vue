@@ -1824,7 +1824,6 @@ export default {
             });
         },
         addDocumentDetraction(detraction) {
-            console.log("🚀 ~ addDocumentDetraction ~ detraction:", detraction);
             //si  detraction no es objecto vacio
             if (Object.keys(detraction).length === 0) {
                 return;
@@ -2872,14 +2871,16 @@ export default {
                 ];
 
                 let new_base = this.form.total_value_without_rounding;
+
                 this.form.total_taxed = _.round(
                     new_base - global_discount_amount_without_rounding,
                     2
                 );
+                let total_taxed_without_rounding = new_base - global_discount_amount_without_rounding;
                 this.form.total_value = this.form.total_taxed;
                 if (this.configuration.affectation_igv_type_id == "10") {
                     this.form.total_igv = _.round(
-                        this.form.total_taxed * (this.percentage_igv / 100),
+                        total_taxed_without_rounding * (this.percentage_igv / 100),
                         2
                     );
                 } else {
@@ -3791,7 +3792,6 @@ export default {
                     form
                 );
                 let { data } = response;
-                console.log("🚀 ~ clickPayment ~ data:", data);
                 if (response.status == 200 && data.data) {
                     let format = null;
                     let data = response.data.data;
@@ -3829,7 +3829,6 @@ export default {
                         if (response.data.success == true) {
                             if(this.configuration.all_items_pos){
                                 this.$emit("reloadItems");
-                                console.log("recargando items");
 
                             }
                             /* let customer = this.all_customers.find(
