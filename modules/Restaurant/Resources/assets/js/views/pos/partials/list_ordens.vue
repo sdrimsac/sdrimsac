@@ -1579,7 +1579,7 @@
                                                                                             .food
                                                                                             .item
                                                                                             .series_enabled ==
-                                                                                            1 ||
+                                                                                            1 && !configuration.quotation ||
                                                                                         order_pend
                                                                                             .food
                                                                                             .item
@@ -1617,7 +1617,7 @@
                                                                                             .food
                                                                                             .item
                                                                                             .series_enabled ==
-                                                                                            1 ||
+                                                                                            1 && !configuration.quotation ||
                                                                                         order_pend
                                                                                             .food
                                                                                             .item
@@ -1813,7 +1813,7 @@
                                                             v-if="
                                                                 order_pend.food
                                                                     .item
-                                                                    .series_enabled
+                                                                    .series_enabled 
                                                             "
                                                         >
                                                             <template
@@ -1821,7 +1821,7 @@
                                                                     order_pend
                                                                         .series
                                                                         .length ==
-                                                                        0
+                                                                        0 
                                                                 "
                                                             >
                                                                 <el-tag
@@ -3636,6 +3636,9 @@ export default {
         },
 
         validStock(orden, quantity = 1) {
+            if(this.configuration.quotation_stock){
+                return false;
+            }
             let qty = this.localOrden
                 .filter(o => o.id == orden.id)
                 .reduce((a, b) => a + Number(b.quantity), 0);
@@ -3904,6 +3907,7 @@ export default {
             this.calculateTotal();
         },
         sumar_orden(index) {
+
             if (this.validStock(this.localOrden[index])) {
                 this.$toast.warning("Limite de stock alcanzado");
                 return;

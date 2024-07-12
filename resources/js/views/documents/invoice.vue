@@ -1786,7 +1786,6 @@
                                             class="text-end"
                                             style="padding-left: 20px;"
                                         >
-                                            {{ currency_type.symbol }}
                                             <!-- <template v-if="form.detraction">
                                                 {{
                                                     Number(form.total_payment) -
@@ -1796,9 +1795,11 @@
                                                         )
                                                 }}
                                             </template> -->
-                                                <h4>
-                                                    {{ form.total_payment }}
-                                                </h4>
+                                            <h4>
+                                                {{ currency_type.symbol }}
+
+                                                {{ form.total_payment }}
+                                            </h4>
                                         </td>
                                     </tr>
                                 </table>
@@ -3364,8 +3365,8 @@ export default {
         },
 
         async submit() {
-            if(this.form.detraction && this.form.detraction.amount == 0){
-                delete this.form.detraction
+            if (this.form.detraction && this.form.detraction.amount == 0) {
+                delete this.form.detraction;
             }
             if (this.form.has_prepayment || this.prepayment_deduction) {
                 let error_prepayment = await this.validateAffectationTypePrepayment();
