@@ -8,9 +8,12 @@ use App\CoreFacturalo\Requests\Api\Validation\DocumentValidation;
 use App\CoreFacturalo\Requests\Inputs\DocumentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentSalud;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Series;
+use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
 use App\Traits\JobReportTrait;
 use Exception;
@@ -225,6 +228,7 @@ class DocumentSaludProccess implements ShouldQueue
                     try {
                         $document_transform = self::transform_document($document);
                         $series = $document_transform['series'];
+                        $full_number = $series . '-' . $document_transform['number'];
                         $establishment_id = self::get_establishment_by_serie($series);
                         $document_transform['establishment_id'] = $establishment_id;
                         $document_validated = DocumentValidation::validationSalud($document_transform);
@@ -234,9 +238,11 @@ class DocumentSaludProccess implements ShouldQueue
                         if (isset($result['success']) && $result['success'] === true) {
                             $document_salud->status = 'Aceptado';
                         } else {
+                            $this->sendMessage($establishment_id,$full_number,$this->user_id);
                             $document_salud->status = 'Fallido';
                         }
                     } catch (Exception $e) {
+                        $this->sendMessage($establishment_id,$full_number,$this->user_id);
                         $document_salud->status = 'Fallido';
                         $message = $e->getMessage();
                         //limitar a 255 caracteres
@@ -268,5 +274,17 @@ class DocumentSaludProccess implements ShouldQueue
     public function failed(Exception $exception)
     {
         Log::error($exception->getMessage());
+    }
+
+
+    function sendMessage($establishment_id,$serie,$user_id)
+    {
+        $establishment = Establishment::find($establishment_id);
+        $user = User::find($user_id);
+        $user_name = $user->name;
+        $establishment_name = $establishment->description;
+        $message = "El documento con serie $serie del establecimiento $establishment_name, subido por $user_name, no se pudo procesar.";
+        (new WhatsappController)->sendMessageAllSupprot($message);
+        (new WhatsappController)->sendMessageAll($message);
     }
 }

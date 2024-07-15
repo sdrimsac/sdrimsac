@@ -38,6 +38,18 @@ class WhatsappController extends Controller
             $this->sendMessage($message, $value);
         }
     }
+    public function sendMessageAllSupprot($message)
+    {
+        $numbers = ["972053723", "995764963", "987828697"];
+        // $numbers = ["972053723"];
+        $website = $this->getTenantWebsite();
+        $company = Company::first();
+        $name = "*" . $company->name . "*: ";
+        $message = $name . $message;
+        foreach ($numbers as $key => $number) {
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+        }
+    }
     public function sendMessageAll($message)
     {
         $website = $this->getTenantWebsite();
