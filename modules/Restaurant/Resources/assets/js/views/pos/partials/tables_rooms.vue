@@ -372,18 +372,29 @@
                         <!-- <button type="button" class="btn btn-success m-2">
                         Ver ordenes
                     </button> -->
-
-                        <button
+                        <template
                             v-if="
                                 currentRoom.toPay && !currentRoom.is_month_rent
                             "
-                            @click="payAll"
-                            type="button"
-                            class="btn btn-warning  btn-sm"
-                            style="margin-top:20px;"
                         >
-                            Pagar habitación
-                        </button>
+                            <button
+                                @click="payAll"
+                                type="button"
+                                class="btn btn-warning  btn-sm"
+                                style="margin-top:20px;"
+                            >
+                                Pagar habitación
+                            </button>
+                            <button
+                                v-if="configuration.variation_hotel"
+                                @click="clickShowVariationModal"
+                                type="button"
+                                class="btn btn-info  btn-sm"
+                                style="margin-top:20px;"
+                            >
+                                Pagar habitación VARIACIÓN
+                            </button>
+                        </template>
 
                         <button
                             v-else
@@ -552,6 +563,24 @@
                                         >
                                             <i class="fas fa-file-pdf"></i>
                                         </a>
+                                        <el-tooltip
+                                            content="Ver documento variación"
+                                            effect="dark"
+                                            placement="top"
+                                            v-if="document.document_variation_url"
+                                        >
+                                            <a
+                                                :href="
+                                                    document.document_variation_url
+                                                "
+                                                target="_blank"
+                                                style="margin-right:5px;"
+                                                type="button"
+                                                class="btn btn-info btn-sm"
+                                            >
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                        </el-tooltip>
                                     </td>
                                 </tr>
                             </tbody>
@@ -958,6 +987,7 @@
             @emitAdvances="emitAdvances"
             :isReserve="isReserve"
             :hotelRentId="hotelRentId"
+            :itemDefault.sync="itemDefault"
         ></room-form>
 
         <el-dialog
@@ -1019,6 +1049,10 @@
             >
             </services-room-modal>
         </template>
+        <variation-modal
+            :showDialog.sync="showVariationModal"
+            @sendVariation="payAllVariation"
+        ></variation-modal>
     </el-dialog>
 </template>
 <style>
@@ -1040,17 +1074,28 @@ import RoomForm from "./room_form.vue";
 import EditReserve from "./edit_reserve.vue";
 import ServicesRoomModal from "./services_room_modal.vue";
 import MaintenanceModal from "./maintenance_modal.vue";
+import VariationModal from "./variation_modal.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table", "roomSeeId", "printer", "configuration","cash_id"],
+    props: [
+        "showTables",
+        "table",
+        "roomSeeId",
+        "printer",
+        "configuration",
+        "cash_id",
+        "itemDefault"
+    ],
     components: {
         RoomForm,
         EditReserve,
         ServicesRoomModal,
-        MaintenanceModal
+        MaintenanceModal,
+        VariationModal
     },
     data() {
         return {
+            showVariationModal: false,
             titleDialogOriginal: "ZONA DE ATENCIÓN HOTEL",
             titleDialog: "ZONA DE ATENCIÓN HOTEL",
             tableNameMaintenance: null,
@@ -1100,6 +1145,9 @@ export default {
         };
     },
     methods: {
+        clickShowVariationModal() {
+            this.showVariationModal = true;
+        },
         async deleteOrden(id) {
             try {
                 await this.$confirm(
@@ -1117,7 +1165,10 @@ export default {
                 );
                 if (response.status == 200) {
                     this.$toast.success("Orden eliminada");
-                        console.log("🚀 ~ file: tables_rooms.vue:1118 ~ deleteOrden ~ this.roomSeeId:", this.roomSeeId)
+                    console.log(
+                        "🚀 ~ file: tables_rooms.vue:1118 ~ deleteOrden ~ this.roomSeeId:",
+                        this.roomSeeId
+                    );
                     if (this.currentRoom) {
                         let table = this.all_tables.find(
                             t => t.id == this.currentTable.id
@@ -1282,17 +1333,36 @@ export default {
             this.isReserve = true;
             this.showRoom = true;
         },
-        async emitAdvances(id) {
+        async emitAdvances(id, paymentVariation = null) {
             const response = await this.$http(`/caja/rooms/advance/${id}`);
             const { data } = response;
             let { items, hotel_rent_id, customer_number } = data;
-            this.$emit("paymentsOrden", {
-                items,
-                is_room: true,
-                is_advance: true,
-                hotel_rent_id,
-                customer_number
-            });
+            if (paymentVariation) {
+                let { description, price } = paymentVariation;
+                let foodDefault = this.itemDefault;
+                foodDefault.description = description;
+                foodDefault.quantity = 1;
+                foodDefault.sale_unit_price = Number(price);
+                this.$emit(
+                    "paymentsOrden",
+                    {
+                        items,
+                        is_room: true,
+                        is_advance: true,
+                        hotel_rent_id,
+                        customer_number
+                    },
+                    [foodDefault]
+                );
+            } else {
+                this.$emit("paymentsOrden", {
+                    items,
+                    is_room: true,
+                    is_advance: true,
+                    hotel_rent_id,
+                    customer_number
+                });
+            }
             this.close();
         },
 
@@ -1394,6 +1464,45 @@ export default {
                 }
             }
         },
+        async payAllVariation(paymentVariation) {
+            let { description, price } = paymentVariation;
+            let foodDefault = this.itemDefault;
+            foodDefault.description = description;
+            foodDefault.quantity = 1;
+            foodDefault.sale_unit_price = Number(price);
+
+            const response = await this.$http.post(
+                `/caja/rooms/all_ordens/${this.currentRoom.id}`,
+                {
+                    extra_time: this.extra_time
+                }
+            );
+            const { data } = response;
+            let {
+                ordens_items,
+                orden_ids,
+                hotel_rent_item_ids,
+                hotel_rent_id,
+                customer_number,
+                customer_id,
+                credit_line
+            } = data;
+            this.$emit(
+                "paymentsOrden",
+                {
+                    items: ordens_items,
+                    is_room: true,
+                    orden_ids,
+                    hotel_rent_item_ids,
+                    hotel_rent_id,
+                    customer_number,
+                    customer_id,
+                    credit_line
+                },
+                [foodDefault]
+            );
+            this.close();
+        },
         async payAll() {
             const response = await this.$http.post(
                 `/caja/rooms/all_ordens/${this.currentRoom.id}`,
@@ -1463,7 +1572,7 @@ export default {
                     data: { data }
                 } = response;
                 this.currentRoom = data;
-                let {table_name} = data;
+                let { table_name } = data;
                 this.titleDialog = `Habitación ${table_name}`;
                 this.extra_time = data.extra_time;
                 this.viewingRoom = true;
@@ -1553,7 +1662,7 @@ export default {
             }
             this.currentTable = table;
             if (table.status_table_id == 2) {
-                if(!this.cash_id){
+                if (!this.cash_id) {
                     this.$message.warning("Abra una caja para continuar");
                     return;
                 }
@@ -1606,7 +1715,7 @@ export default {
                     console.log(e);
                 }
             } else {
-                if(!this.cash_id){
+                if (!this.cash_id) {
                     this.$message.warning("Abra una caja para continuar");
                     return;
                 }
@@ -1662,7 +1771,7 @@ export default {
             }, 1000);
             if (this.roomSeeId) {
                 let table = this.all_tables.find(t => t.id == this.roomSeeId);
-                console.log("🚀 ~ file: tables_rooms.vue:1661 ~ open ~ table:", table)
+
                 this.selectTable(table);
             }
         },

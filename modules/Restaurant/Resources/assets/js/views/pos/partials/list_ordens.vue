@@ -186,9 +186,12 @@
                         </template>
                     </div>
                     <div class="col-6">
-                        <h3 class="text-white" style="text-align: right">
-                            Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
-                        </h3>
+                        <div class="row">
+                            <h3 class="text-white" style="text-align: right">
+                                Total S/.
+                                {{ (total + totalOrdenItems).toFixed(2) }}
+                            </h3>
+                        </div>
                     </div>
                 </div>
 
@@ -220,13 +223,45 @@
                     </div>
 
                     <div class="col-6">
-                        <h3
-                            v-if="!clientTableData.table"
-                            class="text-white"
-                            style="text-align: right"
-                        >
-                            Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
-                        </h3>
+                        <div class="row">
+                            <h3
+                                v-if="!clientTableData.table"
+                                class="text-white"
+                                style="text-align: right"
+                            >
+                                Total {{ currency_id }}
+                                {{ (total + totalOrdenItems).toFixed(2) }}
+                            </h3>
+                        </div>
+                        <!-- <div class="d-flex justify-content-end">
+                            <div class="col-3 text-white">
+                                <label for="currency">
+                                    <small>Moneda</small>
+                                </label>
+                                <el-radio-group
+                                    @change="changeCurrency"
+                                    v-model="currency_id"
+                                >
+                                    <el-radio-button
+                                        value="PEN"
+                                        label="S/"
+                                    ></el-radio-button>
+                                    <el-radio-button
+                                        value="USD"
+                                        label="$"
+                                    ></el-radio-button>
+                                </el-radio-group>
+                            </div>
+                            <div class="col-3 text-white">
+                                <label for="tc">T/C</label>
+                                <el-input
+                                    v-model="exchange_rate_sale"
+                                    type="number"
+                                    style="width: 100px"
+                                    @input="calculateTotal"
+                                ></el-input>
+                            </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -1575,11 +1610,12 @@
                                                                                         !configuration.item_set_quantity_pos) ==
                                                                                         1 ||
                                                                                         isConsignment ||
-                                                                                        order_pend
+                                                                                        (order_pend
                                                                                             .food
                                                                                             .item
                                                                                             .series_enabled ==
-                                                                                            1 && !configuration.quotation ||
+                                                                                            1 &&
+                                                                                            !configuration.quotation) ||
                                                                                         order_pend
                                                                                             .food
                                                                                             .item
@@ -1613,11 +1649,12 @@
                                                                                 data-spin="down"
                                                                                 :disabled="
                                                                                     isConsignment ||
-                                                                                        order_pend
+                                                                                        (order_pend
                                                                                             .food
                                                                                             .item
                                                                                             .series_enabled ==
-                                                                                            1 && !configuration.quotation ||
+                                                                                            1 &&
+                                                                                            !configuration.quotation) ||
                                                                                         order_pend
                                                                                             .food
                                                                                             .item
@@ -1813,7 +1850,7 @@
                                                             v-if="
                                                                 order_pend.food
                                                                     .item
-                                                                    .series_enabled 
+                                                                    .series_enabled
                                                             "
                                                         >
                                                             <template
@@ -1821,7 +1858,7 @@
                                                                     order_pend
                                                                         .series
                                                                         .length ==
-                                                                        0 
+                                                                        0
                                                                 "
                                                             >
                                                                 <el-tag
@@ -2495,7 +2532,9 @@ const ShowLotesProduct = () => import("../partials/show_lotes_product.vue");
 const TransfersModal = () => import("../partials/transfer_modal.vue");
 const CreditListModal = () => import("../partials/credit_list_modal.vue");
 const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
+import { exchangeRate } from "@mixins/functions";
 export default {
+    mixins: [exchangeRate],
     components: {
         CreditListDialog,
         CreditListModal,
@@ -2546,6 +2585,8 @@ export default {
 
     data() {
         return {
+            exchange_rate_sale: 1,
+            currency_id: "S/",
             cashAvailable: 0,
             showColorSize: false,
             currentColorSize: null,
@@ -2654,8 +2695,12 @@ export default {
         }
     },
 
-    mounted() {
-        console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
+    async mounted() {
+        // console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
+         this.searchExchangeRateByDate("2024-07-15").
+        then((exchange) => {
+                this.exchange_rate_sale = exchange;
+        });
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
@@ -2718,6 +2763,9 @@ export default {
         this.checkCashAvailable();
     },
     methods: {
+        changeCurrency() {
+            console.log(this.currency_id);
+        },
         async savePriceProduct(idx) {
             try {
                 await this.$confirm(
@@ -3636,7 +3684,7 @@ export default {
         },
 
         validStock(orden, quantity = 1) {
-            if(this.configuration.quotation_stock){
+            if (this.configuration.quotation_stock) {
                 return false;
             }
             let qty = this.localOrden
@@ -3907,7 +3955,6 @@ export default {
             this.calculateTotal();
         },
         sumar_orden(index) {
-
             if (this.validStock(this.localOrden[index])) {
                 this.$toast.warning("Limite de stock alcanzado");
                 return;
@@ -4034,13 +4081,17 @@ export default {
             }
             return hasError;
         },
-        checkIfHasZeroTotal(){
+        checkIfHasZeroTotal() {
             let { localOrden } = this;
-            let  pass = true;
+            let pass = true;
             for (let ord of localOrden) {
-                let {food:{item}} = ord;
-                let is15 = item.sale_affectation_igv_type_id == "15" || item.sale_affectation_igv_type_id == 15;
-                if ((ord.price == 0 || ord.quantity == 0 ) && !is15) {
+                let {
+                    food: { item }
+                } = ord;
+                let is15 =
+                    item.sale_affectation_igv_type_id == "15" ||
+                    item.sale_affectation_igv_type_id == 15;
+                if ((ord.price == 0 || ord.quantity == 0) && !is15) {
                     pass = false;
                     break;
                 }
@@ -4048,8 +4099,10 @@ export default {
             return pass;
         },
         async payOrden() {
-            if(!this.checkIfHasZeroTotal()){
-                this.$toast.error("No puede realizar una venta de productos con total 0");
+            if (!this.checkIfHasZeroTotal()) {
+                this.$toast.error(
+                    "No puede realizar una venta de productos con total 0"
+                );
                 return;
             }
             if (this.checkIsExistSerie()) {
@@ -4145,13 +4198,11 @@ export default {
             this.totalOrden = 0.0;
             let OrdenPen = 0;
             let OrdenPenAtendidos = 0;
-            let nTotal_poratendidos = _.forEach(this.localOrden, function(
-                value
-            ) {
+            _.forEach(this.localOrden, function(value) {
                 OrdenPen = parseFloat(OrdenPen) + value.quantity * value.price;
             });
             this.totalOrden = _.round(OrdenPen, 2);
-            let nTotal_atendidos = _.forEach(this.ordens, function(values) {
+            _.forEach(this.ordens, function(values) {
                 OrdenPenAtendidos =
                     parseFloat(OrdenPenAtendidos) +
                     values.quantity * values.price;

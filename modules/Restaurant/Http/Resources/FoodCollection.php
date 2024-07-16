@@ -108,6 +108,8 @@ class FoodCollection extends ResourceCollection
                 'types' => $item_unit_types,
                 'series'  => $lots ?? [],
                 'second_name' => $item->second_name,
+                'currency_type_id' => $item->currency_type_id,
+                'currency' => $item->currency_type->symbol,
             ];
         });
     }

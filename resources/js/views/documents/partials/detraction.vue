@@ -4,7 +4,7 @@
     >
         <!-- <p class="text-center">* Se recomienda resoluciones 700x300.</p> -->
         <form autocomplete="off" @submit.prevent="submit">
-            <div class="form-body"> 
+            <div class="form-body" v-if="detraction"> 
                 <div class="row mb-3" >
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group" >

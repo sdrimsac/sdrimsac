@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Resources;
 
+use App\Models\Tenant\Document;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
 use Carbon\Carbon;
@@ -40,12 +41,18 @@ class HotelRentItemResource extends JsonResource
                 if($document->is_advance == 0){
                     $cancel_document += $document->total;
                 }
+                $document_variation_url = null;
+                if($is_sale_note && $document->variation_document_id){
+                    $document_variation = Document::find($document->variation_document_id);
+                    $document_variation_url = url("print/document/{$document_variation->external_id}/ticket");
+                }
                 return [
                     'id' => $row->id,
                     'number' => $document->number_full,
                     'pdf' => url($url),
                     'total' => $document->total,
                     'date_of_issue' => $date_of_issue->format('Y-m-d'),
+                    'document_variation_url' => $document_variation_url,
 
                 ];
             });

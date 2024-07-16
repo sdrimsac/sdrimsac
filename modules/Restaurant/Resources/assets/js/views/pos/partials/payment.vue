@@ -55,10 +55,14 @@
                                                     size="small"
                                                     @change="filterSeries()"
                                                 >
-                                                    <template v-if="!isInterno" class="fw-bold">
+                                                    <template
+                                                        v-if="!isInterno"
+                                                        class="fw-bold"
+                                                    >
                                                         <el-radio-button
                                                             v-if="invoice"
-                                                            label="01">
+                                                            label="01"
+                                                        >
                                                             FACTURA
                                                         </el-radio-button>
                                                         <el-radio-button
@@ -142,7 +146,10 @@
                                                         <label
                                                             class="control-label fw-bold"
                                                             style="margin-right:3px;"
-                                                            ><i class="fas fa-regular fa-user"></i>Cliente</label
+                                                            ><i
+                                                                class="fas fa-regular fa-user"
+                                                            ></i
+                                                            >Cliente</label
                                                         >
                                                         <el-button
                                                             :disabled="
@@ -152,11 +159,12 @@
                                                             @click="
                                                                 openDialogPerson
                                                             "
-                                                            >
-                                                            <i class="fas fa-edit tab-icon"></i>
-                                                            Editar
-                                                            </el-button
                                                         >
+                                                            <i
+                                                                class="fas fa-edit tab-icon"
+                                                            ></i>
+                                                            Editar
+                                                        </el-button>
                                                         <el-button
                                                             v-if="
                                                                 !configuration.college ||
@@ -166,11 +174,12 @@
                                                                 createClient
                                                             "
                                                             class="fw-bold"
-                                                            > 
-                                                            <i class="fas fa-solid fa-plus"></i>
-                                                            Nuevo
-                                                             </el-button
                                                         >
+                                                            <i
+                                                                class="fas fa-solid fa-plus"
+                                                            ></i>
+                                                            Nuevo
+                                                        </el-button>
                                                     </div>
                                                 </template>
                                             </div>
@@ -240,7 +249,7 @@
                                                 >
                                                 </el-option>
                                             </el-select>
-                                        </div>  
+                                        </div>
                                     </div>
                                     <!-- <div class="row"> -->
                                     <div class="row col-lg-12 col-xl-12">
@@ -277,8 +286,7 @@
                                             </el-input>
                                         </div>
                                     </div> -->
-                                    
-                                    
+
                                     <template
                                         v-if="
                                             configuration.show_coins_to_receive
@@ -410,7 +418,9 @@
                                                 ></label>
                                             </div>
                                         </div>
-                                        <div class="input-container2 border rounded-sm">
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
                                             <input
                                                 :disabled="form_payment.is_bank"
                                                 id="culqui"
@@ -436,8 +446,9 @@
                                                 ></label>
                                             </div>
                                         </div>
-                                        <div class="input-container2 border rounded-sm" >
-                                            
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
                                             <input
                                                 :disabled="form_payment.is_bank"
                                                 id="plin"
@@ -449,7 +460,9 @@
                                                 @change="
                                                     method_payment(
                                                         'TARJETA: IZYPAY'
-                                                    )"/>
+                                                    )
+                                                "
+                                            />
                                             <div
                                                 class="radio-tile2"
                                                 style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
@@ -462,7 +475,6 @@
                                                     class="radio-tile-label2"
                                                 ></label>
                                             </div>
-                                        
                                         </div>
                                         <div
                                             class="input-container2 border rounded-sm"
@@ -912,6 +924,37 @@
                             </div>
                         </div>
                     </div>
+                    <!-- <div class="col-lg-12">
+                        <div class="mb-2">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <h3>
+                                            Producto variable
+                                        </h3>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-12">
+                                    <label for="description">Descripción</label>
+                                    <el-input
+                                        v-model="paymentVariation.description"
+                                        placeholder="Descripción"
+                                    ></el-input>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <label for="price">Precio</label>
+                                    <el-input
+                                        v-model="paymentVariation.price"
+                                        placeholder="Precio"
+                                        type="number"
+                                    ></el-input>
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
                     <div class="col-lg-12">
                         <div class="mb-2">
                             <div class=" card  bg-light ">
@@ -1424,7 +1467,8 @@
         >
         </person-college-form>
         <document-detraction
-            v-if="form && form.total > 0"
+            v-if="form && form.total > 0 && form.detraction"
+            
             :currency-type-id-active="form.currency_type_id"
             :detraction="form.detraction"
             :exchange-rate-sale="form.exchange_rate_sale"
@@ -1500,6 +1544,7 @@ export default {
     },
 
     props: [
+        "itemDefault",
         "company",
         "quotationId",
         "clientSaleNoteNumber",
@@ -1545,6 +1590,10 @@ export default {
     },
     data() {
         return {
+            paymentVariation: {
+                description: "Consumo",
+                price: 0
+            },
             showDialogDocumentDetraction: false,
             hasDetraction: false,
             methodsValidate: [
@@ -2533,7 +2582,11 @@ export default {
             }
             this.filterSeries();
             this.hasDetraction = this.checkDetraction();
-            if (this.hasDetraction && this.company.detraction_account && this.form.total > 700) {
+            if (
+                this.hasDetraction &&
+                this.company.detraction_account &&
+                this.form.total > 700
+            ) {
                 let { detraction_type_id } = this.configuration;
                 if (detraction_type_id) {
                     let detraction = this.detraction_types.find(
@@ -2556,7 +2609,7 @@ export default {
             }
         },
         checkDetraction() {
-            if(!this.configuration.detraction) return false;
+            if (!this.configuration.detraction) return false;
             let { items } = this.form;
             return items.some(i => i.subject_to_detraction == 1);
         },
@@ -2876,11 +2929,13 @@ export default {
                     new_base - global_discount_amount_without_rounding,
                     2
                 );
-                let total_taxed_without_rounding = new_base - global_discount_amount_without_rounding;
+                let total_taxed_without_rounding =
+                    new_base - global_discount_amount_without_rounding;
                 this.form.total_value = this.form.total_taxed;
                 if (this.configuration.affectation_igv_type_id == "10") {
                     this.form.total_igv = _.round(
-                        total_taxed_without_rounding * (this.percentage_igv / 100),
+                        total_taxed_without_rounding *
+                            (this.percentage_igv / 100),
                         2
                     );
                 } else {
@@ -3389,6 +3444,7 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
+
             // if (this.discount_amount) {
             //     let global_discount = parseFloat(this.discount_amount);
             //     let total = parseFloat(this.form.total);
@@ -3827,9 +3883,8 @@ export default {
                         this.documentNewId = response.data.data.id;
 
                         if (response.data.success == true) {
-                            if(this.configuration.all_items_pos){
+                            if (this.configuration.all_items_pos) {
                                 this.$emit("reloadItems");
-
                             }
                             /* let customer = this.all_customers.find(
                                 c => c.id == form.customer_id

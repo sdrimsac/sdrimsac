@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'variation_hotel',
         'ver_etiqueta_logistica',
         'detraction',
         'config_etiquetas',
@@ -191,6 +192,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'variation_hotel' => 'boolean',
         'ver_etiqueta_logistica' => 'boolean',
         'correo_red_salud_ticket' => 'boolean',
         'numero_accion_independiente_admin' => 'boolean',
@@ -322,6 +324,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'variation_hotel' => (bool)$this->variation_hotel,
             'ver_etiqueta_logistica' => $this->ver_etiqueta_logistica,
             'detraction' => $this->detraction,
             'config_etiquetas' => $this->config_etiquetas,

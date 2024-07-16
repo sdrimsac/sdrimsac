@@ -1421,7 +1421,18 @@ class SaleNoteController extends Controller
 
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
-
+            if ($this->sale_note->variation_document_id) {
+                $document_variation = Document::find($this->sale_note->variation_document_id);
+                $total_variation = $document_variation->total;
+                $total_original = $this->sale_note->total;
+                $document_hotel = HotelRentDocument::where('sale_note_id', $this->sale_note->id)->first();
+                $hotel_rent = HotelRent::find($document_hotel->hotel_rent_id);
+                $hotel_rent_item = $hotel_rent->first_hotel_rent_item();
+                $room = $hotel_rent_item->getName();
+                $is_discount = $total_variation < $total_original;
+                $message = "Se ha generado un documento con variación para la habitación " . $room . " por S/" . $total_variation . " Total Original: S/" . $total_original . "" . ($is_discount ? " (Descuento)" : " (Recargo)");
+                (new WhatsappController)->sendMessageAll($message);
+            }
             return [
                 'success' => true,
                 'data' => [

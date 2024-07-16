@@ -42,14 +42,12 @@
                     Agregar habitación
                 </el-button>
             </div>
-            <div class="col-md-5"
-                v-if="rooms.length > 1"
-            >
-                <label 
-                class="w-100"
-                for="discount_pack">Pack - Dscto por cada habitación</label>
-               <el-input
-               class="w-100"
+            <div class="col-md-5" v-if="rooms.length > 1">
+                <label class="w-100" for="discount_pack"
+                    >Pack - Dscto por cada habitación</label
+                >
+                <el-input
+                    class="w-100"
                     type="number"
                     :min="1"
                     @input="calculateTotal"
@@ -274,10 +272,15 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-3 d-flex"
-                    :class="`${
-                        room.discount_instead_services ? ' align-items-center' : ' align-items-end'
-                    }`"
+                    <div
+                        class="col-md-3 d-flex"
+                        :class="
+                            `${
+                                room.discount_instead_services
+                                    ? ' align-items-center'
+                                    : ' align-items-end'
+                            }`
+                        "
                     >
                         <el-button @click="addGuess(idx)" type="primary">
                             Agregar Huesped
@@ -297,11 +300,14 @@
                         <label for="total_room">Subtotal</label>
                         <el-input type="number" readonly v-model="room.total">
                         </el-input>
-                        <small 
-                        class="text-danger"
-                        v-if="room.discount_instead_services">
-                           Descuento S/{{ configuration.discount_amount_instead_service * room.duration }}
-                           
+                        <small
+                            class="text-danger"
+                            v-if="room.discount_instead_services"
+                        >
+                            Descuento S/{{
+                                configuration.discount_amount_instead_service *
+                                    room.duration
+                            }}
                         </small>
                     </div>
                     <div
@@ -332,21 +338,22 @@
                         v-if="room.services.length > 0"
                         content-position="left"
                         >Promociones
-                        
+
                         <el-checkbox
                             @change="discountService(room)"
                             v-model="room.discount_instead_services"
                             label="Cambiar por descuento"
                         ></el-checkbox>
-                        </el-divider
-                    >
+                    </el-divider>
                     <div v-if="room.services.length > 0" class="row">
                         <div
                             class="col-md-3"
                             v-for="(service, sidx) in room.services"
                             :key="`_sidx${sidx}`"
                         >
-                            <label for="total_room" class="w-100">{{ service.name }} </label>
+                            <label for="total_room" class="w-100"
+                                >{{ service.name }}
+                            </label>
                             <el-input-number
                                 :min="0"
                                 :max="2"
@@ -396,7 +403,7 @@
                                     :max="2"
                                     step="any"
                                     v-model="room.insumos"
-                                    @input="limitInsumos(room,idx)"
+                                    @input="limitInsumos(room, idx)"
                                 >
                                 </el-input>
                             </div>
@@ -405,7 +412,29 @@
                 </div>
             </el-collapse-item>
         </el-collapse>
-
+        <div class="row mt-2" v-if="hasAdvances > 0 && configuration.variation_hotel">
+            <div class="row">
+                PRODUCTO VARIACIÓN
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-12">
+                    <label for="description">Descripción</label>
+                    <el-input
+                        v-model="paymentVariation.description"
+                        placeholder="Descripción"
+                        clearable
+                    ></el-input>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                    <label for="price">Precio</label>
+                    <el-input
+                        v-model="paymentVariation.price"
+                        placeholder="Precio"
+                        clearable
+                    ></el-input>
+                </div>
+            </div>
+        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Guardar</el-button>
@@ -426,8 +455,13 @@ const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
     props: [
+        "itemDefault",
         "configuration",
-        "showDialog", "table", "isReserve", "hotelRentId"],
+        "showDialog",
+        "table",
+        "isReserve",
+        "hotelRentId"
+    ],
     components: {
         PersonForm
     },
@@ -437,8 +471,17 @@ export default {
             this.reloadDataCustomers(customer_id);
         });
     },
+    computed: {
+        hasAdvances() {
+            return this.rooms.filter(r => r.advances > 0).length;
+        }
+    },
     data() {
         return {
+            paymentVariation: {
+                description: "Consumo",
+                price: 0
+            },
             credit_line_limit: 150,
             services: [],
             all_services: [],
@@ -469,22 +512,23 @@ export default {
         removeGuess(room, idx) {
             room.guesses.splice(idx, 1);
             room.quantity_persons = room.guesses.length;
-            if(room.quantity_persons == 0){
+            if (room.quantity_persons == 0) {
                 room.quantity_persons = 1;
             }
             // this.calculateTotal();
         },
-        discountService(room){i
-            let {discount_instead_services} = room;
-            if(discount_instead_services){
-                room.services = room.services.map(s=>{
+        discountService(room) {
+            i;
+            let { discount_instead_services } = room;
+            if (discount_instead_services) {
+                room.services = room.services.map(s => {
                     s.quantity = 0;
                     return s;
                 });
             }
             this.calculateTotal();
         },
-        limitInsumos(room,idx) {
+        limitInsumos(room, idx) {
             if (room.insumos > 2) {
                 this.$message({
                     message: "Solo puede seleccionar 2 insumos",
@@ -499,7 +543,6 @@ export default {
                 });
                 room.insumos = 1;
             }
-            
         },
         async changeMonthRent(room) {
             let { is_month_rent } = room;
@@ -639,12 +682,20 @@ export default {
                         price = price * room.duration;
                         room.original_price = price;
                         let result = price - Number(advances);
-                        if(room.discount_instead_services){
-                            let {discount_amount_instead_service} = this.configuration;
-                            discount_amount_instead_service = Number(discount_amount_instead_service);
-                            result -= discount_amount_instead_service * room.duration;
+                        if (room.discount_instead_services) {
+                            let {
+                                discount_amount_instead_service
+                            } = this.configuration;
+                            discount_amount_instead_service = Number(
+                                discount_amount_instead_service
+                            );
+                            result -=
+                                discount_amount_instead_service * room.duration;
                         }
-                        if(this.form.discount_pack > 0 && this.rooms.length > 1){
+                        if (
+                            this.form.discount_pack > 0 &&
+                            this.rooms.length > 1
+                        ) {
                             result -= this.form.discount_pack;
                         }
                         room.total = result;
@@ -681,8 +732,10 @@ export default {
                 c => c.id == this.rooms[idx].guess_id
             );
             this.rooms[idx].guesses.push(customer);
-            if(this.rooms[idx].guesses){
-                this.rooms[idx].quantity_persons = this.rooms[idx].guesses.length;
+            if (this.rooms[idx].guesses) {
+                this.rooms[idx].quantity_persons = this.rooms[
+                    idx
+                ].guesses.length;
             }
             // this.form.quantity_persons = this.rooms[idx].quantity_persons;
             this.rooms[idx].guess_id = null;
@@ -701,7 +754,7 @@ export default {
         },
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
-                discount_instead_services:false,
+                discount_instead_services: false,
                 insumos: 1,
                 enable_frigobar: false,
                 credit_line: 0,
@@ -822,21 +875,10 @@ export default {
             }, 500);
         },
         changeCustomer() {},
-        hasAdvances() {
-            let has = false;
-            for (let room of this.rooms) {
-                if (room.advances > 0) {
-                    has = true;
-                    break;
-                }
-            }
-            return has;
-        },
 
         async submit() {
-
             this.form.rooms = this.rooms;
-            if(this.rooms.length == 0){
+            if (this.rooms.length == 0) {
                 this.form.discount_pack = 0;
             }
             if (!this.validate()) {
@@ -852,9 +894,17 @@ export default {
                 if (response.status == 200) {
                     this.$toast.success("Huesped ingresado correctamente");
                     this.$emit("getTables");
-                    if (this.hasAdvances()) {
+                    if (this.hasAdvances) {
                         let { id } = response.data;
-                        this.$emit("emitAdvances", id);
+                        if (this.paymentVariation.price > 0) {
+                            this.$emit(
+                                "emitAdvances",
+                                id,
+                                this.paymentVariation
+                            );
+                        } else {
+                            this.$emit("emitAdvances", id);
+                        }
                     }
                     this.$emit("update:showDialog", false);
                 }

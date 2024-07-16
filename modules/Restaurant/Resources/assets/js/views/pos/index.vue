@@ -1588,6 +1588,7 @@
 
         <template>
             <payment-form
+            :itemDefault.sync="itemDefault"
                 :quotationId.sync="quotationId"
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                 :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
@@ -1684,6 +1685,7 @@
             @sendOrdens="sendOrdens"
             :roomSeeId="roomSeeId"
             :showTables.sync="showTablesRooms"
+                :itemDefault.sync="itemDefault"
         ></tables-rooms>
         <documents-print
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
@@ -3148,6 +3150,7 @@ export default {
             };
         },
         async paymentsOrden(form, variationItem = []) {
+            console.log("🚀 ~ asyncpaymentsOrden(form,variationItem ~ variationItem:", variationItem)
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
@@ -5713,8 +5716,9 @@ export default {
                 let sameAreas = this.configuration
                     .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
+
                 let canPrint = true;
-                if (isHotels) {
+                if (isHotels  ) {
                     if (isSameEstablishment) {
                         canPrint = true;
                     } else {
