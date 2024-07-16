@@ -1,6 +1,7 @@
 @php
     $establishment = $document->establishment;
     $customer = $document->customer;
+    $seller = $document->seller;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     
     $left = $document->series ? $document->series : $document->prefix;
@@ -126,6 +127,18 @@
                 </td>
             </tr>
         @endif
+        <tr>
+            <td height="18px"><b>Vendedor:</b></td>
+            <td colspan="3">
+                <p> 
+                    @if ($seller)
+                        {{ $seller->name }}
+                    @else
+                        {{ $document->user->name }}
+                    @endif
+                </p>
+            </td>
+        </tr>
         @if ($document->paid == 1)
             <tr>
                 <td height="18px"><b>Estado:</b></td>
@@ -396,7 +409,7 @@
         <table class="full-width">
             <tr>
                 <td>
-                    <strong>Vendedor:</strong> &ensp;&ensp;{{ $document->user->name }}
+                    <strong>Caja:</strong> &ensp;&ensp;{{ $document->user->name }}
                 </td>
 
             </tr>

@@ -3,6 +3,7 @@
     $customer = $document->customer;
     $invoice = $document->invoice;
     $document_base = $document->note ? $document->note : null;
+    $seller = $document->seller;
 
     //$path_style =
     // app_path(
@@ -360,6 +361,17 @@
                         {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
                         {{ $customer->department_id !== '-' ? '- ' . $customer->department->description : '' }}
                     </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p><strong>VENDEDOR: </strong> 
+                        @if ($seller)
+                        {{ $seller->name }}
+                    @else
+                        {{ $document->user->name }}
+                    @endif
+                </p>
                 </td>
             </tr>
         </table>

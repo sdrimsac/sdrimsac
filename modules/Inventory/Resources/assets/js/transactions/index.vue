@@ -28,18 +28,15 @@
 
             </div>
             <div class="data-table-visible-columns">
-                    <el-button type="primary" 
-                                class="" 
-                                href="javascript:void(0)" 
-                                @click.prevent="clickCreate()">
-                                <i class="fas fa-list-ul fa-lg"></i>
-                                <i class="fas fa-plus"></i>
-                            Nueva Transacción
-                    </el-button>
-            </div> 
+                <el-button type="primary" class="" href="javascript:void(0)" @click.prevent="clickCreate()">
+                    <i class="fas fa-list-ul fa-lg"></i>
+                    <i class="fas fa-plus"></i>
+                    Nueva Transacción
+                </el-button>
+            </div>
 
             <div class="card-body">
-                
+
                 <data-table :resource="resource" class="table-striped">
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
@@ -62,28 +59,9 @@
                                 <a type="button" class="dropdown-item text-secondary" @click.prevent=" clickCreate(row.id)"> <i class="fa fa-edit"></i> Editar
                                 </a>
                                 <a type="button" class="dropdown-item text-danger" @click.prevent="
-                                    clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
+                                        clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
                                 </a>
-                                <!-- <a type="button" class="dropdown-item text-warning" @click.prevent="
-                                    clickDisable(row.id)" v-if="row.active">Inhabilitar
-                                </a>
-                                <a type="button" class="dropdown-item text-success" @click.prevent="
-                                    clickEnable(row.id)" v-else>Habilitar
-                                </a> -->
                             </div>
-
-                            <!-- <div class="btn-group">
-                                <el-tooltip class="item" effect="dark" content="Editar" placement="bottom-end">
-                                    <button type="button" class="btn btn-primary btn-icon btn-icon-start" @click.prevent="clickCreate(row.id)">
-                                        <i class="icofont-edit"></i>
-                                    </button>
-                                </el-tooltip>
-                                <el-tooltip class="item" effect="dark" content="Eliminar" placement="bottom-end">
-                                    <button type="button" class="btn btn-danger btn-icon btn-icon-start" @click.prevent="clickDelete(row.id)">
-                                        <i class="icofont-trash"></i>
-                                    </button>
-                                </el-tooltip>
-                            </div> -->
                         </td>
 
                     </tr>
@@ -96,14 +74,16 @@
 </div>
 </template>
 
+    
 <style>
 .table-striped tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 </style>
 
+    
 <script>
-/* import DataTable from "../../../../modules/Inventory/Resources/assets/components/DataTableTransaction.vue"; */
+import DataTable from "../../../../../../resources/js/components/DataTableTransactions.vue";
 import {
     deletable
 } from "../../../../../../resources/js/mixins/deletable";

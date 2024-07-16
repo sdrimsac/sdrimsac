@@ -163,7 +163,7 @@
 </style>
 
 <script>
-import DataTable from "../../../../modules/Inventory/Resources/assets/components/DataTableTransaction.vue";
+import DataTable from "../../../../modules/Inventory/Resources/assets/components/DataTableSalida.vue";
 import InventoriesForm from "../../../../modules/Inventory/Resources/assets/js/inventory/form.vue";
 import InventoriesFormOutput from "../../../../modules/Inventory/Resources/assets/js/inventory/form_output.vue";
 import InventoriesMove from "../../../../modules/Inventory/Resources/assets/js/inventory/move.vue";

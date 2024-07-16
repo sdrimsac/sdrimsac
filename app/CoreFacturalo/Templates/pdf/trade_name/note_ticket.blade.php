@@ -1,6 +1,7 @@
 @php
     $establishment = $document->establishment;
     $customer = $document->customer;
+    $seller = $document->seller;
 
     $document_base = $document->note;
     $document_number = $document->series.'-'.str_pad($document->number, 8, '0', STR_PAD_LEFT);
@@ -111,6 +112,20 @@
             </td>
         </tr>
     @endif
+    <tr>
+        <td class="align-top">
+            <p class="desc">Vendedor:</p>
+        </td>
+        <td>
+            <p class="desc">
+                @if ($seller)
+                    {{ $seller->name }}
+                @else
+                    {{ $document->user->name }}
+                @endif
+            </p>
+        </td>
+    </tr>
     @if ($document->purchase_order)
         <tr>
             <td><p class="desc">Orden de Compra:</p></td>

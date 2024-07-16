@@ -3,6 +3,7 @@
     $company = \App\Models\Tenant\Company::first();
     $establishment = $document->establishment;
     $customer = $document->customer;
+    $seller = $document->seller;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $left = $document->series ? $document->series : $document->prefix;
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
@@ -168,6 +169,15 @@
                         </td>
                     </tr>
                 @endif
+                <tr>
+                    <td colspan="6" class="align-top" height="20px" style="font-size:12px;"><b>VENDEDOR:</b>
+                        @if ($seller)
+                            {{ $seller->name }}
+                        @else
+                            {{ $document->user->name }}
+                        @endif
+                    </td>
+                </tr>
                 {{-- @if ($document->paid == 1)
                     <tr>
                         <td height="18px" style="font-size:12px;padding:0px;"><b>ESTADO</b></td>

@@ -2,6 +2,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
+    $seller = $document->seller;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $accounts = \App\Models\Tenant\BankAccount::all();
     $configuration = \App\Models\Tenant\Configuration::first();
@@ -148,6 +149,20 @@
                 </td>
             </tr>
         @endif
+        <tr>
+            <td class="align-top">
+                <p class="desc">Vendedor:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    @if ($seller)
+                        {{ $seller->name }}
+                    @else
+                        {{ $document->user->name }}
+                    @endif
+                </p>
+            </td>
+        </tr>
         @if ($document->shipping_address)
             <tr>
                 <td class="align-top">

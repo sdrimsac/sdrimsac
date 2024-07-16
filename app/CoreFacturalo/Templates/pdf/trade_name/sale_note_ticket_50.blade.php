@@ -3,6 +3,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
+    $seller = $document->seller;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
     $conf_establishment = \App\Models\Tenant\ConfEstablishment::where('establishment_id', $document->establishment_id)->first();
     $print_company_address = false;
@@ -251,6 +252,20 @@
                 </td>
             </tr>
         @endif
+        <tr>
+            <td class="align-top">
+                <p class="desc">Vendedor:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    @if ($seller)
+                        {{ $seller->name }}
+                    @else
+                        {{ $document->user->name }}
+                    @endif
+                </p>
+            </td>
+        </tr>
         @if ($document->purchase_order)
             <tr>
                 <td>
@@ -459,7 +474,7 @@
         </tr> --}}
         <tr>
             <td class="desc pt-3">
-                <b>Vendedor</b>: {{ $document->user->name }} <br>
+                <b>Caja</b>: {{ $document->user->name }} <br>
             </td>
         </tr>
         <tr>

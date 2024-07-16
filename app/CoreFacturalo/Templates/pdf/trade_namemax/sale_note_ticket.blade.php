@@ -3,6 +3,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
+    $seller = $document->seller;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
     $conf_establishment = \App\Models\Tenant\ConfEstablishment::where('establishment_id', $document->establishment_id)->first();
     $print_company_address = false;
@@ -273,6 +274,18 @@ contain"
                 </td>
             </tr>
         @endif
+        <tr>
+            <td class="align-top">
+                <p class="desc">Vendedor:</p>
+            </td>
+            <td class="desc">
+                @if ($seller)
+                    {{ $seller->name }}
+                @else
+                    {{ $document->user->name }}
+                @endif
+            </td>
+        </tr>
         @if ($document->purchase_order)
             <tr>
                 <td>
@@ -616,7 +629,7 @@ contain"
         </tr> --}}
         <tr>
             <td class="desc pt-3">
-                <b>Vendedor</b>: {{ $document->user->name }} <br>
+                <b>Caja</b>: {{ $document->user->name }} <br>
                 @php
                     $code = null;
                     $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();

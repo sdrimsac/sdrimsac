@@ -3,6 +3,7 @@
     $customer = $document->customer;
     $invoice = $document->invoice;
     $document_base = $document->note ? $document->note : null;
+    $seller = $document->seller;
 
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
@@ -225,6 +226,19 @@
 
                     </tr>
                 @endif
+                <tr>
+                    <td class="align-top" height="20px"><b>Vendedor:</b></td>
+                    <td>:</td>
+                    <td colspan="4">
+                        <p class="desc">
+                            @if ($seller)
+                                {{ $seller->name }}
+                            @else
+                                {{ $document->user->name }}
+                            @endif
+                        </p>
+                    </td>
+                </tr>
 
                 @if ($document->detraction)
                     @if ($document->detraction->pay_constancy)
@@ -846,7 +860,7 @@
             <table class="full-width">
                 <tr>
                     <td>
-                        <strong>Vendedor:</strong> &ensp;&ensp;{{ $document->user->name }}
+                        <strong>Caja:</strong> &ensp;&ensp;{{ $document->user->name }}
                     </td>
 
                 </tr>

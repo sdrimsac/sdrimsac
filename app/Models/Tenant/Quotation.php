@@ -176,6 +176,11 @@ class Quotation extends ModelTenant
         return $this->prefix . '-' . $this->id;
     }
 
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class, 'seller_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

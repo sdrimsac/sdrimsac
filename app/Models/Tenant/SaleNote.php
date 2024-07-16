@@ -422,4 +422,8 @@ class SaleNote extends ModelTenant
     // {
     //     return $this->belongsTo(Quotation::class);
     // }
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class);
+    }
 }

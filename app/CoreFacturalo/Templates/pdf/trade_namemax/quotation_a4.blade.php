@@ -1,6 +1,7 @@
 @php
     $establishment = $document->establishment;
     $customer = $document->customer;
+    $seller = $document->seller;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $accounts = \App\Models\Tenant\BankAccount::all();
     $tittle = $document->prefix . '-' . str_pad($document->id, 8, '0', STR_PAD_LEFT);
@@ -62,7 +63,7 @@
                 </div>
             </td>
             <td width="30%" class="border-box py-4 px-2 text-center">
-                <h5 class="text-center">COTIZACIÓN aaa</h5>
+                <h5 class="text-center">COTIZACIÓN</h5>
                 <h3 class="text-center">{{ $tittle }}</h3>
             </td>
         </tr>
@@ -97,6 +98,16 @@
                 @endif
             </tr>
         @endif
+        <tr>
+            <td class="align-top">Vendedor:</td>
+            <td colspan="3">
+                @if ($seller)
+                    {{ $seller->name }}
+                @else
+                    {{ $document->user->name }}
+                @endif
+            </td>
+        </tr>
         @if ($document->payment_method_type)
             <tr>
                 <td class="align-top">T. Pago:</td>

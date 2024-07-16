@@ -528,4 +528,8 @@ class Document extends ModelTenant
     {
         return $this->hasOne(Note::class, 'affected_document_id', 'id');
     }
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class, 'seller_id');
+    }
 }

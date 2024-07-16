@@ -2,6 +2,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
+    $seller = $document->seller;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
     $conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
         'establishment_id',
@@ -361,6 +362,20 @@
                 </td>
             </tr>
         @endif
+        <tr>
+            <td class="align-top">
+                <p class="desc">Vendedor:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    @if ($seller)
+                        {{ $seller->name }}
+                    @else
+                        {{ $document->user->name }}
+                    @endif
+                </p>
+            </td>
+        </tr>
         @if ($hotel_rent)
             @php
                 $hotel_rent_items = $hotel_rent->items;
@@ -983,7 +998,7 @@
                     src="data:image/png;base64, {{ $document->qr }}" /></td>
             <td class="text-left " style="vertical-align: top; padding-top:5px">
                 <b>Código Hash</b>: {{ $document->hash }} <br>
-                <b>Vendedor</b>: {{ $document->user->name }} <br>
+                <b>Caja</b>: {{ $document->user->name }} <br>
                 @php
                     $code = null;
                     $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
