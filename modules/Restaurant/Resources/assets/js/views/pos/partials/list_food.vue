@@ -7,15 +7,15 @@
                 <label>No Hay Productos</label>
             </div>
         </template>
-        <template v-if="configuration.health_network">
+        <!-- <template v-if="configuration.health_network"> -->
             <div>
                 <div>
                     <button @click="toggleView" class="btn btn-primary btn-sm ml-auto">
-                        {{ form.health_network ? 'Mostrar Card' : 'Mostrar Tabla' }}
+                        {{ form.show_list ? 'Mostrar Card' : 'Mostrar Tabla' }}
                     </button>
                 </div>
             </div>
-            <template v-if="form.health_network">
+            <template v-if="form.show_list">
                 <div class="row card mx-1 mt-2">
                     <div class="container mt-4 border-bottom">
                         <div class="infinite-list-wrapper" style="max-height: 800px; overflow-y: auto;">
@@ -312,8 +312,8 @@
                     <!-- hasta aqui -->
                 </div>
             </template>
-        </template>
-        <template v-else>
+        <!-- </template> -->
+        <!-- <template v-else>
             <div class="d-flex flex-wrap">
                 <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="index">
                     <el-tooltip effect="dark" :disabled="
@@ -327,12 +327,7 @@
                                                 info.warehouse.id != establishmentId
                                             ">
                                     <template v-if="data.item.max_quantity">
-                                        <!-- {{
-                                                    `${
-                                                        info.warehouse.description
-                                                    }: ${Number(info.stock) /
-                                                        data.item.max_quantity}`
-                                                }} -->
+                                    
                                         {{
                                                     formatedStockPresentation(
                                                         data.item,
@@ -420,9 +415,7 @@
 
                             <div class="d-flex justify-content-between" style="padding-right: 10px; margin-top: 2px">
                                 <div class="d-flex flex-column align-items-end">
-                                    <!-- <div class="text-uppercase font-weight-light h5">
-                                                    {{ data.category.name }}
-                                                </div> -->
+                        
                                     <div class="block mb-2">
                                         <span class="time font-weight-light">
                                             <span class="text-muted lead-font-weight-700">
@@ -478,15 +471,7 @@
                                                             data.item.stock
                                                         )
                                                     }}
-                                            <!-- {{
-                                                        parseFloat(
-                                                            data.item
-                                                                .stock /
-                                                                data
-                                                                    .item
-                                                                    .max_quantity
-                                                        )
-                                                    }} -->
+                                    
                                         </template>
                                         <template v-else>
                                             {{
@@ -504,9 +489,8 @@
                         </div>
                     </el-tooltip>
                 </div>
-                <!-- hasta aqui -->
             </div>
-        </template>
+        </template> -->
 
     </div>
 </div>
@@ -530,7 +514,7 @@ export default {
     data() {
         return {
             form: {
-                health_network: false
+                show_list: false
             },
             selectCategory: 0,
             activeName: "menu",
@@ -1071,15 +1055,15 @@ export default {
         },
         /* agregado para cambiar de forma los div card a table */
         toggleView() {
-            this.form.health_network = !this.form.health_network;
-            localStorage.setItem('viewPreference', JSON.stringify(this.form.health_network));
-            console.log('Estado de modo hospital guardado:', this.form.health_network);
+            this.form.show_list = !this.form.show_list;
+            localStorage.setItem('viewPreference', JSON.stringify(this.form.show_list));
+            console.log('Estado de modo hospital guardado:', this.form.show_list);
         },
         loadViewPreference() {
             const savedPreference = localStorage.getItem('viewPreference');
             if (savedPreference !== null) {
-                this.form.health_network = JSON.parse(savedPreference);
-                console.log('Estado de modo hospital cargado:', this.form.health_network);
+                this.form.show_list = JSON.parse(savedPreference);
+                console.log('Estado de modo hospital cargado:', this.form.show_list);
             }
         }
     }
