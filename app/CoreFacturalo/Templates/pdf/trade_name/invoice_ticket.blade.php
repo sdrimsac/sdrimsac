@@ -998,7 +998,7 @@
                     src="data:image/png;base64, {{ $document->qr }}" /></td>
             <td class="text-left " style="vertical-align: top; padding-top:5px">
                 <b>Código Hash</b>: {{ $document->hash }} <br>
-                <b>Caja</b>: {{ $document->user->name }} <br>
+                <b>Usuario</b>: {{ $document->user->name }} <br>
                 @php
                     $code = null;
                     $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();

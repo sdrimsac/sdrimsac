@@ -139,7 +139,7 @@
     @endif
     
     <tr>
-        <td class="align-top">Caja:</td>
+        <td class="align-top">Usuario:</td>
         <td colspan="3">
             {{ $document->user->name }} 
         </td>

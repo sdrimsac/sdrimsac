@@ -860,7 +860,7 @@
             <table class="full-width">
                 <tr>
                     <td>
-                        <strong>Caja:</strong> &ensp;&ensp;{{ $document->user->name }}
+                        <strong>Usuario:</strong> &ensp;&ensp;{{ $document->user->name }}
                     </td>
 
                 </tr>

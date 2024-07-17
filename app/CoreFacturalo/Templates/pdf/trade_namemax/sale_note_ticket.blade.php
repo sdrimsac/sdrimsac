@@ -629,7 +629,7 @@ contain"
         </tr> --}}
         <tr>
             <td class="desc pt-3">
-                <b>Caja</b>: {{ $document->user->name }} <br>
+                <b>Usuario</b>: {{ $document->user->name }} <br>
                 @php
                     $code = null;
                     $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();

@@ -2,6 +2,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
+    $seller = $document->seller;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
     $conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
         'establishment_id',
@@ -884,9 +885,19 @@
 
         <tr>
             <td class="desc pt-2">
-                <strong>Vendedor: </strong>{{ $document->user->name }}
+                <strong>Usuario: </strong>{{ $document->user->name }}
             </td>
-            <!-- <td class="desc">{{ $document->user->name }}</td> -->
+
+        </tr>
+        <tr>
+            <td class="desc pt-2">
+                <strong>Vendedor: </strong>
+                @if ($seller)
+                        {{ $seller->name }}
+                    @else
+                        {{ $document->user->name }}
+                    @endif
+            </td>
         </tr>
         <tr>
             <td colspan="2" class="align-top">
