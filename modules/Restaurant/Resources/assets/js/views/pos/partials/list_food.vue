@@ -7,7 +7,7 @@
                 <label>No Hay Productos</label>
             </div>
         </template>
-        <!-- <template v-if="configuration.health_network"> -->
+        <template v-if="configuration.list_or_card">
             <div>
                 <div>
                     <button @click="toggleView" class="btn btn-primary btn-sm ml-auto">
@@ -28,9 +28,14 @@
                                                     <th class="text-white">CODIGO</th>
                                                     <th class="text-white">DESCRIPCION</th>
                                                     <th class="text-white">PRECIO</th>
-                                                    <th class="text-white">STOCK</th>
-                                                    <th class="text-white text-center">LOTE</th>
-                                                    <th class="text-white">POLITICA PRECIO</th>
+                                                    <th v-if="  configuration.show_stock_cash == true" class="text-white">STOCK</th>
+                                                    <th class="text-white text-center"
+                                                    
+                                                    v-if="configuration.lotgroup_list_or_card"
+                                                    >LOTE</th>
+                                                    <th class="text-white"
+                                                    v-if="configuration.listprice_list_or_card"
+                                                    >POLITICA PRECIO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -55,10 +60,10 @@
                                                         </div>
                                                         
                                                     </td>
-                                                    <td>s/.{{ data.price }}</td>
-                                                    <td v-if=" data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true">
-                                                        <template v-if="data.item.stock > 0">
-                                                            <span class="badge rounded-pill bg-primary m-l-0" style="text-align: center !important">Stock
+                                                    <td>S/ {{ data.price }}</td>
+                                                    <td v-if="  configuration.show_stock_cash == true">
+                                                        <template v-if=" data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && data.item.stock > 0">
+                                                            <span class="m-l-0" style="text-align: center !important">
                                                                 <template v-if="data.item.max_quantity">
                                                                     {{
                                                                                     formatedStockPresentation(
@@ -75,12 +80,12 @@
                                                             </span>
                                                         </template>
                                                         <template v-else>
-                                                            <span class="badge rounded-pill bg-danger m-l-0" style="text-align: center !important">
+                                                            <span class="text-danger m-l-0" style="text-align: center !important">
                                                                 Agotado
                                                             </span>
                                                         </template>
                                                     </td>
-                                                    <td>
+                                                    <td v-if="configuration.lotgroup_list_or_card">
                                                         <div class="" v-if=" data.item.lots_enabled == 1 && data.item.date_of_due">
                                                             <el-tag :type=" `${ isExpired(data.item.date_of_due) ? 'danger' : 'primary' }`">
                                                                 {{ data.item.lot_code }} -
@@ -88,7 +93,7 @@
                                                             </el-tag>
                                                         </div>
                                                     </td>
-                                                    <td>
+                                                    <td v-if="configuration.listprice_list_or_card">
                                                         <div v-if="data.types.length > 0">
                                                             <el-dropdown @command="clickCommand">
                                                                 <span class="el-dropdown-link">
@@ -312,8 +317,8 @@
                     <!-- hasta aqui -->
                 </div>
             </template>
-        <!-- </template> -->
-        <!-- <template v-else>
+        </template>
+        <template v-else>
             <div class="d-flex flex-wrap">
                 <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="index">
                     <el-tooltip effect="dark" :disabled="
@@ -490,7 +495,7 @@
                     </el-tooltip>
                 </div>
             </div>
-        </template> -->
+        </template>
 
     </div>
 </div>

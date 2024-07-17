@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'list_or_card',
+        'lotgroup_list_or_card',
+        'listprice_list_or_card',
         'variation_hotel',
         'ver_etiqueta_logistica',
         'detraction',
@@ -192,6 +195,9 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'list_or_card' => 'boolean',
+        'lotgroup_list_or_card' => 'boolean',
+        'listprice_list_or_card' => 'boolean',
         'variation_hotel' => 'boolean',
         'ver_etiqueta_logistica' => 'boolean',
         'correo_red_salud_ticket' => 'boolean',
@@ -324,6 +330,9 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'list_or_card' => (bool)$this->list_or_card,
+            'lotgroup_list_or_card' => (bool)$this->lotgroup_list_or_card,
+            'listprice_list_or_card' => (bool)$this->listprice_list_or_card,
             'variation_hotel' => (bool)$this->variation_hotel,
             'ver_etiqueta_logistica' => $this->ver_etiqueta_logistica,
             'detraction' => $this->detraction,

@@ -15,6 +15,9 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'list_or_card' => (bool)$this->list_or_card,
+            'lotgroup_list_or_card' => (bool)$this->lotgroup_list_or_card,
+            'listprice_list_or_card' => (bool)$this->listprice_list_or_card,
             'variation_hotel' => (bool) $this->variation_hotel,
             'ver_etiqueta_logistica' => (bool) $this->ver_etiqueta_logistica,
             'print_direct_just_different_areas' => (bool) $this->print_direct_just_different_areas,

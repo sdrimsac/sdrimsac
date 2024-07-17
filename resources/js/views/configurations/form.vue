@@ -2689,6 +2689,127 @@
                                                                                         ></small>
                                                                                     </div>
                                                                                 </div>
+
+                                                                                <div
+                                                                                    class="col-md-3 mt-4"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label"
+                                                                                        >Mostrar
+                                                                                        lista
+                                                                                        o
+                                                                                        tarjeta
+                                                                                        productos</label
+                                                                                    >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                        :class="{
+                                                                                            'has-danger':
+                                                                                                errors.list_or_card
+                                                                                        }"
+                                                                                    >
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.list_or_card
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                        <small
+                                                                                            class="text-danger"
+                                                                                            v-if="
+                                                                                                errors.list_or_card
+                                                                                            "
+                                                                                            v-text="
+                                                                                                errors
+                                                                                                    .list_or_card[0]
+                                                                                            "
+                                                                                        ></small>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-md-3 mt-4"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label"
+                                                                                        >Lote
+                                                                                        en
+                                                                                        lista
+                                                                                        de
+                                                                                        productos</label
+                                                                                    >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                        :class="{
+                                                                                            'has-danger':
+                                                                                                errors.lotgroup_list_or_card
+                                                                                        }"
+                                                                                    >
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.lotgroup_list_or_card
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                        <small
+                                                                                            class="text-danger"
+                                                                                            v-if="
+                                                                                                errors.lotgroup_list_or_card
+                                                                                            "
+                                                                                            v-text="
+                                                                                                errors
+                                                                                                    .lotgroup_list_or_card[0]
+                                                                                            "
+                                                                                        ></small>
+                                                                                    </div>
+                                                                                </div>
+                                                                                    <div
+                                                                                    class="col-md-3 mt-4"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label"
+                                                                                        >Política de precio
+                                                                                        en
+                                                                                        lista
+                                                                                        de
+                                                                                        productos</label
+                                                                                    >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                        :class="{
+                                                                                            'has-danger':
+                                                                                                errors.listprice_list_or_card
+                                                                                        }"
+                                                                                    >
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.listprice_list_or_card
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                        <small
+                                                                                            class="text-danger"
+                                                                                            v-if="
+                                                                                                errors.listprice_list_or_card
+                                                                                            "
+                                                                                            v-text="
+                                                                                                errors
+                                                                                                    .listprice_list_or_card[0]
+                                                                                            "
+                                                                                        ></small>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </el-card>
