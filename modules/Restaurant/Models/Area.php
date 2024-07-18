@@ -63,6 +63,15 @@ class Area extends ModelTenant
             ->first();
         if($user){
             return $user->area_id;
+        }else{
+            $user = User::where('establishment_id', $establishment_id)
+                ->whereHas('area', function ($query) {
+                    $query->where('description','like', '%CAJA%');
+                })
+                ->first();
+            if($user){
+                return $user->area_id;
+            }
         }
         return null;
 

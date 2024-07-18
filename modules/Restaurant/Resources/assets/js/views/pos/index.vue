@@ -5709,17 +5709,21 @@ export default {
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {
-                console.log("imprimiendoxd", e);
+                
 
                 // let area_id = e.data.area_id;
                 let user_establishment_id = e.data.user_establishment_id;
+                let user_establishment_id_printer =
+                    e.data.user_establishment_id_printer;
                 let area_id = e.data.area_id;
+                let isSameEstablishmentPrinter =
+                    this.establishments.id ==
+                    user_establishment_id_printer;
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
                 let sameAreas = this.configuration
                     .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
-            
 
                 let canPrint = true;
                 if (isHotels) {
@@ -5728,12 +5732,14 @@ export default {
                     } else {
                         canPrint = false;
                     }
-                }
-                if (isSameEstablishment) {
-                    canPrint = true;
                 } else {
-                    canPrint = false;
+                    if (isSameEstablishmentPrinter) {
+                        canPrint = true;
+                    } else {
+                        canPrint = false;
+                    }
                 }
+
                 if (sameAreas) {
                     if (area_id != this.area_id) {
                         return;

@@ -32,13 +32,13 @@ class PrintEvent implements ShouldBroadcast
     {
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
-        if($area_id == null){
+        // if($area_id == null){
             $id_by_area = Area::getAreaEstablishment($area_id);
             if($id_by_area){
                 $area_id = $id_by_area;
             }
             
-        }
+        // }
 
         $format = 'ticket';
         if ($establishment->format_printer == 2) {
@@ -181,6 +181,7 @@ class PrintEvent implements ShouldBroadcast
             'user_id' => $user->id,
             'area_id' => $area_id,
             'user_establishment_id' => $user_establishment_id,
+            'user_establishment_id_printer' => auth()->user()->establishment_id,
         );
 
         // Log::info(json_encode($this->data));
