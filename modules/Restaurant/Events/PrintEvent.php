@@ -30,6 +30,13 @@ class PrintEvent implements ShouldBroadcast
     public $data;
     public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null)
     {
+        $zone_id = $area_id;
+        if($zone_id){
+            $id_by_zone = Area::getZoneEstablishment($zone_id);
+            if($id_by_zone){
+                $zone_id = $id_by_zone;
+            }
+        }
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         // if($area_id == null){
@@ -39,13 +46,7 @@ class PrintEvent implements ShouldBroadcast
             }
             
         // }
-            $zone_id = $area_id;
-    if($zone_id){
-        $id_by_zone = Area::getZoneEstablishment($zone_id);
-        if($id_by_zone){
-            $zone_id = $id_by_zone;
-        }
-    }
+
         $format = 'ticket';
         if ($establishment->format_printer == 2) {
             $format = 'a5';
