@@ -804,6 +804,14 @@ class OrdenController extends Controller
     }
     function getBoxArea()
     {
+        $establishment_id = auth()->user()->establishment_id;
+        $user_box = User::whereHas('area', function ($query) {
+            $query->where('description', 'like', '%CAJ%');
+        })->where('establishment_id', $establishment_id)->first();
+        if($user_box){
+            $area_box = $user_box->area;
+            return $area_box->id;
+        }
         $area_box = Area::where('description', 'like', '%CAJ%')->first();
 
         if ($area_box != null) {
