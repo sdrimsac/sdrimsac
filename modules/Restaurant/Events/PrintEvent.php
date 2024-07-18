@@ -39,7 +39,13 @@ class PrintEvent implements ShouldBroadcast
             }
             
         // }
-
+            $zone_id = $area_id;
+    if($zone_id){
+        $id_by_zone = Area::getZoneEstablishment($zone_id);
+        if($id_by_zone){
+            $zone_id = $id_by_zone;
+        }
+    }
         $format = 'ticket';
         if ($establishment->format_printer == 2) {
             $format = 'a5';
@@ -112,7 +118,7 @@ class PrintEvent implements ShouldBroadcast
                 $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
                 break;
             case "0":
-                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}";
+                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}";
                 break;
             case "box":
                 $documentLink = url('') . "/caja/worker/expenses/print-box?box_id={$id}&area_id={$area_id}";

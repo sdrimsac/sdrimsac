@@ -18,7 +18,8 @@ class Area extends ModelTenant
         'printer',
         'copies',
         'active',
-        'search_print'
+        'search_print',
+        'establishment_id',
     ];
 
 
@@ -58,7 +59,7 @@ class Area extends ModelTenant
         $description = $description[0];
         $user = User::where('establishment_id', $establishment_id)
             ->whereHas('area', function ($query) use ($description) {
-                $query->where('description', $description);
+                $query->where('description','like', '%'.$description.'%');
             })
             ->first();
         if($user){
@@ -75,5 +76,22 @@ class Area extends ModelTenant
         }
         return null;
 
+    }
+
+    public static function getZoneEstablishment($id){
+        $establishment_id = auth()->user()->establishment_id;
+        $area = Area::where('id', $id)->first();
+        if(!$area) return null;
+        $description = $area->description;
+        $description = explode(" ", $description);
+        $description = $description[0];
+        $area_establishment = Area::where('establishment_id', $establishment_id)
+            ->where('description','like', '%'.$description.'%')
+            ->first();
+        if($area_establishment){
+            return $area_establishment->id;
+        }else{
+        return null;
+        }
     }
 }
