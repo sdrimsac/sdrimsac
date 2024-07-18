@@ -32,7 +32,10 @@ class PrintEvent implements ShouldBroadcast
     {
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
-
+        if($area_id == null){
+            $area_id = Area::getAreaEstablishment($area_id);
+            
+        }
 
         $format = 'ticket';
         if ($establishment->format_printer == 2) {
@@ -149,7 +152,7 @@ class PrintEvent implements ShouldBroadcast
         }
         $conf_establishment = ConfEstablishment::where('establishment_id', $establishment->id)->first();
         if ($conf_establishment && $conf_establishment->print_command == false && $document_type == "0" && $document_type == "00") {
-            Log::info('No se imprime el comando');
+            // Log::info('No se imprime el comando');
             $printing = false;
         }
         $copies = 0;

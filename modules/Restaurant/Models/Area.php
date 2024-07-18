@@ -49,4 +49,21 @@ class Area extends ModelTenant
         }
         return null;
     }
+    public static function getAreaEstablishment($id){
+        $establishment_id = auth()->user()->establishment_id;
+        $area = Area::where('id', $id)->first();
+        $description = $area->description;
+        $description = explode(" ", $description);
+        $description = $description[0];
+        $user = User::where('establishment_id', $establishment_id)
+            ->whereHas('area', function ($query) use ($description) {
+                $query->where('description', $description);
+            })
+            ->first();
+        if($user){
+            return $user->area_id;
+        }
+        return null;
+
+    }
 }

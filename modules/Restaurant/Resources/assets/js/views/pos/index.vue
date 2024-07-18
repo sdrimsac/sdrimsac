@@ -1588,7 +1588,7 @@
 
         <template>
             <payment-form
-            :itemDefault.sync="itemDefault"
+                :itemDefault.sync="itemDefault"
                 :quotationId.sync="quotationId"
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                 :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
@@ -1685,7 +1685,7 @@
             @sendOrdens="sendOrdens"
             :roomSeeId="roomSeeId"
             :showTables.sync="showTablesRooms"
-                :itemDefault.sync="itemDefault"
+            :itemDefault.sync="itemDefault"
         ></tables-rooms>
         <documents-print
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
@@ -1796,7 +1796,7 @@
             <x-report-credit-daily-cash></x-report-credit-daily-cash>
         </el-dialog>
         <detraction-payment
-        :showDialog.sync="showDialogDetraction"
+            :showDialog.sync="showDialogDetraction"
         ></detraction-payment>
     </div>
 </template>
@@ -1840,9 +1840,7 @@ const WarehousesDetail = () =>
     import(
         "../../../../../../../resources/js/views/items/partials/warehouses.vue"
     );
-const DetractionPayment = () =>
-    import(
-        "./partials/detraction_payment.vue");
+const DetractionPayment = () => import("./partials/detraction_payment.vue");
 const Tables = () => import("./partials/tables.vue");
 const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
@@ -2296,10 +2294,10 @@ export default {
         setMenuOptions() {
             this.optionsMenu = [
                 {
-                    id:97,
-                    title: ["Pagos","Detracciones"],
+                    id: 97,
+                    title: ["Pagos", "Detracciones"],
                     icon: "fas fa-money-check-alt",
-                    visible: this.configuration.detraction,
+                    visible: this.configuration.detraction
                 },
                 {
                     id: 1,
@@ -2913,8 +2911,9 @@ export default {
             this.ordensItems = [
                 ...orden.orden_items.map(o => {
                     let orden = o;
-                    if(orden.name_product_pdf){
-                        orden.food.item.name_product_pdf = orden.name_product_pdf;
+                    if (orden.name_product_pdf) {
+                        orden.food.item.name_product_pdf =
+                            orden.name_product_pdf;
                     }
                     orden.price = Number(orden.price).toFixed(2);
                     if (orden.unit_type_id) {
@@ -3150,7 +3149,10 @@ export default {
             };
         },
         async paymentsOrden(form, variationItem = []) {
-            console.log("🚀 ~ asyncpaymentsOrden(form,variationItem ~ variationItem:", variationItem)
+            console.log(
+                "🚀 ~ asyncpaymentsOrden(form,variationItem ~ variationItem:",
+                variationItem
+            );
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
@@ -3351,7 +3353,7 @@ export default {
         },
         async insertItemFromNoteSales() {},
         checkDetractionItems(item) {
-            if(!this.configuration.detraction) return false;
+            if (!this.configuration.detraction) return false;
             let {
                 item: { subject_to_detraction }
             } = item;
@@ -3360,7 +3362,8 @@ export default {
             );
             if (
                 subject_to_detraction == 1 &&
-                !ordenHasDetraction && this.localOrden.length > 0
+                !ordenHasDetraction &&
+                this.localOrden.length > 0
             ) {
                 this.$toast.error(
                     "Este producto esta sujeto a detracción, y existen productos que no lo están"
@@ -5716,14 +5719,20 @@ export default {
                 let sameAreas = this.configuration
                     .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
+            
 
                 let canPrint = true;
-                if (isHotels  ) {
+                if (isHotels) {
                     if (isSameEstablishment) {
                         canPrint = true;
                     } else {
                         canPrint = false;
                     }
+                }
+                if (isSameEstablishment) {
+                    canPrint = true;
+                } else {
+                    canPrint = false;
                 }
                 if (sameAreas) {
                     if (area_id != this.area_id) {
