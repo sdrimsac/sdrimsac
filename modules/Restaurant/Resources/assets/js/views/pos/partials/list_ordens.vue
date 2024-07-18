@@ -233,7 +233,7 @@
                                 {{ (total + totalOrdenItems).toFixed(2) }}
                             </h3>
                         </div>
-                        <!-- <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end">
                             <div class="col-3 text-white">
                                 <label for="currency">
                                     <small>Moneda</small>
@@ -261,7 +261,7 @@
                                     @input="calculateTotal"
                                 ></el-input>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 

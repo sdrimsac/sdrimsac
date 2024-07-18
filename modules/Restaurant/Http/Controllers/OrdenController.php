@@ -223,7 +223,7 @@ class OrdenController extends Controller
         $height = 8  * 30;
 
         if ($ordens->count() == 1) {
-            $height = $height + $ordens->count() * 28;
+            $height = $height + $ordens->count() * 35;
         } else if ($ordens->count() > 12) {
             $height = $height + ($ordens->count() * 30);
         } else {
