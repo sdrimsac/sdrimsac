@@ -307,7 +307,9 @@
                                     </template>
                                     <template v-else>
                                         <span class="badge rounded-pill bg-danger m-l-0" style="text-align: center !important">
-                                            Agotado
+                                            <template v-if="data.item.unit_type_id != 'ZZ'">
+                                                Agotado
+                                            </template>
                                         </span>
                                     </template>
                                 </div>
