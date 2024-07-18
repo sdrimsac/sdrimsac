@@ -33,7 +33,10 @@ class PrintEvent implements ShouldBroadcast
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         if($area_id == null){
-            $area_id = Area::getAreaEstablishment($area_id);
+            $id_by_area = Area::getAreaEstablishment($area_id);
+            if($id_by_area){
+                $area_id = $id_by_area;
+            }
             
         }
 
