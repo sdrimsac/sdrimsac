@@ -987,6 +987,8 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            @updateCurrencyChoice="updateCurrencyChoice"
+                            :exchange_rate_sale="form.exchange_rate_sale"
                             :users.sync="users"
                             :user.sync="user"
                             :quotationId.sync="quotationId"
@@ -1522,6 +1524,7 @@
                 </div>
                 <div class="row">
                     <list-orden
+                        :exchange_rate_sale="form.exchange_rate_sale"
                         :users.sync="users"
                         @sendOrdens="sendOrdens"
                         :company.sync="company"
@@ -1916,6 +1919,7 @@ export default {
 
     data() {
         return {
+            currencyIdChoice: "PEN",
             showDialogDetraction: false,
             loadingItems: false,
             allLocalFoods: [],
@@ -2072,7 +2076,7 @@ export default {
 
     async created() {
         this.area_id = this.worker.area_id;
-
+        this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");
         this.isAnalist = this.checkWorkerType("analista");
         localStorage.setItem("quotation_stock", 0);
@@ -2161,6 +2165,9 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        updateCurrencyChoice(currency) {
+            this.currencyIdChoice = currency;
+        },
         openCreditReportDaily() {
             this.showDialogCreditReportDaily = true;
         },
@@ -3398,7 +3405,7 @@ export default {
                 let added = false;
                 let {
                     food: {
-                        item: { lots_group },
+                        item: { lots_group,currency_type_id },
                         series
                     }
                 } = orden;
@@ -3443,6 +3450,14 @@ export default {
                         orden.series = [serieFind];
                     }
                     orden.quantity = 1;
+                }
+                if(currency_type_id != "PEN" && this.currencyIdChoice == "PEN"){
+                    orden.price = orden.price * this.form.exchange_rate_sale;
+                    orden.price = Number(orden.price).toFixed(2);
+                }
+                if(currency_type_id == "PEN" && this.currencyIdChoice != "PEN"){
+                    orden.price = orden.price / this.form.exchange_rate_sale;
+                    orden.price = Number(orden.price).toFixed(2);
                 }
                 orden.original_price = orden.price;
                 this.localOrden.unshift(orden);
@@ -4348,7 +4363,7 @@ export default {
             this.value = customer_default;
             this.form.customer_id = customer_default;
             this.initFormItem();
-            this.changeDateOfIssue();
+            // this.changeDateOfIssue();
             this.initInputPerson();
             //  this.changeCustomer();
             this.name_product_pdf = null;
@@ -5007,10 +5022,11 @@ export default {
                 }
             }
         },
-        changeDateOfIssue() {
-            // this.searchExchangeRateByDate(this.form.date_of_issue).then(response => {
-            //     this.form.exchange_rate_sale = response
-            // })
+        getExchange() {
+            let now = moment().format("YYYY-MM-DD");
+            this.searchExchangeRateByDate(now).then(response => {
+                this.form.exchange_rate_sale = response;
+            });
         },
         changeExchangeRate() {
             // this.searchExchangeRateByDate(this.form.date_of_issue).then(
@@ -5709,7 +5725,7 @@ export default {
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {
-                
+                console.log("imprimiendoxd", e);
 
                 // let area_id = e.data.area_id;
                 let user_establishment_id = e.data.user_establishment_id;
@@ -5717,8 +5733,7 @@ export default {
                     e.data.user_establishment_id_printer;
                 let area_id = e.data.area_id;
                 let isSameEstablishmentPrinter =
-                    this.establishments.id ==
-                    user_establishment_id_printer;
+                    this.establishments.id == user_establishment_id_printer;
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
                 let sameAreas = this.configuration

@@ -121,7 +121,8 @@
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            S/ {{ data.price }}
+                                                            
+                                                            {{data.item.currency_type_id == 'PEN' ? 'S/':'$'}} {{ data.price }}
                                                         </td>
                                                         <td
                                                             v-if="
@@ -474,7 +475,12 @@
                                                     <span
                                                         class="text-muted lead-font-weight-700"
                                                     >
-                                                        S/
+                                                        {{
+                                                            data.item.currency_type_id ==
+                                                            "PEN"
+                                                                ? "S/"
+                                                                : "$"
+                                                        }}
                                                         {{ data.price }}</span
                                                     >
                                                 </span>

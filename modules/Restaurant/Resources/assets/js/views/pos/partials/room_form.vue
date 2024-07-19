@@ -13,7 +13,7 @@
             <div class="col-md-4">
                 <label for="name"
                     >Cliente
-                    <a href="#" @click.prevent="createClient">
+                    <a href="#" @click.prevent="createClient(null)">
                         [ + Nuevo ]
                     </a>
                 </label>
@@ -30,8 +30,8 @@
                     @keyup.native="keyupCustomer"
                 >
                     <el-option
-                        v-for="option in customers"
-                        :key="option.id"
+                        v-for="(option, idx) in customers"
+                        :key="idx"
                         :label="option.description"
                         :value="option.id"
                     ></el-option>
@@ -265,8 +265,8 @@
                             @keyup.native="keyupCustomer"
                         >
                             <el-option
-                                v-for="option in customers"
-                                :key="option.id"
+                                v-for="(option, idx) in customers"
+                                :key="idx"
                                 :label="option.description"
                                 :value="option.id"
                             ></el-option>
@@ -412,7 +412,10 @@
                 </div>
             </el-collapse-item>
         </el-collapse>
-        <div class="row mt-2" v-if="hasAdvances > 0 && configuration.variation_hotel">
+        <div
+            class="row mt-2"
+            v-if="hasAdvances > 0 && configuration.variation_hotel"
+        >
             <div class="row">
                 PRODUCTO VARIACIÓN
             </div>
@@ -634,6 +637,7 @@ export default {
             this.$http.get(`/pos/table/customers`).then(async response => {
                 this.customers = [...this.customers, ...response.data];
                 this.removeDuplicateCustomer();
+
                 if (this.idxRoom != null) {
                     this.rooms[this.idxRoom].guess_id = customer_id;
                 } else {
@@ -643,20 +647,12 @@ export default {
             });
         },
         removeDuplicateCustomer() {
-            let ids = this.customers.map(c => c.id);
-            let persons = [];
+            const ids = new Set(this.customers.map(c => c.id));
+            const persons = this.all_customers.filter(
+                person => !ids.has(person.id)
+            );
 
-            for (let person of this.all_customers) {
-                let existInList = ids.find(p => p == person.id);
-                if (existInList == undefined) {
-                    persons.push(person);
-                }
-            }
-            let newData = [];
-
-            newData = [...this.customers, ...persons];
-
-            this.customers = newData;
+            this.customers = [...this.customers, ...persons];
         },
         calculateSubtotal() {
             let subtotal = 0;
@@ -820,7 +816,9 @@ export default {
         createClient(idx = null) {
             this.idxRoom = idx;
             this.value = null;
-            this.form.customer_id = null;
+            if (idx == null) {
+                this.form.customer_id = null;
+            }
             this.showDialogNewPerson = true;
         },
         async updateAllCustomers(personsFromServer) {
@@ -942,6 +940,10 @@ export default {
             return pass;
         },
         async open() {
+            this.paymentVariation = {
+                description: "Consumo",
+                price: 0
+            };
             this.loading = true;
             this.keyupCustomer();
             this.initForm();

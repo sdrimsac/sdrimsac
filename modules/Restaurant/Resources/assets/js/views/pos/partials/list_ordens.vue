@@ -188,7 +188,7 @@
                     <div class="col-6">
                         <div class="row">
                             <h3 class="text-white" style="text-align: right">
-                                Total S/.
+                                Total {{ currency_id == "USD" ? "$" : "S/"}}
                                 {{ (total + totalOrdenItems).toFixed(2) }}
                             </h3>
                         </div>
@@ -233,7 +233,7 @@
                                 {{ (total + totalOrdenItems).toFixed(2) }}
                             </h3>
                         </div>
-                        <div class="d-flex justify-content-end">
+                        <!-- <div class="d-flex justify-content-end">
                             <div class="col-3 text-white">
                                 <label for="currency">
                                     <small>Moneda</small>
@@ -261,7 +261,7 @@
                                     @input="calculateTotal"
                                 ></el-input>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -1207,17 +1207,11 @@
                                                                         >
                                                                             <template
                                                                                 slot="prepend"
-                                                                                v-if="
-                                                                                    ord
-                                                                                        .food
-                                                                                        .item
-                                                                                        .currency_type_id ==
-                                                                                        'PEN'
-                                                                                "
+                                                                            
                                                                             >
-                                                                                S/
+                                                                                {{currency_id == "USD" ? '$' : 'S/'}}
                                                                             </template>
-                                                                            <template
+                                                                            <!-- <template
                                                                                 slot="prepend"
                                                                                 v-if="
                                                                                     ord
@@ -1228,7 +1222,7 @@
                                                                                 "
                                                                             >
                                                                                 $
-                                                                            </template>
+                                                                            </template> -->
                                                                         </el-input>
                                                                     </span>
                                                                 </span>
@@ -1719,17 +1713,11 @@
                                                                         >
                                                                             <template
                                                                                 slot="prepend"
-                                                                                v-if="
-                                                                                    order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .currency_type_id ==
-                                                                                        'PEN'
-                                                                                "
+                                                                            
                                                                             >
-                                                                                S/
+                                                                                {{currency_id == "USD" ? '$' : 'S/'}}
                                                                             </template>
-                                                                            <template
+                                                                            <!-- <template
                                                                                 slot="prepend"
                                                                                 v-if="
                                                                                     order_pend
@@ -1740,7 +1728,7 @@
                                                                                 "
                                                                             >
                                                                                 $
-                                                                            </template>
+                                                                            </template> -->
                                                                         </el-input>
                                                                     </span>
                                                                 </span>
@@ -2553,6 +2541,7 @@ export default {
         ShowColorSizeProduct
     },
     props: [
+
         "users",
         "cotIdentifier",
         "quotationId",
@@ -2580,12 +2569,13 @@ export default {
         "ordenId",
         "cash_id",
         "isHotelArea",
-        "user"
+        "user",
+        "exchange_rate_sale"
     ],
 
     data() {
         return {
-            exchange_rate_sale: 1,
+            // exchange_rate_sale: 1,
             currency_id: "S/",
             cashAvailable: 0,
             showColorSize: false,
@@ -2697,10 +2687,7 @@ export default {
 
     async mounted() {
         // console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
-         this.searchExchangeRateByDate("2024-07-15").
-        then((exchange) => {
-                this.exchange_rate_sale = exchange;
-        });
+    
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
@@ -2764,7 +2751,8 @@ export default {
     },
     methods: {
         changeCurrency() {
-            console.log(this.currency_id);
+            // console.log(this.currency_id);
+            this.$emit("updateCurrencyChoice", this.currency_id);
         },
         async savePriceProduct(idx) {
             try {
