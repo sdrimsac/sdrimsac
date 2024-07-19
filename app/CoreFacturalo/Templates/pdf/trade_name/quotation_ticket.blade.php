@@ -20,7 +20,7 @@
 <body style="margin: 0px;padding:0px !important;">
 
     @if ($company->logo)
-        <div class="text-center company_logo_box pt-5">
+        <div class="text-center company_logo_ticket">
             <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
                 alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
         </div>
@@ -227,7 +227,7 @@
         @endif
         <tr>
             <td class="align-top">
-                <p class="desc">Vendedor:</p>
+                <p class="desc">Usuario:</p>
             </td>
             <td>
                 <p class="desc">

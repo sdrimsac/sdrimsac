@@ -190,10 +190,6 @@ class DocumentController extends Controller
         $sender = 'sdrimsac';
         $envio = new WhatsappController;
 
-
-
-
-
         try {
             $results = DB::select("            SHOW DATABASES;            ");
 
@@ -255,19 +251,14 @@ class DocumentController extends Controller
                 }
             }
 
-
             $documento = (new ReportDocumentStatus)
                 ->infoCompleta($infoCompleta)
                 ->download('ReporteDoc' . Carbon::now() . '.xlsx');
-
-
-
 
             $file = new File($documento->getFile());
             $request = new Request(['file' => $file, 'number' => $number, 'message' => $message, 'file_name' => $file_name, 'sender' => $sender]);
 
             $envio->sendReporteDocumentos($request);
-
 
             return [
                 'success' => true,
@@ -334,7 +325,6 @@ class DocumentController extends Controller
     }
     public function totals($request)
     {
-
         $records =  Document::where([['state_type_id', '01'], ['currency_type_id', 'PEN']])->get();
         $total_pen = 0;
         $total_paid_pen = 0;
@@ -356,6 +346,8 @@ class DocumentController extends Controller
             'total_pending_paid_pen' => number_format($total_pending_paid_pen, 2, ".", "")
         ];
     }
+
+
     public function index_detraction()
     {
         $configuration = Configuration::first();
@@ -439,13 +431,13 @@ class DocumentController extends Controller
 
         return new DocumentDetractionCollection($records->paginate(config('tenant.items_per_page')));
     }
+
+    /* agregado para 50 paginacion */
     public function records(Request $request)
     {
-
-
         $records = $this->getRecords($request);
 
-        return new DocumentCollection($records->paginate(config('tenant.items_per_page')));
+        return new DocumentCollection($records->paginate(50));
     }
 
     public function records_list(Request $request)
@@ -1916,6 +1908,7 @@ class DocumentController extends Controller
 
         return $records;
     }
+
     private function associateSaleNoteToDocument(Request $request, int $documentId)
     {
         if ($request->sale_note_id) {
@@ -2015,7 +2008,6 @@ class DocumentController extends Controller
 
         return $items;
     }
-
 
     private function updateMaxCountPayments($value)
     {

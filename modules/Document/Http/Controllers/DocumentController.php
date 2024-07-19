@@ -117,7 +117,6 @@ class DocumentController extends Controller
     }
 
 
-
     public function upload(Request $request)
     {
         if ($request->hasFile('file')) {
@@ -186,7 +185,6 @@ class DocumentController extends Controller
 
         return compact('customers');
     }
-
 
 
     public function savePayConstancy(Request $request)
