@@ -3156,10 +3156,7 @@ export default {
             };
         },
         async paymentsOrden(form, variationItem = []) {
-            console.log(
-                "🚀 ~ asyncpaymentsOrden(form,variationItem ~ variationItem:",
-                variationItem
-            );
+        
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
@@ -3220,6 +3217,7 @@ export default {
                 );
                 this.formVariation.difference = 0;
                 this.formVariation.total = this.formVariation.enter_amount;
+                this.formVariation.hotel_customer_number = form.customer_number;
                 this.formVariation.establishment_id = this.establishment.id;
                 if (!this.formVariation.customer_id) {
                     let varios = this.all_customers.filter(a =>
@@ -4312,6 +4310,7 @@ export default {
                 restaurant: true,
                 total_rounded: 0.0,
                 total_payment: 0.0,
+                hotel_customer_number:null,
                 establishment_id: null,
                 document_type_id: this.establishments.document_default,
                 series_id: null,
