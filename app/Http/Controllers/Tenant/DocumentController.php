@@ -437,7 +437,7 @@ class DocumentController extends Controller
     {
         $records = $this->getRecords($request);
 
-        return new DocumentCollection($records->paginate(50));
+        return new DocumentCollection($records);
     }
 
     public function records_list(Request $request)
@@ -1841,7 +1841,6 @@ class DocumentController extends Controller
                 // ->where('establishment_id', auth()->user()->establishment_id)
                 ->where('state_type_id', 'like', '%' . $state_type_id . '%')
                 ->whereBetween('date_of_issue', [$d_start, $d_end])
-
                 ->OrderBy('id', 'desc')
                 ->OrderBy('number', 'desc')
                 ->latest();
@@ -1904,7 +1903,13 @@ class DocumentController extends Controller
                 });
             });
         }
-        $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
+
+        $totalSum = $records->sum('total');
+        
+        /* $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc'); */
+        $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(25);
+
+        $records->total_sum = $totalSum;
 
         return $records;
     }

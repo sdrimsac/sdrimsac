@@ -311,13 +311,19 @@
                             ></slot>
                         </tbody>
                     </table>
+                    
                     <div class="row mb-5" v-if="totals > 0">
                         <div class="col-md-12 text-end  border-top">
                             <h6>
-                                <b>Total S/ {{ totals.toFixed(2) }}</b>
+                                <b>Total Por Pagina S/ {{ totals.toFixed(2) }}</b>
                             </h6>
                         </div>
                     </div>
+                        <div class="col-md-12 text-end ">
+                            <h6>
+                                <b>Total Suma Documentos S/ {{ totalSum }}</b>
+                            </h6>
+                        </div>
                     <div>
                         <el-pagination
                             @current-change="getRecords"
@@ -373,6 +379,7 @@ export default {
             sellers: [],
             see_more: false,
             totals: null,
+            totalSum: 0,
             pickerOptionsDates: {
                 disabledDate: time => {
                     time = moment(time).format("YYYY-MM-DD");
@@ -508,6 +515,11 @@ export default {
                 .get(`/${this.resource}/records?${this.getQueryParameters()}`)
                 .then(response => {
                     this.records = response.data.data;
+                    /* this.totalSum = response.data.total_sum; */
+
+                    if(response.data.data && response.data.data.length > 0 && response.data.data[0].total_sum) {
+                    this.totalSum = response.data.data[0].total_sum;
+                }
                     this.getTotals(this.records);
                     this.pagination = response.data.meta;
                     this.pagination.per_page = parseInt(
