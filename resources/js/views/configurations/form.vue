@@ -2770,12 +2770,14 @@
                                                                                         ></small>
                                                                                     </div>
                                                                                 </div>
-                                                                                    <div
+                                                                                <div
                                                                                     class="col-md-3 mt-4"
                                                                                 >
                                                                                     <label
                                                                                         class="control-label"
-                                                                                        >Política de precio
+                                                                                        >Política
+                                                                                        de
+                                                                                        precio
                                                                                         en
                                                                                         lista
                                                                                         de
@@ -4522,6 +4524,24 @@
                                                         inactive-text="No"
                                                         @change="submit"
                                                     ></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        class="control-label w-100"
+                                                        >% de crédito
+                                                    </label>
+                                                    <el-input-number
+                                                        class="w-100"
+                                                        v-model="form.rates"
+                                                        :precision="2"
+                                                        :step="0.5"
+                                                        :max="100"
+                                                        active-text="Si"
+                                                        inactive-text="No"
+                                                        @change="submit"
+                                                    ></el-input-number>
                                                 </div>
                                             </div>
                                         </div>

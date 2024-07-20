@@ -5239,6 +5239,7 @@ export default {
             this.form.seller_id = null;
             this.form.total_discount = 0;
             this.form.is_room = false;
+            this.form.original_total = undefined;
             this.form.reference_number = null;
             this.form.hotel_customer_number = null;
             this.form.hotel_rent_item_service_id = null;

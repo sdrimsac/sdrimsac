@@ -589,7 +589,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row col-md-12">
+                                    <div class="row col-md-12 m-2">
                                         <div
                                             class="mt-2 d-flex justify-content-start align-items-end"
                                             v-if="
@@ -700,7 +700,7 @@
                                         >
                                     </template>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 m-">
                                     <div
                                         class="row"
                                         v-if="
@@ -4125,6 +4125,8 @@ export default {
             );
         },
         back(val = false) {
+            // this.$emit()
+            this.form.original_total = undefined;
             let { is_advance, hotel_rent_id } = this.form;
             if (is_advance && hotel_rent_id && !val) {
                 this.$emit("limpiarForm");
