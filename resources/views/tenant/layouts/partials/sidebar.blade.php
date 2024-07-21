@@ -277,7 +277,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($many_establishments)
+                        {{-- @if ($many_establishments) --}}
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('transfers.index') }}">
@@ -290,7 +290,7 @@
                                     <i class="icofont-list"></i> Traslados por aceptar
                                 </a>
                             </li>
-                        @endif
+                        {{-- @endif --}}
 
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"

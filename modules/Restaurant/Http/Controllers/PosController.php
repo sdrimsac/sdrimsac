@@ -113,18 +113,7 @@ class PosController extends Controller
             $date = Carbon::parse($box->created_at)->format('d/m/y H:i:s');
         }
 
-
         $height = 8  * 150;
-
-        // if ($ordens->count() == 1) {
-        //     $height = $height + $ordens->count() * 28;
-        // } else if ($ordens->count() > 12) {
-        //     $height = $height + ($ordens->count() * 30);
-        // } else {
-        //     $height = $height + $orden_item_length;
-        // }
-
-        // 
 
         try {
             $pdf = PDF::loadView('restaurant::cash.expense_income_ticket', compact(
@@ -252,6 +241,13 @@ class PosController extends Controller
         //     }
         // }
         if ($configuration->ord_dscp) {
+            // Ordena los resultados priorizando la palabra exacta
+            $foods = $foods->orderByRaw("description LIKE '{$value}%' DESC")
+                ->orderByRaw("description LIKE '%{$value}%' DESC")
+                ->orderBy('description', 'ASC');
+        }
+
+        if ($configuration->ord_dscp) {
             $foods = $foods->orderBy('description', 'ASC');
         }
         $all_foods = $configuration->all_items_pos;
@@ -266,13 +262,10 @@ class PosController extends Controller
                 return new FoodCollection($foods->paginate(100), $search_by_series);
             }
         }
-       
-
-
-
         //  return Food::all();
         //     return new InventoryCollection($reports->paginate(config('tenant.items_per_page')));
     }
+
     public function pos()
     {
         $cash = Cash::where('state', 1)

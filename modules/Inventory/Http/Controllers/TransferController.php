@@ -420,13 +420,17 @@ class TransferController extends Controller
             $detail->quantity = $it['quantity'];
             $series_lots = [
                 "series" => [],
-                "lotes" => []
+                "lotes" => [],
+                "color_size" => [],
             ];
             if (count($it['lotes']) > 0) {
                 $series_lots["lotes"] = $it['lotes'];
             }
             if (count($it['lots']) > 0) {
                 $series_lots["series"] = $it['lots'];
+            }
+            if (count($it['color_size']) > 0) {
+                $series_lots["color_size"] = $it['color_size'];
             }
             $detail->series_lots = $series_lots;
             $item = ItemWarehouse::where(

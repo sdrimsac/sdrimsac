@@ -94,6 +94,10 @@ trait InventoryTrait
                     $query->where('code', 'like', '%' . $description . '%');
                 });
                 break;
+            case 'has_color_size':
+                $records = $records->whereHas('has_color_size', function ($query) use ($description) {
+                    $query->where('talla', 'like', '%' . $description . '%');
+                });
             default:
                 if ($description) {
                     $records = $records->where('description', 'like', '%' . $description . '%')
@@ -114,6 +118,7 @@ trait InventoryTrait
                 'description' => $row->description,
                 'lots_enabled' => (bool)$row->lots_enabled,
                 'series_enabled' => (bool)$row->series_enabled,
+                'has_color_size' => (bool)$row->has_color_size,
                 'full_description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
                 'max_quantity' => $row->max_quantity,
                 'lotes' => $row->lots_group->where('warehouse_id', $warehouse_id)->transform(function ($row) {
@@ -136,11 +141,26 @@ trait InventoryTrait
                         'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
                     ];
                 }),
+                /* 'color_size' => $row->item_color_size->where('warehouse_id', $warehouse_id)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'talla' => $row->talla,
+                        'color' => $row->color,
+                        'quantity' => $row->quantity,
+                    ];
+                }), */
+                'color_size' => $row->color_size ? $row->color_size->where('warehouse_id', $warehouse_id)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'size' => $row->size,
+                        'color' => $row->color,
+                        'stock' => $row->stock,
+                        'price' => $row->price,
+                    ];
+                }) : [],
             ];
         });
     }
-
-
 
     public function optionsItemFull()
     {
@@ -242,7 +262,7 @@ trait InventoryTrait
 
     private function createInventoryKardex($model, $item_id, $quantity, $warehouse_id)
     {
-      $inventory_kardex =  $model->inventory_kardex()->create([
+        $inventory_kardex =  $model->inventory_kardex()->create([
             'date_of_issue' => date('Y-m-d'),
             'item_id' => $item_id,
             'warehouse_id' => $warehouse_id,
