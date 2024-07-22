@@ -62,7 +62,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="100%" >
+        <div width="90%" style="margin:0;">
             @php
                 $jj = 0;
                 $per_page = $paper;
