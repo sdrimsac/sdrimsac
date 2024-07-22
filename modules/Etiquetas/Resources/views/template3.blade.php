@@ -72,7 +72,7 @@
                     @php
                         $jj++;
                     @endphp
-                    <div style="width: 50%; float: left;">
+                    <div style="width: 49%; float: left;border:1px solid black;">
                         <div style="width:100%;" 
                         
                         >
@@ -86,7 +86,7 @@
 
                         </div>
 
-                        <div class="text-center font-xs" style="width:90%;height:27px;">
+                        <div class="text-center font-xs" style="width:90%;height:25px;">
                             {{ $description }}
 
                         </div>
