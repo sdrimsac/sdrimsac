@@ -62,7 +62,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="100%" style="height:70px;margin:0;padding:0;" >
+        <div width="100%" style="margin:0;padding:0;" >
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -73,7 +73,7 @@
                         $jj++;
                     @endphp
                     <div style="width: 50%; float: left;">
-                        <div style="width:90%;" 
+                        <div style="width:90%; text-align: center; height: 20px;" 
                         
                         >
 
@@ -86,7 +86,7 @@
 
                         </div>
 
-                        <div class="text-center font-xs" style="width:90%;height:25px;">
+                        <div class="text-center font-xs" style="width:90%;height:20px;">
                             {{ $description }}
 
                         </div>
@@ -110,7 +110,9 @@
 
                         </div>
 
-                        <div class="text-center font-xs">
+                        <div class="text-center font-xs"
+                        style="height: 5px;"
+                        >
                             {{ $barcode }}
 
                         </div>
