@@ -62,7 +62,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="100%" autosize="1">
+        <div width="100%">
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -79,7 +79,7 @@
 
                             @php
                                 if ($jj - 1 < $stock) {
-                                    echo '<img style="height: 20px; " src=' . $image . '>';
+                                    echo '<img style="height: 25px; " src=' . $image . '>';
                                 }
                             @endphp
 
@@ -97,7 +97,7 @@
                                     $colour = [0, 0, 0];
                                     $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                    echo '<img   style="width:100px;height: 10px;"  src="data:image/png;base64,' .
+                                    echo '<img   style="width:100px;height: 15px;"  src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
                                                 $barcode,
