@@ -83,8 +83,8 @@ class EtiquetasController extends Controller
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
-                    $paper ==  1 ? 50 :  65,
-                    $paper == 1 ? 25 : 25
+                    $paper ==  1 ? 50 :  70,
+                    $paper == 1 ? 25 : 20
                 ],
 
                 'margin_top' => $margin_top,
