@@ -62,7 +62,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="98%" style="margin:0;padding:0;" >
+        <div width="95%" style="margin:0;padding:0;" >
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -86,7 +86,7 @@
 
                         </div>
 
-                        <div class="text-center font-xs" style="width:90%;height:18px;">
+                        <div class="text-center font-xs" style="width:90%;height:25px;">
                             {{ $description }}
 
                         </div>
@@ -97,7 +97,7 @@
                                     $colour = [0, 0, 0];
                                     $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                    echo '<img   style="width:100px;height: 5px;"  src="data:image/png;base64,' .
+                                    echo '<img   style="width:100px;height: 15px;"  src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
                                                 $barcode,
