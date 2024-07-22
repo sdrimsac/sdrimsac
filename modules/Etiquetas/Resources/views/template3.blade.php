@@ -62,7 +62,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="100%">
+        <div width="100%" >
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -86,7 +86,7 @@
 
                         </div>
 
-                        <div class="text-center font-xs" style="width:90%">
+                        <div class="text-center font-xs" style="width:90%;height:27px;">
                             {{ $description }}
 
                         </div>
