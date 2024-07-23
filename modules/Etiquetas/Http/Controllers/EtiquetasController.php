@@ -50,9 +50,9 @@ class EtiquetasController extends Controller
             if ($format == '1' && $paper == '2') {
                 $template = 'template3';
             }
-            if ($format == '1' && $paper == '1') {
-                $template = 'template6';
-            }
+            // if ($format == '1' && $paper == '1') {
+            //     $template = 'template6';
+            // }
 
 
             $record = Item::where('description', $description)->first();
@@ -87,7 +87,7 @@ class EtiquetasController extends Controller
                 'mode' => 'utf-8',
                 'format' => [
                     $paper ==  1 ? 50 :  65,
-                    $paper == 1 ? 23 : 23
+                    $paper == 1 ? 25 : 23
                 ],
 
                 'margin_top' => $margin_top,
