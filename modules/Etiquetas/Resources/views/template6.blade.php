@@ -31,7 +31,7 @@
                     @if ($type == 1)
                         <div>
                             <div
-                                style="width:100%;height:70px;"">
+                                style="width:100%;">
                                 <div
                                     style="width:50%;float:left;margin:auto 0;
                                 ">
