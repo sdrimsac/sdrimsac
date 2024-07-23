@@ -50,6 +50,9 @@ class EtiquetasController extends Controller
             if ($format == '1' && $paper == '2') {
                 $template = 'template3';
             }
+            if ($format == '1' && $paper == '1') {
+                $template = 'template6';
+            }
 
 
             $record = Item::where('description', $description)->first();
