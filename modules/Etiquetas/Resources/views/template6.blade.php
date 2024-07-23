@@ -3,7 +3,7 @@
 <head>
     <style>
         body {
-            margin: 0 auto;
+            margin: 0px;
             padding: 0px;
         }
 
