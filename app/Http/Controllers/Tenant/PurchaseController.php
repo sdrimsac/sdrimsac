@@ -368,6 +368,7 @@ class PurchaseController extends Controller
                 }
                 $doc = Purchase::create($data);
                 foreach ($data['items'] as $row) {
+                    $unit_price = floatval($row['unit_price']);
                     $p_item = new PurchaseItem;
                     $p_item->fill($row);
                     $p_item->purchase_id = $doc->id;
@@ -378,6 +379,10 @@ class PurchaseController extends Controller
                         Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
                         ItemWarehousePrice::where('item_id', $row['item_id'])
                             ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
+                    }
+                    $purchase_unit_price_item = floatval($item->purchase_unit_price);
+                    if ($unit_price != $purchase_unit_price_item) {
+                        $item->purchase_unit_price = $unit_price;                    
                     }
                     $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
