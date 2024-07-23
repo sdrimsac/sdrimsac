@@ -68,13 +68,13 @@ class EtiquetasController extends Controller
             $margin_bottom = 0;
             if ($format == 1) {
                 if ($paper == 1) {
-                    $margin_top = 1;
+                    // $margin_top = 1;
                 }
             }
             if ($format == 2) {
                 if ($paper == 1) {
 
-                    $margin_top = 1;
+                    // $margin_top = 1;
                 }
             }
             $stock = $request->stock ?? 0;
@@ -116,7 +116,9 @@ class EtiquetasController extends Controller
             ))->render();
 
             $pdf->WriteHTML($html);
-            $pdf->output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'I');
+            // $pdf->output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'I');
+            //stream
+            $pdf->Output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
         } catch (Exception $e) {
             return response($e, 500);
         }
