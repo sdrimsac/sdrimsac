@@ -5312,6 +5312,29 @@
                                                                         ></el-input>
                                                                     </div>
                                                                 </div>
+                                                                        <div
+                                                                    class="col-md-4 mt-4"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="fa fa-file-alt fa-lg"
+                                                                        ></i>
+                                                                        PDF de precuenta
+                                                                    
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="
+                                                                            form.pdf_preorder
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        @change="
+                                                                            submit
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </el-card>

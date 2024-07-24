@@ -71,7 +71,13 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                        $amount_due = 0;
+                        @endphp
                         @foreach ($records as $key => $value)
+                        @php
+                        $amount_due += $value['amount_due'];
+                        @endphp
                             <tr>
                                 <td class="celda">{{ $loop->iteration }}</td>
                                 @if ($configuration->sale_note_credit_confirm)
@@ -129,6 +135,16 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="12" style="text-align: right;">
+                                <strong>Total:</strong>
+                            </td>
+                            <td>
+                                <strong>{{ number_format($amount_due, 2) }}</strong>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

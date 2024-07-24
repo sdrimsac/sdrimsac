@@ -978,7 +978,7 @@ class CashController extends Controller
         $seriesIds = $user->series()->pluck('user_id');
 
         $hasSeriesAssigned = $seriesIds->count() > 0;
-         
+
         $model = null;
         switch ($type_document) {
             case 'documents':
@@ -993,7 +993,7 @@ class CashController extends Controller
         }
         $company = Company::active();
         $documents = $model::where('establishment_id', $establishment_id);
-        if($company->soap_type_id != '01') {
+        if ($company->soap_type_id != '01') {
             $documents = $documents->where('soap_type_id', $company->soap_type_id);
         }
         if ($hasSeriesAssigned) {
@@ -1767,16 +1767,18 @@ class CashController extends Controller
                 ->where('state', true)->first();
             if (!$exist_principal_cash) {
                 $user_arca = User::getUserArca();
-                Cash::create([
-                    'user_id' => $user_arca->id,
-                    'beginning_balance' => 0,
-                    'state' => 1,
-                    'principal' => true,
-                    'turn_id' => $turn_principal,
-                    'date_opening' => date('Y-m-d'),
-                    'time_opening' => date('H:i:s'),
-                    'reference_number' => 'ARCA-' . date('H:i:s'),
-                ]);
+                if ($user_arca) {
+                    Cash::create([
+                        'user_id' => $user_arca->id,
+                        'beginning_balance' => 0,
+                        'state' => 1,
+                        'principal' => true,
+                        'turn_id' => $turn_principal,
+                        'date_opening' => date('Y-m-d'),
+                        'time_opening' => date('H:i:s'),
+                        'reference_number' => 'ARCA-' . date('H:i:s'),
+                    ]);
+                }
             }
         }
         $cash = Cash::firstOrNew(['id' => $id]);

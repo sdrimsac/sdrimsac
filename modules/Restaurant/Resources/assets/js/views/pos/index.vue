@@ -3156,7 +3156,6 @@ export default {
             };
         },
         async paymentsOrden(form, variationItem = []) {
-        
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
@@ -3403,7 +3402,7 @@ export default {
                 let added = false;
                 let {
                     food: {
-                        item: { lots_group,currency_type_id },
+                        item: { lots_group, currency_type_id },
                         series
                     }
                 } = orden;
@@ -3449,14 +3448,28 @@ export default {
                     }
                     orden.quantity = 1;
                 }
-                if(currency_type_id != "PEN" && this.currencyIdChoice == "PEN"){
-                    orden.price = orden.price * this.form.exchange_rate_sale;
-                    orden.price = Number(orden.price).toFixed(2);
-                }
-                if(currency_type_id == "PEN" && this.currencyIdChoice != "PEN"){
-                    orden.price = orden.price / this.form.exchange_rate_sale;
-                    orden.price = Number(orden.price).toFixed(2);
-                }
+                // if (
+                //     currency_type_id != "PEN" &&
+                //     this.currencyIdChoice == "PEN"
+                // ) {
+                //     orden.price = orden.price * this.form.exchange_rate_sale;
+                //     orden.price = Number(orden.price).toFixed(2);
+                // }
+                // if (
+                //     currency_type_id == "PEN" &&
+                //     this.currencyIdChoice != "PEN"
+                // ) {
+                //     orden.price = orden.price / this.form.exchange_rate_sale;
+                //     orden.price = Number(orden.price).toFixed(2);
+                // }
+                // console.log(
+                //     "🚀 ~ insertOrden ~ this.currencyIdChoice:",
+                //     this.currencyIdChoice
+                // );
+                // console.log(
+                //     "🚀 ~ insertOrden ~ currency_type_id:",
+                //     currency_type_id
+                // );
                 orden.original_price = orden.price;
                 this.localOrden.unshift(orden);
             }
@@ -4310,7 +4323,7 @@ export default {
                 restaurant: true,
                 total_rounded: 0.0,
                 total_payment: 0.0,
-                hotel_customer_number:null,
+                hotel_customer_number: null,
                 establishment_id: null,
                 document_type_id: this.establishments.document_default,
                 series_id: null,

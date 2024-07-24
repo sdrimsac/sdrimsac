@@ -463,6 +463,7 @@ class ReportCreditController extends Controller
     public function records(Request $request)
     {
         $paid = $request->paid;
+        $isFromAdmin = $request->isFromAdmin;
         $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
@@ -477,6 +478,9 @@ class ReportCreditController extends Controller
             $records = SaleNote::where('status', 'R');
         } else {
             $records = SaleNote::whereHas('creditPayments');
+        }
+        if ($isFromAdmin) {
+            $records = $records->where('state_type_id', '!=', '11');
         }
         if ($params->date_start && $params->date_end) {
             $records =
@@ -521,6 +525,7 @@ class ReportCreditController extends Controller
         $paid = $request->paid;
         $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
+        $isFromAdmin = $request->isFromAdmin;
         $person_id = $request->person_id;
         $user_id = $request->user_id;
         $type = $request->type;
@@ -541,6 +546,9 @@ class ReportCreditController extends Controller
             $records = SaleNote::where('status', 'R');
         } else {
             $records = SaleNote::whereHas('creditPayments');
+        }
+        if ($isFromAdmin) {
+            $records = $records->where('state_type_id', '!=', '11');
         }
         if ($params->date_start && $params->date_end) {
             $records =
@@ -769,10 +777,11 @@ class ReportCreditController extends Controller
     public function excel(Request $request)
     {
 
-        $period = $this->getDatesOfPeriod($request);
+        // $period = $this->getDatesOfPeriod($request);
         $paid = $request->paid;
         $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
+        $isFromAdmin = $request->isFromAdmin;
         $person_id = $request->person_id;
         $user_id = $request->user_id;
         $type = $request->type;
@@ -793,6 +802,9 @@ class ReportCreditController extends Controller
             $records = SaleNote::where('status', 'R');
         } else {
             $records = SaleNote::whereHas('creditPayments');
+        }
+        if ($isFromAdmin) {
+            $records = $records->where('state_type_id', '!=', '11');
         }
         if ($params->date_start && $params->date_end) {
             $records =
@@ -846,7 +858,6 @@ class ReportCreditController extends Controller
                     $differenc_days = Carbon::parse($date_of_due)->diffInDays(Carbon::now()->startOfDay(), false);
                 }
 
-                $dues = $payment_not_paid->count();
                 $customer = $row->customer;
                 $amount_due = 0;
                 if ($last_payment == null) {
@@ -854,9 +865,9 @@ class ReportCreditController extends Controller
                         ->where('paid', 1)
                         ->orderBy('date_payment', 'asc')
                         ->first();
-                    $amount_due = $last_paid->amount;
+                    $amount_due = $last_paid->amount  + $last_paid->penalty_amount;
                 } else {
-                    $amount_due = $last_payment->amount;
+                    $amount_due = $last_payment->amount + $last_payment->penalty_amount;
                 }
                 $all_records[] = [
                     'id' => $row->id,

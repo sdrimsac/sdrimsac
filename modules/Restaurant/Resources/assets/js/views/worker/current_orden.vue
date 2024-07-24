@@ -256,6 +256,13 @@
                                     ticket
                                 </el-button>
                                 <el-button
+                                    v-if="configuration.pdf_preorder"
+                                    type="success"
+                                    @click="printTicketPdf"
+                                >
+                                    <i class="icofont-printer"></i> PDF ticket
+                                </el-button>
+                                <el-button
                                     type="danger"
                                     @click="cancelGeneralOrden"
                                 >
@@ -844,6 +851,20 @@ export default {
                 this.calculateTotal();
             } else {
                 this.$toast.warning("Mínimo permitido");
+            }
+        },
+        async printTicketPdf() {
+            try {
+                let id = this.ordens[0].orden_id;
+                const response = await this.$http.get(
+                    `/caja/worker/record/${id}?precuenta=true`
+                );
+                let url = response.data.print;
+                window.open(url, "_blank");
+                console.log("regresando");
+                return;
+            } catch (e) {
+                console.log(e);
             }
         },
         async printTicket() {

@@ -356,7 +356,8 @@ import WhatsappFormReport from "../../../../../../resources/js/components/Whatsa
 export default {
     props: {
         resource: String,
-        applyCustomer: { type: Boolean, required: false, default: false }
+        applyCustomer: { type: Boolean, required: false, default: false },
+        isFromAdmin: { type: Boolean, required: false, default: false }
     },
     components: { WhatsappFormReport },
     data() {
@@ -570,7 +571,8 @@ export default {
         },
         clickDownload(type) {
             let query = queryString.stringify({
-                ...this.form
+                ...this.form,
+                isFromAdmin:this.isFromAdmin
             });
             window.open(`/${this.resource}/${type}/?${query}`, "_blank");
         },
@@ -641,6 +643,7 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
+                isFromAdmin:this.isFromAdmin,
                 page: this.pagination.current_page,
                 limit: this.limit,
                 ...this.form

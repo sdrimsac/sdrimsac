@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'pdf_preorder',
         'list_or_card',
         'lotgroup_list_or_card',
         'listprice_list_or_card',
@@ -196,6 +197,7 @@ class Configuration extends ModelTenant
     ];
     protected $casts = [
         'list_or_card' => 'boolean',
+        'pdf_preorder' => 'boolean',
         'lotgroup_list_or_card' => 'boolean',
         'listprice_list_or_card' => 'boolean',
         'variation_hotel' => 'boolean',
@@ -330,6 +332,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'pdf_preorder' => (bool)$this->pdf_preorder,
             'list_or_card' => (bool)$this->list_or_card,
             'lotgroup_list_or_card' => (bool)$this->lotgroup_list_or_card,
             'listprice_list_or_card' => (bool)$this->listprice_list_or_card,

@@ -188,7 +188,7 @@
                     <div class="col-6">
                         <div class="row">
                             <h3 class="text-white" style="text-align: right">
-                                Total {{ currency_id == "USD" ? "$" : "S/"}}
+                                Total {{ currency_id == "USD" ? "$" : "S/" }}
                                 {{ (total + totalOrdenItems).toFixed(2) }}
                             </h3>
                         </div>
@@ -408,7 +408,24 @@
                             ><br />
                             Imprimir
                         </button>
-
+                        <button
+                            v-if="
+                                isCreatingOrden == false &&
+                                    clientTableData.table != undefined &&
+                                    ordens.length != 0 && configuration.pdf_preorder
+                            "
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="printOrdenPdf()"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-print"
+                                style="color: var(--primary) !important"
+                            ></i
+                            ><br />
+                            PDF
+                        </button>
                         <button
                             v-if="
                                 isCreatingOrden == false &&
@@ -1207,9 +1224,13 @@
                                                                         >
                                                                             <template
                                                                                 slot="prepend"
-                                                                            
                                                                             >
-                                                                                {{currency_id == "USD" ? '$' : 'S/'}}
+                                                                                {{
+                                                                                    currency_id ==
+                                                                                    "USD"
+                                                                                        ? "$"
+                                                                                        : "S/"
+                                                                                }}
                                                                             </template>
                                                                             <!-- <template
                                                                                 slot="prepend"
@@ -1713,9 +1734,13 @@
                                                                         >
                                                                             <template
                                                                                 slot="prepend"
-                                                                            
                                                                             >
-                                                                                {{currency_id == "USD" ? '$' : 'S/'}}
+                                                                                {{
+                                                                                    currency_id ==
+                                                                                    "USD"
+                                                                                        ? "$"
+                                                                                        : "S/"
+                                                                                }}
                                                                             </template>
                                                                             <!-- <template
                                                                                 slot="prepend"
@@ -2541,7 +2566,6 @@ export default {
         ShowColorSizeProduct
     },
     props: [
-
         "users",
         "cotIdentifier",
         "quotationId",
@@ -2678,6 +2702,8 @@ export default {
             this.optionsMenu[2].title = [this.boxOperation, " Caja"];
         },
         ordens(newOrdens, _) {
+            console.log("aqui=");
+            if (newOrdens == null) return;
             this.calculateTotal(newOrdens);
         },
         localOrden(newOrdens, _) {
@@ -2687,7 +2713,7 @@ export default {
 
     async mounted() {
         // console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
-    
+
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
@@ -2753,6 +2779,7 @@ export default {
         changeCurrency() {
             // console.log(this.currency_id);
             this.$emit("updateCurrencyChoice", this.currency_id);
+            this.calculateTotal();
         },
         async savePriceProduct(idx) {
             try {
@@ -3696,6 +3723,16 @@ export default {
             }
             return false;
         },
+        async printOrdenPdf() {
+            this.ordenLoading = true;
+            try {
+                await this.printTicket(this.clientTableData.orden_id, true);
+            } catch (e) {
+                this.$toast.error("No se pudo imprimir");
+            } finally {
+                this.ordenLoading = false;
+            }
+        },
         async printOrden() {
             this.ordenLoading = true;
             try {
@@ -3988,13 +4025,17 @@ export default {
                 this.$toast.warning("Mínimo permitido");
             }
         },
-        async printTicket(id) {
+        async printTicket(id, pdf = false) {
             try {
                 const response = await this.$http.get(
                     `/caja/worker/record/${id}?precuenta=true`
                 );
                 let url = response.data.print;
-
+                if (pdf) {
+                    window.open(url, "_blank");
+                    console.log("regresando");
+                    return;
+                }
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
@@ -4179,21 +4220,45 @@ export default {
             let formated = "storage/uploads/items/" + url;
             return `/${formated}`;
         },
-
+        getPriceCurrency(price, currency_id) {
+            let localCurrencyId = this.currency_id == "S/" ? "PEN" : "USD";
+            if (localCurrencyId == currency_id) {
+                return price;
+            }
+            if (localCurrencyId == "PEN" && currency_id != "PEN") {
+                return price * this.exchange_rate_sale;
+            }
+            if (localCurrencyId != "PEN" && currency_id == "PEN") {
+                return price / this.exchange_rate_sale;
+            }
+        },
         calculateTotal(w = null) {
             this.totalOrdenItems = 0.0;
+
             this.total = 0.0;
             this.totalOrden = 0.0;
             let OrdenPen = 0;
             let OrdenPenAtendidos = 0;
-            _.forEach(this.localOrden, function(value) {
-                OrdenPen = parseFloat(OrdenPen) + value.quantity * value.price;
+            _.forEach(this.localOrden, value => {
+                let { item } = value.food;
+                OrdenPen =
+                    parseFloat(OrdenPen) +
+                    value.quantity *
+                        this.getPriceCurrency(
+                            value.price,
+                            item.currency_type_id
+                        );
             });
             this.totalOrden = _.round(OrdenPen, 2);
-            _.forEach(this.ordens, function(values) {
+            _.forEach(this.ordens, values => {
+                let { item } = values.food;
                 OrdenPenAtendidos =
                     parseFloat(OrdenPenAtendidos) +
-                    values.quantity * values.price;
+                    values.quantity *
+                        this.getPriceCurrency(
+                            values.price,
+                            item.currency_type_id
+                        );
             });
             this.totalOrdenItems = _.round(OrdenPenAtendidos, 2);
             // this.total = this.totalOrden + this.totalOrdenItems;
