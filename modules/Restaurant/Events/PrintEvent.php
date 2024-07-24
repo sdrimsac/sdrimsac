@@ -46,7 +46,9 @@ class PrintEvent implements ShouldBroadcast
                 $area_id = $id_by_area;
             }else{
                 $user_found = User::where('area_id', $area_id)->first();
-                $user_establishment_id_printer = $user_found->establishment_id;
+                if($user_found){
+                    $user_establishment_id_printer = $user_found->establishment_id;
+                }
             }
             
         // }
