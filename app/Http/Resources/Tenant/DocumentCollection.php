@@ -16,14 +16,16 @@ class DocumentCollection extends ResourceCollection
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
-    public $total_sum;
+    public $total_sum = 0;
 
     public function __construct($resource)
     {
         parent::__construct($resource);
 
         // Asignar total_sum desde el recurso si está disponible
-        $this->total_sum = $resource->total_sum ?? null;
+        if (isset($resource->total_sum)) {
+            $this->total_sum = $resource->total_sum;
+        }
     }
     public function toArray($request)
     {
