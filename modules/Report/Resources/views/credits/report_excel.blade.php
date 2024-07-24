@@ -66,7 +66,9 @@
                             <th style="background: silver">Cuotas vencidas</th>
                             <th style="background: silver">Fecha de cobro</th>
                             <th style="background: silver">Dias de atraso</th>
-                            <th style="background: silver">Monto</th>
+                            <th style="background: silver">Penalidad</th>
+                            <th style="background: silver">Cuota</th>
+                            <th style="background: silver">Total</th>
 
                         </tr>
                     </thead>
@@ -76,7 +78,7 @@
                         @endphp
                         @foreach ($records as $key => $value)
                         @php
-                        $amount_due += $value['amount_due'];
+                        $amount_due += $value['total_amount'];
                         @endphp
                             <tr>
                                 <td class="celda">{{ $loop->iteration }}</td>
@@ -130,14 +132,20 @@
                                     {{ $value['differenc_days'] }}
                                 </td>
                                 <td class="celda">
+                                    {{ $value['penalty_amount'] }}
+                                </td>
+                                <td class="celda">
                                     {{ $value['amount_due'] }}
+                                </td>
+                                <td class="celda">
+                                    {{ $value['total_amount'] }}
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="12" style="text-align: right;">
+                            <td colspan="14" style="text-align: right;">
                                 <strong>Total:</strong>
                             </td>
                             <td>

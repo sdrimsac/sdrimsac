@@ -860,15 +860,21 @@ class ReportCreditController extends Controller
 
                 $customer = $row->customer;
                 $amount_due = 0;
+                $penalty_amount = 0;
+                $total_amount = 0;
                 if ($last_payment == null) {
                     $last_paid =  Payment::where('sale_note_id', $row->id)
                         ->where('paid', 1)
                         ->orderBy('date_payment', 'asc')
                         ->first();
-                    $amount_due = $last_paid->amount  + $last_paid->penalty_amount;
+                    $amount_due = $last_paid->amount;
+                    $penalty_amount = $last_paid->penalty_amount;
                 } else {
-                    $amount_due = $last_payment->amount + $last_payment->penalty_amount;
+                    $amount_due = $last_payment->amount;
+                    $penalty_amount = $last_payment->penalty_amount;
+                    
                 }
+                $total_amount = $amount_due + $penalty_amount;
                 $all_records[] = [
                     'id' => $row->id,
                     'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
@@ -882,6 +888,8 @@ class ReportCreditController extends Controller
                     'state' => $row->canceled ? 'PAGADO' : 'PENDIENTE',
                     // 'amount_due' => number_format($amount_due, 2, ".", ""),
                     'amount_due' => number_format($amount_due, 2, ".", ""),
+                    'penalty_amount' => number_format($penalty_amount, 2, ".", ""),
+                    'total_amount' => number_format($total_amount, 2, ".", ""),
                     'differenc_days' => $differenc_days,
                 ];
             }
