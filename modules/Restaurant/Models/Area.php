@@ -28,9 +28,10 @@ class Area extends ModelTenant
         return $this->description == 'HOTEL';
     }
 
-    public static function getAreaCajaId(){
+    public static function getAreaCajaId()
+    {
         $area = Area::where('description', 'like', '%CAJA%')->first();
-        if($area){
+        if ($area) {
             return $area->id;
         }
         return null;
@@ -50,48 +51,57 @@ class Area extends ModelTenant
         }
         return null;
     }
-    public static function getAreaEstablishment($id){
+    public static function getAreaEstablishment($id)
+    {
         $establishment_id = auth()->user()->establishment_id;
         $area = Area::where('id', $id)->first();
-        if(!$area) return null;
+        if (!$area) return null;
         $description = $area->description;
         $description = explode(" ", $description);
         $description = $description[0];
         $user = User::where('establishment_id', $establishment_id)
             ->whereHas('area', function ($query) use ($description) {
-                $query->where('description','like', '%'.$description.'%');
+                $query->where('description', 'like', '%' . $description . '%');
             })
             ->first();
-        if($user){
+        if ($user) {
             return $user->area_id;
-        }else{
-            $user = User::where('establishment_id', $establishment_id)
-                ->whereHas('area', function ($query) {
-                    $query->where('description','like', '%CAJA%');
-                })
+        } else {
+            $user = User::whereHas('worker_type', function ($query) use ($description) {
+                $query->where('description', 'like', '%' . $description . '%');
+            })
                 ->first();
-            if($user){
+            if ($user) {
                 return $user->area_id;
+            } else {
+                $user = User::where('establishment_id', $establishment_id)
+                    ->whereHas('area', function ($query) {
+                        $query->where('description', 'like', '%CAJA%');
+                    })
+                    ->first();
+                if ($user) {
+                    return $user->area_id;
+                }
             }
         }
         return null;
-
     }
 
-    public static function getZoneEstablishment($id){
+    public static function getZoneEstablishment($id)
+    {
         $establishment_id = auth()->user()->establishment_id;
         $area = Area::where('id', $id)->first();
-        if(!$area) return null;
+        if (!$area) return null;
         $description = $area->description;
         $description = explode(" ", $description);
         $description = $description[0];
         $area_establishment = Area::where('establishment_id', $establishment_id)
-            ->where('description','like', '%'.$description.'%')
+            ->where('description', 'like', '%' . $description . '%')
             ->first();
-        if($area_establishment){
+        if ($area_establishment) {
             return $area_establishment->id;
-        }else{
-        return null;
+        } else {
+            return null;
         }
     }
 }
