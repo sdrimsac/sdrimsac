@@ -30,6 +30,7 @@ class PrintEvent implements ShouldBroadcast
     public $data;
     public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null)
     {
+        $user_establishment_id_printer =  auth()->user()->establishment_id;
         $zone_id = $area_id;
         if($zone_id){
             $id_by_zone = Area::getZoneEstablishment($zone_id);
@@ -43,6 +44,9 @@ class PrintEvent implements ShouldBroadcast
             $id_by_area = Area::getAreaEstablishment($area_id);
             if($id_by_area){
                 $area_id = $id_by_area;
+            }else{
+                $user_found = User::where('area_id', $area_id)->first();
+                $user_establishment_id_printer = $user_found->establishment_id;
             }
             
         // }
@@ -188,7 +192,8 @@ class PrintEvent implements ShouldBroadcast
             'user_id' => $user->id,
             'area_id' => $area_id,
             'user_establishment_id' => $user_establishment_id,
-            'user_establishment_id_printer' => auth()->user()->establishment_id,
+            // 'user_establishment_id_printer' => auth()->user()->establishment_id,
+            'user_establishment_id_printer' => $user_establishment_id_printer,
         );
 
         // Log::info(json_encode($this->data));
