@@ -45,15 +45,15 @@ class PrintEvent implements ShouldBroadcast
             $id_by_area = Area::getAreaEstablishment($area_id);
             if($id_by_area){
                 $area_id = $id_by_area;
-            }else{
-                $area_found = Area::find($area_id);
+            }
+                
+            
+            $area_found = Area::find($area_id);
                 if($area_found ){
                     if($area_found->establishment_id != null){
                         $user_establishment_id_printer = $area_found->establishment_id;
                     }
                 }
-            }
-            
         // }
 
         $format = 'ticket';
