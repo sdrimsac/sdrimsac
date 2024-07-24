@@ -1678,7 +1678,7 @@ class DocumentController extends Controller
     public function excel(Request $request)
     {
         ini_set('memory_limit', '2048M');
-        $records = $this->getRecords($request)->get();
+        $records = $this->getRecords($request,false,true)->get();
         $establishment = Establishment::first();
         $company = Company::active();
         return (new DocumentExport)
@@ -1812,7 +1812,7 @@ class DocumentController extends Controller
 
         return $records;
     }
-    public function getRecords($request, $detraction = false)
+    public function getRecords($request, $detraction = false,$export = false)
     {
         $d_end = $request->d_end;
         $d_start = $request->d_start;
@@ -1905,11 +1905,15 @@ class DocumentController extends Controller
         }
 
         $totalSum = $records->sum('total');
-        
-        /* $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc'); */
-        $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(25);
+        if($export){
 
-        $records->total_sum = $totalSum;
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc'); 
+        }else{
+
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(25);
+            $records->total_sum = $totalSum;
+        }
+
 
         return $records;
     }
