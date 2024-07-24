@@ -167,7 +167,7 @@ class RecurrencySaleNoteCommand extends Command
                     $replicate_sale_note->update(); 
 
                     $this->info("Nota de venta: {$replicate_sale_note->identifier} fue generada de forma automática"); 
-                    Log::info("Nota de venta: {$replicate_sale_note->identifier} fue generada de forma automática");
+                    // Log::info("Nota de venta: {$replicate_sale_note->identifier} fue generada de forma automática");
                     // return $replicate_sale_note;
 
                 }

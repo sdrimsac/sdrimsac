@@ -165,7 +165,7 @@ class ValidateDocumentsCommand extends Command
                     $res =json_decode($res);
                     $data=$res->data;
                  foreach ($data as $key => $value) {
-                    Log::info('End Ubigeo: '.$this->document_state[$value->EstadoCodComprobante]);
+                    // Log::info('End Ubigeo: '.$this->document_state[$value->EstadoCodComprobante]);
                     $sale_find=Document::where('series',$value->Serie)->where('number',$value->Numero)->where('document_type_id',$value->TipoComprobante)->first();
                     $sales=Document::findOrFail($sale_find->id);
                     if($value->EstadoComprobante=="NO EXISTE"){

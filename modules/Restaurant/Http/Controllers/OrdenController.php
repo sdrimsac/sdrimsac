@@ -147,7 +147,7 @@ class OrdenController extends Controller
             if ($area) {
                 $area_desc = $area->description;
                 $desc = strtoupper($area_desc);
-                Log::info('area_desc: '.$desc);
+                // Log::info('area_desc: '.$desc);
                 // if (!str_contains($desc, "CAJA")) {
                 //     $to_kitchen = false;
                 // }
