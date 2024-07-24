@@ -178,8 +178,7 @@ class PrintEvent implements ShouldBroadcast
         if ($user_area) {
             $user_establishment_id = $user_area->establishment_id;
         }
-
-        $this->data = array(
+        $data = array(
             'document_type' => $document_type,
             'printer' => $printer,
             'printing' => $printing,
@@ -195,6 +194,8 @@ class PrintEvent implements ShouldBroadcast
             // 'user_establishment_id_printer' => auth()->user()->establishment_id,
             'user_establishment_id_printer' => $user_establishment_id_printer,
         );
+        Log::info(json_encode($data));
+        $this->data = $data;
 
         // Log::info(json_encode($this->data));
     }
