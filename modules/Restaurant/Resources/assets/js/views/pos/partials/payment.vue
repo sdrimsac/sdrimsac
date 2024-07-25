@@ -57,7 +57,6 @@
                                                 >
                                                     <template
                                                         v-if="!isInterno"
-                                                        class="fw-bold"
                                                     >
                                                         <el-radio-button
                                                             v-if="invoice"
@@ -1468,7 +1467,6 @@
         </person-college-form>
         <document-detraction
             v-if="form && form.total > 0 && form.detraction"
-            
             :currency-type-id-active="form.currency_type_id"
             :detraction="form.detraction"
             :exchange-rate-sale="form.exchange_rate_sale"
@@ -1867,6 +1865,27 @@ export default {
     },
     mounted() {},
     methods: {
+        insertReferenceNumber() {
+            console.log("entra a referencia");
+            let pass = false;
+            if (this.form.reference_number && this.form.bank_account_id) {
+                let bank = this.bank_accounts.find(
+                    b => b.id == this.form.bank_account_id
+                );
+                let message = `Se ha ingresado el número de referencia: ${this.form.reference_number} y la cuenta bancaria: ${bank.description} - ${bank.number}`;
+                if (
+                    this.form.observation == null ||
+                    this.form.observation == ""
+                ) {
+                    this.form.observation = message;
+                } else {
+                    this.form.observation += "\n" + this.form.reference_number;
+                }
+                pass = true;
+            }
+                    console.log("🚀 ~ insertReferenceNumber ~ this.form.observatio:", this.form.observatio)
+            return pass;
+        },
         focusObservation() {
             this.$nextTick(() => {
                 this.$refs.observation.focus();
@@ -3444,7 +3463,6 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
-
             // if (this.discount_amount) {
             //     let global_discount = parseFloat(this.discount_amount);
             //     let total = parseFloat(this.form.total);
@@ -3457,23 +3475,24 @@ export default {
             // }
             //$confirm check if form.observation is null or empty confirmation
             let pass = true;
+
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
-                (this.form.observation == "" && this.hasExceedBank)
+                (this.form.observation == "" && this.hasExceedBank) && (this.form.reference_number && this.form.bank_account_id)
             ) {
-                try {
-                    await this.$confirm(
-                        "¿Desea continuar sin registrar la bancarización?",
-                        "Advertencia",
-                        {
-                            confirmButtonText: "Sí",
-                            cancelButtonText: "No",
-                            type: "warning"
-                        }
-                    );
-                } catch (e) {
-                    pass = false;
-                }
+                    try {
+                        await this.$confirm(
+                            "¿Desea continuar sin registrar la bancarización?",
+                            "Advertencia",
+                            {
+                                confirmButtonText: "Sí",
+                                cancelButtonText: "No",
+                                type: "warning"
+                            }
+                        );
+                    } catch (e) {
+                        pass = false;
+                    }
             }
             if (!pass) {
                 return;
@@ -3486,6 +3505,7 @@ export default {
                 form.printerOn = form.printDocument;
             }
             form.detraction = this.form.detraction;
+            
             await this.clickPayment(form);
 
             if (this.formVariation.items.length != 0) {

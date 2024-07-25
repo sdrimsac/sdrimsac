@@ -4254,6 +4254,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
+            reference_number: null,
                 detraction: {
                     amount: 0,
                     bank_account: this.company.detraction_account
