@@ -872,7 +872,8 @@ class OrdenController extends Controller
         $orden = Orden::find($id);
         if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
             try {
-                (new WhatsappController)->sendMessage($orden->info_to_message($items_message, $reason));
+                (new WhatsappController)->sendMessageAll($orden->info_to_message($items_message, $reason));
+                // (new WhatsappController)->sendMessage($orden->info_to_message($items_message, $reason));
             } catch (Exception $e) {
                 return [
                     'success' => false,
