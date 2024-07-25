@@ -57,7 +57,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
             return;
         }
         $url = "https://sdrpersonal.shop/api/send-message";
-
+        Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
         $sender = 'sdrimsac';
         if($this->subdomain != null && $configuration->whatsapp_client){
             $url = "https://".$this->subdomain.".sdrpersonal.shop/api/send-message";

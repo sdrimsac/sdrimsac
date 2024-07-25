@@ -53,7 +53,8 @@ class OrdenItemController extends Controller
                 $orden_delete->save();
                 if ($configuration->send_whatsapp_activity) {
                     try {
-                        $result =  (new WhatsappController)->sendMessage($orden_item->info_to_message($reason));
+                        // $result =  (new WhatsappController)->sendMessage($orden_item->info_to_message($reason));
+                        (new WhatsappController)->sendMessageAll($orden_item->info_to_message($reason));
                     } catch (Exception $e) {
                         $orden_delete->delete();
                         return [
