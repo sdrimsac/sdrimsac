@@ -40,7 +40,6 @@ class PrintEvent implements ShouldBroadcast
         }
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
-        // if($area_id == null){
             $id_by_area = Area::getAreaEstablishment($area_id);
             if($id_by_area){
                 $area_id = $id_by_area;
@@ -186,7 +185,6 @@ class PrintEvent implements ShouldBroadcast
             'document_type' => $document_type,
             'printer' => $printer,
             'printing' => $printing,
-            // 'copies' => ($multiple_boxes == true && auth()->user()->type != 'admin') ? $area->copies : $establishment->copies,
             'copies' => $copies,
             'direct_printing' => (bool) $establishment->direct_printing,
             'print'   => $documentLink,
@@ -195,7 +193,6 @@ class PrintEvent implements ShouldBroadcast
             'user_id' => $user->id,
             'area_id' => $area_id,
             'user_establishment_id' => $user_establishment_id,
-            // 'user_establishment_id_printer' => auth()->user()->establishment_id,
             'user_establishment_id_printer' => $user_establishment_id_printer,
         );
         Log::info(json_encode($data));

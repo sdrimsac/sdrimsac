@@ -2,8 +2,10 @@
 
 namespace Modules\Restaurant\Models;
 
+use App\Models\Tenant\Company;
 use App\Models\Tenant\ModelTenant;
 use App\Models\Tenant\User;
+use Illuminate\Support\Facades\Log;
 
 class Area extends ModelTenant
 {
@@ -53,12 +55,23 @@ class Area extends ModelTenant
     }
     public static function getAreaEstablishment($id)
     {
+        $company = Company::active();
+        if($company->number == '20609612208'){
+            Log::info('getAreaEstablishment '.$id);
+        }
         $establishment_id = auth()->user()->establishment_id;
+        if($company->number == '20609612208'){
+            Log::info('getAreaEstablishment '.$establishment_id);
+        }
         $area = Area::where('id', $id)->first();
         if (!$area) return null;
         $description = $area->description;
         $description = explode(" ", $description);
+
         $description = $description[0];
+        if($company->number == '20609612208'){
+            Log::info('getAreaEstablishment '.$description);
+        }
         $user = User::where('establishment_id', $establishment_id)
             ->whereHas('area', function ($query) use ($description) {
                 $query->where('description', 'like', '%' . $description . '%');
