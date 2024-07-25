@@ -64,7 +64,7 @@ class WhatsappController extends Controller
         }
         $numbers_activity = NumberActivity::all();
         foreach ($numbers_activity as $key => $value) {
-            WhatsappSendMessageProccess::dispatch($website->id, $message, $value);
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number);
             // $this->sendMessage($message, $value->number);
         }
     }
