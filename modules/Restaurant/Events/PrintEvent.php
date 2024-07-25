@@ -198,7 +198,7 @@ class PrintEvent implements ShouldBroadcast
             // 'user_establishment_id_printer' => auth()->user()->establishment_id,
             'user_establishment_id_printer' => $user_establishment_id_printer,
         );
-        // Log::info(json_encode($data));
+        Log::info(json_encode($data));
         $this->data = $data;
 
         // Log::info(json_encode($this->data));
