@@ -104,6 +104,11 @@ class Orden extends ModelTenant
         }
         return false;
     }
+    /*
+    * @param $items = array
+    * @param $reason = string
+    */
+
     public function info_to_message($items = [],$reason){
         $message = "";
         $message .= "📝 *ORDEN N° ".$this->id." ELIMINADA* \n";
