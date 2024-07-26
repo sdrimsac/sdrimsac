@@ -110,7 +110,7 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $document_establishment = Establishment::find($document->establishment_id);
                 $establishment_telephone = $document_establishment->telephone;
                 if($establishment_telephone){
-                    $message .= "\n\n *Cualquier consulta adicional comunicarse al teléfono:*\n https://wa.me/+51" . $establishment_telephone;
+                    $message .= "\n\n *Cualquier consulta adicional comunicarse al teléfono:*\nhttps://wa.me/+51" . $establishment_telephone;
                 }
             }
             if ($sender == "sdrimsac") {
