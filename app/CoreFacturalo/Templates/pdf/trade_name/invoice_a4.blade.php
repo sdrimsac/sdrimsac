@@ -578,7 +578,7 @@
                     @if ($document->detraction)
                         <p>
                             <span class="font-bold">
-                                Operación sujeta al Sistema de Pago de Obligaciones Tributarias
+                                Operación sujeta al Sistema de Pago de Obligaciones Tributarias con el Gobierno Central.
                             </span>
                         </p>
                         <br />

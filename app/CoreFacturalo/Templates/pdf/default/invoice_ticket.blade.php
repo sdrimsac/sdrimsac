@@ -388,7 +388,7 @@
     @if ($document->detraction)
         <tr>
             <td class="desc pt-3 font-bold">
-                Operación sujeta al Sistema de Pago de Obligaciones Tributarias
+                Operación sujeta al Sistema de Pago de Obligaciones Tributarias con el Gobierno Central.
             </td>
         </tr>
     @endif
