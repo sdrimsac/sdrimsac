@@ -418,7 +418,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm"
+                                            class="input-container2 border rounded-sm" v-if="configuration.culqi"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -446,7 +446,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm"
+                                            class="input-container2 border rounded-sm" v-if="configuration.izipay"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -476,7 +476,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm"
+                                            class="input-container2 border rounded-sm" v-if="configuration.openpay"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -506,7 +506,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm"
+                                            class="input-container2 border rounded-sm" v-if="configuration.nubiz"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -536,7 +536,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm"
+                                            class="input-container2 border rounded-sm" v-if="configuration.yape"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -562,7 +562,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm"
+                                            class="input-container2 border rounded-sm" v-if="configuration.plin"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"

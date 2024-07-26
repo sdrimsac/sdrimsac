@@ -555,6 +555,9 @@ class ItemController extends Controller
                             $records->where('description', 'like', '%' . $value . '%');
                         }
                     }
+                    $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
+                        ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
+                        ->orderBy('description', 'ASC');
                 }
                 break;
 
@@ -582,7 +585,7 @@ class ItemController extends Controller
             });
         }
 
-        return $records->orderBy('description');
+        return $records->orderBy('description', 'ASC');
     }
 
     public function create()
