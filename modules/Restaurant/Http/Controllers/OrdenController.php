@@ -711,9 +711,13 @@ class OrdenController extends Controller
                     $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
                         return $area_id == $a['area_id'];
                     }), "orden_id");
+                    $area_found = Area::find($area_id);
+                    if($area_found->printer || $area_found->search_print ==1){
+                        event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+                        sleep(1);
+                    }
                     //esperar un segundo
-                    event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
-                    sleep(1);
+                    
 
                 }
             }
