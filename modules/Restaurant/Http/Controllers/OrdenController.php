@@ -616,7 +616,12 @@ class OrdenController extends Controller
                 $table->save();
                 }
             }
-
+            if(count($items) == 0){
+                return [
+                    'success' => false,
+                    'message' => 'No se puede guardar una orden sin items'
+                ];
+            }
             //si la orden existe solo quiero agregar
             //los items
             $orden = null;

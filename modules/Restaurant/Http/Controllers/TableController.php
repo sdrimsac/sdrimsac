@@ -158,25 +158,38 @@ class TableController extends Controller
         $records = Table::where('is_room', false);
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 
-        // return [
-        //     'success' => true,
-        //     'data' => $tables
-        // ];
+
     }
     function checkTables($establishment_id)
     {
 
         Table::where('status_table_id', 2)
             ->where('is_room', false)
-            ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+            ->where('establishment_id', $establishment_id)
+            ->orWhereNull('establishment_id')
             ->chunk(
                 50,
-                function ($row) {
-                    foreach ($row as $table) {
-                        //buscar las ordenes de la mesa
-                        $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
-
-                        if (count($ordens) == 0) {
+                function ($rows) {
+                    foreach ($rows as $table) {
+                        $ordens = Orden::where('table_id', $table->id)
+                            ->where('status_orden_id', '<>', 4)
+                            ->where('status_orden_id', '<>', 5)
+                            ->get();
+        
+                        $hasActiveOrdersWithItems = false;
+        
+                        foreach ($ordens as $orden) {
+                            $ordenItems = OrdenItem::where('orden_id', $orden->id)->get();
+        
+                            if ($ordenItems->isEmpty()) {
+                                $orden->status_orden_id = 4;
+                                $orden->save();
+                            } else {
+                                $hasActiveOrdersWithItems = true;
+                            }
+                        }
+        
+                        if (!$hasActiveOrdersWithItems) {
                             $table->status_table_id = 1;
                             $table->save();
                         }
