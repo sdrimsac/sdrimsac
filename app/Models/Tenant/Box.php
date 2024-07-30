@@ -132,4 +132,15 @@ class Box extends ModelTenant
     {
         return $this->belongsTo(CashTransfer::class, 'cash_transfer_id');
     }
+
+    public function sale_note_payment()
+    {
+        return $this->belongsTo(SaleNotePayment::class, 'sale_note_payment_id');
+    }
+
+    public function document_payment()
+    {
+        return $this->belongsTo(DocumentPayment::class, 'document_payment_id');
+    }
+
 }

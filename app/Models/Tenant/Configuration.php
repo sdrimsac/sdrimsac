@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'rappi',
+        'pedidosya',
+        'didi',
         'plin',
         'nubiz',
         'openpay',
@@ -202,12 +205,15 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
-        'plin',
-        'nubiz',
-        'openpay',
-        'izipay',
-        'yape',
-        'culqi',
+        'rappi' => 'boolean',
+        'pedidosya' => 'boolean',
+        'didi' => 'boolean',
+        'plin' => 'boolean',
+        'nubiz' => 'boolean',
+        'openpay' => 'boolean',
+        'izipay' => 'boolean',
+        'yape' => 'boolean',
+        'culqi' => 'boolean',
         'list_or_card' => 'boolean',
         'pdf_preorder' => 'boolean',
         'lotgroup_list_or_card' => 'boolean',
@@ -344,6 +350,9 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'didi' => (bool)$this->didi,
+            'rappi' => (bool)$this->rappi,
+            'pedidosya' => (bool)$this->pedidosya,
             'plin' => (bool)$this->plin,
             'nubiz' => (bool)$this->nubiz,
             'openpay' => (bool)$this->openpay,

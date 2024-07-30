@@ -664,6 +664,7 @@
                                         </el-select>
                                     </div>
                                 </div>
+                                <template v-if="form.detraction">
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label class="control-label"
@@ -711,7 +712,7 @@
                                         ></el-input>
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-2" >
                                     <div class="form-group">
                                         <label class="control-label"
                                             >T. Detracción<span
@@ -731,6 +732,7 @@
                                         ></el-input>
                                     </div>
                                 </div>
+                                </template>
                             </div>
 
                             <div class="row">
@@ -1605,7 +1607,7 @@
                                             ></el-input>
                                         </td>
                                     </tr>
-                                    <tr v-if="form.detraction.amount > 0">
+                                    <tr v-if="form.detraction && form.detraction.amount > 0">
                                         <td
                                             class="text-right"
                                             style="padding-right: 20px;"
@@ -1925,15 +1927,7 @@ export default {
             sellers: [],
             editandoDocument: false,
             tempMethod: "Efectivo",
-            methods: [
-                "Efectivo",
-                "Yape",
-                "PLIN",
-                "Culqui",
-                "TARJETA: NIUBIZ",
-                "TARJETA: IZYPAY",
-                "Transferencia"
-            ],
+            methods: ["Efectivo", "Transferencia"],
             datEmision: {
                 disabledDate(time) {
                     return time.getTime() > moment();
@@ -2190,6 +2184,28 @@ export default {
     },
 
     methods: {
+        addMethods() {
+            let {
+                yape,
+                culqi,
+                izipay,
+                openpay,
+                nubiz,
+                plin,
+                didi,
+                rappi,
+                pedidosya
+            } = this.configuration;
+            if (yape) this.methods.push("Yape");
+            if (culqi) this.methods.push("Culqi");
+            if (izipay) this.methods.push("TARJETA: IZYPAY");
+            if (openpay) this.methods.push("TARJETA: OPENPAY");
+            if (nubiz) this.methods.push("TARJETA: NIUBIZ");
+            if (plin) this.methods.push("PLIN");
+            if (didi) this.methods.push("DIDI FOODS");
+            if (rappi) this.methods.push("RAPPI");
+            if (pedidosya) this.methods.push("PEDIDOS YA");
+        },
         setItemFromResponse(item, itemsParsed) {
             /* Obtiene el igv del item, si no existe, coloca el gravado*/
             if (item.sale_affectation_igv_type !== undefined) {
@@ -3748,6 +3764,7 @@ export default {
             this.editandoDocument = true;
         }
         this.loader = true;
+        this.addMethods();
     }
 };
 </script>

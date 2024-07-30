@@ -573,6 +573,12 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
+                            href="{{ route('reports.methods.index') }}">
+                            <i class="icofont-box"></i> Reporte de métodos de pago
+                        </a>
+                    </li>
                     @if ($config->hotels && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"

@@ -101,6 +101,7 @@ const getAreaPrinter = async () => {
 // Vue.component('table-column', TableColumn);
 
 // System
+
 Vue.component(
     "system-clients-index",
     require("./views/system/clients/index.vue")
@@ -192,6 +193,10 @@ const app = new Vue({
     el: "#main",
 
     components: {
+        "tenant-report-methods-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/methods/index.vue"
+            ),
         "tenant-productos-index": () =>
             import("../js/views/productos/index.vue"),
         /* "tenant-reports-productos": () =>
@@ -691,7 +696,7 @@ const app = new Vue({
         "worker-maintenance": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue"
-            ),
+            )
         /* "tenant-etiquetas-index": () =>
             import("./views/etiquetas/index.vue") */
     }

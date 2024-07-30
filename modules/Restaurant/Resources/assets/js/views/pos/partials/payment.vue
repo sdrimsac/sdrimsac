@@ -55,9 +55,7 @@
                                                     size="small"
                                                     @change="filterSeries()"
                                                 >
-                                                    <template
-                                                        v-if="!isInterno"
-                                                    >
+                                                    <template v-if="!isInterno">
                                                         <el-radio-button
                                                             v-if="invoice"
                                                             label="01"
@@ -418,7 +416,8 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm" v-if="configuration.culqi"
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.culqi"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -446,7 +445,8 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm" v-if="configuration.izipay"
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.izipay"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -476,7 +476,8 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm" v-if="configuration.openpay"
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.openpay"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -506,7 +507,8 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm" v-if="configuration.nubiz"
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.nubiz"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -536,7 +538,8 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm" v-if="configuration.yape"
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.yape"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -562,7 +565,8 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="input-container2 border rounded-sm" v-if="configuration.plin"
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.plin"
                                         >
                                             <input
                                                 :disabled="form_payment.is_bank"
@@ -577,6 +581,93 @@
                                             <div
                                                 class="radio-tile2"
                                                 style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.didi"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="05"
+                                                @change="method_payment('DIDI FOODS')"
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonDidi.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.pedidosya"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="06"
+                                                @change="
+                                                    method_payment('PEDIDOS YA')
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonPedidosYa.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                            v-if="configuration.rappi"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="07"
+                                                @change="
+                                                    metdhod_payment('RAPPI')
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonRappi.png') ; background-size: contain ; background-repeat: no-repeat; "
                                             >
                                                 <div
                                                     class="icon bike-icon"
@@ -1883,7 +1974,10 @@ export default {
                 }
                 pass = true;
             }
-                    console.log("🚀 ~ insertReferenceNumber ~ this.form.observatio:", this.form.observatio)
+            console.log(
+                "🚀 ~ insertReferenceNumber ~ this.form.observatio:",
+                this.form.observatio
+            );
             return pass;
         },
         focusObservation() {
@@ -3478,21 +3572,23 @@ export default {
 
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
-                (this.form.observation == "" && this.hasExceedBank) && (this.form.reference_number && this.form.bank_account_id)
+                (this.form.observation == "" &&
+                    this.hasExceedBank &&
+                    this.form.reference_number && this.form.bank_account_id)
             ) {
-                    try {
-                        await this.$confirm(
-                            "¿Desea continuar sin registrar la bancarización?",
-                            "Advertencia",
-                            {
-                                confirmButtonText: "Sí",
-                                cancelButtonText: "No",
-                                type: "warning"
-                            }
-                        );
-                    } catch (e) {
-                        pass = false;
-                    }
+                try {
+                    await this.$confirm(
+                        "¿Desea continuar sin registrar la bancarización?",
+                        "Advertencia",
+                        {
+                            confirmButtonText: "Sí",
+                            cancelButtonText: "No",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    pass = false;
+                }
             }
             if (!pass) {
                 return;
@@ -3505,7 +3601,7 @@ export default {
                 form.printerOn = form.printDocument;
             }
             form.detraction = this.form.detraction;
-            
+
             await this.clickPayment(form);
 
             if (this.formVariation.items.length != 0) {

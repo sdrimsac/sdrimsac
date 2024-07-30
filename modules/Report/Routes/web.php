@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Report\Http\Controllers\ReportConsignmentController;
 use Modules\Report\Http\Controllers\ReportCreditController;
+use Modules\Report\Http\Controllers\ReportMethodController;
 
 Route::get('reports/credits/pdf', [ReportCreditController::class, 'pdf'])->name('tenant.reports.credits.pdf');
 Route::get('reports/consignment/pdf', [ReportConsignmentController::class, 'pdf']);
@@ -11,6 +12,12 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
 
     Route::prefix('reports')->group(function () {
 
+        Route::prefix('methods')->group(function (){
+            Route::get('',[ReportMethodController::class,'index'])->name('reports.methods.index');
+            Route::get('records',[ReportMethodController::class,'records']);
+            Route::get('filter',[ReportMethodController::class,'filter']);
+            Route::get('excel',[ReportMethodController::class,'excel']);
+        });
 
         Route::get('credits', [ReportCreditController::class, 'index'])->name('reports.credits.index');
         Route::get('credits/cash_credit', [ReportCreditController::class, 'index_cash'])->name('reports.credits.credit_index');

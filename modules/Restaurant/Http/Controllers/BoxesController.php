@@ -1801,6 +1801,9 @@ class BoxesController extends Controller
             'Deposito Bancario',
             'Tarjeta',
             'TARJETA: OPENPAY',
+            'DIDI FOODS',
+            'RAPPI',
+            'PEDIDOS YA',
             'Yape',
             'PLIN',
             'Culqui',
@@ -1971,8 +1974,27 @@ class BoxesController extends Controller
                 "digital" => true,
                 "transfer" => false,
             ],
-
-
+            "pedidosya" => [
+                "desc" => "PEDIDOS YA",
+                "quantity" => $methods['PEDIDOS YA']['quantity'],
+                "sum" => $methods['PEDIDOS YA']['sum'],
+                "digital" => true,
+                "transfer" => false,
+            ],
+            "didi" => [
+                "desc" => "DIDI FOODS",
+                "quantity" => $methods['DIDI FOODS']['quantity'],
+                "sum" => $methods['DIDI FOODS']['sum'],
+                "digital" => true,
+                "transfer" => false,
+            ],
+            "rappi" => [
+                "desc" => "RAPPI",
+                "quantity" => $methods['RAPPI']['quantity'],
+                "sum" => $methods['RAPPI']['sum'],
+                "digital" => true,
+                "transfer" => false,
+            ],
 
         ];
         $banks = Box::where('type', '1')
@@ -2889,18 +2911,18 @@ class BoxesController extends Controller
         $company = Company::first();
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
         $saldo = 0;
-        // if ($request['type'] == "pdf") {
+        if ($request['type'] == "pdf") {
         $pdf = PDF::loadView('report::boxes.report_type_pdf', compact("user", "boxes_report", "establishment", "date_start", "date_end", "company", "type_box"))->setPaper('a4', 'landscape');
         return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
-        // } else if ($request['type'] == "excel") {
+        } else if ($request['type'] == "excel") {
 
-        //     return (new BoxesExport)
-        //         ->records($data->get())
-        //         ->company($company)
+            return (new BoxesExport)
+                ->records($data->get())
+                ->company($company)
 
-        //         ->establishment($establishment)
-        //         ->download('Reporte_arqueo_caja_' . Carbon::now() . '.xlsx');
-        // }
+                ->establishment($establishment)
+                ->download('Reporte_arqueo_caja_' . Carbon::now() . '.xlsx');
+        }
     }
     public function reports_bancario_type(Request $request)
     {

@@ -2205,102 +2205,366 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        Mostrar culqui en Metodos de Pago caja
-                                                                                        <el-tooltip class="item" effect="dark" content="metodo de pago en caja" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            culqui
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
 
-                                                                                    <el-switch v-model="
+                                                                                        <el-switch
+                                                                                            v-model="
                                                                                                 form.culqi
-                                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
                                                                                                 submit
-                                                                                            "></el-switch>
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        Mostrar yape en Metodos de Pago caja
-                                                                                        <el-tooltip class="item" effect="dark" content="metodo de pago en caja" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            yape
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
 
-                                                                                    <el-switch v-model="
+                                                                                        <el-switch
+                                                                                            v-model="
                                                                                                 form.yape
-                                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
                                                                                                 submit
-                                                                                            "></el-switch>
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        Mostrar izipay en Metodos de Pago caja
-                                                                                        <el-tooltip class="item" effect="dark" content="metodo de pago en caja" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            izipay
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
 
-                                                                                    <el-switch v-model="
+                                                                                        <el-switch
+                                                                                            v-model="
                                                                                                 form.izipay
-                                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
                                                                                                 submit
-                                                                                            "></el-switch>
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        Mostrar openpay en Metodos de Pago caja
-                                                                                        <el-tooltip class="item" effect="dark" content="metodo de pago en caja" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            openpay
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
 
-                                                                                    <el-switch v-model="
+                                                                                        <el-switch
+                                                                                            v-model="
                                                                                                 form.openpay
-                                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
                                                                                                 submit
-                                                                                            "></el-switch>
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        Mostrar nubiz en Metodos de Pago caja
-                                                                                        <el-tooltip class="item" effect="dark" content="metodo de pago en caja" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            nubiz
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
 
-                                                                                    <el-switch v-model="
+                                                                                        <el-switch
+                                                                                            v-model="
                                                                                                 form.nubiz
-                                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
                                                                                                 submit
-                                                                                            "></el-switch>
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        Mostrar plin en Metodos de Pago caja
-                                                                                        <el-tooltip class="item" effect="dark" content="metodo de pago en caja" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            plin
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
 
-                                                                                    <el-switch v-model="
+                                                                                        <el-switch
+                                                                                            v-model="
                                                                                                 form.plin
-                                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
                                                                                                 submit
-                                                                                            "></el-switch>
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            Rappi
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.rappi
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            Pedidos-Ya
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.pedidosya
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Mostrar
+                                                                                            Didi-Foods
+                                                                                            en
+                                                                                            Metodos
+                                                                                            de
+                                                                                            Pago
+                                                                                            caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.didi
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </el-card>
@@ -5408,7 +5672,7 @@
                                                                         ></el-input>
                                                                     </div>
                                                                 </div>
-                                                                        <div
+                                                                <div
                                                                     class="col-md-4 mt-4"
                                                                 >
                                                                     <label
@@ -5417,8 +5681,8 @@
                                                                         <i
                                                                             class="fa fa-file-alt fa-lg"
                                                                         ></i>
-                                                                        PDF de precuenta
-                                                                    
+                                                                        PDF de
+                                                                        precuenta
                                                                     </label>
                                                                     <el-switch
                                                                         v-model="
