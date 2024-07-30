@@ -23,9 +23,15 @@ class PersonTransform
 
     public static function transformSalud($inputs)
     {
+        $identity_document_type_id =  $inputs['tipoDocReceptor'];
+        $number = $inputs['numDocReceptor'];
+        if($identity_document_type_id == "_"){
+            $number = "00000000";
+            $identity_document_type_id = "1";
+        }
         return [
-            'identity_document_type_id' => $inputs['tipoDocReceptor'],
-            'number' => $inputs['numDocReceptor'],
+            'identity_document_type_id' => $identity_document_type_id,
+            'number' => $number,
             'name' => $inputs['nombreReceptor'],
             'trade_name' => null,
             'country_id' => "PE",
