@@ -30,6 +30,12 @@
                     <div class="col-md-3">
                         <label class="control-label">Periodo</label>
                         <el-select v-model="form.period" @change="changePeriod">
+                            
+                                <el-option
+                                key="date"
+                                value="date"
+                                label="Por fecha"
+                            ></el-option>
                             <el-option
                                 key="month"
                                 value="month"
@@ -39,11 +45,6 @@
                                 key="between_months"
                                 value="between_months"
                                 label="Entre meses"
-                            ></el-option>
-                            <el-option
-                                key="date"
-                                value="date"
-                                label="Por fecha"
                             ></el-option>
                             <el-option
                                 key="between_dates"
@@ -306,7 +307,7 @@ export default {
                 person_id: null,
                 type_person: null,
                 document_type_id: null,
-                period: "month",
+                period: "date",
                 date_start: moment().format("YYYY-MM-DD"),
                 date_end: moment().format("YYYY-MM-DD"),
                 month_start: moment().format("YYYY-MM"),
