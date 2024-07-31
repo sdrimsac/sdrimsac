@@ -603,7 +603,7 @@
                                                 type="radio"
                                                 name="method_payment"
                                                 value="08"
-                                                @change="method_payment('DIDI FOODS')"
+                                                @change="method_payment('DIDI FOOD')"
                                             />
                                             <div
                                                 class="radio-tile2"
@@ -1789,7 +1789,7 @@ export default {
                 "05": "TARJETA: IZYPAY",
                 "06": "TARJETA: NIUBIZ",
                 "07": "TARJETA: OPENPAY",
-                "08": "DIDI FOODS",
+                "08": "DIDI FOOD",
                 "09": "PEDIDOS YA",
                 "10": "RAPPI",
             },

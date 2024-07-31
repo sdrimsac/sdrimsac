@@ -2202,7 +2202,7 @@ export default {
             if (openpay) this.methods.push("TARJETA: OPENPAY");
             if (nubiz) this.methods.push("TARJETA: NIUBIZ");
             if (plin) this.methods.push("PLIN");
-            if (didi) this.methods.push("DIDI FOODS");
+            if (didi) this.methods.push("DIDI FOOD");
             if (rappi) this.methods.push("RAPPI");
             if (pedidosya) this.methods.push("PEDIDOS YA");
         },
