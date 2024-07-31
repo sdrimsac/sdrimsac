@@ -239,7 +239,7 @@
 <body>
     @php
         $precuenta = isset($precuenta) ? (bool) $precuenta : false;
-
+        $configuration = App\Models\Tenant\Configuration::first();
     @endphp
     <div id="register">
 
@@ -370,7 +370,7 @@
                     <td class="celda_left header_title2 border-bottom">
                         <strong>
                             {{ strtoupper($row->desc_unit) }}
-                            @if ($row->food->item->second_name)
+                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
                                 / {{ strtoupper($row->food->item->second_name) }}
                             @endif
                         </strong>
@@ -413,7 +413,7 @@
                             <td colspan="3" class="celda_left header_title2 border-bottom">
                                 <strong>
                                     {{ strtoupper($row->desc_unit) }}
-                                    @if ($row->food->item->second_name)
+                                    @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
                                         / {{ strtoupper($row->food->item->second_name) }}
                                     @endif
                                 </strong>
@@ -437,7 +437,7 @@
                             <td colspan="3" class="celda_left header_title2 border-bottom">
                                 <strong>
                                     {{ strtoupper($row_carry->desc_unit) }}
-                                    @if ($row->food->item->second_name)
+                                    @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
                                         / {{ strtoupper($row->food->item->second_name) }}
                                     @endif
                                 </strong>
