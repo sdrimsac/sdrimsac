@@ -120,7 +120,7 @@ class ReportMethodController extends Controller
             $boxes->where('method', 'like', '%' . $method . '%');
         }
 
-        return $boxes;
+        return $boxes->orderBy('date', 'desc');
     }
     public function columns()
     {
