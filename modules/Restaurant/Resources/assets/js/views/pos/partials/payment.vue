@@ -602,7 +602,7 @@
                                                 class="radio-button2"
                                                 type="radio"
                                                 name="method_payment"
-                                                value="05"
+                                                value="08"
                                                 @change="method_payment('DIDI FOODS')"
                                             />
                                             <div
@@ -630,7 +630,7 @@
                                                 class="radio-button2"
                                                 type="radio"
                                                 name="method_payment"
-                                                value="06"
+                                                value="09"
                                                 @change="
                                                     method_payment('PEDIDOS YA')
                                                 "
@@ -660,7 +660,7 @@
                                                 class="radio-button2"
                                                 type="radio"
                                                 name="method_payment"
-                                                value="07"
+                                                value="10"
                                                 @change="
                                                     metdhod_payment('RAPPI')
                                                 "
@@ -1788,7 +1788,10 @@ export default {
                 "04": "PLIN",
                 "05": "TARJETA: IZYPAY",
                 "06": "TARJETA: NIUBIZ",
-                "07": "TARJETA: OPENPAY"
+                "07": "TARJETA: OPENPAY",
+                "08": "DIDI FOODS",
+                "09": "PEDIDOS YA",
+                "10": "RAPPI",
             },
             last_number: {},
             showDialogNewPerson: false,
