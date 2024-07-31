@@ -155,8 +155,8 @@ class DashboardController extends Controller
             // $tables = new TableCollection(Table::where('area_id', $user->area_id)->get());
             // $foods =  Food::all();
 
-            $select_category = CategoryItem::first();
-            $select_category_id = $select_category->id;
+            // $select_category = CategoryItem::first();
+            // $select_category_id = $select_category->id;
             $categories = CategoryItem::all();
             $status_table = StatusTable::all();
             return view('restaurant::worker.index', compact('configuration', 'areas', 'tables_active', 'categories', 'status_table', 'company', 'tables_area'));
