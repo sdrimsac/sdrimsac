@@ -3003,8 +3003,8 @@ export default {
                     icon: "fas fa-money-bill-wave-alt",
                     visible:
                         this.configuration.show_expenses_incomes_caja &&
-                        !this.isSeller &&
-                        !this.isAnalist
+                        !this.isSeller 
+                
                 },
                 {
                     id: 4,
