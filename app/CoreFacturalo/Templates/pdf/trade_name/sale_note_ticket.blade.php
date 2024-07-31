@@ -479,7 +479,7 @@ contain"
                         @if (isset($row->item->from_unit_type_id_desc))
                             - {!! $row->item->from_unit_type_id_desc !!}
                         @endif
-                        @if (isset($row->item->second_name))
+                        @if (isset($row->item->second_name) && $configuration->show_second_name_external_code)
                             - {!! $row->item->second_name !!}
                         @endif
                         @if (isset($row->unit_desc))
