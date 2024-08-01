@@ -48,7 +48,7 @@
                                         {{-- <div class="sale_code">
                                             {{ $sale_code }}
                                         </div> --}}
-                                        <div style="height:35px;font-size:10px;text-align:center;">
+                                        <div style="height:35px;font-size:5px;text-align:center;color:red;">
                                             {{ $description }}
                                         </div>
 
@@ -108,7 +108,7 @@
                                 @endphp
                             </div>
 
-                            <div class="text-center font-xs" style="height:25px;">
+                            <div class="text-center" style="height:25px;font-size:10px;">
                                 {{ $description }}
                             </div>
 
@@ -118,7 +118,7 @@
                                         $colour = [0, 0, 0];
                                         $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                        echo '<img style="width:98%;height: 20px;" src="data:image/png;base64,' .
+                                        echo '<img style="width:70%;height: 20px;" src="data:image/png;base64,' .
                                             base64_encode(
                                                 $generator->getBarcode(
                                                     $barcode,
@@ -130,7 +130,7 @@
                                 @endphp
                             </div>
 
-                            <div class="font-sm" style="height: 5px;">
+                            <div  style="height: 5px;font-size:10px;">
                                 {{ $barcode }}
                             </div>
                         </div>
@@ -153,8 +153,8 @@
 
 
                         <td id="content" style={{ $jj - 1 < $stock ? 'color:black;' : 'color:white;' }}>
-                            <div class="sale_code">
-                                {{ $sale_code }}
+                            <div class="sale_code"> 
+                                {{ $sale_code }} 
                             </div>
                             <div>{{ $description }}</div>
                             <p>

@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Modules\Etiquetas\Models\Codigos;
 use Modules\Etiquetas\Models\MurcielagoPalabras;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Mpdf\HTMLParserMode;
 use Mpdf\Mpdf;
@@ -89,6 +90,8 @@ class EtiquetasController extends Controller
                 $format = 1;
                 $width = 60;
                 $height = 23;
+                Log::info('formato 1');
+                $template = 'template6';
             }
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
