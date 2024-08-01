@@ -88,8 +88,8 @@ class EtiquetasController extends Controller
             $height = $paper == 1 ? 25 : 23;
             if($company->number == '10465702449'){
                 $format = 1;
-                $width = 60;
-                $height = 28;
+                $width = 50;
+                $height = 25;
                 Log::info('formato 1');
                 $margin_left = 0;
                 $template = 'template6';
