@@ -35,10 +35,10 @@
                                 <div
                                     style="width:50%;float:left;margin:auto 0;
                                 ">
-                                    <div style="height: 5px"></div>
+                                    {{-- <div style="height: 5px"></div> --}}
                                     @php
                                         if ($jj - 1 < $stock) {
-                                            echo '<img style="height: 50px;" src=' . $image . '>';
+                                            echo '<img style="height: 25px;" src=' . $image . '>';
                                         }
                                     @endphp
                                 </div>
@@ -103,7 +103,7 @@
                             <div class="width:100%">
                                 @php
                                     if ($jj - 1 < $stock) {
-                                        echo '<img style="height: 25px;" src=' . $image . '>';
+                                        echo '<img style="height: 20px;" src=' . $image . '>';
                                     }
                                 @endphp
                             </div>
