@@ -83,11 +83,19 @@ class EtiquetasController extends Controller
             } else {
                 $image = null;
             }
+            $width = $paper == 1 ? 50 : 65;
+            $height = $paper == 1 ? 25 : 23;
+            if($company->number == '10465702449'){
+                $width = 60;
+                $height = 23;
+            }
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
-                    $paper ==  1 ? 50 :  65,
-                    $paper == 1 ? 25 : 23
+                    $width,
+                    $height
+                    // $paper ==  1 ? 50 :  65,
+                    // $paper == 1 ? 25 : 23
                 ],
 
                 'margin_top' => $margin_top,
