@@ -89,7 +89,7 @@ class EtiquetasController extends Controller
             if($company->number == '10465702449'){
                 $format = 1;
                 $width = 70;
-                $height = 40;
+                $height = 20;
                 Log::info('formato 1');
                 $margin_left = 0;
                 $template = 'template6';
