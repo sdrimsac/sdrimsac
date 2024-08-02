@@ -244,7 +244,16 @@ class PosController extends Controller
             // Ordena los resultados priorizando la palabra exacta
             $foods = $foods->orderByRaw("description LIKE '{$value}%' DESC")
             ->orderByRaw("description LIKE '%{$value}%' DESC")
-            ->orderByRaw("CAST(REGEXP_REPLACE(description, '[^0-9]', '') AS UNSIGNED) ASC")
+            ->orderByRaw("
+            CAST(
+                CASE
+                    WHEN description REGEXP '[0-9]+/[0-9]+' THEN
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(description, ' ', -4), '\"', 1)
+                    ELSE
+                        REGEXP_REPLACE(SUBSTRING_INDEX(SUBSTRING_INDEX(description, ' ', -4), '\"', 1), '[^0-9]', '')
+                END AS UNSIGNED
+            ) ASC
+        ")
             ->orderBy('description', 'ASC');
         }
 
