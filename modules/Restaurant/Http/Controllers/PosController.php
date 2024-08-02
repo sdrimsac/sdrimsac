@@ -243,18 +243,8 @@ class PosController extends Controller
         if ($configuration->ord_dscp) {
             // Ordena los resultados priorizando la palabra exacta
             $foods = $foods->orderByRaw("description LIKE '{$value}%' DESC")
-            ->orderByRaw("description LIKE '%{$value}%' DESC")
-            ->orderByRaw("
-            CAST(
-                CASE
-                    WHEN description REGEXP '[0-9]+/[0-9]+' THEN
-                        SUBSTRING_INDEX(SUBSTRING_INDEX(description, ' ', -4), '\"', 1)
-                    ELSE
-                        REGEXP_REPLACE(SUBSTRING_INDEX(SUBSTRING_INDEX(description, ' ', -4), '\"', 1), '[^0-9]', '')
-                END AS UNSIGNED
-            ) ASC
-        ")
-            ->orderBy('description', 'ASC');
+                ->orderByRaw("description LIKE '%{$value}%' DESC")
+                ->orderBy('description', 'ASC');
         }
 
         if ($configuration->ord_dscp) {
