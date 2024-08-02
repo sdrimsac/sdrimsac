@@ -85,7 +85,10 @@ class SaleNoteCollection extends ResourceCollection
 
             $orden = Orden::where('sale_note_id', $row->id)->first();
             $ordens_ref = $orden ? $orden->ref : null;
-
+            if($total_boxes == $row->total){
+                $pending = 0;
+                $paid = true;
+            }
             $table_number = null;
             $orden = $row->orden;
             if ($orden) {
