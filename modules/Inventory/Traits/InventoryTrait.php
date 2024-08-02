@@ -141,14 +141,6 @@ trait InventoryTrait
                         'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
                     ];
                 }),
-                /* 'color_size' => $row->item_color_size->where('warehouse_id', $warehouse_id)->transform(function ($row) {
-                    return [
-                        'id' => $row->id,
-                        'talla' => $row->talla,
-                        'color' => $row->color,
-                        'quantity' => $row->quantity,
-                    ];
-                }), */
                 'color_size' => $row->color_size ? $row->color_size->where('warehouse_id', $warehouse_id)->transform(function ($row) {
                     return [
                         'id' => $row->id,
@@ -156,8 +148,18 @@ trait InventoryTrait
                         'color' => $row->color,
                         'stock' => $row->stock,
                         'price' => $row->price,
+                        
                     ];
                 }) : [],
+                /* 'color_size' => $row->color_size ? $row->color_size->where('warehouse_id', $warehouse_id)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'size' => $row->size,
+                        'color' => $row->color,
+                        'stock' => $row->stock,
+                        'price' => $row->price,
+                    ];
+                }) : [], */
             ];
         });
     }
@@ -174,6 +176,8 @@ trait InventoryTrait
                 'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
                 'lots_enabled' => (bool) $row->lots_enabled,
                 'series_enabled' => (bool) $row->series_enabled,
+                'has_color_size_enabled' => (bool) $row->has_color_size_enabled,
+            
                 'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
                     return [
                         'id' => $row->id,
@@ -193,7 +197,16 @@ trait InventoryTrait
                         'date_of_due' => $row->date_of_due,
                         'checked'  => false
                     ];
-                })
+                }),
+                'color_size' => $row->color_size ? $row->color_size->where('warehouse_id')->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'size' => $row->size,
+                        'color' => $row->color,
+                        'stock' => $row->stock,
+                        'price' => $row->price
+                    ];
+                }) : []
             ];
         });
     }

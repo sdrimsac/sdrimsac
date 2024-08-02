@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\ItemColorSize;
 use Exception;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
@@ -234,7 +235,9 @@ class TransferPlaceController extends Controller
                         $item_group->save();
 
                         $item_group_destination =  ItemLotsGroup::where("item_id", $lote["item_id"])
-                            ->where('warehouse_id', $transfer->warehouse_id_destination)->first();
+                            ->where('warehouse_id', $transfer->warehouse_id_destination)
+                            ->where('code', $item_group->code)
+                            ->first();
 
                         if ($item_group_destination) {
                             $item_group_destination->quantity += $quantity;
@@ -249,6 +252,30 @@ class TransferPlaceController extends Controller
                             $item_group_destination->save();
                         }
                     }
+                }
+                foreach ($series_lots['color_size']  as $item_color) {
+                    $size = $item_color['size'];
+                    $color = $item_color['color'];
+                    $price = $item_color['price'];
+                    $quantity = $item_color['selectedQuantity'];
+                    $item_color_size = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
+                        ->where('size', $size)
+                        ->where('color', $color)
+                        ->where('item_id',$it->item_id)
+                        ->first();
+                    if (!$item_color_size) {
+                        $item_color_size = ItemColorSize::create([
+                            'size' => $size,
+                            'item_id' => $it->item_id,
+                            'color' => $color,
+                            'price' => $price,
+                            'warehouse_id' => $transfer->warehouse_id_destination,
+                            'stock' => 0,
+                        ]);
+                        $item_color_size->save();
+                    }
+                    $item_color_size->stock += $quantity;
+                    $item_color_size->save();
                 }
             }
 
@@ -324,13 +351,17 @@ class TransferPlaceController extends Controller
             $detail->quantity = $it['quantity'];
             $series_lots = [
                 "series" => [],
-                "lotes" => []
+                "lotes" => [],
+                "color_size" => []
             ];
             if (count($it['lotes']) > 0) {
                 $series_lots["lotes"] = $it['lotes'];
             }
             if (count($it['lots']) > 0) {
                 $series_lots["series"] = $it['lots'];
+            }
+            if (count($it['color_size']) > 0) {
+                $series_lots["color_size"] = $it['color_size'];
             }
             $detail->series_lots = $series_lots;
             $item = ItemWarehouse::where(

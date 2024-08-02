@@ -43,27 +43,21 @@
                     <h4 class="my-0 text-white">
                         <i class="fas fa-clipboard-list"></i>
                         <i class="fas fa-truck-loading"></i>
-                        Listado de {{ title }}</h4>
+                        Listado de {{ title }}
+                    </h4>    
                 </div>
-                <!-- <div class="data-table-visible-columns">
-                        <el-button type="primary" 
-                                    class="btn btn-success button-margin" 
-                                    href="javascript:void(0)" 
-                                    @click.prevent="clickCreate('input')">
-                                    
-                                <i class="fa fa-arrow-circle-down fa-lg"></i>
-                               Ingreso
-                        </el-button>
-                </div> 
                 <div class="data-table-visible-columns">
-                        <el-button type="primary" 
-                                    class="" 
-                                    href="javascript:void(0)" 
-                                    @click.prevent="clickOutput()">
-                              <i class="fa fa-arrow-circle-up fa-lg"></i>
-                                Salida
-                        </el-button>
-                </div> -->
+                <el-button
+                    type="button"
+                    class="btn btn-success"
+                    @click.prevent="clickRegularizar()"
+                    >
+                    <i class="fas fa-box fa-lg"></i>
+                    Regularizar Stock de Productos
+
+                
+                </el-button>
+            </div>
 
                 <div class="card-body">
                     <data-table :resource="resource" ref="dataTable">

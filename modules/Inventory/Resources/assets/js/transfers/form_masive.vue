@@ -24,17 +24,17 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group" :class="{
-                                        'has-danger':
-                                            errors.warehouse_destination_id
-                                    }">
+                                            'has-danger':
+                                                errors.warehouse_destination_id
+                                        }">
                             <label class="control-label">
                                 <i class="fas fa-warehouse"></i>
                                 <i class="fa fa-flag-checkered fa-lg"></i>
                                 Almacén Final</label>
                             <el-select v-model="form.warehouse_destination_id">
                                 <el-option :disabled="
-                                                option.id == form.warehouse_id
-                                            " v-for="option in warehouses" :key="option.id" :value="option.id" :label="option.description"></el-option>
+                                                    option.id == form.warehouse_id
+                                                " v-for="option in warehouses" :key="option.id" :value="option.id" :label="option.description"></el-option>
                             </el-select>
                             <small class="form-control-feedback" v-if="errors.warehouse_destination_id" v-text="errors.warehouse_destination_id[0]"></small>
                         </div>
@@ -72,15 +72,16 @@
                                         <el-select :disabled="!form.warehouse_id" @change="changeItem" v-model="form_add.item_id" :remote-method="searchItem" filterable remote :loading="loading_item" popper-class="el-select-document_type" class="border-left rounded-left border-info">
                                             <el-option v-for="option in items" :key="option.id" :value="option.id" :label="option.full_description"></el-option>
                                         </el-select>
-
                                         <a v-if="
-                                            form_add.item_id &&
-                                                form_add.series_enabled
-                                        " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotcodeOutput">[&#10004; Seleccionar series]</a>
+                                                form_add.item_id &&
+                                                    form_add.series_enabled
+                                            " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotcodeOutput">[&#10004; Seleccionar series]</a>
                                         <a v-if="
-                                            form_add.item_id &&
-                                                form_add.lots_enabled
-                                        " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotescodeOutput">[&#10004; Seleccionar cantidad en lotes]</a>
+                                                form_add.item_id &&
+                                                    form_add.lots_enabled
+                                            " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotescodeOutput">[&#10004; Seleccionar cantidad en lotes]</a>
+                                        <a v-if="form_add.item_id && hasColor_size" 
+                                            href="#" class="text-center font-weight-bold text-info" @click.prevent="clickColorcodeOutput">[&#10004; Seleccionar Talla Color]</a>
                                     </div>
                                 </div>
 
@@ -89,12 +90,12 @@
                                         <label class="control-label">Cantidad Actual
                                             <template v-if="currentItem && currentItem.max_quantity">
                                                 <el-tooltip v-if="currentItem.max_quantity" :content="
-                                                    ` ${
-                                                        currentItem.unds
-                                                            ? 'Mostrando unidades'
-                                                            : 'En base a la cantidad máx. ${currentItem.max_quantity}'
-                                                    }`
-                                                ">
+                                                        ` ${
+                                                            currentItem.unds
+                                                                ? 'Mostrando unidades'
+                                                                : 'En base a la cantidad máx. ${currentItem.max_quantity}'
+                                                        }`
+                                                    ">
                                                     <i class="fa fa-info-circle"></i>
                                                 </el-tooltip>
 
@@ -113,26 +114,22 @@
                                         <label class="control-label">Cantidad a Trasladar
                                             <template v-if="currentItem">
                                                 <el-tooltip v-if="currentItem.max_quantity" :content="
-                                                    `Ingrese cantidad en base a ${currentItem.max_quantity}`
-                                                ">
+                                                        `Ingrese cantidad en base a ${currentItem.max_quantity}`
+                                                    ">
                                                     <i class="fa fa-info-circle"></i>
                                                 </el-tooltip>
                                             </template>
                                         </label>
-                                        <el-input :disabled="hasLots" type="number" v-model="form_add.quantity">
+                                        <el-input :disabled="hasLots || hasColor_size" type="number" v-model="form_add.quantity">
                                             <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-12 col-xl-2">
                                     <div class="form-group">
-                                        <el-button :disabled="form_add.item_id == null" 
-                                                    style="margin-top:10%;" 
-                                                    @click.prevent="clickAddItem" 
-                                                    type="primary"
-                                                    icon="fas fa-plus">
-                                                
-                                                    Agregar Producto
-                                                </el-button>
+                                        <el-button :disabled="form_add.item_id == null" style="margin-top:10%;" @click.prevent="clickAddItem" type="primary" icon="fas fa-plus">
+
+                                            Agregar Producto
+                                        </el-button>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +141,7 @@
                 <br />
                 <div class="row">
                     <div class="col-12 col-lg-12 col-xl-12">
-                        <table class="table table-striped" width="100%" >
+                        <table class="table table-striped" width="100%">
                             <thead>
                                 <tr width="100%" slot="heading" class="bg-primary">
                                     <th class="text-white">#</th>
@@ -156,13 +153,20 @@
                             <tbody>
                                 <tr v-for="(row, index) in form.items" :key="index" width="100%">
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ row.description }}</td>
+                                    <td>{{ row.description }}
+                                        <template v-if="row.color_size && row.color_size.length > 0">
+                                            <br>
+                                            <el-tag v-for="(tag, index) in row.color_size" :key="index">
+                                                Color : {{ tag.color }} Talla : {{ tag.size }} Cantidad: {{ tag.selectedQuantity }}
+                                            </el-tag>
+                                        </template>
+                                    </td>
                                     <td>
                                         <template v-if="row.max_quantity">
                                             {{ row.max_quantity.input }}
                                             <el-tooltip :content="
-                                                            `Cantidad real ${row.quantity}`
-                                                        ">
+                                                                `Cantidad real ${row.quantity}`
+                                                            ">
                                                 <i class="fa fa-info-circle"></i>
                                             </el-tooltip>
                                         </template>
@@ -172,8 +176,8 @@
                                     </td>
                                     <td class="series-table-actions text-center">
                                         <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="
-                                                        clickCancel(index)
-                                                    ">
+                                                            clickCancel(index)
+                                                        ">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -183,16 +187,15 @@
                     </div>
                 </div>
             </div>
-
             <div class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2">
                 <div class="col-md-4" style="margin-right:10px;">
-                    <span> 
+                    <span>
                         <i class="fa fa-print fa-lg"></i>
                         Impresora: </span><br />
                     <el-select v-model="form.printer">
                         <el-option v-for="establishment in establishments" :key="establishment.id" :value="establishment.id" :label="
-                                        `${establishment.description} - ${establishment.printer}`
-                                    ">
+                                            `${establishment.description} - ${establishment.printer}`
+                                        ">
                         </el-option>
                     </el-select>
                 </div>
@@ -202,32 +205,44 @@
         </form>
     </div>
 
-    <output-lots-form :showDialog.sync="showDialogLotsOutput" :lots="form_add.lots" @addRowOutputLot="addRowOutputLot"></output-lots-form>
-    <output-lotes-form :lotes="form_add.lotes" @sumLotes="sumLotes" :showDialog.sync="showDialogLotesOutput" @addRowOutputLote="addRowOutputLote"></output-lotes-form>
+    <output-lots-form :showDialog.sync="showDialogLotsOutput" :lots="form_add.lots" @addRowOutputLot="addRowOutputLot">
+    </output-lots-form>
+    <output-lotes-form :lotes="form_add.lotes" @sumLotes="sumLotes" :showDialog.sync="showDialogLotesOutput" @addRowOutputLote="addRowOutputLote">
+    </output-lotes-form>
+    <!-- <output-color-form :showDialog.sync="showDialogColorOutput" :color="form_add.color" @addRowOutputColor="addRowOutputColor"></output-color-form> -->
+    <!-- <output-color-form :showDialog.sync="showDialogColorOutput" :color_size="form_add.color_size" @sumColor_size="sumColor_size" @addRowOutputColor_size="addRowOutputColor_size">
+        </output-color-form> -->
+
+    <output-color-form :color_size="form_add.color_size" @sumColor_size="sumColor_size" :showDialog.sync="showDialogColorOutput" @addRowOutputColor_size="addRowOutputColor_size">
+    </output-color-form>
+
 </div>
 </template>
 
-    
 <script>
 import OutputLotsForm from "./partials/lots.vue";
 import OutputLotesForm from "./partials/lotes.vue";
+import OutputColorForm from "./partials/color.vue";
 
 export default {
     props: ["establishment_id", "establishments", "configuration"],
     components: {
         OutputLotsForm,
-        OutputLotesForm
+        OutputLotesForm,
+        OutputColorForm
     },
     data() {
         return {
             sameEstablishment: false,
             hasLots: false,
+            hasColor_size: false,
             loading_item: false,
             isDirect: false,
             loading_submit: false,
             titleDialog: null,
             showDialogLotsOutput: false,
             showDialogLotesOutput: false,
+            showDialogColorOutput: false,
             resource: "transfers",
             errors: {},
             searchType: "description",
@@ -302,6 +317,9 @@ export default {
         sumLotes(qty) {
             this.form_add.quantity = qty;
         },
+        sumColor_size(qty) {
+            this.form_add.quantity = qty;
+        },
         searchItem(input) {
             if (input.length > 2) {
                 if (this.time) {
@@ -370,6 +388,12 @@ export default {
             let row = this.items.find(x => x.id == this.form_add.item_id);
             row.lotes = lotes;
         },
+        //agregado para talla & color
+        addRowOutputColor_size(color_size) {
+            let row = this.items.find(x => x.id == this.form_add.item_id);
+            row.color_size = color_size;
+        },
+
         clickCancel(index) {
             this.form.items.splice(index, 1);
         },
@@ -399,11 +423,14 @@ export default {
             }
             this.form_add.lots = lots;
             this.form_add.lotes = row.lotes;
+            this.form_add.color_size = row.color_size;
             this.form_add.lots_enabled = row.lots_enabled;
             this.form_add.series_enabled = row.series_enabled;
 
             this.hasLots =
                 this.form_add.lots_enabled || this.form_add.series_enabled;
+            this.hasColor_size =
+                this.form_add.color_size && this.form_add.color_size.length > 0;
         },
         showUnits() {
             if (this.currentItem.unds) {
@@ -421,14 +448,16 @@ export default {
                 quantity: 0,
                 lots: [],
                 lotes: [],
+                color_size: [],
+                /* color_size_enabled: false, */
                 lots_enabled: false,
                 series_enabled: false
             };
         },
         clickAddItem() {
             /* if (!this.form_add.item_id) {
-            return;
-          }*/
+                return;
+              }*/
 
             if (parseFloat(this.form_add.stock) < 1) {
                 return;
@@ -480,11 +509,22 @@ export default {
                     .map(m => ({
                         ...m,
                         quantity: m.selectedQuantity
-                    }))
+                    })),
+                color_size: this.form_add.color_size.filter(c => c.selectedQuantity != null)
             });
 
             this.initFormAdd();
             this.currentItem = null;
+        },
+        clickColorcodeOutput() {
+
+            if (this.hasColor_size) {
+                this.showDialogColorOutput = true;
+            } else {
+                this.$toast.warning("Este producto no tiene opciones de color y tamaño.");
+            }
+
+            /* this.showDialogColorOutput = true; */
         },
         clickLotescodeOutput() {
             this.showDialogLotesOutput = true;
