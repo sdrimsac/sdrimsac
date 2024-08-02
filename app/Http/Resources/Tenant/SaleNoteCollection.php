@@ -87,7 +87,9 @@ class SaleNoteCollection extends ResourceCollection
             $ordens_ref = $orden ? $orden->ref : null;
             if($total_boxes == $row->total){
                 $pending = 0;
-                $paid = true;
+                // $paid = true;
+                $row->paid = 1;
+                $row->save();
             }
             $table_number = null;
             $orden = $row->orden;
