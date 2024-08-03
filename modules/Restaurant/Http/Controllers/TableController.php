@@ -45,6 +45,7 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $tables = Table::where('status_table_id', 2)
+            ->where('number', 'not like', '%caj%')
             ->where('is_room', false)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
