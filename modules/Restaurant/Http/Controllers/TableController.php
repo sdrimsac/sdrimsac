@@ -161,42 +161,85 @@ class TableController extends Controller
 
     }
     function checkTables($establishment_id)
-    {
+{
+    Table::where('status_table_id', 2)
+        ->where('is_room', false)
+        ->where(function ($query) use ($establishment_id) {
+            $query->where('establishment_id', $establishment_id)
+                  ->orWhereNull('establishment_id');
+        })
+        ->chunk(
+            50,
+            function ($tables) {
+                $tableIds = $tables->pluck('id');
 
-        Table::where('status_table_id', 2)
-            ->where('is_room', false)
-            ->where('establishment_id', $establishment_id)
-            ->orWhereNull('establishment_id')
-            ->chunk(
-                50,
-                function ($rows) {
-                    foreach ($rows as $table) {
-                        $ordens = Orden::where('table_id', $table->id)
-                            ->where('status_orden_id', '<>', 4)
-                            ->where('status_orden_id', '<>', 5)
-                            ->get();
-        
-                        $hasActiveOrdersWithItems = false;
-        
-                        foreach ($ordens as $orden) {
-                            $ordenItems = OrdenItem::where('orden_id', $orden->id)->get();
-        
-                            if ($ordenItems->isEmpty()) {
-                                $orden->status_orden_id = 4;
-                                $orden->save();
-                            } else {
-                                $hasActiveOrdersWithItems = true;
-                            }
-                        }
-        
-                        if (!$hasActiveOrdersWithItems) {
-                            $table->status_table_id = 1;
-                            $table->save();
+                $ordens = Orden::whereIn('table_id', $tableIds)
+                    ->whereNotIn('status_orden_id', [4, 5])
+                    ->get();
+
+                $ordenIds = $ordens->pluck('id');
+                $ordenItems = OrdenItem::whereIn('orden_id', $ordenIds)->get();
+
+                $ordenItemsGrouped = $ordenItems->groupBy('orden_id');
+
+                foreach ($tables as $table) {
+                    $tableOrdens = $ordens->where('table_id', $table->id);
+                    $hasActiveOrdersWithItems = false;
+
+                    foreach ($tableOrdens as $orden) {
+                        if ($ordenItemsGrouped->has($orden->id)) {
+                            $hasActiveOrdersWithItems = true;
+                        } else {
+                            $orden->status_orden_id = 4;
+                            $orden->save();
                         }
                     }
+
+                    if (!$hasActiveOrdersWithItems) {
+                        $table->status_table_id = 1;
+                        $table->save();
+                    }
                 }
-            );
-    }
+            }
+        );
+}
+    // function checkTables($establishment_id)
+    // {
+
+    //     Table::where('status_table_id', 2)
+    //         ->where('is_room', false)
+    //         ->where('establishment_id', $establishment_id)
+    //         ->orWhereNull('establishment_id')
+    //         ->chunk(
+    //             50,
+    //             function ($rows) {
+    //                 foreach ($rows as $table) {
+    //                     $ordens = Orden::where('table_id', $table->id)
+    //                         ->where('status_orden_id', '<>', 4)
+    //                         ->where('status_orden_id', '<>', 5)
+    //                         ->get();
+        
+    //                     $hasActiveOrdersWithItems = false;
+        
+    //                     foreach ($ordens as $orden) {
+    //                         $ordenItems = OrdenItem::where('orden_id', $orden->id)->get();
+        
+    //                         if ($ordenItems->isEmpty()) {
+    //                             $orden->status_orden_id = 4;
+    //                             $orden->save();
+    //                         } else {
+    //                             $hasActiveOrdersWithItems = true;
+    //                         }
+    //                     }
+        
+    //                     if (!$hasActiveOrdersWithItems) {
+    //                         $table->status_table_id = 1;
+    //                         $table->save();
+    //                     }
+    //                 }
+    //             }
+    //         );
+    // }
     public function record($id)
     {
         $table = Table::find($id);
