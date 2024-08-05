@@ -52,7 +52,7 @@ class BoxesExport implements  FromView, ShouldAutoSize
 
     public function view(): View {
         return view('report::boxes.report_excel', [
-            'records'=> $this->records,
+            'boxes_report'=> $this->records,
             'company' => $this->company,
             'type_box'=> $this->type_box,
              'establishment'=>$this->establishment,
