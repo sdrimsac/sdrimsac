@@ -374,8 +374,8 @@ export default {
                 }
             });
         },
-        clickDownload() {
-            this.$emit("clickReport", this.search);
+        clickDownload(type) {
+            this.$emit("clickReport", this.search, type);
         },
         clickDownloadForImport(){
             this.$emit("clickReportForImport", this.search);

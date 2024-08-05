@@ -64,19 +64,19 @@ use Modules\Report\Exports\ItemExportGeneralForImport;
 class ItemController extends Controller
 {
 
-    public function updatePriceUnitType(Request $request){
+    public function updatePriceUnitType(Request $request)
+    {
         $price = $request->sale_unit_price;
         $type_id = $request->unit_type_id;
 
         $item_unit_type = ItemUnitType::find($type_id);
         $item_unit_type->price2 = $price / $item_unit_type->quantity_unit;
-        $item_unit_type->total = $price ;
+        $item_unit_type->total = $price;
         $item_unit_type->save();
         return [
             'success' => true,
             'message' => 'Se actualizó el precio del producto'
         ];
-                                    
     }
     public function updatePriceCommercialTreatment(Request $request)
     {
@@ -111,6 +111,10 @@ class ItemController extends Controller
         $food = Food::where('item_id', $item->id)->first();
         $food->price = $request->sale_unit_price;
         $food->save();
+        //de itemwarehouse seleccionar los que tengan el warehouse_id en 1 y stock menor a 0 y actualiza rel stock a 0
+        $item_warehouse = ItemWarehouse::where('warehouse_id', 1)
+            ->where('stock', '<', 0)
+            ->update(['stock' => 0]);
         $establishment_id = auth()->user()->establishment_id;
         $warehouse_id = Warehouse::where('establishment_id', $establishment_id)->first()->id;
         ItemWarehousePrice::where('item_id', $item->id)
@@ -620,20 +624,18 @@ class ItemController extends Controller
                     if (count($textoIntoArray) === 1) {
                         $records
                             ->where('description', 'like', "%{$request->value}%")
-                            ->orWhere('internal_id', 'like', "%{$request->value}%") 
-                             ->orWhere('second_name', 'like', "%{$request->value}%");
+                            ->orWhere('internal_id', 'like', "%{$request->value}%")
+                            ->orWhere('second_name', 'like', "%{$request->value}%");
                     } else {
 
                         foreach ($textoIntoArray as $key => $value) {
-                            
+
                             $records->where('description', 'like', '%' . $value . '%');
-                            
                         }
                     }
                     $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
                         ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
                         ->orderBy('description', 'ASC');
-                    
                 }
                 break;
 
@@ -752,7 +754,7 @@ class ItemController extends Controller
         $item->item_type_id = '01';
         $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
         $item->fill($request->all());
-        
+
         $temp_path = $request->input('temp_path');
         $id = $request->input('id');
         $food = Food::firstOrNew(['item_id' => $id]);

@@ -2866,30 +2866,6 @@ class BoxesController extends Controller
         $user = User::find($user_id);
         $type_box = $request['type_box'];
 
-
-        // switch ($period) {
-        //     case 'month':
-        //         $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
-        //         $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
-
-        //         break;
-        //     case 'between_months':
-        //         $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
-        //         $d_end = Carbon::parse($month_end . '-01')->endOfMonth()->format('Y-m-d');
-        //         break;
-        //     case 'date':
-        //         $d_start = $date_start;
-        //         $d_end = $date_end;
-        //         break;
-        //     case 'between_dates':
-        //         $d_start = $date_start;
-        //         $d_end = $date_end;
-        //         break;
-        // }
-        // Box::whereBetween('date', [$date_start, $date_end])
-        //->OrderBy('sale_note_id')->OrderBy('document_id')
-        //latest
-
         if ($column == 'date' && isset($value)) {
             $d = explode(",", $value);
             $d_start = $d[0];
@@ -2919,7 +2895,10 @@ class BoxesController extends Controller
             return (new BoxesExport)
                 ->records($data->get())
                 ->company($company)
-
+                ->user($user)
+                ->date_start($date_start)
+                ->date_end($date_end)
+                ->type_box($type_box)
                 ->establishment($establishment)
                 ->download('Reporte_arqueo_caja_' . Carbon::now() . '.xlsx');
         }

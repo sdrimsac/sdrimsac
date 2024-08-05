@@ -1,207 +1,377 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="application/pdf; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        html {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+
+        }
+
+        .table {
+            border: 0.1px solid #ccc;
+        }
+
+        .celda {
+            text-align: left;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        .celda_center {
+            text-align: center;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        .celda_right {
+            text-align: right;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        tr:nth-child(even) {}
+
+        .nth-child {
+            background-color: transparent;
+        }
+
+        .border-bottom {
+            border-bottom: 0.1px solid #ccc;
+        }
+
+        th {
+            padding: 5px;
+            text-align: center;
+            border-color: #409EFF;
+            border: 0.1px solid #ccc;
+        }
+
+        .headers {
+            padding: 5px !important;
+            border-bottom: 0.1px solid #ccc;
+            height: 25px;
+        }
+
+        .title {
+            font-weight: bold;
+            padding: 5px;
+            font-size: 20px !important;
+            text-decoration: underline;
+        }
+
+        p>strong {
+            margin-left: 5px;
+            font-size: 13px;
+        }
+
+        thead {
+            font-weight: bold;
+            color: #000;
+            text-align: center;
+        }
+
+        .title {
+            font-weight: bold;
+            padding: 3px;
+            font-size: 20px !important;
+            text-decoration: underline;
+        }
+
+        .encabezado {
+            background-color: #ccc;
+            text-transform: uppercase;
+            padding: 5px;
+            padding-left: 10px;
+        }
+
+        .categoria {
+            background-color: #eee;
+            text-transform: uppercase;
+            padding: 5px;
+            padding-left: 50px;
+        }
+
+        .celda_loop {
+            width: 10% !important;
+            text-align: center;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        .celda_descrip {
+            width: 60% !important;
+            text-align: left;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        .celda_date {
+            width: 30% !important;
+            text-align: center;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        .celda_left {
+            width: 30% !important;
+            text-align: left;
+            padding: 5px;
+            border: 0.1px solid #ccc;
+        }
+
+        p>strong {
+            margin-left: 5px;
+            font-size: 11px;
+        }
+
+        header {
+            position: fixed;
+            height: 1cm;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            font-family: arial;
+
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            height: 0.8cm;
+            color: #000;
+            text-align: center;
+            font-size: 11px;
+            padding: 12px;
+            font-family: Arial;
+            padding: 10px;
+        }
+
+        @page {
+            margin: 0.5cm 0.5cm 0cm 0.5cm;
+            font-family: sans-serif;
+        }
+
+        td,
+        th {
+            font-size: 10px !important;
+            height: 15px;
+        }
+
+        body {
+            margin: 1.5cm 0.5cm 0.5cm 0.5cm;
+        }
+    </style>
 </head>
 
 <body>
     <table>
-        <div style="margin-top:20px; margin-bottom:15px;">
+        <tr>
+            <td colspan="16" class="celda_center" style="border: none">
+                <h1 class="title">Reporte de {{ $type_box == 'expenses' ? 'Gastos' : 'Egresos' }}</h1>
+            </td>
+        </tr>
+    </table>
+
+        <table style="border-collapse: collapse;border-bottom:1px solid #ddd;">
 
             <tr>
-                <td colspan="8" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">
-                    <h3 align="center" class="text-center"><strong>Reporte Documentos</strong></h3>
+                {{-- <td width="60%" height="30" align="left" valign="top">
+                    @if ($company->logo)
+                        <img src="{{ asset('storage/uploads/logos/' . $company->logo) }}" height="40" />
+                    @endif
+                </td> --}}
+                {{-- @if ($type_box == 'incomes')
+                    <td width="40%" height="30" align="right" valign="middle"
+                        style="font-size:13px !important;  font-family: sans-serif !important;">Movimiento Venta
+                        Efectivo desde {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
+                        hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
+                    </td>
+                @else --}}
+                    <td colspan="15" width="40%" height="30" align="right" valign="middle"
+                        style="font-size:13px !important; text-align:center; font-family: sans-serif !important;">Reporte desde
+                        {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
+                        hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
+                    </td>
+                {{-- @endif --}}
+                @if ($user)
+                    <td></td>
+                @endif
+            </tr>
+        </table>
+
+    <div>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="10" class="headers" height="20">
+                    <strong>Empresa: </strong>{{ $company->name }}
+                </td>
+                <td colspan="3" class="headers">
+                    <strong>Fecha: </strong>{{ date('Y-m-d') }}
+                </td>
+                @if ($user)
+                    <td colspan="3" class="headers">
+                        <strong>Usuario: </strong>{{ $user->name }}
+                    </td>
+                @endif
+            </tr>
+            <tr class="nth-child">
+                <td colspan="8" class="headers" height="20">
+                    <strong>Ruc: </strong>{{ $company->number }}
+                </td>
+                <td colspan="8" class="headers">
+                    <strong>Establecimiento: </strong>{{ $establishment->address }} -
+                    {{ $establishment->department->description }} - {{ $establishment->district->description }}
                 </td>
             </tr>
             <tr>
-                <td colspan="8" style="border: 1px solid black; background-color: #DCDCDC;">
-                    <p><b>Empresa: </b>{{ $company->name }}</p>
-                </td>
+                <td colspan="16"></td>
             </tr>
-            <tr>
-                <td colspan="4" style="border: 1px solid black; background-color: #DCDCDC;">
-                    <p><b>Ruc: </b>{{$company->number}}</p>
-                </td>
-                <td colspan="4" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">
-                    <p><b>Fecha: </b>{{ date('Y-m-d') }}</p>
-                </td>
-            </tr>
-        </div>
-        <br>
-        @if(!empty($records))
-        <div class="">
-            <div class=" ">
+        </table>
+    </div>
+    @if (!empty($boxes_report))
+
                 @php
-                $totales_ingresos=0;
-                $totales_egresos=0;
-                $depositos=0;
-                $transferencia=0;
-                $yape=0;
-                $ingresos=0;
-                $egresos=0;
+                    $totales_ingresos = 0;
+                    $totales_egresos = 0;
+                    $ingresos = 0;
+                    $egresos = 0;
+                    $depositos = 0;
+                    $transferencia = 0;
                 @endphp
+                <table>
+                    <tbody>
 
-                <tr>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">#</td>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Fecha</td>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Operacion</td>
-                    <td class="encabezado" width="30" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Ref</td>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Cliente</td>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Concepto</td>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Monto</td>
-                    <td class="encabezado" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Usuario</td>
-                </tr>
-                <tbody>
-                    @foreach ($records as $row)
 
-                    <?php
-                    $amount = $row['amount'];
-                    if (isset($row["document_id"]) && $row["document_id"] != null) {
-                        $document = \App\Models\Tenant\Document::find($row["document_id"]);
-                        $total = $document->total;
-                        if($total < $amount){
-                            $amount = $total;
-                        }
-                        $date = $document->date_of_issue . " " . $document->time_of_issue;
-                    }
-                    if (isset($row["sale_note_id"]) && $row["sale_note_id"] != null) {
-                        $document = \App\Models\Tenant\SaleNote::find($row["sale_note_id"]);
-                        $total = $document->total;
-                        if($total < $amount){
-                            $amount = $total;
-                        }
-                        $date = $document->date_of_issue->format('Y-m-d') . " " . $document->time_of_issue;
-                    }
-                    if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
-                        $ingresos = $ingresos + $amount;
-                    }
-                    if ($row['type'] == '1' && $row['method'] == 'Depositos') {
-                        $depositos = $depositos +  $amount;
-                    }
-                    if ($row['type'] == '1' && $row['method'] == 'Transferencia') {
-                        $transferencia = $transferencia + $amount;
-                    }
+                        <tr>
+                            <th class="encabezado">#</th>
+                            <th class="encabezado" width="80">Fecha</th>
+                            {{-- <td class="encabezado" width="70">Operacion</td> --}}
+                            <th colspan="2" class="encabezado" width="288">Concepto</th>
+                            <th class="encabezado" width="205">Detalle</th>
+                            <th class="encabezado" width="70">Monto</th>
+                            <th class="encabezado" width="70">Usuario</th>
 
-                    if ($row['type'] == '2') {
-                        $egresos = $egresos +  $amount;
-                    }
-                    $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y') . " " . \Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
+                        </tr>
+                    <tbody>
+                        @foreach ($boxes_report as $row)
+                            <?php
+                            if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
+                                $ingresos = $ingresos + $row['amount'];
+                            }
+                            if ($row['type'] == '1' && $row['method'] == 'Depositos') {
+                                $depositos = $depositos + $row['amount'];
+                            }
+                            if ($row['type'] == '1' && $row['method'] == 'Transferencia') {
+                                $transferencia = $transferencia + $row['amount'];
+                            }
+                            
+                            if ($row['type'] == '2') {
+                                $egresos = $egresos + $row['amount'];
+                            }
+                            
+                            ?>
+                            <tr>
+                                <td class="celda_loop">{{ $loop->iteration }}</td>
+                                <td class="celda_descrip">
+                                    {{ \Carbon\Carbon::parse($row['date'])->format('d-m-Y') }}
+                                    {{ \Carbon\Carbon::parse($row['created_at'])->format('h:m:s') }}</td>
+
+                                <td colspan="2" class="celda_left">{{ $row['description'] }}</td>
+                                <td class="celda_left">
+                                    @if (count($row['items']) > 0)
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <td class="celda_left" style="border: none">Desc.</td>
+                                                    <td class="celda_left" style="border: none">Cant.</td>
+                                                    <td class="celda_left" style="border: none">Prec.</td>
+                                                    <td class="celda_left" style="border: none">Prec. Adic.</td>
+                                                    <td class="celda_left" style="border: none">Total</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+
+                                                @foreach ($row['items'] as $item)
+                                                    <tr>
+                                                        <td class="celda_left" style="border:none">
+                                                            {{ $item->item->detail }}
+                                                        </td>
+                                                        <td class="celda_left" style="border:none">
+                                                            {{ number_format($item->quantity, 2) }}
+                                                        </td>
+                                                        <td class="celda_left" style="border:none">
+                                                            {{ number_format($item->price, 2) }}
+                                                        </td>
+                                                        <td class="celda_left" style="border:none">
+                                                            {{ number_format($item->price_extra, 2) }}
+                                                        </td>
+                                                        <td class="celda_left" style="border:none">
+                                                            {{ number_format($item->price_extra + $item->price * $item->quantity, 2) }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
+                                </td>
+                                <td class="celda_date">{{ $row['amount'] }}</td>
+                                <td class="celda_left">{{ $row['user']->name }}</td>
+
+                            </tr>
+                        @endforeach
+
+
+                    </tbody>
+                </table>
+                <table>
+                    <tr>
+                        <td class="categoria celda_right"><b>RESUMEN TOTAL</b></td>
+                    </tr>
+
+                    @if ($type_box != 'expenses')
+                        <tr>
+                            <td class="categoria celda_right">Ingresos - Venta : <b> S/.
+                                    {{ number_format(round($ingresos * 10) / 10, 2) }}</b></td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td class="categoria celda_right">Egresos : <b> S/.
+                                    {{ number_format(round($egresos * 10) / 10, 2) }}</b></td>
+                        </tr>
+                    @endif
+
+
 
                 
-                    ?>
-                    <tr>
-                        <td class="celda_loop" style="border: 1px solid black; text-align: center;">{{ $loop->iteration }}</td>
-                        <td class="celda_descrip" style="border: 1px solid black; text-align: center;">
-                            {{$date}}
-                        </td>
+                </table>
+            @else
+                <div class="callout callout-info">
+                    <p>No se encontraron registros.</p>
+                </div>
 
-
-                        @if ($row['type'] == '1' && $row['method'])
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">{{$row['method']}}</td>
-                        @endif
-
-                        @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">
-                            {{$row['method']}}
-                        </td>
-                        @endif
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">{{$row["cash"]["reference_number"]}}</td>
-                        @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">
-                            {{ $row['subcategories']->subcategory }}
-                        </td>
-                        @else
-                        @if ($row['type'] == '1' && $row['sale_note_id'] == null && $row['document_id'] == null)
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">
-                            {{ $row['subcategories']->subcategory }}
-                        </td>
-                        @else
-                        @if ($row['sale_note_id'] != null && $row['document_id'] == null)
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">
-                            {{ $row['salenote']['customer']->name }}
-                        </td>
-                        @else
-                        @if ($row['sale_note_id'] != null && $row['document_id'] != null)
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">
-                            {{ $row['salenote']['customer']->name }}
-                        </td>
-                        @else
-                        @if ($row['document_id'] != null && $row['sale_note_id'] == null)
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">
-                            {{ $row['document']['customer']->name }}
-                        </td>
-                        @endif
-                        @endif
-                        @endif
-                        @endif
-                        @endif
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">{{ $row['description'] }}</td>
-                        <td class="celda_date" style="border: 1px solid black; text-align: center;">{{ $amount}}</td>
-                        <td class="celda_left" style="border: 1px solid black; text-align: center;">{{ $row['user']->name }}</td>
-
-                    </tr>
-                    @endforeach
-
-                </tbody>
-
-
-                <tr>
-                    <td colspan="6" class="categoria celda_right" style="border: 1px solid black; text-align: center;"></td>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;"><b>RESUMEN DE ARQUEO</b></td>
-                </tr>
-                <tr>
-                    <td colspan="6" class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC">Ingresos - Venta : </td>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center;"><b> S/. {{$ingresos}}</b></td>
-                </tr>
-                <tr>
-
-                    <td colspan="6" class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Egresos - Gastos : </td>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center;"><b> S/. {{$egresos}}</b></td>
-                </tr>
-
-                @if($type_box=="2" && $type_box!=null)
-                <tr>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Gastos - Egresos : <b> S/. {{$egresos}}</b></td>
-                </tr>
-                @endif
-
-                @if($depositos>0.00 || $transferencia>00)
-                <tr>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Depositos - Transferencia : <b> S/. {{number_format($depositos+$transferencia,2)}}</b></td>
-                </tr>
-                @endif
-
-                @if($type_box=="1" && $type_box!=null)
-                <tr>
-                    <td colspan="6" class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Totales</td>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center;"><b> S/. {{number_format(($ingresos-$egresos)+$depositos+$transferencia,2)}}</b></td>
-                </tr>
-                @endif
-
-                @if($type_box=="2" && $type_box!=null)
-                <tr>
-                    <td class="categor1ia celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Efectivo Gastos: <b> S/. {{$egresos}}</b></td>
-
-                </tr>
-                @endif
-
-                @if($type_box=="1" && $type_box!=null)
-                <tr>
-                    <td colspan="6" class="categoria celda_right" style="border: 1px solid black; text-align: center; background-color: #DCDCDC;">Efectivo</td>
-                    <td class="categoria celda_right" style="border: 1px solid black; text-align: center;"><b> S/. {{number_format($ingresos-$egresos,2)}}</b></td>
-                </tr>
-                @endif
-    </table>
-    @else
-    <div class="callout callout-info">
-        <p>No se encontraron registros.</p>
-    </div>
     @endif
+        <table width="100%" border="0" style="border-collapse: collapse;border-top:1px solid #ddd;">
+            <tr>
+                <td align="left" valign="middle" colspan="2">Direccion:{{ $establishment->address }} -
+                    {{ $establishment->department->description }} - {{ $establishment->district->description }} -
+                    Telefonos: {{ $establishment->telephone }} Email: {{ $establishment->email }}</td>
+            </tr>
+        </table>
 </body>
+
 
 </html>

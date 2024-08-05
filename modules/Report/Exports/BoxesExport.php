@@ -18,7 +18,21 @@ class BoxesExport implements  FromView, ShouldAutoSize
 
         return $this;
     }
+    public function date_end($date_end) {
+        $this->date_end = $date_end;
 
+        return $this;
+    }
+    public function date_start($date_start) {
+        $this->date_start = $date_start;
+
+        return $this;
+    }
+    public function user($user) {
+        $this->user = $user;
+
+        return $this;
+    }
     public function company($company) {
         $this->company = $company;
 
@@ -41,7 +55,10 @@ class BoxesExport implements  FromView, ShouldAutoSize
             'records'=> $this->records,
             'company' => $this->company,
             'type_box'=> $this->type_box,
-             'establishment'=>$this->establishment
+             'establishment'=>$this->establishment,
+            'date_start'=> $this->date_start,
+            'date_end'=> $this->date_end,
+            'user'=> $this->user
         ]);
     }
 }

@@ -181,13 +181,13 @@ export default {
             this.recordId = recordId;
             this.showDialog = true;
         },
-        clickReport(query = null) {
+        clickReport(query = null,type = 'excel') {
             //this.recordId = recordId
             //report-boxes/reports_type
             let { column, value } = query;
 
             window.open(
-                `/caja/report-boxes/reports_type?type_box=expenses&column=${column}&value=${value}`
+                `/caja/report-boxes/reports_type?type_box=expenses&column=${column}&value=${value}&type=${type}`
             );
             console.log("report-boxes/reports_type");
         },
