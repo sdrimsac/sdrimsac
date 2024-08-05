@@ -257,12 +257,12 @@
 
                         <tr>
                             <th class="encabezado">#</th>
-                            <th class="encabezado" width="80">Fecha</th>
+                            <th class="encabezado" width="60">Fecha</th>
                             {{-- <td class="encabezado" width="70">Operacion</td> --}}
-                            <th  class="encabezado" width="288">Concepto</th>
-                            <th class="encabezado" width="205">Detalle</th>
-                            <th class="encabezado" width="70">Monto</th>
-                            <th class="encabezado" width="70">Usuario</th>
+                            <th  class="encabezado" width="60">Concepto</th>
+                            <th class="encabezado" width="60">Detalle</th>
+                            <th class="encabezado" width="60">Monto</th>
+                            <th class="encabezado" width="60">Usuario</th>
 
                         </tr>
                     <tbody>
