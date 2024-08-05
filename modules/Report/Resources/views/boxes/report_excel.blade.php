@@ -200,7 +200,7 @@
                         hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
                     </td>
                 @else --}}
-                    <td colspan="15" width="40%" height="30" align="right" valign="middle"
+                    <td colspan="5" width="40%" height="30" align="right" valign="middle"
                         style="font-size:13px !important; text-align:center; font-family: sans-serif !important;">Reporte desde
                         {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
                         hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
@@ -228,10 +228,10 @@
                 @endif
             </tr>
             <tr class="nth-child">
-                <td colspan="8" class="headers" height="20">
+                <td colspan="5" class="headers" height="20">
                     <strong>Ruc: </strong>{{ $company->number }}
                 </td>
-                <td colspan="8" class="headers">
+                <td colspan="5" class="headers">
                     <strong>Establecimiento: </strong>{{ $establishment->address }} -
                     {{ $establishment->department->description }} - {{ $establishment->district->description }}
                 </td>
