@@ -259,7 +259,7 @@
                             <th class="encabezado">#</th>
                             <th class="encabezado" width="80">Fecha</th>
                             {{-- <td class="encabezado" width="70">Operacion</td> --}}
-                            <th colspan="2" class="encabezado" width="288">Concepto</th>
+                            <th  class="encabezado" width="288">Concepto</th>
                             <th class="encabezado" width="205">Detalle</th>
                             <th class="encabezado" width="70">Monto</th>
                             <th class="encabezado" width="70">Usuario</th>
@@ -289,7 +289,7 @@
                                     {{ \Carbon\Carbon::parse($row['date'])->format('d-m-Y') }}
                                     {{ \Carbon\Carbon::parse($row['created_at'])->format('h:m:s') }}</td>
 
-                                <td colspan="2" class="celda_left">{{ $row['description'] }}</td>
+                                <td  class="celda_left">{{ $row['description'] }}</td>
                                 <td class="celda_left">
                                     @if (count($row['items']) > 0)
                                         <table>
