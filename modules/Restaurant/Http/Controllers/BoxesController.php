@@ -2893,7 +2893,7 @@ class BoxesController extends Controller
         } else if ($request['type'] == "excel") {
 
             return (new BoxesExport)
-                ->records($data->get())
+                ->records($boxes_report)
                 ->company($company)
                 ->user($user)
                 ->date_start($date_start)
