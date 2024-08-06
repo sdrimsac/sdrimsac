@@ -268,6 +268,51 @@ class InventoryController extends Controller
         ];
     }
 
+    public function regularizarStock(Request $request)
+    {
+        $warehouse_id = $request->input('warehouse_id');
+
+        if (!$warehouse_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El ID del almacén no está presente en la solicitud.'
+            ], 400);
+        }
+
+        $items = ItemWarehouse::where('stock', '<', 0)
+                 ->where('warehouse_id', $warehouse_id)
+                 ->get();
+        if ($items->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No se encontraron productos con stock negativo en el almacén especificado.'
+            ]);
+        }
+       foreach ($items as $item) {
+
+        $quantity_new = abs($item->stock);
+
+        $inventory = new Inventory();
+        $inventory->type = 1;
+        $inventory->description = 'Stock regularizado';
+        $inventory->item_id = $item->item_id;
+        $inventory->warehouse_id = $item->warehouse_id;
+        $inventory->detail = 'Ajuste a 0 por Rectificación';
+        $inventory->quantity = $quantity_new;
+        $inventory->inventory_transaction_id = 28;
+        $inventory->real_stock = 0;
+        $inventory->system_stock = $item->stock;
+        $inventory->save();
+
+        $item->stock = 0;
+        $item->save();
+       }
+        return [
+            'success'=> true,
+            'message'=> 'stock regularizado con exito'
+        ];    
+    }
+
     public function store(Request $request)
     {
         $result = DB::connection('tenant')->transaction(function () use ($request) {

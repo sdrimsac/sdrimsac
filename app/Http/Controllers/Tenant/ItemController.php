@@ -41,6 +41,7 @@ use App\Http\Resources\Tenant\ItemResource;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Http\Resources\Tenant\ItemCollection;
 use App\Imports\ItemsPriceImport;
+use App\Imports\ItemsStockImport;
 use App\Models\Tenant\Catalogs\AttributeType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use Modules\Item\Models\ItemLotsGroup;
@@ -60,12 +61,50 @@ use Modules\Report\Exports\ItemClientProductExport;
 use Modules\Report\Exports\ItemExport;
 use Modules\Report\Exports\ItemExportGeneral;
 use Modules\Report\Exports\ItemExportGeneralForImport;
+use Modules\Report\Exports\ItemStockImportFormatExport;
 
 class ItemController extends Controller
 {
+    public function importStockFormat(Request $request){
+        $warehouse_id = $request->warehouse_id;
+        $items =  Item::select('internal_id','description')
+        ->whereHas('warehouses',function ($q) use($warehouse_id){
+            $q->where('warehouse_id', $warehouse_id);
+        })
+        ->get();
+        $description_warehouse = Warehouse::find($warehouse_id)->description;
 
-    public function updatePriceUnitType(Request $request)
+        return (new ItemStockImportFormatExport)
+        ->items($items)
+        ->download('Productos_de_' . $description_warehouse . '_' . Carbon::now() . '.xlsx');
+
+    }
+    public function importStock(Request $request)
     {
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemsStockImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+   
+    public function updatePriceUnitType(Request $request){
         $price = $request->sale_unit_price;
         $type_id = $request->unit_type_id;
 

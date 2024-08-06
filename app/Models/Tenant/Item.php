@@ -73,8 +73,8 @@ class Item extends ModelTenant
         'location',
         'has_orden_compra',
         'is_promotion',
-        'promotion_count'
-        // 'warehouse_id'
+        'promotion_count',
+        //'warehouse_id'
     ];
 
     /*protected static function boot()

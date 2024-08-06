@@ -25,6 +25,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('/', 'InventoryController@index')->name('inventory.index');
         Route::get('records', 'InventoryController@records');
         Route::get('columns', 'InventoryController@columns');
+        /* Route::post('/regularizar-stock',  'InventoryController@regularizarStock')->name('regularizarstock'); */
 
         Route::get('tables/transaction/{type}', 'InventoryController@tables_transaction');
         Route::get('record/{inventory}', 'InventoryController@record');
@@ -33,6 +34,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::post('move', 'InventoryController@move');
         Route::get('tables', 'InventoryController@tables');
         Route::post('stock', 'InventoryController@stock');
+        Route::post('regularizarStock', 'InventoryController@regularizarStock');
         Route::get('items', 'InventoryController@getItems');
 
         Route::get('moves', 'MovesController@index')->name('inventory.moves.index');

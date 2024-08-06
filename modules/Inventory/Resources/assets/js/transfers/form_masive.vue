@@ -188,6 +188,9 @@
                 </div>
             </div>
             <div class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2">
+                    <!-- <el-checkbox>
+                    inhabilitar 
+                    </el-checkbox> -->
                 <div class="col-md-4" style="margin-right:10px;">
                     <span>
                         <i class="fa fa-print fa-lg"></i>
@@ -209,10 +212,6 @@
     </output-lots-form>
     <output-lotes-form :lotes="form_add.lotes" @sumLotes="sumLotes" :showDialog.sync="showDialogLotesOutput" @addRowOutputLote="addRowOutputLote">
     </output-lotes-form>
-    <!-- <output-color-form :showDialog.sync="showDialogColorOutput" :color="form_add.color" @addRowOutputColor="addRowOutputColor"></output-color-form> -->
-    <!-- <output-color-form :showDialog.sync="showDialogColorOutput" :color_size="form_add.color_size" @sumColor_size="sumColor_size" @addRowOutputColor_size="addRowOutputColor_size">
-        </output-color-form> -->
-
     <output-color-form :color_size="form_add.color_size" @sumColor_size="sumColor_size" :showDialog.sync="showDialogColorOutput" @addRowOutputColor_size="addRowOutputColor_size">
     </output-color-form>
 
@@ -455,19 +454,37 @@ export default {
             };
         },
         clickAddItem() {
-            /* if (!this.form_add.item_id) {
-                return;
-              }*/
 
             if (parseFloat(this.form_add.stock) < 1) {
+                let message = "ingrese cantidad a trasladar";
+                this.$toast.warning(message);
                 return;
             }
 
             if (this.form_add.quantity < 1) {
+
+                let message = '';
+
+                if (this.form_add.color_size && this.form_add.color_size.length > 0){
+                    message = "seleccione cantidad talla color a trasladar";
+                    this.$toast.warning(message);
+                } else if (this.form_add.lotes && this.form_add.lotes.length > 0){
+                    message = "seleccione cantidad de lotes a trasladar";
+                    this.$toast.warning(message);
+                } else if (this.form_add.lots && this.form_add.lots.length > 0) {
+                    message = "seleccione cantidad series a trasladar";
+                    this.$toast.warning(message);
+                } else {
+                    message = "la cantidad debe ser mayor a 1 ";
+                    this.$toast.warning(message);
+                }
+                
                 return;
             }
 
             if (parseFloat(this.form_add.stock) < this.form_add.quantity) {
+                let message = "la cantidad no puede ser mayor que al stock disponible";
+                this.$toast.warning(message);
                 return;
             }
 
@@ -483,6 +500,8 @@ export default {
 
             let dup = this.form.items.find(x => x.id == this.form_add.item_id);
             if (dup) {
+                let message = "el producto seleccionado ya esta en la lista";
+                this.$toast.warning(message);
                 return;
             }
 
@@ -521,7 +540,7 @@ export default {
             if (this.hasColor_size) {
                 this.showDialogColorOutput = true;
             } else {
-                this.$toast.warning("Este producto no tiene opciones de color y tamaño.");
+                this.$toast.warning("Este producto no tiene talla color.");
             }
 
             /* this.showDialogColorOutput = true; */

@@ -55,6 +55,9 @@
                         <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportListPrice()">
                             <i class="fa fa-upload"></i> Importar Politica de Precios
                         </a>
+                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportStockProducto()">
+                            <i class="fa fa-upload"></i> Importar stock de producto 
+                        </a>
                     </div>
 
 
@@ -181,6 +184,7 @@
             </warehouses-detail>
 
             <items-import-list-price :showDialog.sync="showImportListPriceDialog"></items-import-list-price>
+            <items-import-stock-producto :showDialog.sync="showImportStockProductoDialog"></items-import-stock-producto>
         </div>
     </div>
 </div>
@@ -198,6 +202,7 @@ import WarehousesDetail from "./partials/warehouses.vue";
 import ItemsImport from "./import.vue";
 import ItemsImportListPrice from "./partials/import_list_price.vue";
 import DataTable from "../../components/DataTable.vue";
+import ItemsImportStockProducto from "./partials/stock_producto.vue";
 import {
     deletable
 } from "../../mixins/deletable";
@@ -215,7 +220,8 @@ export default {
         ItemsImport,
         DataTable,
         WarehousesDetail,
-        ItemsImportListPrice
+        ItemsImportListPrice,
+        ItemsImportStockProducto
     },
     data() {
         return {
@@ -223,6 +229,7 @@ export default {
             showDialog: false,
             showImportDialog: false,
             showImportListPriceDialog: false,
+            showImportStockProductoDialog: false,
             showWarehousesDetail: false,
             resource: "items",
             recordId: null,
@@ -304,6 +311,9 @@ export default {
         },
         clickImportListPrice() {
             this.showImportListPriceDialog = true;
+        },
+        clickImportStockProducto() {
+            this.showImportStockProductoDialog = true;
         },
         clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>

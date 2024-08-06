@@ -108,7 +108,6 @@ class InventoryChangeServiceProvider extends ServiceProvider
     private function inventory()
     {
         Inventory::created(function ($inventory) {
-
             switch ($inventory->type) {
                 case 1:
                     $this->createInventoryKardex($inventory, $inventory->item_id, $inventory->quantity, $inventory->warehouse_id);

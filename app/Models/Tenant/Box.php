@@ -13,7 +13,7 @@ use Modules\Restaurant\Models\BoxesDetail;
 class Box extends ModelTenant
 {
     use RegisterMovementTrait;
-    protected $with = ['groups', 'categories', 'subcategories', 'user', 'document', 'salenote']; //nombre tablas secundarias
+    protected $with = ['groups', 'categories', 'subcategories', 'user', 'document', 'SaleNote', 'items']; //nombre tablas secundarias
     protected $table = "boxes";                                  //nombre tabla
     protected $primarykey = "id";
     // protected $hidden = ["created_at", "updated_at"];
@@ -118,10 +118,14 @@ class Box extends ModelTenant
     {
         return $this->belongsTo(Document::class, 'document_id', 'id');
     }
-    public function salenote()
+    public function SaleNote()
     {
-        return $this->belongsTo(salenote::class, 'sale_note_id', 'id');
+        return $this->belongsTo(SaleNote::class, 'sale_note_id', 'id');
     }
+    /* public function SaleNote()
+    {
+        return $this->belongsTo(SaleNote::class);
+    } */
 
     public function cash()
     {
@@ -141,6 +145,10 @@ class Box extends ModelTenant
     public function document_payment()
     {
         return $this->belongsTo(DocumentPayment::class, 'document_payment_id');
+    }
+    public function item ()
+    {
+        return $this->belongsTo(Item::class, 'id');
     }
 
 }

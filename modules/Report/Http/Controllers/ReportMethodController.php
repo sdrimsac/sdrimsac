@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\PaymentMethodType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,11 +26,11 @@ class ReportMethodController extends Controller
     }
     public function filter()
     {
-
+        $boxes = PaymentMethodType::all();
         $persons = $this->getPersons('customers');
         $establishments = Establishment::all();
 
-        return compact('persons', 'establishments');
+        return compact('persons', 'establishments','boxes');
     }
 
     public function records(Request $request)
@@ -102,7 +103,7 @@ class ReportMethodController extends Controller
             $boxes->where(function ($query) use ($person_id) {
                 $query->whereHas('document', function ($query) use ($person_id) {
                     $query->where('customer_id', $person_id);
-                })->orWhereHas('sale_note', function ($query) use ($person_id) {
+                })->orWhereHas('SaleNote', function ($query) use ($person_id) {
                     $query->where('customer_id', $person_id);
                 })->orWhereHas('sale_note_payment', function ($query) use ($person_id) {
                     $query->whereHas('associated_record_payment', function ($query) use ($person_id) {
@@ -115,7 +116,7 @@ class ReportMethodController extends Controller
                 });
             });
         }
-
+        
         if ($method) {
             $boxes->where('method', 'like', '%' . $method . '%');
         }

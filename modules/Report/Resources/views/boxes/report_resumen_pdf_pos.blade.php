@@ -754,8 +754,6 @@
                                     </tr>
                                 @endif
                             @endforeach
-
-
                         </tbody>
                     </table>
                     @if (count($detraction_payments) > 0)
@@ -1683,6 +1681,17 @@
                                     <td class="f12">
                                         {{ $a_item['description'] }}
                                     </td>
+                                    {{-- <td>
+                                        @foreach ($sales_detail as $detail)
+                                        @if ($detail['sum'] > 0)
+                                        
+                                            <td class="f12">{{ strtoupper($detail['desc']) }}</td>
+                                        
+                                        @endif
+                                    @endforeach
+
+                                    </td> --}}
+                                    
                                     <td class="f12 right">
                                         {{ number_format(floatval($a_item['price']), 2) }}
                                     </td>

@@ -28,7 +28,15 @@
                                 {{ row.price }}
                             </td>
                             <td>
-                                <el-input v-model="row.selectedQuantity">
+                                <!-- <el-input v-model="row.selectedQuantity" type="number">
+                                </el-input> -->
+                                <el-input
+                                        type="text"
+                                        placeholder="ingrese cantidad"
+                                        v-model.number="row.selectedQuantity"
+                                        maxlength="8"
+                                        show-word-limit
+                                        >
                                 </el-input>
                             </td>
                             <br />
@@ -70,6 +78,8 @@ export default {
         },
         close() {
             this.$emit("addRowOutputColor_size", this.color_size);
+            let message = "la cantidad seleccione no puede ser mayor al stock ";
+            this.$emit("showMessage", message);
             console.log(this.color_size);
             this.$emit("update:showDialog", false);
         },

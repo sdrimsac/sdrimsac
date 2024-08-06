@@ -41,7 +41,15 @@
                                     {{ row.quantity }}
                                 </td>
                                 <td>
-                                    <el-input v-model="row.selectedQuantity">
+                                    <!-- <el-input v-model="row.selectedQuantity" type="number" maxlength="10" show-word-limit>
+                                    </el-input> -->
+                                    <el-input
+                                        type="text"
+                                        placeholder="ingrese cantidad"
+                                        v-model.number="row.selectedQuantity"
+                                        maxlength="8"
+                                        show-word-limit
+                                        >
                                     </el-input>
                                 </td>
                                 <br />

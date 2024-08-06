@@ -23,7 +23,7 @@
         </div>
         <div class="form-actions text-end pt-2 pb-2">
             <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
-            <el-button icon="fas fa-save"type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
+            <el-button icon="fas fa-save" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
         </div>
     </form>
 </el-dialog>

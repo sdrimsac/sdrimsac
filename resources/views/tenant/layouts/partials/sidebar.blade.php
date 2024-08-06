@@ -256,11 +256,6 @@
                 </a>
 
                 <ul id="invetories" class="collapse ">
-                    {{-- <li>
-                            <a class="{{ $path[0] === 'inventory' && $path[1] === '' ? 'active' : '' }}"
-                href="{{ route('inventory.index') }}">Movimientos</a>
-        </li> --}}
-
                     <li>
                         <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.items.index') }}">
@@ -852,7 +847,7 @@
 
             </li>
         @endif
-        @if ($config->restaurant)
+        @if ($config->restaurant && !$roleService->isLogistic() )
             <li>
                 <a href="#configuration" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
@@ -862,7 +857,7 @@
                     <span class="label ">Restaurante</span>
                 </a>
 
-                <ul id="configuration" class="collapse ">
+                <ul id="configuration" class="collapse">
 
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
@@ -894,7 +889,7 @@
             </li>
         @endif
 
-        @if ($config->hotels)
+        @if ($config->hotels && !$roleService->isLogistic())
             <li>
                 <a href="#configuration" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"

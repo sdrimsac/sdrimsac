@@ -84,7 +84,7 @@
                                                         :key="index"
                                                         @click="addFood(index)"
                                                     >
-                                                        <td>{{ data.code }}</td>
+                                                        <td>{{ data.code }} </td>
                                                         <td>
                                                             <div role="button">
                                                                 <span
@@ -450,6 +450,7 @@
                                                             </template>
                                                         </el-tooltip>
                                                     </div>
+                                                    <!-- {{ data.location }} -->
                                                 </div>
                                             </div>
                                             <div>
@@ -771,7 +772,7 @@
                                                 >
                                             </span>
                                         </div>
-                                        <div></div>
+                                        
                                     </div>
                                     <div v-if="data.types.length > 0">
                                         <el-dropdown @command="clickCommand">

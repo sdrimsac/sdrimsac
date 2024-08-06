@@ -237,6 +237,7 @@
                                             </h2>
                                         </el-checkbox>
                                         <el-checkbox
+                                            v-if="configuration.barcode"
                                             v-model="barcode"
                                             @change="saveInLocalStorageBarcode"
                                         >
@@ -280,7 +281,7 @@
                                             </el-select>
                                         </template>
                                     </div>
-                                    <div class="col-12 col-lg-7 p-2">
+                                    <div class="col-12 col-lg-4 p-2">
                                         <h2
                                             class="font-weight-bold custom-text-size"
                                         >

@@ -3172,6 +3172,40 @@
                                                                                         ></small>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Barcode En Caja
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="metodo de pago en caja"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.barcode
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </el-card>

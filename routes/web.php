@@ -304,6 +304,7 @@ if ($hostname) {
                 Route::delete('arqueos/{arqueo}', [App\Http\Controllers\Tenant\ArqueoController::class, 'destroy']);
 
                 //vehicles------------------------------------------------------vehiculos
+               
 
 
                 //Reviews-----------------------------------------------------revisiones
@@ -370,6 +371,8 @@ if ($hostname) {
                 //Items
                 Route::get('items', [App\Http\Controllers\Tenant\ItemController::class, 'index'])->name('tenant.items.index')->middleware(['redirect.level', 'just.admin']);
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
+                Route::post('items/import_stock', [App\Http\Controllers\Tenant\ItemController::class, 'importStock']);
+                Route::get('items/import_stock_format', [App\Http\Controllers\Tenant\ItemController::class, 'importStockFormat']);
                 Route::get('items/check_series', [App\Http\Controllers\Tenant\ItemController::class, 'check_series']);
                 Route::get('items/records', [App\Http\Controllers\Tenant\ItemController::class, 'records']);
                 Route::get('items/excel', [App\Http\Controllers\Tenant\ItemController::class, 'excel']);

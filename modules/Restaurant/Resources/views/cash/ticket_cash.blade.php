@@ -49,7 +49,7 @@
 
     <div style="padding-left: 8px;">
         <div>
-            <h4 class="text-center">RESUMEN DE VENTA DIARIA </h4>
+            <h4 class="text-center">RESUMEN DE VENTA DIARIA</h4>
         </div>
         <table class="border-bottom">
             <tr>

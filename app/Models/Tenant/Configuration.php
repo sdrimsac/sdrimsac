@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'barcode',
         'rappi',
         'pedidosya',
         'didi',
@@ -205,6 +206,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'barcode' => 'boolean',
         'rappi' => 'boolean',
         'pedidosya' => 'boolean',
         'didi' => 'boolean',
@@ -350,6 +352,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'barcode' => (bool)$this->barcode,
             'didi' => (bool)$this->didi,
             'rappi' => (bool)$this->rappi,
             'pedidosya' => (bool)$this->pedidosya,

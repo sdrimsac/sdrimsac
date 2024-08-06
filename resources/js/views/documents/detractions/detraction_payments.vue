@@ -350,10 +350,20 @@
                         >Nuevo</el-button
                     >
                 </div>
+                <div class="mb-3">
+
+                </div>
             </div>
         </div>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
 
 
 <script>
