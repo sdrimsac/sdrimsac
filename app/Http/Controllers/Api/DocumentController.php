@@ -97,7 +97,7 @@ class DocumentController extends Controller
             $file = $request->file('file');
             $extension = $file->getClientOriginalExtension();
             //if extension is not txt or json return error
-            if ($extension !== 'txt' && $extension !== 'json') {
+            if ($extension !== 'txt' && $extension !== 'json' && $extension !== 'zip') {
                 return [
                     'success' => false,
                     'message' => 'El archivo no es válido',
