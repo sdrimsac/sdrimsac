@@ -3206,6 +3206,40 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
+                                                                                        <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Una caja por establecimiento
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="Solo se podrá tener una caja activa por establecimiento"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.only_cash_by_establishment
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </el-card>

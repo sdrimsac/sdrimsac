@@ -1746,11 +1746,49 @@ class CashController extends Controller
 
         return $record;
     }
+    function checkIfHasOpenCash()
+    {
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+        $establishment_description = Establishment::find($establishment_id)->description;
+        $cash = Cash::whereHas('user', function ($query) use ($establishment_id) {
+            $query->where('establishment_id', $establishment_id)
+                ->where('type', 'seller');
+        })
+            ->where('principal', false)
+            ->where('state', true)
+            ->first();
+
+        if ($cash) {
+            $user_cash = User::find($cash->user_id);
+            $message = "Caja pendiente de cierre del usuario: " . $user_cash->name;
+            $message_for_user = "El usuario: " . $user->name . " intentó abrir una caja, pero usted tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
+            if ($user_cash->telephone) {
+                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user);
+            }
+            $message_for_all = "El usuario: " . $user->name . " intentó abrir una caja, pero el usuario: " . $user_cash->name . " tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
+            (new WhatsappController)->sendMessageAll($message_for_all);
+            return [
+                'success' => false,
+                'message' => $message
+            ];
+        }
+        return [
+            'success' => true,
+        ];
+    }
 
     public function store(CashRequest $request)
     {
 
         $configuration = Configuration::first();
+        if ($configuration->only_cash_by_establishment) {
+            $result = $this->checkIfHasOpenCash();
+            if (!$result['success']) {
+                return $result;
+            }
+        }
+
         $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
         $cash_user = User::find(auth()->user()->id);
