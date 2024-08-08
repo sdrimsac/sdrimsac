@@ -15,6 +15,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\DetractionType;
+use App\Models\Tenant\ExcludedUser;
+use App\Models\Tenant\User;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Services\RoleService;
@@ -196,6 +198,53 @@ class ConfigurationController extends Controller
         }
         return null;
     }
+    public function getUsersExcluded(Request $request)
+    {
+        $users = User::whereHas('excluded_user')->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->name,
+            ];
+        });
+
+        return compact('users');
+    }
+    public function addUserExcluded(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $exist = ExcludedUser::where('user_id', $user_id)->first();
+        if (!$exist) {
+            $excluded_user = new ExcludedUser();
+            $excluded_user->user_id = $user_id;
+            $excluded_user->save();
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Usuario ya se encuentra excluido'
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Usuario excluido'
+        ];
+    }
+    public function removeUserExcluded(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $excluded_user = ExcludedUser::where('user_id', $user_id)->first();
+        if ($excluded_user) {
+            $excluded_user->delete();
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Usuario no se encuentra excluido'
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Usuario eliminado de la lista de excluidos'
+        ];
+    }
     public function store(ConfigurationRequest $request)
     {
         $id = $request->input('id');
@@ -251,11 +300,17 @@ class ConfigurationController extends Controller
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $item_id = Configuration::first()->item_variation_id;
         $detraction_types = DetractionType::all();
+        $users = User::where('type', 'seller')->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->name,
+            ];
+        });
         $item = null;
         if ($item_id) {
             $item = Item::find($item_id);
         }
-        return compact('affectation_igv_types', 'items', 'item', 'detraction_types');
+        return compact('affectation_igv_types', 'items', 'item', 'detraction_types', 'users');
     }
 
     public function visualDefaults()

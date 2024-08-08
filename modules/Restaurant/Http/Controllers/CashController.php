@@ -41,6 +41,7 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\ExcludedUser;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
@@ -1749,6 +1750,12 @@ class CashController extends Controller
     function checkIfHasOpenCash()
     {
         $user = auth()->user();
+        $is_exclude = ExcludedUser::where('user_id', $user->id)->first();
+        if ($is_exclude) {
+            return [
+                'success' => true,
+            ];
+        }
         $establishment_id = $user->establishment_id;
         $establishment_description = Establishment::find($establishment_id)->description;
         $cash = Cash::whereHas('user', function ($query) use ($establishment_id) {

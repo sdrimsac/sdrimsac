@@ -3181,7 +3181,9 @@
                                                                                         <label
                                                                                             class="control-label w-100"
                                                                                         >
-                                                                                            Barcode En Caja
+                                                                                            Barcode
+                                                                                            En
+                                                                                            Caja
                                                                                             <el-tooltip
                                                                                                 class="item"
                                                                                                 effect="dark"
@@ -3206,7 +3208,7 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
-                                                                                        <div
+                                                                                <div
                                                                                     class="col-md-4 mt-4"
                                                                                 >
                                                                                     <div
@@ -3215,7 +3217,10 @@
                                                                                         <label
                                                                                             class="control-label w-100"
                                                                                         >
-                                                                                            Una caja por establecimiento
+                                                                                            Una
+                                                                                            caja
+                                                                                            por
+                                                                                            establecimiento
                                                                                             <el-tooltip
                                                                                                 class="item"
                                                                                                 effect="dark"
@@ -3238,6 +3243,75 @@
                                                                                                 submit
                                                                                             "
                                                                                         ></el-switch>
+                                                                                        <br />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Usuarios
+                                                                                            excluidos
+                                                                                            
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="Usuarios que podrán abrir caja en el establecimiento asi ya exista una caja abierta"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-select
+                                                                                            v-model="
+                                                                                                user_excluded_id
+                                                                                            "
+                                                                                            placeholder="Seleccione"
+                                                                                            filterable
+                                                                                            clearable
+                                                                                            style="width: 100%"
+                                                                                            @change="
+                                                                                                addUserExcluded
+                                                                                            "
+                                                                                        >
+                                                                                            <el-option
+                                                                                                v-for="user in users"
+                                                                                                :key="
+                                                                                                    user.id
+                                                                                                "
+                                                                                                :label="
+                                                                                                    user.name
+                                                                                                "
+                                                                                                :value="
+                                                                                                    user.id
+                                                                                                "
+                                                                                            ></el-option>
+                                                                                        </el-select>
+                                                                                        <br />
+                                                                                        <el-tag
+                                                                                            class="m-1"
+                                                                                            v-for="user in users_excluded"
+                                                                                            :key="
+                                                                                                user.id
+                                                                                            "
+                                                                                            closable
+                                                                                            @close="
+                                                                                                removeUserExcluded(
+                                                                                                    user.id
+                                                                                                )
+                                                                                            "
+                                                                                            >{{
+                                                                                                user.name
+                                                                                            }}</el-tag
+                                                                                        >
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -6899,6 +6973,8 @@ export default {
     //
     data() {
         return {
+            users_excluded: [],
+            user_excluded_id: null,
             turns: [
                 {
                     id: 1,
@@ -6919,6 +6995,7 @@ export default {
             searchQueryAccounting: "",
             searchQueryVisual: "",
             detraction_types: [],
+            users: [],
             /*  */
             /* activeTab: 'modes',
             searchQuery: '', */
@@ -6972,6 +7049,7 @@ export default {
     async created() {
         await this.loadTables();
         await this.initForm();
+        this.getUsersExcluded();
         await this.$http.get(`/${this.resource}/record`).then(response => {
             if (response.data !== "") {
                 this.form = response.data.data;
@@ -6991,6 +7069,45 @@ export default {
         }
     },
     methods: {
+        getUsersExcluded() {
+            this.$http
+                .get("/configurations/get-users-excluded")
+                .then(response => {
+                    this.users_excluded = response.data.users;
+                });
+        },
+        addUserExcluded() {
+            if (!this.user_excluded_id) {
+                return;
+            }
+            this.$http
+                .post("/configurations/add-user-excluded", {
+                    user_id: this.user_excluded_id
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        this.getUsersExcluded();
+                        this.$toast.success(response.data.message);
+                        this.user_excluded_id = null;
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                });
+        },
+        removeUserExcluded(user_id) {
+            this.$http
+                .post("/configurations/remove-user-excluded", {
+                    user_id
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        this.getUsersExcluded();
+                        this.$toast.success(response.data.message);
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                });
+        },
         getNumbers() {
             this.$http.get("/whatsapp/numbers").then(response => {
                 this.numbers = response.data.data;
@@ -7082,6 +7199,7 @@ export default {
                     response.data.affectation_igv_types;
                 this.detraction_types = response.data.detraction_types;
                 this.items = response.data.items;
+                this.users = response.data.users;
                 if (response.data.item) {
                     this.form.item_variation_id = response.data.item.id;
 
@@ -7096,6 +7214,7 @@ export default {
             this.getNumbers();
         },
         initForm() {
+            this.user_excluded_id = null;
             this.errors = {};
             this.form = {
                 send_auto: true,

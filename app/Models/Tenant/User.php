@@ -113,6 +113,9 @@ class User extends Authenticatable
 
         return null;
     }
+    public function excluded_user(){
+        return $this->hasOne(ExcludedUser::class);
+    }
     public function isWorkerType($worker_type)
     {
         $to_upper = strtoupper($worker_type);

@@ -257,6 +257,9 @@ if ($hostname) {
                 Route::get('configurations/create', [App\Http\Controllers\Tenant\ConfigurationController::class, 'create'])->name('tenant.configurations.create')->middleware('just.admin');
                 Route::get('configurations/record', [App\Http\Controllers\Tenant\ConfigurationController::class, 'record']);
                 Route::post('configurations', [App\Http\Controllers\Tenant\ConfigurationController::class, 'store']);
+                Route::get('configurations/get-users-excluded', [App\Http\Controllers\Tenant\ConfigurationController::class, 'getUsersExcluded']);
+                Route::post('configurations/add-user-excluded', [App\Http\Controllers\Tenant\ConfigurationController::class, 'addUserExcluded']);
+                Route::post('configurations/remove-user-excluded', [App\Http\Controllers\Tenant\ConfigurationController::class, 'removeUserExcluded']);
                 Route::post('configurations/icbper', [App\Http\Controllers\Tenant\ConfigurationController::class, 'icbper']);
                 Route::post('configurations/changeFormat', [App\Http\Controllers\Tenant\ConfigurationController::class, 'changeFormat']);
                 Route::get('configurations/tables', [App\Http\Controllers\Tenant\ConfigurationController::class, 'tables']);
