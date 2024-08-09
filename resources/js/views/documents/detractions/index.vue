@@ -1,7 +1,7 @@
 <!-- Listado de Comprobante de Pago -->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
+        <!-- <div class="container-fluid p-l-0 p-r-0">
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
@@ -19,11 +19,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Container-fluid starts-->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="row">
-                <div class="col-sm-12">
+                <!-- <div class="col-sm-12"> -->
                     <div class="card mb-0">
                         <div class="card-header bg-primary rounded-top">
                             <h4 class="my-0  text-white">
@@ -108,14 +108,16 @@
                             </data-table>
                         </div>
                     </div>
-                </div>
+                <!-- </div> -->
             </div>
         </div>
         <detraction-payments
             :documentId="recordId"
             :showDialog.sync="showDialogPayments"
         ></detraction-payments>
+        <br>
     </div>
+
 </template>
 
 <style>

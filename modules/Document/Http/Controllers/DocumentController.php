@@ -245,7 +245,7 @@ class DocumentController extends Controller
         /** @var Item[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Builder[]|Collection|mixed $items */
         return $items->transform(function ($row) use ($warehouse) {
             /** @var Item $row */
-            return $row->getDataToItemModal($warehouse);
+            return $row->getDataToItemModal($warehouse,true);
         });
     }
 
@@ -258,6 +258,7 @@ class DocumentController extends Controller
 
         $items_not_services = $this->getItemsNotServices($request);
         $items_services = $this->getItemsServices($request);
+        //aqui hay un return, cuando hay un return el codigo abajo de él no se ejectua
         return self::TransformToModal($items_not_services->merge($items_services));
         $all_items = $items_not_services->merge($items_services);
 
@@ -325,13 +326,23 @@ class DocumentController extends Controller
                             'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code:null):null
                         ];
                     }),
+
                     'lots_enabled' => (bool) $row->lots_enabled,
                     'series_enabled' => (bool) $row->series_enabled,
+
+                    'color_size' => $row->color_size->where('warehouse_id', $warehouse->id)->transform(function($row) {
+                        return [
+                            'id' => $row->id,
+                        'color' => $row->color,
+                        'size' => $row->size,
+                        'stock' => $row->stock,
+                        'price' => $row->price,
+                        ];
+                    }),
 
 
                 ];
             })->take(20);
-
         return compact('items');
 
     }
@@ -413,8 +424,12 @@ class DocumentController extends Controller
                         'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code:null):null
                     ];
                 }),
+                
                 'lots_enabled' => (bool) $row->lots_enabled,
                 'series_enabled' => (bool) $row->series_enabled,
+                /* 'has_color_size' => (bool) $row->has_color_size_enabled, */
+
+                
 
             ];
         });

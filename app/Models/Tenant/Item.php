@@ -124,9 +124,8 @@ class Item extends ModelTenant
 
             $ItemSize = [];
         }
-
         if ($with_lots_has_sale == true) {
-            $lots = $this->item_lots->where('has_sale', false)->transform(function ($row) {
+            $lots = $this->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)  ->transform(function ($row) {
                 return [
                     'id'           => $row->id,
                     'series'       => $row->series,
@@ -258,6 +257,18 @@ class Item extends ModelTenant
                     'date_of_due' => $lots_group->date_of_due,
                     'checked'     => false,
                     'compromise_quantity' => 0
+                ];
+            }),
+            // 'color_size' =>$this->color_size->where('warehouse_id', $warehouse->id)
+            'color_size' =>ItemColorSize::where('item_id',$this->id)->where('warehouse_id', $warehouse->id)
+            ->get()
+            ->transform(function($row) {
+                return [
+                'id' => $row->id,
+                'color' => $row->color,
+                'size' => $row->size,
+                'stock' => $row->stock,
+                'price' => $row->price,
                 ];
             }),
             'lots'           => $lots,

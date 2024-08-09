@@ -2,7 +2,6 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
 use App\Services\RoleService;
@@ -11,39 +10,44 @@ use Modules\Restaurant\Http\Requests\ObservationRequest;
 use Modules\Restaurant\Models\Observation;
 use Modules\Restaurant\Http\Resources\ObservationCollection;
 
-
-
 class ObservationController extends Controller
 {
-
-
     public function index()
     {
         $configurations = Configuration::first();
         return view('restaurant::configuration.observations', compact('configurations'));
     }
+
     public function columns()
     {
         return [
             'description' => 'Descripción',
         ];
     }
+
     public function records(Request $request)
-
-
     {
-        if (count($request->all()) != 0) {
-            if ($request->value == "Activado") {
-                $records = Observation::where($request->column, '=', 1);
-            } else {
-                $records = Observation::where($request->column, 'like', "%{$request->value}%")
-                    ->where('active', 1);
+        $records = Observation::query();
+
+        if ($request->has('column') && $request->has('value')) {
+            $column = $request->input('column');
+            $value = $request->input('value');
+
+            if ($column && $value) {
+                if ($value == "Activado") {
+                    $records->where($column, '=', 1);
+                } else {
+                    $records->where($column, 'like', "%{$value}%")
+                        ->where('active', 1);
+                }
             }
         } else {
-            $records = Observation::orderBy('created_at', 'desc');
+            $records->orderBy('created_at', 'desc');
         }
+
         $user = auth()->user()->type;
         $isArca = (new RoleService)->isArca();
+
         if ($user == "admin" || $user == "superadmin" || $isArca) {
             return new ObservationCollection($records->paginate(config('tenant.items_per_page')));
         } else {
@@ -52,12 +56,11 @@ class ObservationController extends Controller
                     'id'          => $row->id,
                     'description' => $row->description,
                     'active'      => $row->active,
-
                 ];
             });
         }
-        // 
     }
+
     public function actives()
     {
         $areas = Observation::where('active', 1)->get();
@@ -73,12 +76,14 @@ class ObservationController extends Controller
         $area = Observation::find($id);
         $area->active = !$area->active;
         $area->save();
+
         return [
             'success' => true,
             'data' => $area,
             'message' => 'Observación ' . ($area->active ? 'activada' : 'desactivada')
         ];
     }
+
     public function record($id)
     {
         $area = Observation::find($id);
@@ -88,6 +93,7 @@ class ObservationController extends Controller
             'data' => $area
         ];
     }
+
     public function store(ObservationRequest $request)
     {
         $id = $request->input('id');
@@ -102,12 +108,13 @@ class ObservationController extends Controller
             'message' => ($id) ? 'Observación actualizada con éxito' : 'Observación creada con éxito'
         ];
     }
+
     public function destroy($id)
     {
         Observation::find($id)->delete();
 
         return [
-            "succes" => true,
+            "success" => true,
             "message" => "Observación eliminada"
         ];
     }

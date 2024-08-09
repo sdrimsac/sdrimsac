@@ -1,3 +1,4 @@
+{{-- listado de obsevaciones de restaurant --}}
 <?php
 $configurations = App\Models\Tenant\Configuration::first();
 ?>

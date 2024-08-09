@@ -136,16 +136,15 @@
                     </div>-->
 
                 <div style="padding-top: 1%;" class="col-md-2 col-sm-2" v-if="
-                            form.item_id &&
-                                form.item.lots_enabled &&
-                                form.lots_group.length > 0
-                        ">
+                        form.item_id && form.item.lots_enabled && form.lots_group.length > 0">
                     <a href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotGroup">[&#10004; Seleccionar lote]</a>
                 </div>
 
                 <div style="padding-top: 1%;" class="col-md-3 col-sm-3" v-if="form.item_id && form.item.series_enabled">
-                    <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
                     <a href="#" class="text-center font-weight-bold text-info" @click.prevent="clickSelectLots">[&#10004; Seleccionar series]</a>
+                </div>
+                <div style="padding-top: 1%;" class="col-md-3 col-sm-3" v-if="form.item_id && form.item_id && color_size">
+                        <a href="#"  class="text-center font-weight-bold text-info" @click.prevent="clickSelectColor">[&#10004; Seleccionar Talla Color]</a>
                 </div>
 
                 <div class="col-md-3 col-sm-6" v-show="form.item.calculate_quantity">
@@ -479,6 +478,11 @@
 
     <select-lots-form :showDialog.sync="showDialogSelectLots" :lots="lots" @addRowSelectLot="addRowSelectLot">
     </select-lots-form>
+    <color-form 
+            :showDialog.sync="showDialogSelectColor_size"
+            :color_size="color_size"
+            @addRowSelectColor_size="addRowSelectColor_size">
+        </color-form>
 </el-dialog>
 </template>
 
@@ -498,6 +502,7 @@ import {
 } from "../../../helpers/functions";
 import WarehousesDetail from "./select_warehouses.vue";
 import SelectLotsForm from "./lots.vue";
+import ColorForm from "./color.vue"
 
 export default {
     props: [
@@ -517,11 +522,13 @@ export default {
         ItemForm,
         WarehousesDetail,
         LotsGroup,
-        SelectLotsForm
+        SelectLotsForm,
+        ColorForm
     },
     data() {
         return {
             loading_search: false,
+            /* hasColor_size: false, */
             titleAction: "",
             is_client: false,
             titleDialog: "",
@@ -529,7 +536,10 @@ export default {
             showDialogNewItem: false,
             has_list_prices: false,
             errors: {},
-            form: {},
+            form: {
+                lots: [],
+                color_size: [],
+            },
             all_items: [],
             items: [],
             operation_types: [],
@@ -551,8 +561,10 @@ export default {
             isUpdateWarehouseId: null,
             showDialogLots: false,
             showDialogSelectLots: false,
+            showDialogColor_size: false,
+            showDialogSelectColor_size: false,
             lots: [],
-
+            color_size: [],
             item_select: null,
             agregar_item: false,
             form_control: {},
@@ -820,6 +832,7 @@ export default {
             this.form.unit_price_value = this.form.item.sale_unit_price;
             this.form.stock_disp = this.form.item.stock;
             this.lots = this.form.item.lots;
+            this.color_size = this.form.item.color_size;
 
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
@@ -996,9 +1009,9 @@ export default {
             let select_lots = await _.filter(this.row.item.lots, {
                 has_sale: true
             });
-            let un_select_lots = await _.filter(this.row.item.lots, {
+            /* let un_select_lots = await _.filter(this.row.item.lots, {
                 has_sale: false
-            });
+            }); */
 
             if (this.form.item.series_enabled) {
                 if (select_lots.length != this.form.quantity)
@@ -1104,6 +1117,14 @@ export default {
         },
         addRowSelectLot(lots) {
             this.lots = lots;
+        },
+        async clickSelectColor(){
+                this.showDialogSelectColor_size = true
+        },
+        addRowSelectColor_size(color_size) {
+            color_size = color_size
+            .filter(item => item.has_sale == true)
+            this.form,IdColorSelected = id 
         }
     }
 };

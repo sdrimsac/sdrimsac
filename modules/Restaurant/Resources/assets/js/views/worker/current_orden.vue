@@ -74,6 +74,53 @@
                 </span>
             </div>
             <div
+                        v-if="ordens.length > 0"
+                        class="row d-flex flex-row p-2"
+                    >
+                        <div class="col-12 d-flex justify-content-end">
+                            <el-button-group>
+                                <el-button type="success" class="btn btn-sm" @click="printTicket">
+                                    <i class="icofont-printer"></i> Imprimir
+                                    Precuenta
+                                </el-button>
+
+                                <el-button
+                                    v-if="configuration.pdf_preorder"
+                                    type="success"
+                                    @click="printTicketPdf"
+                                    class="btn btn-sm"
+                                >
+                                    <i class="icofont-printer"></i> PDF ticket
+                                </el-button>
+                                
+                                <el-button
+                                    type="danger"
+                                    @click="cancelGeneralOrden"
+                                    class="btn btn-sm"
+                                >
+                                    <i class="icofont-close-line"></i> Cancelar
+                                </el-button>
+                            </el-button-group>
+                        </div>
+            </div>
+            <div class="row p-2" v-if="localOrden.length != 0">
+                <div class="col-6 f-w-700 text-end pt-2 pb-2">
+                    <label class="control-label w-100">Todo para llevar </label>
+                    <el-switch
+                        v-model="to_carry"
+                        active-text="Si"
+                        inactive-text="No"
+                        @change="allToCarry"
+                    ></el-switch>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <button @click="submit" class="btn btn-success btn-sm">
+                        Enviar pedido
+                    </button>
+                </div>
+            </div>
+
+            <div
                 v-if="ordens.length == 0 && localOrden.length == 0"
                 style="min-height:300px;"
                 class="d-flex flex-column align-items-center justify-content-center "
@@ -242,33 +289,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div
-                        v-if="ordens.length > 0"
-                        class="row d-flex flex-row p-2"
-                    >
-                        <div class="col-12 d-flex justify-content-end">
-                            <el-button-group>
-                                <el-button type="success" @click="printTicket">
-                                    <i class="icofont-printer"></i> Imprimir
-                                    ticket
-                                </el-button>
-                                <el-button
-                                    v-if="configuration.pdf_preorder"
-                                    type="success"
-                                    @click="printTicketPdf"
-                                >
-                                    <i class="icofont-printer"></i> PDF ticket
-                                </el-button>
-                                <el-button
-                                    type="danger"
-                                    @click="cancelGeneralOrden"
-                                >
-                                    <i class="icofont-close-line"></i> Cancelar
-                                </el-button>
-                            </el-button-group>
                         </div>
                     </div>
                 </div>
@@ -507,23 +527,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="row p-2" v-if="localOrden.length != 0">
-                <div class="col-12 f-w-700 text-end pt-2 pb-2">
-                    <label class="control-label w-100">Todo para llevar </label>
-                    <el-switch
-                        v-model="to_carry"
-                        active-text="Si"
-                        inactive-text="No"
-                        @change="allToCarry"
-                    ></el-switch>
-                </div>
-                <div class="col-12 d-flex justify-content-end">
-                    <button @click="submit" class="btn btn-success btn-sm">
-                        Enviar pedido
-                    </button>
                 </div>
             </div>
 

@@ -114,9 +114,6 @@
                 </el-button>
             </div>
 
-
-
-
             <div class="card-body">
                 <data-table :resource="resource">
                     <tr slot="heading" class="bg-primary">

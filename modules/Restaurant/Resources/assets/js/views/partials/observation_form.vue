@@ -98,7 +98,7 @@ export default {
     methods: {
         search(input) {
             this.tags = this.observations
-                .filter(o => o.description.includes(input.toUpperCase()))
+                .filter(o => o.description.includes(input.toUpperCase()) && o.active)
                 .slice(0, 10);
         },
         addObservation() {
@@ -166,7 +166,7 @@ export default {
             this.formatObs();
         },
         open() {
-            this.tags = this.observations.slice(0, 10).map(o => ({
+            this.tags = this.observations.filter(o => o.active).slice(0, 10).map(o => ({
                 ...o,
                 description: o.description.toUpperCase(),
                 selected: false

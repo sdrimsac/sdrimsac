@@ -39,7 +39,7 @@
                             <td>{{row.currency_type_id}}</td>
                             <td>
                                 <template v-for="(doc,i) in row.documents">                                
-                                    <label class="d-block"  ::key="i">{{doc.number_full}}</label>
+                                    <label class="d-block" :key="i">{{doc.number_full}}</label>
                                 </template>
                             </td>
                             <td>{{row.quotation_number_full}}</td>

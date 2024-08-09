@@ -112,7 +112,9 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 foreach ($document_item->item->color_size as $it) {
                     $color_size_found = ItemColorSize::find($it->id);
                     if ($color_size_found) {
-                        $color_size_found->stock = ($document->document_type_id === '07') ? ($color_size_found->stock+ $it->quantity) : ($color_size_found->stock - $it->quantity);
+                        dump($it);
+                        $quantity_color_size = $it->quantity ?? $it->selectedQuantity;
+                        $color_size_found->stock = ($document->document_type_id === '07') ? ($color_size_found->stock+ $quantity_color_size) : ($color_size_found->stock - $quantity_color_size);
                         $color_size_found->save();
                         InventoryKardexDetail::create([
                             'inventory_kardex_id' => $inventory_kardex->id,

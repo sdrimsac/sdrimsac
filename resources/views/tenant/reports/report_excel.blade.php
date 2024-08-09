@@ -13,15 +13,15 @@
 <body>
     <table>
         <tr>
-            <td colspan="16" style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
-                <h3 align="center" class="title"><strong>Reporte Documentos Boletas y Facturas</strong></h3>
+            <td colspan="17" style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
+                <h3 align="center" class="title"><strong>Reporte Documentos Boletas y Facturas aaa</strong></h3>
             </td>
         </tr>
         <tr>
             <td colspan="10" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Empresa:</strong>{{$company->name}}</p>
             </td>
-            <td colspan="6" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
+            <td colspan="7" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Fecha: </strong>{{date('Y-m-d')}}</p>
             </td>
         </tr>
@@ -29,7 +29,7 @@
             <td colspan="10" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Establecimiento: </strong>{{$establishment->address}} - {{$establishment->department->description}} - {{$establishment->district->description}} </p>
             </td>
-            <td colspan="6" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
+            <td colspan="7" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Ruc: </strong>{{$company->number}}</p>
             </td>
         </tr>
@@ -72,6 +72,7 @@
                 <th style=" border: 1px solid black; background-color: #DCDCDC;">Total Gravado</th>
                 <th style=" border: 1px solid black; background-color: #DCDCDC;">Total IGV</th>
                 <th style=" border: 1px solid black; background-color: #DCDCDC;">Saldo</th>
+                <th style=" border: 1px solid black; background-color: #DCDCDC;">Condicon de Pago</th>
                 <th style=" border: 1px solid black; background-color: #DCDCDC;">Total</th>
             </tr>
         </thead>
@@ -123,6 +124,7 @@
                 }
                 @endphp
                 <td class="celda" style=" border: 1px solid black;">{{$remain}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{ $value->payment_condition->name }}</td>
                 <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total}}</td>
                 @php
 
@@ -213,16 +215,17 @@
                                 <td>{{$acum_total_free}}</td> -->
                 <td style=" border: 1px solid black; background-color: #DCDCDC;">Totales PEN</td>
 
-                <td style=" border: 1px solid black;">{{number_format($acum_total_exonerado, 2)}}</td>
-                <td style=" border: 1px solid black;">{{number_format ($acum_total_inafecto, 2 )}}</td>
-                <td style=" border: 1px solid black;">{{number_format($acum_total_free, 2)}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{number_format($acum_total_exonerado, 2)}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{number_format ($acum_total_inafecto, 2 )}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{number_format($acum_total_free, 2)}}</td>
 
-                <td style=" border: 1px solid black;">{{$acum_total_taxed}}</td>
-                <td style=" border: 1px solid black;">{{$acum_total_igv}}</td>
-                <td style=" border: 1px solid black;">
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{$acum_total_taxed}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{$acum_total_igv}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">
                     {{$acum_total_remain}}
                 </td>
-                <td style=" border: 1px solid black;">{{$acum_total}}</td>
+                <td></td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{$acum_total}}</td>
             </tr>
             <tr>
                 <td colspan="8"></td>
@@ -230,12 +233,13 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td style=" border: 1px solid black;">{{$acum_total_taxed_usd}}</td>
-                <td style=" border: 1px solid black;">{{$acum_total_igv_usd}}</td>
-                <td style=" border: 1px solid black;">
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{$acum_total_taxed_usd}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{$acum_total_igv_usd}}</td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">
                     {{$acum_total_remain_usd}}
                 </td>
-                <td style=" border: 1px solid black;">{{$acum_total_usd}}</td>
+                <td></td>
+                <td style=" border: 1px solid black; background-color: #DCDCDC;">{{$acum_total_usd}}</td>
             </tr>
         </tbody>
     </table>

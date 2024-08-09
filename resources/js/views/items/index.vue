@@ -49,13 +49,13 @@
                             <i data-cs-icon="more-horizontal"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
-                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImport()">
+                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImport()" style="color:green">
                             <i class="fa fa-upload"></i> Importar Productos
                         </a>
-                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportListPrice()">
+                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportListPrice()" style="color:blue">
                             <i class="fa fa-upload"></i> Importar Politica de Precios
                         </a>
-                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportStockProducto()">
+                        <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportStockProducto()" style="color:red">
                             <i class="fa fa-upload"></i> Importar stock de producto 
                         </a>
                     </div>

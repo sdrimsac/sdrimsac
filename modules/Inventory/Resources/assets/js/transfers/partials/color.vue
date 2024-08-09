@@ -28,8 +28,6 @@
                                 {{ row.price }}
                             </td>
                             <td>
-                                <!-- <el-input v-model="row.selectedQuantity" type="number">
-                                </el-input> -->
                                 <el-input
                                         type="text"
                                         placeholder="ingrese cantidad"
@@ -52,8 +50,13 @@
     </div>
 </el-dialog>
 </template>
+<style>
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
+}   
+</style>
 
-    
 <script>
 export default {
     props: ["showDialog", "color_size"],

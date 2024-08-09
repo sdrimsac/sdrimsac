@@ -19,6 +19,7 @@
                                         selectOption = 1;
                                     tables_row_select = null;
                                     show = 'tables';"
+                                    class="fw-bold"
                                     >
                                     <i class="icofont icofont-dining-table"></i>
                                     Visualizar mesas
@@ -56,19 +57,23 @@
                         <ul class="breadcrumb pt-0">
                             <template v-if="!currentTable">
                                 <li class="breadcrumb-item">
-                                    <a href="javascript:void(0)">Seleccione una Mesa</a>
+                                    <a href="javascript:void(0)" class="fw-bold">SELECCIONE UNA MESA</a>
                                 </li>
                             </template>
                             <template v-if="currentTable != null">
                                 <li class="breadcrumb-item">
-                                    <a href="javascript:void(0)" class="text-danger font-weight-bold" @click="
+                                    <h1 class="fw-bold">
+                                        <a href="javascript:void(0)" class="text-danger font-weight-bold" @click="
                                         selectOption = 1;
-                                    tables_row_select = null;
-                                    show = 'tables';
-                                    ">
-                                        Mesa Seleccionada N°{{
+                                        tables_row_select = null;
+                                        show = 'tables';
+                                        ">
+                                        Mesa N°{{
                                                 currentTable.number
                                         }}</a>
+
+                                    </h1>
+                                    
                                 </li>
                                 <li class="breadcrumb-item">
                                     <a href="javascript:void(0)" class="text-info font-weight-bold"
@@ -128,7 +133,9 @@
                 ]" class=" col-xl-2 col-md-3  col-4 btn   m-1 d-flex flex-column justify-content-center align-items-center "
                     v-for="(data, index) in tables" :key="index" @click="selectedTable(data.id, data)">
                     <strong class="h3 text-white">{{data.is_room ? 'Habitación':'Mesa' }}</strong>
-                    <i class="fas fa-utensils"></i>
+                    <!-- <i class="fas fa-utensils"></i> -->
+                    <i class="icofont-dining-table icofont-4x"></i>
+                    
 
                     <span class="h2  text-white">
                         {{ data.full_name }}

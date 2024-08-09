@@ -138,7 +138,7 @@ Route::prefix('caja')->group(function () {
         Route::get('observations/records', 'ObservationController@records');
         Route::post('observations', 'ObservationController@store');
         Route::get('observations/record/{id}', 'ObservationController@record');
-        Route::delete('observations/{id}', 'ObservationController@active');
+        Route::get('observations/{id}', 'ObservationController@active');
         //**** TIPO DE TRABAJADORES */
         Route::get('workers-type', 'WorkersTypeController@index')->name('restaurant.workers_type')->middleware("just.super");;
         Route::get('workers-type/columns', 'WorkersTypeController@columns');

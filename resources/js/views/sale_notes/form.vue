@@ -828,7 +828,7 @@
                                     <table class="table">
                                         <thead>
                                             <tr slot="heading" class="bg-primary">
-                                                <th class="text-white"width="40px">#</th>
+                                                <th class="text-white" width="40px">#</th>
                                                 <th class="text-white text-center font-weight-bold"> Afectar Stock</th>
                                                 <th class="text-white font-weight-bold">Descripción</th>
                                                 <th class="text-white text-center font-weight-bold">Unidad</th>
@@ -877,7 +877,8 @@
                                                                       .presentation
                                                                       .description
                                                                 : ""
-                                                        }} </template
+                                                        }} 
+                                                    </template
                                                     ><br />
                                                     <small>
                                                         {{
@@ -886,6 +887,26 @@
                                                                 .description
                                                         }}
                                                     </small>
+                                                    <template v-if="row.lots && row.lots.length > 0">
+                                                        <br />
+                                                        <small class="text-primary" v-for="(lot, index) in row.lots" :key="index">
+                                                            <b>Serie:</b> {{ lot.series }} 
+                                                        </small>
+                                                    </template>
+
+                                                    <template v-if="row.lots_group && row.lots_group.length > 0">
+                                                        <br />
+                                                        <small class="text-primary" v-for="(lot, index) in row.lots_group" :key="index">
+                                                            <b>Lote:</b> {{ lot.code }}
+                                                        </small>
+                                                    </template>
+
+                                                    <template v-if="row.color_size && row.color_size.length > 0">
+                                                        <br />
+                                                        <small class="text-primary" v-for="(color, index) in row.color_size" :key="index">
+                                                            <b>Color:</b> {{ color.color }} <b>Talla:</b> {{ color.size }}
+                                                        </small>
+                                                    </template>
                                                 </td>
                                                 <td class="text-center">
                                                     {{ row.item.unit_type_id }}

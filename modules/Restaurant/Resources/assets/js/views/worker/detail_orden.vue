@@ -2,22 +2,23 @@
     <div>
         <div class="row" v-if="ordens.length > 0">
             <div class="col-12 p-1">
-                <h2 class="small-title">Ordenes Realizadas</h2>
+                <h2 class="small-title fw-bold">Ordenes Realizadas</h2>
                 <hooper :settings="hooperSettings">
                     <slide v-for="(o, index) in ordens" :key="index">
                         <div class="col-md-12 p-2">
                             <div class="card_profile" :class="ordenSelectedId == o.id ? 'bg-active' : ''
                                 " @click="
-        selectOrden(o.id);
-    show_orders();
-    ">
+                                    selectOrden(o.id);
+                                    show_orders();
+                                    ">
                                 <div class="card__avatar">
                                     <div class="badge"></div>
                                 </div>
                                 <div>
                                     <h3>
-                                        <strong> Orden Nº{{ o.id }} </strong>
+                                        <strong> Orden Nº{{ o.id }} </strong> <br>{{ o.ref }}
                                     </h3>
+                                    <!-- <p>{{ o.ref }}</p> -->
                                 </div>
                             </div>
                         </div>
@@ -55,7 +56,7 @@
                                         <div class="row ">
                                             <div class="col-12">
                                                 <template>
-                                                    <h2 class="text-muted text-small">
+                                                    <h2 class="font-weight-bold custom-text-size">
                                                         Categorias
                                                     </h2>
                                                     <el-select v-model="category" filterable clearable
@@ -67,12 +68,12 @@
                                                 </template>
                                             </div>
                                             <div class="col-12 ">
-                                                <h2 class="text-muted text-small">
+                                                <h2 class="font-weight-bold custom-text-size">
                                                     Buscar
                                                 </h2>
                                                 <el-input ref="input_item" size="small" v-model="input_item"
                                                     @input="searchOrden()" @focus="clear_input()" autofocus
-                                                    placeholder="Ingrese aca Un Producto">
+                                                    placeholder="Ingrese Nombre de Producto">
                                                     <el-button slot="append" icon="el-icon-search"
                                                         @click="searchOrden()"></el-button>
                                                 </el-input>
@@ -214,6 +215,9 @@
         border-radius: 5px;
         cursor:move;
     }
+    .custom-text-size {
+    font-size: 0.8em;
+}
 </style>
 <script>
 import ListFood from "./list_food.vue";

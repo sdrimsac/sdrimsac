@@ -418,6 +418,12 @@
                                 </a>
                             </li>
                         @endif
+                        {{-- <li>
+                            <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
+                                href="{{ route('tenant.documents.index') }}">
+                                <i class="icofont-list"></i> Productos Vendidos 
+                            </a>
+                        </li> --}}
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.not_sent') }}">

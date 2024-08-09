@@ -6,13 +6,20 @@
         @close="close"
         width="80%"
     >
-        <detraction-index></detraction-index>
+        <button @click="close" type="button" class="el-dialog__headerbtn">
+            <i class="el-icon-close"></i>
+        </button>
+        <br>
+        <detraction-index>
+        
+        </detraction-index>
+        
     </el-dialog>
 </template>
 <style scoped>
 .no-header .el-dialog__wrapper .el-dialog .el-dialog__header {
     display: none;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 </style>
 <script>

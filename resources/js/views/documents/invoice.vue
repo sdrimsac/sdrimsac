@@ -1463,6 +1463,29 @@
                                                         row.affectation_igv_type
                                                             .description
                                                     }}</small>
+                                                    <template v-if="row.item.lots && row.item.lots.length > 0">
+                                                           
+                                                        <br />
+                                                        <small class="text-primary" v-for="(lot, index) in row.item.lots" :key="index">
+                                                            <b>Serie:</b> {{ lot.series }} 
+                                                        </small>
+                                                    </template>
+
+                                                    <template v-if="row.item.lots_group && row.item.lots_group.length > 0">
+                                                        <br />
+                                                        <small class="text-primary" v-for="(lot, index) in row.item.lots_group" :key="index">
+                                                            <b>Lote:</b> {{ lot.code }}
+                                                        </small>
+                                                    </template>
+
+                                                    <template v-if="row.item.color_size &&  row.item.color_size.length > 0">
+                                                        <br />
+                                                        <small class="text-primary" v-for="(color, index) in row.item.color_size.filter(i=>i.selectedQuantity)" :key="index">
+                                                             Talla: {{color.size}}-{{ color.color }} 
+                                                             <b>Cant:</b>
+                                                              {{ color.selectedQuantity }}
+                                                        </small>
+                                                    </template>
                                                 </td>
                                                 <td class="text-center">
                                                     {{ row.item.unit_type_id }}
@@ -3161,6 +3184,7 @@ export default {
             this.form.guides.splice(index, 1);
         },
         addRow(row) {
+            console.log(JSON.stringify(row.total));
             if (this.recordItem) {
                 //this.form.items.$set(this.recordItem.indexi, row)
                 this.form.items[this.recordItem.indexi] = row;
