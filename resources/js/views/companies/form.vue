@@ -270,10 +270,10 @@
                                         <label
                                             class="control-label font-weight-bold h5"
                                         >
-                                        <i class="fas fa-check"></i>
+                                            <i class="fas fa-check"></i>
                                             Es prico
                                         </label>
-<br>
+                                        <br />
                                         <el-checkbox
                                             v-model="form.is_prico"
                                         ></el-checkbox>
@@ -283,6 +283,39 @@
                                             v-if="errors.is_prico"
                                             v-text="errors.is_prico[0]"
                                         ></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label font-weight-bold h5"
+                                        >
+                                            Clientes con mismo ruc
+                                        </label>
+                                        <el-select
+                                            v-model="same_ruc_id"
+                                            placeholder="Seleccione"
+                                            clearable
+                                            filterable
+                                            @change="saveSameRuc"
+                                        >
+                                            <el-option
+                                                v-for="(item, idx) in companies"
+                                                :key="idx"
+                                                :label="item.name"
+                                                :value="item.id"
+                                            ></el-option>
+                                        </el-select>
+                                        <br />
+                                        <el-tag
+                                            class="m-2"
+                                            v-for="(item, idx) in same_rucs"
+                                            :key="idx"
+                                            closable
+                                            @close="removeSameRuc(item.id)"
+                                        >
+                                            {{ item.name }}
+                                        </el-tag>
                                     </div>
                                 </div>
                             </div>
@@ -1239,6 +1272,8 @@ export default {
     },
     data() {
         return {
+            same_ruc_id: null,
+            companies: [],
             loading_submit: false,
             headers: headers_token,
             resource: "companies",
@@ -1248,16 +1283,15 @@ export default {
             soap_sends: [],
             soap_types: [],
             loading: false,
+            same_rucs: [],
             show_image_a5: false,
             toggle: false //Creando el objeto a retornar con v-model
         };
     },
     async created() {
         await this.initForm();
-        await this.$http.get(`/${this.resource}/tables`).then(response => {
-            this.soap_sends = response.data.soap_sends;
-            this.soap_types = response.data.soap_types;
-        });
+        await this.getTables();
+
         await this.$http.get(`/${this.resource}/record`).then(response => {
             if (response.data !== "") {
                 this.form = response.data.data;
@@ -1266,6 +1300,61 @@ export default {
         this.show_image_a5 = this.configuration.show_image_a5;
     },
     methods: {
+        async getTables() {
+            await this.$http.get(`/${this.resource}/tables`).then(response => {
+                this.soap_sends = response.data.soap_sends;
+                this.soap_types = response.data.soap_types;
+                this.companies = response.data.companies;
+                this.same_rucs = response.data.same_rucs;
+            });
+        },
+        saveSameRuc() {
+            let same_ruc_id = this.companies.find(
+                item => item.id == this.same_ruc_id
+            );
+            this.$http
+                .post(`/companies/save_same_ruc`, {
+                    name: same_ruc_id.name,
+                    website_id: same_ruc_id.website_id,
+                    uuid:same_ruc_id.uuid
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        this.getTables();
+                        this.same_ruc_id = null;
+                        this.$toast.success(response.data.message);
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
+                });
+        },
+        removeSameRuc(id) {
+            this.$http
+                .delete(`/companies/remove_same_ruc/${id}`)
+                .then(response => {
+                    if (response.data.success) {
+                        this.getTables();
+                        this.same_ruc_id = null;
+                        this.$toast.success(response.data.message);
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
+                });
+        },
         async setConfiguration() {
             await this.$http
                 .post(`/configurations`, {

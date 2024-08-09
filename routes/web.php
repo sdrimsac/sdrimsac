@@ -210,6 +210,8 @@ if ($hostname) {
                 Route::post('persons', [App\Http\Controllers\Tenant\PersonController::class, 'store']);
                 Route::get('pos/table/{table}', [App\Http\Controllers\Tenant\PosController::class, 'table']);
                 Route::get('companies/record', [App\Http\Controllers\Tenant\CompanyController::class, 'record']);
+                Route::post('companies/save_same_ruc', [App\Http\Controllers\Tenant\CompanyController::class, 'save_same_ruc']);
+                Route::delete('companies/remove_same_ruc/{id}', [App\Http\Controllers\Tenant\CompanyController::class, 'remove_same_ruc']);
                 Route::get('documents/records', [App\Http\Controllers\Tenant\DocumentController::class, 'records']);
                 Route::get('documents/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excel']);
 
@@ -307,7 +309,7 @@ if ($hostname) {
                 Route::delete('arqueos/{arqueo}', [App\Http\Controllers\Tenant\ArqueoController::class, 'destroy']);
 
                 //vehicles------------------------------------------------------vehiculos
-               
+
 
 
                 //Reviews-----------------------------------------------------revisiones
@@ -481,8 +483,8 @@ if ($hostname) {
                 Route::delete('document_payments/{document_payment}', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'destroy']);
                 Route::get('document_payments/initialize_balance', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'initialize_balance']);
                 Route::get('document_payments/report/{start}/{end}', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'report']);
-                
-                Route::prefix('detraction_payments')->group(function(){
+
+                Route::prefix('detraction_payments')->group(function () {
                     Route::get('records/{document_id}', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'records']);
                     Route::get('document/{document_id}', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'document']);
                     Route::get('tables', [App\Http\Controllers\Tenant\DetractionPaymentController::class, 'tables']);
