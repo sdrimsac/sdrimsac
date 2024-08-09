@@ -1,0 +1,13 @@
+{
+    "name": "Cafe",
+    "alias": "cafe",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Cafe\\Providers\\CafeServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

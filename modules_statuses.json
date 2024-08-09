@@ -28,5 +28,6 @@
     "Dispatch": true,
     "Store": true,
     "ApiPeruDev": true,
-    "Consignment": true
+    "Consignment": true,
+    "Cafe": true
 }
