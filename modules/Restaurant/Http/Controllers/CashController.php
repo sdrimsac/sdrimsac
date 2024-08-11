@@ -1659,6 +1659,9 @@ class CashController extends Controller
     }
     public function records(Request $request)
     {
+
+        ini_set('memory_limit', '2500M');
+
         $fromAdmin = $request->input('fromAdmin');
         $is_principal = $request->input('is_principal');
         $records = Cash::query();
