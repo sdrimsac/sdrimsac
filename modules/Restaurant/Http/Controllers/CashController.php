@@ -1660,7 +1660,8 @@ class CashController extends Controller
     public function records(Request $request)
     {
 
-        ini_set('memory_limit', '2500M');
+        ini_set('memory_limit', '3500M');
+        ini_set('max_execution_time', 3000);
 
         $fromAdmin = $request->input('fromAdmin');
         $is_principal = $request->input('is_principal');
