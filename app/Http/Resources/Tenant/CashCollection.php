@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
@@ -16,57 +15,40 @@ class CashCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function ($row, $key) {
-            // $final_cash = $row->beginning_balance + $row->income - $row->expense;
-            // $income = Box::where('cash_id', $row->id)->where('expenses', 0)->sum('amount');
-            $incomes = 0;
-            Box::where('cash_id', $row->id)->where('expenses', 0)->where('incomes', 0)->chunk(50, function ($rows) use (&$incomes) {
-                foreach ($rows as $row) {
-                    $amount = $row->amount;
-                    if ($row->salenote) {
-                        if ($row->sale_note_payment_id) {
-                            $incomes += $amount;
-                        } else {
-                            $total = $row->salenote->total;
-                            if ($total > $amount) {
-                                $incomes += $amount;
-                            } else {
-                                $incomes += $total;
-                            }
-                        }
-                    }
-                    if ($row->document) {
-                        $total = $row->document->total;
-                        if ($total > $amount) {
-                            $incomes += $amount;
-                        } else {
-                            $incomes += $total;
-                        }
-                    }
-                    if (!$row->salenote && !$row->document) {
-                        $incomes += $amount;
+        // Preload related data to avoid N+1 problem
+        $this->collection->each->load(['user', 'user.establishment', 'boxes.salenote', 'boxes.document']);
+
+        return $this->collection->transform(function ($row) {
+            $incomes = $row->boxes->where('expenses', 0)->where('incomes', 0)->sum(function ($box) {
+                $amount = $box->amount;
+                if ($box->salenote) {
+                    if ($box->sale_note_payment_id) {
+                        return $amount;
+                    } else {
+                        return min($box->salenote->total, $amount);
                     }
                 }
+                if ($box->document) {
+                    return min($box->document->total, $amount);
+                }
+                return $amount;
             });
 
-            $expense = Box::where('cash_id', $row->id)->where('expenses', 1)->sum('amount');
-            $incomes_s = Box::where('cash_id', $row->id)->where('incomes', 1)->sum('amount');
+            $expense = $row->boxes->where('expenses', 1)->sum('amount');
+            $incomes_s = $row->boxes->where('incomes', 1)->sum('amount');
             $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
 
-            // $total_cierre = $transfer + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
-            $counter = [];
-            if ($row->counter != null) {
-                foreach ($row->counter as $value => $total) {
+            $counter = collect($row->counter)->map(function ($total, $value) {
+                return [
+                    "value" => $value,
+                    "total" => $total
+                ];
+            })->all();
 
-                    $counter[] = [
-                        "value" => $value,
-                        "total" => $total
-                    ];
-                }
-            }
             $user_cash = $row->user;
-            $establishment = Establishment::where('id', $user_cash->establishment_id)->first();
-            $tab_single =  (bool)$establishment->tab_single;
+            $establishment = $user_cash->establishment;
+            $tab_single = (bool)$establishment->tab_single;
+
             return [
                 'tab_single' => $tab_single,
                 'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null,
@@ -92,8 +74,6 @@ class CashCollection extends ResourceCollection
                 'reference_number' => $row->reference_number,
                 'counter' => $counter,
                 'stock_file' => $row->stock_file,
-                // 'final_cash' => $final_cash,
-
             ];
         });
     }
