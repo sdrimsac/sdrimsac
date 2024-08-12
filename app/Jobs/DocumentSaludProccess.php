@@ -44,6 +44,7 @@ class DocumentSaludProccess implements ShouldQueue
 
     function items($inputs)
     {
+        ini_set('memory_limit', '3048M');
         $document = $inputs['documento'];
         $establishment_id = self::get_establishment_by_serie(Functions::valueKeyInArray($document, 'serie'));
         $warehouse_id = null;
@@ -111,6 +112,7 @@ class DocumentSaludProccess implements ShouldQueue
     }
     function transform_document($inputs)
     {
+        ini_set('memory_limit', '3048M');
         $document = $inputs['documento'];
         $total = $document['mntTotal'];
         //redondeo de totales
@@ -194,6 +196,8 @@ class DocumentSaludProccess implements ShouldQueue
     }
     public function handle()
     {
+
+        ini_set('memory_limit', '3048M');
         $date = date('Y-m-d');
         $website = $this->findWebsite($this->website_id);
         $tenancy = app(Environment::class);
