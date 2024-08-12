@@ -12,7 +12,14 @@
                         <th>
                             Acciones
                         </th>
-                        <th v-if="configuration.restaurant && (type == 'documents'||type=='saleNotes')"> N° Mesa </th>
+                        <th
+                            v-if="
+                                configuration.restaurant &&
+                                    (type == 'documents' || type == 'saleNotes')
+                            "
+                        >
+                            N° Mesa
+                        </th>
                         <th>
                             Número
                         </th>
@@ -93,7 +100,10 @@
                                 >
                                     <template>
                                         <template
-                                            v-if="configuration.caja_actions && configuration.internal_voided"
+                                            v-if="
+                                                configuration.caja_actions &&
+                                                    configuration.internal_voided
+                                            "
                                         >
                                             <el-button
                                                 class="col-md-12 col-12"
@@ -304,7 +314,7 @@
                                             class="col-md-12 col-12"
                                             v-if="
                                                 data.state_type_id != '11' &&
-                                                    data.state_type_id != '13' 
+                                                    data.state_type_id != '13'
                                             "
                                             @click="clickVoidedNote(data)"
                                         >
@@ -314,7 +324,7 @@
                                 </div>
                             </div>
                         </td>
-                        
+
                         <td
                             :class="
                                 `${(data.state_type_id == '11' ||
@@ -519,7 +529,12 @@
                                 </el-button>
                             </template>
                         </td>
-                        <td v-if="configuration.restaurant && (type == 'documents'||type=='saleNotes')">
+                        <td
+                            v-if="
+                                configuration.restaurant &&
+                                    (type == 'documents' || type == 'saleNotes')
+                            "
+                        >
                             {{ data.table_number }}
                             <br />
                             <template>
@@ -528,7 +543,7 @@
                                         {{ data.ordens_ref }}
                                     </span>
                                 </small>
-                            </template> 
+                            </template>
                         </td>
                         <td
                             :class="
@@ -560,7 +575,7 @@
                                 {{ data.time_of_issue }}
                             </small>
                         </td>
-                        
+
                         <td
                             :class="
                                 `${(data.state_type_id == '11' ||
@@ -881,18 +896,36 @@ export default {
             this.showDialogGenerate = true;
         },
         previsualitation(external_id, type) {
+            let { format_printer } = this.establishment;
+            let format = "";
+            switch (format_printer) {
+                case "1":
+                    format = "a4";
+                    break;
+                case "2":
+                    format = "a5";
+                    break;
+                case "3":
+                    format = "ticket";
+                    break;
+                default:
+                    console.log(JSON.stringify(format_printer), " default");
+                    format = "ticket_50";
+                    break;
+            }
+                    console.log("🚀 ~ previsualitation ~ format:", format)
             let url = null;
             if (type == "80") {
-                url = `/sale-notes/print/${external_id}/ticket`;
+                url = `/sale-notes/print/${external_id}/${format}`;
             } else if (
                 type == "03" ||
                 type == "01" ||
                 type == "07" ||
                 type == "08"
             ) {
-                url = `/print/document/${external_id}/ticket`;
+                url = `/print/document/${external_id}/${format}`;
             } else {
-                url = `/quotations/print/${external_id}/ticket`;
+                url = `/quotations/print/${external_id}/${format}`;
             }
             this.resourcePdf = url;
             this.showPrevisualitation = true;
