@@ -126,8 +126,8 @@ class DocumentController extends Controller
                 $zip->close();
                 $store_path = 'app/public/red_salud/' . $name;
                 $website = $this->getTenantWebsite();
-                $user_id = auth()->user()->id;
-                DocumentSaludProccess::dispatch($website->id, $store_path, $user_id);
+                // $user_id = auth()->user()->id;
+                DocumentSaludProccess::dispatch($website->id, $store_path);
 
                 return [
                     'message' => 'Se ha subido el archivo y está siendo procesado',

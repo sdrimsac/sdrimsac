@@ -31,15 +31,15 @@ class DocumentSaludProccess implements ShouldQueue
     use  Dispatchable, InteractsWithQueue, Queueable, SerializesModels, JobReportTrait;
 
     protected $website_id;
-    protected $user_id;
     protected $store_path;
+    protected $user_id;
 
 
-    public function __construct($website_id, $store_path,$user_id)
+    public function __construct($website_id, $store_path)
     {
         $this->website_id = $website_id;
         $this->store_path = $store_path;
-        $this->user_id = $user_id;
+
     }
 
     function items($inputs)
@@ -102,17 +102,25 @@ class DocumentSaludProccess implements ShouldQueue
         }
         return null;
     }
+    function getUserId($serie){
+        $series = Series::where('number',$serie)->first();
+        $establishment_id = $series->establishment_id;
+        $user = User::where('establishment_id',$establishment_id)->first();
+        $this->user_id = $user->id;
+        // return $user->id;
+    }
     function transform_document($inputs)
     {
-
         $document = $inputs['documento'];
         $total = $document['mntTotal'];
         //redondeo de totales
         $total_rounded = round($total, 2);
         $additional = $inputs['datosAdicionales'];
         // $totals = $inputs['totales'];
+        $series = Functions::valueKeyInArray($document, 'serie');
+        $this->getUserId($series);
         $inputs_transform = [
-            'series' => Functions::valueKeyInArray($document, 'serie'),
+            'series' => $series,
             'user_id' =>$this->user_id,
             'afectar_caja' => false,
             'method_pay' => 'Efectivo',
