@@ -93,7 +93,7 @@
                                 >
                                     <template>
                                         <template
-                                            v-if="configuration.caja_actions"
+                                            v-if="configuration.caja_actions && configuration.internal_voided"
                                         >
                                             <el-button
                                                 class="col-md-12 col-12"
@@ -304,7 +304,7 @@
                                             class="col-md-12 col-12"
                                             v-if="
                                                 data.state_type_id != '11' &&
-                                                    data.state_type_id != '13'
+                                                    data.state_type_id != '13' 
                                             "
                                             @click="clickVoidedNote(data)"
                                         >

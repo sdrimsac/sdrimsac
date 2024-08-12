@@ -1674,7 +1674,7 @@ class CashController extends Controller
         $records->orderBy('date_opening', 'desc')
             ->orderBy('time_opening', 'desc');
 
-        return new CashCollection($records->paginate(5));
+        return new CashCollection($records->paginate(20));
     }
 
     public function create()

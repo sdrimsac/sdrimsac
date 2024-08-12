@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'internal_voided',
         'only_cash_by_establishment',
         'barcode',
         'rappi',
@@ -207,6 +208,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'internal_voided' => 'boolean',
         'only_cash_by_establishment' => 'boolean',
         'barcode' => 'boolean',
         'rappi' => 'boolean',
@@ -354,6 +356,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'internal_voided' => (bool)$this->internal_voided,
             'only_cash_by_establishment' => (bool)$this->only_cash_by_establishment,
             'barcode' => (bool)$this->barcode,
             'didi' => (bool)$this->didi,

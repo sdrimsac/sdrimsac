@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\CoreFacturalo\Facturalo;
 use App\CoreFacturalo\Template;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Establishment;
 use Mpdf\Mpdf;
 use Exception;
 
@@ -18,7 +19,21 @@ class DownloadController extends Controller
     {
         $model = "App\\Models\\Tenant\\" . ucfirst($model);
         $document = $model::where('external_id', $external_id)->first();
-
+        $format_type = Establishment::find(auth()->user()->establishment_id)->format_printer;
+        switch ($format_type) {
+            case 1:
+                $format = 'a4';
+                break;
+            case 2:
+                $format = 'a5';
+                break;
+            case 3:
+                $format = 'ticket';
+                break;
+            default:
+            $format =  'ticket_50';
+                break;
+        }
         if (!$document) throw new Exception("El código {$external_id} es inválido, no se encontro documento relacionado");
 
         if ($format != null) $this->reloadPDF($document, 'invoice', $format);

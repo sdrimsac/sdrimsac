@@ -164,18 +164,19 @@
                                             'text-dark':
                                                 row.state_type_id === '11'
                                         }" class="text-left" v-if="typeUser != 'integrator'">
-                                    <div class="dropdown-as-select d-inline-block" data-childselector="span" v-if="row.state_type_id != '11'">
+                                    <div class="dropdown-as-select d-inline-block" data-childselector="span">
                                         <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" style="">
-                                            <a type="button" class="dropdown-item" @click.prevent="
+                                            <template  v-if="row.state_type_id != '11'">
+                                                <a type="button" class="dropdown-item" @click.prevent="
                                                         clickDeleteDocument(
                                                             row.id
                                                         )
                                                     " v-if="
                                                         row.btn_delete_doc_type_03 &&
-                                                            !isAccountant
+                                                            !isAccountant && configuration.internal_voided
                                                     ">Anulado Interno
                                             </a>
                                             <a type="button" class="dropdown-item" @click.prevent="
@@ -265,6 +266,11 @@
                                                     ">
                                                 Consultar Servidor
                                             </a>
+                                                <a v-if="row.is_credit" type="button" class="dropdown-item" @click.prevent="
+                                                        clickPayment(row.id)
+                                                    ">Pagos</a>
+                                            </template>
+
                                             <a type="button" class="dropdown-item" @click.prevent="
                                                         clickOptions(
                                                             row.id,
@@ -274,9 +280,7 @@
                                                 Imprimir
                                             </a>
 
-                                            <a v-if="row.is_credit" type="button" class="dropdown-item" @click.prevent="
-                                                        clickPayment(row.id)
-                                                    ">Pagos</a>
+                                        
                                         </div>
                                     </div>
                                 </td>
