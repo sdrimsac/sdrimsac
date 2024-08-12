@@ -112,11 +112,33 @@ class DocumentController extends Controller
             $name = $current . '_' . Str::random(8);
             $fileName = $name . '.' . $extension;
             $file->storeAs('red_salud', $fileName, 'public');
+            $zip = new \ZipArchive;
+            $res = $zip->open(storage_path('app/public/red_salud/' . $fileName));
+            if ($res === TRUE) {
+                $current = Carbon::now();
+                $current = $current->format('Y-m-d H:i:s');
+                $current = str_replace(' ', '', $current);
+                $current = str_replace('-', '', $current);
+                $current = str_replace(':', '', $current);
+                $current = str_replace('.', '', $current);
+                $name = $current . '_' . Str::random(8);
+                $zip->extractTo(storage_path('app/public/red_salud/' . $name));
+                $zip->close();
+                $store_path = 'app/public/red_salud/' . $name;
+                $website = $this->getTenantWebsite();
+                $user_id = auth()->user()->id;
+                DocumentSaludProccess::dispatch($website->id, $store_path, $user_id);
 
-            return [
-                'success' => true,
-
-            ];
+                return [
+                    'message' => 'Se ha subido el archivo y está siendo procesado',
+                    'success' => true,
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'No se ha podido abrir el archivo',
+                ];
+            }
         }
 
         return [
@@ -163,7 +185,7 @@ class DocumentController extends Controller
                 $store_path = 'app/public/red_salud/' . $name;
                 $website = $this->getTenantWebsite();
                 $user_id = auth()->user()->id;
-                DocumentSaludProccess::dispatch($website->id, $store_path,$user_id);
+                DocumentSaludProccess::dispatch($website->id, $store_path, $user_id);
                 // $files = scandir(storage_path($store_path));
 
                 // $files = array_diff($files, array('.', '..'));
@@ -262,7 +284,7 @@ class DocumentController extends Controller
                 // 'hash' => $document->hash,
                 // 'qr' => $document->qr,
             ],
-            
+
         ];
     }
     public function store(Request $request)
