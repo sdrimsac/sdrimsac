@@ -41,7 +41,7 @@
                             <th class="text-white">Fecha</th>
                             <th class="text-white">Responsable</th>
                             <th class="text-white">Tipo de transacción</th>
-                            <th class="text-white">Ingreso</th>
+                            <!-- <th class="text-white">Ingreso</th> -->
                             <th class="text-white">Egreso</th>
                         </tr>
 
@@ -55,12 +55,12 @@
                             
                             </td>
                             <td class="text-left">{{ row.type }}</td>
-                            <td class="text-end text-success">{{ row.income }}</td>
+                            <!-- <td class="text-end text-success">{{ row.income }}</td> -->
                             <td class="text-end text-danger">{{ row.expense }}</td>
                         </tr>
                         <tr slot="footer" v-if="$refs.datatable">
                             <td colspan="4" class="text-right">Total</td>
-                            <td class="text-end">{{ $refs.datatable.total_income() }}</td>
+                            <!-- <td class="text-end">{{ $refs.datatable.total_income() }}</td> -->
                             <td class="text-end">{{ $refs.datatable.total_expense() }}</td>
                         </tr>
                     </data-table>

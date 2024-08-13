@@ -184,7 +184,7 @@
                                     {{ Number(totals.acum_gain).toFixed(2) }}
                                 </td>
                                 <td class="text-end">
-                                    {{ totals.acum_total_penalties }}
+                                    {{ Number(totals.acum_total_penalties).toFixed(2) }}
                                 </td>
                                 <td class="text-end">
                                     {{ Number(totals.acum_total_gain).toFixed(2) }}

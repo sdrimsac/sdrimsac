@@ -82,10 +82,13 @@ class CashTransferController extends Controller
         $value = $request->value;
         $end_date = $request->end_date;
         $boxes = Box::where(function ($query) use ($cash_id) {
-            $query->where('cash_id', $cash_id)
-                ->orWhereHas('cash_transfer', function ($query) use ($cash_id) {
-                    $query->where('cash_principal_id', $cash_id);
-                });
+            $query->whereHas('cash_transfer', function ($query) use ($cash_id) {
+                $query->where('cash_principal_id', $cash_id);
+            });
+            // $query->where('cash_id', $cash_id)
+            //     ->orWhereHas('cash_transfer', function ($query) use ($cash_id) {
+            //         $query->where('cash_principal_id', $cash_id);
+            //     });
         });
         if ($column && $value) {
             if ($column == 'date_of_issue') {
