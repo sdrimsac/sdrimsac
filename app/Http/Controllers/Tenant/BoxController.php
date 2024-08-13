@@ -164,6 +164,7 @@ class BoxController extends Controller
                             'user' => $row->user->name
                         ];
                     }
+             
                     $subcategories[] = [
                         'subcategory_id' => $subcategory_id,
                         'subcategory_name' => $subcategory_name,
@@ -555,9 +556,13 @@ class BoxController extends Controller
         $boxes_report = $data->get();
 
         return (new BoxesExportCashClosed)
-            ->records($boxes_report)
+            ->boxes_report($boxes_report)
             ->type_box($type_box)
+            ->establishment($establishment)
             ->company($company)
+            ->date_start($date_start)
+            ->date_end($date_end)
+            ->user($user)
             ->download('Lista_de_cajas_cerradas' . Carbon::now() . '.xlsx');
     }
     public function reports_results_pdf(Request $request)
@@ -589,7 +594,7 @@ class BoxController extends Controller
         $type_box  = 1;
         $boxes_report = $data->get();
 
-        //dump the first element of the array
+        
         $pdf = PDF::loadView('report::boxes.report_pdf', compact("type_box", "user", "boxes_report", "establishment", "company", "date_start", "date_end"))->setPaper('a4', 'landscape');
         return $pdf->stream('Reporte_Detalle_' . date('YmdHis') . '.pdf');
     }

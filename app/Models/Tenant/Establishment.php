@@ -77,6 +77,10 @@ class Establishment extends ModelTenant
     {
         return $this->belongsTo(District::class);
     }
+    public function documents()
+    {
+        return $this->belongsTo(document::class, 'establishment_id');
+    }
 
     public function getAddressFullAttribute()
     {

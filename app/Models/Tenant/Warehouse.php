@@ -25,4 +25,7 @@ class Warehouse extends ModelTenant
     {
         return $this->belongsTo(Establishment::class);
     }
+    public function document() {
+        return $this->belongsTo(DocumentItem::class);
+    }
 }

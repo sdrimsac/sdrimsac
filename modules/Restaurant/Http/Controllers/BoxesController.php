@@ -68,8 +68,8 @@ class BoxesController extends Controller
     {
         $receipts = [];
         $receipts = Receipt::where('cash_id', $cash_id)
-        ->whereNull('detraction_payment_id')
-        ->get()
+            ->whereNull('detraction_payment_id')
+            ->get()
             ->transform(function ($row) {
                 $number = "RC01-" . $row->number;
                 $time = Carbon::parse($row->hour)->format('H:m:s');
@@ -502,7 +502,7 @@ class BoxesController extends Controller
     function get_items_from_box($cash_id)
     {
         $boxes = Box::where('cash_id', $cash_id)
-            ->select('document_id', 'sale_note_id')
+            ->select('document_id', 'sale_note_id', 'method')
             ->whereNull('sale_note_payment_id')
             ->get();
 
@@ -517,9 +517,11 @@ class BoxesController extends Controller
 
         foreach ($boxes as $box) {
             $total = 0;
+            $method=null;
             if ($box->document_id) {
                 $document = Document::find($box->document_id);
                 $boxes = Box::where('document_id', $box->document_id)->get()->pluck('amount')->toArray();
+                $method = implode("-",array_unique(Box::where('document_id',$box->document_id)->get()->pluck('method')->toArray()));
                 if ($document) {
                     $name_document = $document->getNumberFullAttribute();
                     $column = array_column($documents, 'name');
@@ -563,7 +565,8 @@ class BoxesController extends Controller
                                                 "category" => $this->get_category($item),
                                                 "description" => $description_item,
                                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                                "total" => $all_items[$id_exist]["total"] + $item->total
+                                                "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                'method' => $method
                                             ];
                                         } else {
                                             $all_items[] = [
@@ -572,7 +575,8 @@ class BoxesController extends Controller
                                                 "description" => $description_item,
                                                 "quantity" => $item->quantity,
                                                 "category" => $this->get_category($item),
-                                                "total" => $item->total
+                                                "total" => $item->total,
+                                                'method' => $method
                                             ];
                                         }
                                     }
@@ -588,6 +592,7 @@ class BoxesController extends Controller
                 $boxes = Box::where('sale_note_id', $box->sale_note_id)
 
                     ->get()->pluck('amount')->toArray();
+                    $method = implode("-",array_unique(Box::where('sale_note_id',$box->sale_note_id)->get()->pluck('method')->toArray()));
                 if ($sale_note) {
                     $name_sale_note = $sale_note->getNumberFullAttribute();
                     $column = array_column($documents, 'name');
@@ -624,7 +629,8 @@ class BoxesController extends Controller
                                                 "category" => $this->get_category($item),
                                                 "description" => $description_item,
                                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                                "total" => $all_items[$id_exist]["total"] + $item->total
+                                                "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                'method' => $method
                                             ];
                                         } else {
                                             $all_items[] = [
@@ -633,7 +639,8 @@ class BoxesController extends Controller
                                                 "description" => $description_item,
                                                 "quantity" => $item->quantity,
                                                 "category" => $this->get_category($item),
-                                                "total" => $item->total
+                                                "total" => $item->total,
+                                                'method' => $method
                                             ];
                                         }
                                     }
@@ -1929,7 +1936,8 @@ class BoxesController extends Controller
                 'digital' => true,
                 "transfer" => false,
 
-            ], "niubiz" => [
+            ],
+            "niubiz" => [
                 "desc" => "Niubiz",
                 "quantity" => $methods['TARJETA: NIUBIZ']['quantity'],
                 "sum" => $methods['TARJETA: NIUBIZ']['sum'],
@@ -2739,7 +2747,8 @@ class BoxesController extends Controller
                 "desc" => "Izypay",
                 "quantity" => $methods['TARJETA: IZYPAY']['quantity'],
                 "sum" => $methods['TARJETA: IZYPAY']['sum'],
-            ], "niubiz" => [
+            ],
+            "niubiz" => [
                 "desc" => "Niubiz",
                 "quantity" => $methods['TARJETA: NIUBIZ']['quantity'],
                 "sum" => $methods['TARJETA: NIUBIZ']['sum'],
@@ -2888,8 +2897,8 @@ class BoxesController extends Controller
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
         $saldo = 0;
         if ($request['type'] == "pdf") {
-        $pdf = PDF::loadView('report::boxes.report_type_pdf', compact("user", "boxes_report", "establishment", "date_start", "date_end", "company", "type_box"))->setPaper('a4', 'landscape');
-        return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
+            $pdf = PDF::loadView('report::boxes.report_type_pdf', compact("user", "boxes_report", "establishment", "date_start", "date_end", "company", "type_box"))->setPaper('a4', 'landscape');
+            return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
         } else if ($request['type'] == "excel") {
 
             return (new BoxesExport)

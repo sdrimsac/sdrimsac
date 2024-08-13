@@ -15,7 +15,7 @@
                             <th class="text-center">Total detracción</th>
                             <th class="text-center">Descarga</th>
  
-                        <tr>
+                        </tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>  
                             <td>{{row.date_of_issue}}</td>

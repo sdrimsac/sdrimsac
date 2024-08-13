@@ -147,6 +147,44 @@ class DocumentController extends Controller
         ];
     }
 
+    /* public function storeFile(Request $request)
+    {
+        if ($request->header('token') !== 'toQB7pooyxV7GoWN008rXGMp4WAOGuSGo') {
+            return [
+                'success' => false,
+                'message' => 'No autorizado',
+            ];
+        }
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            if ($extension !== 'txt' && $extension !== 'json' && $extension !== 'zip') {
+                return [
+                    'success' => false,
+                    'message' => 'El archivo no es válido',
+                ];
+            }
+            $current = Carbon::now();
+            $current = $current->format('Y-m-d H:i:s');
+            $current = str_replace(' ', '', $current);
+            $current = str_replace('-', '', $current);
+            $current = str_replace(':', '', $current);
+            $current = str_replace('.', '', $current);
+            $name = $current . '_' . Str::random(8);
+            $fileName = $name . '.' . $extension;
+            $file->storeAs('red_salud', $fileName, 'public');
+
+            return [
+                'success' => true,
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'No se ha enviado un archivo',
+        ];
+    } */
+
     public function storeZip(Request $request)
     {
 

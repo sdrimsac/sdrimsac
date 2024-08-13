@@ -146,6 +146,9 @@ Vue.component(
     "tenant-report-document-detractions-index",
     require("../../modules/Report/Resources/assets/js/views/document-detractions/index.vue")
 );
+/* Vue.component("tenant-report-document-ventas-index",
+    require("../../modules/Report/Resources/assets/js/views/document-ventas/index.vue")
+); */
 //token
 Vue.component(
     "system-configuration-token",
@@ -199,8 +202,6 @@ const app = new Vue({
             ),
         "tenant-productos-index": () =>
             import("../js/views/productos/index.vue"),
-        /* "tenant-reports-productos": () =>
-            import("../js/views/reports/productos/index.vue"), */
         "whatsapp-index": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/whatsapp/index.vue"
@@ -304,6 +305,8 @@ const app = new Vue({
         "tenant-documents-index": () => import("./views/documents/index.vue"),
         "tenant-detractions-index": () =>
             import("./views/documents/detractions/index.vue"),
+        "tenant-ventas-index": () => 
+            import("./views/documents/ventas/index.vue"),
         "restaurant-documents-index": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/documents/index.vue"

@@ -23,8 +23,40 @@
                                 ></el-date-picker>
                             </div>
                         </template>
-                        <template v-if="restaurant">
+                        <template>
                             <div class="col-md-3">
+                                <label class="control-label w-100"
+                                    >Fecha Inicio</label
+                                >
+                                <el-date-picker
+                                    class="w-100"
+                                    v-model="form.date_start"
+                                    type="date"
+                                    @change="changeDisabledDates"
+                                    value-format="yyyy-MM-dd"
+                                    format="dd/MM/yyyy"
+                                    clearable
+                                ></el-date-picker>
+                            </div>
+                        </template>
+                        <template>
+                            <div class="col-md-3">
+                                <label class="control-label w-100"
+                                    >Fecha Final</label
+                                >
+                                <el-date-picker
+                                    class="w-100"
+                                    v-model="form.date_end"
+                                    type="date"
+                                    @change="changeDisabledDates"
+                                    value-format="yyyy-MM-dd"
+                                    format="dd/MM/yyyy"
+                                    clearable
+                                ></el-date-picker>
+                            </div>
+                        </template>
+                        <template v-if="restaurant">
+                            <div class="col-md-4">
                                 <label class="control-label">Usuario</label>
                                 <el-select
                                     v-model="form.user_id"
@@ -82,11 +114,14 @@
                                             <th>#</th>
                                             <th>Fecha</th>
                                             <th>Operacion</th>
+                                            <th>Establecimiento</th>
                                             <th>Referencia</th>
                                             <th>Cliente</th>
+                                            <th>DNI</th>
                                             <th>Concepto</th>
                                             <th>Usuario</th>
-                                            <th>Monto</th>
+                                            <th class="text-end">Monto</th>
+                                            <th class="text-end">Condicion de Pago</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -99,14 +134,19 @@
                                             </td>
                                             <td>{{ row.date }}</td>
                                             <td>{{ row.type }}</td>
+                                            <td>{{ row.establishment_description }}</td>
                                             <td>{{ row.reference }}</td>
                                             <td>{{ row.cliente }}</td>
+                                            <td>{{ row.customerNumber }}</td>
                                             <td>{{ row.description }}</td>
                                             <td>{{ row.user }}</td>
-                                            <td>{{ row.amount }}</td>
+                                            <td class="text-end">{{ row.amount }}</td>
+                                            <td class="text-end">
+                                                {{ row.payment_condition }}
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-end" colspan="7">
+                                            <td class="text-end" colspan="10">
                                                 Total Gastos
                                             </td>
                                             <td class="text-center">
@@ -114,7 +154,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-end" colspan="7">
+                                            <td class="text-end" colspan="10">
                                                 Total Ingreso
                                             </td>
                                             <td class="text-center">
@@ -122,7 +162,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-end" colspan="7">
+                                            <td class="text-end" colspan="10">
                                                 Total Efectivo
                                             </td>
                                             <td class="text-center">
@@ -130,7 +170,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-end" colspan="7">
+                                            <td class="text-end" colspan="10">
                                                 Total Depositos - Transferencias
                                             </td>
                                             <td class="text-center">
@@ -138,7 +178,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-end" colspan="7">
+                                            <td class="text-end" colspan="10">
                                                 Total S/
                                             </td>
                                             <td class="text-center">

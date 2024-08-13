@@ -7,242 +7,53 @@
     <meta http-equiv="Content-Type" content="application/pdf; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <style>
-        html {
-            font-family: sans-serif;
-            font-size: 11px;
-        }
-
-        table {
-            width: 100%;
-            border-spacing: 0;
-
-        }
-
-        .table {
-            border: 0.1px solid #ccc;
-        }
-
-        .celda {
-            text-align: left;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        .celda_center {
-            text-align: center;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        .celda_right {
-            text-align: right;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        tr:nth-child(even) {}
-
-        .nth-child {
-            background-color: transparent;
-        }
-
-        .border-bottom {
-            border-bottom: 0.1px solid #ccc;
-        }
-
-        th {
-            padding: 5px;
-            text-align: center;
-            border-color: #409EFF;
-            border: 0.1px solid #ccc;
-        }
-
-        .headers {
-            padding: 5px !important;
-            border-bottom: 0.1px solid #ccc;
-            height: 25px;
-        }
-
-        .title {
-            font-weight: bold;
-            padding: 5px;
-            font-size: 20px !important;
-            text-decoration: underline;
-        }
-
-        p>strong {
-            margin-left: 5px;
-            font-size: 13px;
-        }
-
-        thead {
-            font-weight: bold;
-            color: #000;
-            text-align: center;
-        }
-
-        .title {
-            font-weight: bold;
-            padding: 3px;
-            font-size: 20px !important;
-            text-decoration: underline;
-        }
-
-        .encabezado {
-            background-color: #ccc;
-            text-transform: uppercase;
-            padding: 5px;
-            padding-left: 10px;
-        }
-
-        .categoria {
-            background-color: #eee;
-            text-transform: uppercase;
-            padding: 5px;
-            padding-left: 50px;
-        }
-
-        .celda_loop {
-            width: 10% !important;
-            text-align: center;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        .celda_descrip {
-            width: 60% !important;
-            text-align: left;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        .celda_date {
-            width: 30% !important;
-            text-align: center;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        .celda_left {
-            width: 30% !important;
-            text-align: left;
-            padding: 5px;
-            border: 0.1px solid #ccc;
-        }
-
-        p>strong {
-            margin-left: 5px;
-            font-size: 11px;
-        }
-
-        header {
-            position: fixed;
-            height: 1cm;
-            color: #000;
-            text-align: center;
-            padding: 10px;
-            font-size: 12px;
-            font-family: arial;
-
-        }
-
-        footer {
-            position: fixed;
-            bottom: 10px;
-            height: 0.8cm;
-            color: #000;
-            text-align: center;
-            font-size: 11px;
-            padding: 12px;
-            font-family: Arial;
-            padding: 10px;
-        }
-
-        @page {
-            margin: 0.5cm 0.5cm 0cm 0.5cm;
-            font-family: sans-serif;
-        }
-
-        td,
-        th {
-            font-size: 10px !important;
-            height: 15px;
-        }
-
-        body {
-            margin: 1.5cm 0.5cm 0.5cm 0.5cm;
-        }
-    </style>
 </head>
 
 <body>
-    <table>
-        <tr>
-            <td colspan="16" class="celda_center" style="border: none">
-                <h1 class="title">Reporte de {{ $type_box == 'expenses' ? 'Gastos' : 'Egresos' }}</h1>
-            </td>
-        </tr>
-    </table>
-
-        <table style="border-collapse: collapse;border-bottom:1px solid #ddd;">
-
-            <tr>
-                {{-- <td width="60%" height="30" align="left" valign="top">
-                    @if ($company->logo)
-                        <img src="{{ asset('storage/uploads/logos/' . $company->logo) }}" height="40" />
-                    @endif
-                </td> --}}
-                {{-- @if ($type_box == 'incomes')
-                    <td width="40%" height="30" align="right" valign="middle"
-                        style="font-size:13px !important;  font-family: sans-serif !important;">Movimiento Venta
-                        Efectivo desde {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
-                        hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
-                    </td>
-                @else --}}
-                    <td colspan="5" width="40%" height="30" align="right" valign="middle"
-                        style="font-size:13px !important; text-align:center; font-family: sans-serif !important;">Reporte desde
-                        {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
-                        hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
-                    </td>
-                {{-- @endif --}}
-                @if ($user)
-                    <td></td>
-                @endif
-            </tr>
-        </table>
 
     <div>
-        <table cellpadding="0" cellspacing="0">
+        <table>
             <tr>
-                <td colspan="10" class="headers" height="20">
+                <td colspan="11"
+                    style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
+                    <h3 align="center" class="title"><strong>Reporte De Venta Por Usuarios</strong></h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6"
+                    style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
                     <strong>Empresa: </strong>{{ $company->name }}
                 </td>
-                <td colspan="3" class="headers">
-                    <strong>Fecha: </strong>{{ date('Y-m-d') }}
+                <td colspan="5"
+                        style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
+                        Reporte desde
+                        {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
+                        hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
                 </td>
+
+            </tr>
+            <tr>
                 @if ($user)
-                    <td colspan="3" class="headers">
+                    <td colspan="5"
+                        style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
                         <strong>Usuario: </strong>{{ $user->name }}
                     </td>
                 @endif
-            </tr>
-            <tr class="nth-child">
-                <td colspan="5" class="headers" height="20">
+                <td colspan="3"
+                    style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
                     <strong>Ruc: </strong>{{ $company->number }}
                 </td>
-                <td colspan="5" class="headers">
+                <td colspan="3"
+                    style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
                     <strong>Establecimiento: </strong>{{ $establishment->address }} -
                     {{ $establishment->department->description }} - {{ $establishment->district->description }}
                 </td>
             </tr>
-            <tr>
-                <td colspan="16"></td>
-            </tr>
         </table>
     </div>
     @if (!empty($boxes_report))
-
+        <div class="">
+            <div class=" ">
                 @php
                     $totales_ingresos = 0;
                     $totales_egresos = 0;
@@ -253,83 +64,128 @@
                 @endphp
                 <table>
                     <tbody>
-
-
                         <tr>
-                            <th class="encabezado">#</th>
-                            <th class="encabezado" >Fecha</th>
-                            {{-- <td class="encabezado" width="70">Operacion</td> --}}
-                            <th  class="encabezado" >Concepto</th>
-                            <th class="encabezado" >Detalle</th>
-                            <th class="encabezado" >Monto</th>
-                            <th class="encabezado" >Usuario</th>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">#</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Fecha</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Operacion</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Ref</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Establecimiento</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Cliente</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">N° Identificacion</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Concepto</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Monto</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Usuario</td>
+                            <td style="border: 1px solid black; background-color: #DCDCDC;">Condicion de Pago</td>
 
                         </tr>
                     <tbody>
                         @foreach ($boxes_report as $row)
+                            @php
+                                $establishment = App\Models\Tenant\Establishment::find($row->establishment_id);
+                                $establishment_description = $establishment == null ? '' : $establishment->description;
+                            @endphp
                             <?php
+                            $amount = $row['amount'];
+                            if (isset($row['document_id']) && $row['document_id'] != null) {
+                                $document = \App\Models\Tenant\Document::find($row['document_id']);
+                                $total = $document->total;
+                                /* $payment_condition = $row_document->payment_condition_id == "01" ? "Contado" : "Crédito"; */
+                                $payment_condition = $document->payment_condition_id == "01" ? "Contado" : "Crédito";
+                                if ($total < $amount) {
+                                    $amount = $total;
+                                }
+                                $date = $document->date_of_issue . ' ' . $document->time_of_issue;
+                            }
+                            if (isset($row['sale_note_id']) && $row['sale_note_id'] != null) {
+                                $document = \App\Models\Tenant\SaleNote::find($row['sale_note_id']);
+                                $payment_condition = $document->credit_cash !== 1 ? "Contado" : "Crédito";
+                                $total = $document->total;
+                                if ($total < $amount) {
+                                    $amount = $total;
+                                }
+                                $date = $document->date_of_issue->format('Y-m-d') . ' ' . $document->time_of_issue;
+                            }
                             if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
-                                $ingresos = $ingresos + $row['amount'];
+                                $ingresos = $ingresos + $amount;
                             }
                             if ($row['type'] == '1' && $row['method'] == 'Depositos') {
-                                $depositos = $depositos + $row['amount'];
+                                $depositos = $depositos + $amount;
                             }
                             if ($row['type'] == '1' && $row['method'] == 'Transferencia') {
-                                $transferencia = $transferencia + $row['amount'];
+                                $transferencia = $transferencia + $amount;
                             }
                             
                             if ($row['type'] == '2') {
-                                $egresos = $egresos + $row['amount'];
+                                $egresos = $egresos + $amount;
                             }
+                            $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y') . ' ' . \Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
                             
                             ?>
                             <tr>
-                                <td class="celda_loop">{{ $loop->iteration }}</td>
-                                <td class="celda_descrip">
-                                    {{ \Carbon\Carbon::parse($row['date'])->format('d-m-Y') }}
-                                    {{ \Carbon\Carbon::parse($row['created_at'])->format('h:m:s') }}</td>
-
-                                <td  class="celda_left">{{ $row['description'] }}</td>
-                                <td class="celda_left">
-                                    @if (count($row['items']) > 0)
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <td class="celda_left" style="border: none">Desc.</td>
-                                                    <td class="celda_left" style="border: none">Cant.</td>
-                                                    <td class="celda_left" style="border: none">Prec.</td>
-                                                    <td class="celda_left" style="border: none">Prec. Adic.</td>
-                                                    <td class="celda_left" style="border: none">Total</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-
-                                                @foreach ($row['items'] as $item)
-                                                    <tr>
-                                                        <td class="celda_left" style="border:none">
-                                                            {{ $item->item->detail }}
-                                                        </td>
-                                                        <td class="celda_left" style="border:none">
-                                                            {{ number_format($item->quantity, 2) }}
-                                                        </td>
-                                                        <td class="celda_left" style="border:none">
-                                                            {{ number_format($item->price, 2) }}
-                                                        </td>
-                                                        <td class="celda_left" style="border:none">
-                                                            {{ number_format($item->price_extra, 2) }}
-                                                        </td>
-                                                        <td class="celda_left" style="border:none">
-                                                            {{ number_format($item->price_extra + $item->price * $item->quantity, 2) }}
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    @endif
+                                <td  style="border: 1px solid black;">{{ $loop->iteration }}</td>
+                                <td style="border: 1px solid black;">
+                                    {{ $date }}
                                 </td>
-                                <td class="celda_date">{{ $row['amount'] }}</td>
-                                <td class="celda_left">{{ $row['user']->name }}</td>
+
+
+                                @if ($row['type'] == '1' && $row['method'])
+                                    <td style="border: 1px solid black;">{{ $row['method'] }}</td>
+                                @endif
+
+                                @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
+                                    <td style="border: 1px solid black;">
+                                        {{ $row['method'] }}
+                                    </td>
+                                @endif
+                                <td style="border: 1px solid black;">{{ $row['cash']['reference_number'] }}</td>
+                                @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
+                                    <td style="border: 1px solid black;">
+                                        {{ $row['subcategories']->subcategory }}
+                                    </td>
+                                @else
+                                    @if ($row['type'] == '1' && $row['sale_note_id'] == null && $row['document_id'] == null)
+                                        <td style="border: 1px solid black;">
+                                            {{ $row['subcategories']->subcategory }}
+                                        </td>
+                                    @else
+                                        <td style="border: 1px solid black;">
+                                            {{ $establishment_description }}
+                                        </td>
+                                        @if ($row['sale_note_id'] != null && $row['document_id'] == null)
+                                            <td style="border: 1px solid black;">
+                                                {{ $row['salenote']['customer']->name }}
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                {{ $row['salenote']['customer']->number }}
+                                            </td>
+                                        @else
+                                            @if ($row['sale_note_id'] != null && $row['document_id'] != null)
+                                                <td style="border: 1px solid black;">
+                                                    {{ $row['salenote']['customer']->name }}
+                                                </td>
+                                                <td style="border: 1px solid black;">
+                                                    {{ $row['salenote']['customer']->number }}
+                                                </td>
+                                            @else
+                                                @if ($row['document_id'] != null && $row['sale_note_id'] == null)
+                                                    <td style="border: 1px solid black;">
+                                                        {{ $row['document']['customer']->name }}
+                                                    </td>
+                                                    <td style="border: 1px solid black;">
+                                                        {{ $row['document']['customer']->number }}
+                                                    </td>
+                                                @endif
+                                            @endif
+                                            {{-- <td>
+                                                {{ $row['document']['customer']->number }}
+                                            </td> --}}
+                                        @endif
+                                    @endif
+                                @endif
+                                <td style="border: 1px solid black;">{{ $row['description'] }}</td>
+                                <td style="border: 1px solid black;">{{ $amount }}</td>
+                                <td style="border: 1px solid black;">{{ $row['user']->name }}</td>
+                                <td style="border: 1px solid black;">{{ $payment_condition }}</td>
 
                             </tr>
                         @endforeach
@@ -339,24 +195,59 @@
                 </table>
                 <table>
                     <tr>
-                        <td class="categoria celda_right"><b>RESUMEN TOTAL</b></td>
+                        <td colspan="10"></td>
+                        <td class="categoria celda_right" style="border: 1px solid black;"><b>RESUMEN DE ARQUEO</b></td>
                     </tr>
 
-                    @if ($type_box != 'expenses')
+                    <tr>
+                        <td colspan="10"></td>
+                        <td class="categoria celda_right" style="border: 1px solid black;">Ingresos - Venta : <b> S/.
+                                {{ number_format(round($ingresos * 10) / 10, 2) }}</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"></td>
+                        <td class="categoria celda_right" style="border: 1px solid black;">Egresos : <b> S/.
+                                {{ number_format(round($egresos * 10) / 10, 2) }}</b></td>
+                    </tr>
+
+
+
+                    @if ($type_box == '2' && $type_box != null)
                         <tr>
-                            <td class="categoria celda_right">Ingresos - Venta : <b> S/.
-                                    {{ number_format(round($ingresos * 10) / 10, 2) }}</b></td>
-                        </tr>
-                    @else
-                        <tr>
-                            <td class="categoria celda_right">Egresos : <b> S/.
+                            <td colspan="10"></td>
+                            <td class="categoria celda_right" style="border: 1px solid black;">Gastos - Egresos : <b> S/.
                                     {{ number_format(round($egresos * 10) / 10, 2) }}</b></td>
                         </tr>
                     @endif
-
-
-
-                
+                    @if ($depositos > 0.0 || $transferencia > 00)
+                        <tr>
+                            <td colspan="10"></td>
+                            <td class="categoria celda_right" style="border: 1px solid black;">Depositos - Transferencia : <b> S/.
+                                    {{ number_format(round(($depositos + $transferencia) * 10) / 10, 2) }}</b></td>
+                        </tr>
+                    @endif
+                    @if ($type_box == '1' && $type_box != null)
+                        <tr>
+                            <td colspan="10"></td>
+                            <td class="categoria celda_right" style="border: 1px solid black;">Totales : <b> S/.
+                                    {{ number_format($ingresos - $egresos + $depositos + $transferencia, 2) }}</b>
+                            </td>
+                        </tr>
+                        @if ($type_box == '2' && $type_box != null)
+                            <tr>
+                                <td colspan="10"></td>
+                                <td class="categoria celda_right" style="border: 1px solid black;">Efectivo Gastos: <b> S/.
+                                        {{ number_format(round($egresos * 10) / 10, 2) }}</b></td>
+                            </tr>
+                        @endif
+                    @endif
+                    @if ($type_box == '1' && $type_box != null)
+                        <tr>
+                            <td colspan="10"></td>
+                            <td class="categoria celda_right" style="border: 1px solid black;">Efectivo : <b> S/.
+                                    {{ number_format(round(($egresos + $ingresos) * 10) / 10, 2) }}</b></td>
+                        </tr>
+                    @endif
                 </table>
             @else
                 <div class="callout callout-info">
@@ -364,14 +255,6 @@
                 </div>
 
     @endif
-        <table width="100%" border="0" style="border-collapse: collapse;border-top:1px solid #ddd;">
-            <tr>
-                <td align="left" valign="middle" colspan="2">Direccion:{{ $establishment->address }} -
-                    {{ $establishment->department->description }} - {{ $establishment->district->description }} -
-                    Telefonos: {{ $establishment->telephone }} Email: {{ $establishment->email }}</td>
-            </tr>
-        </table>
 </body>
-
 
 </html>

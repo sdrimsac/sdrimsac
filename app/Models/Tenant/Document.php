@@ -402,7 +402,7 @@ class Document extends ModelTenant
 
     public function items()
     {
-        return $this->hasMany(DocumentItem::class);
+        return $this->hasMany(DocumentItem::class, 'document_id', 'id');
     }
 
     public function kardex()
@@ -440,6 +440,11 @@ class Document extends ModelTenant
     public function sale_note()
     {
         return $this->belongsTo(SaleNote::class, 'sale_note_id');
+    }
+
+    public function establishment()
+    {
+        return $this->belongsTo(Establishment::class, 'establishment_id');
     }
 
     public function hotel_rent()

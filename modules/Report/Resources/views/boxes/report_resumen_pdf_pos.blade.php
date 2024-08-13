@@ -1665,6 +1665,9 @@
                                     <span class="f12">DESCRIPCION</span>
                                 </th>
                                 <th>
+                                    <span class="f12">METODO PAGO</span>
+                                </th>
+                                <th>
                                     <span class="f12">PRECIO</span>
                                 </th>
                                 <th>
@@ -1688,10 +1691,11 @@
                                             <td class="f12">{{ strtoupper($detail['desc']) }}</td>
                                         
                                         @endif
-                                    @endforeach
-
+                                    @endforeach 
                                     </td> --}}
-                                    
+                                    <td class="f12 right">
+                                        {{ $a_item['method'] }}
+                                    </td>
                                     <td class="f12 right">
                                         {{ number_format(floatval($a_item['price']), 2) }}
                                     </td>
@@ -1701,7 +1705,7 @@
                                 </tr>
                             @endforeach
                             <tr>
-                                <td colspan="2"></td>
+                                <td colspan="3"></td>
                                 <td class="f12 right">TOTAL</td>
                                 <td class="f12 right">
                                     @php

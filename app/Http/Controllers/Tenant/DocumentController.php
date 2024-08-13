@@ -78,7 +78,9 @@ use  Modules\Inventory\Models\InventoryConfiguration;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\DocumentExport;
+use App\Exports\DocumentVenta;
 use App\Http\Resources\Tenant\DocumentDetractionCollection;
+use App\Http\Resources\Tenant\DocumentVentaCollection;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
@@ -347,6 +349,12 @@ class DocumentController extends Controller
         ];
     }
 
+    public function index_ventas()
+    {
+        $configuration = Configuration::first();
+        $company = Company::first();
+        return view('tenant.documents.ventas', compact('company', 'configuration'));
+    }
 
     public function index_detraction()
     {
@@ -382,6 +390,13 @@ class DocumentController extends Controller
         return view('restaurant::documents.list', compact('is_client', 'import_documents', 'import_documents_second', 'configuration'));
     }
     public function columns_detraction()
+    {
+        return [
+            'number' => 'Número',
+            'date_of_issue' => 'Fecha de emisión'
+        ];
+    }
+    public function columns_ventas()
     {
         return [
             'number' => 'Número',
@@ -424,12 +439,18 @@ class DocumentController extends Controller
             $salenoteFind->save();
         }
     }
-
+    /* aqui envia a atravez de records los datos a a la colection y luego pasa al fronted */
     public function records_detraction(Request $request)
     {
         $records = $this->getRecordsDetraction($request);
 
         return new DocumentDetractionCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function records_ventas(Request $request)
+    {
+        $records = $this->getRecordsVentas($request);
+
+        return new DocumentVentaCollection($records->paginate(20));
     }
 
     /* agregado para 50 paginacion */
@@ -488,7 +509,12 @@ class DocumentController extends Controller
             $token = config('app.api_peru_service_token');
             $company = Company::first();
             $response = Http::withoutVerifying()->withToken($token)->accept('application/json')->post($api_url . "/cpe", [
-                'ruc_emisor' => $company->number, 'codigo_tipo_documento' => $documents->document_type_id, 'serie_documento' => $documents->series, 'numero_documento' => $documents->number, 'fecha_de_emision' => Carbon::parse($documents->date_of_issue)->format('Y-m-d'), 'total' => $documents->total
+                'ruc_emisor' => $company->number,
+                'codigo_tipo_documento' => $documents->document_type_id,
+                'serie_documento' => $documents->series,
+                'numero_documento' => $documents->number,
+                'fecha_de_emision' => Carbon::parse($documents->date_of_issue)->format('Y-m-d'),
+                'total' => $documents->total
             ]);
             if ($response->ok()) {
                 $body = $response->json();
@@ -1678,7 +1704,7 @@ class DocumentController extends Controller
     public function excel(Request $request)
     {
         ini_set('memory_limit', '2048M');
-        $records = $this->getRecords($request,false,true)->get();
+        $records = $this->getRecords($request, false, true)->get();
         $establishment = Establishment::first();
         $company = Company::active();
         return (new DocumentExport)
@@ -1686,6 +1712,22 @@ class DocumentController extends Controller
             ->company($company)
             ->establishment($establishment)
             ->download('Reporte_Ventas_' . Carbon::now() . '.xlsx');
+    }
+    public function excelVentas(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+        $records = $this->getRecordsVentas($request, false, true)->get();
+        $establishment = Establishment::first();
+        $d_start = $request->d_start;
+        $d_end = $request->d_end;
+        $company = Company::active();
+        return (new DocumentVenta)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->d_end($d_end)
+            ->d_start($d_start)
+            ->download('Reporte_productos_vendidos_' . Carbon::now() . '.xlsx');
     }
     public function import(Request $request)
     {
@@ -1756,6 +1798,50 @@ class DocumentController extends Controller
             'message' => '',
         ];
     }
+    public function getRecordsVentas($request)
+    {
+        $d_end = $request->d_end;
+        $d_start = $request->d_start;
+        $date_of_issue = $request->date_of_issue;
+        $document_type_id = $request->document_type_id;
+        $state_type_id = $request->state_type_id;
+        $number = $request->number;
+        $series = $request->series;
+        $item_id = $request->item_id;
+        $company = Company::first();
+        $customer_id = $request->customer_id;
+        $soap_type_id = $company->soap_type_id;
+    
+        $records = Document::query()
+            ->where('soap_type_id', '=', $soap_type_id)
+            ->where('document_type_id', 'like', '%' . $document_type_id . '%')
+            ->where('state_type_id', 'like', '%' . $state_type_id . '%')
+            ->where('series', 'like', '%' . $series . '%')
+            ->where('number', 'like', '%' . $number . '%')
+            ->orderBy('id', 'desc')
+            ->orderBy('number', 'desc')
+            ->latest();
+
+
+        if ($d_start && $d_end) {
+            $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
+        } else {
+            $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
+        }
+
+        if ($customer_id) {
+            $records = $records->where('customer_id', $customer_id);
+        }
+        if ($item_id) {
+            $records = $records->whereHas('items', function ($query) use ($item_id) {
+                $query->where('item_id', $item_id);
+            });
+        }
+        
+
+        $records = $records->orderBy('date_of_issue', 'desc');
+        return $records;
+    }
 
     public function getRecordsDetraction($request)
     {
@@ -1812,7 +1898,7 @@ class DocumentController extends Controller
 
         return $records;
     }
-    public function getRecords($request, $detraction = false,$export = false)
+    public function getRecords($request, $detraction = false, $export = false)
     {
         $d_end = $request->d_end;
         $d_start = $request->d_start;
@@ -1905,10 +1991,10 @@ class DocumentController extends Controller
         }
 
         $totalSum = $records->sum('total');
-        if($export){
+        if ($export) {
 
-            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc'); 
-        }else{
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
+        } else {
 
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(25);
             $records->total_sum = $totalSum;
@@ -2014,7 +2100,6 @@ class DocumentController extends Controller
 
                 ];
             });
-
         return $items;
     }
 

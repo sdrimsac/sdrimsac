@@ -527,6 +527,10 @@ class Item extends ModelTenant
     {
         return $this->hasMany(ItemWarehouse::class)->with('warehouse');
     }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
+    }
 
 
     public function item_unit_types()

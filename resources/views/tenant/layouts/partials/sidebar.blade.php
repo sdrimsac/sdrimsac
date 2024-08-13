@@ -272,7 +272,7 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- @if ($many_establishments) --}}
+                        @if ($many_establishments && $config->receive_merchandise) 
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('transfers.index') }}">
@@ -285,7 +285,7 @@
                                     <i class="icofont-list"></i> Traslados por aceptar
                                 </a>
                             </li>
-                        {{-- @endif --}}
+                        @endif
 
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
@@ -418,12 +418,12 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- <li>
-                            <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
-                                href="{{ route('tenant.documents.index') }}">
+                        <li>
+                            <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
+                                href="{{ route('tenant.ventas.index') }}">
                                 <i class="icofont-list"></i> Productos Vendidos 
                             </a>
-                        </li> --}}
+                        </li>
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.not_sent') }}">

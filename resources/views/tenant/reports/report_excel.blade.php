@@ -14,7 +14,7 @@
     <table>
         <tr>
             <td colspan="17" style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
-                <h3 align="center" class="title"><strong>Reporte Documentos Boletas y Facturas aaa</strong></h3>
+                <h3 align="center" class="title"><strong>Reporte Documentos Boletas y Facturas</strong></h3>
             </td>
         </tr>
         <tr>

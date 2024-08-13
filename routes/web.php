@@ -451,7 +451,15 @@ if ($hostname) {
                         Route::get('columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns_detraction']);
                         Route::get('records', [App\Http\Controllers\Tenant\DocumentController::class, 'records_detraction']);
                         Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
-                    });
+                });
+                Route::prefix('documents_ventas')
+                    ->group(function () {
+                        Route::get('', [App\Http\Controllers\Tenant\DocumentController::class, 'index_ventas'])->name('tenant.ventas.index')->middleware(['just.admin']);
+                        Route::get('columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns_ventas']);
+                        Route::get('records', [App\Http\Controllers\Tenant\DocumentController::class, 'records_ventas']);
+                        Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
+                        Route::get('/ventas/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excelVentas']);
+                });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
 
                 Route::get('documents/create/{documents?}', [App\Http\Controllers\Tenant\DocumentController::class, 'create'])->name('tenant.documents.create')->middleware('just.admin');
