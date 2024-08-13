@@ -262,7 +262,7 @@ class ReportStockMinController extends Controller
                 $ordencompra = ListOrdenCompra::create([
                     'item_id' => $value['item_id'],
                     'id_persons' => $value['persona_id'],
-                    'unit_price' => $value['unit_price'],
+                    'unit_price' => floatval( $value['unit_price']),
                     'id_orden_compra' => $idOrdenCompra->id
                 ]);
 
