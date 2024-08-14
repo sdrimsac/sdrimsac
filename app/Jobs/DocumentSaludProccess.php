@@ -254,6 +254,7 @@ class DocumentSaludProccess implements ShouldQueue
                             $document_salud->status = 'Fallido';
                         }
                     } catch (Exception $e) {
+                        Log::info('error: file: ' . $file . " " . $e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
                         $this->sendMessage($establishment_id,$full_number,$this->user_id);
                         $document_salud->status = 'Fallido';
                         $message = $e->getMessage();
