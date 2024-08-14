@@ -1664,9 +1664,7 @@
                                 <th>
                                     <span class="f12">DESCRIPCION</span>
                                 </th>
-                                <th>
-                                    <span class="f12">METODO PAGO</span>
-                                </th>
+
                                 <th>
                                     <span class="f12">PRECIO</span>
                                 </th>
@@ -1693,9 +1691,7 @@
                                         @endif
                                     @endforeach 
                                     </td> --}}
-                                    <td class="f12 right">
-                                        {{ $a_item['method'] }}
-                                    </td>
+
                                     <td class="f12 right">
                                         {{ number_format(floatval($a_item['price']), 2) }}
                                     </td>
@@ -1705,7 +1701,7 @@
                                 </tr>
                             @endforeach
                             <tr>
-                                <td colspan="3"></td>
+                                <td colspan="2"></td>
                                 <td class="f12 right">TOTAL</td>
                                 <td class="f12 right">
                                     @php
@@ -1727,6 +1723,67 @@
             </div>
         @endif
 
+        @if ($all_methods_info && count($all_methods_info) > 0)
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE METODOS DE PAGO (NO EFECTIVO)
+                </span>
+
+                @foreach ($all_methods_info as $title_method => $moves)
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="left">
+                                    <span class="f12">
+                                        {{ $title_method }}
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="f12">DOCUMENTO</span>
+                                </th>
+                                <th>
+                                    <span class="f12">FECHA</span>
+                                </th>
+
+                                <th>
+                                    <span class="f12">CLIENTE</span>
+                                </th>
+                                <th>
+                                    <span class="f12">TOTAL</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($moves as $move)
+                                <tr>
+                                    <td class="f12 center">
+                                        {{ $move['document'] }}
+                                    </td>
+                                    <td class="f12 center">
+                                        {{ $move['date_of_issue'] }}
+                                    </td>
+
+                                    <td class="f12 center">
+                                        {{ $move['customer_name'] }}
+                                        <br>
+                                        <small>
+                                            {{ $move['customer_number'] }}
+                                        </small>
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format($move['amount'], 2) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                            
+                        </tbody>
+                    </table>
+                @endforeach
+
+            </div>
+        @endif
     </div>
 
 </body>

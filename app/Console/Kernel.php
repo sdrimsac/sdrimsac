@@ -25,6 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //$schedule->command('tenancy:run tenant:run')->everyMinute();
+        //  $schedule->command('tenancy:run delete:register-movements')->everySixHours();
+        //one time per day
+        // $schedule->command('delete:register-movements')->daily();
          $schedule->command('tenancy:run tenant:run')->everyMinute();
     }
 

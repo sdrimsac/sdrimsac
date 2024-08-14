@@ -48,38 +48,49 @@ class WhatsappSendMessageProccess implements ShouldQueue
         $number = $this->number;
         $message = $this->message;
         $configuration = Configuration::first();
-        if ($number == null) {
-            $number = $configuration->number_activity;
+        
+        try{
+            if ($number == null) {
+                $number = $configuration->number_activity;
+            }
+    
+            if (!$number) {
+                Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
+                return;
+            }
+            $url = "https://sdrpersonal.shop/api/send-message";
+            // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
+            $sender = 'sdrimsac';
+            if($this->subdomain != null && $configuration->whatsapp_client){
+                $url = "https://".$this->subdomain.".sdrpersonal.shop/api/send-message";
+                $sender = $this->subdomain;
+            }else{
+                $web_whatsapp = config('app.web_whatsapp');
+                $url = "https://" . $web_whatsapp . '/api/send-message';
+            }
+                $response = Http::post($url, [
+                    'number' => "51" . $number,
+                    'sender' => $sender,
+                    'message' => $message,
+                ]);
+    
+                $status = $response->status();
+                $body = $response->body();
+                return [
+                    "success" => $status == 200,
+                    "message" => $body
+    
+    
+                ];
         }
-
-        if (!$number) {
-            Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
-            return;
-        }
-        $url = "https://sdrpersonal.shop/api/send-message";
-        // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
-        $sender = 'sdrimsac';
-        if($this->subdomain != null && $configuration->whatsapp_client){
-            $url = "https://".$this->subdomain.".sdrpersonal.shop/api/send-message";
-            $sender = $this->subdomain;
-        }else{
-            $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $web_whatsapp . '/api/send-message';
-        }
-            $response = Http::post($url, [
-                'number' => "51" . $number,
-                'sender' => $sender,
-                'message' => $message,
-            ]);
-
-            $status = $response->status();
-            $body = $response->body();
+        catch(Exception $e){
+            Log::error($e->getMessage());
             return [
-                "success" => $status == 200,
-                "message" => $body
-
-
+                "success" => false,
+                "message" => $e->getMessage()
             ];
+        }
+        
 
         
     }

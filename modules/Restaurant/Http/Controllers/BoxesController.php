@@ -498,14 +498,25 @@ class BoxesController extends Controller
             "documents_info" => $documents,
         ];
     } */
-
+    function add_method(&$all_methods, $method, $amount, $document, $date_of_issue, $customer) {
+        if (!isset($all_methods[$method])) {
+            $all_methods[$method] = [];
+        }
+        $all_methods[$method][] = [
+            'amount' => $amount,
+            'document' => $document,
+            'date_of_issue' => $date_of_issue,
+            'customer_name' => $customer->name,
+            'customer_number' =>$customer->number
+        ];
+    }
     function get_items_from_box($cash_id)
     {
         $boxes = Box::where('cash_id', $cash_id)
             ->select('document_id', 'sale_note_id', 'method')
             ->whereNull('sale_note_payment_id')
             ->get();
-
+        $all_methods = [];
         $all_items = [];
         $all_documents = [
             "facturas" => ["total" => 0, "quantity" => 0],
@@ -517,11 +528,13 @@ class BoxesController extends Controller
 
         foreach ($boxes as $box) {
             $total = 0;
-            $method=null;
+            $method=$box->method;
             if ($box->document_id) {
                 $document = Document::find($box->document_id);
+                if($method != "Efectivo"){
+                    $this->add_method($all_methods,$method,$document->total,$document->number_full,$document->date_of_issue,$document->customer);
+                }
                 $boxes = Box::where('document_id', $box->document_id)->get()->pluck('amount')->toArray();
-                $method = implode("-",array_unique(Box::where('document_id',$box->document_id)->get()->pluck('method')->toArray()));
                 if ($document) {
                     $name_document = $document->getNumberFullAttribute();
                     $column = array_column($documents, 'name');
@@ -566,7 +579,6 @@ class BoxesController extends Controller
                                                 "description" => $description_item,
                                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                                 "total" => $all_items[$id_exist]["total"] + $item->total,
-                                                'method' => $method
                                             ];
                                         } else {
                                             $all_items[] = [
@@ -576,7 +588,6 @@ class BoxesController extends Controller
                                                 "quantity" => $item->quantity,
                                                 "category" => $this->get_category($item),
                                                 "total" => $item->total,
-                                                'method' => $method
                                             ];
                                         }
                                     }
@@ -589,10 +600,12 @@ class BoxesController extends Controller
 
             if ($box->sale_note_id && $box->sale_note_payment_id == null) {
                 $sale_note = SaleNote::find($box->sale_note_id);
+                if($method != "Efectivo"){
+                    $this->add_method($all_methods,$method,$sale_note->total,$sale_note->number_full,$sale_note->date_of_issue->format('d-m-Y'),$document->customer);
+                }
                 $boxes = Box::where('sale_note_id', $box->sale_note_id)
 
                     ->get()->pluck('amount')->toArray();
-                    $method = implode("-",array_unique(Box::where('sale_note_id',$box->sale_note_id)->get()->pluck('method')->toArray()));
                 if ($sale_note) {
                     $name_sale_note = $sale_note->getNumberFullAttribute();
                     $column = array_column($documents, 'name');
@@ -630,7 +643,6 @@ class BoxesController extends Controller
                                                 "description" => $description_item,
                                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                                 "total" => $all_items[$id_exist]["total"] + $item->total,
-                                                'method' => $method
                                             ];
                                         } else {
                                             $all_items[] = [
@@ -640,7 +652,6 @@ class BoxesController extends Controller
                                                 "quantity" => $item->quantity,
                                                 "category" => $this->get_category($item),
                                                 "total" => $item->total,
-                                                'method' => $method
                                             ];
                                         }
                                     }
@@ -675,13 +686,13 @@ class BoxesController extends Controller
         $grouped = array_merge($cat_habitaciones, array_filter($grouped, function ($item) {
             return $item[0]["category"] != "HABITACIONES";
         }));
-
         return [
             "categories" => $categories,
             "grouped" => $grouped,
             "items" => $all_items,
             "documents" => $all_documents,
             "documents_info" => $documents,
+            "all_methods" => $all_methods,
         ];
     }
 
@@ -1879,6 +1890,7 @@ class BoxesController extends Controller
         $grouped = $info['grouped'];
         $documents = $info['documents'];
         $documents_info = $info['documents_info'];
+        $all_methods_info = $info['all_methods'];
         $saldo = 0;
 
         $uniques = array_unique(array_column($items, 'description'));
@@ -2153,6 +2165,8 @@ class BoxesController extends Controller
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
                 "detraction_payments",
+                "all_methods",
+                "all_methods_info",
                 "advances_sale_note_credit",
                 "credit_cash_expense",
                 "bill_series",
