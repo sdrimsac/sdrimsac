@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'report_cash_methods',
         'internal_voided',
         'only_cash_by_establishment',
         'barcode',
@@ -208,6 +209,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'report_cash_methods' => 'boolean',
         'internal_voided' => 'boolean',
         'only_cash_by_establishment' => 'boolean',
         'barcode' => 'boolean',
@@ -356,6 +358,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'report_cash_methods' => (bool)$this->report_cash_methods,
             'internal_voided' => (bool)$this->internal_voided,
             'only_cash_by_establishment' => (bool)$this->only_cash_by_establishment,
             'barcode' => (bool)$this->barcode,

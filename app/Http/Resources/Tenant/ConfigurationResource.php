@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'report_cash_methods'    => (bool) $this->report_cash_methods,
             'internal_voided' => (bool) $this->internal_voided,
             'only_cash_by_establishment' => (bool)$this->only_cash_by_establishment,
             'barcode' => (bool)$this->barcode,

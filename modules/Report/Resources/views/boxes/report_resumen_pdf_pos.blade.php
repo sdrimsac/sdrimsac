@@ -227,6 +227,7 @@
     $digital = $total_coins_virtual;
     $transfer = $total_coins_transfert;
     $bank = $total_coins_bank;
+    $configuration = \App\Models\Tenant\Configuration::first();
     function get_coin($coin, $counter)
     {
         if (array_key_exists($coin, $counter)) {
@@ -1722,7 +1723,7 @@
 
             </div>
         @endif
-
+            @if($configuration->report_cash_methods)
         @if ($all_methods_info && count($all_methods_info) > 0)
             <div style="text-align:center;">
                 <span style="font-size: 18px !important;">
@@ -1783,6 +1784,7 @@
                 @endforeach
 
             </div>
+        @endif
         @endif
     </div>
 

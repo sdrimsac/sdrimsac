@@ -3339,6 +3339,41 @@
                                                                                         >
                                                                                     </div>
                                                                                 </div>
+                                                                                    <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            Detalle métodos - reporte
+                                                                                            <el-tooltip
+                                                                                                class="item"
+                                                                                                effect="dark"
+                                                                                                content="Mostrar detalle método de pago (no efectivo) en reporte"
+                                                                                                placement="top-start"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.report_cash_methods
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                        <br />
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </el-card>

@@ -3184,7 +3184,7 @@ export default {
             this.form.guides.splice(index, 1);
         },
         addRow(row) {
-            console.log(JSON.stringify(row.total));
+            console.log("total agregado: ",JSON.stringify(row.total));
             if (this.recordItem) {
                 //this.form.items.$set(this.recordItem.indexi, row)
                 this.form.items[this.recordItem.indexi] = row;

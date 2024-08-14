@@ -45,18 +45,22 @@ class DeleteUserMovements extends Command
      */
     public function handle()
     {
-    DB::statement('SET SESSION wait_timeout = 28800'); // 8 horas
+        DB::statement('SET SESSION wait_timeout = 28800'); // 8 horas
 
-    $oneWeekAgo = Carbon::now()->subWeek();
+        $oneWeekAgo = Carbon::now()->subWeek();
 
-    RegisterMovement::where('created_at', '<', $oneWeekAgo)
-        ->chunkById(1000, function ($movements) {
-            DB::transaction(function () use ($movements) {
-                foreach ($movements as $movement) {
-                    $movement->delete();
-                }
+        $limit = 20000;
+
+        RegisterMovement::where('created_at', '<', $oneWeekAgo)
+            ->orderBy('id')
+            ->limit($limit)
+            ->chunkById(500, function ($movements) {
+                DB::transaction(function () use ($movements) {
+                    foreach ($movements as $movement) {
+                        $movement->delete();
+                    }
+                });
             });
-        });
         $this->info('Movimientos de usuarios eliminados');
     }
 }
