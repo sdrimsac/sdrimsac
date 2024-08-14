@@ -160,7 +160,7 @@
                                 href="{{ route('tenant.etiquetas.index') }}">
                                 <i class="fa fa-solid fa-ruler"></i> Prueba Etiquetas
                             </a>
-                        </li> --}} 
+                        </li> --}}
 
 
                         <!-- @if ($config->restaurant)
@@ -272,7 +272,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($many_establishments && $config->receive_merchandise) 
+                        @if ($config->receive_merchandise)  {{-- ($many_establishments) --}}
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('transfers.index') }}">
@@ -419,12 +419,6 @@
                             </li>
                         @endif
                         <li>
-                            <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
-                                href="{{ route('tenant.ventas.index') }}">
-                                <i class="icofont-list"></i> Productos Vendidos 
-                            </a>
-                        </li>
-                        <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.not_sent') }}">
                                 <i class="icofont-send-mail"></i> No enviados
@@ -541,25 +535,31 @@
                         @endif
 
                     </li>
-                    <li>
-                        <a class="{{ $path[0] === 'boxes' ? 'active' : '' }}" href="{{ route('boxes') }}">
-                            <i class="icofont-patient-file"></i> Reporte de Caja
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
-                            href="{{ route('reports.cash_closes.index') }}">
-                            <i class="icofont-attachment"></i>
-                            Reporte de Cierre de Caja
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
-                            href="{{ route('tenant.reportincomebox.global_index') }}">
-                            <i class="icofont-globe"></i>
-                            Reporte globalizado
-                        </a>
-                    </li>
+                    @if ($config->reporte_caja)
+                        <li>
+                            <a class="{{ $path[0] === 'boxes' ? 'active' : '' }}" href="{{ route('boxes') }}">
+                                <i class="icofont-patient-file"></i> Reporte de Caja
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->reporte_cierre_caja)
+                        <li>
+                            <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                                href="{{ route('reports.cash_closes.index') }}">
+                                <i class="icofont-attachment"></i>
+                                Reporte de Cierre de Caja
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->reporte_globalizado)
+                        <li>
+                            <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                                href="{{ route('tenant.reportincomebox.global_index') }}">
+                                <i class="icofont-globe"></i>
+                                Reporte globalizado
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
@@ -574,12 +574,14 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
-                            href="{{ route('reports.methods.index') }}">
-                            <i class="icofont-box"></i> Reporte de métodos de pago
-                        </a>
-                    </li>
+                    @if ($config->reporte_metodos_pago)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
+                                href="{{ route('reports.methods.index') }}">
+                                <i class="icofont-box"></i> Reporte de métodos de pago
+                            </a>
+                        </li>
+                    @endif
                     @if ($config->hotels && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
@@ -636,52 +638,58 @@
                         </li>
                     @endif
                     @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm)
-                        <li>
-                            <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
-                                href="{{ route('reports.cash.index') }}">
-                                <i class="icofont-money-bag"></i>
-                                Ganancias
-                            </a>
-                        </li>
+                        @if ($config->reporte_ganancias)
+                            <li>
+                                <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
+                                    href="{{ route('reports.cash.index') }}">
+                                    <i class="icofont-money-bag"></i>
+                                    Ganancias
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->reporte_productos)
+                            <li>
+                                <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
+                                    href="{{ route('reports.products-clients.index') }}">
+                                    <i class="fas fa-window-restore"></i>
+                                    R. productos
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->stock_valorizado)
+                            <li>
+                                <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
+                                    href="{{ route('reports.valued.index') }}">
 
+                                    <i class="icofont-dollar"></i> Stock valorizado
+                                </a>
+                            </li>
+                        @endif
+                    @endif
+                    @if ($config->stock_minino)
                         <li>
-                            <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
-                                href="{{ route('reports.products-clients.index') }}">
-                                <i class="fas fa-window-restore"></i>
-                                R. productos
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
-                                href="{{ route('reports.valued.index') }}">
-
-                                <i class="icofont-dollar"></i> Stock valorizado
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
+                                href="{{ route('reports.stockmin.index') }}">
+                                <i class="fas fa-boxes"> </i> Stock Minimo
                             </a>
                         </li>
                     @endif
-                    <!-- <li>
-                <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}" href="{{ route('reports.inventory.index') }}">
-                    <i class="icofont-box"></i> Stock Producto
-                </a>
-            </li> -->
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
-                            href="{{ route('reports.stockmin.index') }}">
-                            <i class="fas fa-boxes"> </i> Stock Minimo
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
-                            href="{{ route('reports.inventory.index') }}">
-                            <i class="icofont-box"></i> Stock Producto
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
-                            href="{{ route('reports.kardex.index') }}">
-                            <i class="icofont-chart-bar-graph"></i> Kardex
-                        </a>
-                    </li>
+                    @if ($config->stock_producto)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
+                                href="{{ route('reports.inventory.index') }}">
+                                <i class="icofont-box"></i> Stock Producto
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->kardex)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
+                                href="{{ route('reports.kardex.index') }}">
+                                <i class="icofont-chart-bar-graph"></i> Kardex
+                            </a>
+                        </li>
+                    @endif
                     @if ($config->credit_list && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
@@ -690,11 +698,19 @@
                             </a>
                         </li>
                     @endif
-                    @if ($has_series)
+                    @if ($has_series && $config->reporte_series_vendidas)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
                                 href="{{ route('reports.series.index') }}">
                                 <i class="fas fa-fingerprint"></i> Venta de Series
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->productos_vendidos)
+                        <li>
+                            <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
+                                href="{{ route('tenant.ventas.index') }}">
+                                <i class="icofont-list"></i> Productos Vendidos
                             </a>
                         </li>
                     @endif
@@ -853,7 +869,7 @@
 
             </li>
         @endif
-        @if ($config->restaurant && !$roleService->isLogistic() )
+        @if ($config->restaurant && !$roleService->isLogistic())
             <li>
                 <a href="#configuration" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
