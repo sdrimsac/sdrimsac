@@ -529,6 +529,9 @@ class BoxController extends Controller
     }
     public function reports_results_excel(Request $request)
     {
+
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
         $date_close = $request['date_close'];
         $user_id = $request['user_id'];
         $user = User::find($user_id);
@@ -567,7 +570,8 @@ class BoxController extends Controller
     }
     public function reports_results_pdf(Request $request)
     {
-
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
         $date_close = $request['date_close'];
         $user_id = $request['user_id'];
         $user = User::find($user_id);
