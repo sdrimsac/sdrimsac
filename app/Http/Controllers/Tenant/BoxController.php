@@ -508,13 +508,19 @@ class BoxController extends Controller
 
         $date_close = $request['date_close'];
         $user_id = $request['user_id'];
+        $date_start = $request['date_start'];
+        $date_end = $request['date_end'];
         //------------------------------------------------------------------------------------------------------------
         if ($date_close) {
             $data = Box::whereHas('cash', function ($q) use ($date_close) {
                 $q->where('date_closed', $date_close);
             });
         } else {
-            $data  = Box::query();
+            if ($date_start && $date_end) {
+                $data = Box::whereBetween('date', [$date_start, $date_end])->latest();
+            } else {
+                $data = Box::latest();
+            }
         }
 
 
