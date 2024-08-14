@@ -52,7 +52,6 @@ class SaleNotePaymentController extends Controller
     {
         $sale_note = SaleNote::find($sale_note_id);
         $penalty = $sale_note->credit_cash == 0 ? $sale_note->getPenalties() : 0;
-        dump("penalty: " . $penalty);
         $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
         $penalties_payed = Payment::where('sale_note_id', $sale_note_id)
             ->where('paid', 1)
