@@ -164,7 +164,7 @@ class BoxController extends Controller
                             'user' => $row->user->name
                         ];
                     }
-             
+
                     $subcategories[] = [
                         'subcategory_id' => $subcategory_id,
                         'subcategory_name' => $subcategory_name,
@@ -546,7 +546,11 @@ class BoxController extends Controller
                 $q->where('date_closed', $date_close);
             });
         } else {
-            $data  = Box::query();
+            if ($date_start && $date_end) {
+                $data = Box::whereBetween('date', [$date_start, $date_end])->latest();
+            } else {
+                $data = Box::latest();
+            }
         }
 
         $data->with(['cash'])
@@ -586,7 +590,11 @@ class BoxController extends Controller
                 $q->where('date_closed', $date_close);
             });
         } else {
-            $data  = Box::query();
+            if ($date_start && $date_end) {
+                $data = Box::whereBetween('date', [$date_start, $date_end])->latest();
+            } else {
+                $data = Box::latest();
+            }
         }
 
         $data->with(['cash'])
@@ -598,7 +606,7 @@ class BoxController extends Controller
         $type_box  = 1;
         $boxes_report = $data->get();
 
-        
+
         $pdf = PDF::loadView('report::boxes.report_pdf', compact("type_box", "user", "boxes_report", "establishment", "company", "date_start", "date_end"))->setPaper('a4', 'landscape');
         return $pdf->stream('Reporte_Detalle_' . date('YmdHis') . '.pdf');
     }
