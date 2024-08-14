@@ -220,6 +220,7 @@ class DocumentSaludProccess implements ShouldQueue
                     $document = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $document);
                     $document = str_replace('�', '', $document);
                     $document = json_decode($document, true);
+                    Log::info('procesando: 1');
                     $identifier = $document['idTransaccion'];
                     $document_salud = new DocumentSalud;
                     $document_salud->date_of_issue = $document['fechaEmision'];
@@ -227,6 +228,7 @@ class DocumentSaludProccess implements ShouldQueue
                     $document_salud->file_name = $file;
                     $document_salud->identifier = $identifier;
                     DocumentSalud::where('identifier', $identifier)->whereNotNull('error')->delete();
+                    Log::info('procesando: 2');
                     $document_salud_exists = DocumentSalud::where('identifier', $identifier)
                         ->whereNull('error')
                         ->where('status', 'Aceptado')
@@ -237,21 +239,28 @@ class DocumentSaludProccess implements ShouldQueue
                         $document_salud->save();
                         continue;
                     }
+                    Log::info('procesando: 3');
                     try {
                         $document_transform = self::transform_document($document);
                         $series = $document_transform['series'];
+                        Log::info('procesando: 4');
                         $full_number = $series . '-' . $document_transform['number'];
                         $establishment_id = self::get_establishment_by_serie($series);
                         $document_transform['establishment_id'] = $establishment_id;
+                        Log::info('procesando: 5');
                         $document_validated = DocumentValidation::validationSalud($document_transform);
+                        Log::info('procesando: 6');
                         $document_input = DocumentInput::set($document_validated);
+                        Log::info('procesando: 7');
 
                         $result = (new DocumentController)->storeTransform($document_input);
+                        Log::info('procesando: 8');
                         if (isset($result['success']) && $result['success'] === true) {
                             $document_salud->status = 'Aceptado';
                         } else {
-                            $this->sendMessage($establishment_id,$full_number,$this->user_id);
                             $document_salud->status = 'Fallido';
+                            Log::info('procesando: 9');
+                            $this->sendMessage($establishment_id,$full_number,$this->user_id);
                         }
                     } catch (Exception $e) {
                         Log::info($e->getMessage());
