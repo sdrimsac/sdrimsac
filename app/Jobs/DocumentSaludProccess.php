@@ -104,6 +104,7 @@ class DocumentSaludProccess implements ShouldQueue
         return null;
     }
     function getUserId($serie){
+        Log::info('serie: '.$serie);
         $series = Series::where('number',$serie)->first();
         $establishment_id = $series->establishment_id;
         $user = User::where('establishment_id',$establishment_id)->first();
@@ -187,7 +188,9 @@ class DocumentSaludProccess implements ShouldQueue
     }
     function get_establishment_by_serie($serie)
     {
+        Log::info('serie2: ' . $serie);
         $serie = Series::where('number', $serie)->first();
+
         if ($serie) {
             $establishment_id = $serie->establishment_id;
             return $establishment_id;
@@ -263,7 +266,7 @@ class DocumentSaludProccess implements ShouldQueue
                             $this->sendMessage($establishment_id,$full_number,$this->user_id);
                         }
                     } catch (Exception $e) {
-                        Log::info($e->getMessage());
+                        Log::info($e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
                         $this->sendMessage($establishment_id,$full_number,$this->user_id);
                         $document_salud->status = 'Fallido';
                         $message = $e->getMessage();
