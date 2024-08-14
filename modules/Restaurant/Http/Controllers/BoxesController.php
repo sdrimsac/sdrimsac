@@ -601,7 +601,7 @@ class BoxesController extends Controller
             if ($box->sale_note_id && $box->sale_note_payment_id == null) {
                 $sale_note = SaleNote::find($box->sale_note_id);
                 if($method != "Efectivo"){
-                    $this->add_method($all_methods,$method,$sale_note->total,$sale_note->number_full,$sale_note->date_of_issue->format('d-m-Y'),$document->customer);
+                    $this->add_method($all_methods,$method,$sale_note->total,$sale_note->number_full,$sale_note->date_of_issue->format('d-m-Y'),$sale_note->customer);
                 }
                 $boxes = Box::where('sale_note_id', $box->sale_note_id)
 
