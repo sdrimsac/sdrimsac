@@ -77,12 +77,22 @@ class SellerController extends Controller
 
     public function destroy($id)
     {
-        $item = Series::findOrFail($id);
-        $item->delete();
+        $seller = Seller::findOrFail($id);
+        $seller->delete();
 
         return [
             'success' => true,
-            'message' => 'Serie eliminada con éxito'
+            'message' => 'Vendedor eliminada con éxito'
         ];
     }
+    /* public function delete($id)
+    {
+        $seller = Seller::findOrFail($id);
+        $seller->delete();
+
+        return [
+            'success' => true,
+            'message' => 'Vendedor Eliminado con Exito'
+        ];
+    } */
 }

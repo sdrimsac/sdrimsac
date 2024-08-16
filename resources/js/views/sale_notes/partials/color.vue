@@ -1,5 +1,5 @@
 <template>
-<el-dialog :title="titleDialog" width="40%" :visible="showDialog" @open="create" :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
+<el-dialog :title="titleDialog" width="30%" :visible="showDialog" @open="create" :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
     <div class="form-body">
         <div class="row">
             <div class="col-lg-12 col-md-12 table-responsive">
@@ -10,11 +10,11 @@
                             <th>Color</th>
                             <th>Stock</th>
                             <th>Precio</th>
-                            <th>Seleccione</th>
+                            <th>Ingrese Cantidad</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(row, index) in color_size" :key="index" width="100%">
+                        <tr v-for="(row, index) in color_size_" :key="index" width="100%">
                             <td>
                                 {{ row.size }}
                             </td>
@@ -63,22 +63,29 @@ export default {
             loading: false,
             errors: {},
             form: {},
+            color_size_: [],
         };
     },
     async created() {},
+    watch: {
+
+        color_size(val) {
+            this.color_size_ = val
+        }
+    },
     methods: {
         create() {},
         async submit() {
-            let quantity = this.color_size.reduce(
-                (a, b) => a + Number(b.selectedQuantity ?? "0"),
-                0
-            );
-            this.$emit("sumColor_size", quantity);
+            let hasValidQuantity = this.color_size_.some(row => row.selectedQuantity > 0);
+            if (!hasValidQuantity) {
+                return this.$toast.error('Debe ingresar al menos una cantidad mayor a 0.');  
+            }
+            this.$toast.success('Producto agregado exitosamente a la lista de venta.');
+
             this.close();
         },
         close() {
-            this.$emit("addRowOutputColor_size", this.color_size);
-            console.log(this.color_size);
+            this.$emit("addRowSelectColor_size", this.color_size_);
             this.$emit("update:showDialog", false);
         },
         async clickCancelSubmit() {}

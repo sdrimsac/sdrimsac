@@ -8,7 +8,9 @@
       :close-on-press-escape="false"
       @close="onClose"
     >
+    <br>
       <div class="row mt-2">
+        
         <div class="col-2">
           <el-select
             v-model="filter.type"
@@ -117,9 +119,16 @@
           <el-button :disabled="loading" @click="onClose">Cerrar</el-button>
         </div>
       </div>
+      <br>
     </el-dialog>
   </div>
 </template>
+<style>
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
 
 <script>
 import moment from "moment";

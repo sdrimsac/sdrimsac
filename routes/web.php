@@ -126,6 +126,7 @@ if ($hostname) {
                     Route::get('/record/{id}', [SellerController::class, 'record']);
                     Route::get('/tables', [SellerController::class, 'tables']);
                     Route::post('/', [SellerController::class, 'store']);
+                    /* Route::delete('/delete/{id}', [SellerController::class, 'destroy']); */
                 });
                 Route::prefix('/registers')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\RegisterController::class, 'index'])->name('tenant.registers.index');

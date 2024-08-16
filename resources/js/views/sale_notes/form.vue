@@ -834,8 +834,6 @@
                                                 <th class="text-white text-center font-weight-bold">Unidad</th>
                                                 <th class="text-white text-end font-weight-bold"> Cantidad</th>
                                                 <th class="text-white text-end font-weight-bold">Precio Unitario</th>
-                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
-                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
                                                 <th class="text-white text-end font-weight-bold"> Subtotal</th>
                                                 <!--<th class="text-end font-weight-bold">Cargo</th>-->
                                                 <th class="text-white text-end font-weight-bold"> Total</th>
@@ -887,25 +885,28 @@
                                                                 .description
                                                         }}
                                                     </small>
-                                                    <template v-if="row.lots && row.lots.length > 0">
-                                                        <br />
-                                                        <small class="text-primary" v-for="(lot, index) in row.lots" :key="index">
-                                                            <b>Serie:</b> {{ lot.series }} 
-                                                        </small>
+                                                    <template v-if="row.item.lots && row.item.lots.length > 0">
+                                                           
+                                                           <br />
+                                                           <small class="text-primary" v-for="(lot, index) in row.item.lots" :key="index">
+                                                               <b>Serie:</b> {{ lot.series }} 
+                                                           </small>
                                                     </template>
-
-                                                    <template v-if="row.lots_group && row.lots_group.length > 0">
-                                                        <br />
-                                                        <small class="text-primary" v-for="(lot, index) in row.lots_group" :key="index">
-                                                            <b>Lote:</b> {{ lot.code }}
-                                                        </small>
+   
+                                                    <template v-if="row.item.lots_group && row.item.lots_group.length > 0">
+                                                           <br />
+                                                           <small class="text-primary" v-for="(lot, index) in row.item.lots_group" :key="index">
+                                                               <b>Lote:</b> {{ lot.code }}
+                                                           </small>
                                                     </template>
-
-                                                    <template v-if="row.color_size && row.color_size.length > 0">
-                                                        <br />
-                                                        <small class="text-primary" v-for="(color, index) in row.color_size" :key="index">
-                                                            <b>Color:</b> {{ color.color }} <b>Talla:</b> {{ color.size }}
-                                                        </small>
+   
+                                                    <template v-if="row.item.color_size &&  row.item.color_size.length > 0">
+                                                           <br />
+                                                           <small class="text-primary" v-for="(color, index) in row.item.color_size.filter(i=>i.selectedQuantity)" :key="index">
+                                                                Talla: {{color.size}}-{{ color.color }} 
+                                                                <b>Cant:</b>
+                                                                 {{ color.selectedQuantity }}
+                                                           </small>
                                                     </template>
                                                 </td>
                                                 <td class="text-center">

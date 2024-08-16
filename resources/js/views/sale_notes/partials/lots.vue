@@ -1,10 +1,5 @@
 <template>
-    <el-dialog 
-        :title="titleDialog" width="40%"  
-        :visible="showDialog"  @open="create"  
-        :close-on-click-modal="false" 
-        :close-on-press-escape="false" 
-        append-to-body :show-close="false">
+    <el-dialog :title="titleDialog" width="40%"  :visible="showDialog"  @open="create"  :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
 
         <div class="form-body">
             <div class="row" >
@@ -27,7 +22,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in lots" :key="index" width="100%">
+                            <tr v-for="(row, index) in lots_" :key="index" width="100%">
                                 <!-- <td>{{index}}</td> -->
                                 <td class="text-center">
                                     <el-checkbox v-model="row.has_sale"></el-checkbox>
@@ -45,9 +40,13 @@
                             </tr>
                         </tbody>
                     </table>
+
+
                 </div>
+
             </div>
         </div>
+
        <div class="form-actions text-end pt-2 pb-2">
             <el-button @click.prevent="close()">Cerrar</el-button>
             <!-- <el-button type="primary" @click="submit" >Guardar</el-button> -->
@@ -83,7 +82,8 @@
 
                 if(this.search)
                 {
-                    this.lots_ = this.lots.filter( x => x.series.toUpperCase().includes(this.search.toUpperCase()))
+                    // this.lots_ = this.lots.filter( x => x.series.toUpperCase().includes(this.search.toUpperCase()))
+                    this.lots_ = _.filter(this.lots, x => x.series.toUpperCase().includes(this.search.toUpperCase()))
                 }
                 else{
                     this.lots_ = this.lots
@@ -104,6 +104,8 @@
             },
             close() {
                 this.$emit('update:showDialog', false)
+   
+                
                 this.$emit('addRowSelectLot', this.lots_);
             },
             async clickCancelSubmit() {

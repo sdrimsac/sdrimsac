@@ -1,37 +1,19 @@
-<!-- Agregar Producto o Servicio (Nota de Venta) -->
 <template>
 <el-dialog :title="titleDialog" :visible="showDialog" @open="create" @close="close" top="7vh" :close-on-click-modal="false">
-    <br>
     <form autocomplete="off">
         <div class="form-body">
             <div class="row">
                 <div class="col-md-7 col-lg-7 col-xl-7 col-sm-7">
                     <div class="form-group" id="custom-select" :class="{ 'has-danger': errors.item_id }">
                         <label class="control-label">
-                            <i class="fas fa-box fa-lg"></i>
                             Producto/Servicio
-                            <a v-if="typeUser != 'seller'" href="#" @click.prevent="showDialogNewItem = true">[+ Nuevo]</a>
+                            <a class="text-primary" v-if="typeUser != 'seller'" href="#" @click.prevent="showDialogNewItem = true">[+ Nuevo]</a>
                         </label>
 
                         <template v-if="!search_item_by_barcode" id="select-append">
                             <div class="el-input el-input-group el-input-group--append">
-                                <el-select :disabled="recordItem != null" v-model="form.item_id" @focus="$event.target.select()" ref="producto" @change="changeItem" filterable remote placeholder="Buscar" popper-class="el-select-items" @visible-change="focusTotalItem" slot="prepend" id="select-width" :remote-method="searchRemoteItems" :loading="loading_search" autofocus>
-                                    <el-tooltip v-for="option in items" :key="option.id" placement="top">
-                                        <div slot="content">
-                                            Marca: {{ option.brand }} <br />
-                                            Categoria:
-                                            {{ option.category }} <br />
-                                            Stock: {{ option.stock }} <br />
-                                            Precio:
-                                            {{
-                                                    option.currency_type_symbol
-                                                }}
-                                            {{ option.sale_unit_price }}
-                                            <br />
-                                        </div>
-
-                                        <el-option :value="option.id" :label="option.full_description"></el-option>
-                                    </el-tooltip>
+                                <el-select :disabled="recordItem != null" @focus="$event.target.select()" ref="producto" v-model="form.item_id" @change="changeItem" filterable remote placeholder="Buscar......" popper-class="el-select-items" @visible-change="focusTotalItem" slot="prepend" id="select-width" :remote-method="searchRemoteItems" :loading="loading_search">
+                                    <el-option v-for="option in items" :key="option.id" :value="option.id" :label="option.full_description"></el-option>
                                 </el-select>
                                 <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="recordItem != null">
                                     <div class="el-input-group__append">
@@ -43,47 +25,34 @@
                             </div>
                         </template>
                         <template v-else>
-                            <div class="el-input el-input-group el-input-group--append">
-                                <el-select :disabled="recordItem != null" v-model="form.item_id" @change="changeItem" ref="productos" filterable placeholder="Buscar" popper-class="el-select-items" dusk="item_id" @visible-change="focusTotalItem" slot="prepend" id="select-width" remote :remote-method="searchRemoteItems" :loading="loading_search">
-                                    <el-tooltip v-for="option in items" :key="option.id" placement="top">
-                                        <div slot="content">
-                                            Marca: {{ option.brand }} <br />
-                                            Categoria:
-                                            {{ option.category }} <br />
-                                            Stock: {{ option.stock }} <br />
-                                            Precio:
-                                            {{
-                                                    option.currency_type_symbol
-                                                }}
-                                            {{ option.sale_unit_price }}
-                                            <br />
-                                        </div>
-                                        <el-option :value="option.id" :label="option.full_description"></el-option>
-                                    </el-tooltip>
-                                </el-select>
+                            <el-input placeholder="Buscar productos por Codigo" v-model="input_item" @input="searchItemsBarcode" class="m-bottom" ref="ref_search_items">
                                 <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="recordItem != null">
-                                    <div class="el-input-group__append">
-                                        <el-button :disabled="isEditItemNote" @click.prevent="
-                                                    clickWarehouseDetail()
-                                                "><i class="fa fa-search"></i></el-button>
-                                    </div>
+                                    <el-button :disabled="isEditItemNote" @click.prevent="
+                                                clickWarehouseDetail()
+                                            "><i class="fa fa-search"></i></el-button>
                                 </el-tooltip>
-                            </div>
+                            </el-input>
                         </template>
+                        <small class="badge text-primary w-100" v-if="form.item_id != null">Ubicacion: {{ form.item.location }}<br /></small>
 
                         <template v-if="!is_client">
-                            <el-checkbox v-model="search_item_by_barcode" :disabled="recordItem != null">Buscar por código de barras</el-checkbox><br />
+                            <el-checkbox class="m-t-10" v-model="search_item_by_barcode" :disabled="recordItem != null" @change="changeSearchItemBarcode">Buscar por código de barras</el-checkbox><br />
                         </template>
-                        <small class="form-control-feedback" v-if="errors.item_id" v-text="errors.item_id[0]"></small>
+                        <!-- <el-checkbox v-model="form.has_plastic_bag_taxes" :disabled="isEditItemNote" >Impuesto a la Bolsa Plástica</el-checkbox> -->
+                        <small class="txt-danger" v-if="errors.item_id" v-text="errors.item_id[0]"></small>
                     </div>
                 </div>
-                <!-- <div class="col-md-1 col-lg-1 col-xl-1 col-sm-1" >
-                        <div class="form-group">
-                            <label class="control-label">Stock</label><br>
-                            <button type="button" class="btn waves-effect waves-light btn-sm btn-primary" @click.prevent="clickWarehouseDetail()"><i class="fa fa-search"></i></button>
-                        </div>
-                    </div> -->
-                <div class="col-md-5">
+                <div class="col-md-2 col-lg-2 col-xl-2 col-sm-2">
+                    <div class="form-group">
+                        <label class="control-label text-left">Stock </label><br />
+                        <b>
+                            <h6 class="text-center" style="font-size:14px">
+                                {{ form.stock_disp }}
+                            </h6>
+                        </b>
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group" :class="{
                                 'has-danger': errors.affectation_igv_type_id
                             }">
@@ -92,79 +61,82 @@
                             <el-option v-for="option in affectation_igv_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
                         </el-select>
                         <el-checkbox :disabled="recordItem != null" v-model="change_affectation_igv_type_id">Editar</el-checkbox>
-                        <small class="form-control-feedback" v-if="errors.affectation_igv_type_id" v-text="errors.affectation_igv_type_id[0]"></small>
+                        <small class="txt-danger" v-if="errors.affectation_igv_type_id" v-text="errors.affectation_igv_type_id[0]"></small>
+                    </div>
+                </div>
+                <!-- <template>
+
+                </template> -->
+
+                <div class="col-md-3 col-sm-3">
+                    <div class="form-group" :class="{ 'has-danger': errors.quantity }">
+                        <label class="control-label w-100">Cantidad</label>
+
+                        <el-input-number @focus="$event.target.select()" ref="cantidad" 
+                            v-model="form.quantity" 
+                            :min="0.00" 
+                            :precision="2" 
+                            :disabled="form.item.has_color_size || form.item.series_enabled" 
+                            @keyup.enter.native="
+                                    focusPrecio();
+                                    calculateQuantity();
+                                    updateprice();
+                                " @input="calculateQuantity()"></el-input-number>
+                        <small class="txt-danger" v-if="errors.quantity" v-text="errors.quantity[0]"></small>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-3">
-                    <div class="form-group" :class="{ 'has-danger': errors.quantity }">
-                        <label class="control-label">Cantidad</label>
-                        <el-input-number class="w-100" @focus="$event.target.select()" ref="cantidad" v-model="form.quantity" :min="0.01" :precision="4" @keyup.enter.native="focusPrecio()"></el-input-number>
-                        <small class="form-control-feedback" v-if="errors.quantity" v-text="errors.quantity[0]"></small>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-2">
                     <div class="form-group" :class="{ 'has-danger': errors.unit_price_value }">
                         <label class="control-label">Precio Unitario</label>
-                        <el-input ref="precio" v-model="form.unit_price_value" @focus="$event.target.select()" @keyup.enter.native="
+                        <el-input ref="precio" v-model="form.unit_price_value" 
+                            :disabled="form.item.has_color_size" 
+                            @input="calculateQuantity()" 
+                            @focus="$event.target.select()" 
+                            @keyup.enter.native="
                                     clickAddItem();
                                     focusProducto();
-                                " :precision="4" @change="calculateQuantity" :readonly="typeUser === ''">
-                            <template slot="prepend" v-if="form.item.currency_type_symbol">{{
-                                        form.item.currency_type_symbol
-                                    }}</template>
-                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                        <small class="form-control-feedback" v-if="errors.unit_price_value" v-text="errors.unit_price[0]"></small>
+                                " :readonly="typeUser === ''">
+                            <template slot="prepend">{{
+                                    form.item.currency_type_symbol
+                                }}</template>
+                        </el-input>
+                        <small class="txt-danger" v-if="errors.unit_price_value" v-text="errors.unit_price[0]"></small>
                     </div>
                 </div>
-
-                <div class="col-md-3 col-sm-3" v-if="form.item_id != null">
+                <div class="col-md-3 col-sm-3">
+                    <div class="form-group" :class="{ 'has-danger': errors.amount }">
+                        <label class="control-label">Importe Total</label>
+                        <el-input v-model="form.amount" :disabled="form.item.has_color_size" :readonly="typeUser === ''">
+                            <template slot="prepend">{{
+                                    form.item.currency_type_symbol
+                                }}</template>
+                        </el-input>
+                    </div>
+                </div>
+                <!-- <div class="col-md-3 col-sm-3" v-if="form.item_id != null">
                     <div class="form-group">
                         <label class="control-label">Descontar stock</label><br />
-                        <el-radio-group v-model="form.stock" size="mini">
+                        <el-radio-group v-model="form.stock" size="mini" @change="stock()">
                             <el-radio-button label="Si"></el-radio-button>
                             <el-radio-button label="No"></el-radio-button>
                         </el-radio-group>
                     </div>
-                </div>
-                <!--<div class="col-md-3 col-sm-3" v-if="form.item.lots_enabled && form.lots_group.length > 0">
-                        <div class="form-group" >
-                             <label class="control-label">
-                                Seleccione el lote
-                            </label>
-                            <el-button style="margin-top:2%;" type="primary" icon="el-icon-edit-outline"  @click.prevent="clickLotGroup"></el-button>
-                        </div>
-                    </div>-->
-
+                </div> -->
                 <div style="padding-top: 1%;" class="col-md-2 col-sm-2" v-if="
-                        form.item_id && form.item.lots_enabled && form.lots_group.length > 0">
+                            form.item_id &&
+                                form.item.lots_enabled &&
+                                form.lots_group.length > 0
+                        ">
                     <a href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotGroup">[&#10004; Seleccionar lote]</a>
                 </div>
 
                 <div style="padding-top: 1%;" class="col-md-3 col-sm-3" v-if="form.item_id && form.item.series_enabled">
                     <a href="#" class="text-center font-weight-bold text-info" @click.prevent="clickSelectLots">[&#10004; Seleccionar series]</a>
                 </div>
-                <div style="padding-top: 1%;" class="col-md-3 col-sm-3" v-if="form.item_id && form.item_id && color_size">
-                        <a href="#"  class="text-center font-weight-bold text-info" @click.prevent="clickSelectColor">[&#10004; Seleccionar Talla Color]</a>
-                </div>
 
-                <div class="col-md-3 col-sm-6" v-show="form.item.calculate_quantity">
-                    <div class="form-group" :class="{ 'has-danger': errors.total_item }">
-                        <label class="control-label">Total venta producto</label>
-                        <el-input v-model="total_item" @input="calculateQuantity" :min="0.01" ref="total_item">
-                            <template slot="prepend" v-if="form.item.currency_type_symbol">{{
-                                        form.item.currency_type_symbol
-                                    }}</template>
-                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                        <small class="form-control-feedback" v-if="errors.total_item" v-text="errors.total_item[0]"></small>
-                    </div>
+                <div style="padding-top: 1%;" class="col-md-3 col-sm-3" v-if="form.item_id && form.item.has_color_size">
+                    <a href="#" class="text-center font-weight-bold text-info" @click.prevent="clickSelectColor">[&#10004; Seleccionar Talla Color]</a>
                 </div>
-                <!-- <div v-if="configuration.edit_name_product" class="col-md-12 col-sm-12">
-                    <div class="form-group">
-                        <label class="control-label">Nombre producto en PDF</label>
-                        <el-input v-model="form.name_product_pdf">
-                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                    </div>
-                </div> -->
                 <template v-if="!is_client">
                     <div class="col-md-12" v-if="form.item_unit_types.length > 0">
                         <div style="margin:3px" class="table-responsive">
@@ -222,7 +194,7 @@
                                             Precio {{ row.price_default }}
                                         </td>
                                         <td class="series-table-actions text-end">
-                                            <button type="button" class="btn waves-effect waves-light btn-sm btn-success" @click.prevent="
+                                            <button type="button" class="btn waves-effect waves-light btn-xs btn-success" @click.prevent="
                                                         selectedPrice(row)
                                                     ">
                                                 <i class="el-icon-check"></i>
@@ -233,242 +205,15 @@
                             </table>
                         </div>
                     </div>
-                    <!--<div class="col-md-3 center-el-checkbox">-->
-                    <!--<div class="form-group" :class="{'has-danger': errors.has_igv}">-->
-                    <!--<el-checkbox v-model="form.has_igv">Incluye Igv</el-checkbox><br>-->
-                    <!--<small class="form-control-feedback" v-if="errors.has_igv" v-text="errors.has_igv[0]"></small>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!-- <div class="col-md-4 center-el-checkbox">
-                            <div class="form-group" :class="{'has-danger': errors.has_igv}">
-                                <el-checkbox v-model="form.has_plastic_bag_taxes">Impuesto a la Bolsa Plástica</el-checkbox><br>
-                            </div>
-                        </div>  -->
-                    <!--<div class="col-md-6" v-show="has_list_prices">
-                            <div class="form-group" :class="{'has-danger': errors.item_unit_type_id}">
-                                <label class="control-label">Presentación</label>
-                                <el-select v-model="form.item_unit_type_id" filterable @change="changePresentation">
-                                    <el-option v-for="option in item_unit_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <el-radio-group v-if="form.item_unit_type_id" v-model="item_unit_type.price_default" @change="changePresentation">
-                                    <el-radio :label="1">Precio 1</el-radio>
-                                    <el-radio :label="2">Precio 2</el-radio>
-                                    <el-radio :label="3">Precio 3</el-radio>
-                                </el-radio-group>
-                                <small class="form-control-feedback" v-if="errors.item_unit_type_id" v-text="errors.item_unit_type_id[0]"></small>
-                            </div>
-                        </div>-->
-                    <!-- <div class="col-md-12 mt-2" v-if="form.item.warehouses">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Ubicación</th>
-                                    <th class="text-end">Stock</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="row in form.item.warehouses">
-                                    <th>{{ row.warehouse_description }}</th>
-                                    <th class="text-end">{{ row.stock }}</th>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div> -->
-
-<!-- Agregar Atributos especiales -->
-                    <!-- <div class="col-md-12 mt-2">
-                        <el-collapse v-model="activePanel">
-                            <el-collapse-item :disabled="recordItem != null" title="+ Agregar Descuentos/Cargos/Atributos especiales" name="1">
-                                <div v-if="discount_types.length > 0">
-                                    <label class="control-label">
-                                        Descuentos
-                                        <a href="#" @click.prevent="
-                                                    clickAddDiscount
-                                                ">[+ Agregar]</a>
-                                    </label>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descripción</th>
-                                                <th>Porcentaje</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(row,
-                                                    index) in form.discounts" :key="index">
-                                                <td>
-                                                    <el-select v-model="
-                                                                row.discount_type_id
-                                                            " @change="
-                                                                changeDiscountType(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        <el-option v-for="option in discount_types" :key="option.id" :value="
-                                                                    option.id
-                                                                " :label="
-                                                                    option.description
-                                                                "></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="
-                                                                row.description
-                                                            ">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <el-checkbox v-model="
-                                                                row.is_amount
-                                                            ">Ingresar monto
-                                                        fijo</el-checkbox><br />
-                                                    <el-input v-model="
-                                                                row.percentage
-                                                            ">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" @click.prevent="
-                                                                clickRemoveDiscount(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        x
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div v-if="charge_types.length > 0">
-                                    <label class="control-label">
-                                        Cargos
-                                        <a href="#" @click.prevent="clickAddCharge">[+ Agregar]</a>
-                                    </label>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descripción</th>
-                                                <th>Porcentaje</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(row,
-                                                    index) in form.charges" :key="index">
-                                                <td>
-                                                    <el-select v-model="
-                                                                row.charge_type_id
-                                                            " @change="
-                                                                changeChargeType(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        <el-option v-for="option in charge_types" :key="option.id" :value="
-                                                                    option.id
-                                                                " :label="
-                                                                    option.description
-                                                                "></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="
-                                                                row.description
-                                                            ">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="
-                                                                row.percentage
-                                                            ">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" @click.prevent="
-                                                                clickRemoveCharge(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        x
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div v-if="attribute_types.length > 0">
-                                    <label class="control-label">
-                                        Atributos
-                                        <a href="#" @click.prevent="
-                                                    clickAddAttribute
-                                                ">[+ Agregar]</a>
-                                    </label>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descripción</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(row,
-                                                    index) in form.attributes" :key="index">
-                                                <td>
-                                                    <el-select v-model="
-                                                                row.attribute_type_id
-                                                            " filterable @change="
-                                                                changeAttributeType(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        <el-option v-for="option in attribute_types" :key="option.id" :value="
-                                                                    option.id
-                                                                " :label="
-                                                                    option.description
-                                                                "></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="row.value" @input="
-                                                                inputAttribute(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" @click.prevent="
-                                                                clickRemoveAttribute(
-                                                                    index
-                                                                )
-                                                            ">
-                                                        x
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </el-collapse-item>
-                        </el-collapse>
-
-                    </div> -->
                 </template>
             </div>
         </div>
         <div class="form-actions text-end pt-2 pb-2">
-            <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cerrar</el-button>
-            <el-button icon="fas fa-plus fa-lg" 
-            class="add" type="primary" @click="clickAddItem()" v-if="agregar_item">{{ titleAction }}</el-button>
+            <el-button @click.prevent="close()">Cerrar</el-button>
+            <el-button class="add" type="primary" @click="clickAddItem()" v-if="agregar_item">{{ titleAction }}</el-button>
         </div>
     </form>
-    <item-form :showDialog.sync="showDialogNewItem" :external="true"></item-form>
+    <item-form :showDialog.sync="showDialogNewItem" :external="true" @add="addNewItem"></item-form>
 
     <warehouses-detail :showDialog.sync="showWarehousesDetail" :isUpdateWarehouseId="isUpdateWarehouseId" :warehouses="warehousesDetail">
     </warehouses-detail>
@@ -476,13 +221,10 @@
     <lots-group :quantity="form.quantity" :showDialog.sync="showDialogLots" :lots_group="form.lots_group" @addRowLotGroup="addRowLotGroup">
     </lots-group>
 
-    <select-lots-form :showDialog.sync="showDialogSelectLots" :lots="lots" @addRowSelectLot="addRowSelectLot">
+    <select-lots-form :showDialog.sync="showDialogSelectLots" :lots="lotsItem" @addRowSelectLot="addRowSelectLot">
     </select-lots-form>
-    <color-form 
-            :showDialog.sync="showDialogSelectColor_size"
-            :color_size="color_size"
-            @addRowSelectColor_size="addRowSelectColor_size">
-        </color-form>
+    <color-form :showDialog.sync="showDialogSelectColor_size" :color_size="colorSizeItem" @addRowSelectColor_size="addRowSelectColor_size">
+    </color-form>
 </el-dialog>
 </template>
 
@@ -496,39 +238,40 @@
 <script>
 import ItemForm from "../../items/form.vue";
 import LotsGroup from "./lots_group.vue";
-
 import {
     calculateRowItem
 } from "../../../helpers/functions";
+//'../../../../helpers/functions'
 import WarehousesDetail from "./select_warehouses.vue";
 import SelectLotsForm from "./lots.vue";
-import ColorForm from "./color.vue"
+import ColorForm from "./color.vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import VueCkeditor from "vue-ckeditor5";
 
 export default {
     props: [
         "recordItem",
         "showDialog",
-        "operationTypeId",
         "percentage_igv",
+        "operationTypeId",
         "currencyTypeIdActive",
         "exchangeRateSale",
         "typeUser",
         "isEditItemNote",
         "configuration",
-        "idDetalle",
-        "restringir_stock"
+        "restringir_stock",
     ],
     components: {
         ItemForm,
         WarehousesDetail,
         LotsGroup,
         SelectLotsForm,
-        ColorForm
+        ColorForm,
+        "vue-ckeditor": VueCkeditor.component
     },
     data() {
         return {
             loading_search: false,
-            /* hasColor_size: false, */
             titleAction: "",
             is_client: false,
             titleDialog: "",
@@ -537,11 +280,12 @@ export default {
             has_list_prices: false,
             errors: {},
             form: {
-                lots: [],
-                color_size: [],
+                color_size: []
             },
+            input_item: "",
             all_items: [],
             items: [],
+            items_select: [],
             operation_types: [],
             all_affectation_igv_types: [],
             affectation_igv_types: [],
@@ -564,27 +308,32 @@ export default {
             showDialogColor_size: false,
             showDialogSelectColor_size: false,
             lots: [],
+            lotsItem: [],
+            colorSizeItem: [],
             color_size: [],
             item_select: null,
             agregar_item: false,
             form_control: {},
-            items_select: []
+            editors: {
+                classic: ClassicEditor
+            }
+            //item_unit_type: {}
         };
     },
     async created() {
         this.initForm();
         this.$http.get(`/${this.resource}/item/tables`).then(response => {
-            // this.items = response.data.items
             this.all_items = response.data.items;
             this.operation_types = response.data.operation_types;
+            this.all_affectation_igv_types =
+                response.data.affectation_igv_types;
             this.affectation_igv_types = response.data.affectation_igv_types;
             this.system_isc_types = response.data.system_isc_types;
             this.discount_types = response.data.discount_types;
             this.charge_types = response.data.charge_types;
             this.attribute_types = response.data.attribute_types;
             this.is_client = response.data.is_client;
-            // this.restringir_stock= response.data.restringir_stock;
-
+            //  this.restringir_stock= response.data.restringir_stock;
             this.filterItems();
         });
 
@@ -593,22 +342,21 @@ export default {
         });
 
         this.$eventHub.$on("selectWarehouseId", warehouse_id => {
+            // console.log(warehouse_id)
             this.form.warehouse_id = warehouse_id;
         });
     },
     methods: {
         async searchRemoteItems(input) {
-
             if (input.length > 2) {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
-
                 await this.$http
                     .get(`/${this.resource}/search-items/?${parameters}`)
                     .then(response => {
                         this.items_select = response.data[0];
-                        this.items = response.data;
 
+                        this.items = response.data;
                         this.loading_search = false;
 
                         this.enabledSearchItemsBarcode();
@@ -620,6 +368,86 @@ export default {
             } else {
                 await this.filterItems();
             }
+        },
+        keyupTabCustomer(e) {
+            // console.log(e.keyCode)
+            if (e.keyCode === 9) {
+                this.$refs.select_person.$el
+                    .getElementsByTagName("input")[0]
+                    .focus();
+            }
+        },
+
+        focusProducto() {
+            this.calculateQuantity();
+            this.$nextTick(function () {
+                this.$refs.ref_search_items.$el.querySelector("input").focus();
+            });
+            this.input_item = "";
+        },
+        addNewItem(data) {
+            this.form.item_id = data.id;
+            this.items.push(data);
+            this.searchRemoteItems(data.description);
+            this.form.item = _.find(this.items, {
+                id: data.id
+            });
+            let precios = _.filter(this.items, {
+                id: this.form.item_id
+            })[0];
+            this.form.unit_price_value = this.form.item.sale_unit_price;
+            ///////////////////////////////////////////////////////////////////////////
+            this.lots = this.form.item.lots;
+            this.colorSizeItem = this.form.item.color_size;
+            this.form.stock_disp = this.form.item.stock;
+            this.form.has_igv = this.form.item.has_igv;
+            this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
+            if (this.colorSizeItem && this.colorSizeItem.length > 0) {
+                this.form.quantity = 0;
+            } else {
+                this.form.quantity = 1;
+            }
+            /* this.form.quantity = 0; */
+            ///////////////////////////////////////////////////////////////////////////
+            this.cleanTotalItem();
+            this.showListStock = true;
+
+            this.calculateQuantity();
+            //this.changeItem()
+        },
+        focusPrecio() {
+            //   this.$refs.precio.$el.getElementsByTagName('input')[0].focus()
+            //  this.$refs.precio.$el.querySelector('input').focus();
+            this.calculateQuantity();
+            this.$nextTick(function () {
+                this.$refs.precio.$el.querySelector("input").focus();
+            });
+        },
+        stock() {
+            if (this.form.stock == "Si") {
+                this.form_control.stock_control = true;
+            } else {
+                this.form_control.stock_control = false;
+            }
+            this.$http
+                .post("/inventories/configuration", this.form_control)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$toast.success(response.data.message);
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
+                })
+                .then(() => {
+                    //this.loading_submit = false;
+                });
         },
         filterItems() {
             this.items = this.all_items;
@@ -641,26 +469,89 @@ export default {
                 this.form.item_id = item.id;
                 this.changeItem();
             }
+            // console.log(item)
         },
         clickWarehouseDetail() {
             if (!this.form.item_id) {
                 return this.$toast.error("Seleccione un item");
             }
-
             let item = _.find(this.items, {
                 id: this.form.item_id
             });
-
             this.warehousesDetail = item.warehouses;
             this.showWarehousesDetail = true;
         },
-        // filterItems(){
-        //     this.items = this.items.filter(item => item.warehouses.length >0)
-        // },
+        filterItems() {
+            this.items = this.all_items;
+        },
+        async searchItemsBarcode() {
+            if (this.input_item.length > 1) {
+                this.loading_search = true;
+                let parameters = `input=${this.input_item}`;
+                await this.$http
+                    .get(`/${this.resource}/search-items?${parameters}`)
+                    .then(response => {
+                        this.items_select = response.data.items[0];
+                        this.items = response.data.items;
+                        this.form.item_id = response.data.items[0].id;
+                        this.loading_search = false;
+                        this.input_item =
+                            response.data.items[0].full_description;
+                        this.focusTotalItem();
+                        this.changeItem();
+                        //this.enabledSearchItemsBarcode()
+                        if (this.items.length == 0) {
+                            this.filterItems();
+                        }
+                    });
+            } else {
+                await this.filterItems();
+            }
+
+            // if (this.input_item.length > 1) {
+            //     this.loading = true;
+            //     let parameters = `input_item=${this.input_item}`;
+            //     await this.$http
+            //         .get(`/${this.resource}/search_items?${parameters}`)
+            //         .then(response => {
+            //              this.items = response.data.items;
+            //              this.enabledSearchItemsBarcode();
+            //             this.loading = false;
+            //             if (this.items.length == 0) {
+            //                 this.filterItems();
+            //             }
+            //         });
+            // } else {
+            //     await this.filterItems();
+            // }
+        },
+        enabledSearchItemsBarcode() {
+            if (this.search_item_by_barcode) {
+                // if (this.items.length == 1) {
+                //     // console.log(this.items)
+                //     this.clickAddItem(this.items[0], 0);
+                //     this.filterItems();
+                // }
+
+                this.cleanInput();
+            }
+        },
+        changeSearchItemBarcode() {
+            this.cleanInput();
+            this.$nextTick(function () {
+                this.$refs.ref_search_items.$el.querySelector("input").focus();
+            });
+        },
+        cleanInput() {
+            this.input_item = null;
+        },
 
         initForm() {
             this.errors = {};
+
             this.form = {
+                // category_id: [1],
+                // edit: false,
                 item_id: null,
                 item: {},
                 affectation_igv_type_id: null,
@@ -681,10 +572,11 @@ export default {
                 has_plastic_bag_taxes: false,
                 warehouse_id: null,
                 lots_group: [],
+                IdColorSelected: null,
                 IdLoteSelected: null,
                 stock: "Si",
-                amount: 0.0,
-                stock_disp: null
+                stock_disp: null,
+                name_product_pdf: null
             };
 
             this.activePanel = 0;
@@ -699,23 +591,28 @@ export default {
             this.titleDialog = this.recordItem ?
                 " Modificar Producto o Servicio" :
                 " Agregar Producto o Servicio";
-            this.titleAction = this.recordItem ? " Modificar" : " Agregar";
+            this.titleAction = this.recordItem ? " Modificar" : "Agregar";
             let operation_type = await _.find(this.operation_types, {
                 id: this.operationTypeId
             });
-            //        this.affectation_igv_types = await _.filter(this.all_affectation_igv_types, {exportation: operation_type.exportation})
 
             if (this.recordItem) {
                 this.form.item_id = await this.recordItem.item_id;
+                this.form.unit_price = this.recordItem.unit_price;
                 await this.searchRemoteItems(this.recordItem.item.description);
                 await this.changeItem();
                 this.form.quantity = this.recordItem.quantity;
+                this.form.name_product_pdf = this.recordItem.name_product_pdf;
                 this.form.unit_price_value = this.recordItem.unit_price;
+                this.form.amount = _.round(
+                    this.form.quantity * this.form.unit_price_value,
+                    4
+                );
+                this.form.stock = this.recordItem.item.is_stock;
                 this.form.has_plastic_bag_taxes =
                     this.recordItem.total_plastic_bag_taxes > 0 ? true : false;
                 this.form.warehouse_id = this.recordItem.warehouse_id;
                 this.isUpdateWarehouseId = this.recordItem.warehouse_id;
-                this.form.stock = this.recordItem.item.is_stock;
                 this.item_select = this.recordItem;
                 if (this.isEditItemNote) {
                     this.form.item.currency_type_id = this.currencyTypeIdActive;
@@ -809,13 +706,6 @@ export default {
             this.$emit("update:showDialog", false);
         },
         async changeItem() {
-            /*  if(this.recordItem){
-                    this.form.item =this.items_select;
-                    this.form.item_unit_types =  this.form.item.item_unit_types
-               }else{
-                    this.form.item = _.find(this.items, {'id': this.form.item_id})
-                    this.form.item_unit_types = _.find(this.items, {'id': this.form.item_id})
-               }*/
             if (this.recordItem) {
                 this.form.item = this.items_select;
             } else {
@@ -827,26 +717,23 @@ export default {
                 id: this.form.item_id
             })[0];
             this.form.item_unit_types = precios.item_unit_types;
-            //  this.form.item = _.find(this.items, {'id': this.form.item_id});
-            //  this.form.item_unit_types = _.find(this.items, {'id': this.form.item_id}).item_unit_types
             this.form.unit_price_value = this.form.item.sale_unit_price;
+            this.lotsItem = this.form.item.lots;
+            if (this.form.item.color_size) {
+                this.colorSizeItem = JSON.parse(
+                    JSON.stringify(this.form.item.color_size)
+                );
+            }
             this.form.stock_disp = this.form.item.stock;
-            this.lots = this.form.item.lots;
-            this.color_size = this.form.item.color_size;
-
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
-            this.form.quantity = 1;
-
-            this.form.amount =
-                Math.round(
-                    parseFloat(
-                        this.form.quantity * this.form.unit_price_value
-                    ) * 10
-                ) / 10;
-
+            if (this.colorSizeItem && this.colorSizeItem.length > 0) {
+                this.form.quantity = 0;
+            } else {
+                this.form.quantity = 1;
+            }
+            /* this.form.quantity = 0; */
             this.cleanTotalItem();
-
             this.showListStock = true;
 
             if (this.form.item.attributes.length > 0) {
@@ -863,41 +750,16 @@ export default {
                 });
             }
 
-            this.calculateQuantity();
-
             this.form.lots_group = this.form.item.lots_group;
-            // if (!this.recordItem) {
-            //     await this.form.item.warehouses.forEach(element => {
-            //         if(element.checked){
-            //             this.form.warehouse_id = element.warehouse_id
-            //         }
-            //     });
-            // }
-
-            //this.item_unit_types = this.form.item.item_unit_types;
-            //(this.item_unit_types.length > 0) ? this.has_list_prices = true : this.has_list_prices = false;
-        },
-        focusProducto() {
-            this.$nextTick(function () {
-                this.$refs.producto.$el.querySelector("input").focus();
-            });
-        },
-        focusPrecio() {
-            //   this.$refs.precio.$el.getElementsByTagName('input')[0].focus()
-            //  this.$refs.precio.$el.querySelector('input').focus();
-            this.$nextTick(function () {
-                this.$refs.precio.$el.querySelector("input").focus();
-            });
+            this.calculateQuantity();
         },
         focusTotalItem(change) {
-            //if(!change && this.form.item.calculate_quantity) {
+            //  if(!change && this.form.item.calculate_quantity) {
             this.$refs.cantidad.$el.getElementsByTagName("input")[0].focus();
             //this.total_item = this.form.unit_price_value
             // }
         },
         calculateQuantity() {
-            let total_importe = 0;
-
             if (this.restringir_stock === true && this.form.item_id !== null) {
                 if (
                     this.form.stock_disp < this.form.quantity &&
@@ -912,84 +774,89 @@ export default {
             } else {
                 this.agregar_item = true;
             }
-            // debugger
+
             if (this.form.item.calculate_quantity) {
                 this.form.quantity = _.round(
                     this.total_item / this.form.unit_price_value,
                     4
                 );
             }
-
-            let subtotal = _.round(
-                this.form.quantity * this.form.unit_price_value,
-                2
+            // this.form.amount=_.round(this.form.quantity*this.form.unit_price_value, 4)
+            this.form.amount = _.round(
+                Math.round(
+                    parseFloat(this.form.quantity) *
+                    parseFloat(this.form.unit_price_value) *
+                    10
+                ) / 10,
+                4
             );
-
-            if (this.form.amount != undefined) {
-                let subtotal = this.form.quantity * this.form.unit_price_value;
-                if (subtotal > 0) {
-                    let n = (subtotal + "").split(".");
-
-                    if (n.length > 1 && n.length <= 2) {
-                        let decimal = n[1].substr(0, 1);
-                        if (decimal > "5" && decimal < "9") {
-                            let dec = parseInt(n[1].substr(0, 1)) + 1;
-
-                            let decimales = _.round(dec, 2);
-                            let enteros = n[0];
-                            total_importe = enteros.concat(
-                                ".",
-                                decimales + "0"
-                            );
-                        } else {
-                            let decimales = n[1].substr(0, 1) + "0";
-
-                            let enteros = n[0];
-                            total_importe = enteros.concat(".", decimales);
-                        }
-                    } else {
-                        total_importe = _.round(subtotal, 2);
-                    }
+            /* if (this.form.quantity <= 0) {
+                this.agregar_item = false;
+                this.$toast.warning("ingrese la cantida a vender");
+            } else {
+                this.agregar_item = true;
+            } */
+            if (this.colorSizeItem && this.colorSizeItem.length > 0) {
+                if (!this.selectedColor || !this.selectedSize) {
+ 
+                    this.agregar_item = false;
+                    /* this.$toast.info("Por favor, seleccione talla y color."); */
+                    return;
                 }
-                this.form.amount = _.round(total_importe, 2);
+                else {
+                    this.agregar_item = true;
+                }
+            } else {
+                if (this.form.quantity <= 0) {
+                    this.agregar_item = false;
+                    this.$toast.warning("Ingrese la cantidad a vender.");
+                    return;
+                } else {
+                    this.agregar_item = true;
+                }
+            }
+            /* this.agregar_item = true; */
+        },
+        updateprice() {
+            if (this.configuration.refresh_price_sales == true) {
+                let form_price_sales = {
+                    id: this.form.item_id,
+                    sale_unit_price: this.form.unit_price_value
+                };
+                this.$http
+                    .post(`/items/updateprice`, form_price_sales)
+                    .then(response => {
+                        if (response.data.success == true) {
+                            this.$toast.success(response.data.message);
+                        } else {
+                            this.$toast.error(
+                                "Ocurrio un error al actualizar el precio de venta"
+                            );
+                        }
+                    });
             }
         },
         cleanTotalItem() {
             this.total_item = null;
         },
-        async clickAddItem() {
-            if (this.recordItem && this.idDetalle != undefined) {
-                //   await   this.$parent.clickDeleteSNItem(this.idDetalle, this.recordItem.indexi);
-                await this.$http
-                    .delete(
-                        `/sale-notes/destroy_sale_note_item/${this.idDetalle}`
-                    )
-                    .then(res => {
-                        this.$eventHub.$emit("reloadDataItems", null);
-                    })
-                    .catch(error => {
-                        if (error.response.status === 500) {
-                            this.$toast.error("Error al intentar eliminar");
-                        } else {
-                            console.log(error.response.data.message);
-                        }
-                    });
-                //this.recordItem = null
-            }
-
+        async clickAddItem(reset = "ok", item_color_size = null) {
             this.form.item.is_stock = this.form.stock;
-            if (!this.form.item.hasOwnProperty("is_sset")) {
-                this.form.item.is_set = false;
-            }
             if (this.form.item.lots_enabled) {
                 if (!this.form.IdLoteSelected)
                     return this.$toast.error("Debe seleccionar un lote.");
             }
+            /* if(this.form.item.color_size){
+                if(!this.form.IdColor_sizeSelected)
+                return this.$toast.error('debe seleccionar al menos una talla y color')
+            } */
             if (this.validateTotalItem().total_item) return;
+
             let unit_price = this.form.has_igv ?
                 this.form.unit_price_value :
                 this.form.unit_price_value * (1 + this.percentage_igv / 100);
+
             this.form.input_unit_price_value = this.form.unit_price_value;
+
             this.form.unit_price = unit_price;
             this.form.item.unit_price = unit_price;
             this.form.item.presentation = this.item_unit_type;
@@ -998,20 +865,24 @@ export default {
                     id: this.form.affectation_igv_type_id
                 }
             );
+
             let IdLoteSelected = this.form.IdLoteSelected;
 
-            this.row = calculateRowItem(
+            // return
+            // console.logc
+            let row_calculate = calculateRowItem(
                 this.form,
                 this.currencyTypeIdActive,
                 this.exchangeRateSale,
                 this.percentage_igv / 100
             );
+            this.row = JSON.parse(JSON.stringify(row_calculate));
             let select_lots = await _.filter(this.row.item.lots, {
                 has_sale: true
             });
-            /* let un_select_lots = await _.filter(this.row.item.lots, {
+            let un_select_lots = await _.filter(this.row.item.lots, {
                 has_sale: false
-            }); */
+            });
 
             if (this.form.item.series_enabled) {
                 if (select_lots.length != this.form.quantity)
@@ -1020,15 +891,46 @@ export default {
                     );
             }
 
-            this.initForm();
-            if (this.recordItem) {}
-            this.row.IdLoteSelected = IdLoteSelected;
-            this.$emit("add", this.row);
-            this.agregar_item = false;
+            this.form.item.is_stock = this.form.stock;
+            if (this.form.item.has_color_size) {
+                let quantityTotal = this.color_size.reduce(
+                    (a, b) => a + Number(b.selectedQuantity),
+                    0
 
+                );
+                /* if (quantityTotal === 0) {
+                    return this.$toast.error('Debe seleccionar al menos una talla y color.');
+                } */
+            }
+
+            // this.row.edit = false;
+            if (reset == "ok") {
+                this.initForm();
+            }
+            //this.initializeFields()
+            if (this.recordItem) {
+                this.row.indexi = this.recordItem.indexi;
+            }
+            this.row.IdLoteSelected = IdLoteSelected;
+            this.row.item.lots = this.lots;
+            if (item_color_size) {
+                let new_color_size = JSON.parse(
+                    JSON.stringify(item_color_size)
+                );
+                this.row.item.color_size = new_color_size.map(i => ({
+                    ...i,
+                    quantity: i.selectedQuantity
+                }));
+                /* return this.$toast.error('debe seleccionar almenos una talla & color') */
+            }
+
+            await this.$emit("add", JSON.parse(JSON.stringify(this.row)));
+
+            this.agregar_item = false;
             if (this.recordItem) {
                 this.close();
             }
+            return;
         },
         validateTotalItem() {
             this.errors = {};
@@ -1042,7 +944,7 @@ export default {
 
             return this.errors;
         },
-        reloadDataItems(item_id) {
+        async reloadDataItems(item_id) {
             if (!item_id) {
                 this.$http
                     .get(`/${this.resource}/table/items`)
@@ -1053,13 +955,24 @@ export default {
                         // this.filterItems()
                     });
             } else {
-                this.$http
-                    .get(`/${this.resource}/search/item/${item_id}`)
-                    .then(response => {
-                        this.items = response.data.items;
-                        this.form.item_id = item_id;
-                        this.changeItem();
-                    });
+                const resp = await this.$http.get(
+                    `/${this.resource}/search/item/${item_id}`
+                );
+                if (resp.data.items.length > 0) {
+                    let data = resp.data.items[0];
+                    this.items = resp.data.items[0];
+                    this.form.item_id = item_id;
+
+                    // this.form.item.stock=resp.data.items[0].stock
+                    // this.form.unit_price_value=resp.data.items[0].sale_unit_price
+                    // this.searchRemoteItems(resp.data.items[0].description);
+                    // this.form.item.stock=resp.data.items[0].stock
+                    // this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus()
+                    // this.changeItem()
+                }
+                //.then((response) => {
+
+                //  })
             }
         },
         changePresentation() {
@@ -1102,9 +1015,10 @@ export default {
 
             this.form.unit_price_value = valor;
             this.form.item.unit_type_id = row.unit_type_id;
-            let sub = this.form.quantity * this.form.unit_price_value;
-            this.form.amount = sub.toFixed(2);
             this.calculateQuantity();
+        },
+        addRow(row) {
+            // this.searchRemoteItems(row.description)
         },
         addRowLotGroup(id) {
             this.form.IdLoteSelected = id;
@@ -1116,15 +1030,44 @@ export default {
             this.showDialogSelectLots = true;
         },
         addRowSelectLot(lots) {
+            lots = lots.filter(item => item.has_sale == true);
+            //this.lots
+            //fue al elegir, todas las series => this.lots
             this.lots = lots;
+            this.form.quantity = this.lots.length;
+            this.calculateQuantity();
         },
-        async clickSelectColor(){
-                this.showDialogSelectColor_size = true
+        async clickSelectColor() {
+            this.showDialogSelectColor_size = true;
         },
-        addRowSelectColor_size(color_size) {
-            color_size = color_size
-            .filter(item => item.has_sale == true)
-            this.form,IdColorSelected = id 
+        async addRowSelectColor_size(color_size) {
+            this.color_size = color_size;
+            let count_color_size = 0;
+            let total_color_size = color_size.filter(i => i.selectedQuantity)
+                .length;
+
+            for (const color of color_size) {
+                if (color.selectedQuantity) {
+                    this.form.quantity = color.selectedQuantity;
+                    this.form.unit_price_value = color.price;
+                    this.calculateQuantity();
+
+                    let json_color = {
+                        ...color
+                    };
+
+                    if (count_color_size + 1 === total_color_size) {
+                        await this.clickAddItem("ok", [{
+                            ...json_color
+                        }]);
+                    } else {
+                        await this.clickAddItem("no", [{
+                            ...json_color
+                        }]);
+                    }
+                    count_color_size += 1;
+                }
+            }
         }
     }
 };

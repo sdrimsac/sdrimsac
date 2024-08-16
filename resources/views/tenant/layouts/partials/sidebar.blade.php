@@ -336,8 +336,8 @@
                         <li>
                             <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
                                 href="{{ route('transactions.index') }}">
-                                <i class="icofont-id-card"></i> Tipo de transacciónes - Inventario
-                            </a>
+                                <i class="icofont-id-card"></i> Tipo de transacciones - Inventario
+                            </a>  
                         </li>
 
                         @if ($config->ver_etiqueta_logistica)

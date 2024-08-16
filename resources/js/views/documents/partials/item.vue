@@ -180,8 +180,9 @@
                                 @focus="$event.target.select()"
                                 ref="cantidad"
                                 v-model="form.quantity"
-                                :min="0.01"
-                                :precision="4"
+                                :min="0.00"
+                                :precision="2"
+                                :disabled="form.item.has_color_size || form.item.series_enabled"
                                 @keyup.enter.native="
                                     focusPrecio();
                                     calculateQuantity();
@@ -205,6 +206,7 @@
                             <el-input
                                 ref="precio"
                                 v-model="form.unit_price_value"
+                                :disabled="form.item.has_color_size"
                                 @input="calculateQuantity()"
                                 @focus="$event.target.select()"
                                 @keyup.enter.native="
@@ -233,6 +235,7 @@
                             <el-input
                                 v-model="form.amount"
                                 :readonly="typeUser === ''"
+                                :disabled="form.item.has_color_size"
                             >
                                 <template slot="prepend">{{
                                     form.item.currency_type_symbol
@@ -240,30 +243,6 @@
                             </el-input>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3" v-if="form.item_id != null">
-                        <div class="form-group">
-                            <label class="control-label">Descontar stock</label
-                            ><br />
-                            <el-radio-group
-                                v-model="form.stock"
-                                size="mini"
-                                @change="stock()"
-                            >
-                                <el-radio-button label="Si"></el-radio-button>
-                                <el-radio-button label="No"></el-radio-button>
-                            </el-radio-group>
-                        </div>
-                    </div>
-
-                    <!--<div class="col-md-3 col-sm-3" v-if="form.item.lots_enabled && form.lots_group.length > 0">
-                        <div class="form-group" >
-                             <label class="control-label">
-                                Seleccione el lote
-                            </label>
-                            <el-button style="margin-top:2%;" type="primary" icon="el-icon-edit-outline"  @click.prevent="clickLotGroup"></el-button>
-                        </div>
-                    </div>-->
-
                     <div
                         style="padding-top: 1%;"
                         class="col-md-2 col-sm-2"
@@ -298,7 +277,7 @@
                     <div
                         style="padding-top: 1%;"
                         class="col-md-3 col-sm-3"
-                        v-if="form.item_id && form.item.color_size"
+                        v-if="form.item_id && form.item.has_color_size"
                     >
                         <a
                             href="#"
@@ -368,7 +347,7 @@
                                     <tbody>
                                         <tr
                                             v-for="(row,
-                                            index) in form.item_unit_types"
+                                            index) in form.item_unit_types" :key="index"
                                         >
                                             <td class="text-center">
                                                 {{ row.unit_type_id }}
@@ -445,7 +424,7 @@
                                             <tbody>
                                                 <tr
                                                     v-for="(row,
-                                                    index) in form.discounts"
+                                                    index) in form.discounts" :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -539,7 +518,7 @@
                                             <tbody>
                                                 <tr
                                                     v-for="(row,
-                                                    index) in form.charges"
+                                                    index) in form.charges" :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -627,7 +606,7 @@
                                             <tbody>
                                                 <tr
                                                     v-for="(row,
-                                                    index) in form.attributes"
+                                                    index) in form.attributes" :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -907,7 +886,13 @@ export default {
             this.form.stock_disp = this.form.item.stock;
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
-            this.form.quantity = 1;
+            if (this.colorSizeItem && this.colorSizeItem.length > 0) {
+                this.form.quantity = 0;
+            } else {
+                this.form.quantity = 1;
+            }
+            /* this.form.quantity = 1; */
+            /* this.colorSizeItem = this.form.quantity = 0; */
             ///////////////////////////////////////////////////////////////////////////
             this.cleanTotalItem();
             this.showListStock = true;
@@ -1068,7 +1053,6 @@ export default {
                 has_plastic_bag_taxes: false,
                 warehouse_id: null,
                 lots_group: [],
-                /* color_size: [], */
                 IdColorSelected: null,
                 IdLoteSelected: null,
                 stock: "Si",
@@ -1219,7 +1203,13 @@ export default {
             this.form.stock_disp = this.form.item.stock;
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
-            this.form.quantity = 1;
+            if (this.colorSizeItem && this.colorSizeItem.length > 0) {
+                this.form.quantity = 0;
+            } else {
+                this.form.quantity = 1;
+            }
+            /* this.form.quantity = 1; */
+            /* this.colorSizeItem = this.form.quantity = 0; */
             this.cleanTotalItem();
             this.showListStock = true;
 
@@ -1277,6 +1267,30 @@ export default {
                 ) / 10,
                 4
             );
+            /* if (this.form.quantity <= 0) {
+                this.agregar_item = false;
+                this.$toast.warning("ingrese la cantida a vender");
+            } else {
+                this.agregar_item = true;
+            } */
+            if (this.colorSizeItem && this.colorSizeItem.length > 0) {
+                if (!this.selectedColor || !this.selectedSize) {
+ 
+                    this.agregar_item = false;
+                    this.$toast.info("Por favor, seleccione talla y color.");
+                    return;
+                }
+            } else {
+                if (this.form.quantity <= 0) {
+                    this.agregar_item = false;
+                    this.$toast.warning("Ingrese la cantidad a vender.");
+                    return;
+                }/*  else {
+                    this.agregar_item = true;
+                } */
+            }
+            this.agregar_item = true;
+            
         },
         updateprice() {
             if (this.configuration.refresh_price_sales == true) {
@@ -1306,10 +1320,6 @@ export default {
                 if (!this.form.IdLoteSelected)
                     return this.$toast.error("Debe seleccionar un lote.");
             }
-            /* if(this.form.item.color_size){
-                if(!this.form.IdColor_sizeSelected)
-                return this.$toast.error('debe seleccionar al menos una talla y color')
-            } */
             if (this.validateTotalItem().total_item) return;
 
             let unit_price = this.form.has_igv

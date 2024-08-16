@@ -161,6 +161,7 @@ class TransferPlaceController extends Controller
                 "message" => "El pin no corresponde al usuario actual"
             ];
         }
+        //aqui el usuario ingresa el codigo y busca por el codigo pero en el caso de rechazo será por id supongo
         $code = $request->code;
         $transfer = TransferPlace::where('code', $code)->where('status', 1)->first();
         if ($transfer == null) {
@@ -169,13 +170,15 @@ class TransferPlaceController extends Controller
                 "message" => "No se encontró algun traslado con ese código"
             ];
         }
+        //aqui le cambia el estado, como aceptado
         $transfer->status = 2;
         $transfer->save();
 
         $result = DB::connection('tenant')->transaction(function () use ($transfer) {
-
+            //aqui obtiene los items
             $details = TransferPlaceDetail::where('transfers_place_id', $transfer->id)->get();
             $row = InventoryTransfer::create([
+                //aca en description pondrías que es la cancelacion
                 'description' => $transfer->observation,
                 'warehouse_id' => $transfer->warehouse_id,
                 'warehouse_destination_id' => $transfer->warehouse_id_destination,
@@ -183,34 +186,23 @@ class TransferPlaceController extends Controller
             ]);
 
             foreach ($details as $it) {
+                //aqui actuliza el stock del almacén
                 $item = ItemWarehouse::where(
                     'item_id',
                     $it->item_id
+                    //aqui cambiaria el almacén al de origen
                 )->where('warehouse_id', $transfer->warehouse_id)->first();
                 if ($item) {
                     $item->stock += $it->quantity;
                     $item->save();
                 }
-                // $item_destination = ItemWarehouse::where(
-                //     'item_id',
-                //     $it->item_id
-                // )->where('warehouse_id', $transfer->warehouse_id_destination)->first();
-                // if ($item_destination) {
-                //     $item_destination->stock += $it->quantity;
-                //     $item_destination->save();
-                // } else {
-                //     $item_destination = new ItemWarehouse;
-                //     $item_destination->item_id = $it->item_id;
-                //     $item_destination->warehouse_id = $transfer->warehouse_id_destination;
-                //     $item_destination->stock = $it->quantity;
-                //     $item_destination->save();
-                // }
-
                 $inventory = new Inventory;
                 $inventory->type = 2;
                 $inventory->description = 'Traslado';
                 $inventory->item_id = $it->item_id;
+                //aqui igual
                 $inventory->warehouse_id = $transfer->warehouse_id;
+                //esto lo dejas vacio
                 $inventory->warehouse_destination_id = $transfer->warehouse_id_destination;
                 $inventory->quantity = $it->quantity;
 
