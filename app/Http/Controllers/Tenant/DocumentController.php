@@ -65,6 +65,7 @@ use App\Http\Resources\Tenant\DocumentResource2;
 use App\Imports\DocumentsImportTwoFormat;
 use Modules\Restaurant\Events\PrintEvent;
 use App\Http\Resources\Tenant\DocumentCollection;
+use App\Http\Resources\Tenant\DocumentSumaCollection;
 use GuzzleHttp\Exception\RequestException;
 use App\Http\Requests\Tenant\DocumentEmailRequest;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
@@ -460,6 +461,15 @@ class DocumentController extends Controller
 
         return new DocumentCollection($records);
     }
+
+    /* para que solo realice la suma total por separado */
+    public function recordsSuma(Request $request)
+    {
+        $totalSum = $this->getRecordsSuma($request);
+
+        return response()->json(['total_sum' => $totalSum]);
+    }
+
 
     public function records_list(Request $request)
     {
@@ -1811,7 +1821,7 @@ class DocumentController extends Controller
         $company = Company::first();
         $customer_id = $request->customer_id;
         $soap_type_id = $company->soap_type_id;
-    
+
         $records = Document::query()
             ->where('soap_type_id', '=', $soap_type_id)
             ->where('document_type_id', 'like', '%' . $document_type_id . '%')
@@ -1837,7 +1847,7 @@ class DocumentController extends Controller
                 $query->where('item_id', $item_id);
             });
         }
-        
+
 
         $records = $records->orderBy('date_of_issue', 'desc');
         return $records;
@@ -1989,19 +1999,33 @@ class DocumentController extends Controller
                 });
             });
         }
-
-        $totalSum = $records->sum('total');
+        $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
         if ($export) {
 
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
         } else {
 
-            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(25);
-            $records->total_sum = $totalSum;
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(20);
+            
         }
 
 
         return $records;
+    }
+    public function getRecordsSuma($request)
+    {
+        $d_start = $request->d_start;
+        $d_end = $request->d_end;
+
+        $records = Document::query();
+
+        if ($d_start && $d_end) {
+            $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
+        }
+        $totalSum = $records->sum('total');
+        
+
+        return $totalSum;
     }
 
     private function associateSaleNoteToDocument(Request $request, int $documentId)

@@ -51,6 +51,8 @@ if ($hostname) {
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
+            /* ruta para cancelar traslado */
+            /* Route::post('cancel-transfer', [TransferPlaceController::class, 'cancel_transfer']); */
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
@@ -462,6 +464,8 @@ if ($hostname) {
                         Route::get('/ventas/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excelVentas']);
                 });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
+                /* para mostrar la suma total de los productos */
+                Route::get('/records-suma', [App\Http\Controllers\Tenant\DocumentController::class, 'recordsSuma']);
 
                 Route::get('documents/create/{documents?}', [App\Http\Controllers\Tenant\DocumentController::class, 'create'])->name('tenant.documents.create')->middleware('just.admin');
                 Route::get('documents/record2/{salenote}', [App\Http\Controllers\Tenant\DocumentController::class, 'record2']);

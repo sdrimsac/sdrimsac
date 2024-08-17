@@ -391,7 +391,7 @@ export default {
                 }
                 let isPosd = printer.split(" ")[printer.split(" ").length - 1];
                 if (isPosd == "POSD") {
-                    config.density = 200;
+                    config.density = 200;      
                 }
                 let data = [{
                     type: "pdf",

@@ -203,6 +203,11 @@ export default {
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
+                let printer = response.data.printer;
+                let isPosd = printer.split(" ")[printer.split(" ").length - 1];
+                if (isPosd == "POSD") {
+                    config.density = 200;      
+                }
                 if (!qz.websocket.isActive()) {
                     await qz.websocket.connect(config);
                 }

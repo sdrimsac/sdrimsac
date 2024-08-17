@@ -149,6 +149,204 @@ class TransferPlaceController extends Controller
             ];
         }
     }
+    /* public function cancel_transfer(Request $request)
+    {
+        
+
+        $code = $request->code;
+        $transfer = TransferPlace::where('code', $code)->where('status', 1)->first();
+
+        // Cambia el estado del traslado a "cancelado"
+        $transfer->status = 3; // Por ejemplo, 3 representa "cancelado"
+        $transfer->save();
+
+        $result = DB::connection('tenant')->transaction(function () use ($transfer) {
+            // Obtiene los detalles del traslado
+            $details = TransferPlaceDetail::where('transfers_place_id', $transfer->id)->get();
+
+            foreach ($details as $it) {
+                // Restaura el stock en el almacén de destino
+                $item_dest = ItemWarehouse::where('item_id', $it->item_id)
+                    ->where('warehouse_id', $transfer->warehouse_id_destination)
+                    ->first();
+                if ($item_dest) {
+                    $item_dest->stock -= $it->quantity;
+                    $item_dest->save();
+                }
+
+                // Incrementa el stock en el almacén de origen
+                $item_orig = ItemWarehouse::where('item_id', $it->item_id)
+                    ->where('warehouse_id', $transfer->warehouse_id)
+                    ->first();
+                if ($item_orig) {
+                    $item_orig->stock += $it->quantity;
+                    $item_orig->save();
+                }
+
+                // Maneja los lotes y series
+                $series_lots = $it->series_lots;
+                foreach ($series_lots['series'] as $lot) {
+                    if ($lot['has_sale']) {
+                        $item_lot = ItemLot::findOrFail($lot['id']);
+                        $item_lot->warehouse_id = $transfer->warehouse_id; // Revertir al almacén de origen
+                        $item_lot->update();
+                    }
+                }
+
+                foreach ($series_lots['lotes'] as $lote) {
+                    $item_group = ItemLotsGroup::find($lote["id"]);
+                    $quantity = $lote["quantity"];
+                    if ($item_group) {
+                        $item_group->quantity += $quantity; // Revertir cantidad en el almacén de destino
+                        $item_group->save();
+
+                        $item_group_orig = ItemLotsGroup::where("item_id", $lote["item_id"])
+                            ->where('warehouse_id', $transfer->warehouse_id)
+                            ->where('code', $item_group->code)
+                            ->first();
+
+                        if ($item_group_orig) {
+                            $item_group_orig->quantity -= $quantity; // Restar cantidad en el almacén de origen
+                            $item_group_orig->save();
+                        }
+                    }
+                }
+
+                foreach ($series_lots['color_size'] as $item_color) {
+                    $size = $item_color['size'];
+                    $color = $item_color['color'];
+                    $quantity = $item_color['selectedQuantity'];
+
+                    $item_color_size_dest = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
+                        ->where('size', $size)
+                        ->where('color', $color)
+                        ->where('item_id', $it->item_id)
+                        ->first();
+
+                    if ($item_color_size_dest) {
+                        $item_color_size_dest->stock -= $quantity;
+                        $item_color_size_dest->save();
+                    }
+
+                    $item_color_size_orig = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
+                        ->where('size', $size)
+                        ->where('color', $color)
+                        ->where('item_id', $it->item_id)
+                        ->first();
+
+                    if ($item_color_size_orig) {
+                        $item_color_size_orig->stock += $quantity;
+                        $item_color_size_orig->save();
+                    }
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Traslado cancelado y stock revertido con éxito'
+            ];
+        });
+
+        return $result;
+    } */
+    /* public function cancel_transfer(Request $request)
+    {
+        $code = $request->code;
+        $transfer = TransferPlace::where('code', $code)->where('status', 1)->first();
+    
+        // Cambia el estado del traslado a "cancelado"
+        $transfer->status = 3; // Por ejemplo, 3 representa "cancelado"
+        $transfer->save();
+    
+        $result = DB::connection('tenant')->transaction(function () use ($transfer) {
+            // Obtiene los detalles del traslado
+            $details = TransferPlaceDetail::where('transfers_place_id', $transfer->id)->get();
+    
+            foreach ($details as $it) {
+                // Restaura el stock en el almacén de destino
+                $item_dest = ItemWarehouse::where('item_id', $it->item_id)
+                    ->where('warehouse_id', $transfer->warehouse_id_destination)
+                    ->first();
+                if ($item_dest) {
+                    $item_dest->stock -= $it->quantity;
+                    $item_dest->save();
+                }
+    
+                // Incrementa el stock en el almacén de origen
+                $item_orig = ItemWarehouse::where('item_id', $it->item_id)
+                    ->where('warehouse_id', $transfer->warehouse_id)
+                    ->first();
+                if ($item_orig) {
+                    $item_orig->stock += $it->quantity;
+                    $item_orig->save();
+                }
+    
+                // Maneja los lotes y series
+                $series_lots = $it->series_lots;
+                foreach ($series_lots['series'] as $lot) {
+                    if ($lot['has_sale']) {
+                        $item_lot = ItemLot::findOrFail($lot['id']);
+                        $item_lot->warehouse_id = $transfer->warehouse_id; // Revertir al almacén de origen
+                        $item_lot->update();
+                    }
+                }
+    
+                foreach ($series_lots['lotes'] as $lote) {
+                    $item_group = ItemLotsGroup::find($lote["id"]);
+                    $quantity = $lote["quantity"];
+                    if ($item_group) {
+                        $item_group->quantity -= $quantity; // Revertir cantidad en el almacén de destino
+                        $item_group->save();
+    
+                        $item_group_orig = ItemLotsGroup::where("item_id", $lote["item_id"])
+                            ->where('warehouse_id', $transfer->warehouse_id)
+                            ->where('code', $item_group->code)
+                            ->first();
+    
+                        if ($item_group_orig) {
+                            $item_group_orig->quantity += $quantity; // Restar cantidad en el almacén de origen
+                            $item_group_orig->save();
+                        }
+                    }
+                }
+    
+                foreach ($series_lots['color_size'] as $item_color) {
+                    $size = $item_color['size'];
+                    $color = $item_color['color'];
+                    $quantity = $item_color['selectedQuantity'];
+    
+                    $item_color_size_dest = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
+                        ->where('size', $size)
+                        ->where('color', $color)
+                        ->where('item_id', $it->item_id)
+                        ->first();
+    
+                    if ($item_color_size_dest) {
+                        $item_color_size_dest->stock -= $quantity;
+                        $item_color_size_dest->save();
+                    }
+    
+                    $item_color_size_orig = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
+                        ->where('size', $size)
+                        ->where('color', $color)
+                        ->where('item_id', $it->item_id)
+                        ->first();
+    
+                    if ($item_color_size_orig) {
+                        $item_color_size_orig->stock += $quantity;
+                        $item_color_size_orig->save();
+                    }
+                }
+            }
+    
+            return [
+                'success' => true,
+                'message' => 'Traslado cancelado y stock revertido con éxito'
+            ];
+        });
+    
+        return $result;
+    } */
 
     public function accept_transfer(Request $request)
     {
@@ -253,7 +451,7 @@ class TransferPlaceController extends Controller
                     $item_color_size = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
                         ->where('size', $size)
                         ->where('color', $color)
-                        ->where('item_id',$it->item_id)
+                        ->where('item_id', $it->item_id)
                         ->first();
                     if (!$item_color_size) {
                         $item_color_size = ItemColorSize::create([

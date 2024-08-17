@@ -49,7 +49,7 @@
                             <th class="text-white">Detalle</th>
                             <th class="text-white">Detalle Productos</th>
                             <th class="text-white">Cantidad Total Productos</th>
-                            <!--<th class="text-end">Acciones</th> -->
+                            <!-- <th class="text-white">Acciones</th> -->
                         </tr>
                         <tr class="text-white"></tr>
                         <tr slot-scope="{ index, row }">
@@ -114,12 +114,12 @@
                                 </el-popover>
                             </td>
                             <td>{{ row.quantity }}</td>
-                            <!--<td class="text-end">
+                            <!-- <td class="">
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-info"
                                         @click.prevent="clickCreate(row.id)">Editar</button>
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-danger"
                                         @click.prevent="clickDelete(row.id)">Eliminar</button>
-                </td>-->
+                            </td> -->
                         </tr>
                     </data-table>
                 </div>
