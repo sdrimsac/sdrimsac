@@ -4036,6 +4036,12 @@ export default {
                     console.log("regresando");
                     return;
                 }
+                await this.$http.post("/caja/re-print", {
+                    url
+                });
+
+                return
+            
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });

@@ -249,7 +249,7 @@ class TransferPlaceController extends Controller
 
         return $result;
     } */
-    /* public function cancel_transfer(Request $request)
+    public function cancel_transfer(Request $request)
     {
         $code = $request->code;
         $transfer = TransferPlace::where('code', $code)->where('status', 1)->first();
@@ -346,7 +346,7 @@ class TransferPlaceController extends Controller
         });
     
         return $result;
-    } */
+    }
 
     public function accept_transfer(Request $request)
     {

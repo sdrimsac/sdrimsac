@@ -52,7 +52,7 @@ if ($hostname) {
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
             /* ruta para cancelar traslado */
-            /* Route::post('cancel-transfer', [TransferPlaceController::class, 'cancel_transfer']); */
+            Route::post('cancel-transfer', [TransferPlaceController::class, 'cancel_transfer']);
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');

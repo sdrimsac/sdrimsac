@@ -255,7 +255,7 @@ export default {
                     this.pagination = meta;
                 }
             } catch (e) {
-                this.$toast.error("Ocurrió un erro");
+                this.$toast.error("Ocurrió un error");
             } finally {
                 this.loading = false;
             }

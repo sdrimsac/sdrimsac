@@ -54,7 +54,7 @@
                         <td>
                             {{ row.status == 1 ? "Enviado" : "Aceptado" }}
                         </td>
-                        <!-- <td class="text-end">
+                        <td class="text-end">
                             <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
                             </button>
@@ -63,7 +63,7 @@
                                     <i class="fa fa-edit"></i> Cancelar
                                 </a>
                             </div>
-                        </td> -->
+                        </td>
                     </tr>
                 </data-table>
             </div>
