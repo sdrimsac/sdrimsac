@@ -52,14 +52,25 @@
                         </td>
                         <td>{{ row.quantity }}</td>
                         <td>
-                            {{ row.status == 1 ? "Enviado" : "Aceptado" }}
+                            <button class="btn" :style="{
+                                color: 'white', 
+                                backgroundColor: row.status === 1 ? 'blue' :
+                                row.status === 2 ? 'green' :
+                                row.status === 3 ? 'red' : 'gray',
+                                fontWeight: 'bold',
+                                width: '110px'
+                                }">
+                                {{ row.status === 1 ? 'Enviado' :
+                                row.status === 2 ? 'Aceptado' :
+                                row.status === 3 ? 'Anulado' : 'Desconocido' }}
+                            </button>
                         </td>
-                        <td class="text-end">
+                        <td class="text-end" v-if="row.status === 1">
                             <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-end" style="">
-                                <a type="button" class="dropdown-item text-secondary" @click.prevent="cancelTransfer">
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a type="button" class="dropdown-item text-warning" @click="cancelTransfer(row.code)">
                                     <i class="fa fa-edit"></i> Cancelar
                                 </a>
                             </div>
@@ -192,17 +203,17 @@ export default {
                 this.$toast.error(e.message);
             });
         },
-        async cancelTransfer() {
+        async cancelTransfer(code) {
             try {
-                const response = await axios.post('/cancel-transfer', {
-                    code: this.transferCode
+
+                const response = await axios.post('/transfers/cancel_transfer', {
+                    code: code
                 });
 
                 if (response.data.success) {
                     this.$message.success(response.data.message);
                 } else {
                     this.$message.error('Error al cancelar el traslado');
-                    
                 }
             } catch (error) {
                 this.$message.error('Ocurrió un error al cancelar el traslado');

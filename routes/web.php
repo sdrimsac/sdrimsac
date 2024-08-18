@@ -38,7 +38,8 @@ if ($hostname) {
             Route::get('search/tables', [App\Http\Controllers\Tenant\SearchController::class, 'tables']);
             Route::post('search', [App\Http\Controllers\Tenant\SearchController::class, 'store']);
             Route::post('efectivo', [App\Http\Controllers\Tenant\SearchController::class, 'efectivo']);
-            Route::get('transfers/print_places/{code?}', [TransferPlaceController::class, 'print_transfer']);
+            /* agrgado para cancelar traslado */
+            /* Route::post('transfers/cancel_transfer', [TransferPlaceController::class, 'cancel_transfer']); */
             Route::get('report_cash/report/{type}', [CashController::class, 'report_cash_export']);
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'downloadExternal'])->name('tenant.download.external_id');
             Route::get('print/{model}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'toPrint']);
@@ -52,7 +53,7 @@ if ($hostname) {
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
             /* ruta para cancelar traslado */
-            Route::post('cancel-transfer', [TransferPlaceController::class, 'cancel_transfer']);
+            
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
@@ -464,7 +465,6 @@ if ($hostname) {
                         Route::get('/ventas/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excelVentas']);
                 });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
-                /* para mostrar la suma total de los productos */
                 Route::get('/records-suma', [App\Http\Controllers\Tenant\DocumentController::class, 'recordsSuma']);
 
                 Route::get('documents/create/{documents?}', [App\Http\Controllers\Tenant\DocumentController::class, 'create'])->name('tenant.documents.create')->middleware('just.admin');

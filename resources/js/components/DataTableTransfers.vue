@@ -10,6 +10,7 @@
                                 v-model="search.column"
                                 placeholder="Select"
                                 @change="changeClearInput"
+                                clearable    
                             >
                                 <el-option
                                     v-for="(label, key) in columns"
@@ -56,6 +57,7 @@
                                 v-model="search.value"
                                 style="width: 100%;"
                                 @change="getRecords"
+                                clearable
                             >
                                 <el-option
                                     v-for="w in warehouses"
@@ -71,6 +73,7 @@
                                 v-model="search.value"
                                 style="width: 100%;"
                                 @change="getRecords"
+                                clearable
                             >
                                 <el-option
                                     v-for="w in states"
@@ -130,7 +133,8 @@ export default {
             },
             states: [
                 { id: 1, description: "Enviado" },
-                { id: 2, description: "Aceptado" }
+                { id: 2, description: "Aceptado" },
+                { id: 3, description: "Anulado" },
             ],
             columns: [],
             records: [],

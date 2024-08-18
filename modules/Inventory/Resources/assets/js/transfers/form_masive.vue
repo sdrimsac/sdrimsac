@@ -80,8 +80,7 @@
                                                 form_add.item_id &&
                                                     form_add.lots_enabled
                                             " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotescodeOutput">[&#10004; Seleccionar cantidad en lotes]</a>
-                                        <a v-if="form_add.item_id && hasColor_size" 
-                                            href="#" class="text-center font-weight-bold text-info" @click.prevent="clickColorcodeOutput">[&#10004; Seleccionar Talla Color]</a>
+                                        <a v-if="form_add.item_id && hasColor_size" href="#" class="text-center font-weight-bold text-info" @click.prevent="clickColorcodeOutput">[&#10004; Seleccionar Talla Color]</a>
                                     </div>
                                 </div>
 
@@ -188,14 +187,14 @@
                 </div>
             </div>
             <div class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2">
-                    <!-- <el-checkbox>
-                    inhabilitar 
-                    </el-checkbox> -->
+                <el-checkbox v-model="isDisabled">
+                    inhabilitar
+                </el-checkbox>
                 <div class="col-md-4" style="margin-right:10px;">
                     <span>
                         <i class="fa fa-print fa-lg"></i>
                         Impresora: </span><br />
-                    <el-select v-model="form.printer">
+                    <el-select v-model="form.printer" :disabled="isDisabled">
                         <el-option v-for="establishment in establishments" :key="establishment.id" :value="establishment.id" :label="
                                             `${establishment.description} - ${establishment.printer}`
                                         ">
@@ -232,6 +231,7 @@ export default {
     },
     data() {
         return {
+            isDisabled: false,
             sameEstablishment: false,
             hasLots: false,
             hasColor_size: false,
@@ -253,6 +253,19 @@ export default {
             currentItem: null
         };
     },
+    watch: {
+        isDisabled(newValue) {
+            // Guarda el estado en localStorage cuando cambie
+            localStorage.setItem('isDisabled', newValue);
+        }
+    },
+    mounted() {
+        const savedIsDisabled = localStorage.getItem('isDisabled');
+        if (savedIsDisabled !== null) {
+            this.isDisabled = savedIsDisabled === 'true';
+        }
+    },
+
     async created() {
         this.isDirect = this.configuration.translate_direct;
         await this.$http.get(`/${this.resource}/tables`).then(response => {
@@ -465,10 +478,10 @@ export default {
 
                 let message = '';
 
-                if (this.form_add.color_size && this.form_add.color_size.length > 0){
+                if (this.form_add.color_size && this.form_add.color_size.length > 0) {
                     message = "seleccione cantidad talla color a trasladar";
                     this.$toast.warning(message);
-                } else if (this.form_add.lotes && this.form_add.lotes.length > 0){
+                } else if (this.form_add.lotes && this.form_add.lotes.length > 0) {
                     message = "seleccione cantidad de lotes a trasladar";
                     this.$toast.warning(message);
                 } else if (this.form_add.lots && this.form_add.lots.length > 0) {
@@ -478,7 +491,7 @@ export default {
                     message = "la cantidad debe ser mayor a 1 ";
                     this.$toast.warning(message);
                 }
-                
+
                 return;
             }
 
@@ -561,7 +574,8 @@ export default {
             };
         },
         async submit() {
-            if (!this.form.printer && !this.isDirect) {
+
+            if (!this.form.printer && !this.isDirect && !this.isDisabled) {
                 return this.$toast.warning(
                     "Recuerde Seleccionar una impresora."
                 );
@@ -585,7 +599,7 @@ export default {
                         let {
                             printer
                         } = response.data;
-                        if (this.form.printer) {
+                        if (this.form.printer && !this.isDisabled) {
                             await this.printTransfer(code, printer);
                         }
                         this.close();

@@ -192,9 +192,13 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::post('/place', [TransferPlaceController::class, 'place_transfer']);
         Route::get('/places', [TransferPlaceController::class, 'get_place_transfer']);
         Route::post('/accept_transfer', [TransferPlaceController::class, 'accept_transfer']);
+        Route::post('/cancel_transfer', [TransferPlaceController::class, 'cancel_transfer']);
         Route::get('/transfer_place/records', [TransferPlaceController::class, 'records']);
         Route::get('/transfer_place/columns', [TransferPlaceController::class, 'columns']);
         Route::get('/transfer_place/tables', [TransferPlaceController::class, 'tables']);
+        
+        /* Route::post('/transfers/cancel_transfer', [TransferController::class, 'cancel_transfer']); */
+
         // });
 
         Route::delete('{inventory}', 'TransferController@destroy');
