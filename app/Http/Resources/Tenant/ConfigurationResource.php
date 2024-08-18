@@ -15,6 +15,16 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'cuentas_bancarias' => (bool)$this->cuentas_bancarias,
+            'bancos' => (bool)$this->bancos,
+            'vendedores' => (bool)$this->vendedores,
+            'registro_actividad' => (bool)$this->registro_actividad,
+            'categorias' => (bool)$this->categorias,
+            'marca' => (bool)$this->marca,
+            'clientes' => (bool)$this->clientes,
+            'provedores' => (bool)$this->provedores,
+            'atributos' => (bool)$this->atributos,
+            'unidad_medida' => (bool)$this->unidad_medida,
             'reporte_series_vendidas' => (bool)$this->reporte_series_vendidas,
             'kardex' => (bool)$this->kardex,
             'stock_producto' => (bool)$this->stock_producto,

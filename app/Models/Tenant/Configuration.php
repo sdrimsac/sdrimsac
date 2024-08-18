@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'cuentas_bancarias',
+        'bancos',
+        'vendedores',
+        'registro_actividad',
+        'categorias',
+        'marca',
+        'clientes',
+        'provedores',
+        'atributos',
+        'unidad_medida',
         'reporte_series_vendidas',
         'kardex',
         'stock_producto',
@@ -221,6 +231,16 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'cuentas_bancarias' => 'boolean',
+        'bancos' => 'boolean',
+        'vendedores' => 'boolean',
+        'registro_actividad' => 'boolean',
+        'categorias' => 'boolean',
+        'marca' => 'boolean',
+        'clientes' => 'boolean',
+        'provedores' => 'boolean',
+        'atributos' => 'boolean',
+        'unidad_medida' => 'boolean',
         'reporte_series_vendidas' => 'boolean',
         'kardex' => 'boolean',
         'stock_producto' => 'boolean',
@@ -382,6 +402,16 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'cuentas_bancarias' => (bool)$this->cuentas_bancarias,
+            'bancos' => (bool)$this->bancos,
+            'vendedores' => (bool)$this->vendedores,
+            'registro_actividad' => (bool)$this->registro_actividad,
+            'categorias' => (bool)$this->categorias,
+            'marca' => (bool)$this->marca,
+            'clientes' => (bool)$this->clientes,
+            'provedores' => (bool)$this->provedores,
+            'atributos' => (bool)$this->atributos,
+            'unidad_medida' => (bool)$this->unidad_medida,
             'reporte_series_vendidas' => (bool)$this->reporte_series_vendidas,
             'kardex' => (bool)$this->kardex,
             'stock_producto' => (bool)$this->stock_producto,

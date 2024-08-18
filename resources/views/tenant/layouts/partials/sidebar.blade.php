@@ -75,36 +75,39 @@
                                 </a>
                             </li>
                         @endif
-                        <li>
-                            <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.bank_accounts.index') }}">
-                                <i class="icofont-bank"></i>
-                                Ctas bancarias
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.banks.index') }}">
-                                <i class="icofont-bank-alt"></i> Bancos
-                            </a>
-                        </li>
-                        <!-- <li>
-                    <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}" href="{{ route('transactions.index') }}">
-                        <i class="icofont-id-card"></i> Tipo de transacciónes - Inventario
-                    </a>
-                </li> -->
-                        <li>
-                            <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.sellers.index') }}">
-                                <i class="icofont-id-card"></i> Vendedores
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
-                                href="{{ route('tenant.registers.index') }}">
-                                <i class="fas fa-history"></i> Registro de actividades
-                            </a>
-                        </li>
+                        @if ($config->cuentas_bancarias)
+                            <li>
+                                <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.bank_accounts.index') }}">
+                                    <i class="icofont-bank"></i>
+                                    Ctas bancarias
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->bancos)
+                            <li>
+                                <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.banks.index') }}">
+                                    <i class="icofont-bank-alt"></i> Bancos
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->vendedores)
+                            <li>
+                                <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.sellers.index') }}">
+                                    <i class="icofont-id-card"></i> Vendedores
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->registro_actividad)
+                            <li>
+                                <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
+                                    href="{{ route('tenant.registers.index') }}">
+                                    <i class="fas fa-history"></i> Registro de actividades
+                                </a>
+                            </li>
+                        @endif
                         @if ($config->college)
                             <li>
                                 <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
@@ -113,48 +116,54 @@
                                 </a>
                             </li>
                         @endif
-                        <li>
-                            <a class="{{ $path[0] === 'category' ? 'active' : '' }}"
-                                href="{{ route('tenant.categories.index') }}">
-                                <i class="icofont-chart-flow"></i> Categorias
-                            </a>
-                        </li>
-                        <!-- <li>
-                    <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}" href="{{ route('etiquetas.index') }}">
-                        <i class="icofont-label"></i> Etiquetas
-                    </a>
-                </li> -->
-                        <li>
-                            <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
-                                href="{{ route('tenant.brands.index') }}">
-                                <i class="icofont-xing"></i> Marcas
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
-                                href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
-                                <i class="icofont-business-man"></i> Clientes
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
-                                href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
-                                <i class="icofont-business-man"></i> Proveedores
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.attribute_types.index') }}">
-                                <i class="fa fa-newspaper"></i> Atributos
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.unit_types.index') }}">
-                                <i class="fa fa-solid fa-ruler"></i> Unidad de medida
-                            </a>
-                        </li>
+                        @if ($config->categorias)
+                            <li>
+                                <a class="{{ $path[0] === 'category' ? 'active' : '' }}"
+                                    href="{{ route('tenant.categories.index') }}">
+                                    <i class="icofont-chart-flow"></i> Categorias
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->marca)
+                            <li>
+                                <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
+                                    href="{{ route('tenant.brands.index') }}">
+                                    <i class="icofont-xing"></i> Marcas
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->clientes)
+                            <li>
+                                <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
+                                    href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
+                                    <i class="icofont-business-man"></i> Clientes
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->provedores)
+                            <li>
+                                <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
+                                    href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
+                                    <i class="icofont-business-man"></i> Proveedores
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->atributos)
+                            <li>
+                                <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.attribute_types.index') }}">
+                                    <i class="fa fa-newspaper"></i> Atributos
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->unidad_medida)
+                            <li>
+                                <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.unit_types.index') }}">
+                                    <i class="fa fa-solid fa-ruler"></i> Unidad de medida
+                                </a>
+                            </li>
+                        @endif
                         {{-- <li>
                             <a class="{{ $path[0] === 'etiquetas' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.etiquetas.index') }}">
@@ -272,7 +281,8 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->receive_merchandise)  {{-- ($many_establishments) --}}
+                        @if ($config->receive_merchandise)
+                            {{-- ($many_establishments) --}}
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('transfers.index') }}">
@@ -337,7 +347,7 @@
                             <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
                                 href="{{ route('transactions.index') }}">
                                 <i class="icofont-id-card"></i> Tipo de transacciones - Inventario
-                            </a>  
+                            </a>
                         </li>
 
                         @if ($config->ver_etiqueta_logistica)

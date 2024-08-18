@@ -3132,6 +3132,172 @@
                                         </div>
                                     </div>
                                 </el-tab-pane>
+                                <!-- agregado para todo el modulo de mantenimiento -->
+                                <el-tab-pane name="Mantenimiento">
+                                    <template #label>
+                                        <div class="tab-label">
+                                            <!-- <i class=""></i> -->
+                                            <i class="icofont-modules icon-parent"></i>
+                                            <span class="tab-text">
+                                                Mantenimiento</span>
+                                        </div>
+                                    </template>
+                                    <div class="nested-tab-content">
+                                        Modulo Bancos
+                                        <div class="row">
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Bancos
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.bancos
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Cuentas Bancarias
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.cuentas_bancarias
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Vendedores
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.vendedores
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Registro de Actividad
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.registro_actividad
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Categorias
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.categorias
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Marca
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.marca
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Clientes
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.clientes
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Proveedores
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.provedores
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Atributos
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.atributos
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        Unidad de Medida
+                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-switch v-model="
+                                                            form.unidad_medida
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                             submit
+                                                        "></el-switch>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </el-tab-pane>
                                 <!-- Restaurant-------- -->
                                 <el-tab-pane v-if="form.restaurant" name="restaurant">
                                     <template #label>
