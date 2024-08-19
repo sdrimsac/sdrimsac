@@ -2077,140 +2077,7 @@
                                     </template>
                                     <div class="nested-tab-content">
                                         Contenido de Reportes
-                                        <div class="row">
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-list"></i>
-                                                        Productos Vendidos
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.productos_vendidos
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-patient-file"></i>
-                                                        Reporte de Caja
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_caja
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-attachment"></i>
-                                                        Reporte de Cierre De Caja
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_cierre_caja
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-globe"></i>
-                                                        Reporte Globalizado
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_globalizado
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-box"></i>
-                                                        Reporte de metodos de pago
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_metodos_pago
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-money-bag"></i>
-                                                        Reporte de Ganancias
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_ganancias
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="fas fa-window-restore "></i>
-                                                        Reporte de Productos
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_productos
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-dollar"></i>
-                                                        Stock Valorizado
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.stock_valorizado
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="fas fa-boxes"></i>
-                                                        Stock Minimo
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.stock_minimo
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-box"></i>
-                                                        Stock De Producto
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.stock_producto
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-chart-bar-graph"></i>
-                                                        Kardex
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.kardex
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="fas fa-fingerprint"></i>
-                                                        Reprote De Series Vendidas
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.reporte_series_vendidas
-                                                                "></el-switch>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </el-tab-pane>
                                 <!-- Panel de módulos -->
@@ -2228,7 +2095,7 @@
                                     <!-- Pestaña Mantenimiento -->
                                     <el-tab-pane label="Mantenimiento" name="tab-1">
                                         <div class="nested-tab-content">
-                                           Modulo Manteniiento
+                                           Modulo Mantenimiento
                                         <div class="row">
                                             <div class="col-md-4 mt-4">
                                                 <div class="form-group">
@@ -2415,7 +2282,140 @@
                                     <!-- Pestaña 6 -->
                                     <el-tab-pane label="Reportes" name="tab-6">
                                         <div class="nested-tab-content">
-                                        Contenido de la Pestaña 6
+                                            <div class="row">
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-list"></i>
+                                                        Productos Vendidos
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.productos_vendidos
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-patient-file"></i>
+                                                        Reporte de Caja
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_caja
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-attachment"></i>
+                                                        Reporte de Cierre De Caja
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_cierre_caja
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-globe"></i>
+                                                        Reporte Globalizado
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_globalizado
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-box"></i>
+                                                        Reporte de metodos de pago
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_metodos_pago
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-money-bag"></i>
+                                                        Reporte de Ganancias
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_ganancias
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="fas fa-window-restore "></i>
+                                                        Reporte de Productos
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_productos
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-dollar"></i>
+                                                        Stock Valorizado
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.stock_valorizado
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="fas fa-boxes"></i>
+                                                        Stock Minimo
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.stock_minimo
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-box"></i>
+                                                        Stock De Producto
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.stock_producto
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="icofont-chart-bar-graph"></i>
+                                                        Kardex
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.kardex
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-4">
+                                                <div class="form-group">
+                                                    <label class="control-label w-100">
+                                                        <i class="fas fa-fingerprint"></i>
+                                                        Reprote De Series Vendidas
+                                                    </label>
+                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.reporte_series_vendidas
+                                                                "></el-switch>
+                                                </div>
+                                            </div>
+                                        </div>
                                         </div>
                                     </el-tab-pane>
                                     </el-tabs>

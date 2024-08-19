@@ -200,14 +200,21 @@ export default {
                 );
                 let url = response.data.print;
 
+                await this.$http.post("/caja/re-print",
+                    {url}
+                );
+                return;
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
                 let printer = response.data.printer;
+                console.log(printer);
                 let isPosd = printer.split(" ")[printer.split(" ").length - 1];
+                console.log(isPosd);
                 if (isPosd == "POSD") {
                     config.density = 200;      
                 }
+                console.log(config);
                 if (!qz.websocket.isActive()) {
                     await qz.websocket.connect(config);
                 }
