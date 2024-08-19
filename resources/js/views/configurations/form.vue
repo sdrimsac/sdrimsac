@@ -461,13 +461,7 @@
                                             <i class="fas fa-search fa-lg"></i> Buscar
                                         </label>
                                         <div class="form-group">
-                                            <el-input 
-                                                v-model="searchQueryAccounting" 
-                                                placeholder="Escribe para buscar..." 
-                                                style="width: 100%; max-width: 300px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);" 
-                                                maxlength="30" 
-                                                show-word-limit 
-                                                type="text">
+                                            <el-input v-model="searchQueryAccounting" placeholder="Escribe para buscar..." style="width: 100%; max-width: 300px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);" maxlength="30" show-word-limit type="text">
                                                 <template #prefix>
                                                     <i class="fas fa-search text-muted"></i>
                                                 </template>
@@ -744,7 +738,7 @@
                                                                         <i class="fas fa-file-alt fa-lg"></i>
                                                                         Gestiones Adicionales
                                                                     </div>
-                                                                    
+
                                                                     <div class="section-content">
                                                                         <!-- Contenido de la sección 1 -->
                                                                         <div class="row">
@@ -759,7 +753,7 @@
                                                                                     <small class="text-danger" v-if="errors.recreat_document" v-text="errors.recreat_document[0]"></small>
                                                                                 </div>
                                                                             </div>
-                                                                            
+
                                                                             <!-- Eliminar Documento -->
                                                                             <div class="col-md-4 mt-4">
                                                                                 <label class="control-label">
@@ -810,8 +804,6 @@
                                                                                     <el-switch v-model="form.require_code" active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                                                                 </div>
                                                                             </div>
-
-                                                                          
 
                                                                             <!-- Cargo por pago con tarjeta -->
                                                                             <div class="col-md-4 mt-4">
@@ -930,19 +922,6 @@
                                                                                 </div>
                                                                             </div>
 
-                                                                            <!-- Detracciones -->
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        <i class="fas fa-percentage tab-icon"></i>
-                                                                                        Detracciones
-                                                                                    </label>
-                                                                                    <el-switch v-model="form.detraction" active-text="Si" inactive-text="No" @change="submit"></el-switch>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            
-
                                                                             <!-- Vender con stock -->
                                                                             <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
@@ -1015,20 +994,6 @@
                                                                                 </div>
                                                                             </div>
 
-                                                                            <!-- Mostrar Módulo de Etiquetas -->
-                                                                            <div class="col-md-4 mt-4">
-                                                                                <div class="form-group">
-                                                                                    <label class="control-label w-100">
-                                                                                        <i class="fas fa-tags tab-icon"></i>
-                                                                                        Mostrar Módulo de Etiquetas
-                                                                                        <el-tooltip class="item" effect="dark" content="Aquí podemos decidir si queremos mostrar o no el módulo de etiquetas" placement="top-start">
-                                                                                            <i class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
-                                                                                    <el-switch v-model="form.ver_etiqueta_logistica" active-text="Si" inactive-text="No" @change="submit"></el-switch>
-                                                                                </div>
-                                                                            </div>
-
                                                                             <!-- Permitir anulado interno -->
                                                                             <div class="col-md-4 mt-4">
                                                                                 <div class="form-group">
@@ -1042,7 +1007,7 @@
                                                                         </div>
 
                                                                     </div>
-                                                                
+
                                                                 </el-card>
                                                             </el-col>
 
@@ -1669,19 +1634,18 @@
                                                                             </div>
 
                                                                         </div>
-                                                                            
+
                                                                     </div>
                                                                 </el-card>
                                                             </el-col>
 
                                                         </el-row>
-                                                        
 
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </template>
                                 </el-tab-pane>
 
@@ -1865,7 +1829,6 @@
                                         </div>
                                     </div>
 
-                                
                                 </el-tab-pane>
 
                                 <el-tab-pane label="Crédito NV" v-if="form.credits">
@@ -1964,9 +1927,9 @@
                                     <div class="nested-tab-content">
                                         Contenido de Cotización
                                         <div class="row">
-                                            
+
                                         </div>
-                                        
+
                                     </div>
                                 </el-tab-pane> -->
 
@@ -2010,7 +1973,6 @@
                                                 </div>
                                             </div>
 
-
                                             <div class="col-md-2 mt-4">
                                                 <div class="form-group">
                                                     <label class="control-label w-100">
@@ -2049,7 +2011,6 @@
                                                 </div>
                                             </div>
 
-                                            
                                             <div class="col-md-2 mt-4">
                                                 <div class="form-group">
                                                     <label class="control-label w-100">
@@ -2064,363 +2025,576 @@
                                         </div>
                                     </div>
                                 </el-tab-pane>
-
-                                <!--botones  para activar o desacticvar los resportes -->
-
-                                <el-tab-pane name="Reportes">
-                                    <template #label>
-                                        <div class="tab-label">
-                                            <i class="icofont-file-alt icon-parent"></i>
-                                            <span class="tab-text">
-                                                Reportes</span>
-                                        </div>
-                                    </template>
-                                    <div class="nested-tab-content">
-                                        Contenido de Reportes
-
-                                    </div>
-                                </el-tab-pane>
                                 <!-- Panel de módulos -->
 
                                 <el-tab-pane name="Módulos">
                                     <template #label>
-                                    <div class="tab-label">
-                                        <i class="fas fa-cubes"></i>
-                                        <span class="tab-text fa-lg"> Módulos</span>
-                                    </div>
+                                        <div class="tab-label">
+                                            <i class="fas fa-cubes"></i>
+                                            <span class="tab-text fa-lg"> Módulos</span>
+                                        </div>
                                     </template>
-                                
+
                                     <!-- Sección de Pestañas -->
                                     <el-tabs type="border-card" v-model="activeSubTab" @tab-click="handleTabClick">
-                                    <!-- Pestaña Mantenimiento -->
-                                    <el-tab-pane label="Mantenimiento" name="tab-1">
-                                        <div class="nested-tab-content">
-                                           Modulo Mantenimiento
-                                        <div class="row">
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Bancos
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                        <!-- Pestaña Mantenimiento -->
+                                        <el-tab-pane label="Mantenimiento" name="tab-1">
+                                            <div class="nested-tab-content">
+                                                Modulo Mantenimmiento
+                                                <div class="row">
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Bancos
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.bancos
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Cuentas Bancarias
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Cuentas Bancarias
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.cuentas_bancarias
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Vendedores
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Vendedores
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.vendedores
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Registro de Actividad
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Registro de Actividad
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.registro_actividad
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Categorias
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Categorias
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.categorias
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Marca
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Marca
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.marca
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Clientes
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Clientes
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.clientes
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Proveedores
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Proveedores
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.provedores
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Atributos
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Atributos
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.atributos
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        Unidad de Medida
-                                                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
-                                                            <i class="fa fa-info-circle"></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-switch v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Unidad de Medida
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
                                                             form.unidad_medida
                                                             " active-text="Si" inactive-text="No" @change="
                                                             submit
                                                         "></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        </div>
-                                    </el-tab-pane>
-                                
-                                    <!-- Pestaña 2 -->
-                                    <el-tab-pane label="Compras" name="tab-2">
-                                        <div class="nested-tab-content">
-                                        Contenido de la Pestaña 2
-                                        </div>
-                                    </el-tab-pane>
-                                
-                                    <!-- Pestaña 3 -->
-                                    <el-tab-pane label="Inventario" name="tab-3">
-                                        <div class="nested-tab-content">
-                                        Contenido de la Pestaña 3
-                                        </div>
-                                    </el-tab-pane>
-                                
-                                    <!-- Pestaña 4 -->
-                                    <el-tab-pane label="Comprobantes de Pago" name="tab-4">
-                                        <div class="nested-tab-content">
-                                        Contenido de la Pestaña 4
-                                        </div>
-                                    </el-tab-pane>
-                                
-                                    <!-- Pestaña 5 -->
-                                    <el-tab-pane label="Arqueo" name="tab-5">
-                                        <div class="nested-tab-content">
-                                        Contenido de la Pestaña 5
-                                        </div>
-                                    </el-tab-pane>
-                                
-                                    <!-- Pestaña 6 -->
-                                    <el-tab-pane label="Reportes" name="tab-6">
-                                        <div class="nested-tab-content">
-                                            <div class="row">
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-list"></i>
-                                                        Productos Vendidos
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
-                                                                    form.productos_vendidos
-                                                                "></el-switch>
+                                        </el-tab-pane>
+
+                                        <!-- Pestaña 2 -->
+                                        <el-tab-pane label="Compras" name="tab-2">
+                                            <div class="nested-tab-content">
+                                                Modulo Compras
+                                                <div class="row">
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Compras
+                                                                <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                            form.lista_compras
+                                                            " active-text="Si" inactive-text="No" @change="
+                                                            submit
+                                                        "></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-patient-file"></i>
-                                                        Reporte de Caja
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                        </el-tab-pane>
+                                        <!-- Pestaña 3 -->
+                                        <el-tab-pane label="Inventario" name="tab-3">
+                                            <div class="nested-tab-content">
+                                                Modulo Inventario
+                                                <div class="row">
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Recibir
+                                                                Productos
+                                                                (traslado)
+                                                                <el-tooltip class="item" effect="dark" content="Recibir Productos por TRASLADO DE MERCADERIA en CAJA activa 2 modulos en adminsitrador inventario" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                                form.receive_merchandise
+                                                                " active-text="Si" inactive-text="No" @change="
+                                                                submit
+                                                            "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Productos
+                                                                <el-tooltip class="item" effect="dark" content="Modulo de productos aqui se encuentra todo los productos registrados y tambien se puede crear" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                                form.listado_productos
+                                                                " active-text="Si" inactive-text="No" @change="
+                                                                submit
+                                                            "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Guias de Remision
+                                                                <el-tooltip class="item" effect="dark" content="Modulo de guias de remision aqui puedes generar una guia re remision por administrador" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                                form.guias_remision
+                                                                " active-text="Si" inactive-text="No" @change="
+                                                                submit
+                                                            "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Promociones y Ofertas
+                                                                <el-tooltip class="item" effect="dark" content="Modulo de promociones y Ofertas para crear platos con receta" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                                form.promocion_oferta
+                                                                " active-text="Si" inactive-text="No" @change="
+                                                                submit
+                                                            "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Ingreso y Salida de Productos
+                                                                <el-tooltip class="item" effect="dark" content="Modulo de ingreso y salida de productos aqui podemos sacar o ingresar productos" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                                form.ingreso_salida_productos
+                                                                " active-text="Si" inactive-text="No" @change="
+                                                                submit
+                                                            "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                Tipo de Transacciones Inventario
+                                                                <el-tooltip class="item" effect="dark" content="Modulo de transaciones e inventario aqui podemos crear o inhabilitar los tipos de gtransacciones que nos para el ingreso o salidda de productos" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="
+                                                                form.tipo_transacciones_inventario
+                                                                " active-text="Si" inactive-text="No" @change="
+                                                                submit
+                                                            "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Etiquetas
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos imprimir nuestras etiquetas de nuestros productos" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.ver_etiqueta_logistica" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </el-tab-pane>
+                                        <!-- Pestaña 4 -->
+                                        <el-tab-pane label="Comprobantes de Pago" name="tab-4">
+                                            <div class="nested-tab-content">
+                                                Modulo Comprobantes de Pago
+                                                <div class="row">
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Nuevo Comprobante
+                                                                <el-tooltip class="item" effect="dark" content="Aqui podemos emitir boletas y facturas de adminsitrador" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.nuevo_comprobante_electronico" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Listado de Comprobantes
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos ver todo los comprobantes emitidos boletas y facturas" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.listado_boleta_factura_nuevo" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                No Enviados
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos ver los docuemntos que no se enviaron a sunat o vencieron el plazo de envio" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.no_enviados" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Nota de Venta
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos ver todo las notas de venta generados y tambien renegar nuevas notas de venta" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.nota_venta" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Nota de Credito
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos generar notas de credito con los documentos que por error se envio a sunat y se pedira la devolucion" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.nota_credito" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Cotizaciones
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos ver las cotizaciones y crear nuevas cotizaciones en administrador" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.cotizaciones" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Resumenes
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos ver los resumenes generados de las boletas y tambien generar nuevos resumenes por fecha" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.resumenes" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-tags tab-icon"></i>
+                                                                Anulaciones
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos ver todo los documentos anulados" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.anulaciones" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-percentage tab-icon"></i>
+                                                                Detracciones
+                                                            </label>
+                                                            <el-switch v-model="form.detraction" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </el-tab-pane>
+
+                                        <!-- Pestaña 5 -->
+                                        <el-tab-pane label="Arqueo" name="tab-5">
+                                            <div class="nested-tab-content">
+                                                Modulos de arqueo 
+                                                <div class="row">
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-patient-file"></i>
+                                                                Reporte de Caja
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_caja
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-attachment"></i>
-                                                        Reporte de Cierre De Caja
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-attachment"></i>
+                                                                Reporte de Cierre De Caja
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_cierre_caja
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-globe"></i>
-                                                        Reporte Globalizado
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-globe"></i>
+                                                                Reporte Globalizado
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_globalizado
                                                                 "></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-box"></i>
-                                                        Reporte de metodos de pago
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                        </el-tab-pane>
+
+                                        <!-- Pestaña 6 -->
+                                        <el-tab-pane label="Reportes" name="tab-6">
+                                            <div class="nested-tab-content">
+                                                <div class="row">
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-list"></i>
+                                                                Productos Vendidos
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                                    form.productos_vendidos
+                                                                "></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-box"></i>
+                                                                Reporte de metodos de pago
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_metodos_pago
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-money-bag"></i>
-                                                        Reporte de Ganancias
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-money-bag"></i>
+                                                                Reporte de Ganancias
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_ganancias
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="fas fa-window-restore "></i>
-                                                        Reporte de Productos
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-window-restore "></i>
+                                                                Reporte de Productos
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_productos
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-dollar"></i>
-                                                        Stock Valorizado
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-dollar"></i>
+                                                                Stock Valorizado
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.stock_valorizado
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="fas fa-boxes"></i>
-                                                        Stock Minimo
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-boxes"></i>
+                                                                Stock Minimo
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.stock_minimo
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-box"></i>
-                                                        Stock De Producto
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-box"></i>
+                                                                Stock De Producto
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.stock_producto
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="icofont-chart-bar-graph"></i>
-                                                        Kardex
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="icofont-chart-bar-graph"></i>
+                                                                Kardex
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.kardex
                                                                 "></el-switch>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mt-4">
-                                                <div class="form-group">
-                                                    <label class="control-label w-100">
-                                                        <i class="fas fa-fingerprint"></i>
-                                                        Reprote De Series Vendidas
-                                                    </label>
-                                                    <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-fingerprint"></i>
+                                                                Reprote De Series Vendidas
+                                                            </label>
+                                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
                                                                     form.reporte_series_vendidas
                                                                 "></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        </div>
-                                    </el-tab-pane>
+                                        </el-tab-pane>
                                     </el-tabs>
                                 </el-tab-pane>
-                                
 
                                 <!-- Restaurant-------- -->
                                 <el-tab-pane v-if="form.restaurant" name="restaurant">
@@ -3329,7 +3503,6 @@
 </div>
 </template>
 
-    
 <style scoped>
 .custom-tabs {
     margin: 20px;
@@ -3423,7 +3596,6 @@
 }
 </style>
 
-    
 <script>
 //  import TermsCondition from '@views/quotations/partials/terms_condition.vue'
 
@@ -3433,8 +3605,8 @@ export default {
     //
     data() {
         return {
-            activeSubTab: 'tab-1',  // Esta es la subpestaña que se activará por defecto
-        
+            activeSubTab: 'tab-1', // Esta es la subpestaña que se activará por defecto
+
             users_excluded: [],
             user_excluded_id: null,
             turns: [{
@@ -3506,9 +3678,6 @@ export default {
         };
     },
 
-   
-
-
     async created() {
         await this.loadTables();
         await this.initForm();
@@ -3534,9 +3703,9 @@ export default {
     methods: {
 
         handleTabClick(tab) {
-        if (tab.name === 'Módulos') {
-          this.activeSubTab = 'tab-1'; // Cambia a la subpestaña "Mantenimiento" automáticamente
-        }
+            if (tab.name === 'Módulos') {
+                this.activeSubTab = 'tab-1'; // Cambia a la subpestaña "Mantenimiento" automáticamente
+            }
         },
         getUsersExcluded() {
             this.$http

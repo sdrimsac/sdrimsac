@@ -226,7 +226,8 @@
 
         </ul>
         </li> --}}
-            @if (!$roleService->isArca() || $user->is_arca)
+            {{-- @if (!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) --}}
+            @if ((!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) && $config->lista_compras)
                 <li>
                     <a href="#compras" data-bs-toggle="collapse" data-role="button"
                         aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
@@ -249,10 +250,8 @@
                                 <i class="icofont-credit-card"></i> Nueva Compras
                             </a>
                         </li>
-
                     </ul>
                 </li>
-                {{-- @if (!$config->college) --}}
             @endif
 
             <li>
@@ -265,12 +264,14 @@
                 </a>
 
                 <ul id="invetories" class="collapse ">
-                    <li>
-                        <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
-                            href="{{ route('tenant.items.index') }}">
-                            <i class="icofont-soft-drinks"></i> Productos
-                        </a>
-                    </li>
+                    @if ($config->listado_productos)
+                        <li>
+                            <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.items.index') }}">
+                                <i class="icofont-soft-drinks"></i> Productos
+                            </a>
+                        </li>
+                    @endif
                     @if (!$roleService->isArca())
                         @if ($config->transform_item)
                             <li>
@@ -296,15 +297,16 @@
                                 </a>
                             </li>
                         @endif
+                        @if ($config->guias_remision)
+                            <li>
+                                <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.dispatches.index') }}">
+                                    <i class="far fa-file-alt"></i>
 
-                        <li>
-                            <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.dispatches.index') }}">
-                                <i class="far fa-file-alt"></i>
-
-                                Guias de remisión
-                            </a>
-                        </li>
+                                    Guias de remisión
+                                </a>
+                            </li>
+                        @endif
                         @if ($has_series && $config->series_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
@@ -322,12 +324,14 @@
                                 </a>
                             </li>
                         @endif
-                        <li>
-                            <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.item_sets.index') }}">
-                                <i class="icofont-price"></i> Promocion / Ofertas
-                            </a>
-                        </li>
+                        @if ($config->promocion_oferta)
+                            <li>
+                                <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.item_sets.index') }}">
+                                    <i class="icofont-price"></i> Promocion / Ofertas
+                                </a>
+                            </li>
+                        @endif
                         @if ($config->color_size_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'item-color-size' ? 'active' : '' }}"
@@ -336,20 +340,22 @@
                                 </a>
                             </li>
                         @endif
-                        <li>
-                            <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
-                                href="{{ route('tenant.productos.index') }}">
-                                <i class="icofont-box"></i> Ingreso y Salida de Productos
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
-                                href="{{ route('transactions.index') }}">
-                                <i class="icofont-id-card"></i> Tipo de transacciones - Inventario
-                            </a>
-                        </li>
-
+                        @if ($config->ingreso_salida_productos)
+                            <li>
+                                <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
+                                    href="{{ route('tenant.productos.index') }}">
+                                    <i class="icofont-box"></i> Ingreso y Salida de Productos
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->tipo_transacciones_inventario)
+                            <li>
+                                <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
+                                    href="{{ route('transactions.index') }}">
+                                    <i class="icofont-id-card"></i> Tipo de transacciones - Inventario
+                                </a>
+                            </li>
+                        @endif
                         @if ($config->ver_etiqueta_logistica)
                             <li>
                                 <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}"
@@ -406,6 +412,7 @@
                 </a>
                 <ul id="documents" class="collapse ">
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
+
                         @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isArca())
                             <li>
                                 <a class="{{ $path[0] === 'documents' && $path[1] === 'create' ? 'active' : '' }}"
@@ -414,12 +421,14 @@
                                 </a>
                             </li>
                         @endif
-                        <li>
-                            <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
-                                href="{{ route('tenant.documents.index') }}">
-                                <i class="icofont-list"></i> Listado
-                            </a>
-                        </li>
+                        @if ($config->listado_boleta_factura_nuevo)
+                            <li>
+                                <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
+                                    href="{{ route('tenant.documents.index') }}">
+                                    <i class="icofont-list"></i> Listado
+                                </a>
+                            </li>
+                        @endif
                         @if ($config->detraction)
                             <li>
                                 <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
@@ -428,14 +437,16 @@
                                 </a>
                             </li>
                         @endif
-                        <li>
-                            <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
-                                href="{{ route('tenant.documents.not_sent') }}">
-                                <i class="icofont-send-mail"></i> No enviados
-                            </a>
-                        </li>
+                        @if ($config->no_enviados)
+                            <li>
+                                <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
+                                    href="{{ route('tenant.documents.not_sent') }}">
+                                    <i class="icofont-send-mail"></i> No enviados
+                                </a>
+                            </li>
+                        @endif
                     @endif
-                    @if (!$roleService->isAccountant($user->worker_type_id))
+                    @if (!$roleService->isAccountant($user->worker_type_id) && $config->nota_venta)
                         <li>
                             <a class="{{ $path[0] === 'sale-notes' ? 'active' : '' }}"
                                 href="{{ route('tenant.sale_notes.index') }}">
@@ -443,13 +454,15 @@
                             </a>
                         </li>
                     @endif
-                    <li>
-                        <a class="{{ $path[0] === 'documents' && $path[1] == 'note_other' ? 'active' : '' }}"
-                            href="{{ route('tenant.documents.note_other') }}">
-                            <i class="icofont-document-folder"></i> Notas crédito/débito - Otros
-                        </a>
-                    </li>
-                    @if (!$roleService->isAccountant($user->worker_type_id))
+                    @if ($config->nota_credito)
+                        <li>
+                            <a class="{{ $path[0] === 'documents' && $path[1] == 'note_other' ? 'active' : '' }}"
+                                href="{{ route('tenant.documents.note_other') }}">
+                                <i class="icofont-document-folder"></i> Notas crédito/débito - Otros
+                            </a>
+                        </li>
+                    @endif
+                    @if (!$roleService->isAccountant($user->worker_type_id) && $config->cotizaciones)
                         <li>
                             <a class="{{ $path[0] === 'quotations' ? 'active' : '' }}"
                                 href="{{ route('tenant.quotations.index') }}">
@@ -459,18 +472,22 @@
                         </li>
                     @endif
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
-                        <li>
-                            <a class="{{ $path[0] === 'summaries' ? 'active' : '' }}"
-                                href="{{ route('tenant.summaries.index') }}">
-                                <i class="icofont-prescription"></i> Resumenes
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'voided' ? 'active' : '' }}"
-                                href="{{ route('tenant.voided.index') }}">
-                                <i class="icofont-delete-alt"></i> Anulaciones
-                            </a>
-                        </li>
+                        @if ($config->resumenes)
+                            <li>
+                                <a class="{{ $path[0] === 'summaries' ? 'active' : '' }}"
+                                    href="{{ route('tenant.summaries.index') }}">
+                                    <i class="icofont-prescription"></i> Resumenes
+                                </a>
+                            </li>
+                        @endif
+                        @if ($config->anulaciones)
+                            <li>
+                                <a class="{{ $path[0] === 'voided' ? 'active' : '' }}"
+                                    href="{{ route('tenant.voided.index') }}">
+                                    <i class="icofont-delete-alt"></i> Anulaciones
+                                </a>
+                            </li>
+                        @endif
                     @endif
                 </ul>
             </li>

@@ -15,6 +15,20 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'nuevo_comprobante_electronico' => (bool)$this->nuevo_comprobante_electronico,
+            'listado_boleta_factura_nuevo' =>(bool)$this->listado_boleta_factura_nuevo,
+            'no_enviados' =>(bool)$this->no_enviados,
+            'nota_venta' =>(bool)$this->nota_venta,
+            'nota_credito' =>(bool)$this-> nota_credito,
+            'cotizaciones' =>(bool)$this-> cotizaciones,
+            'resumenes' =>(bool)$this-> resumenes,
+            'anulaciones' =>(bool)$this-> anulaciones,
+            'listado_productos' =>(bool)$this->listado_productos,
+            'guias_remision' => (bool)$this->guias_remision,
+            'promocion_oferta' => (bool)$this->promocion_oferta,
+            'ingreso_salida_productos' => (bool)$this->ingreso_salida_productos,
+            'tipo_transacciones_inventario' => (bool)$this->tipo_transacciones_inventario,
+            'lista_compras' => (bool)$this->lista_compras,
             'cuentas_bancarias' => (bool)$this->cuentas_bancarias,
             'bancos' => (bool)$this->bancos,
             'vendedores' => (bool)$this->vendedores,

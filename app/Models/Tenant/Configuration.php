@@ -10,6 +10,20 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'nuevo_comprobante_electronico',
+        'listado_boleta_factura_nuevo',
+        'no_enviados',
+        'nota_venta',
+        'nota_credito',
+        'cotizaciones',
+        'resumenes',
+        'anulaciones',
+        'listado_productos',
+        'guias_remision',
+        'promocion_oferta',
+        'ingreso_salida_productos',
+        'tipo_transacciones_inventario',
+        'lista_compras',
         'cuentas_bancarias',
         'bancos',
         'vendedores',
@@ -65,7 +79,6 @@ class Configuration extends ModelTenant
         'print_payment_credit_sale_note',
         'change_price_product',
         'whatsapp_in_login',
-        /* 'configurable_impresion_ticket_categoria_caja', */
         'show_internal_code_ticket',
         'unit_type_pdf_quotation',
         'seller_quotation_cash',
@@ -231,6 +244,20 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'nuevo_comprobante_electronico' => 'boolean',
+        'listado_boleta_factura_nuevo' => 'boolean',
+        'no_enviados' => 'boolean',
+        'nota_venta' => 'boolean',
+        'nota_credito' => 'boolean',
+        'cotizaciones' => 'boolean',
+        'resumenes' => 'boolean',
+        'anulaciones' => 'boolean',
+        'listado_productos' => 'boolean',
+        'guias_remision' => 'boolean',
+        'promocion_oferta' => 'boolean',
+        'ingreso_salida_productos' => 'boolean',
+        'tipo_transacciones_inventario' => 'boolean',
+        'lista_compras' => 'boolean',
         'cuentas_bancarias' => 'boolean',
         'bancos' => 'boolean',
         'vendedores' => 'boolean',
@@ -402,6 +429,20 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'nuevo_comprobante_electronico' => (bool)$this->nuevo_comprobante_electronico,
+            'listado_boleta_factura_nuevo' =>(bool)$this->listado_boleta_factura_nuevo,
+            'no_enviados' =>(bool)$this->no_enviados,
+            'nota_venta' =>(bool)$this->nota_venta,
+            'nota_credito' =>(bool)$this-> nota_credito,
+            'cotizaciones' =>(bool)$this-> cotizaciones,
+            'resumenes' =>(bool)$this-> resumenes,
+            'anulaciones' =>(bool)$this-> anulaciones,
+            'listado_productos' =>(bool)$this->listado_productos,
+            'guias_remision' => (bool)$this->guias_remision,
+            'promocion_oferta' => (bool)$this->promocion_oferta,
+            'ingreso_salida_productos' => (bool)$this->ingreso_salida_productos,
+            'tipo_transacciones_inventario' => (bool)$this->tipo_transacciones_inventario,
+            'lista_compras' => (bool)$this->lista_compras,
             'cuentas_bancarias' => (bool)$this->cuentas_bancarias,
             'bancos' => (bool)$this->bancos,
             'vendedores' => (bool)$this->vendedores,
