@@ -199,9 +199,13 @@ export default {
                     `/caja/worker/record/${id}?to_kitchen=1`
                 );
                 let url = response.data.print;
+                let printerR = response.data.printer;
 
                 await this.$http.post("/caja/re-print",
-                    {url}
+                    {url,
+                    printer:printerR
+
+                    }
                 );
                 return;
                 let config = qz.configs.create(response.data.printer, {

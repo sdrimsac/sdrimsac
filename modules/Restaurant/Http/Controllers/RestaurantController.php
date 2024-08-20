@@ -32,8 +32,17 @@ class RestaurantController extends Controller
 {
     public function rePrint(Request $request)
     {
+        $area_id = null;
         $url = $request->url;
-        event(new PrintEvent(null, 'URL', true, null, [], false, false, $url));
+        $printer = $request->printer;
+        if ($printer != null) {
+            $area = Area::where('printer', $printer)->first();
+            if ($area) {
+                $area_id = $area->id;
+            }
+        }
+
+        event(new PrintEvent(null, 'URL', true, $area_id, [], false, false, $url));
         return [
             'success' => true,
             'message' => 'Imprimiendo'
@@ -233,7 +242,7 @@ class RestaurantController extends Controller
             }
             $user = User::find($user->id);
             $configuration = Configuration::first();
-            if($configuration->whatsapp_in_login && $user->type !== "superadmin" ){
+            if ($configuration->whatsapp_in_login && $user->type !== "superadmin") {
                 $name = $user->name;
                 $establishment = Establishment::find($user->establishment_id);
 
