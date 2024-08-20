@@ -37,7 +37,7 @@
         'correo_red_salud_ticket',
         'numero_accion_independiente_admin',
     ])->first();
-    $total_payment = $document->payments->sum('payment');
+    $total_payment = $document->payments ? $document->payments->sum('payment') : 0;
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
