@@ -164,6 +164,7 @@
         </tr>
 
 
+        @if($establishment)
         <tr>
             <td class="text-center">
                 {{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
@@ -172,6 +173,7 @@
                 {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
             </td>
         </tr>
+        @endif
         @if ($print_company_address)
             @isset($establish_model->trade_address)
                 <tr>
