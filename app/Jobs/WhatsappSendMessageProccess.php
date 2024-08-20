@@ -4,11 +4,13 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\NumberActivity;
 use App\Traits\JobReportTrait;
 use Carbon\Carbon;
 use Exception;
+use GuzzleHttp\Client;
 use Hyn\Tenancy\Environment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -53,6 +55,10 @@ class WhatsappSendMessageProccess implements ShouldQueue
             if ($number == null) {
                 $number = $configuration->number_activity;
             }
+            $company = Company::first();
+            $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
+            $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
+            $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
     
             if (!$number) {
                 Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
@@ -60,7 +66,33 @@ class WhatsappSendMessageProccess implements ShouldQueue
             }
             $url = "https://sdrpersonal.shop/api/send-message";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
-            $sender = 'sdrimsac';
+            if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+                $client = new Client([
+                    'verify' => false,
+                    'stream' => false,
+                    'headers' => [
+                        'User-Agent' => 'Testing 1.0'
+                    ]
+                ]);
+
+                try {
+                    $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
+                        'json' => [
+                            'appkey' => $api_extern_whatsapp_token,
+                            'authkey' => $api_extern_whatsapp_token2,
+                            'to' => "+51" . $number,
+                            'message' => $message,
+                        ]
+                    ]);
+                    return  $response->getBody()->getContents();
+                } catch (\Exception $e) {
+                    return [
+                        "message" => $e->getMessage(),
+                        "line" => $e->getLine(),
+                    ];
+                }
+            }else{
+                $sender = 'sdrimsac';
             if($this->subdomain != null && $configuration->whatsapp_client){
                 $url = "https://".$this->subdomain.".sdrpersonal.shop/api/send-message";
                 $sender = $this->subdomain;
@@ -82,6 +114,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
     
     
                 ];
+            }
         }
         catch(Exception $e){
             Log::error($e->getMessage());

@@ -193,7 +193,7 @@
         @endif
 
         <tr>
-            @unless ($configuration->correo_red_salud_ticket)
+            @unless ($configuration->correo_red_salud_ticket &&$establishment)
                 <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}
                 </td>
             @endunless

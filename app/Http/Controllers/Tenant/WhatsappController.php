@@ -444,12 +444,12 @@ class WhatsappController extends Controller
         $number = $request->number;
         $from_server = $request->from_server ?? false;
         $file_name = (strpos($file_name, '.') !== false) ? $file_name : $file_name . ".pdf";
-
+        $urlx = "";
         if ($from_server) {
-
+            $urlx = $resource;
             $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
         } else {
-
+            $urlx = $request->root() . $resource;
             $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
         }
         $this->client = new Client([
@@ -459,31 +459,30 @@ class WhatsappController extends Controller
                 'User-Agent' => 'Testing 1.0'
             ]
         ]);
-        try {
-            $response = $this->client->post($url, [
-                'multipart' => [
-                    [
-                        'name'     => 'number',
-                        'contents' => "51" . $number
-                    ],
-                    [
-                        'name'     => 'caption',
-                        'contents' => $message,
-                    ],
-                    [
-                        'name'     => 'sender',
-                        'contents' => $sender
-                    ],
-                    [
-                        'name'     => 'file',
-                        'contents' => $content_file,
-                        'filename' =>   $file_name
-                    ],
+        $company = Company::first();
+        $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
+        $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
+        $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
 
+    if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+        $client = new Client([
+            'verify' => false,
+            'stream' => false,
+            'headers' => [
+                'User-Agent' => 'Testing 1.0'
+            ]
+        ]);
+
+        try {
+            $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
+                'json' => [
+                    'appkey' => $api_extern_whatsapp_token,
+                    'authkey' => $api_extern_whatsapp_token2,
+                    'to' => "+51" . $number,
+                    'message' => $message,
+                    'file' => $urlx,
                 ]
             ]);
-
-            ob_get_clean();
             return  $response->getBody()->getContents();
         } catch (\Exception $e) {
             Log::warning($e->getMessage());
@@ -492,6 +491,42 @@ class WhatsappController extends Controller
                 "line" => $e->getLine(),
             ], 500);
             exit;
+        }
+        }else{
+            try {
+                $response = $this->client->post($url, [
+                    'multipart' => [
+                        [
+                            'name'     => 'number',
+                            'contents' => "51" . $number
+                        ],
+                        [
+                            'name'     => 'caption',
+                            'contents' => $message,
+                        ],
+                        [
+                            'name'     => 'sender',
+                            'contents' => $sender
+                        ],
+                        [
+                            'name'     => 'file',
+                            'contents' => $content_file,
+                            'filename' =>   $file_name
+                        ],
+    
+                    ]
+                ]);
+    
+                ob_get_clean();
+                return  $response->getBody()->getContents();
+            } catch (\Exception $e) {
+                Log::warning($e->getMessage());
+                return response([
+                    "message" => $e->getMessage(),
+                    "line" => $e->getLine(),
+                ], 500);
+                exit;
+            }
         }
     }
     public function sendReporteDocumentos(Request $request)

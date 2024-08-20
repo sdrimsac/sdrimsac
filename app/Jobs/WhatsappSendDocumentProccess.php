@@ -100,79 +100,112 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $url1 = $url1 . "/quotations/print/" . $external_id . "/ticket";
             }
             //"" 
-            $sender = 'sdrimsac';
-            if ($sender == 'tunegociofactvillacorpnet') {
-                $sender = 'sdrimsac';
-            }
+            $company = Company::first();
+            $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
+            $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
+            $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
             $message .= "\n\n *Número solo para envíos de documentos*";
             $document_establishment = null;
-            if($document->establishment_id){
+            if ($document->establishment_id) {
                 $document_establishment = Establishment::find($document->establishment_id);
                 $establishment_telephone = $document_establishment->telephone;
-                if($establishment_telephone){
+                if ($establishment_telephone) {
                     $message .= "\n\n *Cualquier consulta adicional comunicarse al teléfono:*\n\nwa.me/+51" . $establishment_telephone;
                 }
             }
-            if ($sender == "sdrimsac") {
-                if ($configuration->whatsapp_client) {
-                    $subdomain = explode(".", parse_url($url1, PHP_URL_HOST))[0];
-                    $sender = $subdomain;
-                    $url = "https://" . $subdomain . ".sdrpersonal.shop" . '/api/send-media';
-                } else {
-                    $web_whatsapp = config('app.web_whatsapp');
-                    $url = "https://" . $web_whatsapp . '/api/send-media';
-                }
-            } else {
-                $url = config('app.whatsapp_url') . '/api/send-media';
-            }
-            // $url = 'http://localhost:3800/api/send-media';
-
-            $content_file = null;
-
-            if (!$xml) {
-                $content_file = file_get_contents($url1);
-                // $content_file = ($this->document_type_id == "80")  ? file_get_contents(Storage::disk('tenant')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :   file_get_contents(Storage::disk('tenant')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
-            } else {
-                $content_file = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
-            }
-            $client = new Client([
-                'verify' => false,
-                'stream' => false,
-                'headers' => [
-                    'User-Agent' => 'Testing 1.0'
-                ]
-            ]);
-            try {
-                $response = $client->post($url, [
-                    'multipart' => [
-                        [
-                            'name'     => 'number',
-                            'contents' => "51" . $this->customer_telephone
-                        ],
-                        [
-                            'name'     => 'caption',
-                            'contents' => $message
-                        ],
-                        [
-                            'name'     => 'sender',
-                            'contents' => $sender ?? 'sdrimsac'
-                        ],
-                        [
-                            'name'     => 'file',
-                            'contents' => $content_file,
-                            'filename' => $document_filename . ($xml ? ".xml" : ".pdf")
-                        ],
-
+            if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+                $client = new Client([
+                    'verify' => false,
+                    'stream' => false,
+                    'headers' => [
+                        'User-Agent' => 'Testing 1.0'
                     ]
                 ]);
 
-                return  $response->getBody()->getContents();
-            } catch (\Exception $e) {
+                try {
+                    $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
+                        'json' => [
+                            'appkey' => $api_extern_whatsapp_token,
+                            'authkey' => $api_extern_whatsapp_token2,
+                            'to' => "+51" . $this->customer_telephone,
+                            'message' => $message,
+                            'file' => $url1,
+                        ]
+                    ]);
+                    return  $response->getBody()->getContents();
+                } catch (\Exception $e) {
+                    return [
+                        "message" => $e->getMessage(),
+                        "line" => $e->getLine(),
+                    ];
+                }
+            } else {
+                $sender = 'sdrimsac';
+                if ($sender == 'tunegociofactvillacorpnet') {
+                    $sender = 'sdrimsac';
+                }
 
-                return [
-                    "message" => $e->getMessage(),
-                    "line" => $e->getLine(),
-                ];
+                if ($sender == "sdrimsac") {
+                    if ($configuration->whatsapp_client) {
+                        $subdomain = explode(".", parse_url($url1, PHP_URL_HOST))[0];
+                        $sender = $subdomain;
+                        $url = "https://" . $subdomain . ".sdrpersonal.shop" . '/api/send-media';
+                    } else {
+                        $web_whatsapp = config('app.web_whatsapp');
+                        $url = "https://" . $web_whatsapp . '/api/send-media';
+                    }
+                } else {
+                    $url = config('app.whatsapp_url') . '/api/send-media';
+                }
+                // $url = 'http://localhost:3800/api/send-media';
+
+                $content_file = null;
+
+                if (!$xml) {
+                    $content_file = file_get_contents($url1);
+                    // $content_file = ($this->document_type_id == "80")  ? file_get_contents(Storage::disk('tenant')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :   file_get_contents(Storage::disk('tenant')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
+                } else {
+                    $content_file = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
+                }
+                $client = new Client([
+                    'verify' => false,
+                    'stream' => false,
+                    'headers' => [
+                        'User-Agent' => 'Testing 1.0'
+                    ]
+                ]);
+                try {
+                    $response = $client->post($url, [
+                        'multipart' => [
+                            [
+                                'name'     => 'number',
+                                'contents' => "51" . $this->customer_telephone
+                            ],
+                            [
+                                'name'     => 'caption',
+                                'contents' => $message
+                            ],
+                            [
+                                'name'     => 'sender',
+                                'contents' => $sender ?? 'sdrimsac'
+                            ],
+                            [
+                                'name'     => 'file',
+                                'contents' => $content_file,
+                                'filename' => $document_filename . ($xml ? ".xml" : ".pdf")
+                            ],
+
+                        ]
+                    ]);
+
+                    return  $response->getBody()->getContents();
+                } catch (\Exception $e) {
+
+                    return [
+                        "message" => $e->getMessage(),
+                        "line" => $e->getLine(),
+                    ];
+                }
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());

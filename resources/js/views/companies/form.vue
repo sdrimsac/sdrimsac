@@ -1050,6 +1050,57 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            <h4 class="text-white my-0">
+                                <i class="fas fa-cogs"></i>
+                                Whatsapp Externo
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="url">
+                                        URL
+                                    </label>
+                                    <el-input
+                                        v-model="form.api_extern_whatsapp_url"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="url">
+                                        ID DEVICE
+                                    </label>
+                                    <el-input
+                                        v-model="form.api_extern_whatsapp_token"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="url">
+                                        API TOKEN
+                                    </label>
+                                    <el-input
+                                        v-model="
+                                            form.api_extern_whatsapp_token_2
+                                        "
+                                    ></el-input>
+                                </div>
+                            </div>
+
+                            <div class="form-actions text-end pt-2 pb-2">
+                                <el-button
+                                    icon="fas fa-save fa-lg"
+                                    type="primary"
+                                    :loading="loading_submit"
+                                    @click="submit()"
+                                >
+                                    Guardar</el-button
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br />
                 <div class="card-body">
                     <div class="card">
@@ -1316,7 +1367,7 @@ export default {
                 .post(`/companies/save_same_ruc`, {
                     name: same_ruc_id.name,
                     website_id: same_ruc_id.website_id,
-                    uuid:same_ruc_id.uuid
+                    uuid: same_ruc_id.uuid
                 })
                 .then(response => {
                     if (response.data.success) {
@@ -1431,6 +1482,9 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
+                api_extern_whatsapp_url: null,
+                api_extern_whatsapp_token: null,
+                api_extern_whatsapp_token_2: null,
                 id: null,
                 identity_document_type_id: "06000006",
                 number: null,
