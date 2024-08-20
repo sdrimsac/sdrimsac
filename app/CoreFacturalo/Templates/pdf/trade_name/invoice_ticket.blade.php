@@ -42,7 +42,7 @@
     $balance = -5;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('document_id', $document->id)->first();
-
+    $stablishment = \App\Models\Tenant\Establishment::find($document->establishment_id);
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
