@@ -60,7 +60,7 @@
 </head>
 
 <body>
-    @if ($configuration->show_logo_in_documents)
+    @if ($configuration->show_logo_in_documents && $stablishment)
         @if ($stablishment->logo || $stablishment->document_logo)
             @if ($is_chifa_china)
                 <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
