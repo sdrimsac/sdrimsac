@@ -472,17 +472,28 @@ class WhatsappController extends Controller
                 'User-Agent' => 'Testing 1.0'
             ]
         ]);
-
+        //
         try {
+            $client2 = new Client();
+            $response2 = $client2->get($urlx, ['stream' => true]);
+            $pdfContent = $response2->getBody()->getContents();
+    
+            // Crear un archivo temporal
+            $tempFilePath = storage_path('app/public/temp_pdf_' . time() . '.pdf');
+            file_put_contents($tempFilePath, $pdfContent);
+    
+            // Generar una URL para descargar el archivo temporal
+            $downloadUrl = url('storage/temp_pdf_' . time() . '.pdf');
             $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
                 'json' => [
                     'appkey' => $api_extern_whatsapp_token,
                     'authkey' => $api_extern_whatsapp_token2,
                     'to' => "+51" . $number,
                     'message' => $message,
-                    'file' => $urlx,
+                    'file' => $downloadUrl,
                 ]
             ]);
+
             return  $response->getBody()->getContents();
         } catch (\Exception $e) {
             Log::warning($e->getMessage());
