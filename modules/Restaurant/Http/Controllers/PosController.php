@@ -36,6 +36,7 @@ use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\User;
+use App\Traits\JobReportTrait;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Modules\Item\Models\CategoryItem;
@@ -50,6 +51,7 @@ use Modules\Restaurant\Events\PrintEvent;
 
 class PosController extends Controller
 {
+    use JobReportTrait;
     public function check_pin(Request $request)
     {
         $pin = $request->pin;
