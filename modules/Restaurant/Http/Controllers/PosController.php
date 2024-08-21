@@ -26,6 +26,7 @@ use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\Table;
 use App\Http\Resources\Tenant\BoxCollection;
+use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\Cash;
 
 use Modules\Restaurant\Models\OrdenItem;
@@ -425,11 +426,15 @@ class PosController extends Controller
                 $user_name = auth()->user()->name;
                 $number = $configuration->number_activity;
                 $message = "Usuario *$user_name* ha solicitado consulta para visualización en Ventas del Dìa";
-                (new WhatsappController)->sendMessage($message, $number);
+                // ()
+                $website = $this->getTenantWebsite();
+                // (new WhatsappController)->sendMessage($message, $number);
+                WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
                 $numbers = NumberActivity::all();
                 foreach ($numbers as $number) {
                     $number = $number->number;
-                    (new WhatsappController)->sendMessage($message, $number);
+                    // (new WhatsappController)->sendMessage($message, $number);
+                    WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
                 }
             }
             return compact('total_sales');
