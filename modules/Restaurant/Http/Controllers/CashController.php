@@ -1656,7 +1656,7 @@ class CashController extends Controller
                 'success' => true,
             ];
         }
-        $excludes_id = ExcludedUser::where('user_id', $user->id)->pluck('user_id');
+        $excludes_id = ExcludedUser::all()->pluck('user_id');
         $establishment_id = $user->establishment_id;
         $establishment_description = Establishment::find($establishment_id)->description;
         $cash = Cash::whereHas('user', function ($query) use ($establishment_id) {
