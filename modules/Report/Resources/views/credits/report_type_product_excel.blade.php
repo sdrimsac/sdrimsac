@@ -16,30 +16,24 @@
 @endphp
 
 <body>
-    <table>
-        <tr>
-            <td colspan="13" style="text-align: center;">
-                <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
-
-            </td>
-        </tr>
-    </table>
-
     <div style="margin-top:20px; margin-bottom:20px;">
         <table>
             <tr>
-                <td colspan="6">
-                    <p><strong>Empresa: </strong>{{ $company->name }}</p>
-                </td>
-                <td colspan="7">
-                    <p><strong>Fecha: </strong>{{ date('Y-m-d') }}</p>
+                <td colspan="10" style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                    <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
+    
                 </td>
             </tr>
             <tr>
-                <td colspan="13">
+                <td colspan="5" style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                    <p><strong>Empresa: </strong>{{ $company->name }}</p>
+                </td>
+                <td colspan="3" style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
                     <strong>Ruc: </strong>{{ $company->number }}
                 </td>
-
+                <td colspan="2" style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                    <p><strong>Fecha: </strong>{{ date('Y-m-d') }}</p>
+                </td>
             </tr>
         </table>
     </div>
@@ -94,15 +88,15 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td  style="border:1px solid black;" colspan="2"></td>
-                            <td  style="border:1px solid black;" class="text-center">{{ $acum_total }}</td>
-                            <td  style="border:1px solid black;" class="text-center">{{ $acum_purchase_unit_price }}</td>
-                            <td  style="border:1px solid black;"></td>
-                            <td  style="border:1px solid black;" class="text-center"></td>
-                            <td  style="border:1px solid black;" class="text-center"></td>
-                            <td  style="border:1px solid black;" class="text-center">{{ $acum_gain }}</td>
-                            <td  style="border:1px solid black;" class="text-end">{{ $acum_total_penalties }}</td>
-                            <td  style="border:1px solid black;" class="text-end">{{ $acum_total_gain }}</td>
+                            <td  style="" colspan="2"></td>
+                            <td  style="border:1px solid black; background: #afd095;" class="text-center">{{ $acum_total }}</td>
+                            <td  style="border:1px solid black; background: #afd095;" class="text-center">{{ $acum_purchase_unit_price }}</td>
+                            <td  style=""></td>
+                            <td  style="" class="text-center"></td>
+                            <td  style="" class="text-center"></td>
+                            <td  style="border:1px solid black; background: #afd095;" class="text-center">{{ $acum_gain }}</td>
+                            <td  style="border:1px solid black; background: #afd095;" class="text-end">{{ $acum_total_penalties }}</td>
+                            <td  style="border:1px solid black; background: #afd095;" class="text-end">{{ $acum_total_gain }}</td>
                         </tr>
                 </table>
             </div>

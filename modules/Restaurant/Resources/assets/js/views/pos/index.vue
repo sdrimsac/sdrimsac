@@ -4,15 +4,13 @@
         v-loading.fullscreen="loading"
         element-loading-text="Espere..."
     >
-        <div class="row ">
-            <div
-                v-if="screenWidth > 678"
-                class="d-flex flex-row justify-content-start card mb-2"
-            >
-                <div
-                    class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7"
-                >
-                    <div class="card-body p-2">
+        <div class="row" 
+         ><!-- <a href="../../../../../../../public/status_images/credito.jpg" target="_blank">
+            <img src="../../../../../../../public/status_images/credito.jpg" alt="Descripción de la imagen" class="img-fluid">
+        </a> -->
+            <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
+                <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
+                    <div class="card-body p-2" >
                         <div class="row">
                             <div class="d-flex flex-wrap ">
                                 <div
@@ -202,7 +200,11 @@
                                 </template>
                             </div>
                         </div>
-                        <div class="row card mx-1 mt-2">
+                        <div class="row card mx-1 mt-2" v-if="
+                            configuration.sale_note_credit_confirm
+                            ? isAnalist || user.can_accept_credit_sale_note
+                            : true
+                        ">
                             <div>
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
@@ -257,7 +259,7 @@
                                            
                                         </el-checkbox> -->
                                     </div>
-                                    <div class="col-12 col-lg-3 p-2">
+                                    <div class="col-12 col-lg-4 p-2">
                                         <template>
                                             <h2
                                                 class="font-weight-bold custom-text-size"
@@ -281,7 +283,7 @@
                                             </el-select>
                                         </template>
                                     </div>
-                                    <div class="col-12 col-lg-4 p-2">
+                                    <div class="col-12 col-lg-6 p-2">
                                         <h2
                                             class="font-weight-bold custom-text-size"
                                         >
@@ -348,7 +350,6 @@
                                 </ListFood>
                             </div>
                         </div>
-
                         <div
                             class="row"
                             v-if="selectOption == 1 || selectOption == 2"
@@ -1788,6 +1789,7 @@
             :configuration="configuration"
             :showDialog.sync="showSaleNoteCreditCash"
         ></sale-note-credit-cash>
+
         <iframe ref="pdfFrame" style="display: none;"></iframe>
         <el-dialog
             class="no-header"
@@ -1796,8 +1798,15 @@
             title=""
             :header="null"
             :visible.sync="showDialogCreditReportDaily"
+            style="color:blue"
+            
         >
+            <div style="text-align: right;">
+                <el-button type="primary" icon="el-icon-close" @click="closeModal"></el-button>
+            </div>
             <x-report-credit-daily-cash></x-report-credit-daily-cash>
+            <br>
+ 
         </el-dialog>
         <detraction-payment
             :showDialog.sync="showDialogDetraction"
@@ -1815,6 +1824,11 @@
 }
 .no-header .el-dialog__header {
     display: none;
+}
+.custom-dialog .el-dialog {
+  background-color: #1025e6; /* Cambia este color según tus necesidades */
+  border-radius: 8px; /* Para esquinas redondeadas */
+  padding: 0; /* Elimina cualquier padding predeterminado */
 }
 /* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
@@ -1922,6 +1936,7 @@ export default {
         return {
             currencyIdChoice: "PEN",
             showDialogDetraction: false,
+            showDialogCreditReportDaily: false,
             loadingItems: false,
             allLocalFoods: [],
             cotIdentifier: null,
@@ -2166,6 +2181,9 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        closeModal() {
+            this.showDialogCreditReportDaily = false;
+        },
         updateCurrencyChoice(currency) {
             this.currencyIdChoice = currency;
         },
@@ -5670,7 +5688,8 @@ export default {
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
-        }
+        },
+        
     },
     beforeUnmount() {
         document.removeEventListener("keydown", this.handleKeydown);

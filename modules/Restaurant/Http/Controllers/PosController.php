@@ -158,10 +158,10 @@ class PosController extends Controller
         
         $textoIntoArray =  explode(' ', $value);
 
-
+        $brand = $request->brand;
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment) {
+            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment, $brand) {
                 $query
                     ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
@@ -180,6 +180,9 @@ class PosController extends Controller
                     if ($establishment->is_product) {
                         $query->where('unit_type_id', '<>', 'ZZ');
                     }
+                }
+                if ($brand) {
+                    $query->where('brand', 'LIKE', '%' . $brand . '%');
                 }
             }
         );

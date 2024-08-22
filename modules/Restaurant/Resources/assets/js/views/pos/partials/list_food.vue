@@ -888,6 +888,7 @@ export default {
                 show_list: false
             },
             selectCategory: 0,
+            /* user: {}, */
             activeName: "menu",
             loading: true,
             ordenItems: [],
@@ -899,6 +900,7 @@ export default {
             showImage: false,
             listFoods: [],
             selectedFood: null,
+            /* isAnalist: false, */
             allFalse: true,
             title: null,
             total: null,

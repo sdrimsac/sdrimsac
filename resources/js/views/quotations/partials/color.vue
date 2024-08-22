@@ -1,5 +1,9 @@
 <template>
-<el-dialog :title="titleDialog" width="30%" :visible="showDialog" @open="create" :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
+<el-dialog :title="titleDialog" width="30%" 
+    :visible="showDialog" @open="create" 
+    :close-on-click-modal="false" 
+    :close-on-press-escape="false" 
+    append-to-body :show-close="false">
     <div class="form-body">
         <div class="row">
             <div class="col-lg-12 col-md-12 table-responsive">
@@ -85,10 +89,11 @@ export default {
             this.close();
         },
         close() {
+
             this.$emit("addRowSelectColor_size", this.color_size_);
+
             this.$emit("update:showDialog", false);
         },
-        async clickCancelSubmit() {}
     }
 };
 </script>

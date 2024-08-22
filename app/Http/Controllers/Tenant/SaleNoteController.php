@@ -2014,7 +2014,7 @@ class SaleNoteController extends Controller
                         'number' => $row->number,
                         'identity_document_type_id' => $row->identity_document_type_id,
                         'identity_document_type_code' => $row->identity_document_type->code,
-                        'seller_id' => $row->seller_id
+                        'seller_id' =>  $row->seller_id,
                     ];
                 });
                 return $customers;

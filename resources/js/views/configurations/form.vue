@@ -1915,24 +1915,6 @@
                                         </div>
                                     </div>
                                 </el-tab-pane>
-                                <!-- Cotización---- -->
-                                <!-- <el-tab-pane name="Cotización">
-                                    <template #label>
-                                        <div class="tab-label">
-                                            <i class="fas fa-file-invoice-dollar tab-icon"></i>
-                                            <span class="tab-text">
-                                                Cotización</span>
-                                        </div>
-                                    </template>
-                                    <div class="nested-tab-content">
-                                        Contenido de Cotización
-                                        <div class="row">
-
-                                        </div>
-
-                                    </div>
-                                </el-tab-pane> -->
-
                                 <!-- Panel de Arca---- -->
                                 <el-tab-pane name="Arca">
                                     <template #label>

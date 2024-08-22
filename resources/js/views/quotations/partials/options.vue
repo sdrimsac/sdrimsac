@@ -199,7 +199,6 @@
                         ></small>
                     </div>
                 </div>
-
                 <div class="col-lg-6">
                     <div
                         class="form-group"
@@ -268,118 +267,6 @@
                         ></small>
                     </div>
                 </div>
-                <br />
-                <!-- <div class="col-lg-4">
-                    <div
-                        class="form-group"
-                        v-show="document.document_type_id == '03'"
-                    >
-                        <el-checkbox
-                            v-model="document.is_receivable"
-                            class="font-weight-bold"
-                            >¿Es venta por cobrar?</el-checkbox
-                        >
-                    </div>
-                </div> -->
-                <br />
-                <!-- <div class="col-lg-12" v-show="is_document_type_invoice">
-                    <table>
-                        <thead>
-                            <tr width="100%">
-                                <th v-if="document.payments.length > 0">
-                                    M.Pago
-                                </th>
-                                <th v-if="document.payments.length > 0">
-                                    Destino
-                                </th>
-                                <th v-if="document.payments.length > 0">
-                                    Referencia
-                                </th>
-                                <th v-if="document.payments.length > 0">
-                                    Monto
-                                </th>
-                                <th width="5%">
-                                    <a
-                                        style="font-size:18px"
-                                        href="#"
-                                        @click.prevent="clickAddPayment"
-                                        class="text-center font-weight-bold text-center text-info"
-                                        >[+]</a
-                                    >
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(row, index) in document.payments"
-                                :key="index"
-                            >
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-select
-                                            v-model="row.payment_method_type_id"
-                                        >
-                                            <el-option
-                                                v-for="option in payment_method_types"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.description"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-select
-                                            v-model="row.payment_destination_id"
-                                            filterable
-                                            :disabled="
-                                                row.payment_destination_disabled
-                                            "
-                                        >
-                                            <el-option
-                                                v-for="option in payment_destinations"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.description"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-input v-model="row.reference">
-                                            <i
-                                                slot="prefix"
-                                                class="el-icon-edit-outline"
-                                            ></i
-                                        ></el-input>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-input v-model="row.payment">
-                                            <i
-                                                slot="prefix"
-                                                class="el-icon-edit-outline"
-                                            ></i
-                                        ></el-input>
-                                    </div>
-                                </td>
-                                <td class="series-table-actions text-center">
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-xs btn-danger"
-                                        @click.prevent="clickCancel(index)"
-                                    >
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </td>
-                                <br />
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
             </div>
 
             <span slot="footer" class="dialog-footer">

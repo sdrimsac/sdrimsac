@@ -16,19 +16,16 @@
 @endphp
 
 <body>
-    <table>
-        <tr>
-            <td colspan="13" style="text-align: center;">
-                <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
-
-            </td>
-        </tr>
-    </table>
-
     <div style="margin-top:20px; margin-bottom:20px;">
         <table>
             <tr>
-                <td colspan="6">
+                <td colspan="15" style="text-align: center;">
+                    <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
+    
+                </td>
+            </tr>
+            <tr>
+                <td colspan="8">
                     <p><strong>Empresa: </strong>{{ $company->name }}</p>
                 </td>
                 <td colspan="7">
@@ -36,7 +33,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="13">
+                <td colspan="15">
                     <strong>Ruc: </strong>{{ $company->number }}
                 </td>
 
