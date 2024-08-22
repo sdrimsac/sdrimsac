@@ -438,18 +438,18 @@ class WhatsappController extends Controller
         }
         // $url = 'http://localhost:3800/api/send-media';
         $resource = $request->resource;
+        
         $sender = $sender ?? 'sdrimsac';
         $message = $request->message;
         $file_name = $request->file_name;
         $number = $request->number;
         $from_server = $request->from_server ?? false;
         $file_name = (strpos($file_name, '.') !== false) ? $file_name : $file_name . ".pdf";
-        $urlx = "";
         if ($from_server) {
-            $urlx = $resource;
+            $parsedUrl = parse_url($resource);
+            $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
             $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
         } else {
-            $urlx = $request->root() . $resource;
             $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
         }
         $this->client = new Client([
@@ -475,7 +475,7 @@ class WhatsappController extends Controller
         //
         try {
             $client2 = new Client();
-            $response2 = $client2->get($urlx, ['stream' => true]);
+            $response2 = $client2->get($resource, ['stream' => true]);
             $pdfContent = $response2->getBody()->getContents();
     
             // Crear un archivo temporal
@@ -486,9 +486,10 @@ class WhatsappController extends Controller
             $downloadUrl = url('storage/temp_pdf_' . time() . '.pdf');
             //remove domain fot the $downloadUrl
             $downloadUrl = str_replace(url(''), '', $downloadUrl);
-            $downloadUrl = $request->root() . $downloadUrl;
+            $downloadUrl = $baseUrl . $downloadUrl;
+            // $downloadUrl = $request->root() . $downloadUrl;
             //change domain fot the $urlx
-            Log::info('downloadUrl: ' . $downloadUrl);
+            
             $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
                 'json' => [
                     'appkey' => $api_extern_whatsapp_token,
