@@ -1566,7 +1566,7 @@ class BoxesController extends Controller
                     }
                     if ($box->document_id) {
 
-                        $document = Document::select(['id', 'document_type_id', 'total'])
+                        $document = Document::select(['id', 'document_type_id', 'total','number'])
                             ->with('items')
                             ->find($box->document_id);
                         if ($document->document_type_id == '01') {
@@ -1600,6 +1600,7 @@ class BoxesController extends Controller
                     foreach ($document_items as $item) {
                         $original_item = Item::select(['barcode', 'category_id'])->find($item->item_id);
                         $description = $item->item->description;
+                        Log::info("Agregando item: " . $description." del documento: ".$document->number);
                         $internal_id = $item->item->internal_id;
                         $key = $description . "-" . $internal_id;
                         $price = floatval($item->unit_price);
