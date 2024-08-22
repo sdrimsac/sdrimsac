@@ -1548,7 +1548,7 @@ class BoxesController extends Controller
         });
 
         $boxes = Box::select(['document_id', 'sale_note_id'])
-            ->whereIn('cash_id', $cashes)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use (
+            ->whereIn('cash_id', $cashes)->where('incomes', 0)->where('expenses', 0)->chunk(50, function ($boxes) use (
                 &$items,
                 &$min_01_document_id,
                 &$max_01_document_id,
