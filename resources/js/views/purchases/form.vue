@@ -15,17 +15,15 @@
                                     'has-danger': errors.document_type_id
                                 }">
 
-                                    <label class="control-label font-weight-bold"> 
-                                        <i class="fas fa-file-invoice"></i>
-                                        Tipo de Comprobante
-                                        <el-tooltip
-                                                    content="Campo Obligatorio"
-                                                >
-                                                <span class="text-danger">
-                                                    <i class="fas fa-exclamation-circle"></i> 
-                                                </span>
-                                                </el-tooltip>
-                                    </label>
+                            <label class="control-label font-weight-bold">
+                                <i class="fas fa-file-invoice"></i>
+                                Tipo de Comprobante
+                                <el-tooltip content="Campo Obligatorio">
+                                    <span class="text-danger">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </span>
+                                </el-tooltip>
+                            </label>
                             <el-select v-model="form.document_type_id" @change="changeDocumentType">
                                 <el-option v-for="option in document_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
                             </el-select>
@@ -36,18 +34,16 @@
                         <div class="col-lg-2">
                             <div class="form-group" :class="{ 'has-danger': errors.series }">
 
-                                <label class="control-label font-weight-bold"> 
+                                <label class="control-label font-weight-bold">
                                     <i class="fas fa-layer-group"></i>
                                     Serie
-                                        <el-tooltip
-                                                    content="Campo Obligatorio"
-                                                >
-                                                <span class="text-danger">
-                                                    <i class="fas fa-exclamation-circle"></i> 
-                                                </span>
-                                                </el-tooltip>
-                                       
-                                    </label>
+                                    <el-tooltip content="Campo Obligatorio">
+                                        <span class="text-danger">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                    </el-tooltip>
+
+                                </label>
                                 <el-input v-model="form.series" :readonly="
                                             this.form.document_type_id == 'NE76'
                                         ">
@@ -61,15 +57,13 @@
                                 <label class="control-label font-weight-bold">
                                     <i class="fas fa-list-ol"></i>
                                     Número
-                                        <el-tooltip
-                                                    content="Campo Obligatorio"
-                                                >
-                                                <span class="text-danger">
-                                                    <i class="fas fa-exclamation-circle"></i>  
-                                                </span>
-                                                </el-tooltip>
-                                       
-                                    </label>
+                                    <el-tooltip content="Campo Obligatorio">
+                                        <span class="text-danger">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                    </el-tooltip>
+
+                                </label>
                                 <el-input v-model="form.number" :readonly="
                                             this.form.document_type_id == 'NE76'
                                         ">
@@ -87,16 +81,14 @@
                                     }">
                                 <label class="control-label font-weight-bold">
                                     <i class="fas fa-layer-group"></i>
-                                     Serie Guía
-                                        <el-tooltip
-                                                    content="Campo Obligatorio"
-                                                >
-                                                <span class="text-danger">
-                                                    <i class="fas fa-exclamation-circle"></i> 
-                                                </span>
-                                                </el-tooltip>
-                                       
-                                    </label>
+                                    Serie Guía
+                                    <el-tooltip content="Campo Obligatorio">
+                                        <span class="text-danger">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                    </el-tooltip>
+
+                                </label>
                                 <el-input v-model="form.series_guia">
                                     <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
 
@@ -109,14 +101,12 @@
                                     }">
                                 <label class="control-label font-weight-bold">
                                     <i class="fas fa-list-ol"></i>
-                                     Número Guía
-                                        <el-tooltip
-                                                    content="Campo Obligatorio"
-                                                >
-                                                <span class="text-danger">
-                                                    <i class="fas fa-exclamation-circle"></i> 
-                                                </span>
-                                                </el-tooltip>
+                                    Número Guía
+                                    <el-tooltip content="Campo Obligatorio">
+                                        <span class="text-danger">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                    </el-tooltip>
                                 </label>
                                 <el-input v-model="form.number_guia">
                                     <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
@@ -182,7 +172,7 @@
                                     'has-danger': errors.exchange_rate_sale
                                 }">
                             <label class="control-label">
-                                
+
                                 <i class="fas fa-exchange-alt red-icon"></i>
                                 Tipo de cambio
                                 <el-tooltip class="item" effect="dark" content="Tipo de cambio del día, extraído de SUNAT" placement="top-end">
@@ -216,7 +206,7 @@
                             <el-checkbox v-model="form.has_payment" @change="changeHasPayment">¿Desea agregar pagos a esta
                                 compra?</el-checkbox>
                         </div>
-                    </div> 
+                    </div>
 
                     <div class="col-lg-6 col-md-6" v-if="form.has_client">
                         <div class="form-group">
@@ -342,26 +332,26 @@
                                                         .description
                                                 }}</small>
 
-                                                <template v-if="row.lots && row.lots.length > 0">
-                                                    <br />
-                                                    <small class="text-primary" v-for="(lot, index) in row.lots" :key="index">
-                                                        <b>Serie:</b> {{ lot.series }} 
-                                                    </small>
-                                                </template>
+                                            <template v-if="row.lots && row.lots.length > 0">
+                                                <br />
+                                                <small class="text-primary" v-for="(lot, index) in row.lots" :key="index">
+                                                    <b>Serie:</b> {{ lot.series }}
+                                                </small>
+                                            </template>
 
-                                                <template v-if="row.lots_group && row.lots_group.length > 0">
-                                                    <br />
-                                                    <small class="text-primary" v-for="(lot, index) in row.lots_group" :key="index">
-                                                        <b>Lote:</b> {{ lot.code }}
-                                                    </small>
-                                                </template>
+                                            <template v-if="row.lots_group && row.lots_group.length > 0">
+                                                <br />
+                                                <small class="text-primary" v-for="(lot, index) in row.lots_group" :key="index">
+                                                    <b>Lote:</b> {{ lot.code }}
+                                                </small>
+                                            </template>
 
-                                                <template v-if="row.color_size && row.color_size.length > 0">
-                                                    <br />
-                                                    <small class="text-primary" v-for="(color, index) in row.color_size" :key="index">
-                                                        <b>Color:</b> {{ color.color }} <b>Talla:</b> {{ color.size }}
-                                                    </small>
-                                                </template>
+                                            <template v-if="row.color_size && row.color_size.length > 0">
+                                                <br />
+                                                <small class="text-primary" v-for="(color, index) in row.color_size" :key="index">
+                                                    <b>Color:</b> {{ color.color }} <b>Talla:</b> {{ color.size }}
+                                                </small>
+                                            </template>
                                         </td>
                                         <td class="text-left">
                                             {{ row.warehouse_description }}
@@ -514,11 +504,8 @@
             </div>
             <div class="form-actions text-end pt-2 pb-2">
                 <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
-                <el-button  icon="fas fa-save fa-lg" 
-                            type="primary" 
-                            native-type="submit" 
-                            :loading="loading_submit" v-if="form.items.length > 0 && !hide_button">
-                      Generar</el-button>
+                <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit" v-if="form.items.length > 0 && !hide_button">
+                    Generar</el-button>
             </div>
         </form>
     </div>
@@ -546,7 +533,7 @@ import {
 } from "../../helpers/functions";
 
 export default {
-    props: ["purchase_order_id","is_arca"],
+    props: ["purchase_order_id", "is_arca"],
     components: {
         PurchaseFormItem,
         PersonForm,
@@ -596,12 +583,15 @@ export default {
             timestamp: 0,
             listar_pedidos: [],
             data: [],
-            form: {},
+            form: {
+                series_guia: '',
+                number_guia: '',
+            },
             percentage_igv: null
         };
     },
-    mounted(){
-        if(this.is_arca){
+    mounted() {
+        if (this.is_arca) {
             this.form.has_payment = true;
             this.clickAddPayment();
         }
@@ -620,8 +610,7 @@ export default {
             this.payment_destinations = this.payment_destinations.filter(
                 item => item != null
             );
-            if(this.payment_destinations.length == 0){
-            }
+            if (this.payment_destinations.length == 0) {}
             console.log("🚀 ~ awaitthis.$http.get ~ this.payment_destinations:", this.payment_destinations)
 
             this.all_customers = response.data.customers;
@@ -794,14 +783,11 @@ export default {
                         this.form.items.forEach(it => {
                             it.warehouse_id = warehouse.id;
                             it.charges = it.charges ?
-                                Object.values(it.charges) :
-                                [];
+                                Object.values(it.charges) : [];
                             it.attributes = it.attributes ?
-                                Object.values(it.attributes) :
-                                [];
+                                Object.values(it.attributes) : [];
                             it.discounts = it.discounts ?
-                                Object.values(it.discounts) :
-                                [];
+                                Object.values(it.discounts) : [];
                         });
                         // this.changeDocumentType()
                     });
@@ -860,7 +846,7 @@ export default {
             this.form.payments.splice(index, 1);
         },
         clickAddPayment() {
-    
+
             this.form.payments.push({
                 id: null,
                 purchase_id: null,
@@ -1269,10 +1255,25 @@ export default {
             if (!validate.success) {
                 return this.$toast.error(validate.message);
             }
-            if (!this.form.series || !this.form.number) {
+            /* if (!this.form.series || !this.form.number) {
                 return this.$toast.error(
                     "Serie/Número del documento es obligatorio."
                 );
+            }
+            if (!this.form.series_guia || !this.form.number_guia) {
+                return this.$toast.error(
+                    "Serie/Número de la Guía es obligatorio."
+                );
+            } */
+
+            if (this.form.document_type_id !== 'GU75') {
+                if (!this.form.series || !this.form.number) {
+                    return this.$toast.error("Serie/Número del documento es obligatorio.");
+                }
+            } else if (this.form.document_type_id === 'GU75') {
+                if (!this.form.series_guia || !this.form.number_guia) {
+                    return this.$toast.error("Serie/Número de la Guía es obligatorio.");
+                }
             }
             this.loading_submit = true;
 

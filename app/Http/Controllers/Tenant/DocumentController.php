@@ -2005,7 +2005,7 @@ class DocumentController extends Controller
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
         } else {
 
-            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(10);
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(20);
         }
 
 

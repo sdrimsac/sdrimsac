@@ -138,9 +138,6 @@ class PurchaseController extends Controller
     public function getRecords($request)
     {
 
-
-
-
         switch ($request->column) {
             case 'name':
 
@@ -382,7 +379,7 @@ class PurchaseController extends Controller
                     }
                     $purchase_unit_price_item = floatval($item->purchase_unit_price);
                     if ($unit_price != $purchase_unit_price_item) {
-                        $item->purchase_unit_price = $unit_price;                    
+                        $item->purchase_unit_price = $unit_price;
                     }
                     $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
@@ -535,114 +532,113 @@ class PurchaseController extends Controller
         ];
     }
     public function toPrint($external_id, $format)
-        {
-            $purchase = Purchase::where('external_id', $external_id)->first();
+    {
+        $purchase = Purchase::where('external_id', $external_id)->first();
 
-            if (!$purchase) throw new Exception("El código {$external_id} es inválido, no se encontro el pedido relacionado");
+        if (!$purchase) throw new Exception("El código {$external_id} es inválido, no se encontro el pedido relacionado");
 
-            $this->reloadPDF($purchase, $format, $purchase->filename);
-            $temp = tempnam(sys_get_temp_dir(), 'purchase');
+        $this->reloadPDF($purchase, $format, $purchase->filename);
+        $temp = tempnam(sys_get_temp_dir(), 'purchase');
 
-            file_put_contents($temp, $this->getStorage($purchase->filename, 'purchase'));
+        file_put_contents($temp, $this->getStorage($purchase->filename, 'purchase'));
 
-            /*
+        /*
             $headers = [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="'.$purchase->filename.'"'
             ];
             */
 
-            return response()->file($temp, $this->generalPdfResponseFileHeaders($purchase->filename));
-        }
-        private function reloadPDF($purchase, $format, $filename)
-        {
-            $this->createPdf($purchase, $format, $filename);
-        }
-        public function createPdf($purchase = null, $format_pdf = null, $filename = null)
-        {
+        return response()->file($temp, $this->generalPdfResponseFileHeaders($purchase->filename));
+    }
+    private function reloadPDF($purchase, $format, $filename)
+    {
+        $this->createPdf($purchase, $format, $filename);
+    }
+    public function createPdf($purchase = null, $format_pdf = null, $filename = null)
+    {
 
-            ini_set("pcre.backtrack_limit", "5000000");
-            $template = new Template();
-            $pdf = new Mpdf();
+        ini_set("pcre.backtrack_limit", "5000000");
+        $template = new Template();
+        $pdf = new Mpdf();
 
-            $document = ($purchase != null) ? $purchase : $this->purchase;
-            $company = Company::active();
-            if($filename == null){
-                $filename = $this->createFilename($document);
-                $this->setFilename($document);
+        $document = ($purchase != null) ? $purchase : $this->purchase;
+
+        $company = Company::active();
+        if ($filename == null) {
+            $filename = $this->createFilename($document);
+            $this->setFilename($document);
+        }
+        // $base_template = Establishment::find($document->establishment_id)->template_pdf;
+        $base_template = Configuration::first()->formats;
+
+        $html = $template->pdf($base_template, "purchase", $company, $document, $format_pdf);
+
+
+        $pdf_font_regular = config('tenant.pdf_name_regular');
+        $pdf_font_bold = config('tenant.pdf_name_bold');
+
+        if ($pdf_font_regular != false) {
+            $defaultConfig = (new ConfigVariables())->getDefaults();
+            $fontDirs = $defaultConfig['fontDir'];
+
+            $defaultFontConfig = (new FontVariables())->getDefaults();
+            $fontData = $defaultFontConfig['fontdata'];
+
+            $pdf = new Mpdf([
+                'fontDir' => array_merge($fontDirs, [
+                    app_path('CoreFacturalo' . DIRECTORY_SEPARATOR . 'Templates' .
+                        DIRECTORY_SEPARATOR . 'pdf' .
+                        DIRECTORY_SEPARATOR . $base_template .
+                        DIRECTORY_SEPARATOR . 'font')
+                ]),
+                'fontdata' => $fontData + [
+                    'custom_bold' => [
+                        'R' => $pdf_font_bold . '.ttf',
+                    ],
+                    'custom_regular' => [
+                        'R' => $pdf_font_regular . '.ttf',
+                    ],
+                ]
+            ]);
+        }
+
+        $path_css = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR . 'Templates' .
+            DIRECTORY_SEPARATOR . 'pdf' .
+            DIRECTORY_SEPARATOR . $base_template .
+            DIRECTORY_SEPARATOR . 'style.css');
+
+        $stylesheet = file_get_contents($path_css);
+
+        $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
+        $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
+
+        if ($format_pdf != 'ticket') {
+            if (config('tenant.pdf_template_footer')) {
+                $html_footer = $template->pdfFooter($base_template, $document);
+                $pdf->SetHTMLFooter($html_footer);
             }
-            // $base_template = Establishment::find($document->establishment_id)->template_pdf;
-            $base_template = Configuration::first()->formats;
-
-            $html = $template->pdf($base_template, "purchase", $company, $document, $format_pdf);
-
-
-            $pdf_font_regular = config('tenant.pdf_name_regular');
-            $pdf_font_bold = config('tenant.pdf_name_bold');
-
-            if ($pdf_font_regular != false) {
-                $defaultConfig = (new ConfigVariables())->getDefaults();
-                $fontDirs = $defaultConfig['fontDir'];
-
-                $defaultFontConfig = (new FontVariables())->getDefaults();
-                $fontData = $defaultFontConfig['fontdata'];
-
-                $pdf = new Mpdf([
-                    'fontDir' => array_merge($fontDirs, [
-                        app_path('CoreFacturalo' . DIRECTORY_SEPARATOR . 'Templates' .
-                            DIRECTORY_SEPARATOR . 'pdf' .
-                            DIRECTORY_SEPARATOR . $base_template .
-                            DIRECTORY_SEPARATOR . 'font')
-                    ]),
-                    'fontdata' => $fontData + [
-                            'custom_bold' => [
-                                'R' => $pdf_font_bold . '.ttf',
-                            ],
-                            'custom_regular' => [
-                                'R' => $pdf_font_regular . '.ttf',
-                            ],
-                        ]
-                ]);
-            }
-
-            $path_css = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR . 'Templates' .
-                DIRECTORY_SEPARATOR . 'pdf' .
-                DIRECTORY_SEPARATOR . $base_template .
-                DIRECTORY_SEPARATOR . 'style.css');
-
-            $stylesheet = file_get_contents($path_css);
-
-            $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
-            $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
-
-            if ($format_pdf != 'ticket') {
-                if (config('tenant.pdf_template_footer')) {
-                    $html_footer = $template->pdfFooter($base_template, $document);
-                    $pdf->SetHTMLFooter($html_footer);
-                }
-            }
-
-            $this->uploadFile($filename, $pdf->output('', 'S'), 'purchase');
         }
-        private function createFilename($purchase)
-        {
 
-            $name = [$purchase->series, $purchase->number, $purchase->id, date('Ymd')];
-            return join('-', $name);
+        $this->uploadFile($filename, $pdf->output('', 'S'), 'purchase');
+    }
+    private function createFilename($purchase)
+    {
 
-        }
-        private function setFilename($purchase)
-        {
+        $name = [$purchase->series, $purchase->number, $purchase->id, date('Ymd')];
+        return join('-', $name);
+    }
+    private function setFilename($purchase)
+    {
 
-            $name = [$purchase->series, $purchase->number, $purchase->id, date('Ymd')];
-            $purchase->filename = join('-', $name);
-            $purchase->save();
-
-        }
-        public function uploadFile($filename, $file_content, $file_type)
-        {
-            $this->uploadStorage($filename, $file_content, $file_type);
-        }
+        $name = [$purchase->series, $purchase->number, $purchase->id, date('Ymd')];
+        $purchase->filename = join('-', $name);
+        $purchase->save();
+    }
+    public function uploadFile($filename, $file_content, $file_type)
+    {
+        $this->uploadStorage($filename, $file_content, $file_type);
+    }
     public function update(PurchaseRequest $request)
     {
         //dd();

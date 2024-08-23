@@ -107,6 +107,8 @@ class Document extends ModelTenant
         'afectar_caja',
         'payment',
         'dispatch_id',
+        'series_guia',
+        'number_guia',
         'ref'
 
 

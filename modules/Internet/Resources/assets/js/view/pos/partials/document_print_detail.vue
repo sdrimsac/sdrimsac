@@ -161,9 +161,9 @@
                         >
                             <b> {{ data.state_type_description }}</b>
                         </td>
-                        <td>
+                        <!-- <td>
                             {{ data.total }}
-                        </td>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>

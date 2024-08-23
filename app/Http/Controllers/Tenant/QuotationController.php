@@ -58,6 +58,59 @@ class QuotationController extends Controller
     protected $quotation;
     protected $company;
 
+    public function itemsToCash2($id){
+        $quotation = Quotation::find($id);
+        $cash = Cash::where('user_id', auth()->user()->id)->where('state', 1)->first();
+        if(!$cash){
+            return [
+                'success' => false,
+                'message' => 'No se encontró caja activa'
+            ];
+        }
+        try{
+            DB::beginTransaction();
+            $configuration = Configuration::firstOrFail();
+            $customer_id = $quotation->customer_id;
+            $customer = Person::find($customer_id);
+            $customer_name = $customer->name;
+            $items = $quotation->items;
+            $user_id = auth()->id();
+           $items_restore = [];
+            foreach ($items as $it) {
+                $item_restore = [];
+                $item = Item::find($it->item_id)
+                ->load('food');
+                $item = $item->toArray();
+                $item_restore['id'] = $item["food"]["id"];
+                $item_restore['food'] = $item["food"];
+                $item_restore['observation'] = null;
+                $item_restore['price'] = $it->unit_price;
+                $item_restore['quantity'] = $it->quantity;
+                $items_restore[]=$item_restore;
+               
+                // $isFromBox = $this->isArea("CAJ", $user->area_id);
+    
+                // if ($print_box) {
+                //     event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
+                // }
+                
+            }
+            DB::commit();
+            return [
+                'identifier' => $quotation->number_full,
+                'quotation_id' => $quotation->id,
+                'success' => true,
+                'message' => 'Items enviados a caja',
+                'items' => $items_restore,
+            ];
+        }
+        catch(Exception $e){
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
     public function itemsToCash($id){
         $quotation = Quotation::find($id);
         $cash = Cash::where('user_id', auth()->user()->id)->where('state', 1)->first();

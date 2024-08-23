@@ -1185,7 +1185,7 @@ export default {
             let quotation_stock = localStorage.getItem("quotation_stock") || 0;
             quotation_stock = quotation_stock == 1;
 
-            if (this.blockAdd && !this.configuration.box_orden) {
+            if (this.blockAdd && !this.configuration.box_orden && this.configuration.restaurant) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
             }

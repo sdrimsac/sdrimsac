@@ -2,7 +2,13 @@
     $establishment = \App\Models\Tenant\Establishment::find($document->establishment_id);
     $supplier = $document->supplier;
     $payments = $document->payments;
-    $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
+
+    /* $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT); */
+    if ($document->document_type_id == 'GU75' && $document->series == null) {
+        $tittle = $document->series_guia . '-' . str_pad($document->number_guia, 8, '0', STR_PAD_LEFT);
+    } else {
+        $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT); 
+    }
 @endphp
 <html>
 
@@ -330,14 +336,6 @@
         </table>
 
     @endif
-
-
-
-    <table class="full-width">
-        <tr>
-
-        </tr>
-    </table>
 </body>
 
 </html>

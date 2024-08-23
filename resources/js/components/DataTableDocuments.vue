@@ -155,7 +155,7 @@
                     </h6>
                 </div>
                 <div>
-                    <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total" :current-page.sync="pagination.current_page" :page-size="pagination.per_page">
+                    <el-pagination @current-change="getRecordsPagination" layout="total, prev, pager, next" :total="pagination.total" :current-page.sync="pagination.current_page" :page-size="pagination.per_page">
                     </el-pagination>
                 </div>
             </div>
@@ -181,6 +181,7 @@ export default {
     },
     data() {
         return {
+            fromPagination:false,
             loading_submit: false,
             columns: [],
             loading: false,
@@ -334,7 +335,15 @@ export default {
             let parameters = this.getQueryParameters();
             window.open(`/${this.resource}/excel?${parameters}`, '_blank');
         },
+        getRecordsPagination() {
+            this.fromPagination = true;
+            this.getRecords_();
+        },
         getRecords() {
+            this.fromPagination = false;
+            this.getRecords_();
+        },
+        getRecords_() {
             this.loading_submit = true;
             this.loading = true;
             return this.$http
@@ -355,8 +364,9 @@ export default {
                 .finally(() => {
                     this.loading_submit = false;
                     this.loading = false;
-
-                    this.getTotalSum();
+                    if(!this.fromPagination){
+                        this.getTotalSum();
+                    }
 
                 });
         },
@@ -364,7 +374,7 @@ export default {
             this.loading_sum = true;
 
             return this.$http
-                .get('/records-suma')
+                .get('/records-suma?'+this.getQueryParameters())
                 .then(response => {
                     this.totalSum = response.data.total_sum;
                 })

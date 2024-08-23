@@ -212,7 +212,7 @@
                             <template v-if="!isConsignment">
                                 {{
                                     quotationId
-                                        ? "GENERANDO COMPROBANTE - COTIZACIÓN"
+                                        ? `GENERANDO COMPROBANTE - COTIZACIÓN ${cotIdentifier}`
                                         : "VENTA DIRECTA"
                                 }}
                             </template>
@@ -376,7 +376,8 @@
                                 (isCreatingOrden == true ||
                                     clientTableData.orden_id) &&
                                     localOrden.length != 0 &&
-                                    !this.isSeller
+                                    !isSeller
+                                    && configuration.restaurant
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -4239,6 +4240,8 @@ export default {
             }
         },
         calculateTotal(w = null) {
+            console.log(this.localOrden);
+            console.log(this.ordens);
             this.totalOrdenItems = 0.0;
 
             this.total = 0.0;

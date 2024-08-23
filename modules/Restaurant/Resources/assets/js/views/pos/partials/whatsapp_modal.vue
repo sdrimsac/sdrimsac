@@ -7,9 +7,11 @@
         :visible="showDialog"
         @open="open"
     >
-        <div class="card ">
+        <div class="">
             <div class="row d-flex align-items-center">
+                
                 <div class="col-8">
+                    <br>
                     <el-input v-model="number" placeholder="tlf: 999999999">
                     </el-input>
                 </div>

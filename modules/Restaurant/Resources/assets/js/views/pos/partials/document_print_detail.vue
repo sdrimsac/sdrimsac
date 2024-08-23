@@ -945,17 +945,30 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/quotations/items-to-cash/${recordId}`
+                    `/quotations/items-to-cash2/${recordId}`
                 );
                 if (response.status) {
                     let data = response.data;
-                    if (data.orden) {
-                        let orden = data.orden;
-                        orden.quotation_id = recordId;
-                        orden.cot = data.cot;
-                        this.$emit("sendOrdens", data.orden);
-                        this.$emit("closeDialog");
-                    }
+                    let quotation_id = data.quotation_id;
+                    let identifier = data.identifier;
+                    if(data.items){
+                        data.items.forEach((it)=>{
+                            this.$emit(
+                        "insertOrden",
+                        it,
+                        quotation_id,
+                        identifier,
+                    );
+                    this.$emit("closeDialog");
+                })
+            }
+                    // if (data.orden) {
+                    //     let orden = data.orden;
+                    //     orden.quotation_id = recordId;
+                    //     orden.cot = data.cot;
+                    //     this.$emit("sendOrdens", data.orden);
+                    //     this.$emit("closeDialog");
+                    // }
                 }
             } catch (e) {
                 this.$toast.error(

@@ -1698,6 +1698,7 @@
             :showDialog.sync="showDocumentsPrint"
             :config.sync="config"
             @sendOrdens="sendOrdens"
+            @insertOrdenQuotation="insertOrdenQuotation"
             @sendItems="sendItems"
             :establishment.sync="establishments"
             :area_id="area_id"
@@ -2181,6 +2182,13 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        insertOrdenQuotation(quotation_id,identifier,item){
+            console.log(identifier," dsadas")
+            this.quotationId = quotation_id;
+            this.cotIdentifier = identifier;
+            this.
+                insertOrden(item,item.id,null,false)
+        },
         closeModal() {
             this.showDialogCreditReportDaily = false;
         },
@@ -2981,6 +2989,7 @@ export default {
             switch (id) {
                 case 97:
                     this.showDialogDetraction = true;
+                    break;
                 case 195:
                     this.showSaleNoteCreditCash = true;
                     break;

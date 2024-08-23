@@ -132,6 +132,7 @@
                             :configuration="config"
                             :sender="sender"
                             :company="company"
+                                 @insertOrden="insertOrden"
                             @getRecords="getRecords"
                             @printData="printData"
                             :records.sync="quotations"
@@ -221,6 +222,14 @@ export default {
         },
         getRecordsInput() {
             this.getRecords();
+        },
+        insertOrden(item,id,identifier){
+console.log(identifier);
+            this.$emit(
+                "insertOrdenQuotation",
+                id,identifier,
+                item,   
+            );
         },
         sendItems(items, clientNumber, notes, dscto_global) {
             this.$emit("sendItems", items, clientNumber, notes, dscto_global);

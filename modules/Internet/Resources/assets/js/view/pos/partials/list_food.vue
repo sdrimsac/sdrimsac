@@ -404,6 +404,7 @@ export default {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
             }
+            
             this.selectedFood = JSON.parse(
                 JSON.stringify(this.listFoods[index])
             );
