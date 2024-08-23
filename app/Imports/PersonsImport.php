@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Tenant\Person;
+use App\Models\Tenant\User;
 use Exception;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -19,6 +20,11 @@ class PersonsImport implements ToCollection
             $total = count($rows);
             $registered = 0;
             unset($rows[0]);
+            $seller_id = isset($row[9]) ? $row[9] : null;
+            if($seller_id == null){
+                $seller = User::where('type', 'seller')->first();
+                $seller_id = ($seller) ? $seller->id : null;
+            }
             foreach ($rows as $row)
             {
                 $type = request()->input('type');
