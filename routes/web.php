@@ -852,6 +852,24 @@ if ($hostname) {
                 Route::post('item-sets/visible_store', [App\Http\Controllers\Tenant\ItemSetController::class, 'visibleStore']);
                 Route::get('item-sets/item/tables', [App\Http\Controllers\Tenant\ItemSetController::class, 'item_tables']);
                 Route::get('person-types/columns', [App\Http\Controllers\Tenant\PersonTypeController::class, 'columns']);
+
+                //nueva ruta para las recetas 
+                Route::get('receta', [App\Http\Controllers\Tenant\RecetaController::class, 'index'])->name('tenant.receta.index')->middleware('just.admin');
+                Route::get('receta/columns', [App\Http\Controllers\Tenant\RecetaController::class, 'columns']);
+                Route::get('receta/records', [App\Http\Controllers\Tenant\RecetaController::class, 'records']);
+                Route::get('receta/check/{id}/{qty}', [App\Http\Controllers\Tenant\RecetaController::class, 'set_item_check_stock']);
+                Route::get('receta/tables', [App\Http\Controllers\Tenant\RecetaController::class, 'tables']);
+                Route::get('receta/record/{item}', [App\Http\Controllers\Tenant\RecetaController::class, 'record']);
+                Route::post('receta', [App\Http\Controllers\Tenant\RecetaController::class, 'store']);
+                Route::delete('receta/{item}', [App\Http\Controllers\Tenant\RecetaController::class, 'destroy']);
+                Route::delete('receta/item-unit-type/{item}', [App\Http\Controllers\Tenant\RecetaController::class, 'destroyItemUnitType']);
+                Route::post('receta/import', [App\Http\Controllers\Tenant\RecetaController::class, 'import']);
+                Route::post('receta/upload', [App\Http\Controllers\Tenant\RecetaController::class, 'upload']);
+                Route::post('receta/visible_store', [App\Http\Controllers\Tenant\RecetaController::class, 'visibleStore']);
+                Route::get('receta/item/tables', [App\Http\Controllers\Tenant\RecetaController::class, 'item_tables']);
+                
+                //personas o clientes 
+                Route::get('person-types/columns', [App\Http\Controllers\Tenant\PersonTypeController::class, 'columns']);
                 Route::get('person-types', [App\Http\Controllers\Tenant\PersonTypeController::class, 'index'])->name('tenant.person_types.index')->middleware('just.admin');
                 Route::get('person-types/records', [App\Http\Controllers\Tenant\PersonTypeController::class, 'records']);
                 Route::get('person-types/record/{person}', [App\Http\Controllers\Tenant\PersonTypeController::class, 'record']);

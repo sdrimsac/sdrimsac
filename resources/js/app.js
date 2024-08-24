@@ -256,6 +256,7 @@ const app = new Vue({
         "tenant-item-color-size-index": () =>
             import("./views/item_color_size/index.vue"),
         "tenant-item-sets-index": () => import("./views/item_sets/index.vue"),
+        "tenant-receta-index": () => import("./views/receta/index.vue"),
         "restaurant-worker-dashboard": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/worker/dashboard.vue"

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'imprimir_comanda_cocina',
+        'imprimir_precuenta_comanda',
         'nuevo_comprobante_electronico',
         'listado_boleta_factura_nuevo',
         'no_enviados',
@@ -244,6 +246,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'imprimir_comanda_cocina' => 'boolean',
+        'imprimir_precuenta_comanda' => 'boolean',
         'nuevo_comprobante_electronico' => 'boolean',
         'listado_boleta_factura_nuevo' => 'boolean',
         'no_enviados' => 'boolean',
@@ -429,6 +433,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'imprimir_comanda_cocina' => (bool)$this->imprimir_comanda_cocina,
+            'imprimir_precuenta_comanda' => (bool)$this->imprimir_precuenta_comanda,
             'nuevo_comprobante_electronico' => (bool)$this->nuevo_comprobante_electronico,
             'listado_boleta_factura_nuevo' =>(bool)$this->listado_boleta_factura_nuevo,
             'no_enviados' =>(bool)$this->no_enviados,

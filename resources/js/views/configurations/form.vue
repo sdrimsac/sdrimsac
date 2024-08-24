@@ -2875,6 +2875,28 @@
                                                                                 submit
                                                                             "></el-switch>
                                                             </div>
+                                                            <div class="col-md-4 mt-4">
+                                                                <label class="control-label w-100">
+                                                                    <i class="fa fa-file-alt fa-lg"></i>
+                                                                    Imprimir precuenta directo en cocina
+                                                                </label>
+                                                                <el-switch v-model="
+                                                                                form.imprimir_precuenta_comanda
+                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                submit
+                                                                            "></el-switch>
+                                                            </div>
+                                                            <div class="col-md-4 mt-4">
+                                                                <label class="control-label w-100">
+                                                                    <i class="fa fa-file-alt fa-lg"></i>
+                                                                    Imprimir comanda en cocina sin precuenta
+                                                                </label>
+                                                                <el-switch v-model="
+                                                                                form.imprimir_comanda_cocina
+                                                                            " active-text="Si" inactive-text="No" @change="
+                                                                                submit
+                                                                            "></el-switch>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </el-card>

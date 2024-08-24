@@ -914,8 +914,6 @@
                             <i class="icofont-dining-table"></i> Mesas
                         </a>
                     </li>
-
-
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}"
                             href="{{ route('restaurant.status_orden') }}">
@@ -934,6 +932,14 @@
                             <i class="icofont-dining-table"></i> Observaciones
                         </a>
                     </li>
+                    {{-- @if ($config->promocion_oferta) --}}
+                        <li>
+                            <a class="{{ $path[0] === 'receta' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.receta.index') }}">
+                                <i class="icofont-price"></i> Receta 
+                            </a>
+                        </li>
+                    {{-- @endif --}}
                 </ul>
             </li>
         @endif
