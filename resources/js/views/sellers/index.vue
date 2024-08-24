@@ -134,7 +134,7 @@ export default {
             this.showDialog = true;
         },
         clickDelete(id) {
-            this.destroy(`/${this.resource}/${id}`).then(() =>
+            this.destroy(`/${this.resource}/delete/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")
             );
         }

@@ -49,15 +49,16 @@ class SellerController extends Controller
     }
 
     public function tables()
-    {   $document_types = IdentityDocumentType::whereActive()
-        ->where('id','<>' ,'6')
-        ->get();
+    {
+        $document_types = IdentityDocumentType::whereActive()
+            ->where('id', '<>', '6')
+            ->get();
         $establishments = Establishment::all();
         return compact('establishments', 'document_types');
-        
     }
 
-    public function record($id){
+    public function record($id)
+    {
         $record = new SellerResource(Seller::findOrFail($id));
 
         return $record;
@@ -65,26 +66,50 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         $id = $request->input('id');
-       $seller = Seller::firstOrNew(['id' => $id]);
+        $seller = Seller::firstOrNew(['id' => $id]);
         $seller->fill($request->all());
         $seller->save();
         return [
             'success' => true,
-            'message' => ($id)?'Vendedor editado con éxito':'Vendedor registrado con éxito',
+            'message' => ($id) ? 'Vendedor editado con éxito' : 'Vendedor registrado con éxito',
             'id' => $seller->id
         ];
     }
 
-    public function destroy($id)
+    /* public function destroy($id)
     {
         $seller = Seller::findOrFail($id);
         $seller->delete();
 
         return [
+
             'success' => true,
             'message' => 'Vendedor eliminada con éxito'
+
         ];
+    } */
+
+    public function destroy($id)
+    {
+        try {
+            $seller = Seller::findOrFail($id);
+            $seller->delete();
+
+            return [
+                'success' => true,
+                'message' => 'Vendedor eliminado con éxito',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar el vendedor: ' . $e->getMessage(),
+            ];
+        }
     }
+
+
+
+
     /* public function delete($id)
     {
         $seller = Seller::findOrFail($id);
