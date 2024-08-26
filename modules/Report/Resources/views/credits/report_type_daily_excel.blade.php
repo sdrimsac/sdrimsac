@@ -60,8 +60,8 @@
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">DIAS DE ATRASO</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">COBRO POR MORA</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">COBRO POR CUOTA</th>
-                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">COBRO CUOTA</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">TOTAL A COBRAR</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">TOTAL A COBRAR POR CRÉDITO</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,7 +69,7 @@
                             @php
 
                                 $acum_total += $record['amount_due'];
-                                $acum_total_payment += $record['penalty'] + $record['quote_payment'];
+                                // $acum_total_payment += $record['penalty'] + $record['quote_payment'];
                             @endphp
                             <tr>
                                 <td style="border:1px solid black;" >{{ $loop->iteration }}</td>
@@ -81,7 +81,11 @@
                                 <td style="border:1px solid black;"  class="text-center">{{ $record['differenc_days'] }}</td>
                                 <td style="border:1px solid black;"  class="text-center">{{ $record['penalty'] }}</td>
                                 <td style="border:1px solid black;"  class="text-center">{{ $record['quote_payment'] }}</td>
-                                <td style="border:1px solid black;"  class="text-end">{{ $record['penalty'] + $record['quote_payment'] }}</td>
+                                @php    
+                                    $_total_payment = ($record['penalty'] * $record['differenc_days']) + $record['quote_payment'];
+                                    $acum_total_payment += $_total_payment;
+                                @endphp
+                                <td style="border:1px solid black;"  class="text-end">{{ $_total_payment }}</td>
                                 <td style="border:1px solid black;"  class="text-end">{{ $record['amount_due'] }}</td>
                             </tr>
                         @endforeach

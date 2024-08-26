@@ -87,8 +87,10 @@ class ReportCreditCollection extends ResourceCollection
             }
             $user_name = $row->user->name;
             $schedules = [];
+            
             $num_quotes = $row->is_cash == false ? 32 : 26;
-            $quotes = $payment->count();
+            $quotes =  Payment::where('sale_note_id', $row->id)->count();
+
             $quotes = $quotes / $num_quotes;
             $quotes = ceil($quotes);
             if ($quotes == 0) {
