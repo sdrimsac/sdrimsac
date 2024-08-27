@@ -1829,6 +1829,7 @@ class DocumentController extends Controller
             ->where('state_type_id', 'like', '%' . $state_type_id . '%')
             ->where('series', 'like', '%' . $series . '%')
             ->where('number', 'like', '%' . $number . '%')
+            ->whereNotHas('note')
             ->orderBy('id', 'desc')
             ->orderBy('number', 'desc')
             ->latest();
