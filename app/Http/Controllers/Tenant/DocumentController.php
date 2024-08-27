@@ -1826,7 +1826,7 @@ class DocumentController extends Controller
         $records = Document::query()
             ->where('soap_type_id', '=', $soap_type_id)
             ->where('document_type_id', 'like', '%' . $document_type_id . '%')
-            ->where('state_type_id', 'like', '%' . $state_type_id . '%')
+            ->where('state_type_id','05')
             ->where('series', 'like', '%' . $series . '%')
             ->where('number', 'like', '%' . $number . '%')
             ->whereDoesntHave('note')
