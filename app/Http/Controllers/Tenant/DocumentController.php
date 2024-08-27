@@ -1726,6 +1726,7 @@ class DocumentController extends Controller
     public function excelVentas(Request $request)
     {
         ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', '30000');
         $records = $this->getRecordsVentas($request, false, true)->get();
         $establishment = Establishment::first();
         $d_start = $request->d_start;
