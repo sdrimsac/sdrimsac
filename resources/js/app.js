@@ -36,12 +36,33 @@ Vue.prototype.$setStorage = function(name, obj) {
 /* Vue toast (notificaciones personalizadas )  */
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-
+import Swal from 'sweetalert2';
 const options = {
     timeout: 5000
 };
 
+// Vue.use(Swal);
+Vue.prototype.$showSAlert = (title, text, iconHtml, backgroundColor = null) =>{
+    Swal.fire({
+        title: `<div style="text-align: center;">${title}</div>`, // Título en mayúsculas y centrado
+        html: `
+    <div style="display: flex; align-items: center; justify-content: center;">
+        ${iconHtml}
+    </div>
+    <p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
+`, // Texto normal
+        timer: 2000, // Duración de 2 segundos
+        showConfirmButton: false,
+        background: backgroundColor ? backgroundColor : undefined,
+        customClass: {
+            popup: 'swal2-no-border', // Clase personalizada
+        },
+        position: 'center'
+    });
+}
+
 Vue.use(Toast, options);
+
 document.addEventListener("DOMContentLoaded", function() {
     getDesarrollador();
     getAreaPrinter();

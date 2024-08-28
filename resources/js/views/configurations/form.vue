@@ -32,8 +32,8 @@
                                         </label>
 
                                         <el-time-picker style="width: 100%;" value-format="HH:mm:ss" :format="'hh:mm A'" :picker-options="{
-                                                            format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
-                                                        }" timezone="America/Lima" v-model="form.time_to_enter"></el-time-picker>
+                                                                format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                            }" timezone="America/Lima" v-model="form.time_to_enter"></el-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-4">
@@ -43,8 +43,8 @@
                                         </label>
 
                                         <el-time-picker style="width: 100%;" value-format="HH:mm:ss" :format="'hh:mm A'" :picker-options="{
-                                                            format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
-                                                        }" timezone="America/Lima" v-model="form.time_to_leave"></el-time-picker>
+                                                                format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                            }" timezone="America/Lima" v-model="form.time_to_leave"></el-time-picker>
                                     </div>
                                 </div>
 
@@ -64,8 +64,8 @@
                                             frigobar
                                         </label>
                                         <el-input-number @change="submit" v-model="
-                                                            form.credit_line_hotel_limit
-                                                        ">
+                                                                form.credit_line_hotel_limit
+                                                            ">
                                         </el-input-number>
                                     </div>
                                 </div>
@@ -75,8 +75,8 @@
                                             cambio del servicio x habitación
                                         </label>
                                         <el-input-number @change="submit" v-model="
-                                                            form.discount_amount_instead_service
-                                                        ">
+                                                                form.discount_amount_instead_service
+                                                            ">
                                         </el-input-number>
                                     </div>
                                 </div>
@@ -1629,8 +1629,8 @@
                                                 <label class="control-label w-100">Penalidades
                                                 </label>
                                                 <el-switch v-model="
-                                                                    form.sale_note_credit_penalty
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.sale_note_credit_penalty
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -1639,8 +1639,8 @@
                                                     aprobación
                                                 </label>
                                                 <el-switch v-model="
-                                                                    form.sale_note_credit_confirm
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.sale_note_credit_confirm
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -1650,8 +1650,8 @@
                                                     la cuotas
                                                 </label>
                                                 <el-switch v-model="
-                                                                    form.sale_note_credit_low_pay
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.sale_note_credit_low_pay
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -1659,8 +1659,8 @@
                                                 <label class="control-label w-100">Editar
                                                 </label>
                                                 <el-switch v-model="
-                                                                    form.sale_note_credit_edit
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.sale_note_credit_edit
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -1669,8 +1669,8 @@
                                                     clientes
                                                 </label>
                                                 <el-switch v-model="
-                                                                    form.sale_note_credit_send_whatsapp
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.sale_note_credit_send_whatsapp
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -1679,8 +1679,8 @@
                                                     adicionales
                                                 </label>
                                                 <el-switch v-model="
-                                                                    form.sale_note_credit_formats
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.sale_note_credit_formats
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -1693,8 +1693,8 @@
                                                 </label>
 
                                                 <el-switch v-model="
-                                                                    form.whatsapp_client
-                                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                                                        form.whatsapp_client
+                                                                    " active-text="Si" inactive-text="No" @change="submit"></el-switch>
                                             </div>
                                         </div>
                                         <div class="col-md-3 mt-4">
@@ -2407,10 +2407,10 @@
                                                             Imprimir precuenta directo en cocina
                                                         </label>
                                                         <el-switch v-model="
-                                                                                form.imprimir_precuenta_comanda
-                                                                            " active-text="Si" inactive-text="No" @change="
-                                                                                submit
-                                                                            "></el-switch>
+                                                                                    form.imprimir_precuenta_comanda
+                                                                                " active-text="Si" inactive-text="No" @change="
+                                                                                    submit
+                                                                                "></el-switch>
                                                     </div>
                                                     <div class="col-md-4 mt-4">
                                                         <label class="control-label w-100">
@@ -2418,10 +2418,10 @@
                                                             Imprimir comanda en cocina sin precuenta
                                                         </label>
                                                         <el-switch v-model="
-                                                                                form.imprimir_comanda_cocina
-                                                                            " active-text="Si" inactive-text="No" @change="
-                                                                                submit
-                                                                            "></el-switch>
+                                                                                    form.imprimir_comanda_cocina
+                                                                                " active-text="Si" inactive-text="No" @change="
+                                                                                    submit
+                                                                                "></el-switch>
                                                     </div>
                                                 </div>
 
@@ -3173,226 +3173,7 @@ export default {
             },
             items: [
                 // Items de Modos
-                {
-                    label: 'Crédito en Nota de Venta',
-                    model: 'credits',
-                    iconClass: 'fas fa-credit-card tab-icon',
-                    iconRef: 'creditIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Entorno Colegio',
-                    model: 'college',
-                    iconClass: 'fas fa-school tab-icon',
-                    iconRef: 'collegeIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Entorno Restaurant',
-                    model: 'restaurant',
-                    iconClass: 'fas fa-utensils tab-icon',
-                    iconRef: 'restaurantIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Entorno Hotel',
-                    model: 'hotels',
-                    iconClass: 'fas fa-hotel tab-icon',
-                    iconRef: 'hotelIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Entorno Internet',
-                    model: 'internet',
-                    iconClass: 'fas fa-wifi tab-icon',
-                    iconRef: 'internetIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Entorno Peaje',
-                    model: 'toll',
-                    iconClass: 'el-icon-tickets tab-icon',
-                    iconRef: 'tollIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Entorno Boticas & Hospital',
-                    model: 'health_network',
-                    iconClass: 'fas fa-pills tab-icon',
-                    iconRef: 'healthIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
 
-                // Items de Modelos de Negocio
-                {
-                    label: 'Habilitar Promociones',
-                    model: 'promotions_sell',
-                    iconClass: 'fas fa-tags tab-icon',
-                    iconRef: 'promotionsIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Contabilidad',
-                    model: 'accounting_mode',
-                    iconClass: 'fas fa-calculator tab-icon',
-                    iconRef: 'accountingIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Series - Productos',
-                    model: 'series_enabled',
-                    iconClass: 'fas fa-barcode tab-icon',
-                    iconRef: 'seriesIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Lotes - Productos',
-                    model: 'lots_enabled',
-                    iconClass: 'fas fa-boxes tab-icon',
-                    iconRef: 'lotsIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Color & Talla - Productos',
-                    model: 'color_size_enabled',
-                    iconClass: 'fas fa-tshirt tab-icon',
-                    iconRef: 'colorSizeIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Guías de Remisión',
-                    model: 'dispatch',
-                    iconClass: 'fas fa-truck tab-icon',
-                    iconRef: 'dispatchIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Cotización',
-                    model: 'quotation',
-                    iconClass: 'fas fa-file-invoice-dollar tab-icon',
-                    iconRef: 'quotationIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Consignación',
-                    model: 'consignment',
-                    iconClass: 'fas fa-handshake tab-icon',
-                    iconRef: 'consignmentIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Transformación de producto',
-                    model: 'transform_item',
-                    iconClass: 'fas fa-exchange-alt tab-icon',
-                    iconRef: 'transformIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Habilitar Tratamiento comercial Producto',
-                    model: 'commercial_treatment_items',
-                    iconClass: 'fas fa-hand-holding-usd tab-icon',
-                    iconRef: 'commercialTreatmentIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-
-                // Items  Contabilidad
-                {
-                    label: 'Cambiar Afectación IGV',
-                    model: 'affectation_optional',
-                    iconClass: 'fas fa-exchange-alt tab-icon',
-                    iconRef: 'affectationIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Cantidad decimales POS',
-                    model: 'decimal_quantity',
-                    iconClass: 'fas fa-sort-numeric-up tab-icon',
-                    iconRef: 'decimalIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Impuesto bolsa plástica',
-                    model: 'amount_plastic_bag_taxes',
-                    iconClass: 'fas fa-recycle tab-icon',
-                    iconRef: 'plasticBagIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Tipo de afectación Venta',
-                    model: 'affectation_igv_type_id',
-                    iconClass: 'fas fa-file-invoice-dollar tab-icon',
-                    iconRef: 'igvTypeIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Envío de comprobantes automático',
-                    model: 'send_auto',
-                    iconClass: 'fas fa-paper-plane tab-icon',
-                    iconRef: 'sendAutoIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Ejecutar Tareas Programadas',
-                    model: 'cron',
-                    iconClass: 'fas fa-calendar-alt tab-icon',
-                    iconRef: 'cronIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Cambiar fecha de emisión',
-                    model: 'change_date_emit',
-                    iconClass: 'fas fa-calendar-check tab-icon',
-                    iconRef: 'changeDateIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Restringir fecha de comprobante',
-                    model: 'restrict_receipt_date',
-                    iconClass: 'fas fa-ban tab-icon',
-                    iconRef: 'restrictIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Días transcurridos para emitir dcto',
-                    model: 'days_before_emit',
-                    iconClass: 'fas fa-calendar-day tab-icon',
-                    iconRef: 'daysBeforeIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
-                {
-                    label: 'Impuesto incluido en registro de productos',
-                    model: 'include_igv',
-                    iconClass: 'fas fa-receipt tab-icon',
-                    iconRef: 'includeIgvIcon',
-                    activeText: 'HABILITADO',
-                    inactiveText: 'DESHABILITADO'
-                },
             ],
 
             loading_submit: false,
@@ -3520,16 +3301,11 @@ export default {
             const backgroundColor = '#f8f9fa'; // Fondo blanco o gris claro
             const actionColor = isActive ? '#28a745' : '#dc3545'; // Verde para activado, rojo para desactivado
 
-            let iconHtml;
+            let iconHtml = '';
 
-            if (isImage) {
-                // Si se trata de una imagen, se muestra sin el borde redondeado
+            if (isImage && iconOrImgSrc) {
+                // Si se trata de una imagen y se ha proporcionado un src válido, se muestra sin el borde redondeado
                 iconHtml = `<img src="${iconOrImgSrc}" alt="${optionName} Logo" class="payment-logo" style="width: 80px; height: auto; vertical-align: middle; margin-right: 10px; border-radius: 0;" />`;
-            } else {
-                // Si no es una imagen, se muestra el icono de activado o desactivado sin el círculo
-                iconHtml = isActive ?
-                    '<i class="fas fa-check-circle" style="color: #28a745; font-size: 2rem;"></i>' :
-                    '<i class="fas fa-times-circle" style="color: #dc3545; font-size: 2rem;"></i>';
             }
 
             console.log('Enviando datos a la API:', this.form, `/${this.resource}`);
@@ -3539,29 +3315,57 @@ export default {
                 const response = await this.$http.post(`/${this.resource}`, this.form);
 
                 if (response.data.success) {
-                    this.showSweetAlert(
-                        optionName.toUpperCase(),
-                        `<strong style="color: ${actionColor};">${action}</strong>`,
-                        iconHtml,
-                        backgroundColor
-                    );
+                    // Mostrar un SweetAlert centrado cuando la operación es exitosa
+                    Swal.fire({
+                        position: "center", // Centrado en la pantalla
+                        icon: isActive ? "success" : "error", // Icono de éxito o error dependiendo del estado
+                        title: optionName.toUpperCase(),
+                        html: `<strong style="color: ${actionColor};">${action}</strong>${iconHtml ? `<br>${iconHtml}` : ''}`,
+                        background: backgroundColor,
+                        showConfirmButton: false,
+                        timer: 2000 // Duración de 2 segundos
+                    });
                 } else {
-                    this.showSweetAlert('ERROR', `Hubo un problema al actualizar la opción "${optionName}". Inténtalo de nuevo.`, 'error');
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "ERROR",
+                        text: `Hubo un problema al actualizar la opción "${optionName}". Inténtalo de nuevo.`,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 }
             } catch (error) {
                 if (error.response && error.response.status === 422) {
                     this.errors = error.response.data.errors;
-                    this.showSweetAlert('ERROR EN EL FORMULARIO', 'Hay errores en el formulario. Revísalos e intenta nuevamente.', 'error');
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "ERROR EN EL FORMULARIO",
+                        text: "Hay errores en el formulario. Revísalos e intenta nuevamente.",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else if (!navigator.onLine) {
-                    this.showSweetAlert(
-                        'SIN CONEXIÓN A INTERNET',
-                        'Parece que no tienes conexión a Internet. Verifica tu conexión y vuelve a intentarlo.',
-                        '<i class="fas fa-wifi-slash" style="color: #dc3545; font-size: 2rem;"></i>',
-                        backgroundColor
-                    );
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "SIN CONEXIÓN A INTERNET",
+                        html: `<i class="fas fa-wifi-slash" style="color: #dc3545; font-size: 2rem;"></i><br>Parece que no tienes conexión a Internet. Verifica tu conexión y vuelve a intentarlo.`,
+                        background: backgroundColor,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 } else {
                     console.log('Error de conexión:', error);
-                    this.showSweetAlert('ERROR DE CONEXIÓN', 'Error de conexión. Verifica tu red y vuelve a intentarlo.', 'error');
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "ERROR DE CONEXIÓN",
+                        text: "Error de conexión. Verifica tu red y vuelve a intentarlo.",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 }
             } finally {
                 this.loading_submit = false;
@@ -3570,30 +3374,15 @@ export default {
             this.animateIcon(iconRef); // Animar el ícono correspondiente
         },
 
-        // showSweetAlert(title, text, iconHtml, backgroundColor = null) {
-        //     Swal.fire({
-        //         title: `<div style="text-align: center;">${title}</div>`, // Título en mayúsculas y centrado
-        //         html: `<p style="font-weight: bold; font-size: 1.2rem;">${text}</p>`, // Texto normal
-        //         iconHtml: iconHtml, // Icono personalizado
-        //         timer: 2000, // Duración de 2 segundos
-        //         showConfirmButton: false,
-        //         background: backgroundColor ? backgroundColor : undefined,
-        //         customClass: {
-        //             popup: 'swal2-no-border', // Clase personalizada
-        //         },
-        //         position: 'center'
-        //     });
-        // },
-
         showSweetAlert(title, text, iconHtml, backgroundColor = null) {
             Swal.fire({
                 title: `<div style="text-align: center;">${title}</div>`, // Título en mayúsculas y centrado
                 html: `
-            <div style="display: flex; align-items: center; justify-content: center;">
-                ${iconHtml}
-            </div>
-            <p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
-        `, // Texto normal
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    ${iconHtml}
+                </div>
+                <p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
+            `, // Texto normal
                 timer: 2000, // Duración de 2 segundos
                 showConfirmButton: false,
                 background: backgroundColor ? backgroundColor : undefined,
@@ -3668,6 +3457,24 @@ export default {
             });
         },
 
+        // async removeNumberWhatsapp(idx) {
+        //     let {
+        //         number
+        //     } = this.numbers[idx];
+        //     const response = await this.$http.post("/whatsapp/remove", {
+        //         number
+        //     });
+        //     if (response.status == 200) {
+        //         this.$toast.success("Número eliminado correctamente");
+
+        //         this.showAddNumberwhatsapp = false;
+        //         this.numberWhatsapp = null;
+        //         this.getNumbers();
+        //     } else {
+        //         this.$toast.error("Ocurrió un error al eliminar el número");
+
+        //     }
+        // },
         async removeNumberWhatsapp(idx) {
             let {
                 number
@@ -3675,13 +3482,29 @@ export default {
             const response = await this.$http.post("/whatsapp/remove", {
                 number
             });
+
             if (response.status == 200) {
-                this.$toast.success("Número eliminado correctamente");
+                // Usando SweetAlert con la configuración personalizada
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Número eliminado correctamente",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
                 this.showAddNumberwhatsapp = false;
                 this.numberWhatsapp = null;
                 this.getNumbers();
             } else {
-                this.$toast.error("Ocurrió un error al eliminar el número");
+                // Usando SweetAlert para mostrar un mensaje de error
+                Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "Ocurrió un error al eliminar el número",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
         },
 
@@ -3691,22 +3514,43 @@ export default {
                     number: this.numberWhatsapp
                 });
                 if (response.status == 200) {
-                    this.$toast.success("Número agregado correctamente");
+                    // Usando SweetAlert para mostrar un mensaje de éxito
+                    Swal.fire({
+                        position: "center", // Centrado en la pantalla
+                        icon: "success", // Icono de éxito
+                        title: "Éxito",
+                        text: "Número de Whatsapp agregado correctamente",
+                        showConfirmButton: false,
+                        timer: 2000, // Duración de 2 segundos
+                    });
+
                     this.showAddNumberwhatsapp = false;
                     this.numberWhatsapp = null;
                     this.getNumbers();
                 } else {
-                    this.$toast.error("Ocurrió un error al agregar el número");
+                    // Usando SweetAlert para mostrar un mensaje de error
+                    Swal.fire({
+                        position: "center", // Centrado en la pantalla
+                        icon: "error", // Icono de error
+                        title: "Error",
+                        text: "Ocurrió un error al agregar el número",
+                        showConfirmButton: false,
+                        timer: 2000, // Duración de 2 segundos
+                    });
                 }
             } catch (e) {
                 let {
                     message
                 } = e.response.data;
-                if (message) {
-                    this.$toast.error(message);
-                } else {
-                    this.$toast.error("Ocurrió un error al agregar el número");
-                }
+                // Usando SweetAlert para mostrar un mensaje de error en caso de excepción
+                Swal.fire({
+                    position: "center", // Centrado en la pantalla
+                    icon: "error", // Icono de error
+                    title: "Error",
+                    text: message || "Ocurrió un error al agregar el número",
+                    showConfirmButton: false,
+                    timer: 2000, // Duración de 2 segundos
+                });
             }
         },
 

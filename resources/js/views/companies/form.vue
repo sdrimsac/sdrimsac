@@ -8,6 +8,7 @@
                         Datos de la Empresa
                     </div>
                 </h4>
+                <!-- Datos de la Empresa -->
                 <div class="card-body">
                     <form autocomplete="off">
                         <div class="form-body">
@@ -334,6 +335,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Imagenes  para el sistema -->
+
                         <div class="card mb-4">
                             <div class="card-header bg-primary">
                                 <h4 class="text-white my-0 card-title">
@@ -356,6 +359,7 @@
                                 id="collapseExample"
                             >
                                 <div class="row">
+                                    <!-- Sección para 'Logo' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -365,19 +369,15 @@
                                                 v-model="form.logo"
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{ type: 'logo' }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage('logo')
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                             <div class="badge text-danger">
                                                 <small
@@ -391,12 +391,15 @@
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.logo}`
+                                                form.logo
+                                                    ? `/storage/uploads/logos/${form.logo}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
 
+                                    <!-- Sección para 'Logo Documento' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -406,21 +409,17 @@
                                                 v-model="form.document_logo"
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{
-                                                        type: 'document_logo'
-                                                    }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'document_logo'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                             <div class="badge text-danger">
                                                 <small
@@ -430,42 +429,18 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-2">
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.document_logo}`
+                                                form.document_logo
+                                                    ? `/storage/uploads/logos/${form.document_logo}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
-                                </div>
-                                <!-- <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="control-label">Logo Documento</label>
-                                            <el-input v-model="form.document_logo" :readonly="true">
-                                                <el-upload slot="append" :headers="headers" :data="{
-                                                        type: 'document_logo'
-                                                    }" action="/companies/uploads" :show-file-list="false" :on-success="successUpload">
-                                                    <el-button type="primary" icon="el-icon-upload"></el-button>
-                                                </el-upload>
-                                            </el-input>
-                                            <div class="badge text-danger">
-                                                <small>Se recomienda resoluciones
-                                                    700x300</small>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-4">
-                                        <img class="img-thumbnail" :src="
-                                                `/storage/uploads/logos/${form.document_logo}`
-                                            " style="  max-height: 100px;" />
-                                    </div>
-                                </div> -->
-                                <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -508,6 +483,7 @@
                                         />
                                     </div>
 
+                                    <!-- Sección para 'Favicon' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -517,19 +493,17 @@
                                                 v-model="form.favicon"
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{ type: 'favicon' }"
-                                                    action="/companies/favicon"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'favicon'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                             <div class="badge text-danger">
                                                 <small
@@ -539,19 +513,19 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-2">
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/favicon/${form.favicon}`
+                                                form.favicon
+                                                    ? `/storage/uploads/favicon/${form.favicon}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
-                                </div>
 
-                                <div class="row">
+                                    <!-- Sección para 'Imagen A5' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -561,26 +535,19 @@
                                                 v-model="form.a5_image"
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{ type: 'a5_image' }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'a5_image'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                             <div class="badge text-danger">
-                                                <!-- <small
-                                                    style="margin-right: 10px; !important"
-                                                    >Se recomienda resoluciones
-                                                    700x300</small -->
-
                                                 <el-checkbox
                                                     @change="setConfiguration"
                                                     v-model="show_image_a5"
@@ -590,16 +557,19 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-2">
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.a5_image}`
+                                                form.a5_image
+                                                    ? `/storage/uploads/logos/${form.a5_image}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
+
+                                    <!-- Sección para 'Imagen de fondo - documentos' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -612,85 +582,33 @@
                                                 "
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{
-                                                        type:
-                                                            'backgroud_image_document'
-                                                    }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'backgroud_image_document'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                         </div>
-                                        <!-- <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">Imagen cuentas plantilla trade_name_max</label>
-                                        <el-input v-model="
-                                                    form.account_img_trade_name_max
-                                                " :readonly="true">
-                                            <el-upload slot="append" :headers="headers" :data="{
-                                                        type:
-                                                            'account_img_trade_name_max'
-                                                    }" action="/companies/uploads" :show-file-list="false" :on-success="successUpload">
-                                                <el-button type="primary" icon="el-icon-upload"></el-button>
-                                            </el-upload>
-                                        </el-input>
-                                        <div class="badge text-danger">
-                                            <small>Se recomienda resoluciones
-                                                500x100 maximo</small>
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <img class="img-thumbnail" :src="
-                                                `/storage/uploads/logos/${form.account_img_trade_name_max}`
-                                            " style="  max-height: 100px;" />
-                                </div>
-                             agregado para la otra imagen del trademanemax
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">Imagen Dolares plantilla trade_name_max </label>
-                                        <el-input v-model="
-                                                    form.file_nuevo_dolares_img
-                                                " :readonly="true">
-                                            <el-upload slot="append" :headers="headers" :data="{
-                                                        type:
-                                                            'file_nuevo_dolares_img'
-                                                    }" action="/companies/uploads" :show-file-list="false" :on-success="successUpload">
-                                                <el-button type="primary" icon="el-icon-upload"></el-button>
-                                            </el-upload>
-                                        </el-input>
-                                        <div class="badge text-danger">
-                                            <small>Se recomienda resoluciones
-                                                300x80 maximo</small>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                        <!-- <div class="col-md-2">
-                                    <img class="img-thumbnail" :src="
-                                                `/storage/uploads/logos/${form.file_nuevo_dolares_img}`
-                                            " style="  max-height: 100px;" />
-                                </div> -->
-                                    </div>
-
                                     <div class="col-md-2">
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.backgroud_image_document}`
+                                                form.backgroud_image_document
+                                                    ? `/storage/uploads/logos/${form.backgroud_image_document}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
 
+                                    <!-- Sección para 'Imagen cuentas plantilla trade_name_max' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
@@ -703,27 +621,22 @@
                                                 "
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{
-                                                        type:
-                                                            'account_img_trade_name_max'
-                                                    }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'account_img_trade_name_max'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                             <div class="badge text-danger">
                                                 <small
                                                     >Se recomienda resoluciones
-                                                    500x100 maximo</small
+                                                    500x100 máximo</small
                                                 >
                                             </div>
                                         </div>
@@ -732,45 +645,43 @@
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.account_img_trade_name_max}`
+                                                form.account_img_trade_name_max
+                                                    ? `/storage/uploads/logos/${form.account_img_trade_name_max}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
-                                    <!-- agregado para la otra imagen del trademanemax -->
+
+                                    <!-- Sección para 'Imagen Dolares plantilla trade_name_max' -->
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
                                                 >Imagen Dolares plantilla
-                                                trade_name_max
-                                            </label>
+                                                trade_name_max</label
+                                            >
                                             <el-input
                                                 v-model="
                                                     form.file_nuevo_dolares_img
                                                 "
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{
-                                                        type:
-                                                            'file_nuevo_dolares_img'
-                                                    }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'file_nuevo_dolares_img'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                             <div class="badge text-danger">
                                                 <small
                                                     >Se recomienda resoluciones
-                                                    300x80 maximo</small
+                                                    300x80 máximo</small
                                                 >
                                             </div>
                                         </div>
@@ -779,18 +690,16 @@
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.file_nuevo_dolares_img}`
+                                                form.file_nuevo_dolares_img
+                                                    ? `/storage/uploads/logos/${form.file_nuevo_dolares_img}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
-                                </div>
 
-                                <div
-                                    class="row"
-                                    v-if="configuration.health_network"
-                                >
-                                    <div class="col-md-6">
+                                    <!-- Sección para 'Reporte red de salud' -->
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
                                                 >Reporte red de salud</label
@@ -801,33 +710,29 @@
                                                 "
                                                 :readonly="true"
                                             >
-                                                <el-upload
-                                                    slot="append"
-                                                    :headers="headers"
-                                                    :data="{
-                                                        type:
-                                                            'health_network_image'
-                                                    }"
-                                                    action="/companies/uploads"
-                                                    :show-file-list="false"
-                                                    :on-success="successUpload"
-                                                >
+                                                <template slot="append">
                                                     <el-button
                                                         type="primary"
                                                         icon="el-icon-upload"
+                                                        @click="
+                                                            selectImage(
+                                                                'health_network_image'
+                                                            )
+                                                        "
                                                     ></el-button>
-                                                </el-upload>
+                                                </template>
                                             </el-input>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-6">
+                                    <div class="col-md-2">
                                         <img
                                             class="img-thumbnail"
                                             :src="
-                                                `/storage/uploads/logos/${form.health_network_image}`
+                                                form.health_network_image
+                                                    ? `/storage/uploads/logos/${form.health_network_image}`
+                                                    : ''
                                             "
-                                            style="  max-height: 100px;"
+                                            style="max-height: 100px;"
                                         />
                                     </div>
                                 </div>
@@ -1054,7 +959,7 @@
                     <div class="card">
                         <div class="card-header bg-primary">
                             <h4 class="text-white my-0">
-                                <i class="fas fa-cogs"></i>
+                                <i class="fas fab fa-whatsapp"></i>
                                 Whatsapp Externo
                             </h4>
                         </div>
@@ -1312,6 +1217,8 @@
 </style>
 
 <script>
+import Swal from "sweetalert2";
+
 // tenant-certificates-index
 const TenantCertificatesIndex = () => import("../certificates/index.vue");
 const EstablishmentsIndex = () => import("../establishments/index.vue");
@@ -1323,6 +1230,17 @@ export default {
     },
     data() {
         return {
+            form: {
+                logo: "",
+                document_logo: "",
+                img_bg: "",
+                favicon: "",
+                a5_image: "",
+                backgroud_image_document: "",
+                account_img_trade_name_max: "",
+                file_nuevo_dolares_img: "",
+                health_network_image: ""
+            },
             same_ruc_id: null,
             companies: [],
             loading_submit: false,
@@ -1351,6 +1269,109 @@ export default {
         this.show_image_a5 = this.configuration.show_image_a5;
     },
     methods: {
+        async selectImage(field) {
+            const { value: file } = await Swal.fire({
+                title: "Selecciona una imagen",
+                input: "file",
+                inputAttributes: {
+                    accept: "image/*",
+                    "aria-label": "Sube tu imagen"
+                }
+            });
+
+            if (file) {
+                // Previsualización de la imagen
+                const reader = new FileReader();
+                reader.onload = e => {
+                    Swal.fire({
+                        title: "Vista previa de la imagen",
+                        imageUrl: e.target.result,
+                        imageAlt: "La imagen subida",
+                        showCancelButton: true,
+                        confirmButtonText: "Subir imagen",
+                        cancelButtonText: "Cancelar"
+                    }).then(async result => {
+                        if (result.isConfirmed) {
+                            // Proceder con la subida de la imagen al servidor
+                            const formData = new FormData();
+                            formData.append("file", file);
+                            formData.append("type", field);
+
+                            try {
+                                const response = await this.$http.post(
+                                    "/companies/uploads",
+                                    formData,
+                                    {
+                                        headers: this.headers
+                                    }
+                                );
+
+                                if (response.data.success) {
+
+                                    // Asegurarse de que la URL de la imagen sea correcta y única para evitar problemas de caché
+                                    this.form[field] = `${
+                                        response.data.name
+                                    }?timestamp=${new Date().getTime()}`;
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Imagen subida correctamente",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    this.$forceUpdate();
+                                    // Actualiza la vista para mostrar la imagen subida
+                                } else {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error al subir la imagen",
+                                        text:
+                                            response.data.message ||
+                                            "Inténtelo nuevamente.",
+                                        showConfirmButton: true
+                                    });
+                                }
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error al subir la imagen",
+                                    text:
+                                        error.message ||
+                                        "Inténtelo nuevamente.",
+                                    showConfirmButton: true
+                                });
+                            }
+                        }
+                    });
+                };
+                reader.readAsDataURL(file); // Leer el archivo para la previsualización
+            }
+        },
+        
+        successUpload(response, file, fileList) {
+            if (response.success) {
+                this.form[response.type] = response.name;
+                this.$forceUpdate(); // Asegura la actualización de la visualización de la imagen
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error al subir la imagen",
+                    text: response.message || "Inténtelo nuevamente.",
+                    showConfirmButton: true
+                });
+            }
+        },
+        async uploadImage(field, file) {
+            // Lógica para subir la imagen al servidor
+            // Simulación de la respuesta del servidor
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve({
+                        success: true,
+                        name: `uploaded_${field}.jpg`
+                    });
+                }, 1000);
+            });
+        },
         async getTables() {
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 this.soap_sends = response.data.soap_sends;
@@ -1542,22 +1563,6 @@ export default {
                 .then(() => {
                     this.loading_submit = false;
                 });
-        },
-        successUploadBg(response, file, fileList) {
-            if (response.success) {
-                this.$toast.success(response.message);
-                this.form.img_bg = response.name;
-            } else {
-                this.$toast.error("Error al subir el archivo");
-            }
-        },
-        successUpload(response, file, fileList) {
-            if (response.success) {
-                this.$toast.success(response.message);
-                this.form[response.type] = response.name;
-            } else {
-                this.$toast.error("Error al subir el archivo");
-            }
         }
     }
 };
