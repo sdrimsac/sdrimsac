@@ -6,6 +6,7 @@ namespace App\Jobs;
 use App\Events\MessageEvent;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\NumberActivity;
 use App\Traits\JobReportTrait;
@@ -47,6 +48,7 @@ class WhatsappSendCashReportStockProccess implements ShouldQueue
         $website = $this->findWebsite($this->website_id);
         $tenancy = app(Environment::class);
         $tenancy->tenant($website);
+    
         $cash = Cash::select(['id','user_id'])->where('id', $this->cash_id)->first();
         $user = $cash->user;
         $area_id = $user->area_id;

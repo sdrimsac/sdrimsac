@@ -22,6 +22,7 @@ use Modules\Report\Exports\ReportCreditTypeCashExport;
 use Modules\Report\Exports\ReportCreditTypeExport;
 use Modules\Report\Exports\ReportCreditTypeProductExport;
 use Modules\Report\Http\Resources\ReportCreditCollection;
+use Modules\Report\Http\Resources\ReportCreditDailyCollection;
 
 class ReportCreditController extends Controller
 {
@@ -109,7 +110,7 @@ class ReportCreditController extends Controller
     {
         $records = $this->get_daily_cash_records($request);
 
-        return new ReportCreditCollection($records->paginate(config('tenant.items_per_page')));
+        return new ReportCreditDailyCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function daily_cash_excel(Request $request)
     {
@@ -117,112 +118,59 @@ class ReportCreditController extends Controller
         $records = $this->get_daily_cash_records($request)->get()->transform(function ($row) {
             $advances  = $row->advances;
             $paid = $row->paid;
-            $payment = Payment::where('sale_note_id', $row->id);
-            $payment_not_paid = $payment->where('paid', 0)
-                ->where('date_payment', '<=', Carbon::now()->startOfDay())
-                ->orderBy('date_payment', 'desc');
-            $last_payment =  Payment::where('sale_note_id', $row->id)
+            $sale_note_credit = $row->sale_note_credit;
+            $penalty_amount_by_day = $sale_note_credit->penalty_amount_by_day;
+            // $payment = Payment::where('sale_note_id', $row->id);
+            $today = Carbon::now()->startOfDay();
+            $payments = Payment::where('sale_note_id', $row->id)
                 ->where('paid', 0)
-                ->orderBy('date_payment', 'asc')
-                ->first();
-            $dues = !$paid ? $payment_not_paid->count() : 0;
-            $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
-            $quote_payment = ($last_payment) ? $last_payment->amount : 0;
-            $differenc_days = 0;
-            if ($date_of_due && $dues > 0 && !$paid) {
-                if (is_object($date_of_due)) {
-                    $date_of_due = $date_of_due->format('Y-m-d');
-                }
-                $differenc_days = Carbon::parse($date_of_due)->diffInDays(Carbon::now()->startOfDay(), false);
-            }
+                ->where('date_payment', '<=', $today)
+                ->get()
+                ->transform(function ($row_payment, $key) use (&$row, &$paid, $penalty_amount_by_day) {
+                    if ($row->paid == 0) {
+                        $paid = false;
+                        $row->paid = false;
+                    }
+                    $diffence_days = 0;
+                    if ($row_payment->date_payment) {
+                        $diffence_days = Carbon::parse($row_payment->date_payment)->diffInDays(Carbon::now()->startOfDay(), false);
+                    }
+                    $total = $row_payment->amount + $row_payment->penalty_amount;
+                    $total_penalty = $penalty_amount_by_day *  $diffence_days;
 
+                    return [
+                        'total_penalty' => $total_penalty,
+                        'id' => $row_payment->id,
+                        'date_payment' => $row_payment->date_payment,
+                        'payment' => $row_payment->amount,
+                        'penalty_amount' => $row_payment->penalty_amount,
+                        'tasa' => $row_payment->tasa,
+                        'paid' => $row_payment->paid,
+                        'diffence_days' => $diffence_days,
+                        'total' => $total
+
+                    ];
+                });
             $customer = $row->customer;
-            $amount_due = 0;
-            $payments_records = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
-            if ($last_payment == null) {
-                $last_paid =  Payment::where('sale_note_id', $row->id)
-                    ->where('paid', 1)
-                    ->orderBy('date_payment', 'asc')
-                    ->first();
-                // $amount_due = $last_paid->amount;
-            }
-            // $amount_due -= $advances + $payments_records;
-            $payment = Payment::where('sale_note_id', $row->id)
-                ->where('paid', 0);
-            $int = 0;
-            if ($payment->count() > 0) {
-                $payment_first = $payment->first();
-
-                $int = ($row->total - $advances) * ($payment_first->tasa / 100);
-            }
-            if ($row->paid == true) {
-                $to_due = 0;
-            } else {
-                $to_due =  floatval($row->total + $row->total_discount - $advances + $int)  - (floatval($payments_records));
-            }
-            $show_formats = true;
-            // $user_id = auth()->user()->id;
-            $user = User::find(auth()->user()->id);
-            $is_analist = $user->isWorkerType('analista');
-            if ($is_analist && $row->status != "A") {
-                $show_formats = false;
-            }
-            $can_edit = SaleNotePayment::where('sale_note_id', $row->id)->count() > 0 ? false : true;
-            if ($row->status == "R") {
-                $can_edit = false;
-            }
             $user_name = $row->user->name;
-            $schedules = [];
-            $num_quotes = $row->is_cash == false ? 32 : 26;
-            $quotes = $payment->count();
-            $quotes = $quotes / $num_quotes;
-            $quotes = round($quotes, 0, PHP_ROUND_HALF_UP);
-            if ($quotes == 0) {
-                $quotes = 1;
-            }
-            //iterar por quotes
-
-            for ($i = 0; $i < $quotes; $i++) {
-                if ($row->is_cash) {
-
-                    $schedules[] = url('/sale-notes/cash_schedule/' . $row->id . '/' . ($i + 1));
-                } else {
-                    $schedules[] = url('/sale-notes/hogar_schedule/' . $row->id . '/' . ($i + 1));
-                }
-            }
             $observation = $row->observation;
             if ($row->state_type_id == '11' || $row->state === 'O') {
                 $observation_credit = $row->sale_note_credit->reason_to_anulate_credit;
                 $observation .= " " . $observation_credit;
             }
             return [
-                'quote_payment' => $quote_payment,
-                'state_type_id' => $row->state_type_id,
-                'quotes' => $quotes,
-                'schedules' => $schedules,
+                'penalty_amount_by_day' => $penalty_amount_by_day,
                 'is_cash' => (bool) $row->is_cash,
                 'is_product' => (bool) $row->is_product,
                 'user_name' => $user_name,
-                'show_formats' => $show_formats,
                 'id' => $row->id,
                 'status' => $row->status,
-                'can_edit' => $can_edit,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
                 'customer' => ["name" => $customer->name, "number" => $customer->number],
                 'number' => $row->number_full,
-                'dues' => $dues,
-                'total' => $row->total   - $advances + $int,
                 'advances' => $advances,
-                'payment' => $payments_records,
+                'payments' => $payments,
                 'type_payment' => $row->type_payment,
-                'date_of_due' => $date_of_due,
-                'canceled' => (bool) $row->paid,
-                'penalty' => $row->status ==  'A' && !$paid ? $row->getPenalties() : 0,
-                // 'amount_due' => number_format($amount_due, 2, ".", ""),
-                'amount_due' => number_format($to_due, 2, ".", ""),
-                'differenc_days' => $differenc_days,
-                'is_credit' => true,
-                'observation' => $observation,
             ];
         });
 
@@ -494,7 +442,7 @@ class ReportCreditController extends Controller
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
         }
-        if ($paid != null) {
+        if ($paid === "1" || $paid === "0") {
             $records = $records->where('paid', $paid);
         }
         if ($type != null) {
@@ -514,7 +462,6 @@ class ReportCreditController extends Controller
             $records = $records->where('user_id', $user_id);
         }
         $records->orderBy('date_of_issue', 'desc');
-
         return new ReportCreditCollection($records->paginate(config('tenant.items_per_page')));
     }
 
@@ -872,7 +819,6 @@ class ReportCreditController extends Controller
                 } else {
                     $amount_due = $last_payment->amount;
                     $penalty_amount = $last_payment->penalty_amount;
-                    
                 }
                 $total_amount = $amount_due + $penalty_amount;
                 $all_records[] = [

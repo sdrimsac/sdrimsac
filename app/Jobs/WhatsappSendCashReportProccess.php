@@ -56,6 +56,9 @@ class WhatsappSendCashReportProccess implements ShouldQueue
                 $sender = $subdomain;
             }
             $company = Company::first();
+            $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
+            $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
+            $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
             $user =  Cash::find($this->cash_id)->user;
             $establishment = Establishment::find($user->establishment_id);
             $company_name = $company->name;

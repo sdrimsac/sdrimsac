@@ -6,6 +6,7 @@
         @open="getData"
         width="90%"
         append-to-body
+        v-loading="loading"
     >
         <div class="row mt-2">
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-start">
@@ -67,6 +68,24 @@
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12" v-if="records.length > 0">
+                        <div
+                    class="col-md-12 text-center pt-2"
+                    v-if="showAddButton && document.total_difference > 0"
+                >
+                    <el-button
+                        type="primary"
+                        icon="el-icon-plus"
+                        @click="clickAddRow"
+                        >Nuevo</el-button
+                    >
+                    <el-button
+                        type="primary"
+                        icon="el-icon-payment"
+                        @click="clickAddCancelCredit"
+                    >
+                        Cancelar crédito</el-button
+                    >
+                </div>
                     <div class="container table-responsive">
                         <table
                             class="table table-hover table-striped table-condensed  table-responsive"
@@ -89,82 +108,7 @@
                                     v-for="(row, index) in records"
                                     :key="index"
                                 >
-                                    <template v-if="row.id">
-                                        <td>PAGO-{{ row.id }}</td>
-                                        <td>{{ row.date_of_payment }}</td>
-                                        <td>
-                                            {{
-                                                row.payment_method_type_description
-                                            }}
-                                        </td>
-                                        <td>
-                                            {{ row.destination_description }}
-                                        </td>
-                                        <td>{{ row.reference }}</td>
-                                        <td class="text-center">
-                                            <template v-if="row.filename">
-                                                <button
-                                                    v-if="isImage(row.filename)"
-                                                    type="button"
-                                                    class="btn waves-effect waves-light btn-sm btn-primary"
-                                                    @click.prevent="
-                                                        clickImagePreview(
-                                                            row.filename
-                                                        )
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fas fa-file-image"
-                                                    ></i>
-                                                </button>
-                                                <button
-                                                    v-else
-                                                    type="button"
-                                                    class="btn waves-effect waves-light btn-sm btn-primary"
-                                                    @click.prevent="
-                                                        clickDownloadFile(
-                                                            row.filename
-                                                        )
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fas fa-file-download"
-                                                    ></i>
-                                                </button>
-                                            </template>
-                                        </td>
-                                        <td class="text-end">
-                                            {{ row.payment }}
-                                        </td>
-                                        <td
-                                            class="series-table-actions text-end"
-                                        >
-                                            <!-- <button
-                                                type="button"
-                                                class="btn waves-effect waves-light btn-sm btn-danger"
-                                                @click.prevent="
-                                                    clickDelete(row.id)
-                                                "
-                                            >
-                                                Eliminar
-                                            </button> -->
-                                            <button
-                                                v-if="
-                                                    row.receipt_link &&
-                                                        row.receipt_link != ''
-                                                "
-                                                type="button"
-                                                class="btn waves-effect waves-light btn-sm btn-primary"
-                                                @click.prevent="
-                                                    ClickPrint(row.receipt_link)
-                                                "
-                                            >
-                                                Imprimir
-                                            </button>
-                                            <!--<el-button type="danger" icon="el-icon-delete" plain @click.prevent="clickDelete(row.id)"></el-button>-->
-                                        </td>
-                                    </template>
-                                    <template v-else>
+                                    <template v-if="!row.id">
                                         <td></td>
                                         <td>
                                             <div
@@ -375,6 +319,82 @@
                                             </button>
                                         </td>
                                     </template>
+                                    <template v-else>
+                                        <td>PAGO-{{ row.id }}</td>
+                                        <td>{{ row.date_of_payment }}</td>
+                                        <td>
+                                            {{
+                                                row.payment_method_type_description
+                                            }}
+                                        </td>
+                                        <td>
+                                            {{ row.destination_description }}
+                                        </td>
+                                        <td>{{ row.reference }}</td>
+                                        <td class="text-center">
+                                            <template v-if="row.filename">
+                                                <button
+                                                    v-if="isImage(row.filename)"
+                                                    type="button"
+                                                    class="btn waves-effect waves-light btn-sm btn-primary"
+                                                    @click.prevent="
+                                                        clickImagePreview(
+                                                            row.filename
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-file-image"
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    v-else
+                                                    type="button"
+                                                    class="btn waves-effect waves-light btn-sm btn-primary"
+                                                    @click.prevent="
+                                                        clickDownloadFile(
+                                                            row.filename
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-file-download"
+                                                    ></i>
+                                                </button>
+                                            </template>
+                                        </td>
+                                        <td class="text-end">
+                                            {{ row.payment }}
+                                        </td>
+                                        <td
+                                            class="series-table-actions text-end"
+                                        >
+                                            <!-- <button
+                                                type="button"
+                                                class="btn waves-effect waves-light btn-sm btn-danger"
+                                                @click.prevent="
+                                                    clickDelete(row.id)
+                                                "
+                                            >
+                                                Eliminar
+                                            </button> -->
+                                            <button
+                                                v-if="
+                                                    row.receipt_link &&
+                                                        row.receipt_link != ''
+                                                "
+                                                type="button"
+                                                class="btn waves-effect waves-light btn-sm btn-primary"
+                                                @click.prevent="
+                                                    ClickPrint(row.receipt_link)
+                                                "
+                                            >
+                                                Imprimir
+                                            </button>
+                                            <!--<el-button type="danger" icon="el-icon-delete" plain @click.prevent="clickDelete(row.id)"></el-button>-->
+                                        </td>
+                                    </template>
+                                
                                 </tr>
                             </tbody>
                             <tfoot v-if="!document.paid">
@@ -446,24 +466,7 @@
                         </table>
                     </div>
                 </div>
-                <div
-                    class="col-md-12 text-center pt-2"
-                    v-if="showAddButton && document.total_difference > 0"
-                >
-                    <el-button
-                        type="primary"
-                        icon="el-icon-plus"
-                        @click="clickAddRow"
-                        >Nuevo</el-button
-                    >
-                    <el-button
-                        type="primary"
-                        icon="el-icon-payment"
-                        @click="clickAddCancelCredit"
-                    >
-                        Cancelar crédito</el-button
-                    >
-                </div>
+            
             </div>
             <image-preview-modal
                 :showDialog.sync="showImagePreviewModal"
@@ -503,7 +506,8 @@ export default {
             fileList: [],
             showAddButton: true,
             document: {},
-            receipt_link: null
+            receipt_link: null,
+            loading: false
         };
     },
     async created() {
@@ -544,7 +548,7 @@ export default {
             ].payment = this.document.total_difference_credit;
         },
         clickAddCancelCredit() {
-            this.records.push({
+            this.records.unshift({
                 id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
                 payment_method_type_id: null,
@@ -608,6 +612,7 @@ export default {
             this.cancelCredit = false;
         },
         async getData() {
+            this.loading = true;
             this.initForm();
             await this.$http
                 .get(`/${this.resource}/document/${this.documentId}`)
@@ -619,11 +624,18 @@ export default {
                         this.document.series +
                         "-" +
                         this.document.number;
+                }).catch(e => {
+                    this.$toast.error(e.message);
                 });
             await this.$http
                 .get(`/${this.resource}/records/${this.documentId}`)
                 .then(response => {
                     this.records = response.data.data;
+                    this.records = this.records.reverse();
+                }).catch(e => {
+                    this.$toast.error(e.message);
+                }).finally(() => {
+                    this.loading = false;
                 });
             this.$eventHub.$emit("reloadDataUnpaid");
         },
@@ -637,7 +649,7 @@ export default {
                     payment_destination_id = payment_with_cash_id.id;
                 }
             }
-            this.records.push({
+            this.records.unshift({
                 id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
                 payment_method_type_id: "01",

@@ -193,8 +193,10 @@
                                         resource == 'reports/sales' ? 6 : 7
                                     "
                                 ></td>
+                                <td></td>
+                                <td></td>
                                 <td class="text-end"><strong>Totales</strong></td>
-                                <td class="text-end">{{ totals.acum_quote.toFixed(2) }}</td>
+                                <!-- <td class="text-end">{{ totals.acum_quote.toFixed(2) }}</td> -->
                                 <td class="text-end">{{ totals.acum_unpaid.toFixed(2) }}</td>
                             </tr>
                         </tfoot>
@@ -337,8 +339,8 @@ export default {
             this.initTotals();
 
             records.forEach(row => {
-                this.totals.acum_unpaid += parseFloat(row.amount_due);
-                this.totals.acum_quote += parseFloat(row.quote_payment);
+                this.totals.acum_unpaid += parseFloat(row.payments.reduce((acc, payment) => acc + parseFloat(payment.total), 0));
+                // this.totals.acum_quote += parseFloat(row.quote_payment);
 
             });
         },

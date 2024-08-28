@@ -3929,7 +3929,6 @@ export default {
                 `/caja/worker/totales_sales?cash_id=${this.cashId}&send=1`
             );
             let { total_sales } = response.data;
-            console.log("🚀 ~ view_modal ~ total_sales:", total_sales);
             if (total_sales) {
                 this.$toast(
                     ` Venta Acumulada S/ ` +

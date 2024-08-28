@@ -16,12 +16,14 @@
                         <th class="text-end">DNI</th>
                         <th class="text-end">DIAS DE ATRASO</th>
                         <th class="text-end">COBRO POR MORA</th>
+                        <th class="text-end">TOTAL MORA</th>
                         <th class="text-end">COBRO POR CUOTA</th>
                         <th class="text-end">TOTAL A COBRAR</th>
                     </tr>
 
                     <tr></tr>
-                    <tr slot-scope="{ index, row }">
+                    <template slot-scope="{index,row}">
+                    <tr>
                         <td>{{ index }}</td>
                         <td class="text-center">
                             {{ row.is_cash ? "EFECTIVO" : "HOGAR" }}
@@ -30,11 +32,40 @@
                         <td class="text-center">{{ row.type_payment }}</td>
                         <td class="text-center">{{ row.customer.name }}</td>
                         <td class="text-center">{{ row.customer.number }}</td>
-                        <td class="text-center">{{ row.differenc_days }}</td>
+                        <!-- <td class="text-center">{{ row.differenc_days }}</td>
                         <td class="text-end">{{ row.penalty }}</td>
                         <td class="text-end">{{ row.quote_payment }}</td>
-                        <td class="text-end">{{ row.amount_due }}</td>
+                        <td class="text-end">{{ row.amount_due }}</td> -->
+                        <td class="text-end">
+                            {{row.payments[0].diffence_days}}
+                        </td>
+                        <td class="text-end">
+                            {{row.penalty_amount_by_day}}
+                        </td>
+                            <td class="text-end">
+                            {{row.payments[0].total_penalty}}
+                        </td>
+                        <td class="text-end">
+                            {{row.payments[0].payment}}
+                        </td>
+                        <td class="text-end">
+                            {{row.payments[0].total}}
+                        </td>
                     </tr>
+                    <tr v-for="(payment, paymentIndex) in row.payments.slice(1)" :key="paymentIndex">
+                        <td class="text-end"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end"></td>
+                        <td class="text-end">{{ payment.diffence_days }}</td>
+                        <td class="text-end">{{ row.penalty_amount_by_day }}</td>
+                        <td class="text-end">{{ payment.total_penalty }}</td>
+                        <td class="text-end">{{ payment.payment }}</td>
+                        <td class="text-end">{{ payment.total }}</td>
+                    </tr>
+                    </template>
                 </data-table>
             </div>
         </div>

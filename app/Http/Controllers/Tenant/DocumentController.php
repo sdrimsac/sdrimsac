@@ -1830,6 +1830,7 @@ class DocumentController extends Controller
             ->where('series', 'like', '%' . $series . '%')
             ->where('number', 'like', '%' . $number . '%')
             ->whereDoesntHave('note')
+            ->whereDoesntHave('document_affected_note')
             ->orderBy('id', 'desc')
             ->orderBy('number', 'desc')
             ->latest();
