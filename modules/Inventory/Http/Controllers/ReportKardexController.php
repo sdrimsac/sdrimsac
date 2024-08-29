@@ -124,7 +124,7 @@ class ReportKardexController extends Controller
     {
 
         if (!$establish) {
-            $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+            $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first()->id;
         } else {
 
             $warehouse = $establish;

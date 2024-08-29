@@ -323,7 +323,13 @@ class ReportKardexCollection extends ResourceCollection
 
         if ($request->page >= 2) {
 
-            $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+            $establish=$request->establish;
+            if($establish == null){
+                $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+
+            }else{
+                $warehouse = Warehouse::find($establish);
+            }
 
             if ($request->date_start && $request->date_end) {
 
@@ -406,7 +412,14 @@ class ReportKardexCollection extends ResourceCollection
 
             if ($request->date_start && $request->date_end) {
 
-                $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+                $establish=$request->establish;
+                if($establish == null){
+                    $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+    
+                }else{
+                    $warehouse = Warehouse::find($establish);
+                }
+                // $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
 
                 //primer registro fechas anteriores
                 $records = InventoryKardex::where([
