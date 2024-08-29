@@ -2401,7 +2401,10 @@
                                                         </label>
                                                         <el-switch v-model="form.variation_hotel" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Emitir documento con variación', form.variation_hotel, 'variation_hotel', 'fileAltIcon')"></el-switch>
                                                     </div>
-                                                    <div class="col-md-4 mt-4">
+                                                    
+                                                    
+                                                </div>
+                                                <div class="col-md-4 mt-4">
                                                         <label class="control-label w-100">
                                                             <i class="fa fa-file-alt fa-lg"></i>
                                                             Imprimir precuenta directo en cocina
@@ -2411,8 +2414,8 @@
                                                                                 " active-text="Si" inactive-text="No" @change="
                                                                                     submit
                                                                                 "></el-switch>
-                                                    </div>
-                                                    <div class="col-md-4 mt-4">
+                                                </div>
+                                                <div class="col-md-4 mt-4">
                                                         <label class="control-label w-100">
                                                             <i class="fa fa-file-alt fa-lg"></i>
                                                             Imprimir comanda en cocina sin precuenta
@@ -2423,7 +2426,6 @@
                                                                                     submit
                                                                                 "></el-switch>
                                                     </div>
-                                                </div>
 
                                                 <!-- Producto - Variación -->
                                                 <div class="col-md-2 mt-4">
@@ -2476,6 +2478,14 @@
                                                             <el-option label="Buscar por Código interno" value="1"></el-option>
                                                         </el-select>
                                                         <small class="text-danger" v-if="errors.affectation_igv_type_id" v-text="errors.affectation_igv_type_id[0]"></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 mt-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label w-100">
+                                                            <i class="fa fa-user fa-lg"></i> Acciones de inhabilitar mesa mozo
+                                                        </label>
+                                                        <el-switch v-model="form.cambiar_mesa_mozo" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Acciones mozo', form.cambiar_mesa_mozo, 'Acciones mozo', 'userIcon')"></el-switch>
                                                     </div>
                                                 </div>
                                             </div>

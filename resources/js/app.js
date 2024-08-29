@@ -327,7 +327,7 @@ const app = new Vue({
         "tenant-documents-index": () => import("./views/documents/index.vue"),
         "tenant-detractions-index": () =>
             import("./views/documents/detractions/index.vue"),
-        "tenant-ventas-index": () => 
+        "tenant-ventas-index": () =>
             import("./views/documents/ventas/index.vue"),
         "restaurant-documents-index": () =>
             import(

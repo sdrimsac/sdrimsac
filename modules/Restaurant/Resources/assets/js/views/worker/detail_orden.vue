@@ -29,7 +29,7 @@
         </div>
 
         <div class="row">
-            <div v-if="screenWidth > 800" class="col-md-5 col-xl-8 col-lg-6 p-1">
+            <div v-if="screenWidth > 698" class="col-sm-6 col-md-5 col-lg-6 col-xl-8 p-1">
                 <list-food ref="list_foods" @insertOrden="insertOrden" :configuration="configuration"
                     :pagination="pagination" :table="table" :categories="categories" :showMenu.sync="showMenu"
                     :localOrden.sync="localOrden" :foods.sync="foods" @changePage="changePage"></list-food>
@@ -191,7 +191,7 @@
             </div><!-- sidebarmodal fin  -->
 
             <!-- fin de sidebar -->
-            <div class="col-md-7 col-xl-4 col-lg-6 p-1">
+            <div class="col-sm-6 col-md-7 col-lg-6 col-xl-4 p-1">
                 <current-orden 
                 :table="table"
                 ref="ordenRef" :referencia.sync="currentRef" :tableId="table.id"
@@ -233,7 +233,8 @@ export default {
         "categories",
         "foods",
         "configuration",
-        "tables_row_select"
+        "tables_row_select",
+        "changingOrden"
     ],
     created() {
         this.ordens = this.table.orden;
@@ -438,14 +439,7 @@ export default {
         deleteFood(idx) {
             this.localOrden.splice(idx, 1);
         },
-        clean() {
-            if (this.selectOrden) {
-                let exist = this.ordens.find(o => o.id == this.selectOrden);
-                if (!exist) {
-                    this.createOrden();
-                }
-            }
-        },
+ 
         updateOrdens() {
             this.createOrden();
         },
@@ -555,6 +549,10 @@ export default {
             this.$refs.list_foods.searchFood(value, optionsSelected);
         },
         selectOrden(id) {
+             if(this.changingOrden){
+                    this.$emit("changeOrdenEvent",id)
+                    return;
+                }
             this.ordenTitle = `Orden #${id}`;
             this.ordenSelectedId = id;
             this.$emit("addenfoque", null);

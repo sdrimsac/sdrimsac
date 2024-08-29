@@ -481,7 +481,7 @@
                                             "
                                             style="  max-height: 100px;"
                                         />
-                                    </div>
+                                    </div>       
 
                                     <!-- Sección para 'Favicon' -->
                                     <div class="col-md-4">

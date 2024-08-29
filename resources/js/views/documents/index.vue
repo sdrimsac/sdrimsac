@@ -68,7 +68,7 @@
                         </div>
                     </div>
                     <div class="data-table-visible-columns">
-                        <el-dropdown :hide-on-click="false">
+                        <el-dropdown v-if="columns.length" :hide-on-click="false">
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item v-for="(column, index) in columns" :key="index">
                                     <el-checkbox v-model="column.visible">{{

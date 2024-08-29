@@ -16,9 +16,9 @@
             </div>
             <div class="form-body" style="padding-bottom: 5px">
                 <div class="form-menu">
-                    <button type="button" class="form-menu-btn" value="#admin">
+                    <!-- <button type="button" class="form-menu-btn" value="#admin">
                         <i class="fa fa-user"></i>   ADMINISTRADOR
-                    </button>
+                    </button> -->
                     <button
                         type="button"
                         class="form-menu-btn selected"
@@ -40,7 +40,7 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div id="admin" class="form-login" style="display: none">
+                <!-- <div id="admin" class="form-login" style="display: none">
                     <label for="email">
                         <i class="fa fa-envelope"></i>
                         <input
@@ -75,7 +75,7 @@
                     <button id="btn-submit" @click="login">
                         INICIAR SESIÓN
                     </button>
-                </div>
+                </div> -->
             </div>
             <div
                 class="d-flex justify-content-center"

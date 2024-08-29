@@ -5,6 +5,7 @@ namespace Modules\Restaurant\Http\Controllers;
 
 use App\Models\Tenant\Configuration;
 use Illuminate\Http\Request;
+use Modules\Restaurant\Models\Area;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Models\Table;
@@ -12,27 +13,39 @@ use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
+use App\Events\MessageEvent;
 
 class TableController extends Controller
 {
 
 
     public function disabled(Request $request){
+        $user = auth()->user();
+        $user_name = $user->name;
         $table_id = $request->input('table_id');
         $table = Table::find($table_id);
         $table->enabled = false;
         $table->save();
+        $caja_area_id= Area::getAreaCajaId();
+        $message = "El usuario ".$user_name." Inhabilito ".$table->number;
+        event(new MessageEvent($message,$caja_area_id));
 
         return [
             'success' => true,
             'message' => 'Mesa desactivada con éxito'
         ];
+        
     }
     public function enabled(Request $request){
+        $user = auth()->user();
+        $user_name = $user->name;
         $table_id = $request->input('table_id');
         $table = Table::find($table_id);
         $table->enabled = true;
         $table->save();
+        $caja_area_id= Area::getAreaCajaId();
+        $message = "El usuario ".$user_name." habilito ".$table->number;
+        event(new MessageEvent($message,$caja_area_id));
 
         return [
             'success' => true,

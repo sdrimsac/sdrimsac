@@ -5,7 +5,7 @@
         @open="open"
         @close="close"
         width="70%"
-        title="ZONA DE ATENCIÓN "
+        title="ZONA DE ATENCIÓN"
         :close-on-click-modal="false"
         :class="{ top }"
     >

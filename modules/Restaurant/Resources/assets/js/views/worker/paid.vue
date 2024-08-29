@@ -3,13 +3,15 @@
     title="Ingrese Pin de Usuario"
     :visible="showDialogPing"
     @close="close"
-    @open="open"
+    @open="onOpenPinModal"
     width="350px"
     class="rounded-top"
   >
+  <br>
     <div class="row d-flex justify-content-center mb-3">
       <div class="col-md-12">
         <input
+          ref="pinInput"
           v-model="maskPin"
           class="form-control"
           type="text"
@@ -17,68 +19,107 @@
           name="listeanzahl"
           value="10"
           style="text-align: center; letter-spacing: 1rem"
+          @keydown="handleKeyDown"
         />
       </div>
     </div>
     <div class="col-md-12" v-loading="loading">
       <div class="row" style="    margin-bottom: 10px;">
-        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center"> 
-          <button            class="btn btn-primary  btn-rounded2 text-white"            style="border-radius: 50% !important"            @click="getOption(1)"
-          >
-            1
-          </button>
-        </div>
-        <div class="col-4 col-sm-4 col-md-4  " style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50%  !important ;" @click="getOption(2)">2</button>
+        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
+          <button
+            class="btn btn-primary btn-rounded2 text-white"
+            style="border-radius: 50% !important"
+            @click="getOption(1)"
+          >1</button>
         </div>
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(3)">3</button>
-        </div>
-      </div>
-      <div class="row" style="    margin-bottom: 10px;">
-        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(4)">4</button>
-        </div>
-        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(5)">5</button>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50%  !important ;"
+            @click="getOption(2)"
+          >2</button>
         </div>
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(6)">6</button>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(3)"
+          >3</button>
         </div>
       </div>
       <div class="row" style="    margin-bottom: 10px;">
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(7)">7</button>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(4)"
+          >4</button>
         </div>
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(8)">8</button>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(5)"
+          >5</button>
         </div>
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(9)">9</button>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(6)"
+          >6</button>
         </div>
       </div>
       <div class="row" style="    margin-bottom: 10px;">
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-            <button class="btn btn-danger w-100" style="margin-top: 16px;" @click="getOption('delete')">
-            Borrar
-          </button></div>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(7)"
+          >7</button>
+        </div>
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
-          <button class="btn btn-primary btn-rounded2" style="border-radius: 50% !important" @click="getOption(0)">0</button>
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(8)"
+          >8</button>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(9)"
+          >9</button>
+        </div>
+      </div>
+      <div class="row" style="    margin-bottom: 10px;">
+        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
+          <button
+            class="btn btn-danger btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption('delete')"
+          ><i class="el-icon-delete"></i></button>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4" style=" text-align: center">
+          <button
+            class="btn btn-primary btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="getOption(0)"
+          >0</button>
         </div>
         <div class="col-4 col-sm-4 col-md-4" style=" text-align: center ; ">
-            <button class="btn btn-success w-100 " style="margin-top: 16px;" @click="sendOrden">
-            Ingresar
-          </button>
+          <button
+            class="btn btn-success btn-rounded2"
+            style="border-radius: 50% !important"
+            @click="sendOrden"
+          ><i class="fas fa-paper-plane"></i></button>
         </div>
       </div>
       <div class="row" style="    margin-bottom: 10px;">
-        <div class="col-4 col-sm-4 col-md-4" >
-          
-        </div>
         <div class="col-4 col-sm-4 col-md-4"></div>
-        <div class="col-4 col-sm-4 col-md-4">
-          
-        </div>
+        <div class="col-4 col-sm-4 col-md-4"></div>
+        <div class="col-4 col-sm-4 col-md-4"></div>
       </div>
     </div>
   </el-dialog>
@@ -92,10 +133,14 @@
   margin: 0 10px;
   border-radius: 50%;
 }
-.btn-rounded2{
-    width: 70px;
-    height: 70px;
-    font-size: 30px;
+.btn-rounded2 {
+  width: 70px;
+  height: 70px;
+  font-size: 30px;
+}
+.el-dialog {
+  border-radius: 10px;
+  overflow: hidden;
 }
 </style>
 <script>
@@ -108,7 +153,7 @@ export default {
     "localOrden",
     "configuration",
     "to_carry",
-    "referencia",
+    "referencia"
   ],
   data() {
     return {
@@ -117,19 +162,63 @@ export default {
       maskPin: null,
       pinHide: null,
       form_submit: {},
-      printerDefault: null,
+      printerDefault: null
     };
   },
   created() {
     this.getOption("delete");
   },
   methods: {
+    onOpenPinModal() {
+      this.$nextTick(() => {
+        this.focusPinInput();
+      });
+    },
+    focusPinInput() {
+      const pinInput = this.$refs.pinInput;
+      if (pinInput) {
+        pinInput.focus();
+      } else {
+        /* console.error("El input para el PIN no está disponible."); */
+      }
+    },
+    handleKeyDown(event) {
+      const key = event.key;
+
+      if (/^[0-9]$/.test(key) && this.pinHide.length < 4) {
+        event.preventDefault();
+
+        this.pinHide += key;
+        this.maskPin = "*".repeat(this.pinHide.length);
+      } else if (key === "Backspace") {
+        this.pinHide = this.pinHide.slice(0, -1);
+        this.maskPin = "*".repeat(this.pinHide.length);
+      } else if (key === "Enter") {
+        this.sendOrden();
+        this.clearPin();
+      } else {
+        event.preventDefault();
+      }
+    },
+    getOption(option) {
+      if (option === "delete") {
+        this.pinHide = "";
+        this.maskPin = null;
+        this.focusPinInput();
+        return;
+      }
+
+      if (this.pinHide.length < 4) {
+        this.pinHide += option.toString();
+        this.maskPin = "*".repeat(this.pinHide.length);
+      }
+    },
     open() {
       if (this.maskPin != null) {
         this.clearPin();
       }
     },
-    getOption(option) {
+    /* getOption(option) {
       if (option == "delete") {
         this.pinHide = "";
         this.maskPin = null;
@@ -140,7 +229,7 @@ export default {
       }
       this.pinHide += option.toString();
       this.maskPin = "*".repeat(this.pinHide.length);
-    },
+    }, */
     close() {
       this.$emit("update:showDialogPing", false);
     },
@@ -153,54 +242,7 @@ export default {
     },
     async sendOrden() {
       this.$emit("sendOrden", this.pinHide);
-    },
-    //     async enter() {
-    //         //this.form_submit=this.form_pe
-    //         /*
-    //     id:null,
-    //         caja:true,
-    //         printing:this.configuration.print_commands,
-    //         commands_fisico:this.commands_fisico,
-    //         orden:{
-    //             table_id:1,
-    //             status_orden_id: 1,
-    //         },
-    //         items:this.localOrden,
-    //         pin:null
-    //   */
-    //         let form_submit = {
-    //             id: this.ordenSelectedId,
-    //             caja: false,
-    //             to_carry: this.to_carry,
-    //             printing: this.configuration.print_commands,
-    //             commands_fisico: null,
-    //             ref: this.referencia,
-    //             orden: {
-    //                 table_id: this.tableId,
-    //                 status_orden_id: 1
-    //             },
-    //             items: this.localOrden,
-    //             pin: this.pinHide
-    //         };
-    //         this.loading = true;
-    //         const response = await this.$http.post("send-orden", form_submit);
-    //         if (response.status == 200) {
-    //             const { success, message } = response.data;
-    //             if (success) {
-    //                 const { ordenId } = response.data;
-
-    //                 this.$toast.success(message);
-    //                 this.$emit("add", ordenId);
-    //                 this.close();
-    //                 this.loading = false;
-    //             } else {
-    //                 this.$toast.error(message);
-    //                 this.loading = false;
-    //             }
-    //         }
-    //         this.clearPin();
-    //         this.loading = false;
-    //     }
-  },
+    }
+  }
 };
 </script>

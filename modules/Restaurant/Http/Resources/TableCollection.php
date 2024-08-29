@@ -24,6 +24,7 @@ class TableCollection extends ResourceCollection
             ->get();
             $tower = optional(optional($row->floor)->tower)->name;
             return [
+                'enabled' => (bool) $row->enabled,
                 'credit_line_hotel_limit' => $credit_line_hotel_limit,
                 'has_frigobar'     => (bool)$row->has_frigobar,
                 'month_price'      => $row->month_price,

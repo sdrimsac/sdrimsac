@@ -38,11 +38,13 @@ use Modules\Restaurant\Http\Resources\OrdenCollection;
 use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
-
+use App\Events\MessageEvent;
 class OrdenController extends Controller
 {
     public function changeOrder(Request $request)
     {
+        $user = auth()->user();
+        $user_name = $user->name;
         $orden = Orden::find($request->orden_id);
         $table = Table::find($request->table_id);
         $table_old = Table::find($orden->table_id);
@@ -50,14 +52,16 @@ class OrdenController extends Controller
         $orden->save();
         $table->status_table_id = 2;
         $table->save();
-
+        
+        $message = "El usuario ".$user_name." cambió la orden: ".$orden->id." de la mesa ".$table_old->number." a la mesa ".$table->number;
         $ordens = Orden::where('table_id', $table_old->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
         if (count($ordens) == 0) {
             $table_old->status_table_id = 1;
             $table_old->save();
         }
+        $caja_area_id= Area::getAreaCajaId();
 
-
+        event(new MessageEvent($message,$caja_area_id));
         return [
             'success' => true,
             'message' => 'Orden cambiada',
