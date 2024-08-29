@@ -40,6 +40,7 @@ if ($hostname) {
             Route::post('efectivo', [App\Http\Controllers\Tenant\SearchController::class, 'efectivo']);
             /* agrgado para cancelar traslado */
             /* Route::post('transfers/cancel_transfer', [TransferPlaceController::class, 'cancel_transfer']); */
+            Route::get('transfers/print_places/{code?}', [TransferPlaceController::class, 'print_transfer']);
             Route::get('report_cash/report/{type}', [CashController::class, 'report_cash_export']);
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'downloadExternal'])->name('tenant.download.external_id');
             Route::get('print/{model}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'toPrint']);
