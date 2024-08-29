@@ -399,7 +399,7 @@ class TransferPlaceController extends Controller
 
         return $pdf->stream('pdf_transfers.pdf');
     }
-    
+
     function createCode()
     {
         $code = Str::random(5);
@@ -415,7 +415,7 @@ class TransferPlaceController extends Controller
         return $code;
     }
 
-    public function place_transfer(Request $request)
+    /* public function place_transfer(Request $request)
     {
         $user = auth()->user();
         $code = $this->createCode();
@@ -458,8 +458,8 @@ class TransferPlaceController extends Controller
             }
             $detail->save();
         }
-        /* $establishment = Establishment::find($request->printer) : null; */
-        $establishment = $request->printer ? Establishment::find($request->printer) : null;
+        $establishment = Establishment::find($request->printer);
+        /* $establishment = $request->printer ? Establishment::find($request->printer) : null;
         $configuration = Configuration::first();
         if ($configuration->translate_direct) {
             $request->merge(['code' => $code]);
@@ -469,8 +469,65 @@ class TransferPlaceController extends Controller
             return [
                 "message" => "Transferencia por aceptar",
                 "code" => url('') . "/transfers/print_places/" . $code,
-                'printer' => $establishment ? $establishment->printer : null,
-                /* 'printer' => $establishment->printer, */
+                /* 'printer' => $establishment ? $establishment->printer : null,
+                'printer' => $establishment->printer,
+                "success" => true,
+            ];
+        }
+    } */
+
+    public function place_transfer(Request $request)
+    {
+
+
+        $user = auth()->user();
+        $code = $this->createCode();
+
+        $transfer_place = new TransferPlace;
+        $transfer_place->observation = $request->description ?? "-";
+        $transfer_place->status = 1;
+        $transfer_place->code = $code;
+        $transfer_place->warehouse_id = $request->warehouse_id;
+        $transfer_place->warehouse_id_destination = $request->warehouse_destination_id;
+        $transfer_place->sender_id = $user->id;
+        $transfer_place->save();
+        foreach ($request->items as $it) {
+            $detail = new TransferPlaceDetail;
+            $detail->item_id = $it['id'];
+            $detail->transfers_place_id = $transfer_place->id;
+            $detail->quantity = $it['quantity'];
+            $series_lots = [
+                "series" => [],
+                "lotes" => []
+            ];
+            if (count($it['lotes']) > 0) {
+                $series_lots["lotes"] = $it['lotes'];
+            }
+            if (count($it['lots']) > 0) {
+                $series_lots["series"] = $it['lots'];
+            }
+            $detail->series_lots = $series_lots;
+            $item = ItemWarehouse::where(
+                'item_id',
+                $it['id']
+            )->where('warehouse_id', $request->warehouse_id)->first();
+            if ($item) {
+                $item->stock -= $it['quantity'];
+                $item->save();
+            }
+            $detail->save();
+        }
+        $establishment = Establishment::find($request->printer);
+        $configuration = Configuration::first();
+        if ($configuration->translate_direct) {
+            $request->merge(['code' => $code]);
+            $response = $this->accept_transfer($request);
+            return $response;
+        } else {
+            return [
+                "message" => "Transferencia por aceptar",
+                "code" => url('') . "/transfers/print_places/" . $code,
+                'printer' => $establishment->printer,
                 "success" => true,
             ];
         }

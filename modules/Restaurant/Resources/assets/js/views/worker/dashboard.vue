@@ -714,6 +714,7 @@ export default {
         await this.getTables();
         return;
       }
+      
       if (
         this.changingOrden &&
         this.currentTable &&
@@ -722,14 +723,15 @@ export default {
         this.sendOrdenToNewTable(this.ordenToChange, id);
         return;
       }
-      if (data.status_table.id == 1) {
+      if (this.changingOrden && table.status_table.id == 1) {
+        
         swal.fire({
           title: "la mesa no tiene ordenes para trasladar",
           icon: "warning"
         });
-        /* this.$toast.warning("La mesa no tiene órdenes."); */
         return;
       }
+      
 
       this.tables_row_select = id;
       this.selectedTables = id;
