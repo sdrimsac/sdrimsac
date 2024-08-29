@@ -67,8 +67,7 @@
         </div>
         <div class="form-body">
             <div class="row">
-                <div class="col-md-12" v-if="records.length > 0">
-                        <div
+                <div
                     class="col-md-12 text-center pt-2"
                     v-if="showAddButton && document.total_difference > 0"
                 >
@@ -86,6 +85,7 @@
                         Cancelar crédito</el-button
                     >
                 </div>
+                <div class="col-md-12" v-if="records.length > 0">
                     <div class="container table-responsive">
                         <table
                             class="table table-hover table-striped table-condensed  table-responsive"
@@ -394,7 +394,6 @@
                                             <!--<el-button type="danger" icon="el-icon-delete" plain @click.prevent="clickDelete(row.id)"></el-button>-->
                                         </td>
                                     </template>
-                                
                                 </tr>
                             </tbody>
                             <tfoot v-if="!document.paid">
@@ -449,7 +448,11 @@
                                         PENDIENTE DE PAGO
                                     </td>
                                     <td class="text-end">
-                                        {{ Number(document.total_difference).toFixed(2) }}
+                                        {{
+                                            Number(
+                                                document.total_difference
+                                            ).toFixed(2)
+                                        }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -458,7 +461,11 @@
                                         PENDIENTE DE PAGO
                                     </td>
                                     <td class="text-end">
-                                        {{ Number(document.total_difference_credit).toFixed(2) }}
+                                        {{
+                                            Number(
+                                                document.total_difference_credit
+                                            ).toFixed(2)
+                                        }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -466,7 +473,6 @@
                         </table>
                     </div>
                 </div>
-            
             </div>
             <image-preview-modal
                 :showDialog.sync="showImagePreviewModal"
@@ -530,7 +536,8 @@ export default {
     methods: {
         calculateDiscountAmountCredit() {
             this.document.total_difference_credit =
-                this.document.total_difference - this.creditDiscountPenalty || 0;
+                this.document.total_difference - this.creditDiscountPenalty ||
+                0;
         },
         isImage(url) {
             return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
@@ -624,7 +631,8 @@ export default {
                         this.document.series +
                         "-" +
                         this.document.number;
-                }).catch(e => {
+                })
+                .catch(e => {
                     this.$toast.error(e.message);
                 });
             await this.$http
@@ -632,9 +640,11 @@ export default {
                 .then(response => {
                     this.records = response.data.data;
                     this.records = this.records.reverse();
-                }).catch(e => {
+                })
+                .catch(e => {
                     this.$toast.error(e.message);
-                }).finally(() => {
+                })
+                .finally(() => {
                     this.loading = false;
                 });
             this.$eventHub.$emit("reloadDataUnpaid");
