@@ -338,29 +338,31 @@ class TransferPlaceController extends Controller
                         }
                     }
                 }
-                foreach ($series_lots['color_size']  as $item_color) {
-                    $size = $item_color['size'];
-                    $color = $item_color['color'];
-                    $price = $item_color['price'];
-                    $quantity = $item_color['selectedQuantity'];
-                    $item_color_size = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
-                        ->where('size', $size)
-                        ->where('color', $color)
-                        ->where('item_id', $it->item_id)
-                        ->first();
-                    if (!$item_color_size) {
-                        $item_color_size = ItemColorSize::create([
-                            'size' => $size,
-                            'item_id' => $it->item_id,
-                            'color' => $color,
-                            'price' => $price,
-                            'warehouse_id' => $transfer->warehouse_id_destination,
-                            'stock' => 0,
-                        ]);
+                if (isset($series_lots['color_size'])) {
+                    foreach ($series_lots['color_size']  as $item_color) {
+                        $size = $item_color['size'];
+                        $color = $item_color['color'];
+                        $price = $item_color['price'];
+                        $quantity = $item_color['selectedQuantity'];
+                        $item_color_size = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
+                            ->where('size', $size)
+                            ->where('color', $color)
+                            ->where('item_id', $it->item_id)
+                            ->first();
+                        if (!$item_color_size) {
+                            $item_color_size = ItemColorSize::create([
+                                'size' => $size,
+                                'item_id' => $it->item_id,
+                                'color' => $color,
+                                'price' => $price,
+                                'warehouse_id' => $transfer->warehouse_id_destination,
+                                'stock' => 0,
+                            ]);
+                            $item_color_size->save();
+                        }
+                        $item_color_size->stock += $quantity;
                         $item_color_size->save();
                     }
-                    $item_color_size->stock += $quantity;
-                    $item_color_size->save();
                 }
             }
 
@@ -517,7 +519,7 @@ class TransferPlaceController extends Controller
             }
             $detail->save();
         }
-        $establishment = Establishment::find($request->printer);
+        $establishment = $request->printer ?  Establishment::find($request->printer) : null;
         $configuration = Configuration::first();
         if ($configuration->translate_direct) {
             $request->merge(['code' => $code]);
@@ -527,7 +529,7 @@ class TransferPlaceController extends Controller
             return [
                 "message" => "Transferencia por aceptar",
                 "code" => url('') . "/transfers/print_places/" . $code,
-                'printer' => $establishment->printer,
+                'printer' => $establishment ? $establishment->printer : null,
                 "success" => true,
             ];
         }
