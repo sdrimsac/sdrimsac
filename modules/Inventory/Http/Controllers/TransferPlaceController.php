@@ -366,11 +366,11 @@ class TransferPlaceController extends Controller
                     }
                 }
             }
-            Item::where('series_enabled', true)->chunk(50, function ($items_chunk) {
-                foreach ($items_chunk as $item) {
-                    $item->checkSeries();
-                }
-            });
+            // Item::where('series_enabled', true)->chunk(50, function ($items_chunk) {
+            //     foreach ($items_chunk as $item) {
+            //         $item->checkSeries();
+            //     }
+            // });
             return  [
                 'success' => true,
                 'message' => 'Traslado creado con éxito'
@@ -518,10 +518,10 @@ class TransferPlaceController extends Controller
                 'item_id',
                 $it['id']
             )->where('warehouse_id', $request->warehouse_id)->first();
-            if ($item) {
-                $item->stock -= $it['quantity'];
-                $item->save();
-            }
+            // if ($item) {
+            //     $item->stock -= $it['quantity'];
+            //     $item->save();
+            // }
             $detail->save();
         }
         $establishment = $request->printer ?  Establishment::find($request->printer) : null;
