@@ -255,7 +255,11 @@ class RestaurantController extends Controller
                 $description =  strtolower($worker_type->description);
             }
             if ($user->type == "admin" || $user->type == "superadmin" || $description == "contador" || $description == "arca") {
-                return ['success' => true,];
+                return [
+                    'success' => true,
+                    'user' => $user,
+
+                ];
             }
             $pos = false;
             $kitchen = false;
