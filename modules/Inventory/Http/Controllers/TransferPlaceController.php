@@ -518,7 +518,7 @@ class TransferPlaceController extends Controller
                 'item_id',
                 $it['id']
             )->where('warehouse_id', $request->warehouse_id)->first();
-            if ($item && !$item->lots_enabled) {
+            if ($item && count($it['lotes']) == 0) {
                 $item->stock -= $it['quantity'];
                 $item->save();
             }
