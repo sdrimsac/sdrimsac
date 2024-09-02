@@ -20,7 +20,8 @@ class DownloadController extends Controller
         $model = "App\\Models\\Tenant\\" . ucfirst($model);
         $document = $model::where('external_id', $external_id)->first();
         if ($type == 'pdf') {
-            $format_type = Establishment::find(auth()->user()->establishment_id)->format_printer;
+            $user = auth()->user() ?? auth('api')->user();
+            $format_type = Establishment::find($user->establishment_id)->format_printer;
             switch ($format_type) {
                 case 1:
                     $format = 'a4';
