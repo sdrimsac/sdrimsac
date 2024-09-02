@@ -711,7 +711,7 @@
                                     <td colspan="7" class="text-right font-bold border_detalles">PERCEPCIÓN:
                                         {{ $document->currency_type->symbol }}</td>
                                     <td class="text-right font-bold border_detalles">
-                                        {{ number_format($document->perception->amount, 2) }}</td>
+                                        {{ number_format($document->perception->total, 2) }}</td>
                                 </tr>
                                 @endif
                                 <tr>
