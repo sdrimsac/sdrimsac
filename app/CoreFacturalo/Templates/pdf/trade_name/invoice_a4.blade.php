@@ -707,18 +707,25 @@
                                         {{ number_format($document->total, 2) }}</td>
                                 </tr>
                                 @isset($document->perception->amount)
-                                <tr>
-                                    <td colspan="7" class="text-right font-bold border_detalles">PERCEPCIÓN:
-                                        {{ $document->currency_type->symbol }}</td>
-                                    <td class="text-right font-bold border_detalles">
-                                        {{ number_format($document->perception->amount, 2) }}</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="7" class="text-right font-bold border_detalles">PERCEPCIÓN:
+                                            {{ $document->currency_type->symbol }}</td>
+                                        <td class="text-right font-bold border_detalles">
+                                            {{ number_format($document->perception->amount, 2) }}</td>
+                                    </tr>
                                 @endif
+                                @php
+                                    $total_perception = 0;
+                                    if (isset($document->perception->amount)) {
+                                        $total_perception = $document->perception->amount;
+                                    }
+
+                                @endphp
                                 <tr>
                                     <td colspan="7" class="text-right font-bold border_detalles">TOTAL A PAGAR:
                                         {{ $document->currency_type->symbol }}</td>
                                     <td class="text-right font-bold border_detalles">
-                                        {{ number_format($document->total + $document->perception->amount, 2) }}
+                                        {{ number_format($document->total + $total_perception, 2) }}
                                     </td>
                                 </tr>
                             @else
@@ -744,21 +751,21 @@
                                             {{ number_format($document->total_payment, 2) }}</td>
                                     </tr>
                                 @endif
-                            @endif
+                                @endif
 
-                            @if ($balance < 0)
-                                <tr>
-                                    <td colspan="7" class="text-right font-bold border_detalles">VUELTO:
-                                        {{ $document->currency_type->symbol }}</td>
-                                    <td class="text-right font-bold border_detalles">
-                                        {{ number_format(abs($balance), 2, '.', '') }}</td>
-                                </tr>
-                            @endif
-                        </table>
-                    </div>
-                </td>
-            <tr>
-                {{-- <tr>
+                                @if ($balance < 0)
+                                    <tr>
+                                        <td colspan="7" class="text-right font-bold border_detalles">VUELTO:
+                                            {{ $document->currency_type->symbol }}</td>
+                                        <td class="text-right font-bold border_detalles">
+                                            {{ number_format(abs($balance), 2, '.', '') }}</td>
+                                    </tr>
+                                @endif
+                            </table>
+                        </div>
+                    </td>
+                <tr>
+                    {{-- <tr>
                 <td colspan="7" height="18px"><b>OBSERVACION: </b>{{ trim($document->observation) }}
                     @isset($document->additional_information)
                     @foreach ($document->additional_information as $information)
@@ -769,45 +776,45 @@
                 @endisset
                 </td>
             </tr> --}}
-        </table>
+            </table>
 
 
 
 
 
-        <table class="full-width">
-            @if ($document->payment_condition_id == '01')
-                <tr>
-                    <td>
-                        <strong>PAGOS:</strong>
-                    </td>
-                </tr>
-                @foreach ($boxes as $box)
+            <table class="full-width">
+                @if ($document->payment_condition_id == '01')
                     <tr>
-                        <td colspan="4" class="text-left font-bold desc">{{ $box->method }}:
-                            {{ $document->currency_type->symbol }}</td>
-                        <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
+                        <td>
+                            <strong>PAGOS:</strong>
                         </td>
                     </tr>
-                @endforeach
-            @endif
-            @if (count($document->fee) > 0)
-                <tr>
-                    <td class="desc pt-5">
-                        <strong>CUOTAS:</strong>
-                    </td>
-                </tr>
-                @foreach ($document->fee as $key => $quote)
+                    @foreach ($boxes as $box)
+                        <tr>
+                            <td colspan="4" class="text-left font-bold desc">{{ $box->method }}:
+                                {{ $document->currency_type->symbol }}</td>
+                            <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+                @if (count($document->fee) > 0)
                     <tr>
-                        <td class="desc">
-                            &#8226;
-                            {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
-                            / Fecha: {{ $quote->date->format('d-m-Y') }} /
-                            Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}</td>
+                        <td class="desc pt-5">
+                            <strong>CUOTAS:</strong>
+                        </td>
                     </tr>
-                @endforeach
-            @endif
-            {{-- @php
+                    @foreach ($document->fee as $key => $quote)
+                        <tr>
+                            <td class="desc">
+                                &#8226;
+                                {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
+                                / Fecha: {{ $quote->date->format('d-m-Y') }} /
+                                Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}</td>
+                        </tr>
+                    @endforeach
+                @endif
+                {{-- @php
                     $payment = 0;
                 @endphp
                 @foreach ($payments as $row)
@@ -820,72 +827,72 @@
                 @endforeach
                 </tr> --}}
 
-        </table>
-
-        @if ($document->detraction)
-            <br>
-            <table class="border" class="full-width bordes_datos_clientes "
-                style="page-break-inside: avoid; border-collapse: collapse; border: 1px solid #000;">
-                <tr>
-                    <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
-                    <td width="8px" height="20px">:</td>
-                    <td>{{ $document->detraction->bank_account }}</td>
-                </tr>
-                <tr>
-                    <td width="140px" height="20px"><b>B/S SUJETO A DETRACCIÓN</b></td>
-                    <td width="8px" height="20px">:</td>
-                    @inject('detractionType', 'App\Services\DetractionTypeService')
-                    <td width="220px" height="20px">{{ $document->detraction->detraction_type_id }} -
-                        {{ $detractionType->getDetractionTypeDescription($document->detraction->detraction_type_id) }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="120px"><b>MÉTODO DE PAGO</b></td>
-                    <td width="8px">:</td>
-                    <td width="220px">
-                        {{ $detractionType->getPaymentMethodTypeDescription($document->detraction->payment_method_id) }}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="120px" height="20px">
-                        <b>
-                            MONTO DETRACCIÓN
-                        </b>
-                    </td>
-                    <td width="8px" height="20px">:</td>
-                    <td>{{ $document->currency_type->symbol }} {{ $document->detraction->amount }}</td>
-                </tr>
             </table>
-        @endif
-        @if ($document->user)
-            <br>
-            <table class="full-width">
-                <tr>
-                    <td>
-                        <strong>Usuario:</strong> &ensp;&ensp;{{ $document->user->name }}
-                    </td>
 
-                </tr>
-                @php
-                    $code = null;
-                    $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
-                    if ($box) {
-                        $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
-                        if ($cash) {
-                            $code = $cash->reference_number;
-                        }
-                    }
-                @endphp
-                @if ($code)
+            @if ($document->detraction)
+                <br>
+                <table class="border" class="full-width bordes_datos_clientes "
+                    style="page-break-inside: avoid; border-collapse: collapse; border: 1px solid #000;">
                     <tr>
-                        <td>
-                            <strong>Código A.</strong>: {{ $code }}
+                        <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
+                        <td width="8px" height="20px">:</td>
+                        <td>{{ $document->detraction->bank_account }}</td>
+                    </tr>
+                    <tr>
+                        <td width="140px" height="20px"><b>B/S SUJETO A DETRACCIÓN</b></td>
+                        <td width="8px" height="20px">:</td>
+                        @inject('detractionType', 'App\Services\DetractionTypeService')
+                        <td width="220px" height="20px">{{ $document->detraction->detraction_type_id }} -
+                            {{ $detractionType->getDetractionTypeDescription($document->detraction->detraction_type_id) }}
                         </td>
                     </tr>
-                @endif
+                    <tr>
+                        <td width="120px"><b>MÉTODO DE PAGO</b></td>
+                        <td width="8px">:</td>
+                        <td width="220px">
+                            {{ $detractionType->getPaymentMethodTypeDescription($document->detraction->payment_method_id) }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="120px" height="20px">
+                            <b>
+                                MONTO DETRACCIÓN
+                            </b>
+                        </td>
+                        <td width="8px" height="20px">:</td>
+                        <td>{{ $document->currency_type->symbol }} {{ $document->detraction->amount }}</td>
+                    </tr>
+                </table>
+            @endif
+            @if ($document->user)
+                <br>
+                <table class="full-width">
+                    <tr>
+                        <td>
+                            <strong>Usuario:</strong> &ensp;&ensp;{{ $document->user->name }}
+                        </td>
 
-            </table>
-        @endif
-</body>
+                    </tr>
+                    @php
+                        $code = null;
+                        $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
+                        if ($box) {
+                            $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                            if ($cash) {
+                                $code = $cash->reference_number;
+                            }
+                        }
+                    @endphp
+                    @if ($code)
+                        <tr>
+                            <td>
+                                <strong>Código A.</strong>: {{ $code }}
+                            </td>
+                        </tr>
+                    @endif
 
-</html>
+                </table>
+            @endif
+    </body>
+
+    </html>
