@@ -284,7 +284,7 @@ class TransferPlaceController extends Controller
                     'item_id',
                     $it->item_id
                     //aqui cambiaria el almacén al de origen
-                )->where('warehouse_id', $transfer->warehouse_id)->first();
+                )->where('warehouse_id', $transfer->warehouse_id_destination)->first();
                 if ($item) {
                     $item->stock += $it->quantity;
                     $item->save();
