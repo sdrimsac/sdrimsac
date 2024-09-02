@@ -366,11 +366,11 @@ class TransferPlaceController extends Controller
                     }
                 }
             }
-            // Item::where('series_enabled', true)->chunk(50, function ($items_chunk) {
-            //     foreach ($items_chunk as $item) {
-            //         $item->checkSeries();
-            //     }
-            // });
+            Item::where('series_enabled', true)->chunk(50, function ($items_chunk) {
+                foreach ($items_chunk as $item) {
+                    $item->checkSeries();
+                }
+            });
             return  [
                 'success' => true,
                 'message' => 'Traslado creado con éxito'
