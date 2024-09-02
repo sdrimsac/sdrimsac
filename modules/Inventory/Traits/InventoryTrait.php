@@ -322,7 +322,7 @@ trait InventoryTrait
         if ($quantity < 0 && $item_warehouse->item->unit_type_id !== 'ZZ') {
             if (($configuration->sales_stock) && ($item_warehouse->stock < 0)) {
 
-                throw new Exception("El producto {$item_warehouse->item->description} no tiene suficiente stock!");
+                throw new Exception("El producto {$item_warehouse->item->description} no tiene suficiente stock! en el almacen {$item_warehouse->warehouse->description}");
             }
         }
         $item_warehouse->save();
