@@ -21,20 +21,22 @@ class DownloadController extends Controller
         $document = $model::where('external_id', $external_id)->first();
         if ($type == 'pdf') {
             $user = auth()->user() ?? auth('api')->user();
-            $format_type = Establishment::find($user->establishment_id)->format_printer;
-            switch ($format_type) {
-                case 1:
-                    $format = 'a4';
-                    break;
-                case 2:
-                    $format = 'a5';
-                    break;
-                case 3:
-                    $format = 'ticket';
-                    break;
-                default:
-                    $format =  'ticket_50';
-                    break;
+            if ($user) {
+                $format_type = Establishment::find($user->establishment_id)->format_printer;
+                switch ($format_type) {
+                    case 1:
+                        $format = 'a4';
+                        break;
+                    case 2:
+                        $format = 'a5';
+                        break;
+                    case 3:
+                        $format = 'ticket';
+                        break;
+                    default:
+                        $format =  'ticket_50';
+                        break;
+                }
             }
         }
         if (!$document) throw new Exception("El código {$external_id} es inválido, no se encontro documento relacionado");
