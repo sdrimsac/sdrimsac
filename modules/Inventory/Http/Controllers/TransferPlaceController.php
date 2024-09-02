@@ -518,10 +518,10 @@ class TransferPlaceController extends Controller
                 'item_id',
                 $it['id']
             )->where('warehouse_id', $request->warehouse_id)->first();
-            // if ($item) {
-            //     $item->stock -= $it['quantity'];
-            //     $item->save();
-            // }
+            if ($item && !$item->lots_enabled) {
+                $item->stock -= $it['quantity'];
+                $item->save();
+            }
             $detail->save();
         }
         $establishment = $request->printer ?  Establishment::find($request->printer) : null;
