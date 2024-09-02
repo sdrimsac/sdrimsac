@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemColorSize;
 use Exception;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -365,7 +366,11 @@ class TransferPlaceController extends Controller
                     }
                 }
             }
-
+            Item::where('series_enabled', true)->chunk(50, function ($items_chunk) {
+                foreach ($items_chunk as $item) {
+                    $item->checkSeries();
+                }
+            });
             return  [
                 'success' => true,
                 'message' => 'Traslado creado con éxito'
