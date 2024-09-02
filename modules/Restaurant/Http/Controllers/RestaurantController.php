@@ -254,11 +254,18 @@ class RestaurantController extends Controller
             if ($worker_type) {
                 $description =  strtolower($worker_type->description);
             }
+            $series = Series::whereIn('document_type_id', ["01", "03", "80"])->get();
+            $establishment = Establishment::find($user->establishment_id);
+            $configuration = Configuration::first();
+            $area = Area::find($user->area_id);
             if ($user->type == "admin" || $user->type == "superadmin" || $description == "contador" || $description == "arca") {
                 return [
                     'success' => true,
                     'user' => $user,
-
+                    'area' => $area,
+                    'series' => $series,
+                    'establishment' => $establishment,
+                    'configuration' => $configuration,
                 ];
             }
             $pos = false;
@@ -293,10 +300,7 @@ class RestaurantController extends Controller
                     $kitchen = true;
                 }
             }
-            $series = Series::whereIn('document_type_id', ["01", "03", "80"])->get();
-            $establishment = Establishment::find($user->establishment_id);
-            $configuration = Configuration::first();
-            $area = Area::find($user->area_id);
+            
             return [
                 'area' => $area,
                 'series' => $series,
