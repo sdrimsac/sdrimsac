@@ -287,7 +287,7 @@ class TransferPlaceController extends Controller
                     //aqui cambiaria el almacén al de origen
                 )->where('warehouse_id', $transfer->warehouse_id_destination)->first();
                 if ($item) {
-                    $item->stock += $it->quantity;
+                    // $item->stock += $it->quantity;
                     $item->save();
                 }
                 $inventory = new Inventory;
@@ -519,7 +519,6 @@ class TransferPlaceController extends Controller
                 $it['id']
             )->where('warehouse_id', $request->warehouse_id)->first();
             if ($item && count($it['lots']) == 0) {
-                $item->stock -= $it['quantity'];
                 $item->save();
             }
             $detail->save();

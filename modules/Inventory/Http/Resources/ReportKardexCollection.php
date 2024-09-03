@@ -136,30 +136,36 @@ class ReportKardexCollection extends ResourceCollection
                     $transaction = '';
                     $input = '';
                     $output = '';
-                    if (!$row->inventory_kardexable->type) {
-                        $transaction = InventoryTransaction::findOrFail($row->inventory_kardexable->inventory_transaction_id);
-                    }
-
-                    if ($row->inventory_kardexable->type != null) {
-                        $input = ($row->inventory_kardexable->type == 1) ? $row->quantity : "-";
-                    } else {
-                        $input = ($transaction->type == 'input') ? $row->quantity : "-";
-                    }
-
-                    if ($row->inventory_kardexable->type != null) {
-                        $output = ($row->inventory_kardexable->type == 2 || $row->inventory_kardexable->type == 3) ? $row->quantity : "-";
-                    } else {
-                        $output = ($transaction->type == 'output') ? $row->quantity : "-";
+                    $detail = '';
+                    $type_transaction = '';
+                    if($row->inventory_kardexable){
+                        $detail = $row->inventory_kardexable->detail;
+                        $type_transaction = $row->inventory_kardexable->description;
+                        if (!$row->inventory_kardexable->type) {
+                            $transaction = InventoryTransaction::findOrFail($row->inventory_kardexable->inventory_transaction_id);
+                        }
+    
+                        if ($row->inventory_kardexable->type != null) {
+                            $input = ($row->inventory_kardexable->type == 1) ? $row->quantity : "-";
+                        } else {
+                            $input = ($transaction->type == 'input') ? $row->quantity : "-";
+                        }
+    
+                        if ($row->inventory_kardexable->type != null) {
+                            $output = ($row->inventory_kardexable->type == 2 || $row->inventory_kardexable->type == 3) ? $row->quantity : "-";
+                        } else {
+                            $output = ($transaction->type == 'output') ? $row->quantity : "-";
+                        }
                     }
                     $user = auth()->user();
                     $return = [
-                        'detail' => $row->inventory_kardexable->detail,
+                        'detail' => $detail,
                         'id' => $row->id,
                         'item_name' => $row->item->description,
                         'unit_type_id' => $row->item->unit_type_id,
                         'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                        'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? \Carbon\Carbon::parse($row->inventory_kardexable->date_of_issue)->format('d/m/Y') : '',
-                        'type_transaction' => $row->inventory_kardexable->description,
+                        'date_of_issue' => isset($row->inventory_kardexable) ? \Carbon\Carbon::parse($row->inventory_kardexable->date_of_issue)->format('d/m/Y') : '',
+                        'type_transaction' => $type_transaction,
                         'number' => "-",
                         'view' => true,
                         'internal_id' => $row->item->internal_id,
@@ -175,12 +181,14 @@ class ReportKardexCollection extends ResourceCollection
                         'order_note_asoc' => '-',
                         'doc_asoc' => '-'
                     ];
-                    if ($row->inventory_kardexable->warehouse_destination_id === $user->establishment_id) {
-                        $return['input'] = $output;
-                        $return['output'] = $input;
-                    } else {
-                        $return['input'] = $input;
-                        $return['output'] = $output;
+                    if($row->inventory_kardexable){
+                        if ($row->inventory_kardexable->warehouse_destination_id === $user->establishment_id) {
+                            $return['input'] = $output;
+                            $return['output'] = $input;
+                        } else {
+                            $return['input'] = $input;
+                            $return['output'] = $output;
+                        }
                     }
                     return $return;
                 }

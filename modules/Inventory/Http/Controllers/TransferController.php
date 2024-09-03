@@ -298,7 +298,7 @@ class TransferController extends Controller
                     $it->item_id
                 )->where('warehouse_id', $transfer->warehouse_id)->first();
                 if ($item) {
-                    $item->stock += $it->quantity;
+                    // $item->stock += $it->quantity;
                     $item->save();
                 }
                 $inventory = new Inventory;
