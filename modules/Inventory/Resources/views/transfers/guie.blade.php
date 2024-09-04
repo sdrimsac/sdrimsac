@@ -267,13 +267,14 @@ function format($it)
     $units = $item->item_unit_types;
     foreach ($units as $unit) {
         if ($unit->quantity_unit == $max_qty) {
-            $unit_type_dec = $unit->unit_type_id;
+            $unit_type_dec = $unit->description;
         }
     }
+    
     $result = '';
 
     if ($part_int != 0) {
-        $result .= $part_int . ' ' . $unit_type_id;
+        $result .= $part_int . ' ' . $unit_type_dec;
     }
     if (isset($part_dec)) {
         $result .= ' ' . $part_dec . ' ' . $unit_type_dec;
@@ -357,8 +358,6 @@ function format($it)
                         </td>
                         <td class="celda_center description_preparacion">
                             @if (isset($it->item->max_quantity))
-                                {{-- {{ number_format($it->quantity / $it->item->max_quantity, 2) }} --}}
-                                {{-- {{ $it->item->unit_type_id }} --}}
                                 {{ format($it) }}
                                 <div style="padding:0px">
                                     <small style="padding:0px" class="small">

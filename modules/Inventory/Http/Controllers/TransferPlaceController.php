@@ -389,7 +389,7 @@ class TransferPlaceController extends Controller
             $transfer = TransferPlace::where('code', $code)->first();
             $height = 260;
             foreach ($transfer->detail as $detail) {
-                $height +=  20;
+                $height +=  45;
                 foreach ($detail->series_lots["lotes"] as $value) {
                     $height +=  20;
                 }

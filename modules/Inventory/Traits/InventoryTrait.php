@@ -115,6 +115,8 @@ trait InventoryTrait
         return collect($records)->transform(function ($row) use ($warehouse_id) {
             return  [
                 'id' => $row->id,
+                'max_quantity_description' => $row->max_quantity_description,
+                'unit_type_description' => $row->unit_type->description,
                 'description' => $row->description,
                 'lots_enabled' => (bool)$row->lots_enabled,
                 'series_enabled' => (bool)$row->series_enabled,

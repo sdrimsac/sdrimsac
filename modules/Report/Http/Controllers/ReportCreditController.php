@@ -99,11 +99,13 @@ class ReportCreditController extends Controller
             ->whereHas(
                 'creditPayments',
                 function ($query) use ($date) {
-                    $query->where('date_payment', $date)
+                    $query->where('date_payment', "2024-09-03")
                         ->where('paid', 0);
                 }
             )
-            ->with(['customer', 'user', 'sale_note_credit', 'creditPayments']); // Cargar relaciones necesarias
+            ->with(['customer', 'user', 'sale_note_credit', 'creditPayments']);
+        
+            // Cargar relaciones necesarias
         return $credits;
     }
     public function daily_cash_records(Request $request)
