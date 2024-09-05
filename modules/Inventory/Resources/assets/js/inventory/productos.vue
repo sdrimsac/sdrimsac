@@ -17,22 +17,6 @@
                             </li>
                         </ol>
                     </div>
-                    <!-- <div class="col-6 text-end">
-                        <button
-                            type="button"
-                            class="btn btn-success"
-                            @click.prevent="clickCreate('input')"
-                        >
-                            Ingreso
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-success"
-                            @click.prevent="clickOutput()"
-                        >
-                            Salida
-                        </button>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -68,6 +52,7 @@
                     <data-table :resource="resource" ref="dataTable">
                         <tr slot="heading" class="bg-primary">
                             <th class="text-white text-center">#</th>
+                            <!-- <th class="text-white text-center">Codigo Interno</th> -->
                             <th class="text-white text-left">Producto</th>
                             <th class="text-white text-left">Almacén</th>
                             <th class="text-white text-center">Stock</th>

@@ -86,6 +86,7 @@
                                 </th>
                                 <th class="text-white">#</th>
                                 <th class="text-white">SOAP</th>
+                                <!-- <th class="text-white">D. E. USUARIO</th> -->
                                 <th class="text-white" v-if="columns.user_name.visible">
                                     Usuario
                                 </th>
@@ -598,6 +599,7 @@ import {
     deletable
 } from "../../mixins/deletable";
 import ReportPayment from "./partials/report_payment.vue";
+import Swal from 'sweetalert2';
 
 export default {
     mixins: [deletable],
@@ -716,7 +718,22 @@ export default {
             this.showDialogVoided = true;
         },
         clickNuevo() {
-            location.href = `/${this.resource}/create`;
+            if (this.$cashId) {
+
+                location.href = `/${this.resource}/create`;
+
+            } else {
+                Swal.fire({
+                    title: 'Caja Cerrada ',
+                    text: 'No se puede Realizar esa Accion debido a que su caja esta cerrado',
+                    icon: 'error',
+                    timer: 2000,
+                }).then (() => {
+                    location.href = "/report_closed_cash";
+                    Swal.fire ("abra su caja aqui")
+                })
+            }
+            
         },
         clickDownload(download) {
             window.open(download, "_blank");

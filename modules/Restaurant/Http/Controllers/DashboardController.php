@@ -29,6 +29,12 @@ class DashboardController extends Controller
 
     public function foods(Request $request)
     {
+        $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
+        $category_ins_id = null;
+        if ($category_ins) {
+            $category_ins_id = $category_ins->id;
+        }
+        /* $category_id = $request->category; */
         $category_id = $request->category;
         $value = $request->value;
         $foods = Food::query();
@@ -46,6 +52,9 @@ class DashboardController extends Controller
         if ($category_id) {
 
             $foods = $foods->where('category_food_id', $category_id);
+        }
+        if ($category_ins_id) {
+            $foods = $foods->where('category_food_id', '<>', $category_ins_id);
         }
         if ($value) {
 
@@ -128,13 +137,18 @@ class DashboardController extends Controller
             $table = Table::where('area_id', $areas[0]->id)->first();
 
             //dd($areas,$table);
+            $category_ins = CategoryItem::where('name', 'INSUMOS')->first();
+            $category_ins_id = null;
+            if ($category_ins) {
+                $category_ins_id = $category_ins->id;
+            }
             if ($table != null) {
                 $tables_active = new TableCollection(Table::where('area_id', $areas[0]->id)->first());
                 $tables = Table::where('area_id', $areas[0]->id);
                 if ($establishment_table_id) {
                     $tables = $tables->where('establishment_id', $establishment_table_id);
                 }
-                $tables_area = collect($tables->get())->transform(function ($row) {
+                $tables_area = collect($tables->get())->transform(function ($row) use($category_ins_id){
                     $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
                     return [
                         'id'                => $row->id,
@@ -157,7 +171,7 @@ class DashboardController extends Controller
 
             // $select_category = CategoryItem::first();
             // $select_category_id = $select_category->id;
-            $categories = CategoryItem::all();
+            $categories = CategoryItem::where('id','<>',$category_ins_id)->get();
             $status_table = StatusTable::all();
             return view('restaurant::worker.index', compact('configuration', 'areas', 'tables_active', 'categories', 'status_table', 'company', 'tables_area'));
         } catch (Exception $e) {

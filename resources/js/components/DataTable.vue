@@ -382,7 +382,7 @@ export default {
         },
 
         customIndex(index) {
-            console.log("🚀 ~ customIndex ~ index:", index)
+
             if(this.resource == "caja/cash-transfer/report" ){
                 return index + 1;
             }

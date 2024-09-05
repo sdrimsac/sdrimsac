@@ -374,7 +374,6 @@ if ($hostname) {
                 Route::post('charge_discounts', [App\Http\Controllers\Tenant\ChargeDiscountController::class, 'store']);
                 Route::delete('charge_discounts/{charge}', [App\Http\Controllers\Tenant\ChargeDiscountController::class, 'destroy']);
 
-
                 //Items Ecommerce
                 Route::get('items_ecommerce', [App\Http\Controllers\Tenant\ItemController::class, 'index_ecommerce'])->name('tenant.items_ecommerce.index')->middleware('just.admin');
 
@@ -382,6 +381,11 @@ if ($hostname) {
                 Route::get('items', [App\Http\Controllers\Tenant\ItemController::class, 'index'])->name('tenant.items.index')->middleware(['redirect.level', 'just.admin']);
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
                 Route::post('items/import_stock', [App\Http\Controllers\Tenant\ItemController::class, 'importStock']);
+
+                Route::get('items/ultima-venta/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_Venta']);
+                Route::get('items/ultima-compra/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_compra']);
+                /* Route::get('items/ultima-venta', [ItemController::class, 'getUltimaVenta']); */
+
                 Route::get('items/import_stock_format', [App\Http\Controllers\Tenant\ItemController::class, 'importStockFormat']);
                 Route::get('items/check_series', [App\Http\Controllers\Tenant\ItemController::class, 'check_series']);
                 Route::get('items/records', [App\Http\Controllers\Tenant\ItemController::class, 'records']);

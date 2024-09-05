@@ -869,6 +869,15 @@
                                                                 <el-switch v-model="form.view_daily_cash_pin" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Ver venta diaria con pin', form.view_daily_cash_pin, 'view_daily_cash_pin', 'lockIcon')"></el-switch>
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-2 mt-4">
+                                                            <div class="form-group">
+                                                                <label class="control-label w-100">
+                                                                    <i class="el-icon-s-grid icon-tab"></i>
+                                                                    Historial Compra Venta En Caja
+                                                                </label>
+                                                                <el-switch v-model="form.compra_venta" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Activar historial compra venta', form.compra_venta, 'view_daily_cash_pin', 'lockIcon')"></el-switch>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 

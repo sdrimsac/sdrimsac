@@ -414,18 +414,18 @@
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
 
                         @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isArca())
-                            <li>
+                            {{-- <li>
                                 <a class="{{ $path[0] === 'documents' && $path[1] === 'create' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.create') }}">
                                     <i class="icofont-document-folder"></i> Nuevo comprobante
                                 </a>
-                            </li>
+                            </li> --}}
                         @endif
                         @if ($config->listado_boleta_factura_nuevo)
                             <li>
                                 <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.index') }}">
-                                    <i class="icofont-list"></i> Listado
+                                    <i class="icofont-list"></i> Boletas y Facturas
                                 </a>
                             </li>
                         @endif

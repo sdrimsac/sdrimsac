@@ -15,7 +15,7 @@
         <div style="margin-top:20px; margin-bottom:15px;">
             <table>
                 <tr>
-                    <td colspan="5"
+                    <td colspan="6"
                         style="text-align: center; border: 2px solid black; background-color: #DCDCDC; font-size: 14px;">
                         <h3 align="center" class="title"><strong>Reporte Inventario</strong></h3>
                     </td>
@@ -25,13 +25,13 @@
                         style=" border: 2px solid black; background-color: #DCDCDC; font-size: 12px;">
                         <p><strong>Empresa: </strong>{{ $company->name }} </p>
                     </td>
-                    <td align="center" colspan="2"
+                    <td align="center" colspan="3"
                         style="text-align: center; border: 2px solid black; background-color: #DCDCDC; font-size: 12px;">
                         <p><strong>Fecha: </strong> {{ date('Y-m-d') }} </p>
                     </td>
                 </tr>
                 <tr>
-                    <td align="center" colspan="2"
+                    <td align="center" colspan="3"
                         style="border: 2px solid black; background-color: #DCDCDC; font-size: 12px;">
                         <p><strong>Ruc: </strong> {{ $company->number }} </p>
                     </td>
@@ -72,6 +72,9 @@
                                                 #</th>
                                             <th
                                                 style="text-align: center; border: 2px solid black; background-color: #DCDCDC;">
+                                                Codigo Interno</th>
+                                            <th
+                                                style="text-align: center; border: 2px solid black; background-color: #DCDCDC;">
                                                 Descripción</th>
                                             <th
                                                 style="text-align: center; border: 2px solid black; background-color: #DCDCDC;">
@@ -107,7 +110,11 @@
                                             <tr>
                                                 <td valign="top" class="celda"
                                                     style="text-align: center; border: 2px solid black;">
-                                                    {{ $loop->iteration }}</td>
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                                <td style="text-align: center; border: 2px solid black;">
+                                                    {{ $values->internal_id }}
+                                                </td>
                                                 <td valign="top" class="celda"
                                                     style="text-align: center; border: 2px solid black;">
                                                     {{ $values->description ?? '' }}
@@ -132,30 +139,31 @@
                                                 </td>
                                                 <td valign="top" class="celda center"
                                                     style="text-align: center; border: 2px solid black;">
+                                                    {{-- {{ $values->warehouses[$iw]->stock ?? '0.00' }} --}}
                                                 </td>
-                                                {{-- <td valign="top"  class="celda center">
-                                                {{ number_format($values->purchase_unit_price, 2) }}
-                    </td>
-                    <td valign="top" class="celda  center">
-                        {{ number_format($values->sale_unit_price, 2) ?? '0.00' }}
-                    </td>
-                    @if ($values->warehouses[$iw]->stock > 0)
-                    <td valign="top" class="celda  center">
-                        {{ number_format($values->purchase_unit_price * $values->warehouses[$iw]->stock, 2) ?? '0.00' }}
-                    </td>
-                    @else
-                    <td valign="top" class="celda  center">0</td>
-                    @endif
-                    @if ($values->warehouses[$iw]->stock > 0)
+                                                {{-- assdsfsfgsgdgdf --}}
+                                                {{-- <td valign="top" class="celda center">
+                                                    {{ number_format($values->purchase_unit_price, 2) }}
+                                                </td> --}}
+                                                {{-- <td valign="top" class="celda  center" style="text-align: center; border: 2px solid black">
+                                                    {{ number_format($values->sale_unit_price, 2) ?? '0.00' }}
+                                                </td> --}}
+                                                {{-- @if ($values->warehouses[$iw]->stock > 0)
+                                                    <td valign="top" class="celda  center">
+                                                        {{ number_format($values->purchase_unit_price * $values->warehouses[$iw]->stock, 2) ?? '0.00' }}
+                                                    </td>
+                                                @else
+                                                    <td valign="top" class="celda  center">0</td>
+                                                @endif
+                                                @if ($values->warehouses[$iw]->stock > 0)
+                                                    <td valign="top" class="celda  center">
+                                                        {{ number_format(($values->sale_unit_price - $values->purchase_unit_price) * $values->warehouses[$iw]->stock, 2) ?? '0.00' }}
+                                                    </td>
+                                                @else
+                                                    <td valign="top" class="celda  center">0</td>
+                                                @endif --}}
 
-                    <td valign="top" class="celda  center">
-                        {{ number_format(($values->sale_unit_price - $values->purchase_unit_price) * $values->warehouses[$iw]->stock, 2) ?? '0.00' }}
-                    </td>
-                    @else
-                    <td valign="top" class="celda  center">0</td>
-                    @endif
 
-                    --}}
                                             </tr>
                                         @endforeach
                                         <tbody>
