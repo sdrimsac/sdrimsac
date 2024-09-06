@@ -1716,9 +1716,7 @@
                                                                         <el-input
                                                                             class="custom_input"
                                                                             :disabled="
-                                                                                (order_pend.type_id !=
-                                                                                    null &&
-                                                                                    !configuration.change_price_product) ||
+                                                                                
                                                                                     configuration.edit_price_sales ==
                                                                                         false
                                                                             "
