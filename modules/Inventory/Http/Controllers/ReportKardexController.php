@@ -138,12 +138,12 @@ class ReportKardexController extends Controller
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
-                    ->orderBy('item_id')->orderBy('id');
+                    ->orderBy('item_id')->orderBy('created_at');
             } else {
                 $data = InventoryKardex::with(['inventory_kardexable'])
                     ->where([['warehouse_id', $warehouse]])
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
-                    ->orderBy('item_id')->orderBy('id');;
+                    ->orderBy('item_id')->orderBy('created_at');;
             }
         } else {
             if ($note == false) {
@@ -151,12 +151,12 @@ class ReportKardexController extends Controller
                 $data = InventoryKardex::with(['inventory_kardexable'])
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
-                    ->orderBy('item_id')->orderBy('id');
+                    ->orderBy('item_id')->orderBy('created_at');
             } else {
 
                 $data = InventoryKardex::with(['inventory_kardexable'])
                     ->where([['warehouse_id', $warehouse]])
-                    ->orderBy('item_id')->orderBy('id');
+                    ->orderBy('item_id')->orderBy('created_at');
             }
         }
 
