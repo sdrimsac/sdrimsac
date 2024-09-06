@@ -121,6 +121,8 @@ class DocumentCollection extends ResourceCollection
             $orden = Orden::where('document_id', $row->id)->first();
             $ordens_ref = $orden ? $orden->ref : null;
 
+            
+
             $table_number = null;
             $orden = $row->orden;
             if ($orden) {
@@ -131,6 +133,7 @@ class DocumentCollection extends ResourceCollection
             }
 
             return [
+                /* 'seller_id' => $row->seller_id, */
                 'ordens_ref' => $ordens_ref,
                 'table_number' => $table_number,
                 'sale_note_related' => $sale_note_related,

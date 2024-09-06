@@ -1332,7 +1332,7 @@
                       "
                                         >
                                             <a
-                                                class="badge badge bg-dark text-white"
+                                                class="bage bg-dark text-white"
                                                 style="margin-right: 5px"
                                             >
                                                 <template

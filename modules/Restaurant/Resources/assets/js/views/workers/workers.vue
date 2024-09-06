@@ -32,6 +32,7 @@
                 </el-button>
             </div>
             <div class="table-responsive">
+                
                 <table class="table table-striped">
                     <thead>
                         <tr slot="heading" class="bg-primary">

@@ -399,9 +399,10 @@ class Document extends ModelTenant
     {
         return $this->hasOne(Invoice::class);
     }
-
-
-
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
     public function items()
     {
         return $this->hasMany(DocumentItem::class, 'document_id', 'id');

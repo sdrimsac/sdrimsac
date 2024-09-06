@@ -194,7 +194,7 @@ class DocumentController extends Controller
         $envio = new WhatsappController;
 
         try {
-            $results = DB::select("            SHOW DATABASES;            ");
+            $results = DB::select(" SHOW DATABASES; ");
 
             foreach ($results as $result) {
                 //$this->line($result->Database);
@@ -998,6 +998,12 @@ class DocumentController extends Controller
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $facturalo = new Facturalo();
                 $facturalo->save($request->all());
+
+                /* $document = $facturalo->getDocumnet(); */
+                /* $document = $facturalo->getDocument();
+                $document->seller_id = auth()->user()->id;
+                $document->save(); */
+
                 $facturalo->createXmlUnsigned();
                 $facturalo->signXmlUnsigned();
                 $facturalo->updateHash();
@@ -1018,12 +1024,14 @@ class DocumentController extends Controller
         // $Payments = DocumentPayment::where('document_id', $document->id)->first();
         if ($request->cash_id == null && $document_id == null) {
             $user_id = auth()->user()->id;
+            /* $user_id->seller_id = auth()->user()->id; */
             $cash = Cash::where('user_id', $user_id)
                 ->where('state', true)
                 ->first();
             if ($cash == null) {
                 $cash = Cash::create([
                     'user_id' => auth()->user()->id,
+                    'seller_id' => $user_id,
                     'date_opening' => date('Y-m-d'),
                     'time_opening' => date('H:i:s'),
                     'date_closed' => null,
@@ -1072,6 +1080,7 @@ class DocumentController extends Controller
                     $box->orden_id =  $request->orden_id;
                     $box->document_id = $document->id;
                     $box->user_id = auth()->user()->id;
+                    /* $box->seller_id = auth()->user()->id; */
                     $box->establishment_id = auth()->user()->establishment_id;
                     $document_save = Document::where('id', $document->id)->first();
                     $document_save->cash_id = $request->cash_id;
@@ -1123,6 +1132,7 @@ class DocumentController extends Controller
                     $boxes->orden_id =  $request->orden_id;
                     $boxes->document_id = $document->id;
                     $boxes->user_id = auth()->user()->id;
+                    /* $boxes->seller_id = auth()->user()->id; */
                     $boxes->establishment_id = auth()->user()->establishment_id;
                     $document_save = Document::where('id', $document->id)->first();
                     switch ($document_save->document_type_id) {

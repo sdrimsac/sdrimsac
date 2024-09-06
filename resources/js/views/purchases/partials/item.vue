@@ -147,7 +147,7 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.unit_price }"
                         >
-                            <label class="control-label">Costo Unitario</label>
+                            <label class="control-label">Precio Compra Unitario</label>
                             <el-input
                                 v-model="form.unit_price"
                                 @input="updatePriceTotal"

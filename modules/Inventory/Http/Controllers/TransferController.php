@@ -378,11 +378,12 @@ class TransferController extends Controller
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
-            return ['m' => $e->getMessage()];
+            return ['m' => $e->getMessage("hubo un error ", "danger")];
         }
 
         return $pdf->stream('pdf_transfers.pdf');
     }
+
     function createCode()
     {
         $code = Str::random(5);

@@ -40,6 +40,7 @@ use App\Http\Resources\Tenant\ItemStockCollection;
 use App\Http\Resources\Tenant\ItemResource;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Http\Resources\Tenant\ItemCollection;
+use App\Http\Resources\Tenant\ItemUltima_Venta;
 use App\Imports\ItemsPriceImport;
 use App\Imports\ItemsStockImport;
 use App\Models\Tenant\Catalogs\AttributeType;
@@ -62,22 +63,26 @@ use Modules\Report\Exports\ItemExport;
 use Modules\Report\Exports\ItemExportGeneral;
 use Modules\Report\Exports\ItemExportGeneralForImport;
 use Modules\Report\Exports\ItemStockImportFormatExport;
+use App\Models\Tenant\Document;
+use App\Models\Tenant\Purchase;
+use App\Http\Resources\Tenant\ItemUltima_ventaCollection;
+use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
 
 class ItemController extends Controller
 {
-    public function importStockFormat(Request $request){
+    public function importStockFormat(Request $request)
+    {
         $warehouse_id = $request->warehouse_id;
-        $items =  Item::select('internal_id','description')
-        ->whereHas('warehouses',function ($q) use($warehouse_id){
-            $q->where('warehouse_id', $warehouse_id);
-        })
-        ->get();
+        $items =  Item::select('internal_id', 'description')
+            ->whereHas('warehouses', function ($q) use ($warehouse_id) {
+                $q->where('warehouse_id', $warehouse_id);
+            })
+            ->get();
         $description_warehouse = Warehouse::find($warehouse_id)->description;
 
         return (new ItemStockImportFormatExport)
-        ->items($items)
-        ->download('Productos_de_' . $description_warehouse . '_' . Carbon::now() . '.xlsx');
-
+            ->items($items)
+            ->download('Productos_de_' . $description_warehouse . '_' . Carbon::now() . '.xlsx');
     }
     public function importStock(Request $request)
     {
@@ -103,8 +108,9 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
-   
-    public function updatePriceUnitType(Request $request){
+
+    public function updatePriceUnitType(Request $request)
+    {
         $price = $request->sale_unit_price;
         $type_id = $request->unit_type_id;
 
@@ -525,9 +531,22 @@ class ItemController extends Controller
     }
     public function records(Request $request)
     {
-
         $records = $this->getRecords($request);
         return new ItemCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    public function recordsUltima_Venta(Request $request, $id)
+    {
+        $records = $this->getRecordsUltima_Venta($id);
+
+        return new ItemUltima_ventaCollection($records->paginate(5));
+    }
+
+    public function recordsUltima_Compra(Request $request, $id)
+    {
+        $records = $this->getRecordsUltima_compra($request,$id);
+
+        return new ItemUltima_CompraCollection($records->paginate(5));
     }
 
     public function updateprice(Request $request)
@@ -628,8 +647,70 @@ class ItemController extends Controller
             });
         }
 
-
         return $records->orderBy('description', 'ASC');
+    }
+
+    public function getRecordsUltima_Venta($item_id)
+    {
+        $records = DocumentItem::query()
+            ->join('documents', 'documents.id', '=', 'document_items.document_id')
+            ->join('persons', 'documents.customer_id', '=', 'persons.id')
+            ->where('document_items.item_id', '=', $item_id)
+            ->select(
+                'documents.date_of_issue',
+                'documents.series',
+                'documents.number',
+                'documents.customer',
+                'persons.name as customer_name',
+                'persons.number as customer_number',
+                'documents.document_type_id',
+                'document_items.item_id',
+                'document_items.item',
+                'document_items.quantity',
+                'document_items.unit_value',
+                'document_items.total'
+            )
+            ->orderBy('documents.date_of_issue', 'desc');
+
+        return $records;
+    }
+
+    public function getRecordsUltima_Compra(Request $request,$item_id)
+    {
+        // $date_of_issue = $request->date_of_issue;
+        // dump($request->all());
+        $records = PurchaseItem::query()
+            ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')
+            ->join('persons', 'purchases.supplier_id', '=', 'persons.id')
+            ->where('purchase_items.item_id', '=', $item_id)
+            ->where('persons.type', '=', 'suppliers')
+            ->select(
+                'purchases.date_of_issue',
+                DB::raw("
+                CASE 
+                    WHEN purchases.document_type_id = 'GU75' THEN purchases.series_guia
+                    ELSE purchases.series
+                END as series
+                "),
+                DB::raw("
+                    CASE
+                        WHEN purchases.document_type_id = 'GU75' THEN purchases.number_guia
+                        ELSE purchases.number
+                    END  as number
+                "),
+                'purchases.document_type_id',
+                'persons.name as supplier_name',
+                'persons.number as supplier_number',
+                'purchase_items.purchase_id',
+                'purchase_items.item_id',
+                'purchase_items.item',
+                'purchase_items.quantity',
+                'purchase_items.unit_value',
+                'purchase_items.total'
+            )
+            ->orderBy('purchases.date_of_issue', 'desc');
+
+        return $records;
     }
 
     public function create()
@@ -683,8 +764,6 @@ class ItemController extends Controller
 
         $brands = Brand::all();
         $configuration = Configuration::first();
-
-
         return compact(
             'unit_types',
             'payment_method_types',
@@ -697,7 +776,7 @@ class ItemController extends Controller
             'areas',
             'categories',
             'brands',
-            'configuration'
+            'configuration',
         );
     }
 
