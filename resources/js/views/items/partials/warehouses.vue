@@ -242,18 +242,17 @@
               </div>
             </div>
           </el-tab-pane>
-         
         </el-tabs>
       </div>
       <div>
-         <el-pagination
-            v-if="activeName!= 'stock' && (pagination.sales.current_page > 0||pagination.purchases.current_page > 0)"
-            @current-change="getRecords"
-            layout="total, prev, pager, next"
-            :total="activeName == 'sales_' ? pagination.sales.total : pagination.purchases.total"
-            :current-page="activeName == 'sales_' ? pagination.sales.current_page : pagination.purchases.current_page"
-            :page-size="activeName == 'sales_' ? pagination.sales.per_page : pagination.purchases.per_page"
-          ></el-pagination>
+        <el-pagination
+          v-if="activeName!= 'stock' && (pagination.sales.current_page > 0||pagination.purchases.current_page > 0)"
+          @current-change="getRecords"
+          layout="total, prev, pager, next"
+          :total="activeName == 'sales_' ? pagination.sales.total : pagination.purchases.total"
+          :current-page="activeName == 'sales_' ? pagination.sales.current_page : pagination.purchases.current_page"
+          :page-size="activeName == 'sales_' ? pagination.sales.per_page : pagination.purchases.per_page"
+        ></el-pagination>
       </div>
       <div class="form-actions text-end pt-2 pb-2">
         <el-button @click.prevent="close()">
@@ -306,10 +305,10 @@ export default {
       activeName: "stock",
       pagination: {
         sales: {
-        current_page:1
+          current_page: 1
         },
         purchases: {
-         current_page:1
+          current_page: 1
         }
       }
     };
@@ -319,9 +318,7 @@ export default {
       this.close();
     });
   },
-  mounted() {
-  
-  },
+  mounted() {},
   methods: {
     customIndex(index, type = "sales_") {
       //2
@@ -364,9 +361,10 @@ export default {
         );
         this.sales = response.data.data;
         this.pagination.sales = response.data.meta;
-       this.pagination.sale.per_page =  parseInt(
-                        response.data.meta.per_page
-                    );
+        /* let { item_description } = data; */
+        /* this.titleDialog = `Habitación ${item_description}`; */
+        this.pagination.sale.per_page = parseInt(response.data.meta.per_page);
+        
         // this.$emit("getRecords", this.pagination.sales.current_page);
       } catch (e) {
         console.log(e);
@@ -386,9 +384,9 @@ export default {
         );
         this.purchases = response.data.data;
         this.pagination.purchases = response.data.meta;
-         this.pagination.purchases.per_page =  parseInt(
-                        response.data.meta.per_page
-                    );
+        this.pagination.purchases.per_page = parseInt(
+          response.data.meta.per_page
+        );
         // this.$emit("getRecords", this.pagination.purchases.current_page);
       } catch (e) {
         console.log(e);
@@ -425,7 +423,7 @@ export default {
     },
     open() {
       this.total = this.warehouses.reduce((a, b) => a + Number(b.stock), 0);
-
+      this.titleDialog = `Stock de producto: ${this.item.description}`;
       if (this.hasSerie) {
         this.getSeries();
       }

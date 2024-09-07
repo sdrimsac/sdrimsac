@@ -588,6 +588,7 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/reports/rooms.vue"
             ),
+            
         "tenant-login-default": () => import("./views/login/index.vue"),
 
         "cash-report": () =>

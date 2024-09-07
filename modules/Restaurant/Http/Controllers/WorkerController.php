@@ -29,6 +29,15 @@ class WorkerController extends Controller
         $configuration = Configuration::first();
         return view('restaurant::workers', compact('establishments', 'configuration'));
     }
+    public function columns(){
+        return [
+            'nombre' => 'name',
+            'estado' => 'active',
+            'tipo usuario' => 'type'
+        ];
+
+    }
+    
     public function report_products_w(Request $request)
     {
         $user_id = $request->user_id;

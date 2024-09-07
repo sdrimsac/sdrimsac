@@ -253,10 +253,14 @@ Route::prefix('caja')->group(function () {
         Route::post('tables/disabled-table', 'TableController@disabled');
         Route::post('tables/enabled-table', 'TableController@enabled');
         Route::post('tables/massive', 'TableController@store_massive');
+        //casino */
+        /* Route::post('casino/store', 'CasinoController@store'); */
+        Route::post('casino', 'CasinoController@store');
         //**** TRABAJADORES */
         Route::get('workers', 'WorkerController@index')->name('restaurant.workers');
         Route::get('workers/records', 'WorkerController@records');
         Route::get('workers/{id}', 'WorkerController@active');
+        Route::get('workers/columns', 'WorkerController@columns');
 
         Route::get('workers/record/{id}', 'WorkerController@record');
         Route::post('workers', 'WorkerController@store');

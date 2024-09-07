@@ -377,7 +377,8 @@
                                     clientTableData.orden_id) &&
                                     localOrden.length != 0 &&
                                     !isSeller
-                                    && configuration.restaurant
+                                    && (configuration.restaurant ||
+                                    configuration.modo_billar)
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -1717,7 +1718,7 @@
                                                                             class="custom_input"
                                                                             :disabled="
                                                                                 
-                                                                                    configuration.edit_price_sales ==
+                                                                                    configuration.editar_precio_politica ==
                                                                                         false
                                                                             "
                                                                             type="number"

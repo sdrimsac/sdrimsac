@@ -1679,6 +1679,12 @@
             @sendOrdens="sendOrdens"
             :showTables.sync="showTables"
         ></tables>
+        <billar
+            :configuration="configuration"
+            @creatingOrden="creatingOrden"
+            @sendOrdens="sendOrdens"
+            :showBillar.sync="showBillar"
+        ></billar>
         <tables-rooms
             :cash_id.sync="cashId"
             :configuration="configuration"
@@ -1861,6 +1867,7 @@ const WarehousesDetail = () =>
     );
 const DetractionPayment = () => import("./partials/detraction_payment.vue");
 const Tables = () => import("./partials/tables.vue");
+const billar = () => import("./partials/billar.vue");
 const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
 const DocumentsPrint = () => import("./partials/documents_print.vue");
@@ -1926,6 +1933,7 @@ export default {
         ListFood,
         ListOrden,
         Tables,
+        billar,
         ListFoodMobiles,
         PromotionCanje,
         TablesRooms,
@@ -1989,10 +1997,12 @@ export default {
             ordensPending: 0,
             isCreatingOrden: false,
             table: {},
+            billar: {},
             tableSelectedNumber: null,
             clientTableData: {},
             tactil: false,
             showTables: false,
+            showBillar: false,
             showTablesRooms: false,
             showHistoryCash: false,
             itemDefault: null,
@@ -2366,6 +2376,16 @@ export default {
                         this.worker.area.description.toUpperCase() !==
                             "CAJA PISCINA"
                 },
+                {
+                    id: 209,
+                    title: [" Zona Billar "],
+                    icon: "fas fa-map-pin ",
+                    visible:
+                        !this.isSeller &&
+                        this.configuration.modo_billar
+                        
+                },
+
                 {
                     id: 195,
                     title: [" Créditos", "Nota de venta "],
@@ -2987,6 +3007,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 209:
+                    this.openBillar();
+                    break;
                 case 97:
                     this.showDialogDetraction = true;
                     break;
@@ -3068,8 +3091,14 @@ export default {
         openTables() {
             this.showTables = true;
         },
+        openBillar(id) {
+            this.showBillar = true;
+        },
         openTablesRooms(id) {
             this.showTablesRooms = true;
+        },
+        openBillar(id) {
+            this.showBillar = true;
         },
         openviewsItemsMobil() {
             this.showDialogViewItems = true;

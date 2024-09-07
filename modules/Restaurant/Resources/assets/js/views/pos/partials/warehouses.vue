@@ -266,6 +266,7 @@ export default {
     async open() {
       /* this.total = this.warehouses.reduce((a, b) => a + Number(b.stock), 0); */
       this.activeName = "sales_";
+      /* this.titleDialog = `Historial de venta y Compra: ${this.item.description}`; */
       await this.getRecords();
       if (this.hasSerie) {
         this.getSeries();

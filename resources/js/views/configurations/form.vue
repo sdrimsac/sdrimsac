@@ -181,6 +181,15 @@
                                                         <el-switch v-model="form.health_network" active-text="HABILITADO" inactive-text="DESHABILITADO" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="() => submit('Entorno Boticas & Hospital', form.health_network, 'healthIcon')"></el-switch>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-3 mb-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label w-100">
+                                                            <i ref="healthIcon" class="el-icon-baseball tab-icon"></i>
+                                                            Entorno Billar
+                                                        </label>
+                                                        <el-switch v-model="form.modo_billar" active-text="HABILITADO" inactive-text="DESHABILITADO" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="() => submit('Entorno billar', form.modo_billar, 'healthIcon')"></el-switch>
+                                                    </div>
+                                                </div>
 
                                             </div>
                                         </div>
@@ -876,6 +885,15 @@
                                                                     Historial Compra Venta En Caja
                                                                 </label>
                                                                 <el-switch v-model="form.compra_venta" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Activar historial compra venta', form.compra_venta, 'view_daily_cash_pin', 'lockIcon')"></el-switch>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 mt-4">
+                                                            <div class="form-group">
+                                                                <label class="control-label w-100">
+                                                                    <i class="el-icon-s-grid icon-tab"></i>
+                                                                   Permitir Editar Politica De Precio En Caja
+                                                                </label>
+                                                                <el-switch v-model="form.editar_precio_politica" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Editar Politica de Precios En Caja', form.editar_precio_politica, 'view_daily_cash_pin', 'lockIcon')"></el-switch>
                                                             </div>
                                                         </div>
                                                     </div>
