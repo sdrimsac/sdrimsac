@@ -119,6 +119,14 @@
                         Ver detalle
                       </a>
                       <a
+                        v-if="row.state_type_id != '11' && !row.is_credit && !row.paid"
+                        class="dropdown-item"
+                        @click.prevent="clickPayment(row.id)"
+                        >
+                        <i class="fas fa-money-bill-alt"></i>
+                        Registrar Pago
+                      </a>
+                      <a
                         :href=" `/dispatches/create_new/sale_note/${row.id}`"
                         v-if=" row.state_type_id != '11' && (user_type == 'admin' || user_type ==
                                                 'superadmin')"
@@ -363,9 +371,7 @@
                       type="button"
                       class="btn waves-effect waves-light btn-sm btn-primary"
                       v-if="row.state_type_id != '11'"
-                      @click.prevent="
-                                                clickPayment(row.id)
-                                            "
+                      @click.prevent="clickPayment(row.id)"
                     >
                       <i class="fas fa-money-bill-alt"></i>
                     </button>

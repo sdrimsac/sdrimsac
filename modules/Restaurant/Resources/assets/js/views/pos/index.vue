@@ -1593,6 +1593,7 @@
 
         <template>
             <payment-form
+            :promotions_document="promotions_document"
                 :itemDefault.sync="itemDefault"
                 :quotationId.sync="quotationId"
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
@@ -1942,7 +1943,7 @@ export default {
     mixins: [functions, exchangeRate],
 
     data() {
-        return {
+        return {promotions_document:[],
             currencyIdChoice: "PEN",
             showDialogDetraction: false,
             showDialogCreditReportDaily: false,
@@ -4310,6 +4311,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
+                promotion_id: null,
             reference_number: null,
                 detraction: {
                     amount: 0,
@@ -5217,7 +5219,7 @@ export default {
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
-
+                this.promotions_document = response.data.promotions_document;
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
                 this.documentsType = response.data.documents_type;

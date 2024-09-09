@@ -367,6 +367,31 @@
                                             </el-checkbox>
                                         </div>
                                     </template>
+                                    <template
+                                        v-if="
+                                            configuration.is_promotion_document
+                                        "
+                                    >
+                                        <div class="col-md-4 form-group">
+                                            <label for="promotion"
+                                                >Promoción</label
+                                            >
+                                            <el-select
+                                                v-model="form.promotion_id"
+                                                filterable
+                                                clearable
+                                                placeholder="Promoción"
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in promotions_document"
+                                                    :key="idx"
+                                                    :label="option.description"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -603,7 +628,9 @@
                                                 type="radio"
                                                 name="method_payment"
                                                 value="08"
-                                                @change="method_payment('DIDI FOOD')"
+                                                @change="
+                                                    method_payment('DIDI FOOD')
+                                                "
                                             />
                                             <div
                                                 class="radio-tile2"
@@ -1633,6 +1660,7 @@ export default {
     },
 
     props: [
+        "promotions_document",
         "itemDefault",
         "company",
         "quotationId",
@@ -1791,7 +1819,7 @@ export default {
                 "07": "TARJETA: OPENPAY",
                 "08": "DIDI FOOD",
                 "09": "PEDIDOS YA",
-                "10": "RAPPI",
+                "10": "RAPPI"
             },
             last_number: {},
             showDialogNewPerson: false,
@@ -2624,6 +2652,10 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
+            this.form.promotion_document_id =
+                this.promotions_document.length > 0
+                    ? this.promotions_document[0].id
+                    : null;
 
             this.sumCoins = [];
             if (!this.form.is_room) {
@@ -3577,7 +3609,8 @@ export default {
                 (this.hasExceedBank && this.form.observation == null) ||
                 (this.form.observation == "" &&
                     this.hasExceedBank &&
-                    this.form.reference_number && this.form.bank_account_id)
+                    this.form.reference_number &&
+                    this.form.bank_account_id)
             ) {
                 try {
                     await this.$confirm(

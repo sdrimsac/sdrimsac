@@ -832,6 +832,15 @@ if ($hostname) {
                 Route::post('tags', [App\Http\Controllers\Tenant\TagController::class, 'store']);
                 Route::delete('tags/{tag}', [App\Http\Controllers\Tenant\TagController::class, 'destroy']);
 
+                Route::prefix('promotions-document')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'index'])->name('tenant.promotions_document.index')->middleware('just.admin');
+                    Route::get('/columns', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'columns']);
+                    Route::get('/records', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'records']);
+                    Route::get('/record/{id}', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'record']);
+                    Route::post('/', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'store']);
+                    Route::delete('/{id}', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'destroy']);
+                });
+                
                 //Promotion
                 Route::get('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');
                 Route::get('promotions/columns', [App\Http\Controllers\Tenant\PromotionController::class, 'columns']);

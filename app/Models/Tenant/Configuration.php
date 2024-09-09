@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'is_promotion_document',
         'editar_precio_politica',
         'modo_billar',
         'compra_venta',
@@ -250,6 +251,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'is_promotion_document' => 'boolean',
         'editar_precio_politica' => 'boolean',
         'modo_billar' => 'boolean',
         'compra_venta' => 'boolean',
@@ -441,6 +443,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'is_promotion_document' => (bool)$this->is_promotion_document,
             'editar_precio_politica' => (bool)$this->editar_precio_politica,
             'modo_billar' => (bool)$this->modo_billar,
             'compra_venta' => (bool)$this->compra_venta,

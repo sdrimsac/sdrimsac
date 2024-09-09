@@ -13,6 +13,14 @@
                 <h4>
                     {{ document.customer_name }}
                 </h4>
+
+                <el-button
+                    v-if="configuration.sale_note_credit_penalty"
+                    type="primary"
+                    @click="seeDetail"
+                    icon="el-icon-view"
+                    >Ajustes</el-button
+                >
             </div>
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
                 <template
@@ -78,6 +86,7 @@
                         >Nuevo</el-button
                     >
                     <el-button
+                        v-if="configuration.sale_note_credit_penalty"
                         type="primary"
                         icon="el-icon-payment"
                         @click="clickAddCancelCredit"
@@ -494,6 +503,7 @@ export default {
     },
     data() {
         return {
+            showDetails: false,
             creditDiscountPenalty: 0,
             customerName: null,
             currentPayment: {},
@@ -534,6 +544,9 @@ export default {
         }
     },
     methods: {
+        seeDetail() {
+            this.showDetails = true;
+        },
         calculateDiscountAmountCredit() {
             this.document.total_difference_credit =
                 this.document.total_difference - this.creditDiscountPenalty ||
@@ -571,6 +584,10 @@ export default {
             this.cancelCredit = true;
             this.showAddButton = false;
             this.document.total_difference_credit = this.document.total_difference;
+            console.log(
+                "🚀 ~ clickAddCancelCredit ~ this.document.total_difference_credit:",
+                this.document.total_difference_credit
+            );
         },
         clickDownloadFile(filename) {
             window.open(

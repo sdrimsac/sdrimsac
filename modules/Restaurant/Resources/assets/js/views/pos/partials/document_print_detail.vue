@@ -39,7 +39,7 @@
                         <th>
                             Estado
                         </th>
-                        <th v-if="type == 'documents'">
+                        <th v-if="type == 'documents' || type == 'saleNotes'">
                             Saldo
                         </th>
                         <th>
@@ -319,6 +319,19 @@
                                             @click="clickVoidedNote(data)"
                                         >
                                             Anular internamente
+                                        </el-button>
+                                    </template>
+                                    <template
+                                        v-if="data.paid == 0 && !data.is_credit"
+                                    >
+                                    <br>
+                                        <el-button
+                                            class="col-md-12 col-12"
+                                            @click="
+                                                clickPaymentSaleNotes(data.id)
+                                            "
+                                        >
+                                            Pagos
                                         </el-button>
                                     </template>
                                 </div>
@@ -652,6 +665,9 @@
                         <td v-if="type == 'documents'" class="text-warning">
                             {{ data.remain > 0 ? data.remain : "" }}
                         </td>
+                        <td v-if="type == 'saleNotes'" class="text-warning">
+                            {{ data.pending > 0 ? data.pending.toFixed(2) : "" }}
+                        </td>
                         <td
                             :class="
                                 `${(data.state_type_id == '11' ||
@@ -733,6 +749,12 @@
             :showDialog.sync="showDialogPayments"
             :documentId="recordId"
         ></documents-payments>
+        <sale-note-payments
+            :configuration="configuration"
+            :showDialog.sync="showDialogPaymentsSaleNotes"
+            :documentId="recordId"
+        ></sale-note-payments>
+
         <note-modal
             :configuration="configuration"
             :showDialog.sync="showNoteModal"
@@ -791,6 +813,10 @@ const SaleNoteGenerate = () =>
     );
 const CreateDispatch = () => import("./create_dispatch.vue");
 const NoteModal = () => import("./note_modal.vue");
+const SaleNotePayments = () =>
+    import(
+        "../../../../../../../../resources/js/views/sale_notes/partials/payments.vue"
+    );
 export default {
     components: {
         whatsappModal,
@@ -801,7 +827,8 @@ export default {
         CreateDispatch,
         DocumentsVoided,
         DocumentsPayments,
-        NoteModal
+        NoteModal,
+        SaleNotePayments
     },
     mixins: [deletable],
     props: [
@@ -815,6 +842,7 @@ export default {
     ],
     data() {
         return {
+            showDialogPaymentsSaleNotes: false,
             titleAvoidSaleNote: "Motivo de anulación",
             resourcePdf: null,
             showPrevisualitation: false,
@@ -873,6 +901,10 @@ export default {
             this.recordId = id;
             this.showNoteModal = true;
         },
+        clickPaymentSaleNotes(recordId) {
+            this.recordId = recordId;
+            this.showDialogPaymentsSaleNotes = true;
+        },
         clickPayment(recordId) {
             this.recordId = recordId;
             this.showDialogPayments = true;
@@ -913,7 +945,7 @@ export default {
                     format = "ticket_50";
                     break;
             }
-                    console.log("🚀 ~ previsualitation ~ format:", format)
+            console.log("🚀 ~ previsualitation ~ format:", format);
             let url = null;
             if (type == "80") {
                 url = `/sale-notes/print/${external_id}/${format}`;
@@ -951,17 +983,17 @@ export default {
                     let data = response.data;
                     let quotation_id = data.quotation_id;
                     let identifier = data.identifier;
-                    if(data.items){
-                        data.items.forEach((it)=>{
+                    if (data.items) {
+                        data.items.forEach(it => {
                             this.$emit(
-                        "insertOrden",
-                        it,
-                        quotation_id,
-                        identifier,
-                    );
-                    this.$emit("closeDialog");
-                })
-            }
+                                "insertOrden",
+                                it,
+                                quotation_id,
+                                identifier
+                            );
+                            this.$emit("closeDialog");
+                        });
+                    }
                     // if (data.orden) {
                     //     let orden = data.orden;
                     //     orden.quotation_id = recordId;

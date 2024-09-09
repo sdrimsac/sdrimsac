@@ -329,6 +329,17 @@
                                                         <el-input v-model="form.promotions_cant_purchase" :disabled="!form.promotions_sell" placeholder="Cantidad de ventas para acceder a la promoción" size="normal" class="mt-2" @blur="submit('Cantidad de ventas para promoción', form.promotions_cant_purchase, 'promotionsIcon')"></el-input>
                                                     </div>
                                                 </div>
+                                                    <div class="col-md-3 mb-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label w-100">
+                                                            <i ref="promotionsIcon" class="fas fa-tags tab-icon"></i> Habilitar Promociones Documento
+                                                            <el-tooltip class="item" effect="dark" content="Por cada cierto total de compra el cliente adquiere un producto gratis" placement="top-start">
+                                                                <i class="fa fa-info-circle"></i>
+                                                            </el-tooltip>
+                                                        </label>
+                                                        <el-switch v-model="form.is_promotion_document" active-text="HABILITADO" inactive-text="DESHABILITADO" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="() => submit('Habilitar Promociones Documento', form.is_promotion_document, 'promotionsIcon')"></el-switch>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -2005,6 +2016,7 @@
                                                             <el-switch v-model="form.guias_remision" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Guias de Remisión', form.guias_remision, 'guias_remision', 'truckLoadingIcon')"></el-switch>
                                                         </div>
                                                     </div>
+                                                    
                                                     <div class="col-md-2 mt-4">
                                                         <div class="form-group">
                                                             <label class="control-label w-100">

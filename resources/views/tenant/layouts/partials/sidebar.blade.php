@@ -324,6 +324,14 @@
                                 </a>
                             </li>
                         @endif
+                        @if ($config->is_promotion_document)
+                            <li>
+                                <a href="{{ route('tenant.promotions_document.index') }}">
+                                    <i class="icofont-price"></i>
+                                    Promocion documento
+                                </a>
+                            </li>
+                        @endif
                         @if ($config->promocion_oferta)
                             <li>
                                 <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
@@ -933,12 +941,12 @@
                         </a>
                     </li>
                     {{-- @if ($config->promocion_oferta) --}}
-                        <li>
-                            <a class="{{ $path[0] === 'receta' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.receta.index') }}">
-                                <i class="icofont-price"></i> Receta 
-                            </a>
-                        </li>
+                    <li>
+                        <a class="{{ $path[0] === 'receta' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.receta.index') }}">
+                            <i class="icofont-price"></i> Receta
+                        </a>
+                    </li>
                     {{-- @endif --}}
                 </ul>
             </li>

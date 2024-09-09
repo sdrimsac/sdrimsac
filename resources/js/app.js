@@ -217,6 +217,10 @@ const app = new Vue({
     el: "#main",
 
     components: {
+        "tenant-promotions-document-index": () =>
+            import(
+                "@views/promotions_document/index.vue"
+            ),
         "tenant-report-methods-index": () =>
             import(
                 "../../modules/Report/Resources/assets/js/views/methods/index.vue"

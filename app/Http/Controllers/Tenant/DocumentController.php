@@ -982,6 +982,7 @@ class DocumentController extends Controller
             ],
         ];
     }
+    
 
     public function store(DocumentRequest $request)
     {

@@ -28,6 +28,7 @@ use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\HotelRentItem;
+use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\UserSerie;
 use Carbon\Carbon;
@@ -337,7 +338,11 @@ class PosController extends Controller
                 $table->hotel_rent_items = collect($hotel_rent_items);
             }
         }
+
+        $promotions_document = PromotionDocument::where('active', true)->get();
+
         return compact(
+            'promotions_document',
             'tablesLeave',
             'tablesClean',
             'sellers',
