@@ -13,14 +13,14 @@
                 <h4>
                     {{ document.customer_name }}
                 </h4>
-
+<!-- 
                 <el-button
                     v-if="configuration.sale_note_credit_penalty"
                     type="primary"
                     @click="seeDetail"
                     icon="el-icon-view"
                     >Ajustes</el-button
-                >
+                > -->
             </div>
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
                 <template
