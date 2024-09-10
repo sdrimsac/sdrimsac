@@ -95,8 +95,10 @@ class SaleNotePaymentController extends Controller
         foreach ($all_payment as $key => $value) {
             if ($value->paid == 0) {
                 $amount = floatval($value->amount);
+                $amount_paid = floatval($value->amount_paid);
                 $penalty_amount = floatval($value->penalty_amount);
                 $amount  = $amount + $penalty_amount;
+                $amount = $amount - $amount_paid;
                 $diff_days = 0;
                 $today = Carbon::now();
                 $date_of_payment = Carbon::parse($value->date_payment);
@@ -104,7 +106,7 @@ class SaleNotePaymentController extends Controller
                 $current_payment = [
                     'num' => $key + 1,
                     'amount' => $amount,
-                    'amount_withouth_penalty' => $value->amount,
+                    'amount_withouth_penalty' => $value->amount - $value->amount_paid,
                     'penalty' => $penalty_amount,
                     'diff_days' => $diff_days,
                     

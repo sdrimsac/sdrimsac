@@ -14,6 +14,7 @@ use App\Http\Controllers\Tenant\PrincipalCategoryController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
+use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Http\Controllers\Tenant\SellerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -220,6 +221,9 @@ if ($hostname) {
                 Route::get('documents/records', [App\Http\Controllers\Tenant\DocumentController::class, 'records']);
                 Route::get('documents/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excel']);
 
+
+                Route::get('sale-notes/get-payments/{sale_note_id}',[SaleNoteController::class,'getPayments']);
+                Route::put('sale-notes/update-payment',[SaleNoteController::class,'updatePayment']);
 
                 Route::get('catalogs', [App\Http\Controllers\Tenant\CatalogController::class, 'index'])->name('tenant.catalogs.index')->middleware('just.admin');
                 Route::get('expenses', [Modules\Restaurant\Http\Controllers\PosController::class, 'expenses_admin'])->name('expenses.index')->middleware('just.admin');

@@ -14,6 +14,7 @@ use App\Models\Tenant\Establishment;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\Payment;
 use App\Models\Tenant\Person;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\Warehouse;
@@ -313,6 +314,7 @@ class CreditListController extends Controller
 
         // $orden_id = $request->orden_id;
     }
+
     public function tables()
     {
         $printers = Area::whereNotNull('printer')->get()

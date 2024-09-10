@@ -72,6 +72,7 @@ use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\CreditList;
+use App\Models\Tenant\HistoryPayment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
@@ -101,8 +102,31 @@ class SaleNoteController extends Controller
     protected $document;
     protected $configuration;
 
-
-
+    public function updatePayment(Request $request){
+        $type = $request->type;
+        $value = $request->value;
+        $payment_id = $request->payment_id;
+        $payment = Payment::find($payment_id);
+        $old_value = $payment->$type;
+        $payment->$type = $value;
+        $payment->save();
+        HistoryPayment::create([
+            'user_id' => auth()->user()->id,
+            'payment_id' => $payment_id,
+            'type' => $type,
+            'value' => $value,
+            'old_value' => $old_value,
+        ]);
+        return [
+            'success' => true,
+            'message' => 'Pago actualizado',
+        ];
+    }
+    public function getPayments($sale_note_id)
+    {
+        $payments = Payment::where('sale_note_id', $sale_note_id)->get();
+        return $payments;
+    }
     public function checkCustomerLine($customer_id)
     {
         $sale_notes = SaleNote::where('customer_id', $customer_id)->whereIn('status', ['R', 'O'])->count();

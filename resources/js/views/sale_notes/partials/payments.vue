@@ -13,14 +13,6 @@
                 <h4>
                     {{ document.customer_name }}
                 </h4>
-<!-- 
-                <el-button
-                    v-if="configuration.sale_note_credit_penalty"
-                    type="primary"
-                    @click="seeDetail"
-                    icon="el-icon-view"
-                    >Ajustes</el-button
-                > -->
             </div>
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
                 <template
@@ -93,8 +85,84 @@
                     >
                         Cancelar crédito</el-button
                     >
+
+                    <el-button
+                        type="primary"
+                        @click="seeDetail"
+                        icon="el-icon-view"
+                        v-if="configuration.sale_note_credit_penalty"
+                        >Ajustes</el-button
+                    >
                 </div>
                 <div class="col-md-12" v-if="records.length > 0">
+                    <div class="container table-responsive">
+                        <table
+                            class="table table-hover table-striped table-condensed  table-responsive"
+                            style="width: 100%; white-space: nowrap;"
+                        >
+                            <tbody>
+                                <tr v-if="!document.paid">
+                                    <td
+                                        class="text-end"
+                                        :colspan="colspanValue"
+                                    >
+                                        TOTAL PAGADO
+                                    </td>
+                                    <td class="text-end">
+                                        {{ document.total_paid }}
+                                    </td>
+                                    <td
+                                        class="text-end"
+                                        :colspan="colspanValue"
+                                    >
+                                        TOTAL A PAGAR
+                                    </td>
+                                    <td class="text-end">
+                                        {{ document.total }}
+                                    </td>
+                                    <td v-if="cancelCredit" class="text-end">
+                                        DESCUENTO
+                                    </td>
+                                    <td v-if="cancelCredit" class="text-end">
+                                        <el-input-number
+                                            @input="calculateDiscountCredit"
+                                            v-model="creditDiscount"
+                                        >
+                                        </el-input-number>
+                                    </td>
+                                    <td v-if="cancelCredit" class="text-end">
+                                        DESCUENTO PENALIDAD
+                                    </td>
+                                    <td v-if="cancelCredit" class="text-end">
+                                        <el-input-number
+                                            @input="
+                                                calculateDiscountAmountCredit
+                                            "
+                                            v-model="creditDiscountPenalty"
+                                        >
+                                        </el-input-number>
+                                    </td>
+                                </tr>
+
+                                <tr v-if="!cancelCredit && !hasPenalty">
+                                    <td
+                                        :colspan="colspanValue"
+                                        class="text-end"
+                                    >
+                                        PENDIENTE DE PAGO
+                                    </td>
+                                    <td class="text-end">
+                                        {{
+                                            Number(
+                                                document.total_difference
+                                            ).toFixed(2)
+                                        }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="container table-responsive">
                         <table
                             class="table table-hover table-striped table-condensed  table-responsive"
@@ -405,80 +473,6 @@
                                     </template>
                                 </tr>
                             </tbody>
-                            <tfoot v-if="!document.paid">
-                                <tr>
-                                    <td colspan="6" class="text-end">
-                                        TOTAL PAGADO
-                                    </td>
-                                    <td class="text-end">
-                                        {{ document.total_paid }}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" class="text-end">
-                                        TOTAL A PAGAR
-                                    </td>
-                                    <td class="text-end">
-                                        {{ document.total }}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr v-if="cancelCredit">
-                                    <td colspan="6" class="text-end">
-                                        DESCUENTO
-                                    </td>
-                                    <td class="text-end">
-                                        <el-input-number
-                                            @input="calculateDiscountCredit"
-                                            v-model="creditDiscount"
-                                        >
-                                        </el-input-number>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr v-if="hasPenalty">
-                                    <td colspan="6" class="text-end">
-                                        DESCUENTO PENALIDAD
-                                    </td>
-                                    <td class="text-end">
-                                        <el-input-number
-                                            @input="
-                                                calculateDiscountAmountCredit
-                                            "
-                                            v-model="creditDiscountPenalty"
-                                        >
-                                        </el-input-number>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr v-if="!cancelCredit && !hasPenalty">
-                                    <td colspan="6" class="text-end">
-                                        PENDIENTE DE PAGO
-                                    </td>
-                                    <td class="text-end">
-                                        {{
-                                            Number(
-                                                document.total_difference
-                                            ).toFixed(2)
-                                        }}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr v-else>
-                                    <td colspan="6" class="text-end">
-                                        PENDIENTE DE PAGO
-                                    </td>
-                                    <td class="text-end">
-                                        {{
-                                            Number(
-                                                document.total_difference_credit
-                                            ).toFixed(2)
-                                        }}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -488,6 +482,12 @@
                 :image="imagePreview"
             >
             </image-preview-modal>
+            <detail-ajusment
+                :dialogAjustment.sync="showDetails"
+                :recordId="documentId"
+                @updateRecord="getData"
+            >
+            </detail-ajusment>
         </div>
     </el-dialog>
 </template>
@@ -495,11 +495,13 @@
 <script>
 import { deletable } from "../../../mixins/deletable";
 import ImagePreviewModal from "../../../components/ImagePreviewModal.vue";
+import DetailAjusment from "./detail_ajustment.vue";
 export default {
     props: ["showDialog", "documentId", "configuration"],
     mixins: [deletable],
     components: {
-        ImagePreviewModal
+        ImagePreviewModal,
+        DetailAjusment
     },
     data() {
         return {
@@ -541,6 +543,13 @@ export default {
                 this.configuration.sale_note_credit_penalty &&
                 this.document.current_payment.penalty > 0
             );
+        },
+        colspanValue() {
+            let colspan = 4; // Base colspan for TOTAL PAGADO and TOTAL A PAGAR
+            if (this.cancelCredit) {
+                colspan += 4; // Adding 4 for DESCUENTO and DESCUENTO PENALIDAD
+            }
+            return colspan;
         }
     },
     methods: {
@@ -588,6 +597,8 @@ export default {
                 "🚀 ~ clickAddCancelCredit ~ this.document.total_difference_credit:",
                 this.document.total_difference_credit
             );
+
+            this.records[0].payment = this.document.total_difference_credit;
         },
         clickDownloadFile(filename) {
             window.open(
