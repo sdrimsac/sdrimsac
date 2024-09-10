@@ -20,7 +20,7 @@ class UnitTypeController extends Controller
 
     public function records()
     {
-        $records = UnitType::paginate(config('tenant.unit_types_per_page'));
+        $records = UnitType::paginate(100);
 
         return new UnitTypeCollection($records);
     }

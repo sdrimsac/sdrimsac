@@ -63,7 +63,12 @@
                         class="form-group"
                         :class="{ 'has-danger': errors.quantity }"
                     >
-                        <label class="control-label w-100">Cantidad</label>
+                        <label class="control-label w-100"
+                            >Cantidad
+                            <span class="text-primary">
+                                [{{ unit_type_description }}]
+                            </span>
+                        </label>
                         <el-input-number
                             class="w-100"
                             v-model="form.quantity"
@@ -142,12 +147,33 @@ export default {
             item: null,
             loading_search: false,
             unit_types: [],
+            all_unit_types: [],
             unit_type_selected: null,
+            unit_type_description:"",
         };
     },
+    created() {
+        this.getUnitTypes();
+    },
+    computed: {
+        // getUnitType() {
+        //     if (!this.item) return "";
+        //     let { unit_type_id } = this.item;
+        //     let unit_type = this.all_unit_types.find(
+        //         ut => ut.id == unit_type_id
+        //     );
+        //     return unit_type ? unit_type.description : "";
+        // }
+    },
     methods: {
+        getUnitTypes() {
+            this.$http("/unit_types/records").then(response => {
+                this.all_unit_types = response.data.data;
+            });
+        },
         clickCommand(type) {
             this.unit_type_selected = type;
+            this.unit_type_description = this.all_unit_types.find(ut => ut.id == type.unit_type_id)?.description || "";
             // this.form.price_type = command;
         },
         clickLotGroup() {
@@ -157,6 +183,7 @@ export default {
             this.form.IdLoteSelected = null;
             this.item = this.items.find(it => it.id == this.form.item);
             this.unit_types = this.item.item_unit_types || [];
+            this.unit_type_description = this.all_unit_types.find(ut => ut.id == this.item.unit_type_id)?.description || "";
             // console.log("🚀 ~ onChangeItem ~ this.item:", this.item)
         },
         addRowLotGroup(id) {
@@ -185,9 +212,10 @@ export default {
                 this.form.quantity = Math.abs(this.form.quantity);
                 if (isNaN(this.form.quantity)) this.form.quantity = 0;
                 const item = this.items.find(item => item.id == this.form.item);
-                if(this.unit_type_selected){
+                if (this.unit_type_selected) {
                     item.unit_type_id = this.unit_type_selected.unit_type_id;
                 }
+                console.log("🚀 ~ clickAddItem ~ item:", item);
                 item.IdLoteSelected = this.form.IdLoteSelected;
                 this.$emit("addItem", {
                     item,
@@ -197,6 +225,7 @@ export default {
                 this.form = {};
                 this.item = null;
                 this.unit_type_selected = null;
+                this.unit_type_description = "";
                 return;
             }
 
