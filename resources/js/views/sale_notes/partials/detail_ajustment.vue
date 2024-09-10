@@ -166,6 +166,7 @@ export default {
                         record.isEditing = false;
                         return record;
                     });
+                    
                 })
                 .catch(error => {
                     console.log(error);

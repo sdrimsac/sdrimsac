@@ -2,7 +2,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
-    
+
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     // $document_type_driver = App\Models\Tenant\Catalogs\IdentityDocumentType::findOrFail($document->driver->identity_document_type_id);
 @endphp
@@ -143,7 +143,9 @@
         <tbody>
             @if ($document->transport_mode_type_id === '01')
                 @php
-                    $document_type_dispatcher = App\Models\Tenant\Catalogs\IdentityDocumentType::findOrFail($document->dispatcher->identity_document_type_id);
+                    $document_type_dispatcher = App\Models\Tenant\Catalogs\IdentityDocumentType::findOrFail(
+                        $document->dispatcher->identity_document_type_id,
+                    );
                 @endphp
                 <tr>
                     <td>Nombre y/o razón social: {{ $document->dispatcher->name }}</td>
@@ -178,6 +180,7 @@
                 <th class="border-top-bottom text-center">Item</th>
                 <th class="border-top-bottom text-center">Código</th>
                 <th class="border-top-bottom text-left">Descripción</th>
+                <th class="border-top-bottom text-left">Presentación</th>
                 <th class="border-top-bottom text-left">Modelo</th>
                 <th class="border-top-bottom text-center">Unidad</th>
                 <th class="border-top-bottom text-right">Cantidad</th>
@@ -195,9 +198,9 @@
                             {!! $row->item->description !!}
                         @endif
 
-                        @if (!empty($row->item->presentation))
+                        {{-- @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
-                        @endif
+                        @endif --}}
 
                         @if ($row->attributes)
                             @foreach ($row->attributes as $attr)
@@ -223,6 +226,7 @@
                             *** Pago Anticipado ***
                         @endif
                     </td>
+                    <td class="text-left">{{ $row->item->presentation }}</td>
                     <td class="text-left">{{ $row->item->model ?? '' }}</td>
                     <td class="text-center">{{ $row->item->unit_type_id }}</td>
                     <td class="text-right">
@@ -264,11 +268,17 @@
     @if ($document->data_affected_document)
         @php
             $document_data_affected_document = $document->data_affected_document;
-            
-            $number = property_exists($document_data_affected_document, 'number') ? $document_data_affected_document->number : null;
-            $series = property_exists($document_data_affected_document, 'series') ? $document_data_affected_document->series : null;
-            $document_type_id = property_exists($document_data_affected_document, 'document_type_id') ? $document_data_affected_document->document_type_id : null;
-            
+
+            $number = property_exists($document_data_affected_document, 'number')
+                ? $document_data_affected_document->number
+                : null;
+            $series = property_exists($document_data_affected_document, 'series')
+                ? $document_data_affected_document->series
+                : null;
+            $document_type_id = property_exists($document_data_affected_document, 'document_type_id')
+                ? $document_data_affected_document->document_type_id
+                : null;
+
         @endphp
         @if ($number !== null && $series !== null && $document_type_id !== null)
             @php

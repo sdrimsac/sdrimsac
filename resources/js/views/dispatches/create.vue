@@ -10,22 +10,24 @@
             <form autocomplete="off" @submit.prevent="submit">
                 <div class="form-body">
                     <div class="row">
-                        <label  class="control-label font-weight-bold h4">
+                        <label class="control-label font-weight-bold h4">
                             Datos Principales
-
-                    </label>
+                        </label>
                         <div class="col-lg-2">
-                            <div :class="{ 'has-danger': errors.establishment }"
+                            <div
+                                :class="{ 'has-danger': errors.establishment }"
                                 class="form-group"
                             >
                                 <label class="control-label">
-                                    <i class="fas fa-warehouse red-icon fa-lg"></i>
+                                    <i
+                                        class="fas fa-warehouse red-icon fa-lg"
+                                    ></i>
                                     Establecimiento
                                 </label>
                                 <el-select
                                     v-model="form.establishment_id"
                                     @change="changeEstablishment"
-                                             :disabled="pos"
+                                    :disabled="pos"
                                 >
                                     <el-option
                                         v-for="(option, idx) in establishments"
@@ -49,8 +51,7 @@
                                 <label class="control-label">
                                     <i class="fas fa-list-ol"></i>
                                     Serie
-                                    </label
-                                >
+                                </label>
                                 <el-select
                                     v-model="form.series"
                                     @change="getCorrelative"
@@ -75,11 +76,9 @@
                                 :class="{ 'has-danger': errors.date_of_issue }"
                                 class="form-group"
                             >
-                                <label class="control-label"
-                                    >
+                                <label class="control-label">
                                     <i class="fas fa-calendar-alt red-icon"></i>
-                                    Fecha de emisión
-                                    ></label
+                                    Fecha de emisión ></label
                                 >
                                 <el-date-picker
                                     v-model="form.date_of_issue"
@@ -101,8 +100,7 @@
                                 }"
                                 class="form-group"
                             >
-                                <label class="control-label"
-                                    >
+                                <label class="control-label">
                                     <i class="fas fa-calendar-alt red-icon"></i>
                                     Fecha de traslado
                                 </label>
@@ -307,8 +305,7 @@
                                 <label class="control-label">
                                     <i class="fas fa-align-left"></i>
                                     Descripción de motivo de traslado
-                                </label
-                                >
+                                </label>
                                 <el-input
                                     v-model="form.transfer_reason_description"
                                     :rows="3"
@@ -458,18 +455,18 @@
                     <div class="row"></div>
                     <div class="row"></div>
                     <hr />
-                    <label  class="control-label font-weight-bold h4">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <i class="fas fa-flag-checkered"></i>
-                            Datos de Envio
-                            <el-tooltip content="Campo Obligatorio">
-                                <span class="text-danger">
-                                    <i class="fas fa-exclamation-circle"></i> <!-- Icono de dato obligatorio -->
-                                </span>
-                            </el-tooltip>
-                                       
+                    <label class="control-label font-weight-bold h4">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <i class="fas fa-flag-checkered"></i>
+                        Datos de Envio
+                        <el-tooltip content="Campo Obligatorio">
+                            <span class="text-danger">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <!-- Icono de dato obligatorio -->
+                            </span>
+                        </el-tooltip>
                     </label>
-                                        <!-- <h4>Datos envío</h4> -->
+                    <!-- <h4>Datos envío</h4> -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div
@@ -550,8 +547,7 @@
                                         "
                                         >[+ Nuevo]
                                     </a>
-                                </label
-                                >
+                                </label>
                                 <el-select
                                     v-model="form.delivery_address_id"
                                     placeholder="Seleccionar punto de llegada"
@@ -573,15 +569,15 @@
                         </div>
                     </div>
                     <hr />
-                    <label  class="control-label font-weight-bold h4">
-                            <i class="fas fa-shipping-fast"></i>
-                            Datos Modo de Traslado
-                            <el-tooltip content="Campo Obligatorio">
-                                <span class="text-danger">
-                                    <i class="fas fa-exclamation-circle"></i> <!-- Icono de dato obligatorio -->
-                                </span>
-                            </el-tooltip>
-                                       
+                    <label class="control-label font-weight-bold h4">
+                        <i class="fas fa-shipping-fast"></i>
+                        Datos Modo de Traslado
+                        <el-tooltip content="Campo Obligatorio">
+                            <span class="text-danger">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <!-- Icono de dato obligatorio -->
+                            </span>
+                        </el-tooltip>
                     </label>
                     <div class="row">
                         <template v-if="form.transport_mode_type_id === '01'">
@@ -721,7 +717,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="control-label">
-                                        <i class="fas fa-car"></i> 
+                                        <i class="fas fa-car"></i>
                                         <i class="fas fa-id-card"></i>
                                         N° Placa Semirremolque</label
                                     >
@@ -742,11 +738,18 @@
                                 <thead>
                                     <tr slot="heading" class="bg-primary">
                                         <th class="text-white">#</th>
-                                        <th class="text-white font-weight-bold">Unidad</th>
+                                        <th class="text-white font-weight-bold">
+                                            Unidad
+                                        </th>
                                         <th class="text-white font-weight-bold">
                                             Descripción
                                         </th>
-                                        <th class="text-white text-right font-weight-bold">
+                                        <th class="text-white font-weight-bold">
+                                            Presentación
+                                        </th>
+                                        <th
+                                            class="text-white text-right font-weight-bold"
+                                        >
                                             Cantidad
                                         </th>
                                         <th></th>
@@ -763,6 +766,8 @@
                                             v-html="setDescriptionOfItem(row)"
                                             class="text-dark"
                                         ></td>
+                                        <td>{{ row.presentation }}</td>
+
                                         <td class="text-right">
                                             {{
                                                 getFormatQuantity(row.quantity)
@@ -940,13 +945,21 @@
                                         </td>
                                     </tr> -->
                                     <tr>
-                                        <td class="text-end hidden-md-up" colspan="5">
-                                            <button class="btn waves-effect waves-light btn-primary"
-                                                    type="button"
-                                                    @click.prevent="showDialogAddItems = true"
-                                                >
-                                                    <i class="fas fa-plus-circle"></i>
-                                                    Agregar Producto
+                                        <td
+                                            class="text-end hidden-md-up"
+                                            colspan="6"
+                                        >
+                                            <button
+                                                class="btn waves-effect waves-light btn-primary"
+                                                type="button"
+                                                @click.prevent="
+                                                    showDialogAddItems = true
+                                                "
+                                            >
+                                                <i
+                                                    class="fas fa-plus-circle"
+                                                ></i>
+                                                Agregar Producto
                                             </button>
                                         </td>
                                     </tr>
@@ -956,13 +969,20 @@
                     </div>
                     <div class="col-lg-12"></div>
                     <div class="form-actions text-right mt-4">
-                        <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
-                        <el-button icon="fas fa-save fa-lg"
+                        <el-button
+                            icon="fas fa-times fa-lg"
+                            @click.prevent="close()"
+                        >
+                            Cancelar</el-button
+                        >
+                        <el-button
+                            icon="fas fa-save fa-lg"
                             v-if="form.items.length > 0"
                             :loading="loading_submit"
                             native-type="submit"
                             type="primary"
-                            > Generar
+                        >
+                            Generar
                         </el-button>
                     </div>
                 </div>
@@ -1198,9 +1218,9 @@ export default {
                     this.form.establishment_id = _.head(this.establishments).id;
                 }
                 await this.changeEstablishment();
-                if(this.pos){
-                    let {establishment_id } = this.config.user;
-                    if(establishment_id){
+                if (this.pos) {
+                    let { establishment_id } = this.config.user;
+                    if (establishment_id) {
                         this.form.establishment_id = establishment_id;
                         await this.changeEstablishment();
                     }
@@ -1589,14 +1609,15 @@ export default {
                 });
             }
             if (searchSeries !== undefined) {
-                
                 this.form.series = searchSeries.number;
             }
         },
         addItem(form) {
             let it = form.item;
             let qty = form.quantity;
-            let exist = this.form.items.find(item => item.id == it.id);
+            let exist = this.form.items.find(
+                item => item.id == it.id && item.unit_type_id == it.unit_type_id
+            );
             let attributes = null;
             if (it.attributes) {
                 attributes = it.attributes;
@@ -1614,6 +1635,7 @@ export default {
                 attributes: attributes,
                 description: it.description,
                 internal_id: it.internal_id,
+                presentation: it.presentation,
                 quantity: form.quantity,
                 item_id: it.id,
                 unit_type_id: it.unit_type_id,

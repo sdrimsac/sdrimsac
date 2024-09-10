@@ -325,6 +325,7 @@ class DispatchInput
                         'unit_type_id' => $row['unit_type_id'],
                         'IdLoteSelected' => $row['IdLoteSelected'] ?? null,
                         'lot_group' => $row['lot_group'] ?? null,
+                        'presentation' => isset($row['presentation']) ? $row['presentation'] : null,
                     ],
                     'quantity' => $row['quantity'],
                     'name_product_pdf' => Functions::valueKeyInArray($row, 'name_product_pdf'),

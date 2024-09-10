@@ -212,19 +212,23 @@ export default {
                 this.form.quantity = Math.abs(this.form.quantity);
                 if (isNaN(this.form.quantity)) this.form.quantity = 0;
                 const item = this.items.find(item => item.id == this.form.item);
+                let quantity = this.form.quantity;
                 if (this.unit_type_selected) {
                     item.unit_type_id = this.unit_type_selected.unit_type_id;
+                    quantity = quantity * this.unit_type_selected.quantity_unit;
+                    item.presentation = this.unit_type_selected.description;
                 }
                 console.log("🚀 ~ clickAddItem ~ item:", item);
                 item.IdLoteSelected = this.form.IdLoteSelected;
                 this.$emit("addItem", {
                     item,
-                    quantity: this.form.quantity
+                    quantity,
                 });
 
                 this.form = {};
                 this.item = null;
                 this.unit_type_selected = null;
+                this.unit_types = [];
                 this.unit_type_description = "";
                 return;
             }
