@@ -334,7 +334,21 @@
                                                     </span></b>
                                             </td>
                                         </tr>
+                                        @if ($next_payment && $next_payment->amount_paid > 0)
+                                            <tr>
+                                                <td colspan="2" align="right" valign="top"
+                                                    class="border-right border-top" style="padding: 5px !important;">
+                                                    <b>ADELANTO CUOTA {{ $position }} S/.</b>
+                                                </td>
+                                                <td align="center" valign="top" class="border-top"
+                                                    style="padding: 5px !important;">
+                                                    <b><span style="font-size: 17px;">
+                                                            {{ $next_payment->amount_paid }}
 
+                                                        </span></b>
+                                                </td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
                                                 class="border-right border-top" style="padding: 5px !important;">
@@ -343,14 +357,14 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-                                                    @if ($penalties == 0)
-                                                    {{ number_format($deuda + $interes, 2) }}
-                                                    {{-- {{ number_format($deuda, 2) }} --}}
-                                                @else
-                                                    {{ number_format($deuda + $interes+ $penalties, 2) }}
-                                                @endif
+                                                        @if ($penalties == 0)
+                                                            {{ number_format($deuda + $interes, 2) }}
+                                                            {{-- {{ number_format($deuda, 2) }} --}}
+                                                        @else
+                                                            {{ number_format($deuda + $interes + $penalties, 2) }}
+                                                        @endif
 
-                                                    
+
                                                     </span></b>
                                             </td>
                                         </tr>
@@ -435,9 +449,9 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-                                                    
-                                                            {{ number_format($deuda, 2) }}
-                                                        
+
+                                                        {{ number_format($deuda, 2) }}
+
                                                     </span></b>
                                             </td>
                                         </tr>

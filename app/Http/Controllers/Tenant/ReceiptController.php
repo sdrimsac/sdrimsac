@@ -42,7 +42,7 @@ class ReceiptController extends Controller
             $payment = $data->sale_note_payment;
         } else {
             $payment = $data->document_payment;
-            if($payment ==  null){
+            if ($payment ==  null) {
                 // $payment 
             }
         }
@@ -65,12 +65,30 @@ class ReceiptController extends Controller
         $company = Company::first();
         $user = User::findOrFail($data->user_id);
         $establishment = Establishment::find($user->establishment_id);
-        $penalties =0;
-        if($data->sale_note_id){
+        $penalties = 0;
+        if ($data->sale_note_id) {
             $penalties = Payment::where('sale_note_id', $data->sale_note_id)->where('paid', 0)->sum('penalty_amount');
         }
+        $payments_ = Payment::where('sale_note_id', $data->sale_note_id)
+            ->where('paid', 0)
+            ->orderBy('date_payment', 'asc')
+            ->get();
+
+        $next_payment = $payments_->first();
+        $position = 0;
+        if ($next_payment) {
+            $all_payments = Payment::where('sale_note_id', $data->sale_note_id)
+                ->get();
+            $position = $all_payments->search(function ($item) use ($next_payment) {
+                return $item->id == $next_payment->id;
+            });
+
+        }
+
         $recibo = PDF::loadView('tenant.receipt.index', [
-            'penalties'=>$penalties,
+            'position' => $position,
+            'next_payment' => $next_payment,
+            'penalties' => $penalties,
             'payment_method_type' => $payment_method_type,
             'data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user
         ]);
