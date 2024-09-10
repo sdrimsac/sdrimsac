@@ -338,7 +338,7 @@
                                             <tr>
                                                 <td colspan="2" align="right" valign="top"
                                                     class="border-right border-top" style="padding: 5px !important;">
-                                                    <b>ADELANTO CUOTA {{ $position }} S/.</b>
+                                                    <b>ADELANTO CUOTA {{ $position +1 }} S/.</b>
                                                 </td>
                                                 <td align="center" valign="top" class="border-top"
                                                     style="padding: 5px !important;">
