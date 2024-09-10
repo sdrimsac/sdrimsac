@@ -91,7 +91,6 @@
           >
             <tr slot="heading" width="100%" class="bg-primary">
               <th class="text-white text-center">Acciones</th>
-              <th class="text-white text-center">Estado</th>
               <th class="text-white">#</th>
               <th class="text-white">Cód. Interno</th>
               <th class="text-white text-center">Unidad</th>
@@ -102,6 +101,7 @@
               <th class="text-end text-white">P.Unitario (Venta)</th>
               <th v-if="typeUser != 'seller'" class="text-end text-white">P.Unitario (Compra)</th>
               <th class="text-center text-white">Tiene Igv</th>
+              <th class="text-white text-center">Estado</th>
             </tr>
 
             <tr></tr>
@@ -169,17 +169,6 @@
                   </div>
                 </template>
               </td>
-              <td class="text-center">
-                <button
-                  class="btn"
-                  :style="{
-                                color: 'white', 
-                                backgroundColor: row.active ? 'green' : 'red', 
-                                fontWeight: 'bold',
-                                width: '110px' 
-                            }"
-                >{{ row.active ? 'Habilitado' : 'Inhabilitado' }}</button>
-              </td>
               <td>{{ index }}</td>
               <td>{{ row.internal_id }}</td>
               <td>{{ row.unit_type_id }}</td>
@@ -227,6 +216,17 @@
               <td class="text-end">{{ row.sale_unit_price }}</td>
               <td v-if="typeUser != 'seller'" class="text-end">{{ row.purchase_unit_price }}</td>
               <td class="text-center">{{ row.has_igv_description }}</td>
+              <td class="text-center">
+                <button
+                  class="btn"
+                  :style="{
+                                color: 'white', 
+                                backgroundColor: row.active ? 'green' : 'red', 
+                                fontWeight: 'bold',
+                                width: '110px' 
+                            }"
+                >{{ row.active ? 'Habilitado' : 'Inhabilitado' }}</button>
+              </td>
             </tr>
           </data-table>
         </div>
@@ -309,7 +309,6 @@ export default {
     });
   },
   methods: {
-
     clickReportForImport(query = null) {
       let { column, value, warehouse_id, area_id } = query;
       window.open(

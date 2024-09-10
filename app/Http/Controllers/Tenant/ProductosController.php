@@ -13,9 +13,13 @@ use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
+use Modules\Restaurant\Models\Area;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Inventory\Models\Category;
+use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
+
 
 class ProductosController extends Controller
 {
@@ -34,11 +38,31 @@ class ProductosController extends Controller
     public function tables()
     {
         return response()->json([
+            'establishment' => Establishment::whereNotNull('printer')->get(),
+            'areas' => Area::whereNotNull('printer')->get(),
             'items' => Item::whereNotNull('description')->get(),
             'warehouses' => Warehouse::all(),
             'categories' => Category::all(),
             'inventories' => Inventory::whereNotNull('created_at')->get(),
         ]);
+    }
+
+    public function tables1()
+    {
+        $printers = Area::whereNotNull('printer')->get()
+            ->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->description,
+                    'printer' => $row->printer,
+                ];
+            });
+
+        return [
+            'printers' => $printers,
+            //'items' => $this->optionsItemWareHouse(),
+            'warehouses' => $this->optionsWarehouse()
+        ];
     }
 
     public function get_records(Request $request)
@@ -51,10 +75,12 @@ class ProductosController extends Controller
             ->whereHas('inventoryTransaction', function ($query) use ($qty_type) {
                 if ($qty_type) {
                     $query->where('type', $qty_type);
+                } else {
+                    $query->whereIn('type', ['input', 'output']);
                 }
             })
 
-            ->select(['id', 'inventory_transaction_id', 'quantity', 'item_id', 'warehouse_id', 'created_at', 'lot_code', 'lots','color_size'])
+            ->select(['id', 'inventory_transaction_id', 'quantity', 'item_id', 'warehouse_id', 'created_at', 'lot_code', 'lots', 'color_size'])
             ->with([
                 'inventoryTransaction:id,type',
                 'item:id,description,internal_id,category_id',
@@ -62,9 +88,9 @@ class ProductosController extends Controller
                 'warehouse:id,description'
             ]);
 
-        $records->whereHas('inventoryTransaction', function ($query) {
+        /* $records->whereHas('inventoryTransaction', function ($query) {
             $query->whereIn('type', ['input', 'output']);
-        });
+        }); */
 
         $records = $records->orderBy('updated_at', 'desc');
 
@@ -235,5 +261,22 @@ class ProductosController extends Controller
                 ->company($company),
             'ReporteTransac_' . Carbon::now()->format('Ymd_His') . '.xlsx'
         );
+    }
+    public function printTransfer($type)
+    {
+        $transfer = Inventory::find($type);
+
+        $company = Company::first();
+        $warehouse_id = $transfer->warehouse_id;
+        $establishment_id = Warehouse::find($warehouse_id)->establishment_id;
+        $establishment = Establishment::find($establishment_id);
+
+        $pdf = Pdf::loadView('tenant.productos.guides_salida', [
+            'transfer' => $transfer,
+            'company' => $company,
+            'establishment' => $establishment
+        ]);
+
+        return $pdf->stream('guides_salida.pdf');
     }
 }

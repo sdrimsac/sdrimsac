@@ -56,7 +56,7 @@ class User extends Authenticatable
         'remember_token',
     ];
     protected $cast = [
-        'is_arca' => 'boolean', 
+        'is_arca' => 'boolean',
         'locked' => 'boolean',
         'active' => 'boolean',
         'can_accept_credit_sale_note' => 'boolean',
@@ -102,18 +102,20 @@ class User extends Authenticatable
 
         ];
     }
-    static function getUserArca(){
+    static function getUserArca()
+    {
         $worker_type_arca = WorkersType::where('description', 'ARCA')->first();
-        if($worker_type_arca){
+        if ($worker_type_arca) {
             $user = User::where('worker_type_id', $worker_type_arca->id)
-            ->where('active', true)
-            ->first();
+                ->where('active', true)
+                ->first();
             return $user;
         }
 
         return null;
     }
-    public function excluded_user(){
+    public function excluded_user()
+    {
         return $this->hasOne(ExcludedUser::class);
     }
     public function isWorkerType($worker_type)
@@ -250,6 +252,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Establishment::class);
     }
+   /*  public function establishments()
+    {
+        return $this->belongsToMany(Establishment::class);
+    } */
 
     /* agregado para mostar sieres de document como boletas facturas y notas de ventas */
     /* public function series()

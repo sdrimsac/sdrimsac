@@ -31,6 +31,8 @@ if ($hostname) {
                 'register' => false,
                 'verify'   => false
             ]);
+            Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'printTransfer']);
+
             Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
             Route::get('check-documents', [TenantDocumentController::class, 'checkDocuments']);
             Route::get('purchases/print/{external_id}/{format?}', 'Tenant\PurchaseController@toPrint');
@@ -54,7 +56,6 @@ if ($hostname) {
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
-            /* ruta para cancelar traslado */
             
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
@@ -654,10 +655,11 @@ if ($hostname) {
                     Route::delete('/{productos}', [App\Http\Controllers\Tenant\ProductosController::class, 'destroy']);
                     Route::get('/columns', [App\Http\Controllers\Tenant\ProductosController::class, 'columns']);
                     Route::get('/tables', [App\Http\Controllers\Tenant\ProductosController::class, 'tables']);
+                    /* Route::get('/tables1', [App\Http\Controllers\Tenant\ProductosController::class, 'tables1']); */
                     Route::post('/move', [App\Http\Controllers\Tenant\ProductosController::class, 'move']);
                     Route::post('/remove', [App\Http\Controllers\Tenant\ProductosController::class, 'remove']);
                     Route::get('/excel', [App\Http\Controllers\Tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');
-                    /* Route::get('/pdf', [App\Http\Controllers\Tenant\ProductosController::class, 'pdf'])->name('tenant.productos.report_pdf'); */
+                    Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'printer'])->name('tenant.productos.guides_salida');
                 });
 
 

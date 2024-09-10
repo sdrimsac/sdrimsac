@@ -18,11 +18,6 @@ use Illuminate\Support\Carbon;
 
 class CasinoController extends Controller
 {
-
-
-
-
-
     public function index()
     {
         $configurations = Configuration::first();
@@ -61,6 +56,26 @@ class CasinoController extends Controller
             'message' => 'Datos guardados exitosamente',
             'data' => $casino,
         ], 201);
+    }
+
+    public  function desocupied($id)
+    {
+        $hotel_rent_item = Casino::find($id);
+        $table = $hotel_rent_item->table;
+        $table->status_table_id = 5;
+        $table->sendMessageDesocupied();
+        $table->save();
+        if ($hotel_rent_item && $hotel_rent_item->is_month_rent) {
+            $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
+            $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
+            $hotel_rent_item->payment_status = "Pagado";
+            $hotel_rent_item->save();
+        }
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Mesa desocupada'
+        ];
     }
 
 

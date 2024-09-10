@@ -21,7 +21,7 @@
         </div>
         <template v-if="form.show_list">
           <div class="row card mx-1 mt-2">
-            <div class="container mt-4 border-bottom">
+            <div class="">
               <div class="infinite-list-wrapper" style="max-height: 800px; overflow-y: auto;">
                 <ul
                   class="list-group"
@@ -814,6 +814,16 @@
 .custom-el-button {
   padding: 2px 6px;
   font-size: 12px;
+}
+.table-container {
+  height: 100%; /* Ocupa todo el espacio disponible */
+  display: flex;
+  flex-direction: column;
+}
+
+.table {
+  flex: 1;
+  overflow-y: auto; /* Permite el scroll si hay más filas */
 }
 </style>
 

@@ -29,15 +29,15 @@ class WorkerController extends Controller
         $configuration = Configuration::first();
         return view('restaurant::workers', compact('establishments', 'configuration'));
     }
-    public function columns(){
+    public function columns()
+    {
         return [
             'nombre' => 'name',
             'estado' => 'active',
             'tipo usuario' => 'type'
         ];
-
     }
-    
+
     public function report_products_w(Request $request)
     {
         $user_id = $request->user_id;
@@ -103,12 +103,14 @@ class WorkerController extends Controller
             ->establishment($establishment)
             ->download('Stock_al_cerrar_caja_' . Carbon::now() . '.xlsx');
     }
-    public function records()
+    public function records(Request $request)
     {
         $configuration =  Configuration::first();
 
         $user_type = auth()->user()->type;
         $establishment_id = auth()->user()->establishment_id;
+        $status = $request->input('qty_type');
+        $name = $request->input('name');
         if ($user_type == 'admin') {
             $records = User::where('type', '<>', 'superadmin');
         } else {
@@ -120,6 +122,15 @@ class WorkerController extends Controller
             if ($configuration->health_network) {
                 $records =  $records->where('establishment_id', $establishment_id);
             }
+        }
+        if ($status !== null) {
+            // Filtrar por estado (0 o 1)
+            $records = $records->where('active', $status);
+        }else {
+            $records = $records->where('active', 1);
+        }
+        if ($name) {
+            $records = $records->where('name', 'like', '%' . $name . '%');
         }
 
         return new UserCollection($records->paginate(150),);
@@ -133,7 +144,7 @@ class WorkerController extends Controller
                 $oo->where('document_type_id', '01');
             })
             ->first();
-        if ($user_serie){
+        if ($user_serie) {
             $worker->series = $user_serie->serie_id;
         }
         return [
@@ -194,7 +205,7 @@ class WorkerController extends Controller
             $serie = Series::where('id', $serie_id)->first();
             $number = $serie->number;
             $prefix = substr($number, -3); //F003 003
-          
+
 
             foreach ($docs as $key => $value) {
                 $prefix_serie = $key;
@@ -205,7 +216,7 @@ class WorkerController extends Controller
                 } else {
                     $prefix_to_search = $key . substr($prefix, -2);
                 }
-                
+
                 //NV002 F002 B002
                 $serie_db = Series::where('document_type_id', $value)
                     ->where('number', $prefix_to_search)

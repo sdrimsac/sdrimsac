@@ -1830,6 +1830,7 @@ class DocumentController extends Controller
         $number = $request->number;
         $series = $request->series;
         $item_id = $request->item_id;
+        $establishments = $request->establishments;
         $company = Company::first();
         $customer_id = $request->customer_id;
         $soap_type_id = $company->soap_type_id;
@@ -1860,6 +1861,10 @@ class DocumentController extends Controller
             $records = $records->whereHas('items', function ($query) use ($item_id) {
                 $query->where('item_id', $item_id);
             });
+        }
+        if ($establishments){
+            $records = $records->where('establishment_id', $establishments);
+
         }
 
 
@@ -2161,8 +2166,12 @@ class DocumentController extends Controller
                     'label' => $series->number . ' ' . $series->establishment->description
                 ];
             });
-        $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
+        /* $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); */ /* Establishment::all(); */
+        /* $establishments = Establishment::all(); */
+        $establishments = Establishment::all();
+        $warehouse = Warehouse::all();
         $payment_conditions = PaymentCondition::all();
+        /* $establishments = auth()->user()->establishments()->get(); */
         return compact('customers', 'sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
     }
 

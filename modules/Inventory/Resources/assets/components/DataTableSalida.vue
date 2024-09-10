@@ -42,7 +42,7 @@
                     <div class="form-group">
                         <label class="control-label">Filtro Por tipo</label>
                         <el-select v-model="form.qty_type" clearable filterable>
-                            <el-option v-for="option in qty_types" :key="option.id" :value="option.value" :label="option.name"></el-option>
+                            <el-option v-for="option in qty_types" :key="option.id" :value="option.value" :label="option.active"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -121,6 +121,7 @@ export default {
             inventory_transactions: [],
             inventories: [],
             form: {},
+            areas: [],
         }
     },
     computed: {},
@@ -217,13 +218,11 @@ export default {
             if (this.form.date_end < this.form.date_start) {
                 this.form.date_end = this.form.date_start
             }
-            // this.loadAll();
         },
         changeDisabledMonths() {
             if (this.form.month_end < this.form.month_start) {
                 this.form.month_end = this.form.month_start
             }
-            // this.loadAll();
         },
         changePeriod() {
             if (this.form.period === 'month') {

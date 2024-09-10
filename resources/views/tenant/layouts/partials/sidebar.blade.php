@@ -262,7 +262,6 @@
                     <i class="icofont-box icon-parent"></i>
                     <span class="label">Inventario</span>
                 </a>
-
                 <ul id="invetories" class="collapse ">
                     @if ($config->listado_productos)
                         <li>
@@ -283,7 +282,6 @@
                             </li>
                         @endif
                         @if ($config->receive_merchandise)
-                            {{-- ($many_establishments) --}}
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('transfers.index') }}">
@@ -302,7 +300,6 @@
                                 <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.dispatches.index') }}">
                                     <i class="far fa-file-alt"></i>
-
                                     Guias de remisión
                                 </a>
                             </li>
@@ -622,7 +619,6 @@
                             <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
                                 href="{{ route('hotels.reports.rooms') }}">
                                 <i class="icofont-file-excel"></i>
-
                                 Reporte habitaciones
                             </a>
                         </li>
@@ -749,7 +745,6 @@
                             </a>
                         </li>
                     @endif
-
                 </ul>
             </li>
         @endif

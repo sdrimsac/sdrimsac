@@ -35,16 +35,38 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-              <label>Filtrar Por:</label>
-              <el-select type="text">
-
-              </el-select>
-              <!-- <el-input type="text" placeholder="Seleccione"></el-input> -->
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="control-label">Filtro Por Estado</label>
+                <el-select v-model="form.qty_type" clearable filterable>
+                  <el-option
+                    v-for="option in qty_types"
+                    :key="option.id"
+                    :value="option.value"
+                    :label="option.name"
+                  ></el-option>
+                </el-select>
+              </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-              <label>Buscar</label>
-              <el-input type="text" placeholder="Otro valor"></el-input>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="control-label">Buscar por Nombre de Usuario</label>
+                <el-input
+                  v-model="form.name"
+                  placeholder="Ingrese el nombre de usuario"
+                  clearable
+                  @change="getData"
+                ></el-input>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-md-4 col-sm-12 d-flex align-items-center">
+              <el-button
+                class="submit"
+                type="primary"
+                @click.prevent="getRecordsByFilter"
+                :loading="loading_submit"
+                icon="el-icon-search"
+              >Buscar</el-button>
             </div>
           </div>
           <div class="table-responsive">
@@ -177,14 +199,28 @@
 /* import DataTableUser from "../../../../../../../resources/js/components/DataTableUser.vue"; */
 import CreateForm from "./form.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
+import queryString from "query-string";
 export default {
   props: ["establishments", "typeUser", "configuration"],
   mixins: [deletable],
   components: {
-    CreateForm,
+    CreateForm
   },
   data() {
     return {
+      qty_types: [
+        {
+          id: 1,
+          name: "Activo",
+          value: "1"
+        },
+        {
+          id: 2,
+          name: "Suspendido",
+          value: "0"
+        }
+      ],
+      active: false,
       showEditPin: false,
       showDialog: false,
       resource: "workers",
@@ -197,10 +233,13 @@ export default {
       newPin: null,
       loading: false,
       allWarehouses: [],
-      allEstablishments: []
+      allEstablishments: [],
+      form: {},
+      loading_submit: false
     };
   },
   created() {
+    this.initForm();
     console.log(this.configuration);
     this.$eventHub.$on("reloadData", () => {
       this.getData();
@@ -248,14 +287,48 @@ export default {
       this.allEstablishments = response.data.establishments;
       /* console.log(series); */
     },
+    initForm() {
+      this.form = {
+        qty_type: null,
+        name: null
+      };
+    },
 
-    async getData() {
-      const response = await this.$http.get(`${this.resource}/records`);
-      this.records = response.data.data.map(d => {
-        d.visible = false;
-        return d;
-      });
-      // this.series = response.data.series;
+    async getRecordsByFilter() {
+      this.loading_submit = await true;
+      await this.getData();
+      this.loading_submit = await false;
+    },
+
+    /* async getData() {
+      const response = await this.$http
+        .get(`${this.resource}/records?${this.getQueryParameters()}`)
+        .then(response => {
+          this.records = response.data.data.map(d => {
+            d.visible = false;
+            return d;
+          });
+        });
+      this.loading_submit = false;
+    }, */
+    getData() {
+      if (this.time) {
+        clearTimeout(this.time);
+      }
+      this.time = setTimeout(async () => {
+        const response = await this.$http
+          .get(`${this.resource}/records?${this.getQueryParameters()}`)
+          .then(response => {
+            this.records = response.data.data.map(d => {
+              d.visible = false;
+              return d;
+            });
+          });
+        this.loading_submit = false;
+      }, 350);
+    },
+    getQueryParameters() {
+      return queryString.stringify(this.form);
     },
     clickCreate(recordId = null) {
       this.recordId = recordId;

@@ -22,6 +22,9 @@ class TransferPlace extends ModelTenant
     {
         return $this->belongsTo(User::class, "receive_id");
     }
+    public function user (){
+        return $this->belongsTo(User::class, "user_id");
+    }
     public function detail()
     {
         return $this->hasMany(TransferPlaceDetail::class, "transfers_place_id");
