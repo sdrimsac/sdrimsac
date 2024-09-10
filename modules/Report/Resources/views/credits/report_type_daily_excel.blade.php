@@ -71,6 +71,10 @@
                                 $payments = $record['payments']->toArray();
 
                                 $acum_total += array_sum(array_column($payments, 'total'));
+                                $total_penalties = array_sum(array_column($payments, 'total_penalty'));
+                                $total_payment = array_sum(array_column($payments, 'payment'));
+                                $total_total = array_sum(array_column($payments, 'total'));
+
                                 // $acum_total_payment += $record['penalty'] + $record['quote_payment'];
                             @endphp
                             <tr>
@@ -80,11 +84,11 @@
                                 <td style="border:1px solid black;"  class="text-center">{{ $record['type_payment'] }}</td>
                                 <td style="border:1px solid black;"  class="text-center">{{ $record['customer']["name"] }}</td>
                                 <td style="border:1px solid black;"  class="text-center">{{ $record['customer']["number"] }}</td>
-                                <td style="border:1px solid black;"  class="text-center">{{ $payments[0]['diffence_days'] }}</td>
-                                <td style="border:1px solid black;"  class="text-center">{{ $record['penalty_amount_by_day'] }}</td>
-                                <td style="border:1px solid black;"  class="text-center">{{ $payments[0]['total_penalty'] }}</td>
-                                <td style="border:1px solid black;"  class="text-end">{{ $payments[0]['payment'] }}</td>
-                                <td style="border:1px solid black;"  class="text-end">{{ $payments[0]['total']}}</td>
+                                <td style="border:1px solid black;"  class="text-center"></td>
+                                <td style="border:1px solid black;"  class="text-center"></td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $total_penalties }}</td>
+                                <td style="border:1px solid black;"  class="text-end">{{ $total_payment}}</td>
+                                <td style="border:1px solid black;"  class="text-end">{{ $total_total}}</td>
                                 {{-- <td style="border:1px solid black;"  class="text-center">{{ $record['differenc_days'] }}</td> --}}
                                 
                                 {{-- <td style="border:1px solid black;"  class="text-center">{{ $record['penalty'] }}</td>
@@ -96,7 +100,7 @@
                                 <td style="border:1px solid black;"  class="text-end">{{ $_total_payment }}</td>
                                 <td style="border:1px solid black;"  class="text-end">{{ $record['amount_due'] }}</td> --}}
                             </tr>
-                            @foreach (array_slice($payments, 1) as $payment)
+                            @foreach ($payments as $payment)
                                 <tr>
                                     <td style="border:1px solid black;"></td>
                                     <td style="border:1px solid black;"></td>

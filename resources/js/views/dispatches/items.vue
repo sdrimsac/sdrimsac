@@ -37,11 +37,25 @@
                                 :label="option.full_description"
                             ></el-option>
                         </el-select>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.items"
-                            v-text="errors.items[0]"
-                        ></small>
+                        <div v-if="unit_types && unit_types.length > 0">
+                            <el-dropdown @command="clickCommand">
+                                <span class="el-dropdown-link">
+                                    Presentación
+                                    <i
+                                        class="el-icon-arrow-down el-icon--right"
+                                    ></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item
+                                        v-for="(type, idx) in unit_types"
+                                        :key="idx"
+                                        :command="type"
+                                    >
+                                        {{ type.description }}
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -81,8 +95,15 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button icon="fas fa-times fa-lg" @click.prevent="close">Cerrar</el-button>
-            <el-button icon="fas fa-plus-circle fa-lg" type="primary" @click="clickAddItem">Agregar</el-button>
+            <el-button icon="fas fa-times fa-lg" @click.prevent="close"
+                >Cerrar</el-button
+            >
+            <el-button
+                icon="fas fa-plus-circle fa-lg"
+                type="primary"
+                @click="clickAddItem"
+                >Agregar</el-button
+            >
         </span>
 
         <item-form
@@ -119,16 +140,24 @@ export default {
             form: {},
             showDialogLots: false,
             item: null,
-            loading_search: false
+            loading_search: false,
+            unit_types: [],
+            unit_type_selected: null,
         };
     },
     methods: {
+        clickCommand(type) {
+            this.unit_type_selected = type;
+            // this.form.price_type = command;
+        },
         clickLotGroup() {
             this.showDialogLots = true;
         },
         onChangeItem() {
             this.form.IdLoteSelected = null;
             this.item = this.items.find(it => it.id == this.form.item);
+            this.unit_types = this.item.item_unit_types || [];
+            // console.log("🚀 ~ onChangeItem ~ this.item:", this.item)
         },
         addRowLotGroup(id) {
             this.form.IdLoteSelected = id;
@@ -156,6 +185,9 @@ export default {
                 this.form.quantity = Math.abs(this.form.quantity);
                 if (isNaN(this.form.quantity)) this.form.quantity = 0;
                 const item = this.items.find(item => item.id == this.form.item);
+                if(this.unit_type_selected){
+                    item.unit_type_id = this.unit_type_selected.unit_type_id;
+                }
                 item.IdLoteSelected = this.form.IdLoteSelected;
                 this.$emit("addItem", {
                     item,
@@ -164,6 +196,7 @@ export default {
 
                 this.form = {};
                 this.item = null;
+                this.unit_type_selected = null;
                 return;
             }
 

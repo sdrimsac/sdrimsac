@@ -5,8 +5,7 @@
         </div>
         <div class="card mb-0">
             <div class="card-body">
-                <data-table :resource="resource">
-                
+                <data-table :resource="resource" ref="dtable">
                     <tr slot="heading">
                         <th>#</th>
                         <th class="text-center">TIPO CREDITO</th>
@@ -22,49 +21,99 @@
                     </tr>
 
                     <tr></tr>
-                    <template slot-scope="{index,row}">
-                    <tr>
-                        <td>{{ index }}</td>
-                        <td class="text-center">
-                            {{ row.is_cash ? "EFECTIVO" : "HOGAR" }}
-                        </td>
-                        <td class="text-center">{{ row.user_name }}</td>
-                        <td class="text-center">{{ row.type_payment }}</td>
-                        <td class="text-center">{{ row.customer.name }}</td>
-                        <td class="text-center">{{ row.customer.number }}</td>
-                        <!-- <td class="text-center">{{ row.differenc_days }}</td>
+                    <template slot-scope="{ index, row }">
+                        <tr @click="visiblePayments(index)"
+                        role="button"
+                        >
+                            <td>
+                                {{ index }}
+                            </td>
+                            <td class="text-center">
+                                {{ row.is_cash ? "EFECTIVO" : "HOGAR" }}
+                            </td>
+                            <td class="text-center">{{ row.user_name }}</td>
+                            <td class="text-center">{{ row.type_payment }}</td>
+                            <td class="text-center">{{ row.customer.name }}</td>
+                            <td class="text-center">
+                                {{ row.customer.number }}
+                            </td>
+                            <!-- <td class="text-center">{{ row.differenc_days }}</td>
                         <td class="text-end">{{ row.penalty }}</td>
                         <td class="text-end">{{ row.quote_payment }}</td>
                         <td class="text-end">{{ row.amount_due }}</td> -->
-                        <td class="text-end">
-                            {{row.payments[0].diffence_days}}
-                        </td>
-                        <td class="text-end">
-                            {{row.penalty_amount_by_day}}
-                        </td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td
+                                class="text-end"
+                                style="font-weight:bold;color:#000;"
+                            >
+                                {{
+                                    row.payments
+                                        .reduce(
+                                            (acc, payment) =>
+                                                acc +
+                                                Number(payment.total_penalty),
+                                            0
+                                        )
+                                        .toFixed(2)
+                                }}
+                            </td>
+                            <td
+                                class="text-end"
+                                style="font-weight:bold;color:#000;"
+                            >
+                                {{
+                                    row.payments
+                                        .reduce(
+                                            (acc, payment) =>
+                                                acc + Number(payment.payment),
+                                            0
+                                        )
+                                        .toFixed(2)
+                                }}
+                            </td>
+                            <td
+                                class="text-end"
+                                style="font-weight:bold;color:#000;"
+                            >
+                                {{
+                                    row.payments
+                                        .reduce(
+                                            (acc, payment) =>
+                                                acc + Number(payment.total),
+                                            0
+                                        )
+                                        .toFixed(2)
+                                }}
+                            </td>
+                        </tr>
+                        <tr
+                            v-show="row.visible"
+                            v-for="(payment, paymentIndex) in row.payments"
+                            :key="`${row.customer.name}-${paymentIndex}`"
+                        >
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
                             <td class="text-end">
-                            {{row.payments[0].total_penalty}}
-                        </td>
-                        <td class="text-end">
-                            {{row.payments[0].payment}}
-                        </td>
-                        <td class="text-end">
-                            {{row.payments[0].total}}
-                        </td>
-                    </tr>
-                    <tr v-for="(payment, paymentIndex) in row.payments.slice(1)" :key="paymentIndex">
-                        <td class="text-end"></td>
-                        <td class="text-end"></td>
-                        <td class="text-end"></td>
-                        <td class="text-end"></td>
-                        <td class="text-end"></td>
-                        <td class="text-end"></td>
-                        <td class="text-end">{{ payment.diffence_days }}</td>
-                        <td class="text-end">{{ row.penalty_amount_by_day }}</td>
-                        <td class="text-end">{{ payment.total_penalty }}</td>
-                        <td class="text-end">{{ payment.payment }}</td>
-                        <td class="text-end">{{ payment.total }}</td>
-                    </tr>
+                                {{ payment.diffence_days }}
+                            </td>
+                            <td class="text-end">
+                                {{ row.penalty_amount_by_day }}
+                            </td>
+                            <td class="text-end">
+                                {{ Number(payment.total_penalty).toFixed(2) }}
+                            </td>
+                            <td class="text-end">
+                                {{ Number(payment.payment).toFixed(2) }}
+                            </td>
+                            <td class="text-end">
+                                {{ Number(payment.total).toFixed(2) }}
+                            </td>
+                        </tr>
                     </template>
                 </data-table>
             </div>
@@ -86,6 +135,9 @@ export default {
     },
     async created() {},
     methods: {
+        visiblePayments(index) {
+            this.$refs.dtable.updateRowVisible(index);
+        },
         updateDate(date) {
             this.date = date;
         }

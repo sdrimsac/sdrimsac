@@ -1,133 +1,9 @@
 <template>
     <div>
-        <div class="row" v-loading="loading"> 
+        <div class="row" v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row">
-                    <!-- <div class="col-md-3">
-                        <label class="control-label"
-                            >Periodo (Fecha de emisión)</label
-                        >
-                        <el-select v-model="form.period" @change="changePeriod">
-                            <el-option
-                                key="month"
-                                value="month"
-                                label="Por mes"
-                            ></el-option>
-                            <el-option
-                                key="between_months"
-                                value="between_months"
-                                label="Entre meses"
-                            ></el-option>
-                            <el-option
-                                key="date"
-                                value="date"
-                                label="Por fecha"
-                            ></el-option>
-                            <el-option
-                                key="between_dates"
-                                value="between_dates"
-                                label="Entre fechas"
-                            ></el-option>
-                        </el-select>
-                    </div>
-                    <template
-                        v-if="
-                            form.period === 'month' ||
-                                form.period === 'between_months'
-                        "
-                    >
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Mes de</label>
-                            <el-date-picker
-                                v-model="form.month_start"
-                                type="month"
-                                class="w-100"
-                                @change="changeDisabledMonths"
-                                value-format="yyyy-MM"
-                                format="MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'between_months'">
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Mes al</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.month_end"
-                                type="month"
-                                :picker-options="pickerOptionsMonths"
-                                value-format="yyyy-MM"
-                                format="MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-                    <template
-                        v-if="
-                            form.period === 'date' ||
-                                form.period === 'between_dates'
-                        "
-                    >
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Fecha del</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.date_start"
-                                type="date"
-                                @change="changeDisabledDates"
-                                value-format="yyyy-MM-dd"
-                                format="dd/MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-                    <template v-if="form.period === 'between_dates'">
-                        <div class="col-md-2">
-                            <label class="w-100 control-label">Fecha al</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.date_end"
-                                type="date"
-                                :picker-options="pickerOptionsDates"
-                                value-format="yyyy-MM-dd"
-                                format="dd/MM/yyyy"
-                                :clearable="false"
-                            ></el-date-picker>
-                        </div>
-                    </template>
-
-                
-
-                    <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <label class="w-100 control-label">
-                                Clientes
-                            </label>
-
-                            <el-select
-                                class="w-100"
-                                v-model="form.person_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o número de documento"
-                                :remote-method="searchRemotePersons"
-                                :loading="loading_search"
-                                @change="changePersons"
-                            >
-                                <el-option
-                                    v-for="option in persons"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div> -->
-
-                
+                    
 
                     <div class="d-flex" style="margin-top:29px">
                         <span style="margin-right:5px">
@@ -150,8 +26,6 @@
                                     resource !== 'reports/document-detractions'
                             "
                         >
-                        
-
                             <el-button
                                 class="submit"
                                 type="success"
@@ -159,12 +33,7 @@
                                 ><i class="fa fa-file-excel"></i> Exportal
                                 Excel</el-button
                             >
-                            <!-- <el-button
-                                class="submit"
-                                @click.prevent="clickOpenWhatsapp"
-                                ><i class="fa fa-whatsapp"></i> Enviar
-                                whatsapp</el-button
-                            > -->
+                        
                         </template>
                     </div>
                 </div>
@@ -183,10 +52,7 @@
                                 :index="customIndex(index)"
                             ></slot>
                         </tbody>
-                        <tfoot
-                        
-                        >
-                        
+                        <tfoot>
                             <tr>
                                 <td
                                     :colspan="
@@ -195,9 +61,13 @@
                                 ></td>
                                 <td></td>
                                 <td></td>
-                                <td class="text-end"><strong>Totales</strong></td>
+                                <td class="text-end">
+                                    <strong>Totales</strong>
+                                </td>
                                 <!-- <td class="text-end">{{ totals.acum_quote.toFixed(2) }}</td> -->
-                                <td class="text-end">{{ totals.acum_unpaid.toFixed(2) }}</td>
+                                <td class="text-end">
+                                    {{ totals.acum_unpaid.toFixed(2) }}
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -239,7 +109,7 @@ export default {
     components: { WhatsappFormReport },
     data() {
         return {
-            loading:false,
+            loading: false,
             messageReport: "",
             resourceReport: "",
             showWhatsappForm: false,
@@ -306,8 +176,7 @@ export default {
             )}`;
             this.showWhatsappForm = true;
         },
-        changePersons() {
-        },
+        changePersons() {},
         searchRemotePersons(input) {
             if (input.length > 0) {
                 this.loading_search = true;
@@ -339,9 +208,13 @@ export default {
             this.initTotals();
 
             records.forEach(row => {
-                this.totals.acum_unpaid += parseFloat(row.payments.reduce((acc, payment) => acc + parseFloat(payment.total), 0));
+                this.totals.acum_unpaid += parseFloat(
+                    row.payments.reduce(
+                        (acc, payment) => acc + parseFloat(payment.total),
+                        0
+                    )
+                );
                 // this.totals.acum_quote += parseFloat(row.quote_payment);
-
             });
         },
         clickDownload(type) {
@@ -352,7 +225,7 @@ export default {
         },
         initForm() {
             this.form = {
-                date: moment().format("YYYY-MM-DD"),
+                date: moment().format("YYYY-MM-DD")
                 // establishment_id: null,
                 // person_id: null,
                 // type_person: null,
@@ -370,8 +243,8 @@ export default {
         initTotals() {
             this.totals = {
                 acum_unpaid: 0,
-                acum_quote:0,
-            }
+                acum_quote: 0
+            };
         },
         customIndex(index) {
             return (
@@ -385,14 +258,24 @@ export default {
             await this.getRecords();
             this.loading_submit = await false;
         },
+        updateRowVisible(index) {
+            index = index - 1;
+            this.records[index].visible = !this.records[index].visible;
+            this.$forceUpdate();
+        },
         getRecords() {
             this.loading = true;
             return this.$http
                 .get(`/${this.resource}/records?${this.getQueryParameters()}`)
                 .then(response => {
                     this.records = response.data.data;
+                    this.records = this.records.map(row => {
+                        row.visible = false;
+                        return row;
+                    });
+                    console.log("🚀 ~ getRecords ~ this.records:", this.records)
+
                     //sort records by dues property (int) in descending order
-                
 
                     this.pagination = response.data.meta;
                     this.pagination.per_page = parseInt(
@@ -400,13 +283,12 @@ export default {
                     );
                     this.loading_submit = false;
                     // this.initTotals()
-            
+
                     this.getTotals(response.data.data);
                 })
                 .finally(() => {
                     this.loading = false;
-                })
-                ;
+                });
         },
         getQueryParameters() {
             return queryString.stringify({
