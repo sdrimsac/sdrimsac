@@ -215,7 +215,6 @@ export default {
                 let quantity = this.form.quantity;
                 if (this.unit_type_selected) {
                     item.unit_type_id = this.unit_type_selected.unit_type_id;
-                    quantity = quantity * this.unit_type_selected.quantity_unit;
                     item.presentation = this.unit_type_selected.description;
                 }
                 console.log("🚀 ~ clickAddItem ~ item:", item);
