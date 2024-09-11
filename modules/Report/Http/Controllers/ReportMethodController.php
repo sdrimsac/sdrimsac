@@ -26,11 +26,12 @@ class ReportMethodController extends Controller
     }
     public function filter()
     {
-        $boxes = PaymentMethodType::all();
+        /* $boxes = PaymentMethodType::all(); */
+        $boxes = PaymentMethodType::where('active', 1)->get();
         $persons = $this->getPersons('customers');
         $establishments = Establishment::all();
 
-        return compact('persons', 'establishments','boxes');
+        return compact('persons', 'establishments', 'boxes');
     }
 
     public function records(Request $request)
@@ -53,7 +54,7 @@ class ReportMethodController extends Controller
             ->company($company)
             ->dateStart($date_start)
             ->dateEnd($date_end)
-            ->establishment($establishment) 
+            ->establishment($establishment)
             ->download('Reporte_Metodos_' . Carbon::now() . '.xlsx');
     }
 
@@ -116,9 +117,17 @@ class ReportMethodController extends Controller
                 });
             });
         }
-        
+
         if ($method) {
-            $boxes->where('method', 'like', '%' . $method . '%');
+            if (is_array($method)) {
+                $boxes->where(function ($query) use ($method) {
+                    foreach ($method as $paymentMethod) {
+                        $query->orWhere('method', 'like', '%' . $paymentMethod . '%');
+                    }
+                });
+            } else {
+                $boxes->where('method', 'like', '%' . $method . '%');
+            }
         }
 
         return $boxes->orderBy('date', 'desc');

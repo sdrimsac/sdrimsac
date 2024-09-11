@@ -5,7 +5,7 @@
         <div class="card-header bg-primary">
             <h4 class="my-0 text-white">
                 <i class="fa fa-cogs"></i>
-                Configuraciones
+                Configuraciones 
             </h4>
         </div>
         <template>
@@ -3298,12 +3298,17 @@ export default {
     async created() {
         await this.loadTables();
         await this.initForm();
+        console.log(this.isArca);
         this.getUsersExcluded();
         await this.$http.get(`/${this.resource}/record`).then(response => {
             if (response.data !== "") {
                 this.form = response.data.data;
             }
         });
+        console.log(this.form.hotels);
+        if(this.isArca){
+            this.activeTab = "hotel"
+        }
     },
     watch: {
         searchQueryModes(newVal) {

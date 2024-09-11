@@ -52,7 +52,11 @@
           >
             <i data-cs-icon="more-horizontal"></i>
           </button>
-          <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+          <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end" 
+          v-if="
+                  typeUser === 'admin' ||
+                    typeUser == 'superadmin'
+                                    ">
             <a
               class="dropdown-item"
               href="javascript:void(0)"

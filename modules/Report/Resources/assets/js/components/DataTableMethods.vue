@@ -63,7 +63,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">Método de pago</label>
-                        <el-select v-model="form.method" clearable filterable>
+                        <el-select v-model="form.method" clearable filterable multiple>
                             <el-option v-for="(option,idx) in boxes" :key="idx" :value="option.description" :label="option.description"></el-option>
                         </el-select>
                     </div>
@@ -133,7 +133,8 @@ export default {
             totals: {},
             establishment: null,
             establishments: [],
-            form: {},
+            form: {
+            },
             
             pickerOptionsDates: {
                 disabledDate: time => {
@@ -216,7 +217,8 @@ export default {
                 date_start: moment().format("YYYY-MM-DD"),
                 date_end: moment().format("YYYY-MM-DD"),
                 month_start: moment().format("YYYY-MM"),
-                month_end: moment().format("YYYY-MM")
+                month_end: moment().format("YYYY-MM"),
+                method: []
             };
         },
         initTotals() {
@@ -243,6 +245,7 @@ export default {
         async getRecordsByFilter() {
 
             this.loading_submit = await true;
+            console.log(this.form.method);
             await this.getRecords();
             this.loading_submit = await false;
         },
@@ -266,7 +269,7 @@ export default {
                 page: this.pagination.current_page,
                 limit: this.limit,
                 ...this.form
-            });
+            }, {arrayFormat: 'bracket'});
         },
 
         changeDisabledDates() {

@@ -193,7 +193,7 @@
                 </li>
             @endif
 
-            @if ($roleService->isArca() && $config->hotels)
+            {{-- @if ($roleService->isArca() && $config->hotels)
                 <li>
                     <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
                         href="{{ url('/caja/rooms') }}">
@@ -202,7 +202,7 @@
                         <span class="label"> Habitaciones</span>
                     </a>
                 </li>
-            @endif
+            @endif --}}
             {{-- <li >
         <a href="#vips" data-bs-toggle="collapse" data-role="button"
           aria-expanded="{{ ($path[0] === 'vips') ? true:false }}{{ ($path[0] === 'vips' && $path[1] === 'create') ? true:false }}"
