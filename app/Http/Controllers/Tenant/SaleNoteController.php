@@ -1741,7 +1741,7 @@ class SaleNoteController extends Controller
     {
         $data = Payment::where('sale_note_id', $sale_note_id)->get();
         $tasa = $data->first()->tasa;
-        $quote = number_format($data->first()->amount, 2);
+        $quote = $data->first()->amount;
         $days = count($data);
         $init_date = Carbon::parse($data->first()->date_payment)->format('d/m/Y');
         $end_date = Carbon::parse($data->last()->date_payment)->format('d/m/Y');
