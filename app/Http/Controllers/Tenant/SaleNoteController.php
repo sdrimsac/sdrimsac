@@ -910,8 +910,9 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
         try {
-            DB::connection('tenant')->transaction(function () use ($request) {
-                $configuration = Configuration::first();
+            $configuration = Configuration::first();
+            DB::connection('tenant')->transaction(function () use ($request,$configuration) {
+
 
                 $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
                 $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
@@ -1445,7 +1446,7 @@ class SaleNoteController extends Controller
 
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
-            if ($this->sale_note->variation_document_id) {
+            if ($this->sale_note->variation_document_id && $configuration->hotels) {
                 $document_variation = Document::find($this->sale_note->variation_document_id);
                 $total_variation = $document_variation->total;
                 $total_original = $this->sale_note->total;
