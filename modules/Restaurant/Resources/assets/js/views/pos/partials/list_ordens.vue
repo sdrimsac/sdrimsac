@@ -376,9 +376,9 @@
                                 (isCreatingOrden == true ||
                                     clientTableData.orden_id) &&
                                     localOrden.length != 0 &&
-                                    !isSeller
-                                    && (configuration.restaurant ||
-                                    configuration.modo_billar)
+                                    !isSeller &&
+                                    (configuration.restaurant ||
+                                        configuration.modo_billar)
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -414,7 +414,8 @@
                             v-if="
                                 isCreatingOrden == false &&
                                     clientTableData.table != undefined &&
-                                    ordens.length != 0 && configuration.pdf_preorder
+                                    ordens.length != 0 &&
+                                    configuration.pdf_preorder
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -1717,9 +1718,8 @@
                                                                         <el-input
                                                                             class="custom_input"
                                                                             :disabled="
-                                                                                
-                                                                                    configuration.editar_precio_politica ==
-                                                                                        false
+                                                                                configuration.editar_precio_politica ==
+                                                                                    false
                                                                             "
                                                                             type="number"
                                                                             v-model="
@@ -3003,8 +3003,7 @@ export default {
                     icon: "fas fa-money-bill-wave-alt",
                     visible:
                         this.configuration.show_expenses_incomes_caja &&
-                        !this.isSeller 
-                
+                        !this.isSeller
                 },
                 {
                     id: 4,
@@ -4040,8 +4039,8 @@ export default {
                     url
                 });
 
-                return
-            
+                return;
+
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
@@ -4198,6 +4197,10 @@ export default {
             } else {
                 this.$emit("paymentsOrden", form_submit);
             }
+            console.log(
+                "🚀 ~ payOrden ~ this.foodDefaults:",
+                this.foodDefaults
+            );
             this.loading = false;
             this.disableSend = false;
             this.to_carry = false;

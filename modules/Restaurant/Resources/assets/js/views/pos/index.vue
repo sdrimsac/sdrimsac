@@ -4,13 +4,18 @@
         v-loading.fullscreen="loading"
         element-loading-text="Espere..."
     >
-        <div class="row" 
-         ><!-- <a href="../../../../../../../public/status_images/credito.jpg" target="_blank">
+        <div class="row">
+            <!-- <a href="../../../../../../../public/status_images/credito.jpg" target="_blank">
             <img src="../../../../../../../public/status_images/credito.jpg" alt="Descripción de la imagen" class="img-fluid">
         </a> -->
-            <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
-                <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
-                    <div class="card-body p-2" >
+            <div
+                v-if="screenWidth > 678"
+                class="d-flex flex-row justify-content-start card mb-2"
+            >
+                <div
+                    class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7"
+                >
+                    <div class="card-body p-2">
                         <div class="row">
                             <div class="d-flex flex-wrap ">
                                 <div
@@ -200,11 +205,15 @@
                                 </template>
                             </div>
                         </div>
-                        <div class="row card mx-1 mt-2" v-if="
-                            configuration.sale_note_credit_confirm
-                            ? isAnalist || user.can_accept_credit_sale_note
-                            : true
-                        ">
+                        <div
+                            class="row card mx-1 mt-2"
+                            v-if="
+                                configuration.sale_note_credit_confirm
+                                    ? isAnalist ||
+                                      user.can_accept_credit_sale_note
+                                    : true
+                            "
+                        >
                             <div>
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
@@ -1594,7 +1603,7 @@
         <template>
             <payment-form
                 @clearVariation="clearVariation"
-            :promotions_document="promotions_document"
+                :promotions_document="promotions_document"
                 :itemDefault.sync="itemDefault"
                 :quotationId.sync="quotationId"
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
@@ -1634,7 +1643,7 @@
                 @openDrawer="openDrawer"
                 @printer="Printer"
                 :all_customers.sync="all_customers"
-                :formVariation="formVariation"
+                :formVariation.sync="formVariation"
                 :customer_variation="customer_variation"
                 :affectation_igv_types="affectation_igv_types"
                 @reloadItems="getFoods"
@@ -1808,14 +1817,16 @@
             :header="null"
             :visible.sync="showDialogCreditReportDaily"
             style="color:blue"
-            
         >
             <div style="text-align: right;">
-                <el-button type="primary" icon="el-icon-close" @click="closeModal"></el-button>
+                <el-button
+                    type="primary"
+                    icon="el-icon-close"
+                    @click="closeModal"
+                ></el-button>
             </div>
             <x-report-credit-daily-cash></x-report-credit-daily-cash>
-            <br>
- 
+            <br />
         </el-dialog>
         <detraction-payment
             :showDialog.sync="showDialogDetraction"
@@ -1835,9 +1846,9 @@
     display: none;
 }
 .custom-dialog .el-dialog {
-  background-color: #1025e6; /* Cambia este color según tus necesidades */
-  border-radius: 8px; /* Para esquinas redondeadas */
-  padding: 0; /* Elimina cualquier padding predeterminado */
+    background-color: #1025e6; /* Cambia este color según tus necesidades */
+    border-radius: 8px; /* Para esquinas redondeadas */
+    padding: 0; /* Elimina cualquier padding predeterminado */
 }
 /* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
@@ -1944,7 +1955,8 @@ export default {
     mixins: [functions, exchangeRate],
 
     data() {
-        return {promotions_document:[],
+        return {
+            promotions_document: [],
             currencyIdChoice: "PEN",
             showDialogDetraction: false,
             showDialogCreditReportDaily: false,
@@ -2198,12 +2210,11 @@ export default {
             this.variation = false;
             this.formVariation = {};
         },
-        insertOrdenQuotation(quotation_id,identifier,item){
-            console.log(identifier," dsadas")
+        insertOrdenQuotation(quotation_id, identifier, item) {
+            console.log(identifier, " dsadas");
             this.quotationId = quotation_id;
             this.cotIdentifier = identifier;
-            this.
-                insertOrden(item,item.id,null,false)
+            this.insertOrden(item, item.id, null, false);
         },
         closeModal() {
             this.showDialogCreditReportDaily = false;
@@ -2386,10 +2397,7 @@ export default {
                     id: 209,
                     title: [" Zona Billar "],
                     icon: "fas fa-map-pin ",
-                    visible:
-                        !this.isSeller &&
-                        this.configuration.modo_billar
-                        
+                    visible: !this.isSeller && this.configuration.modo_billar
                 },
 
                 {
@@ -4317,7 +4325,7 @@ export default {
             this.variation = false;
             this.form = {
                 promotion_id: null,
-            reference_number: null,
+                reference_number: null,
                 detraction: {
                     amount: 0,
                     bank_account: this.company.detraction_account
@@ -5304,6 +5312,63 @@ export default {
             if (this.$refs.list_orden) {
                 this.$refs.list_orden.commercialTreatmentId = null;
             }
+            this.formVariation = {
+                afectar_caja: true,
+                orden_id: null,
+                customer_telephone: null,
+                restaurant: true,
+                total_rounded: 0.0,
+                total_payment: 0.0,
+                hotel_customer_number: null,
+                establishment_id: null,
+                document_type_id: this.establishments.document_default,
+                series_id: null,
+                prefix: null,
+                user_id: this.user.id,
+                number: "#",
+                date_of_issue: moment().format("YYYY-MM-DD"),
+                time_of_issue: moment().format("HH:mm:ss"),
+                currency_type_id: "PEN",
+                purchase_order: null,
+                exchange_rate_sale: 1,
+                total_prepayment: 0,
+                total_charge: 0,
+                total_discount: 0,
+                total_exportation: 0,
+                total_free: 0,
+                total_taxed: 0,
+                total_unaffected: 0,
+                total_exonerated: 0,
+                total_igv: 0,
+                total_base_isc: 0,
+                total_isc: 0,
+                total_base_other_taxes: 0,
+                total_other_taxes: 0,
+                total_taxes: 0,
+                total_value: 0,
+                total: 0,
+                operation_type_id: "0101",
+                date_of_due: moment().format("YYYY-MM-DD"),
+                items: [],
+                charges: [],
+                discounts: [],
+                attributes: [],
+                guides: [],
+                payments: [],
+                hotel: {},
+                additional_information: null,
+                payment_condition_id: "01",
+                printerOn: false,
+                actions: {
+                    format_pdf: "a4"
+                },
+                difference: 0.0,
+                enter_amount: 0.0,
+                method_pay: "Efectivo",
+                commands_fisico: null,
+                to_carry: false
+            };
+            this.variation = false;
             this.clientSaleNoteNumber = null;
             this.quotationId = null;
             this.clientSaleNoteDiscount = 0;
@@ -5732,8 +5797,7 @@ export default {
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
-        },
-        
+        }
     },
     beforeUnmount() {
         document.removeEventListener("keydown", this.handleKeydown);

@@ -2649,6 +2649,7 @@ export default {
             }
         },
         async date_of_issue() {
+        console.log("vv" ,this.formVariation);
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
