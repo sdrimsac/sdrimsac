@@ -3664,6 +3664,7 @@ export default {
                 if (noteVariation) {
                     formVariation.series_id = noteVariation.id;
                     await this.clickPayment(formVariation);
+                    // this.$emit("clearVariation");
                 } else {
                     this.$toast.error("Sin serie en nota de venta");
                 }

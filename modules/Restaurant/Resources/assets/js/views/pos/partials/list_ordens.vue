@@ -4201,6 +4201,8 @@ export default {
             this.loading = false;
             this.disableSend = false;
             this.to_carry = false;
+            this.foodDefaults = [];
+            this.variation = false;
         },
         mergeItems(items) {
             let hasFoodId = items.every(item => item.food && item.food.id);

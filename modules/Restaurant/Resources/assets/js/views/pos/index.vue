@@ -1593,6 +1593,7 @@
 
         <template>
             <payment-form
+                @clearVariation="clearVariation"
             :promotions_document="promotions_document"
                 :itemDefault.sync="itemDefault"
                 :quotationId.sync="quotationId"
@@ -2193,6 +2194,10 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        clearVariation() {
+            this.variation = false;
+            this.formVariation = {};
+        },
         insertOrdenQuotation(quotation_id,identifier,item){
             console.log(identifier," dsadas")
             this.quotationId = quotation_id;

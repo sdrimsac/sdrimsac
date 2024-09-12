@@ -300,7 +300,7 @@ class SaleNotePaymentController extends Controller
                             break;
                         }
 
-                        if ($amount_payed_remain > 0) {
+                        if ($amount_payed_remain > 0.01) {
                             $amount_to_pay = $value->amount + $value->penalty_amount - $creditDiscountPenalty;
 
                             if ($amount_payed_remain >= $amount_to_pay) {

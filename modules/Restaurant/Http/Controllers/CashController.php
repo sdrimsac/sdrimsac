@@ -1704,6 +1704,7 @@ class CashController extends Controller
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $tab_single = (bool) $establishment->tab_single;
+        $excluded = $cash_user->excluded_user;
         if ($configuration->automatic_principal_cash && !$tab_single && $request->input('principal') == false) {
             $exist_principal_cash = Cash::where('principal', true)
                 ->whereHas('user', function ($query) use ($establishment_id, $configuration) {
@@ -1712,7 +1713,7 @@ class CashController extends Controller
                     }
                 })
                 ->where('state', true)->first();
-            if (!$exist_principal_cash) {
+            if (!$exist_principal_cash && !$excluded) {
                 $user_arca = User::getUserArca();
                 if ($user_arca) {
                     Cash::create([
@@ -1975,14 +1976,15 @@ class CashController extends Controller
                 })
                 ->where('principal', 1);
             if ($health_network) {
-                $cash_user = $cash->user;
+    
                 $establishment_id = $cash_user->establishment_id;
                 $cash_principal = $cash_principal->whereHas('user', function ($query) use ($establishment_id) {
                     $query->where('establishment_id', $establishment_id);
                 });
             }
             $cash_principal = $cash_principal->first();
-            if ($cash_principal) {
+            $excluded = $cash_user->excluded_user;
+            if ($cash_principal && !$excluded) {
                 $cash_principal_id = $cash_principal->id;
                 $user_principal = $cash_principal->user;
                 $user_principal_telephone = $user_principal->telephone;
@@ -2005,7 +2007,7 @@ class CashController extends Controller
             }
         }
         $tab_single = (bool)$establishment->tab_single;
-        if ($configuration->automatic_principal_cash && !$tab_single) {
+        if ($configuration->automatic_principal_cash && !$tab_single && !$excluded) {
             $turn_end = $configuration->turn_end;
             // if ($cash->turn_id == $turn_end) {
             if ($cash->cash_type_id == 2 || $cash->cash_type_id == 4) {

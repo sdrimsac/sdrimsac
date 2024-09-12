@@ -118,6 +118,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(ExcludedUser::class);
     }
+
     public function isWorkerType($worker_type)
     {
         $to_upper = strtoupper($worker_type);
