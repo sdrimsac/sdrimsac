@@ -108,15 +108,17 @@ class OrdenItem extends ModelTenant
             $table = $orden->mesa;
             $establishment = $table->establishment_id;
             $warehouse = Warehouse::where('establishment_id', $establishment)->first();
-            $warehouse_id = $warehouse->id;
-            $item_id = $this->food->id;
-            $quantity = $this->quantity;
-            ItemWarehouse::where('item_id', $item_id)
-                ->where('warehouse_id', $warehouse_id)
-                ->increment('stock', $quantity);
-            DB::connection('tenant')->table('stock_order_item')
-                ->where('order_item_id', $this->id)
-                ->delete();
+            if ($warehouse) {
+                $warehouse_id = $warehouse->id;
+                $item_id = $this->food->id;
+                $quantity = $this->quantity;
+                ItemWarehouse::where('item_id', $item_id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->increment('stock', $quantity);
+                DB::connection('tenant')->table('stock_order_item')
+                    ->where('order_item_id', $this->id)
+                    ->delete();
+            }
         }
     }
     public function info_item()
