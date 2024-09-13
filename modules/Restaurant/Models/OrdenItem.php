@@ -108,7 +108,10 @@ class OrdenItem extends ModelTenant
             $table = $orden->mesa;
             $establishment = $table->establishment_id;
             $warehouse = Warehouse::where('establishment_id', $establishment)->first();
-            if ($warehouse) {
+            $exist = DB::connection('tenant')->table('stock_order_item')
+                ->where('order_item_id', $this->id)
+                ->first();
+            if ($warehouse && $exist) {
                 $warehouse_id = $warehouse->id;
                 $item_id = $this->food->id;
                 $quantity = $this->quantity;
