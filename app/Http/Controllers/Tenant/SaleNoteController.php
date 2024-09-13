@@ -84,6 +84,7 @@ use App\Models\Tenant\SaleNoteCreditPenalty;
 use App\Models\Tenant\SaleNotePromotion;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
+use App\Traits\PromotionDocumentTrait;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\Food;
@@ -95,14 +96,15 @@ use Mpdf\Mpdf;
 class SaleNoteController extends Controller
 {
 
-    use StorageDocument, FinanceTrait, FilePaymentTrait;
+    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait;
     protected $sale_note;
     protected $company;
     protected $apply_change;
     protected $document;
     protected $configuration;
 
-    public function updatePayment(Request $request){
+    public function updatePayment(Request $request)
+    {
         $type = $request->type;
         $value = $request->value;
         $payment_id = $request->payment_id;
@@ -911,7 +913,7 @@ class SaleNoteController extends Controller
     {
         try {
             $configuration = Configuration::first();
-            DB::connection('tenant')->transaction(function () use ($request,$configuration) {
+            DB::connection('tenant')->transaction(function () use ($request, $configuration) {
 
 
                 $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
@@ -942,30 +944,6 @@ class SaleNoteController extends Controller
                 foreach ($request->list_ordens as $list_orden) {
                     CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
                 }
-                foreach ($data['items'] as $row) {
-                    $item_id = isset($row['id']) ? $row['id'] : null;
-                    $sale_note_item = new SaleNoteItem;
-                    $sale_note_item->percentage_igv = 18;
-                    $sale_note_item->fill($row);
-                    $sale_note_item->percentage_igv = 18;
-                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
-                    $sale_note_item->sale_note_id = $this->sale_note->id;
-                    $sale_note_item->save();
-                    if (array_key_exists('toWarehouse', $row)) {
-                        $quantity_to_restore = $row['toWarehouse'];
-                        if ($quantity_to_restore > 0) {
-                            $item_id = $row['item_id'];
-                            $warehouse_id = $row['item']['warehouse_id'];
-                            $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
-                        }
-                    }
-                    // $item = Item::find($item_id);
-                    //  $item->stock = $item->stock - $row['quantity'];
-                    // $item->save();
-                }
-                if ($request->is_pay_credit_list) {
-                    SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
-                }
                 if ($request->orden_id) {
                     $Orden = Orden::findOrFail($request->orden_id);
                     $Orden->sale_note_id = $this->sale_note->id;
@@ -975,6 +953,7 @@ class SaleNoteController extends Controller
                     $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
                     foreach ($orden_items as $orden_item) {
                         $orden_item->status_orden_id = 4;
+                        $orden_item->restoreRestaurant();
                         $orden_item->save();
                         event(new OrdenReadyEvent($orden_item->id));
                     }
@@ -990,11 +969,17 @@ class SaleNoteController extends Controller
                         $orden_items = OrdenItem::where('orden_id', $id)->get();
                         foreach ($orden_items as $orden_item) {
                             $orden_item->status_orden_id = 4;
+                            $orden_item->restoreRestaurant();
                             $orden_item->save();
                             // event(new OrdenReadyEvent($orden_item->id));
                         }
                     }
                 }
+
+                if ($request->is_pay_credit_list) {
+                    SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
+                }
+
                 $vacate = $request->vacate;
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
@@ -1076,6 +1061,7 @@ class SaleNoteController extends Controller
                         $hotel_rent->save();
                     }
                 }
+
                 $user_id = auth()->user()->id;
                 $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
                 if (!$cash) {
@@ -1106,11 +1092,33 @@ class SaleNoteController extends Controller
                             $orden_items = OrdenItem::where('orden_id', $orden->id)->get();
                             foreach ($orden_items as $orden_item) {
                                 $orden_item->status_orden_id = 4;
+                                $orden_item->restoreRestaurant();
                                 $orden_item->save();
                             }
                         }
                         Table::where('id', $table->id)->update(['status_table_id' => 1]);
                     }
+                }
+                foreach ($data['items'] as $row) {
+                    $item_id = isset($row['id']) ? $row['id'] : null;
+                    $sale_note_item = new SaleNoteItem;
+                    $sale_note_item->percentage_igv = 18;
+                    $sale_note_item->fill($row);
+                    $sale_note_item->percentage_igv = 18;
+                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
+                    $sale_note_item->sale_note_id = $this->sale_note->id;
+                    $sale_note_item->save();
+                    if (array_key_exists('toWarehouse', $row)) {
+                        $quantity_to_restore = $row['toWarehouse'];
+                        if ($quantity_to_restore > 0) {
+                            $item_id = $row['item_id'];
+                            $warehouse_id = $row['item']['warehouse_id'];
+                            $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
+                        }
+                    }
+                    // $item = Item::find($item_id);
+                    //  $item->stock = $item->stock - $row['quantity'];
+                    // $item->save();
                 }
                 /////------------------------------------------
                 if ($request->generate == true) {
@@ -1458,6 +1466,13 @@ class SaleNoteController extends Controller
                 $message = "Se ha generado un documento con variación para la habitación " . $room . " por S/" . $total_variation . " Total Original: S/" . $total_original . "" . ($is_discount ? " (Descuento)" : " (Recargo)");
                 (new WhatsappController)->sendMessageAll($message);
             }
+            if ($request->promotion_id) {
+                $this->savePromotion(
+                    $this->sale_note,
+                    $request->promotion_id
+                );
+            }
+
             return [
                 'success' => true,
                 'data' => [

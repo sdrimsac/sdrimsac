@@ -103,6 +103,7 @@ class OrdenItemController extends Controller
         try {
             $orden_item = OrdenItem::find($id);
             $orden = Orden::find($orden_item->orden_id);
+            $orden->restoreRestaurant();
             $orden_item->delete();
             $orden_count = Orden::where('id', $orden_item->orden_id)->count();
             if ($orden_count == 0) {

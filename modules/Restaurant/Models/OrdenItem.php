@@ -2,11 +2,15 @@
 
 namespace Modules\Restaurant\Models;
 
+use App\Models\Tenant\Configuration;
+use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\User;
 use App\Traits\HelperTrait;
 use App\Traits\RegisterMovementTrait;
-  use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrdenItem extends ModelTenant
 {
@@ -37,7 +41,7 @@ class OrdenItem extends ModelTenant
             $request = Request::capture();
             $description = "Orden item creado: Solicitado";
             RegisterMovementTrait::registerCreate(
-               $orden_item,
+                $orden_item,
                 $request,
                 $description,
                 $orden_item->toArray()
@@ -49,7 +53,7 @@ class OrdenItem extends ModelTenant
             $newStatus = $orden_item->status_orden->description;
             $description = "Orden item actualizado: $newStatus";
             RegisterMovementTrait::registerUpdate(
-               $orden_item,
+                $orden_item,
                 $request,
                 $description,
                 $orden_item->toArray()
@@ -69,7 +73,7 @@ class OrdenItem extends ModelTenant
                 $data['price'] = $orden_item->price;
                 $data['observations'] = $orden_item->observations;
                 RegisterMovementTrait::registerDelete(
-                   $orden_item,
+                    $orden_item,
                     $request,
                     $description,
                     $data
@@ -78,26 +82,65 @@ class OrdenItem extends ModelTenant
 
         );
     }
-
-    public function info_item(){
-        $food  = $this->food->description;
-        $price = "S/.". number_format($this->price, 2);
-        $quantity = $this->quantity;
-        return "*".$quantity." - ".$food." - ".$price."*";
-    }
-    public function info_to_message($reason = null){
-        $message = "🚨🚨🚨 Se acaba de cancelar un item de la orden N°: *".$this->orden->id."*, el item eliminado es *". $this->food->description."* con el precio de S/. *".number_format($this->price, 2)."* y la cantidad de *".$this->quantity."*";
-
-        if($reason){
-            $message .= " por el motivo: *".$reason."*";
+    public function stockRestaurant()
+    {
+        $configuration = Configuration::first();
+        if ($configuration->restaurant) {
+            $establishment_id = auth()->user()->establishment_id;
+            $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+            $warehouse_id = $warehouse->id;
+            $item_id = $this->food->item_id;
+            $quantity = $this->quantity;
+            ItemWarehouse::where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->decrement('stock', $quantity);
+            DB::connection('tenant')->table('stock_order_item')
+                ->insert([
+                    'order_item_id' => $this->id,
+                ]);
         }
-        $message .= " por el usuario: *".auth()->user()->name."*";
+    }
+    public function restoreRestaurant()
+    {
+        $configuration = Configuration::first();
+        if ($configuration->restaurant) {
+            $orden = $this->orden;
+            $table = $orden->mesa;
+            $establishment = $table->establishment_id;
+            $warehouse = Warehouse::where('establishment_id', $establishment)->first();
+            $warehouse_id = $warehouse->id;
+            $item_id = $this->food->id;
+            $quantity = $this->quantity;
+            ItemWarehouse::where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->increment('stock', $quantity);
+            DB::connection('tenant')->table('stock_order_item')
+                ->where('order_item_id', $this->id)
+                ->delete();
+        }
+    }
+    public function info_item()
+    {
+        $food  = $this->food->description;
+        $price = "S/." . number_format($this->price, 2);
+        $quantity = $this->quantity;
+        return "*" . $quantity . " - " . $food . " - " . $price . "*";
+    }
+    public function info_to_message($reason = null)
+    {
+        $message = "🚨🚨🚨 Se acaba de cancelar un item de la orden N°: *" . $this->orden->id . "*, el item eliminado es *" . $this->food->description . "* con el precio de S/. *" . number_format($this->price, 2) . "* y la cantidad de *" . $this->quantity . "*";
+
+        if ($reason) {
+            $message .= " por el motivo: *" . $reason . "*";
+        }
+        $message .= " por el usuario: *" . auth()->user()->name . "*";
 
         $message .= " 🚨🚨🚨";
         return $message;
     }
 
-    public function status_orden(){
+    public function status_orden()
+    {
 
         return  $this->belongsTo(StatusOrden::class);
     }

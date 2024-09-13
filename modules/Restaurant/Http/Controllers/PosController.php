@@ -155,7 +155,7 @@ class PosController extends Controller
         if ($warehouse_product_id) {
             $warehouse_id = $warehouse_product_id;
         }
-        
+
         $textoIntoArray =  explode(' ', $value);
 
         $brand = $request->brand;
@@ -257,10 +257,10 @@ class PosController extends Controller
             $foods = $foods->orderBy('description', 'ASC');
         }
         $all_foods = $configuration->all_items_pos;
-        if($all_foods){
+        if ($all_foods) {
             $count_foods = Food::query()->count();
             return new FoodCollection($foods->paginate($count_foods));
-        }else{
+        } else {
             if (empty($datafoods)) {
 
                 return new FoodCollection($foods->paginate(50));
@@ -736,7 +736,15 @@ class PosController extends Controller
         if ($document != null) {
             Document::where('orden_id', $orden->id)->delete();
         }
-        OrdenItem::where('orden_id', $orden_id)->delete();
+        // OrdenItem::where('orden_id', $orden_id)->delete();
+        $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
+        /** 
+        @var OrdenItem $item 
+         */
+        foreach ($orden_items as $item) {
+            $item->restoreRestaurant();
+            $item->delete();
+        }
         $orden_delete = Orden::findOrFail($orden->id);
         $orden_delete->delete();
         return [

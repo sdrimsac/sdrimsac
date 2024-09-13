@@ -96,6 +96,7 @@ use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Summary;
 use App\Services\RoleService;
+use App\Traits\PromotionDocumentTrait;
 use Hyn\Tenancy\Models\Website;
 use Illuminate\Support\Facades\Http;
 use Modules\Item\Models\ItemLot;
@@ -114,7 +115,7 @@ use Modules\Restaurant\Models\Table;
 
 class DocumentController extends Controller
 {
-    use StorageDocument, OfflineTrait, FinanceTrait;
+    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait;
     private $max_count_payment = 0;
     protected $document_state = [
         '-' => '-',
@@ -982,18 +983,46 @@ class DocumentController extends Controller
             ],
         ];
     }
-    
+    function restoreOrderItems($request)
+    {
+        $orden_id = isset($request['orden_id']) ? $request['orden_id'] : null;
+        $order_ids = isset($request['order_ids']) ? $request['order_ids'] : null;
+        if ($orden_id) {
+            $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
+            foreach ($orden_items as $orden_item) {
+                $orden_item->restoreRestaurant();
+            }
+        }
+
+        if ($order_ids) {
+            foreach ($order_ids as $order_id) {
+                $orden_items = OrdenItem::where('orden_id', $order_id)->get();
+                foreach ($orden_items as $orden_item) {
+                    $orden_item->restoreRestaurant();
+                }
+            }
+        }
+    }
 
     public function store(DocumentRequest $request)
     {
 
         $ids = [];
+        $this->restoreOrderItems($request->all());
         if (key_exists('id', $request->all())) {
             $document_id = $request->id;
 
             $ids = Orden::where('document_id', $document_id)->pluck('id')->toArray();
 
             Orden::where('document_id', $document_id)->update(["document_id" => null]);
+        }
+        function restoreOrderItems($request)
+        {
+            $orden_id = isset($request['orden_id']) ? $request['orden_id'] : null;
+            $order_ids = isset($request['order_ids']) ? $request['order_ids'] : null;
+            if ($orden_id) {
+                $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
+            }
         }
         try {
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
@@ -1838,7 +1867,7 @@ class DocumentController extends Controller
         $records = Document::query()
             ->where('soap_type_id', '=', $soap_type_id)
             ->where('document_type_id', 'like', '%' . $document_type_id . '%')
-            ->where('state_type_id','05')
+            ->where('state_type_id', '05')
             ->where('series', 'like', '%' . $series . '%')
             ->where('number', 'like', '%' . $number . '%')
             ->whereDoesntHave('note')
@@ -1862,9 +1891,8 @@ class DocumentController extends Controller
                 $query->where('item_id', $item_id);
             });
         }
-        if ($establishments){
+        if ($establishments) {
             $records = $records->where('establishment_id', $establishments);
-
         }
 
 

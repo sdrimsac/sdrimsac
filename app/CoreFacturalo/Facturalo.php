@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\College\Models\CollegePayment;
 use Modules\College\Models\CollegeRegister;
 use Modules\College\Models\CollegeStudent;
+use Modules\Restaurant\Models\OrdenItem;
 
 class Facturalo
 {
@@ -145,6 +146,7 @@ class Facturalo
         $item_warehouse->save();
     }
 
+    
     public function save($inputs)
     {
         if (key_exists('id', $inputs) && $inputs['id'] != null) {

@@ -7,13 +7,19 @@
     >
         <div v-loading="loading" class="card">
             <div class="d-flex">
-                <div class="col-4" style="    margin-top: 15px;">
+                <div class="col-4 m-3">
                     <el-input
                         @input="searchOrden"
                         v-model="form.value"
                         placeholder="N° orden"
                     >
                     </el-input>
+                </div>
+                <div class="col-2">
+                    <br>
+                    <el-checkbox v-model="form.cash" @change="getRecords">
+                         Venta directa
+                    </el-checkbox>
                 </div>
             </div>
             <div class="m-1"></div>
@@ -23,6 +29,7 @@
                         <th>#</th>
                         <th>Mesa</th>
                         <th>Orden #</th>
+                        <th>Estado</th>
                         <th>Referencia</th>
                         <th>Cantidad</th>
                         <th>Fecha</th>
@@ -39,6 +46,20 @@
                         </td>
                         <td>
                             {{ ord.id }}
+                        </td>
+                        <td>
+                            <span
+                                :class="{
+                                    'text-success':
+                                        ord.status_id == 3 ||
+                                        ord.status_id == 4,
+                                    'text-warning': ord.status_id == 2,
+                                    'text-danger': ord.status == 5,
+                                    'text-info': ord.status == 1
+                                }"
+                            >
+                                {{ ord.status }}
+                            </span>
                         </td>
                         <td>
                             {{ ord.ref || "-" }}
@@ -60,9 +81,7 @@
                                 <el-button
                                     type="success"
                                     icon="el-icon-printer"
-                                    @click="
-                                        printCreditList(ord.credit_list_id)
-                                    "
+                                    @click="printCreditList(ord.credit_list_id)"
                                 ></el-button>
                             </el-tooltip>
                             <el-button
@@ -70,16 +89,13 @@
                                 icon="el-icon-printer"
                                 @click="printTicket(ord.id)"
                             ></el-button>
-                                <el-tooltip
-                                    content="Ver detalle"
-                                    placement="top"
-                                >
-                                 <el-button
-                                type="warning"
-                                icon="el-icon-tickets"
-                                @click="listOrden(ord.id)"
-                            ></el-button>
-                                </el-tooltip>
+                            <el-tooltip content="Ver detalle" placement="top">
+                                <el-button
+                                    type="warning"
+                                    icon="el-icon-tickets"
+                                    @click="listOrden(ord.id)"
+                                ></el-button>
+                            </el-tooltip>
                         </td>
                     </tr>
                 </tbody>
@@ -93,48 +109,49 @@
             >
             </el-pagination>
             <el-dialog
-            :visible.sync="showDialog"
-            title="Listado de ordenes"
-            width="60%"
-            append-to-body
-            @open="getOrdenItems"
-            @close="showDialog = false"
+                :visible.sync="showDialog"
+                title="Listado de ordenes"
+                width="60%"
+                append-to-body
+                @open="getOrdenItems"
+                @close="showDialog = false"
             >
-            <div class="row">
-                <div class="table-responsive">
-                    <table class="table table striped">
-                        <thead>
-                            <tr>
-                                <th>
-                                    #
-                                </th>
-                                <th>
-                                    Pedido
-                                </th>
-                                <th>
-                                    Cantidad
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, idx) in currentOrdenItems" :key="idx">
-                                <td>
-                                    {{ idx + 1 }}
-                                </td>
-                                <td>
-                                    {{ item.food.description }}
-                                </td>
-                                <td>
-                                    {{ item.quantity }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        #
+                                    </th>
+                                    <th>
+                                        Pedido
+                                    </th>
+                                    <th>
+                                        Cantidad
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(item, idx) in currentOrdenItems"
+                                    :key="idx"
+                                >
+                                    <td>
+                                        {{ idx + 1 }}
+                                    </td>
+                                    <td>
+                                        {{ item.food.description }}
+                                    </td>
+                                    <td>
+                                        {{ item.quantity }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
             </el-dialog>
-
-
         </div>
     </el-dialog>
 </template>
@@ -145,26 +162,27 @@ export default {
     props: ["showPendingOrdens", "areas"],
     data() {
         return {
-            form: {},
+            form: {
+                cash: false,
+                value: ""
+            },
             ordens: [],
             loading: false,
             pagination: {},
             timer: null,
-            showDialog:false,
-            currentOrdenId:null,
-            currentOrdenItems:[]
+            showDialog: false,
+            currentOrdenId: null,
+            currentOrdenItems: []
         };
     },
     methods: {
-        listOrden(id){
+        listOrden(id) {
             this.showDialog = true;
             this.currentOrdenId = id;
             let orden = this.ordens.find(ord => ord.id == id);
             this.currentOrdenItems = orden.orden_items;
         },
-        getOrdenItems(){
-
-        },
+        getOrdenItems() {},
         ///credit-list/receipt/${this.currentCreditList}/ticket
         async printCreditList(id) {
             let paperConfig = {
@@ -201,12 +219,10 @@ export default {
                 let url = response.data.print;
                 let printerR = response.data.printer;
 
-                await this.$http.post("/caja/re-print",
-                    {url,
-                    printer:printerR
-
-                    }
-                );
+                await this.$http.post("/caja/re-print", {
+                    url,
+                    printer: printerR
+                });
                 return;
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
@@ -216,7 +232,7 @@ export default {
                 let isPosd = printer.split(" ")[printer.split(" ").length - 1];
                 console.log(isPosd);
                 if (isPosd == "POSD") {
-                    config.density = 200;      
+                    config.density = 200;
                 }
                 console.log(config);
                 if (!qz.websocket.isActive()) {
@@ -259,7 +275,9 @@ export default {
             let query = this.getQueryParameters();
             try {
                 this.loading = true;
-                const response = await this.$http(`ordens-pending?${query}`);
+                const response = await this.$http(
+                    `ordens-pending?${query}&cash=${this.form.cash}`
+                );
                 if (response.status == 200) {
                     const { data, meta } = response.data;
                     this.ordens = data;

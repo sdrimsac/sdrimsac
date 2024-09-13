@@ -3126,6 +3126,10 @@ export default {
             this.clientTableData = {};
             this.isCreatingOrden = false;
             this.idOrden = undefined;
+
+            if(!this.configuration.all_items_pos){
+                this.search_items();
+            }
         },
         async changePage(page) {
             this.pagination.current_page = page;
@@ -5835,20 +5839,26 @@ export default {
         Echo.channel("stock_orden").listen(
             `.stock-order-${this.configuration.socket_channel}`,
             e => {
-                for (let index = 0; index < e.data.order_item.length; index++) {
-                    let xFind = _.find(this.listFoods, {
-                        id: e.data.order_item[index].food_id
-                    });
-                    if (xFind) {
-                        let index_find = _.findIndex(this.listFoods, {
-                            id: xFind.id
+                if (this.configuration.all_items_pos) {
+                    for (
+                        let index = 0;
+                        index < e.data.order_item.length;
+                        index++
+                    ) {
+                        let xFind = _.find(this.listFoods, {
+                            id: e.data.order_item[index].food_id
                         });
-                        if (index_find !== -1) {
-                            let nSaldo =
-                                parseInt(
-                                    this.listFoods[index_find].item.stock
-                                ) - e.data.order_item[index].quantity;
-                            this.listFoods[index_find].item.stock = nSaldo;
+                        if (xFind) {
+                            let index_find = _.findIndex(this.listFoods, {
+                                id: xFind.id
+                            });
+                            if (index_find !== -1) {
+                                let nSaldo =
+                                    parseInt(
+                                        this.listFoods[index_find].item.stock
+                                    ) - e.data.order_item[index].quantity;
+                                this.listFoods[index_find].item.stock = nSaldo;
+                            }
                         }
                     }
                 }

@@ -39,6 +39,9 @@ use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
 use App\Events\MessageEvent;
+use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\Warehouse;
+
 class OrdenController extends Controller
 {
     public function changeOrder(Request $request)
@@ -52,16 +55,16 @@ class OrdenController extends Controller
         $orden->save();
         $table->status_table_id = 2;
         $table->save();
-        
-        $message = "El usuario ".$user_name." cambió la orden: ".$orden->id." de la mesa ".$table_old->number." a la mesa ".$table->number;
+
+        $message = "El usuario " . $user_name . " cambió la orden: " . $orden->id . " de la mesa " . $table_old->number . " a la mesa " . $table->number;
         $ordens = Orden::where('table_id', $table_old->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
         if (count($ordens) == 0) {
             $table_old->status_table_id = 1;
             $table_old->save();
         }
-        $caja_area_id= Area::getAreaCajaId();
+        $caja_area_id = Area::getAreaCajaId();
 
-        event(new MessageEvent($message,$caja_area_id));
+        event(new MessageEvent($message, $caja_area_id));
         return [
             'success' => true,
             'message' => 'Orden cambiada',
@@ -126,8 +129,6 @@ class OrdenController extends Controller
             'document' => $document,
             'result' => $result,
         ];
-
-
     }
     public function printTicket(Request $request)
     {
@@ -143,7 +144,7 @@ class OrdenController extends Controller
         $area_desc = null;
         //   $to_kitchen = true; en true no es pa cocina
         $to_kitchen = false;
-        if($precuenta){
+        if ($precuenta) {
             $to_kitchen = true;
         }
         if ($area_id) {
@@ -179,7 +180,7 @@ class OrdenController extends Controller
             $diff_ordens[] = $elemento->orden_id;
             return $elemento->food_id . '-' . $elemento->price;
         })->map(function ($grupo) {
-     
+
             $cantidadTotal = $grupo->sum('quantity');
             return $grupo->first()->forceFill(['quantity' => $cantidadTotal]);
         });
@@ -234,12 +235,12 @@ class OrdenController extends Controller
         } else {
             $height = $height + $orden_item_length;
         }
-        if($configuration->text_comanda){
+        if ($configuration->text_comanda) {
             $height += 100;
         }
 
         // 
-        
+
         try {
             $pdf = PDF::loadView('restaurant::ordens.ticket', compact(
                 'two_or_more',
@@ -399,12 +400,40 @@ class OrdenController extends Controller
     public function ordenspending(Request $request)
     {
 
-        $ordens = Orden::where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5);
-        // $ordens = Orden::query();
+
+        // $ordens = Orden::where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5);
+        $ordens = Orden::query();
         if ($request->value) {
             $ordens = $ordens->where('id', 'like', '%' . $request->value . '%');
         }
-        return new OrdenCollection($ordens->where('status_orden_id', '<>', 4)->orderBy('created_at', 'desc')->paginate(10));
+
+        $cash = $request->cash == 'true' ? true : false;
+        if ($cash) {
+            /** @var User $user */
+            $user = auth()->user();
+            $user_cash_id = $user->get_cash_id();
+            $ordens = $ordens
+                ->whereNotNull('customer_id')
+                ->whereHas('mesa', function ($q) {
+                    $q->where('number', 'like', '%CAJA%');
+                })
+
+                ->where(function ($query) use ($user_cash_id) {
+                    $query->whereHas(
+                        'document',
+                        function ($q) use ($user_cash_id) {
+                            $q->where('cash_id', $user_cash_id);
+                        }
+                    )
+                        ->orWhereHas(
+                            'salenote',
+                            function ($q) use ($user_cash_id) {
+                                $q->where('cash_id', $user_cash_id);
+                            }
+                        );
+                });
+        }
+        return new OrdenCollection($ordens->orderBy('created_at', 'desc')->paginate(10));
     }
     public function ordenslist()
     {
@@ -452,7 +481,8 @@ class OrdenController extends Controller
             'message' => 'Área ' . ($orden->active ? 'activada' : 'desactivada')
         ];
     }
-    public function recordWorker($id, Request $request){
+    public function recordWorker($id, Request $request)
+    {
         $orden = Orden::find($id);
         $precuenta = $request->precuenta ?? false;
         $to_kitchen = $request->to_kitchen;
@@ -484,7 +514,7 @@ class OrdenController extends Controller
             if (count($orden_items) != 0) {
                 $ids_string = join("_", $orden_items);
             }
-            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items,false,$precuenta));
+            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items, false, $precuenta));
             return [
                 'success' => true,
                 'data' => $orden,
@@ -578,14 +608,14 @@ class OrdenController extends Controller
             } else {
                 if ($request->id != null) {
                     $orden = Orden::find($request->id);
-                    if($orden){
+                    if ($orden) {
                         $id = $orden->id;
                     }
                 } else {
                     $id = null;
                 }
             }
-          
+
 
             $new_orden = collect($request->orden);
 
@@ -613,14 +643,14 @@ class OrdenController extends Controller
             } else {
 
                 //   dd($request->all());
-                if($request->orden){
+                if ($request->orden) {
                     $table = Table::find($request->orden['table_id']);
-               
-                $table->status_table_id = 2;
-                $table->save();
+
+                    $table->status_table_id = 2;
+                    $table->save();
                 }
             }
-            if(count($items) == 0){
+            if (count($items) == 0) {
                 return [
                     'success' => false,
                     'message' => 'No se puede guardar una orden sin items'
@@ -633,9 +663,9 @@ class OrdenController extends Controller
                 $orden = Orden::find($id);
                 $orden->ref = $ref;
                 $table = Table::find($orden->table_id);
-                if($table->is_room){
+                if ($table->is_room) {
                     $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
-                    if($hotel_rent_item){
+                    if ($hotel_rent_item) {
                         $orden->hotel_rent_item_id = $hotel_rent_item->id;
                     }
                 }
@@ -657,9 +687,9 @@ class OrdenController extends Controller
                 }
                 $table = Table::find($orden->table_id);
                 $table->status_table_id = 2;
-                if($table->is_room){
+                if ($table->is_room) {
                     $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
-                    if($hotel_rent_item){
+                    if ($hotel_rent_item) {
                         $orden->hotel_rent_item_id = $hotel_rent_item->id;
                     }
                 }
@@ -685,6 +715,7 @@ class OrdenController extends Controller
                 $orden_item->time = date('H:i:s');
                 $orden_item->area_id = $item['food']['area_id'];
                 $orden_item->save();
+                $orden_item->stockRestaurant();
                 $orden_items_ids[] = $orden_item->id;
                 $orden_items_ids_for_kitchen[] = [
                     "orden_id" => $orden_item->id,
@@ -692,7 +723,7 @@ class OrdenController extends Controller
                 ];
                 event(new OrdenEvent($orden_item->id));
             }
-            if($request->add_charge_room){
+            if ($request->add_charge_room) {
                 $food = $this->get_item_service();
                 $orden_item = new OrdenItem;
                 $orden_item->food_id = $food->id;
@@ -708,7 +739,7 @@ class OrdenController extends Controller
                 $orden_item->time = date('H:i:s');
                 $orden_item->area_id = $food->area_id;
                 $orden_item->save();
-
+                $orden_item->stockRestaurant();
             }
 
             $print_box = $configuration->print_commands;
@@ -721,12 +752,12 @@ class OrdenController extends Controller
                         return $area_id == $a['area_id'];
                     }), "orden_id");
                     $area_found = Area::find($area_id);
-                    if($area_found->printer || $area_found->search_print ==1){
+                    if ($area_found->printer || $area_found->search_print == 1) {
                         event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
                         sleep(1);
                     }
                     //esperar un segundo
-                    
+
 
                 }
             }
@@ -755,15 +786,15 @@ class OrdenController extends Controller
             ];
             /* ----------------------------- */
         } catch (Exception $e) {
-            if($e->getMessage()!=null){
+            if ($e->getMessage() != null) {
 
                 Log::info($e->getMessage());
             }
-            if($e->getLine()!=null){
+            if ($e->getLine() != null) {
 
                 Log::info($e->getLine());
             }
-            if($orden){
+            if ($orden) {
                 $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
                 if ($ordens_items == 0) {
                     $orden->delete();
@@ -779,6 +810,7 @@ class OrdenController extends Controller
             ];
         }
     }
+
     function get_item_service()
     {
         $item = Item::where('unit_type_id', 'ZZ')
@@ -822,7 +854,7 @@ class OrdenController extends Controller
         $user_box = User::whereHas('area', function ($query) {
             $query->where('description', 'like', '%CAJ%');
         })->where('establishment_id', $establishment_id)->first();
-        if($user_box){
+        if ($user_box) {
             $area_box = $user_box->area;
             return $area_box->id;
         }
@@ -843,7 +875,8 @@ class OrdenController extends Controller
         }
         return false;
     }
-    public function cancelOrdenHotel(Request $request){
+    public function cancelOrdenHotel(Request $request)
+    {
         $id = $request->id;
 
         $items = OrdenItem::where('orden_id', $id)->get();
@@ -932,7 +965,15 @@ class OrdenController extends Controller
         }
 
         if ($orden->sale_note_id == null || $orden->document_id == null) {
-            OrdenItem::where('orden_id', $orden->id)->delete();
+            $orden_items = OrdenItem::where('orden_id', $orden->id)->get();
+            /** 
+        @var OrdenItem $item 
+             */
+            foreach ($orden_items as $item) {
+                $item->restoreRestaurant();
+                $item->delete();
+            }
+            // OrdenItem::where('orden_id', $orden->id)->delete();
             $orden->delete();
         }
         event(new OrdenPendingEvent(-1));

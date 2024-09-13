@@ -118,7 +118,16 @@ class User extends Authenticatable
     {
         return $this->hasOne(ExcludedUser::class);
     }
+    public function get_cash_id()
+    {
+        $cash = Cash::where('user_id', $this->id)->where('state', true)->first();
 
+        if ($cash) {
+            return $cash->id;
+        }
+
+        return null;
+    }
     public function isWorkerType($worker_type)
     {
         $to_upper = strtoupper($worker_type);
@@ -253,7 +262,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Establishment::class);
     }
-   /*  public function establishments()
+    /*  public function establishments()
     {
         return $this->belongsToMany(Establishment::class);
     } */
