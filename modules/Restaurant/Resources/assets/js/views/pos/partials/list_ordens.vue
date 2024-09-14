@@ -2313,6 +2313,7 @@
         </quotation-form>
 
         <credit-form
+            v-if="user"
             :users.sync="users"
             :user.sync="user"
             :showDialog.sync="showCreditForm"
@@ -2712,7 +2713,6 @@ export default {
     },
 
     async mounted() {
-        // console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
 
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
@@ -2727,7 +2727,9 @@ export default {
             ordens = JSON.parse(ordensSave);
         }
         this.ordenInBox = ordens;
-
+        setTimeout(() => {
+            console.log("isSeller: ",this.isSeller);
+        }, 1000);
         Echo.channel("insert_cash").listen(
             `.insert-cash-${this.configuration.socket_channel}`,
             e => {
@@ -3290,6 +3292,8 @@ export default {
         },
         handleResize() {
             this.screenWidth = window.innerWidth;
+            console.log(this.user);
+            this.quotation_stock = this.isSeller;
         },
         showTransfers() {
             this.showTransfersDialog = true;

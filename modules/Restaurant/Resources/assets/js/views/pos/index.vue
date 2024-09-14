@@ -1537,6 +1537,8 @@
                     <list-orden
                         :exchange_rate_sale="form.exchange_rate_sale"
                         :users.sync="users"
+                        :user.sync="user"
+                        :isSeller.sync="isSeller"
                         @sendOrdens="sendOrdens"
                         :company.sync="company"
                         :customer_variation="customer_variation"
@@ -2119,6 +2121,7 @@ export default {
         this.area_id = this.worker.area_id;
         this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");
+        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller)
         this.isAnalist = this.checkWorkerType("analista");
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
@@ -5269,6 +5272,7 @@ export default {
                     this.customer_default
                 ];
                 this.user = response.data.user;
+                console.log("🚀 ~ awaitthis.$http.get ~ this.user:", this.user)
                 // this.desarrollador=response.data.desarrollador
                 this.currency_types.length > 0
                     ? this.currency_types[0].id
