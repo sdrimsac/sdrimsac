@@ -3127,7 +3127,7 @@ export default {
             this.isCreatingOrden = false;
             this.idOrden = undefined;
 
-            if(!this.configuration.all_items_pos){
+            if(!this.configuration.all_items_pos && this.configuration.restaurant){
                 this.search_items(null);
             }
         },
