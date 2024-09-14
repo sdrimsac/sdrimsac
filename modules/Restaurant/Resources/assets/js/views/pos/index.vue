@@ -3128,7 +3128,7 @@ export default {
             this.idOrden = undefined;
 
             if(!this.configuration.all_items_pos){
-                this.search_items();
+                this.search_items(null);
             }
         },
         async changePage(page) {
