@@ -127,7 +127,9 @@ export default {
     data() {
         return {
             quotationNewId: null,
-            form: {},
+            form: {
+                customer_id: null,
+            },
             showDialogNewPerson: false,
             customers: [],
             resource: "quotations",
@@ -371,6 +373,7 @@ export default {
         },
         open() {
             this.form = {
+                customer_id: null,
                 date_of_issue: new Date(),
                 currency_type_id: "PEN",
                 exchange_rate_sale: 1,
