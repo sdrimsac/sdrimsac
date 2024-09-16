@@ -277,7 +277,7 @@ class QuotationController extends Controller
             ->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
-                    'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
+                    'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
                     'identity_document_type_id' => $row->identity_document_type_id,
@@ -519,7 +519,7 @@ class QuotationController extends Controller
                 $customers = Person::whereType('customers')->whereIsEnabled()->orderBy('name')->take(20)->get()->transform(function ($row) {
                     return [
                         'id' => $row->id,
-                        'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
+                        'description' => $row->number . ' - ' . $row->name,
                         'name' => $row->name,
                         'number' => $row->number,
                         'identity_document_type_id' => $row->identity_document_type_id,
@@ -595,7 +595,7 @@ class QuotationController extends Controller
             ->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
-                    'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
+                    'description' => $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
                     'identity_document_type_id' => $row->identity_document_type_id,

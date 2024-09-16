@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Tenant;
 
+use App\Models\Tenant\CommercialTreatment;
+use App\Models\Tenant\CommercialTreatmentItem;
 use Modules\Restaurant\Models\Food;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Item\Models\ItemLotsGroup;
@@ -19,28 +21,52 @@ class ItemResource extends JsonResource
         $foods = Food::where('item_id', $this->id)->first();
         $lot_code = null;
         $date_of_due = null;
-        if($this->lots_enabled){
+        if ($this->lots_enabled) {
             $lot_group = ItemLotsGroup::where('item_id', $this->id)->first();
 
-            if($lot_group){
+            if ($lot_group) {
                 $lot_code = $lot_group->code;
                 $date_of_due = $lot_group->date_of_due;
             }
-     
         }
+        $commercial_treatments = $this->commercial_treatments->transform(function ($row, $key) {
+            return [
+                'id' => $row->id,
+                'item_id' => $row->item_id,
+                'commercial_treatment_id' => $row->commercial_treatment_id,
+                'amount' => $row->amount,
+                'active' => (bool) $row->active,
+                'commercial_treatment_description' => $row->commercial_treatment->description,
+            ];
+        });
+        $ids_commercial_treatments = $commercial_treatments->pluck('commercial_treatment_id');
+        $all_commercial_treatments = CommercialTreatment::whereNotIn('id', $ids_commercial_treatments)->get();
+        $all_commercial_treatments = $all_commercial_treatments->transform(function ($row, $key) {
+            return [
+                'id' => null,
+                'item_id' => $this->id,
+                'commercial_treatment_id' => $row->id,
+                'amount' => null,
+                'active' => (bool) $row->active,
+                'commercial_treatment_description' => $row->description,
+            ];
+        });
+        //array_merge
+        $commercial_treatments =  array_merge($commercial_treatments->toArray(), $all_commercial_treatments->toArray());
 
         return [
             'subject_to_detraction' => (bool) $this->subject_to_detraction,
-            'commercial_treatments' => $this->commercial_treatments->transform(function ($row, $key) {
-                return [
-                    'id' => $row->id,
-                    'item_id' => $row->item_id,
-                    'commercial_treatment_id' => $row->commercial_treatment_id,
-                    'amount' => $row->amount,
-                    'active' => (bool) $row->active,
-                    'commercial_treatment_description' => $row->commercial_treatment->description,
-                ];
-            }),
+            'commercial_treatments' => $commercial_treatments,
+            // 'commercial_treatments' => $this->commercial_treatments->transform(function ($row, $key) {
+            //     return [
+            //         'id' => $row->id,
+            //         'item_id' => $row->item_id,
+            //         'commercial_treatment_id' => $row->commercial_treatment_id,
+            //         'amount' => $row->amount,
+            //         'active' => (bool) $row->active,
+            //         'commercial_treatment_description' => $row->commercial_treatment->description,
+            //     ];
+            // }),
             'has_color_size' => (bool) $this->has_color_size,
             'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,
@@ -126,8 +152,8 @@ class ItemResource extends JsonResource
                 ];
             }),
             'series_enabled' => $this->series_enabled,
-            'is_promotion' => (bool) $this-> is_promotion , 
-            'promotion_count' => $this-> promotion_count,
+            'is_promotion' => (bool) $this->is_promotion,
+            'promotion_count' => $this->promotion_count,
 
             // 'warehouses' => collect($this->warehouses)->transform(function($row) {
             //     return [

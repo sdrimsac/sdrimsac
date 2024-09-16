@@ -17,15 +17,31 @@ use Modules\Item\Models\CategoryItem;
 class CommercialTreatmentController extends Controller
 {
 
-    public function update_item(Request $request, $id){
-        $commercial_treatment_item = CommercialTreatmentItem::findOrFail($id);
-        $commercial_treatment_item->amount = $request->amount;
-        $commercial_treatment_item->save();
-        return [
-            'success' => true,
-            'message' => 'Actualizado con éxito',
-            'data'    => $commercial_treatment_item
-        ];
+    public function update_item(Request $request, $id)
+    {
+        if ($id != "null") {
+            $commercial_treatment_item = CommercialTreatmentItem::findOrFail($id);
+            $commercial_treatment_item->amount = $request->amount;
+            $commercial_treatment_item->save();
+            return [
+                'success' => true,
+                'message' => 'Actualizado con éxito',
+                'data'    => $commercial_treatment_item
+            ];
+        } else {
+            CommercialTreatmentItem::where('commercial_treatment_id', $request->commercial_treatment_id)->delete();
+            $commercial_treatment_item = new CommercialTreatmentItem;
+            $commercial_treatment_item->commercial_treatment_id = $request->commercial_treatment_id;
+            $commercial_treatment_item->item_id = $request->item_id;
+            $commercial_treatment_item->amount = $request->amount;
+            $commercial_treatment_item->active = true;
+            $commercial_treatment_item->save();
+            return [
+                'success' => true,
+                'message' => 'Actualizado con éxito',
+                'data'    => $commercial_treatment_item
+            ];
+        }
     }
     public function index()
     {
@@ -75,9 +91,9 @@ class CommercialTreatmentController extends Controller
             'data'    => $commercial_treatment
         ];
     }
-    public function deleteItem( $commercial_treatment_item_id)
+    public function deleteItem($commercial_treatment_item_id)
     {
-       CommercialTreatmentItem::where('id', $commercial_treatment_item_id)->delete();
+        CommercialTreatmentItem::where('id', $commercial_treatment_item_id)->delete();
         return [
             'success' => true,
             'message' => 'Eliminado con éxito',
@@ -144,7 +160,7 @@ class CommercialTreatmentController extends Controller
     public function get_items(Request $request, $commercial_treatment_id)
     {
         $item_ids = $request->itemIds;
-    
+
         $records = [];
         foreach ($item_ids as $item_id) {
             $commercial_treatment_item = CommercialTreatmentItem::where('item_id', $item_id)

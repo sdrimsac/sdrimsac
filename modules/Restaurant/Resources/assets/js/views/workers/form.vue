@@ -293,7 +293,8 @@
                 </div> -->
                 </div>
             </div>
-            <div class="row" v-if="configuration.commercial_treatments">
+    
+            <div class="row" v-if="configuration.commercial_treatment_items">
                 <div class="col-12">
                     Tratamientos Comerciales
                 </div>
@@ -420,7 +421,7 @@ export default {
                 }
             );
 
-            this.titleDialog = this.recordId ? "Editar " : "Nuevo ";
+            this.titleDialog = this.recordId ? "Editara " : "Nuevo ";
             if (this.recordId) {
                 this.$http
                     .get(`${this.resource}/record/${this.recordId}`)
