@@ -496,7 +496,7 @@ class DocumentController extends Controller
         $customers = $customers->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' => $row->number . ' - ' . $row->name,
+                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'has_credit_line' => (bool) $row->has_credit_line,
@@ -749,7 +749,7 @@ class DocumentController extends Controller
 
                 return [
                     'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
+                    'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
                     'identity_document_type_id' => $row->identity_document_type_id,
@@ -1702,7 +1702,7 @@ class DocumentController extends Controller
             ->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
+                    'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
                     'phone' => $row->telephone,

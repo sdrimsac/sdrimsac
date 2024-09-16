@@ -18,8 +18,9 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
     protected $fillable = [
+        'alias',
         'has_credit_line',
-'credit_line',
+        'credit_line',
         'sex',
         'type',
         'identity_document_type_id',
@@ -44,7 +45,7 @@ class Person extends ModelTenant
         'client_zone_id',
     ];
     protected $casts = [
-        'has_credit_line' => 'boolean', 
+        'has_credit_line' => 'boolean',
         'credit_line' => 'float',
     ];
     // protected static function boot()
@@ -127,6 +128,7 @@ class Person extends ModelTenant
 
 
         $data = [
+            'alias' => $this->alias,
             'credit_line' => $this->credit_line,
             'has_credit_line' => (bool) $this->has_credit_line,
             'id' => $this->id,

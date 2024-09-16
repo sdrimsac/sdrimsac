@@ -261,6 +261,7 @@ Route::prefix('caja')->group(function () {
         Route::get('workers/records', 'WorkerController@records');
         Route::get('workers/{id}', 'WorkerController@active');
         Route::get('workers/columns', 'WorkerController@columns');
+        Route::post('workers/commercial_treatment', 'WorkerController@commercial_treatment');
 
         Route::get('workers/record/{id}', 'WorkerController@record');
         Route::post('workers', 'WorkerController@store');

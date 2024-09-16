@@ -66,10 +66,12 @@
                 resource: 'users',
                 errors: {},
                 form: {},
+                commercial_treatments: [],
             }
         },
         created() {
             this.initForm()
+            t
             this.$http.get(`/${this.resource}/record/1`)
                 .then(response => {
                     if (response.data !== '') {

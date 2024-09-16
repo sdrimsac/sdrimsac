@@ -73,7 +73,7 @@ class PurchaseController extends Controller
             ->transform(function ($row) {
                 return [
                     'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
+                    'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
                     'identity_document_type_id' => $row->identity_document_type_id,
@@ -164,7 +164,7 @@ class PurchaseController extends Controller
                 $suppliers = Person::whereType('suppliers')->orderBy('name')->take(20)->get()->transform(function ($row) {
                     return [
                         'id' => $row->id,
-                        'description' => $row->number . ' - ' . $row->name,
+                        'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                         'name' => $row->name,
                         'number' => $row->number,
                         'identity_document_type_id' => $row->identity_document_type_id,

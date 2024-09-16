@@ -9,11 +9,10 @@
         :close-on-click-modal="false"
         class="rounded-dialog"
     >
-    <br>
+        <br />
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                   
                     <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
@@ -21,12 +20,20 @@
                                 'has-danger': errors.identity_document_type_id
                             }"
                         >
-                        <label class="control-label">
-                            <i class="fas fas fa-id-card"></i> Tipo Doc. Identidad
-                            <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
-                                <i class="fas fa-info-circle text-danger"></i>
-                            </el-tooltip>
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fas fa-id-card"></i> Tipo Doc.
+                                Identidad
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Este campo es obligatorio...!!!"
+                                    placement="top"
+                                >
+                                    <i
+                                        class="fas fa-info-circle text-danger"
+                                    ></i>
+                                </el-tooltip>
+                            </label>
                             <el-select
                                 v-model="form.identity_document_type_id"
                                 filterable
@@ -53,15 +60,21 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.number }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-id-card"></i> 
-                            <i class="fas fa-hashtag"></i>
-                            Número de Doc.
-                            <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
-                                <i class="fas fa-info-circle text-danger"></i>
-                            </el-tooltip>
-                            
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-id-card"></i>
+                                <i class="fas fa-hashtag"></i>
+                                Número de Doc.
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Este campo es obligatorio...!!!"
+                                    placement="top"
+                                >
+                                    <i
+                                        class="fas fa-info-circle text-danger"
+                                    ></i>
+                                </el-tooltip>
+                            </label>
                             <div v-if="api_service_token != false">
                                 <x-input-service
                                     :identity_document_type_id="
@@ -115,10 +128,16 @@
                         >
                             <label class="control-label">
                                 <i class="fas fa-tag"></i> Nombre
-                                <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
-                                    <i class="fas fa-info-circle text-danger"></i>
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Este campo es obligatorio...!!!"
+                                    placement="top"
+                                >
+                                    <i
+                                        class="fas fa-info-circle text-danger"
+                                    ></i>
                                 </el-tooltip>
-                                
                             </label>
                             <el-input v-model="form.name" dusk="name">
                                 <i
@@ -133,6 +152,31 @@
                             ></small>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-12 col-xl-12">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.alias }"
+                        >
+                            <label class="control-label">
+                                <i
+                                    class="fas fa-tag
+                                "
+                                ></i>
+                                Alias
+                            </label>
+                            <el-input v-model="form.alias" dusk="alias">
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.alias"
+                                v-text="errors.alias[0]"
+                            ></small>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div
@@ -142,7 +186,7 @@
                         <label class="control-label">
                             <i class="fas fa-mars"></i>
                             <i class="fas fa-venus"></i>
-                             Masculino
+                            Masculino
                         </label>
                         <el-select v-model="form.sex">
                             <el-option label="Másculino" value="M"></el-option>
@@ -154,12 +198,19 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.trade_name }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-building"></i> Nombre Comercial
-                            <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
-                                <i class="fas fa-info-circle text-danger"></i>
-                            </el-tooltip>
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-building"></i> Nombre Comercial
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Este campo es obligatorio...!!!"
+                                    placement="top"
+                                >
+                                    <i
+                                        class="fas fa-info-circle text-danger"
+                                    ></i>
+                                </el-tooltip>
+                            </label>
                             <el-input
                                 v-model="form.trade_name"
                                 dusk="trade_name"
@@ -202,9 +253,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.country_id }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-globe"></i> País
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-globe"></i> País
+                            </label>
                             <el-select
                                 v-model="form.country_id"
                                 filterable
@@ -224,15 +275,15 @@
                             ></small>
                         </div>
                     </div>
-                    
+
                     <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.department_id }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-building"></i> Departamento
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-building"></i> Departamento
+                            </label>
                             <el-select
                                 v-model="form.department_id"
                                 filterable
@@ -259,9 +310,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-city"></i> Provincia
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-city"></i> Provincia
+                            </label>
                             <el-select
                                 v-model="form.province_id"
                                 filterable
@@ -288,9 +339,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-map-marker-alt"></i> Distrito
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-map-marker-alt"></i> Distrito
+                            </label>
                             <el-select
                                 v-model="form.district_id"
                                 filterable
@@ -318,11 +369,11 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.address }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <i class="fas fa-globe"></i>
-                            Dirección
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <i class="fas fa-globe"></i>
+                                Dirección
+                            </label>
                             <el-input v-model="form.address" dusk="address">
                                 <i
                                     slot="prefix"
@@ -344,9 +395,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.client_zone_id }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-map-marked-alt"></i> Zona
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-map-marked-alt"></i> Zona
+                            </label>
                             <el-select
                                 v-model="form.client_zone_id"
                                 filterable
@@ -371,9 +422,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.telephone }"
                         >
-                        <label class="control-label">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </label>
+                            <label class="control-label">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </label>
                             <el-input v-model="form.telephone" dusk="telephone">
                                 <i
                                     slot="prefix"
@@ -392,9 +443,10 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.email }"
                         >
-                        <label class="control-label">
-                            <i class="fas fa-envelope"></i> Correo electrónico
-                        </label>
+                            <label class="control-label">
+                                <i class="fas fa-envelope"></i> Correo
+                                electrónico
+                            </label>
                             <el-input v-model="form.email" dusk="email">
                                 <i
                                     slot="prefix"
@@ -678,13 +730,16 @@
                 </template>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
+                    Cancelar</el-button
+                >
                 <el-button
                     icon="fas fa-save fa-lg"
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"
-                    > Guardar</el-button
+                >
+                    Guardar</el-button
                 >
             </div>
         </form>
@@ -693,8 +748,8 @@
 
 <style>
 .el-dialog {
-border-radius: 10px;
-overflow: hidden;
+    border-radius: 10px;
+    overflow: hidden;
 }
 </style>
 <script>
@@ -856,7 +911,7 @@ export default {
                         } else {
                             this.form.identity_document_type_id = "1";
                         }
-                    } 
+                    }
                 }
             }
 

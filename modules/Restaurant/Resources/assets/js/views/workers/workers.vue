@@ -171,6 +171,7 @@
         :establishments="establishments"
         :allEstablishments="allEstablishments"
         :allWarehouses="allWarehouses"
+        :commercial_treatment="commercial_treatment"
       ></create-form>
     </div>
     <el-dialog
@@ -235,7 +236,8 @@ export default {
       allWarehouses: [],
       allEstablishments: [],
       form: {},
-      loading_submit: false
+      loading_submit: false,
+      commercial_treatment:[],
     };
   },
   created() {
@@ -285,6 +287,8 @@ export default {
       console.log(this.series);
       this.allWarehouses = response.data.warehouses;
       this.allEstablishments = response.data.establishments;
+      this.commercial_treatment = response.data.commercial_treatment;
+      console.log("🚀 ~ getTables ~ this.commercial_treatment:", this.commercial_treatment)
       /* console.log(series); */
     },
     initForm() {

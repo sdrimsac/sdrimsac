@@ -548,6 +548,7 @@ class DocumentController extends Controller
         if ($customer) {
             $records = $records->whereHas('person', function ($query) use ($customer) {
                 $query->where('name', 'like', '%' . $customer . '%')
+                    ->orWhere('alias', 'like', '%' . $customer . '%')
                     ->orWhere('number', 'like', '%' . $customer . '%');
             });
         }

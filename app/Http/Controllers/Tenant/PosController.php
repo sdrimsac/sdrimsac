@@ -265,7 +265,7 @@ class PosController extends Controller
         $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' => $row->number . ' - ' . $row->name,
+                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -276,7 +276,7 @@ class PosController extends Controller
         $customers_variation = Person::where('number', "=", "88888888")->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' => $row->number . ' - ' . $row->name,
+                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -429,7 +429,7 @@ class PosController extends Controller
             return [
                 'students' => $students,
                 'id' => $row->id,
-                'description' => $row->number . ' - ' . $row->name,
+                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -475,7 +475,7 @@ class PosController extends Controller
                 return [
                     'students' => $students,
                     'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
+                    'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
                     'identity_document_type_id' => $row->identity_document_type_id,

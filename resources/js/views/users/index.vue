@@ -118,11 +118,11 @@ export default {
             resource: this.type,
             recordId: null,
             records: [],
-            title: null
+            title: null,
+            commercial_treatments: []
         };
     },
     created() {
-        console.log(this.typeUser, this.type);
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });
@@ -134,6 +134,8 @@ export default {
         }
     },
     methods: {
+        
+        
         getData() {
             this.$http
                 .get(`/${this.resource}/${this.type}/records`)

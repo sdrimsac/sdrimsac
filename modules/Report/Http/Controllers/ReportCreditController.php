@@ -99,7 +99,7 @@ class ReportCreditController extends Controller
             ->whereHas(
                 'creditPayments',
                 function ($query) use ($date) {
-                    $query->where('date_payment', $date)
+                    $query->where('date_payment', '<=', $date)
                         ->where('paid', 0);
                 }
             )

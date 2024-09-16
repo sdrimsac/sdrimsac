@@ -83,6 +83,7 @@ class RestaurantController extends Controller
 
         $persons = $persons
             ->where('name', 'like', '%' . $value . '%')
+            ->orWhere('alias', 'like', '%' . $value . '%')
             ->orWhere('number', 'like', '%' . $value . '%')
             ->orWhere('address', 'like', '%' . $value . '%')
             ->whereType('customers')->orderBy('name')
@@ -113,7 +114,7 @@ class RestaurantController extends Controller
             return [
                 'students' => $students,
                 'id' => $row->id,
-                'description' => $row->number . ' - ' . $row->name,
+                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,

@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Table;
 use App\Http\Resources\Tenant\UserCollection;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\CommercialTreatmentUserExcluded;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
@@ -126,7 +127,7 @@ class WorkerController extends Controller
         if ($status !== null) {
             // Filtrar por estado (0 o 1)
             $records = $records->where('active', $status);
-        }else {
+        } else {
             $records = $records->where('active', 1);
         }
         if ($name) {
@@ -144,9 +145,19 @@ class WorkerController extends Controller
                 $oo->where('document_type_id', '01');
             })
             ->first();
+        $commercial_treatment = CommercialTreatmentUserExcluded::where('user_id', $id)
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->commercial_treatment_id,
+                    'description' => $row->commercial_treatment->description,
+                    'active' => (bool) $row->commercial_treatment->active,
+                ];
+            });
         if ($user_serie) {
             $worker->series = $user_serie->serie_id;
         }
+        $worker->commercial_treatment = $commercial_treatment;
         return [
             'success' => true,
             'data' => $worker,
@@ -258,7 +269,26 @@ class WorkerController extends Controller
             'message' => ($id) ? 'Trabajador actualizado con éxito' : 'Trabajador creado con éxito'
         ];
     }
-
+    public function commercial_treatment(Request $request)
+    {
+        $worker_id = $request->input('worker_id');
+        $commercial_treatment_id = $request->input('commercial_treatment_id');
+        $commercial_treatment = CommercialTreatmentUserExcluded::where('user_id', $worker_id)
+            ->where('commercial_treatment_id', $commercial_treatment_id)
+            ->first();
+        if ($commercial_treatment) {
+            $commercial_treatment->delete();
+        } else {
+            $commercial_treatment = new CommercialTreatmentUserExcluded();
+            $commercial_treatment->user_id = $worker_id;
+            $commercial_treatment->commercial_treatment_id = $commercial_treatment_id;
+            $commercial_treatment->save();
+        }
+        return [
+            'success' => true,
+            'message' => 'Tratamiento comercial actualizado con éxito'
+        ];
+    }
     public function active($id)
     {
         $workers = User::find($id);

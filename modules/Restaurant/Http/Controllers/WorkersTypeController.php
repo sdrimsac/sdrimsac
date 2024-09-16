@@ -2,7 +2,8 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
-
+use App\Models\Tenant\CommercialTreatment;
+use App\Models\Tenant\CommercialTreatmentUserExcluded;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Series;
@@ -46,6 +47,7 @@ class WorkersTypeController extends Controller
 
         return new WorkersTypeCollection($records->paginate(config('tenant.items_per_page')));
     }
+    
     public function actives()
     {
         $user = User::find(auth()->user()->id);
@@ -61,8 +63,16 @@ class WorkersTypeController extends Controller
         $workers_type = $workers_type->get();
         $establishments = Establishment::all();
         $warehouses = Warehouse::all();
+        $commercial_treatment = CommercialTreatment::query()->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => $row->description,
+                'active' => (bool) $row->active,
+            ];
+        });
         return [
             'success' => true,
+            'commercial_treatment' => $commercial_treatment,
             'workers_type' => $workers_type,
             'establishments' => $establishments,
             'warehouses' => $warehouses,

@@ -1308,6 +1308,7 @@
                     </td>
                     <td width="15%">
                       <el-input
+                        step="0.01"
                         @input="
                                updateCommercialTreatmentItem(
                                index

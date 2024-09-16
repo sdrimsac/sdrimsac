@@ -10,6 +10,7 @@ use App\Http\Resources\Tenant\CommercialTreatmentResource;
 use App\Models\Tenant\CommercialTreatment;
 use App\Models\Tenant\CommercialTreatmentCategory;
 use App\Models\Tenant\CommercialTreatmentItem;
+use App\Models\Tenant\CommercialTreatmentUserExcluded;
 use Illuminate\Http\Request;
 use Modules\Item\Models\CategoryItem;
 
@@ -203,6 +204,11 @@ class CommercialTreatmentController extends Controller
     {
         $all = $request->input('all');
         $records = CommercialTreatment::query();
+        $user = auth()->user();
+        $commercial_treatment_user_excluded = CommercialTreatmentUserExcluded::where('user_id', $user->id)->pluck('commercial_treatment_id')->toArray();
+        if (count($commercial_treatment_user_excluded) > 0) {
+            $records->whereNotIn('id', $commercial_treatment_user_excluded);
+        }
         if ($request->column == 'description') {
             $records->where('description', 'like', "%{$request->value}%");
         }
