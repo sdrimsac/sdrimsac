@@ -666,10 +666,24 @@ class PurchaseController extends Controller
             }
             $doc->items()->delete();
             foreach ($request['items'] as $row) {
+                $unit_price = floatval($row['unit_price']);
                 $p_item = new PurchaseItem;
                 $p_item->fill($row);
                 $p_item->purchase_id = $doc->id;
                 $p_item->save();
+                $item = Item::findOrFail($row['item_id']);
+                if (isset($row['sale_unit_price']) && $row['sale_unit_price'] != 0 && $row['sale_unit_price'] != null) {
+                    $item->sale_unit_price = $row['sale_unit_price'];
+                    Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
+                    ItemWarehousePrice::where('item_id', $row['item_id'])
+                        ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
+                }
+                $purchase_unit_price_item = floatval($item->purchase_unit_price);
+                if ($unit_price != $purchase_unit_price_item) {
+                    $item->purchase_unit_price = $unit_price;
+                }
+                $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
+                $item->save();
                 if (array_key_exists('lots', $row)) {
                     foreach ($row['lots'] as $lot) {
                         $p_item->lots()->create([
@@ -821,7 +835,7 @@ class PurchaseController extends Controller
                 $suppliers = Person::whereType('suppliers')->orderBy('name')->get()->transform(function ($row) {
                     return [
                         'id' => $row->id,
-                        'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
+                        'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
                         'name' => $row->name,
                         'number' => $row->number,
                         'perception_agent' => (bool) $row->perception_agent,
@@ -1049,7 +1063,7 @@ class PurchaseController extends Controller
         $persons = Person::whereType($type)->orderBy('name')->take(20)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
+                'description' => $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
