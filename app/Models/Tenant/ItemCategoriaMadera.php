@@ -6,7 +6,7 @@ namespace App\Models\Tenant;
 class ItemCategoriaMadera extends ModelTenant
 {
     public $timestamps = false;
-    protected $table = 'Item_categoria_madera';
+    protected $table = 'item_categoria_madera';
     protected $fillable = [
         'id',
         'categoria_madera_id',
