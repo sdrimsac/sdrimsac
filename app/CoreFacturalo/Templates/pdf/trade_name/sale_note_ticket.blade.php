@@ -1,11 +1,14 @@
 @php
-    
+
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
     $seller = $document->seller;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
-    $conf_establishment = \App\Models\Tenant\ConfEstablishment::where('establishment_id', $document->establishment_id)->first();
+    $conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
+        'establishment_id',
+        $document->establishment_id,
+    )->first();
     $print_company_address = false;
     if ($conf_establishment) {
         $print_company_address = $conf_establishment->company_address;
@@ -17,13 +20,15 @@
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('sale_note_id', $document->id)->first();
     $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
-    $configuration = \App\Models\Tenant\Configuration::select(['show_logo_in_documents','show_internal_code_ticket'])->first();
-        if (!function_exists('getUnitType')) {
+    $configuration = \App\Models\Tenant\Configuration::select([
+        'show_logo_in_documents',
+        'show_internal_code_ticket',
+    ])->first();
+    if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
             $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
-            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
-
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
 @endphp
@@ -237,7 +242,7 @@ contain"
                             $txt .= '(S/ ' . $coin->value . ') ' . $coin->quantity . ' | ';
                         }
                         $txt = substr($txt, 0, -2);
-                        
+
                     @endphp
                     <p class="desc">
                         {{ $txt }}
@@ -309,7 +314,7 @@ contain"
         @if ($hotel_rent)
             @php
                 $hotel_rent_items = $hotel_rent->items;
-                
+
             @endphp
             @foreach ($hotel_rent_items as $hri)
                 <tr>
@@ -375,7 +380,7 @@ contain"
         @if ($hotel_rent_advance)
             @php
                 $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
-                
+
             @endphp
             @foreach ($hotel_rent_items as $hri)
                 @if ($hri->is_reserve)
@@ -408,7 +413,7 @@ contain"
                 $observation_hotel = '';
                 if (count($advances) > 0) {
                     $observation_hotel = 'Adelantos : ';
-                
+
                     foreach ($advances as $adv) {
                         if ($adv['is_advance']) {
                             $document_hotel = $adv['document'] ?? $adv['sale_note'];
@@ -457,12 +462,12 @@ contain"
                         @endif
                     </td>
                     <td class="text-center desc-9 align-top">
-                        
-                        {{getUnitType( isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id )}}
+
+                        {{ getUnitType(isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id) }}
                     </td>
                     <td class="text-left desc-9 align-top">
 
-                        @if($configuration->show_internal_code_ticket)
+                        @if ($configuration->show_internal_code_ticket)
                             @if (isset($row->item->internal_id))
                                 {{ $row->item->internal_id }} <br>
                             @endif
@@ -475,6 +480,17 @@ contain"
                             @else
                                 {{ $row->item->description }}
                             @endif
+                        @endif
+                        @if (isset($row->item->categoriaMadera))
+                            -
+                            @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                            @endphp
+                            {{ $m_description }}
                         @endif
                         @if (isset($row->item->from_unit_type_id_desc))
                             - {!! $row->item->from_unit_type_id_desc !!}
@@ -576,12 +592,12 @@ contain"
                 <td class="text-right font-bold desc">{{ number_format($document->total, 2) }}</td>
             </tr>
             @php
-                
+
                 $total_boxes = 0;
                 foreach ($boxes as $box) {
                     $total_boxes += floatval($box->amount);
                 }
-                
+
                 $difference = $total_boxes - $document->total;
             @endphp
             @if ($difference > 0)

@@ -441,6 +441,7 @@
                                     @if (isset($row->item->has_unit_type))
                                         - {!! $row->item->has_unit_type !!}
                                     @endif
+                                   
                                     @if (isset($row->item->lots))
                                         @foreach ($row->item->lots as $lot)
                                             <br />{!! $lot->series !!}
@@ -459,7 +460,17 @@
                                         {!! $row->unit_desc !!}
                                     @endif
                                 @endif
-
+                                @if (isset($row->item->categoriaMadera))
+                                -
+                                @php
+                                    $madera = $row->item->categoriaMadera;
+                                    $ancho = $madera->selectedAncho;
+                                    $largo = $madera->selectedLargo;
+                                    $grosor = $madera->selectedGrosor;
+                                    $m_description = "${grosor}x${ancho}x${largo}";
+                                @endphp
+                                {{ $m_description }}
+                            @endif
                                 @if (!empty($row->item->presentation))
                                     {{-- $row->item->presentation->description --}}
                                 @endif

@@ -36,6 +36,9 @@ use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\User;
+use App\Models\Tenant\ItemMedidaAlto;
+use App\Models\Tenant\ItemMedidaAncho;
+use App\Models\Tenant\ItemMedidaGrosor;
 use App\Traits\JobReportTrait;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
@@ -48,7 +51,6 @@ use Modules\Restaurant\Http\Resources\FoodCollection;
 use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Events\OrdenPendingEvent;
 use Modules\Restaurant\Events\PrintEvent;
-
 class PosController extends Controller
 {
     use JobReportTrait;
@@ -496,7 +498,8 @@ class PosController extends Controller
         if ($config->item_variation_id) {
             $item_default = Item::find($config->item_variation_id);
         }
-        return compact('gruop', 'users',  'category', 'subcategory', 'company', 'methods', 'desarrollador', 'item_default');
+        return compact('gruop', 'users',  'category', 'subcategory', 'company', 'methods', 'desarrollador', 
+        'item_default');
     }
     public function columns() //buscador x campo
     {

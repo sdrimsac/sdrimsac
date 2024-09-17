@@ -670,6 +670,17 @@
                             @else
                                 {!! $row->item->description !!}
                             @endif
+                            @if (isset($row->item->categoriaMadera))
+                            -
+                            @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                            @endphp
+                            {{ $m_description }}
+                        @endif
                             @if (isset($row->item->lots))
                                 @foreach ($row->item->lots as $lot)
                                     <br />{!! $lot->series !!}

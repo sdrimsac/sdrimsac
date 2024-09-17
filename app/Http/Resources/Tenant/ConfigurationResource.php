@@ -16,6 +16,7 @@ class ConfigurationResource extends JsonResource
     {
         return [
             'alias_pdf' => (bool) $this->alias_pdf,
+            'maderera' => (bool)$this->maderera,
             'is_promotion_document' => (bool) $this->is_promotion_document,
             'editar_precio_politica' => (bool)$this->editar_precio_politica,
             'modo_billar' => (bool)$this->modo_billar,

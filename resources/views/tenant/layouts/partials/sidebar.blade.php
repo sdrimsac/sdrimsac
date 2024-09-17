@@ -353,6 +353,14 @@
                                 </a>
                             </li>
                         @endif
+                        {{-- @if ($config->ingreso_salida_productos) --}}
+                            <li>
+                                <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
+                                    href="{{ route('tenant.productos.index') }}">
+                                    <i class="icofont-box"></i> Listado de Politica de Precios
+                                </a>
+                            </li>
+                        {{-- @endif --}}
                         @if ($config->tipo_transacciones_inventario)
                             <li>
                                 <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
@@ -963,6 +971,28 @@
                             href="{{ route('restaurant.rooms') }}">
                             <i class="fas fa-bed"></i>
                             Habitaciones
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
+        @if ($config->modo_billar && !$roleService->isLogistic())
+            <li>
+                <a href="#configuration" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'catalogs' ? 'active' : '' }}{{ $path[0] === 'advanced' ? 'active' : '' }}{{ $path[0] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }}{{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}">
+                    <!-- <i class="icofont-5-star-hotel icon-parent"></i> -->
+                    <i class="icofont-billiard-ball icon-parent"></i>
+                    <span class="label">Casino</span>
+                </a>
+                <ul id="configuration" class="collapse">
+                    <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
+                            href="{{ route('restaurant.billar') }}">
+                            <i class="fas fa-biliard"></i>
+                            Mesas Billar
                         </a>
                     </li>
                 </ul>

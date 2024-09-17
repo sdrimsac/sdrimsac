@@ -1423,6 +1423,31 @@
               </div>
             </div>
           </el-tab-pane>
+          <el-tab-pane label="Categoria Madera">
+            <div class="row">
+              <div class="col-12">
+                <h4 class="separator-title mt-0">
+                  <strong>Categoria Madera</strong>
+                </h4>
+                <table>
+                  <tbody>
+                    <tr v-for="madera in categoria_madera" :key="madera.id">
+                      <td width="60%">
+                        <h5>{{ madera.description }}</h5>
+                      </td>
+                      <td>
+                        <el-input
+                          v-model="madera.precio"
+                          @input="maderaUpdate()"
+                          placeholder="Precio Categoria Madera"
+                        ></el-input>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </div>
       <div class="form-actions text-end pt-2 pb-2">
@@ -1469,12 +1494,6 @@
     /* Oculta el texto del label */
   }
 }
-
-/* .el-input__inner::-webkit-inner-spin-button,
-        .el-input__inner::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        } */
 </style>
 
 <script>
@@ -1505,6 +1524,7 @@ export default {
         id: null
       },
       warehouses: [],
+      categoria_madera: [],
       loading_submit: false,
       showPercentagePerception: false,
       has_percentage_perception: false,
@@ -1540,7 +1560,8 @@ export default {
       },
       attribute_types: [],
       area_id: 2,
-      timer: null
+      timer: null,
+      madera: []
     };
   },
   async created() {
@@ -1552,6 +1573,13 @@ export default {
       this.system_isc_types = response.data.system_isc_types;
       this.affectation_igv_types = response.data.affectation_igv_types;
       this.warehouses = response.data.warehouses;
+      // this.form.categoria_madera = response.data.categoria_madera;
+      this.categoria_madera = response.data.categoria_madera.map(x => {
+        x.precio = 0;
+        return x;
+      });
+
+      console.log("Categoria Madera:", this.form.categoria_madera);
       if (this.warehouses.length > 0) {
         this.form.warehouse_id = this.warehouses[0].id;
         this.form.warehouse_prices = this.warehouses.map(w => ({
@@ -1699,7 +1727,11 @@ export default {
         this.warehouses = response.data.warehouses;
         this.categories = response.data.categories;
         this.brands = response.data.brands;
-
+        // this.form.categoria_madera = this.categoria_madera.map(madera => ({
+        //   id: madera.id,
+        //   description: madera.description,
+        //   precio: madera.precio
+        // }));
         this.form.sale_affectation_igv_type_id =
           this.affectation_igv_types.length > 0
             ? this.affectation_igv_types[0].id
@@ -1774,6 +1806,7 @@ export default {
     initForm() {
       (this.loading_submit = false), (this.errors = {});
       this.form = {
+        categoria_madera: [],
         subject_to_detraction: false,
         is_manufactured: false,
         id: null,
@@ -1874,11 +1907,13 @@ export default {
       this.loading = false;
     },
     async create() {
-      console.log("🚀 ~ create ~ this.configuration:", this.configuration);
-      console.log("🚀 ~ create ~ this.configuration:", this.allEstablishment);
-
+      /* console.log("🚀 ~ create ~ this.configuration:", this.configuration);
+      console.log("🚀 ~ create ~ this.configuration:", this.allEstablishment); */
+      this.categoria_madera = this.categoria_madera.map(c => {
+        c.precio = 0;
+        return c;
+      });
       this.titleDialog = this.recordId ? "Editar Producto" : "Nuevo Producto";
-
       if (this.recordId) {
         this.$http
           .get(`/${this.resource}/record/${this.recordId}`)
@@ -1922,7 +1957,17 @@ export default {
               : false;
             this.changeAffectationIgvType();
             this.showSeries = true;
-
+            if (this.form.categoria_madera_item.length > 0) {
+              this.categoria_madera = this.categoria_madera.map(c => {
+                let exists = this.form.categoria_madera_item.find(
+                  ci => ci.categoria_madera_id == c.id
+                );
+                if (exists) {
+                  c.precio = exists.precio;
+                }
+                return c;
+              });
+            }
             if (this.form.series_enabled == 1) {
               this.form.series_enabled = true;
             } else this.form.series_enabled = false;
@@ -1989,6 +2034,15 @@ export default {
       this.$forceUpdate();
     },
     calculatePercentageOfProfitBySale() {
+      console.log(this.configuration);
+      // if (this.configuration.maderera) {
+      //   let sale_unit_price = this.form.sale_unit_price;
+      //   for (let i = 0; i < this.form.item_unit_types.length; i++) {
+      //     let unit_type = this.form.item_unit_types[i];
+      //     this.form.item_unit_types[i].price2 = sale_unit_price;
+      //     this.undToTotal(i, sale_unit_price, unit_type.quantity_unit);
+      //   }
+      // }
       let w = this.form.warehouse_prices.find(
         ww => ww.warehouse_id == this.form.warehouse_id
       );
@@ -2076,7 +2130,9 @@ export default {
 
       this.loading_submit = true;
       this.form.all_establishment = this.allEstablishment;
-
+      this.form.categoria_madera = this.categoria_madera.filter(
+        c => c.precio != null && c.precio > 0
+      );
       console.log("🚀 ~ file: form.vue:2309 ~ submit ~ this.form:", this.form);
       await this.$http
         .post(`/${this.resource}`, this.form)
@@ -2116,7 +2172,14 @@ export default {
         price: null,
         warehouse: w.description
       }));
+      this.form.categoria_madera = this.categoria_madera.map(madera => ({
+        id: null,
+        description: null
+      }));
+      /* this.form.categoria_madera = [...this.categoria_madera]; */
+      /* this.form.categoria_madera = this.categoria_madera; */
     },
+
     changeHasIsc() {
       this.form.system_isc_type_id = null;
       this.form.percentage_isc = 0;
@@ -2169,7 +2232,23 @@ export default {
     },
     clickRemoveAttribute(index) {
       this.form.attributes.splice(index, 1);
+    },
+    maderaUpdate() {
+      /* this.reloadTables(); */
     }
+    /* maderaUpdate(idx) {
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(async () => {
+        let categoria_madera = this.form.categoria_madera[idx];
+        const response = await this.$http.post(
+          `/items/store/${ItemCategoriaMadera}`,
+          item_categoria_madera
+        );
+        if (response.data.success) {
+          this.$toast.success("Se actualizó correctamente");
+        }
+      }, 700);
+    }, */
   }
 };
 </script>

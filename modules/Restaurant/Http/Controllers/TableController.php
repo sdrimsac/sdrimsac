@@ -126,6 +126,7 @@ class TableController extends Controller
                     })
                         ->orWhere(function ($query) {
                             $query->where('is_room', 0);
+                            $query->where('has_billar', 0);
                         });
                 });
         } else {
@@ -134,7 +135,8 @@ class TableController extends Controller
                 ->where(function ($q) use ($establishment_id) {
                     $q->where('establishment_id', $establishment_id)
                         ->orWhereNull('establishment_id');
-                });
+                })
+                ->where('has_billar', 0);
         }
 
         $tables = new TableCollection($query
@@ -152,7 +154,7 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
-        $tables = Table::where('is_room', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+        $tables = Table::where('is_room', false)->where('has_billar', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
             ->get();
 
         return compact('tables');
@@ -178,6 +180,7 @@ class TableController extends Controller
 {
     Table::where('status_table_id', 2)
         ->where('is_room', false)
+        ->where('has_billar', false)
         ->where(function ($query) use ($establishment_id) {
             $query->where('establishment_id', $establishment_id)
                   ->orWhereNull('establishment_id');
@@ -269,6 +272,7 @@ class TableController extends Controller
         //check in Table if exist the number
         $tables = Table::whereIn('number', $numbers)
             ->where('is_room', false)
+            ->where('has_bilar', 1)
             ->where('establishment_id', $request->input('establishment_id'))
             ->where('area_id', $request->input('area_id'))
             ->get();

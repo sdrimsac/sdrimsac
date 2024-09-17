@@ -154,7 +154,17 @@
                                 ><i class="fa fa-whatsapp"></i> Enviar
                                 whatsapp</el-button
                             > -->
+
                         </template>
+                        <!-- <template>
+                            <el-button
+                            class="submit"
+                            type="success"
+                            @click.prevent="clickDownload('excel')">
+                            <i class="fa fa-file-excel"></i>
+                            Exportar Excel
+                            </el-button>
+                        </template> -->
                     </div>
                 </div>
                 <div class="row mt-1 mb-4"></div>

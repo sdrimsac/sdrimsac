@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Tenant;
 use Exception;
 use Mpdf\Mpdf;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemCategoriaMadera;
+use App\Models\Tenant\CategoriaMadera;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Company;
 use Mpdf\HTMLParserMode;
@@ -544,7 +546,7 @@ class ItemController extends Controller
 
     public function recordsUltima_Compra(Request $request, $id)
     {
-        $records = $this->getRecordsUltima_compra($request,$id);
+        $records = $this->getRecordsUltima_compra($request, $id);
 
         return new ItemUltima_CompraCollection($records->paginate(5));
     }
@@ -580,6 +582,7 @@ class ItemController extends Controller
         $datos = $request->value;
         $textoIntoArray =  explode(' ', $datos);
         $warehouse_id = $request->warehouse_id;
+        $categoria_madera_id = $request->categoria_madera_id;
         $area_id = $request->area_id;
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
@@ -640,6 +643,11 @@ class ItemController extends Controller
                 $query->where('warehouse_id', $warehouse_id);
             });
         }
+        if ($categoria_madera_id) {
+            $records = $records->whereHas('categoria_madera', function ($query) use ($categoria_madera_id) {
+                $query->where('id', $categoria_madera_id);
+            });
+        }
 
         if ($area_id) {
             $records = $records->whereHas('food', function ($query) use ($area_id) {
@@ -649,6 +657,7 @@ class ItemController extends Controller
 
         return $records->orderBy('description', 'ASC');
     }
+
 
     public function getRecordsUltima_Venta($item_id)
     {
@@ -675,7 +684,7 @@ class ItemController extends Controller
         return $records;
     }
 
-    public function getRecordsUltima_Compra(Request $request,$item_id)
+    public function getRecordsUltima_Compra(Request $request, $item_id)
     {
         // $date_of_issue = $request->date_of_issue;
         // dump($request->all());
@@ -750,6 +759,7 @@ class ItemController extends Controller
 
     public function tables()
     {
+        $categoria_madera = CategoriaMadera::all();
         $unit_types = UnitType::whereActive()->orderByDescription()->get();
         $currency_types = CurrencyType::whereActive()->orderByDescription()->get();
         $attribute_types = AttributeType::whereActive()->orderByDescription()->get();
@@ -765,6 +775,7 @@ class ItemController extends Controller
         $brands = Brand::all();
         $configuration = Configuration::first();
         return compact(
+            'categoria_madera',
             'unit_types',
             'payment_method_types',
             'currency_types',
@@ -817,28 +828,57 @@ class ItemController extends Controller
             $item->image = $file_name;
             $food->image = $file_name;
             //--- IMAGE SIZE MEDIUM
-            $image = \Image::make($temp_path);
+            /* $image = \Image::make($temp_path);
             $file_name = Str::slug($item->description) . '-' . $datenow . '_medium' . '.' . $file_name_old_array[1];
             $image->resize(512, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
             Storage::put($directory . $file_name,  (string) $image->encode('jpg', 30));
-            $item->image_medium = $file_name;
+            $item->image_medium = $file_name; */
             //--- IMAGE SIZE SMALL
-            $image = \Image::make($temp_path);
+            /* $image = \Image::make($temp_path);
             $file_name = Str::slug($item->description) . '-' . $datenow . '_small' . '.' . $file_name_old_array[1];
             $image->resize(256, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
             Storage::put($directory . $file_name,  (string) $image->encode('jpg', 20));
-            $item->image_small = $file_name;
+            $item->image_small = $file_name;*/
         } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
             $item->image = 'imagen-no-disponible.jpg';
             $food->image = 'imagen-no-disponible.jpg';
         }
         $item->save();
+
+        /* ItemCategoriaMadera::where('item_id', $item->id)->delete();
+        $categoria_madera = $request->input('categoria_madera');
+        dump($categoria_madera);
+        if ($categoria_madera) {
+            foreach ($categoria_madera as $categoria_madera) {
+                $newCategoriaMadera = new ItemCategoriaMadera;
+                $newCategoriaMadera->precio = $categoria_madera['precio'];
+                $newCategoriaMadera->categoria_madera_id = $categoria_madera['id'];
+                $newCategoriaMadera->item_id = $item->id;
+                $newCategoriaMadera->save();
+            }
+        } */
+        ItemCategoriaMadera::where('item_id', $item->id)->delete();
+        $categoria_madera = $request->input('categoria_madera');
+        /* dump($categoria_madera); */
+
+        if (is_array($categoria_madera) && !empty($categoria_madera)) {
+            foreach ($categoria_madera as $categoria) { // Usar un nombre diferente para la variable interna
+                if (isset($categoria['precio']) && isset($categoria['id'])) {
+                    $newCategoriaMadera = new ItemCategoriaMadera;
+                    $newCategoriaMadera->precio = $categoria['precio'];
+                    $newCategoriaMadera->categoria_madera_id = $categoria['id'];
+                    $newCategoriaMadera->item_id = $item->id;
+                    $newCategoriaMadera->save();
+                }
+            }
+            /* dump($categoria_madera); */
+        }
 
         if ($all_establishment) {
             $warehouses = Warehouse::all()->pluck('id');

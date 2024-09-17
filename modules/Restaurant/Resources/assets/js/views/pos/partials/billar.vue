@@ -41,9 +41,9 @@
         >{{ addingOrden ? "Seleccione mesa" : "Nueva orden" }}</button>
         <button type="button" style="margin-left:15px;" class="btn btn-light" @click="close">Cerrar</button>
       </div>
-      <div v-if="tables.length > 0" class="d-flex flex-wrap justify-content-center">
+      <div v-if="tables.length > 0"  class="d-flex flex-wrap justify-content-center">
         <div
-          v-for="(table, idx) in tables"
+          v-for="(table, idx) in filteredTables"
           :class="
                         `${
                             table.enabled == false
@@ -131,7 +131,7 @@ export default {
       addingOrden: false,
       ordens: [],
       loading: false,
-      resource: "/caja/tables/tables",
+      resource: "/caja/billar/tables",
       tables: [],
       showOrdens: false,
       ordensSaved: [],
@@ -144,6 +144,11 @@ export default {
       ordenToChange: null,
       isDisabling: false
     };
+  },
+  computed: {
+    filteredTables() {
+      return this.tables.filter(table => table && table.has_billar);
+    }
   },
   methods: {
 

@@ -209,44 +209,45 @@
                             </td>
                             <td
                               v-if="
-                                                                configuration.listprice_list_or_card
-                                                            "
+                                  configuration.listprice_list_or_card
+                                  "
                             >
                               <div
                                 v-if="
-                                                                    data.types
-                                                                        .length >
-                                                                        0
-                                                                "
+                                     data.types
+                                      .length >
+                                       0
+                                        "
                               >
-                                <el-dropdown
-                                  @command="
-                                                                        clickCommand
-                                                                    "
-                                >
-                                  <span class="el-dropdown-link">
-                                    Precios
-                                    <i class="el-icon-arrow-down el-icon--right"></i>
-                                  </span>
-                                  <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item
-                                      v-for="(type,
-                                                                            idx) in data.types"
-                                      :key="
-                                                                                idx
-                                                                            "
-                                      :command="
-                                                                                type
-                                                                            "
-                                    >
-                                      {{
-                                      formatDescriptionType(
-                                      type
-                                      )
-                                      }}
-                                    </el-dropdown-item>
-                                  </el-dropdown-menu>
-                                </el-dropdown>
+                                
+                                  <el-dropdown
+                                    @command="
+                                          clickCommand
+                                          "
+                                  >
+                                    <span class="el-dropdown-link">
+                                      Precios
+                                      <i class="el-icon-arrow-down el-icon--right"></i>
+                                    </span>
+                                    <el-dropdown-menu slot="dropdown">
+                                      <el-dropdown-item
+                                        v-for="(type,
+                                             idx) in data.types"
+                                        :key="
+                                        idx
+                                       "
+                                        :command="
+                                       type
+                                       "
+                                      >
+                                        {{
+                                        formatDescriptionType(
+                                        type
+                                        )
+                                        }}
+                                      </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                  </el-dropdown>
                               </div>
                             </td>
                           </tr>
@@ -330,12 +331,12 @@
                     <div>
                       <span
                         :class="
-                                                    `lead-font-weight-700 ${
-                                                        configuration.trunc_txt
-                                                            ? 'd-inline-block text-truncate'
-                                                            : ''
-                                                    }`
-                                                "
+                            `lead-font-weight-700 ${
+                               configuration.trunc_txt
+                                 ? 'd-inline-block text-truncate'
+                                  : ''
+                                  }`
+                                  "
                       >
                         {{
                         data.description.toUpperCase()
@@ -346,8 +347,8 @@
                           class="item"
                           effect="dark"
                           :content="
-                                                        data.description.toUpperCase()
-                                                    "
+                                 data.description.toUpperCase()
+                                  "
                           placement="top-start"
                         >
                           <i class="fas fa-ellipsis-h"></i>
@@ -424,27 +425,29 @@
                       </div>
                       <div></div>
                     </div>
+
                     <div v-if="data.types.length > 0">
-                      <el-dropdown @command="clickCommand">
-                        <span class="el-dropdown-link">
-                          Precios
-                          <i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item
-                            v-for="(type,
+                     
+                        <el-dropdown @command="clickCommand">
+                          <span class="el-dropdown-link">
+                            Precios
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                          </span>
+                          <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item
+                              v-for="(type,
                                                         idx) in data.types"
-                            :key="idx"
-                            :command="type"
-                          >
-                            {{
-                            formatDescriptionType(
-                            type
-                            )
-                            }}
-                          </el-dropdown-item>
-                        </el-dropdown-menu>
-                      </el-dropdown>
+                              :key="idx"
+                              :command="type"
+                            >
+                              {{
+                              formatDescriptionType(
+                              type
+                              )
+                              }}
+                            </el-dropdown-item>
+                          </el-dropdown-menu>
+                        </el-dropdown>
                     </div>
                   </div>
                   <div
@@ -601,7 +604,7 @@
                                                         : ''
                                                 }`
                                             "
-                    >{{ data.description.toUpperCase() }}</span>
+                    >{{ data.description.toUpperCase() }} </span>
                     <template v-if="configuration.trunc_txt">
                       <el-tooltip
                         class="item"
@@ -676,26 +679,27 @@
                     </div>
                   </div>
                   <div v-if="data.types.length > 0">
-                    <el-dropdown @command="clickCommand">
-                      <span class="el-dropdown-link">
-                        Precios
-                        <i class="el-icon-arrow-down el-icon--right"></i>
-                      </span>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item
-                          v-for="(type,
+                 
+                      <el-dropdown @command="clickCommand">
+                        <span class="el-dropdown-link">
+                          Precios
+                          <i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item
+                            v-for="(type,
                                                     idx) in data.types"
-                          :key="idx"
-                          :command="type"
-                        >
-                          {{
-                          formatDescriptionType(
-                          type
-                          )
-                          }}
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
+                            :key="idx"
+                            :command="type"
+                          >
+                            {{
+                            formatDescriptionType(
+                            type
+                            )
+                            }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                   </div>
                 </div>
                 <div
@@ -783,6 +787,17 @@
         </div>
       </template>
     </div>
+    <unit-type-modal
+      @addUnitType="addUnitType"
+      @addCategoriaMadera="addCategoriaMadera"
+      :showDialog.sync="showUnitTypeModal"
+      :medida_alto="medida_alto"
+      :medida_ancho="medida_ancho"
+      :medida_grosor="medida_grosor"
+      :categoria_madera="categoria_madera"
+      :item="selectedFood"
+      :currentIndex="currentIndex"
+    ></unit-type-modal>
     <warehouses-detail
       :showDialog.sync="showWarehousesDetail"
       :warehouses="warehousesDetail"
@@ -829,8 +844,9 @@
 
 <script>
 import WarehousesDetail from "./warehouses.vue";
+import UnitTypeModal from "./unit_type_modal.vue";
 export default {
-  components: { WarehousesDetail },
+  components: { WarehousesDetail, UnitTypeModal },
   props: [
     "loadingItems",
     "foods",
@@ -841,10 +857,20 @@ export default {
     "localOrden",
     "type_code",
     "barcode",
-    "searchSeries"
+    "searchSeries",
+    "medida_ancho",
+    "medida_alto",
+    "medida_grosor",
+    "categoria_madera"
   ],
   data() {
     return {
+      showUnitTypeModal: false,
+      addingType: false,
+      /* medidaAlto: null,
+      medidaAncho: null,
+      medidaGrosor: null, */
+      currentIndex: null,
       itemId: null,
       currentItem: null,
       unit_type: [],
@@ -864,6 +890,9 @@ export default {
       orden: [],
       currentFood: {},
       item: null,
+      /* medida_ancho: null,
+      medida_alto: null,
+      medida_grosor: null, */
       search: "Buscar por Codigo",
       currentImage: null,
       showImage: false,
@@ -968,7 +997,7 @@ export default {
     if (this.foods.length > 0) {
       this.loading = false;
     }
-    console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
+    /* console.log("🚀 ~ mounted ~ this.configuration:", this.configuration); */
   },
   watch: {
     foods(__, _) {
@@ -982,6 +1011,19 @@ export default {
   },
 
   methods: {
+    addUnitType(type) {
+      this.addFood(this.currentIndex, type);
+    },
+    addCategoriaMadera(categoria,index) {
+      /* console.log(" :", categoria); */
+      this.currentIndex = index;
+      this.addingType = true;
+      this.addFood(this.currentIndex, null, false, categoria);
+    },
+    /* medida_ancho(){
+      this.medida_ancho = true;
+
+    }, */
     clickWarehouseDetail(id, hasSerie, warehouses, unit_type, item) {
       this.currentItem = item;
       this.itemId = id;
@@ -1024,6 +1066,10 @@ export default {
     },
 
     clickCommand(type) {
+      /* console.log(type); */
+      // if (this.configuration.maderera) {
+      //   return;
+      // }
       let idxFood = this.listFoods.findIndex(
         food => food.item.id == type.item_id
       );
@@ -1153,7 +1199,12 @@ export default {
       }
       return pass;
     },
-    async addFood(index = 0, type = null, selectSerie = false) {
+    async addFood(
+      index = 0,
+      type = null,
+      selectSerie = false,
+      categoria = null
+    ) {
       let quotation_stock = localStorage.getItem("quotation_stock") || 0;
       quotation_stock = quotation_stock == 1;
 
@@ -1166,8 +1217,21 @@ export default {
         return;
       }
       this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[index]));
-
       if (!this.selectedFood) return;
+      /* console.log("dasasda", this.selectedFood); */
+      let { categoria_madera_item } = this.selectedFood;
+      if (
+        this.configuration.maderera &&
+        Array.isArray(categoria_madera_item) &&
+        categoria_madera_item.length > 0 &&
+        !this.addingType
+      ) {
+        this.showUnitTypeModal = true;
+        this.currentIndex = index;
+        return;
+      }
+      this.currentIndex = null;
+      this.addingType = false;
 
       let foodFound = this.localOrden.filter(f => f.id == this.selectedFood.id);
 
@@ -1215,7 +1279,6 @@ export default {
             return;
           }
         }
-
         if (item.series_enabled) {
           if (item.item_unit_types.length == 0 && !selectSerie) {
             let message = "Producto con serie, ya  agregado";
@@ -1288,9 +1351,9 @@ export default {
         this.currentFood,
         this.selectedFood.id,
         type,
-        selectSerie
+        selectSerie,
+        categoria
       );
-      // console.log("🚀 ~ addFood ~ this.currentFood:", JSON.stringify(this.currentFood))
       let { item } = this.selectedFood;
       if (item.subject_to_detraction == 1) {
         this.$toast.warning("Este producto esta sujeto a detracción");
@@ -1398,13 +1461,13 @@ export default {
         "viewPreference",
         JSON.stringify(this.form.show_list)
       );
-      console.log("Estado de modo hospital guardado:", this.form.show_list);
+      /* console.log("Estado de modo hospital guardado:", this.form.show_list); */
     },
     loadViewPreference() {
       const savedPreference = localStorage.getItem("viewPreference");
       if (savedPreference !== null) {
         this.form.show_list = JSON.parse(savedPreference);
-        console.log("Estado de modo hospital cargado:", this.form.show_list);
+        /* console.log("Estado de modo hospital cargado:", this.form.show_list); */
       }
     }
   }

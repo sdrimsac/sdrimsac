@@ -94,7 +94,9 @@ class FoodCollection extends ResourceCollection
                 //     }
                 // }
             }
+            $categoria_madera_item = $item->categoria_madera;
             return [
+                'categoria_madera_item' => $categoria_madera_item,
                 'id'                => $row->id,
                 'description'  => $row->description,
                 'code'        => $row->code,

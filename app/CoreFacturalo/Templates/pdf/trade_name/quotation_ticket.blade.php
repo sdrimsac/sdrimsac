@@ -290,6 +290,17 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
+                        @if (isset($row->item->categoriaMadera))
+                            -
+                            @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                            @endphp
+                            {{ $m_description }}
+                        @endif
                         @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
                             - {!! $row->item->from_unit_type_id_desc !!}
                         @endif
@@ -414,11 +425,11 @@
     </table>
     <br>
     <table class="full-width">
-        <tr>
+        {{-- <tr>
             <td class="desc pt-3">
                 <strong>PAGOS:</strong>
             </td>
-        </tr>
+        </tr> --}}
         @php
             $payment = 0;
         @endphp
@@ -432,10 +443,10 @@
                 $payment += (float) $row->payment;
             @endphp
         @endforeach
-        <tr>
+        {{-- <tr>
             <td class="desc pt-3"><strong>SALDO:</strong> {{ $document->currency_type->symbol }}
                 {{ number_format($document->total - $payment, 2) }}</td>
-        </tr>
+        </tr> --}}
 
         @if ($document->terms_condition)
             <tr>

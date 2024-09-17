@@ -224,6 +224,17 @@
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif
+                        @if (isset($row->item->categoriaMadera))
+                            -
+                            @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                            @endphp
+                            {{ $m_description }}
+                        @endif
                         @if ($row->attributes)
                             @foreach ($row->attributes as $attr)
                                 <br /><span style="font-size: 9px">{!! $attr->description !!} :

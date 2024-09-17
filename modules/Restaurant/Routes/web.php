@@ -185,7 +185,7 @@ Route::prefix('caja')->group(function () {
                 Route::get('export', 'TableRoomReportController@export');
             });
 
-        //**** MESAS */
+        //**** MESAS ROOM*/
         Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         Route::get('rooms/columns', 'TableRoomController@columns');
         Route::post('rooms/insumos', 'TableRoomController@setInsumo');
@@ -241,6 +241,18 @@ Route::prefix('caja')->group(function () {
         Route::get('room_services/records', 'TableRoomServiceController@records');
         Route::get('room_services/record/{id}', 'TableRoomServiceController@record');
         Route::delete('room_services/record/{id}', 'TableRoomServiceController@destroy');
+        //MESAS BILLAR */
+        Route::get('billar', 'TableBillarController@index')->name('restaurant.billar');
+        Route::get('billar/columns', 'TableBillarController@columns');
+        Route::get('billar/check', 'TableBillarController@check');
+        Route::get('billar/records', 'TableBillarController@records');
+        Route::get('billar/tables', 'TableBillarController@get_tables');
+        Route::get('billar/orden/{id}', 'TableBillarController@get_ordens');
+        Route::get('billar/record/{id}', 'TableBillarController@record');
+        Route::post('billar', 'TableBillarController@store');
+        Route::post('billar/disabled-table', 'TableBillarController@disabled');
+        Route::post('billar/enabled-table', 'TableBillarController@enabled');
+        Route::post('billar/massive', 'TableBillarController@store_massive');
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');

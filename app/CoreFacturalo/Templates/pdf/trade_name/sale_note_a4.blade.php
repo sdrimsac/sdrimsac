@@ -3,18 +3,17 @@
     $customer = $document->customer;
     $seller = $document->seller;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
-    
+
     $left = $document->series ? $document->series : $document->prefix;
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
     $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
-        if (!function_exists('getUnitType')) {
+    if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
             $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
-            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
-
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
 @endphp
@@ -130,7 +129,7 @@
         <tr>
             <td height="18px"><b>Vendedor:</b></td>
             <td colspan="3">
-                <p> 
+                <p>
                     @if ($seller)
                         {{ $seller->name }}
                     @else
@@ -157,7 +156,7 @@
         @if ($hotel_rent)
             @php
                 $hotel_rent_items = $hotel_rent->items;
-                
+
             @endphp
             @foreach ($hotel_rent_items as $hri)
                 <tr>
@@ -225,7 +224,7 @@
                         @endif
                     </td>
                     <td class="text-center align-top">
-                        {{ getUnitType(isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id )}}
+                        {{ getUnitType(isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id) }}
                     </td>
                     <td class="text-left">
 
@@ -252,6 +251,17 @@
                             @foreach ($row->item->lots as $lot)
                                 <br />{!! $lot->series !!}
                             @endforeach
+                        @endif
+                        @if (isset($row->item->categoriaMadera))
+                            -
+                            @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                            @endphp
+                            {{ $m_description }}
                         @endif
                         @if (isset($row->item->color_size))
                             @foreach ($row->item->color_size as $color_size)

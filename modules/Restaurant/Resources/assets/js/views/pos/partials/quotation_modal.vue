@@ -121,7 +121,8 @@ export default {
         "sellers",
         "isSeller",
         "configuration",
-        "establishment"
+        "establishment",
+        "categoriaMadera"
     ],
     components: { PersonForm, QuotationOptions },
     data() {
@@ -143,6 +144,9 @@ export default {
         this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
         });
+        console.log("Props categoriaMadera recibido :", {
+        items: this.items,
+    });
     },
     watch: {
         all_customers(newCustomer, _) {
@@ -190,6 +194,7 @@ export default {
                 ordens[i].food.item.from_unit_type_id = item.type_id;
                 ordens[i].food.item.from_unit_type_id_desc =
                     item.type_description;
+                ordens[i].food.item.categoriaMadera = item.categoriaMadera;
                 ordens[i].food.item.quantity = item.quantity;
                 ordens[i].food.item.lotes = item.lotes;
                 ordens[i].food.item.lots = item.series;

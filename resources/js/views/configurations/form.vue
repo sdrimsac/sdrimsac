@@ -190,7 +190,15 @@
                                                         <el-switch v-model="form.modo_billar" active-text="HABILITADO" inactive-text="DESHABILITADO" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="() => submit('Entorno billar', form.modo_billar, 'healthIcon')"></el-switch>
                                                     </div>
                                                 </div>
-
+                                                <div class="col-md-3 mb-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label w-100">
+                                                            <i ref="healthIcon" class="el-icon-tree tab-icon"></i>
+                                                            Entorno Maderera
+                                                        </label>
+                                                        <el-switch v-model="form.maderera" active-text="HABILITADO" inactive-text="DESHABILITADO" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="() => submit('Entorno maderera', form.maderera, 'healthIcon')"></el-switch>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

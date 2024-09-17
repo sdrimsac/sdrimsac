@@ -42,6 +42,10 @@ use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\Table;
 use Modules\Services\Data\ServiceData;
+use App\Models\Tenant\CategoriaMadera;
+use App\Models\Tenant\ItemMedidaAlto;
+use App\Models\Tenant\ItemMedidaGrosor;
+use App\Models\Tenant\ItemMedidaAncho;
 
 class PosController extends Controller
 {
@@ -247,7 +251,11 @@ class PosController extends Controller
         return compact('date_last');
     }
     public function tables()
-    {
+    { 
+        $categoria_madera = CategoriaMadera::all();
+        $medida_alto = ItemMedidaAlto::all();
+        $medida_grosor = ItemMedidaGrosor:: all();
+        $medida_ancho = ItemMedidaAncho::all();
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $products_to_due = ItemLotsGroup::where('date_of_due', '<=', Carbon::now()->addMonths(2))
             ->where('quantity', '>', 0)
@@ -361,7 +369,12 @@ class PosController extends Controller
             'categories',
             'company',
             'customers_default',
-            'config'
+            'config',
+            'medida_alto',
+            'medida_ancho',
+            'medida_grosor',
+            'categoria_madera'
+
         );
     }
 

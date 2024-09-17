@@ -104,6 +104,7 @@ class ItemResource extends JsonResource
             'image' => $this->image,
             'account_id' => $this->account_id,
             'category_id' => $this->category_id,
+            'categoria_madera_item' => $this->categoria_madera,
             'brand_id' => $this->brand_id,
             'date_of_due' => $date_of_due,
             'image_url' => ($this->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $this->image) : asset("/logo/{$this->image}"),

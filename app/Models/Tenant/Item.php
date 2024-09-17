@@ -537,7 +537,9 @@ class Item extends ModelTenant
     {
         return $this->hasMany(ItemUnitType::class);
     }
-
+    public function categoria_madera(){
+        return $this->hasMany(ItemCategoriaMadera::class);
+    } 
 
 
     public function sets()

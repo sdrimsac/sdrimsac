@@ -57,12 +57,12 @@ class JustAdmin
             "purchases",
             "purchases/create",
             "sale-notes", "quotations", "summaries", "voided",
-            "incomes", "expenses", "boxes", "report_closed_cash", "documents","banks"
+            "incomes", "expenses", "boxes", "report_closed_cash", "documents","banks", "documents_ventas"
         ];
         $paths_logistic = [
             "items", "purchases", "purchases/create",
             "transfers", "transfers/transfer_place", "dispatches", "item-sets",
-            "reports/inventory", "reports/stockmin", "reports/kardex","documents_ventas", "productos",
+            "reports/inventory", "reports/stockmin", "reports/kardex","documents_ventas", "productos","documents_ventas",
         ];
 
         if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca) {

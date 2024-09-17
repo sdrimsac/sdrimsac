@@ -8,7 +8,7 @@
     $left = $document->series ? $document->series : $document->prefix;
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
-    
+
 @endphp
 <html>
 
@@ -240,8 +240,20 @@
                         </td>
                         <td class="text-center align-top">{{ $row->item->unit_type_id }}</td>
                         <td class="text-left">
-                            {!! $row->item->description !!} @if (!empty($row->item->presentation))
+                            {!! $row->item->description !!}
+                            @if (!empty($row->item->presentation))
                                 {!! $row->item->presentation->description !!}
+                            @endif
+                            @if (isset($row->item->categoriaMadera))
+                                -
+                                @php
+                                    $madera = $row->item->categoriaMadera;
+                                    $ancho = $madera->selectedAncho;
+                                    $largo = $madera->selectedLargo;
+                                    $grosor = $madera->selectedGrosor;
+                                    $m_description = "${grosor}x${ancho}x${largo}";
+                                @endphp
+                                {{ $m_description }}
                             @endif
                             @if ($row->attributes)
                                 @foreach ($row->attributes as $attr)

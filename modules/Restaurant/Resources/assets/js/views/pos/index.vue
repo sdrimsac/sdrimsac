@@ -355,6 +355,10 @@
                                     :configuration="configuration"
                                     :foods.sync="allFoods"
                                     @buscarnuevo="buscarnuevo"
+                                    :medida_alto="medida_alto"
+                                    :medida_ancho="medida_ancho"
+                                    :medida_grosor="medida_grosor"
+                                    :categoria_madera="categoria_madera"
                                 >
                                 </ListFood>
                             </div>
@@ -2110,7 +2114,11 @@ export default {
             showdialogPromocion: false,
             timer: null,
             users: [],
-            showDialogCreditReportDaily: false
+            showDialogCreditReportDaily: false,
+            medida_alto: null,
+            medida_ancho: null,
+            medida_grosor: null,
+            categoria_madera: null
         };
     },
     beforeDestroy() {
@@ -3265,6 +3273,7 @@ export default {
 
             for (let i = 0; i < items.length; i++) {
                 let item = JSON.parse(JSON.stringify(items[i]));
+                this.ordens[i].food.item.categoriaMadera = item.categoriaMadera;
                 this.ordens[i].food.item.from_unit_type_id = item.type_id;
                 this.ordens[i].food.item.from_unit_type_id_desc =
                     item.type_description;
@@ -3461,7 +3470,8 @@ export default {
 
             return true;
         },
-        insertOrden(orden, food_id, type, selectSerie = false) {
+        insertOrden(orden, food_id, type, selectSerie = false,categoriaMadera = null) {
+            console.log("categoria: ",categoriaMadera)
             let { food: item } = orden;
             let passDetraction = this.checkDetractionItems(item);
             if (!passDetraction && this.configuration.detraction) {
@@ -3508,12 +3518,17 @@ export default {
                 orden.type_id = type ? type.id : null;
                 orden.type_description = type ? type.description : null;
                 orden.type_quantity = type ? Number(type.quantity_unit) : 0;
+                orden.categoriaMadera = categoriaMadera;
                 //si es el primer registro del prod en la lista
 
                 if (type) {
                     // orden.quantity = Number(type.quantity_unit);
                     orden.quantity = orden.food.item.series_enabled ? 0 : 1;
                     orden.price = this.getDefaultPrice(type);
+                }
+
+                if(categoriaMadera){
+                    orden.price = categoriaMadera.price;
                 }
 
                 if (selectSerie) {
@@ -3601,7 +3616,34 @@ export default {
                     }
 
                     //y si no agregarla como nueva
-                } else {
+                }
+                
+                else if(categoriaMadera){
+                      let indexFind = this.localOrden.findIndex(
+                        orden => orden.categoriaMadera.key == categoriaMadera.key
+                    );
+                    if (indexFind != -1) {
+                        this.localOrden[indexFind].quantity =
+                            Number(this.localOrden[indexFind].quantity) + 1;
+                        // Number(type.quantity_unit);
+                    } else {
+                        // orden.quantity = Number(type.quantity_unit);
+                        orden.quantity =  1;
+                        orden.price = categoriaMadera.price;
+                        orden.categoriaMadera=categoriaMadera;
+                        orden.to_carry = false;
+                        orden.change_subtotal = false;
+                        orden.series = [];
+                        orden.lotes = [];
+                        orden.color_size = [];
+                      
+                      
+                      
+                        this.localOrden.unshift(orden);
+                    }
+
+                }
+                else {
                     let {
                         food: { series }
                     } = orden;
@@ -5222,10 +5264,10 @@ export default {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
                 this.users = response.data.users;
-                console.log(
+                /* console.log(
                     "🚀 ~ awaitthis.$http.get ~ this.users:",
                     this.users
-                );
+                ); */
                 this.tablesClean = response.data.tablesClean;
                 this.tablesClean = this.tablesClean.map(t => ({
                     ...t,
@@ -5239,6 +5281,10 @@ export default {
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
+                this.medida_alto = response.data.medida_alto;
+                this.medida_ancho = response.data.medida_ancho;
+                this.medida_grosor = response.data.medida_grosor;
+                this.categoria_madera = response.data.categoria_madera;
                 this.promotions_document = response.data.promotions_document;
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
@@ -5542,10 +5588,10 @@ export default {
             // );
         },
         async search() {
-            console.log(
+            /* console.log(
                 "🚀 ~ this.time=setTimeout ~ this.selectOption:",
                 this.selectOption
-            );
+            ); */
             if (this.time) {
                 clearTimeout(this.time);
             }

@@ -11,6 +11,7 @@ class Configuration extends ModelTenant
 {
     protected $fillable = [
         'alias_pdf',
+        'maderera',
         'is_promotion_document',
         'editar_precio_politica',
         'modo_billar',
@@ -252,6 +253,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'maderera' => 'boolean',
         'alias_pdf' => 'boolean',
         'is_promotion_document' => 'boolean',
         'editar_precio_politica' => 'boolean',
@@ -445,6 +447,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'maderera' => (bool)$this->maderera,
             'alias_pdf' => (bool)$this->alias_pdf,
             'is_promotion_document' => (bool)$this->is_promotion_document,
             'editar_precio_politica' => (bool)$this->editar_precio_politica,

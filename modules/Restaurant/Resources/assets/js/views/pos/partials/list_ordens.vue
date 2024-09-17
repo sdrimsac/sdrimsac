@@ -1144,6 +1144,20 @@
                                                                     >
                                                                 </small>
                                                             </span>
+                                                             <span
+                                                                v-if="
+                                                                    ord.categoriaMadera
+                                                                "
+                                                                class="text-primary"
+                                                            >
+                                                                <small
+                                                                    ><strong
+                                                                        >*{{
+                                                                           `${ ord.categoriaMadera.selectedGrosor}x${ ord.categoriaMadera.selectedAncho}x${ ord.categoriaMadera.selectedLargo}`
+                                                                        }}</strong
+                                                                    >
+                                                                </small>
+                                                            </span>
                                                         </h3>
                                                         <p
                                                             class="
@@ -1431,6 +1445,20 @@
                                                                         >
                                                                     </small>
                                                                 </span>
+                                                                  <span
+                                                                v-if="
+                                                                    order_pend.categoriaMadera
+                                                                "
+                                                                class="text-primary"
+                                                            >
+                                                                <small
+                                                                    ><strong
+                                                                        >{{
+                                                                           `${ order_pend.categoriaMadera.selectedGrosor}x${ order_pend.categoriaMadera.selectedAncho}x${ order_pend.categoriaMadera.selectedLargo}`
+                                                                        }}</strong
+                                                                    >
+                                                                </small>
+                                                            </span>
                                                                 <el-tooltip
                                                                     v-if="
                                                                         configuration.edit_name_product
@@ -2607,6 +2635,7 @@ export default {
             currentColorSize: null,
             loadingCommercialTreatment: false,
             ordenNumber: null,
+            /* categoriaMadera: [], */
             timer: null,
             promotionCode: null,
             currentArea: null,
