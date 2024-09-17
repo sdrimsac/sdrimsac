@@ -1489,6 +1489,18 @@
                                                 <el-switch v-model="form.new_old_printer" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Impresoras Nuevas', form.new_old_printer, 'new_old_printer', 'printIcon')"></el-switch>
                                             </div>
                                         </div>
+                                        <!-- alias -->
+                                            <div class="col-md-2 mt-4">
+                                            <div class="form-group">
+                                                <label class="control-label w-100">
+                                                    <i class="fas fa-print fa-lg"></i> Alias en documentos
+                                                    <el-tooltip class="item" effect="dark" content="Agrega el alias del cliente en los documentos pdf" placement="top-start">
+                                                        <i class="fa fa-info-circle"></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-switch v-model="form.alias_pdf" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Alias en pdf', form.alias_pdf, 'alias_pdf', 'printIcon')"></el-switch>
+                                            </div>
+                                        </div>
 
                                         <!-- Orientación A5 -->
                                         <div class="col-md-2 mt-4">

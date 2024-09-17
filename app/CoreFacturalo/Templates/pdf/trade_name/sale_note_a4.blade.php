@@ -87,7 +87,7 @@
     <table class="full-width mt-4">
         <tr>
             <td width="80" height="18px"><b>Cliente:</b></td>
-            <td>{{ $customer->name }}</td>
+            <td>{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
             <td><b>{{ $customer->identity_document_type->description }}:</b></td>
             <td>{{ $customer->number }}</td>
 

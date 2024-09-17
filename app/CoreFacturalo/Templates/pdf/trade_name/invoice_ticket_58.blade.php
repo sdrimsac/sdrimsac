@@ -101,7 +101,7 @@
 
     <tr>
         <td class="align-top"><p class="desc">Cliente:</p></td>
-        <td><p class="desc">{{ $customer->name }}</p></td>
+        <td><p class="desc">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</p></td>
     </tr>
     <tr>
         <td><p class="desc">{{ $customer->identity_document_type->description }}:</p></td>

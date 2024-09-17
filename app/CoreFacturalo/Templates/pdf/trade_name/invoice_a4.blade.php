@@ -171,7 +171,7 @@
                     <td height="20px">{{ $customer->number }}</td>
                     <td height="20px"><b>CLIENTE</b></td>
                     <td height="20px">:</td>
-                    <td height="20px">{{ $customer->name }}</td>
+                    <td height="20px">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
 
 
 

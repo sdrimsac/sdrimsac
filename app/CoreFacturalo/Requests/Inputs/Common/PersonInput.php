@@ -30,6 +30,7 @@ class PersonInput
             ],
             'number' => $person->number,
             'name' => $person->name,
+            'alias' => $person->alias,
             'sex' => $person->sex,
             'trade_name' => $person->trade_name,
             'country_id' => $person->country_id,

@@ -282,7 +282,7 @@
                 <p class="desc">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ $customer->name }}</p>
+                <p class="desc">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
             </td>
         </tr>
         <tr>
