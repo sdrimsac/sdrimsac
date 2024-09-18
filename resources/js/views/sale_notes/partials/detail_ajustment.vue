@@ -47,15 +47,13 @@
                             {{ Number(record.amount).toFixed(2) }}
                         </td>
                         <td>
-                            <span
-                                :class="
-                                    record.paid == 1
-                                        ? 'text-success'
-                                        : 'text-warning'
-                                "
+                            <el-button
+                                :type="record.paid == 1 ? 'success' : 'warning'"
+                                @click="updatePayment(record, 'paid')"
                             >
-                                {{ record.paid == 1 ? "Pagado" : "Pendiente" }}
-                            </span>
+                                {{ record.paid == 1 ? 'Pagado' : 'Pendiente' }}
+                            </el-button>
+
                         </td>
                         <td style="width:200px;">
                             <el-input
@@ -74,7 +72,6 @@
                         </td>
                         <td style="width:200px;">
                             <el-input
-                                :disabled="record.paid == 1"
                                 v-model="record.amount_paid"
                                 type="number"
                             >
@@ -109,7 +106,7 @@ export default {
             loading: false,
             records: [],
             all_records: [],
-            page: 0,
+            page: 1,
             pagination: {
                 total: 0,
                 current_page: 1,
@@ -119,15 +116,34 @@ export default {
     },
     computed: {
         paginatedRecords() {
-            const start = this.page * 10;
+            const start = (this.page -1)  * 10;
+            console.log("🚀 ~ paginatedRecords ~ start:", start)
             const end = start + 10;
+            console.log("🚀 ~ paginatedRecords ~ end:", end)
             return this.all_records.slice(start, end);
         }
     },
     methods: {
-        updatePayment(record, type) {
+        async updatePayment(record, type) {
             this.loading = true;
             let value = record[type];
+            if (type === "paid") {
+                value = 1;
+                try{
+                    await this.$confirm(
+                    `¿Está seguro de cambiar el estado de la cuota?`,
+                    "Confirmar",
+                    {
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        type: "warning"
+                    }
+                );
+                }catch(e){
+                    return;
+                }
+
+            }
             this.$http
                 .put(`/sale-notes/update-payment`, {
                     value,
@@ -156,7 +172,8 @@ export default {
             // console.log("🚀 ~ updatePayment ~ record:", record);
         },
         handleCurrentChange(val) {
-            this.page = val - 1;
+            this.page = val;
+            console.log("🚀 ~ handleCurrentChange ~ this.page:", this.page)
         },
         getPayments() {
             this.loading = true;

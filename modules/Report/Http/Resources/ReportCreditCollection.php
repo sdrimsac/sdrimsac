@@ -18,6 +18,7 @@ class ReportCreditCollection extends ResourceCollection
 
 
         return $this->collection->transform(function ($row, $key) {
+            
             $advances  = $row->advances;
             $paid = $row->paid;
             $payment = Payment::where('sale_note_id', $row->id);
@@ -111,6 +112,7 @@ class ReportCreditCollection extends ResourceCollection
                 $observation_credit = $row->sale_note_credit->reason_to_anulate_credit;
                 $observation .= " " . $observation_credit;
             }
+            // $penalty = $row->c
             return [
                 'quote_payment' => number_format($quote_payment,2),
                 'state_type_id' => $row->state_type_id,

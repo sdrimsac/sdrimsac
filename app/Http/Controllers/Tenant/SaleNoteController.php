@@ -119,6 +119,15 @@ class SaleNoteController extends Controller
             'value' => $value,
             'old_value' => $old_value,
         ]);
+        $payments = Payment::where('sale_note_id', $payment->sale_note_id)->where('paid', 0)->count();
+
+        if ($payments == 0) {
+            $sale_note = SaleNote::find($payment->sale_note_id);
+            $sale_note->paid = 1;
+            $sale_note->save();
+        }
+
+
         return [
             'success' => true,
             'message' => 'Pago actualizado',
