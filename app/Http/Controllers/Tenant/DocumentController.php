@@ -181,16 +181,19 @@ class DocumentController extends Controller
 
         ];
     }
-    public function checkDocuments()
+    public function checkDocuments(Request $request)
     {
         $fechaHoy = Carbon::now()->format('Y-m-d');
         $fecha7Dias = Carbon::now()->subDays(7)->format('Y-m-d');
         $infoCompleta = [];
-
+        $domain = $request->domain;
+        if($domain == null){
+            $domain = "XYZ";
+        }
         $number = [995764963,  987828697, 972053723, 927498983, 935921640];
         // $number = 
         $message = 'Reporte de sistemas que no completaron el envio de documentos ';
-        $file_name = 'Tenant_Procesos_Caidos_XYZ_' . Carbon::now() . '.xlsx';
+        $file_name = 'Tenant_Procesos_Caidos_'.$domain."_". Carbon::now() . '.xlsx';
         $sender = 'sdrimsac';
         $envio = new WhatsappController;
 
