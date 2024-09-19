@@ -6,6 +6,7 @@
                 :visible.sync="showDialogClose"
                 @open="dateclosed"
                 :before-close="closeDialog"
+                v-loading="loading"
             >
                 <div class="row">
                     <div class="col-md-6">

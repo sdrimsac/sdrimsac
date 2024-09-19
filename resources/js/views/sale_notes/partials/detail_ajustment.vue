@@ -51,9 +51,8 @@
                                 :type="record.paid == 1 ? 'success' : 'warning'"
                                 @click="updatePayment(record, 'paid')"
                             >
-                                {{ record.paid == 1 ? 'Pagado' : 'Pendiente' }}
+                                {{ record.paid == 1 ? "Pagado" : "Pendiente" }}
                             </el-button>
-
                         </td>
                         <td style="width:200px;">
                             <el-input
@@ -103,6 +102,7 @@ export default {
     props: ["dialogAjustment", "recordId"],
     data() {
         return {
+            timer: null,
             loading: false,
             records: [],
             all_records: [],
@@ -116,33 +116,33 @@ export default {
     },
     computed: {
         paginatedRecords() {
-            const start = (this.page -1)  * 10;
-            console.log("🚀 ~ paginatedRecords ~ start:", start)
+            const start = (this.page - 1) * 10;
+            console.log("🚀 ~ paginatedRecords ~ start:", start);
             const end = start + 10;
-            console.log("🚀 ~ paginatedRecords ~ end:", end)
+            console.log("🚀 ~ paginatedRecords ~ end:", end);
             return this.all_records.slice(start, end);
         }
     },
     methods: {
+        
         async updatePayment(record, type) {
             this.loading = true;
             let value = record[type];
             if (type === "paid") {
                 value = 1;
-                try{
+                try {
                     await this.$confirm(
-                    `¿Está seguro de cambiar el estado de la cuota?`,
-                    "Confirmar",
-                    {
-                        confirmButtonText: "Sí",
-                        cancelButtonText: "No",
-                        type: "warning"
-                    }
-                );
-                }catch(e){
+                        `¿Está seguro de cambiar el estado de la cuota?`,
+                        "Confirmar",
+                        {
+                            confirmButtonText: "Sí",
+                            cancelButtonText: "No",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
                     return;
                 }
-
             }
             this.$http
                 .put(`/sale-notes/update-payment`, {
@@ -173,7 +173,7 @@ export default {
         },
         handleCurrentChange(val) {
             this.page = val;
-            console.log("🚀 ~ handleCurrentChange ~ this.page:", this.page)
+            console.log("🚀 ~ handleCurrentChange ~ this.page:", this.page);
         },
         getPayments() {
             this.loading = true;
@@ -183,7 +183,6 @@ export default {
                         record.isEditing = false;
                         return record;
                     });
-                    
                 })
                 .catch(error => {
                     console.log(error);
@@ -194,6 +193,13 @@ export default {
         },
         open() {
             console.log(this.recordId);
+            this.page = 1;
+            this.pagination = {
+                total: 0,
+                current_page: 1,
+                per_page: 10
+            };
+            this.all_records = [];
             this.getPayments();
         },
         handleClose() {

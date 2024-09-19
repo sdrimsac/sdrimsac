@@ -3840,9 +3840,10 @@ export default {
                     "El establecimiento no tiene series disponibles para el comprobante"
                 );
             }
-
+            form.date_of_issue = moment().format("YYYY-MM-DD");
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
+                
                 form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
                 this.resource_payments = "sale_note_payments";

@@ -57,6 +57,7 @@
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">TIPO</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">CLIENTE</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">DNI</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">N° CUOTA</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">DIAS DE ATRASO</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">COBRO POR MORA</th>
                             <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">TOTAL MORA</th>
@@ -108,6 +109,7 @@
                                     <td style="border:1px solid black;"></td>
                                     <td style="border:1px solid black;"></td>
                                     <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"  class="text-center">{{ $payment['installment_number'] }}</td>
                                     <td style="border:1px solid black;"  class="text-center">{{ $payment['diffence_days'] }}</td>
                                     <td style="border:1px solid black;"  class="text-center">{{ $record['penalty_amount_by_day'] }}</td>
                                     <td style="border:1px solid black;"  class="text-center">{{ $payment['total_penalty'] }}</td>

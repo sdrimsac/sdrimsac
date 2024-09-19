@@ -357,6 +357,8 @@
                                                 <el-input
                                                     :readonly="row.blocked"
                                                     v-model="row.payment"
+                                                    type="number"
+                                                    step="0.1"
                                                 >
                                                     <i
                                                         slot="prefix"
@@ -723,6 +725,20 @@ export default {
             if (payment <= 0) {
                 this.$toast.error("El monto ingresado debe ser mayor a 0.");
                 return;
+            }
+            //si el monto ingresado tiene dos decimales
+            console.log("🚀 ~ clickSubmit ~ payment11:", payment);
+            if (payment % 1 != 0) {
+                console.log("🚀 ~ clickSubmit ~ payment:", payment);
+                //si el segundo decimal es mayor a 0
+                let paymentString = payment.toString().split(".")[1];
+
+                if (paymentString.length >= 2 && !this.cancelCredit) {
+                    this.$toast.error(
+                        "El monto ingresado no puede tener dos o más decimales."
+                    );
+                    return;
+                }
             }
             let difference = parseFloat(this.document.total_difference);
             let passLowPay = false;

@@ -1690,7 +1690,7 @@ class BoxesController extends Controller
     }
     public function reports_resumen_type(Request $request)
     {
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '5096M');
         $configuration = Configuration::first();
         $total_discount = 0;
         $cash_id = $request->cash_id;

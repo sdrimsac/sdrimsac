@@ -48,10 +48,12 @@ class ReceiptController extends Controller
         }
         $payment_method_type = $payment->payment_method_type->description;
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();
+        $quote = null;
         $interes = 0;
         if ($data->sale_note_id) {
             $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
             if ($data_payments != null) {
+                $quote = $data_payments->amount;
                 $interes = ($data->sale_note->total - $data->sale_note->advances) * ($data_payments->tasa / 100);
             }
             $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
@@ -86,6 +88,7 @@ class ReceiptController extends Controller
         }
 
         $recibo = PDF::loadView('tenant.receipt.index', [
+            'quote' => number_format($quote, 2, ".", ""),
             'position' => $position,
             'next_payment' => $next_payment,
             'penalties' => $penalties,

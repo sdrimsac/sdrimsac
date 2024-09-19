@@ -7,9 +7,9 @@
     <title>Recibo de Pago</title>
     <style>
         /**
-                Set the margins of the page to 0, so the footer and the header
-                can be of the full height and width !
-             **/
+            Set the margins of the page to 0, so the footer and the header
+            can be of the full height and width !
+        **/
         @page {
             margin: 0cm 0cm;
             padding: 0cm 0cm;
@@ -325,7 +325,31 @@
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
                                                 class="border-right border-top" style="padding: 5px !important;">
-                                                <b>MONTO PAGADO S/.</b>
+                                                <b>MONTO CUOTA S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ $quote }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>MONTO POR MORA S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ $data->penalty_paid }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>MONTO ENTREGADO S/.</b>
                                             </td>
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
@@ -338,7 +362,7 @@
                                             <tr>
                                                 <td colspan="2" align="right" valign="top"
                                                     class="border-right border-top" style="padding: 5px !important;">
-                                                    <b>ADELANTO CUOTA {{ $position +1 }} S/.</b>
+                                                    <b>ADELANTO CUOTA {{ $position + 1 }} S/.</b>
                                                 </td>
                                                 <td align="center" valign="top" class="border-top"
                                                     style="padding: 5px !important;">

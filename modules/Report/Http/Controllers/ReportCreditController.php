@@ -129,6 +129,9 @@ class ReportCreditController extends Controller
                 ->where('date_payment', '<=', $today)
                 ->get()
                 ->transform(function ($row_payment, $key) use (&$row, &$paid, $penalty_amount_by_day) {
+                    $existing_payments_count = Payment::where('sale_note_id', $row->id)
+                    ->where('id', '<=', $row_payment->id)
+                    ->count();
                     if ($row->paid == 0) {
                         $paid = false;
                         $row->paid = false;
@@ -149,8 +152,8 @@ class ReportCreditController extends Controller
                         'tasa' => $row_payment->tasa,
                         'paid' => $row_payment->paid,
                         'diffence_days' => $diffence_days,
-                        'total' => $total
-
+                        'total' => $total,
+                        'installment_number' => $existing_payments_count
                     ];
                 });
             $customer = $row->customer;
