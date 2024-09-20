@@ -2526,7 +2526,7 @@ export default {
             }
             persons = [...persons, ...this.all_customers];
             let newData = [];
-            if (this.clientSaleNoteNumber || this.form.hotel_customer_number) {
+            if (this.clientSaleNoteNumber || this.form.hotel_customer_number || this.form.quotation_customer_number) {
                 newData = personsFromServer;
             } else {
                 newData = [...this.all_customers, ...persons];
@@ -2649,10 +2649,10 @@ export default {
             }
         },
         async date_of_issue() {
-        console.log("vv" ,this.formVariation);
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
+            console.log(this.form," xx");
             this.form.promotion_document_id =
                 this.promotions_document.length > 0
                     ? this.promotions_document[0].id
@@ -4506,6 +4506,11 @@ export default {
                 await this.searchClientOne(this.form.hotel_customer_number);
                 //                    this.changeCustomer();
             }
+            if(this.form.quotation_customer_number){
+                await this.searchClientOne(this.form.quotation_customer_number);
+            
+            }
+
             this.changeCustomer();
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;

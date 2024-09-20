@@ -2227,9 +2227,11 @@ export default {
             this.variation = false;
             this.formVariation = {};
         },
-        insertOrdenQuotation(quotation_id, identifier, item) {
+        insertOrdenQuotation(quotation_id, identifier, item,customer_number) {
+            console.log("🚀 ~ insertOrdenQuotation ~ customer_number:", customer_number)
             this.quotationId = quotation_id;
             this.cotIdentifier = identifier;
+            this.form.quotation_customer_number = customer_number;
             let type = null;
             if (item.type_quotation) {
                 type = item.type_quotation;
@@ -5460,6 +5462,7 @@ export default {
             this.form.original_total = undefined;
             this.form.reference_number = null;
             this.form.hotel_customer_number = null;
+            this.form.quotation_customer_number = null;
             this.form.hotel_rent_item_service_id = null;
             this.form.hotel_rent_item_ids = null;
             this.form.hotel_rent_id = null;

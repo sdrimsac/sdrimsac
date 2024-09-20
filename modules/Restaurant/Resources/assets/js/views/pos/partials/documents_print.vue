@@ -223,12 +223,13 @@ export default {
         getRecordsInput() {
             this.getRecords();
         },
-        insertOrden(item,id,identifier){
+        insertOrden(item,id,identifier,customer_number){
 console.log(identifier);
             this.$emit(
                 "insertOrdenQuotation",
                 id,identifier,
                 item,   
+                customer_number
             );
         },
         sendItems(items, clientNumber, notes, dscto_global) {

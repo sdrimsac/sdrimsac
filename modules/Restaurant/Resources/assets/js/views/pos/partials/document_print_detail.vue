@@ -974,6 +974,8 @@ export default {
         },
         async clickOptionsQuotation(recordId = null) {
             this.quotationId = recordId;
+            let quotation = this.records.find(it => it.id == recordId);
+            let customer_number = quotation? quotation.customer_number:null;
             try {
                 this.loading = true;
                 const response = await this.$http(
@@ -989,7 +991,8 @@ export default {
                                 "insertOrden",
                                 it,
                                 quotation_id,
-                                identifier
+                                identifier,
+                                customer_number
                             );
                             this.$emit("closeDialog");
                         });
