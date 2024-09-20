@@ -289,12 +289,23 @@ class QuotationController extends Controller
     public function consolidateds(Request $request)
     {
         $records = Consolidated::query();
+        $date = $request->date;
+        $number = $request->number;
+        if ($date) {
+            $records->where('date_of_issue', $date);
+        }
+        if ($number) {
+            $remove_zero_from_start = ltrim($number, '0');
+            $records->where('id', $remove_zero_from_start);
+        }
 
         return new ConsolidateQuotationCollection($records->paginate(config('tenant.items_per_page')));
         // return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function consolidated(Request $request)
     {
+
+
         $excludes = $request->excludes;
         $consolidated = new Consolidated();
         $consolidated->user_id = auth()->id();

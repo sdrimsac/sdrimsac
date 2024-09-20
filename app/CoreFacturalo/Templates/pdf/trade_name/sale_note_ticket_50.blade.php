@@ -193,7 +193,7 @@
                 <p class="desc">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
+                <p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}</p>
             </td>
         </tr>
         <tr>

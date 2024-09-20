@@ -127,7 +127,7 @@
                 <p class="desc-9">Cliente:</p>
             </td>
             <td>
-                <p class="desc-9">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
+                <p class="desc-9">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}</p>
             </td>
         </tr>
         <tr>

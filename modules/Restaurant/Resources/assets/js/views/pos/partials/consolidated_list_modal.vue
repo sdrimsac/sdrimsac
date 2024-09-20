@@ -7,12 +7,38 @@
         append-to-body
         v-loading="loading"
     >
+        <div class="row m-2">
+            <div class="col-md-3">
+                <el-input
+                    v-model="form.number"
+                    placeholder="Número"
+                    @input="getRecordsTimer"
+                    clearable
+                ></el-input>
+            </div>
+            <div class="col-md-3">
+                <el-date-picker
+                    @change="getRecords"
+                    v-model="form.date"
+                    type="date"
+                    placeholder="Fecha"
+                    clearable
+                    value-format="yyyy-MM-dd"
+                    format="yyyy-MM-dd"
+                ></el-date-picker>
+            </div>
+        
+        </div>
+
         <div class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
                         <th>
                             #
+                        </th>
+                        <th>
+                            Consolidación
                         </th>
                         <th>
                             Fecha
@@ -24,9 +50,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(record,idx) in records" :key="idx">
+                    <tr v-for="(record, idx) in records" :key="idx">
                         <td>
                             {{ customIndex(idx) }}
+                        </td>
+                        <td>
+                            {{ record.identifier }}
                         </td>
                         <td>{{ record.date }}</td>
                         <td>
@@ -45,13 +74,13 @@
                                 placement="top"
                                 effect="dark"
                             >
-                            <el-button
-                                type="primary"
-                                size="mini"
-                                @click="clickPrint(record)"
-                            >
-                                <i class="el-icon-printer"></i>
-                            </el-button>
+                                <el-button
+                                    type="primary"
+                                    size="mini"
+                                    @click="clickPrint(record)"
+                                >
+                                    <i class="el-icon-printer"></i>
+                                </el-button>
                             </el-tooltip>
                         </td>
                     </tr>
@@ -72,22 +101,42 @@
 </template>
 
 <script>
+import querystring from "querystring";
 export default {
     props: ["showDialog"],
     data() {
         return {
+            form: {
+                date: ""
+            },
             resource: "quotations",
             records: [],
             excludes: [],
             loading: false,
             checkAll: false,
             pagination: {},
-            loading: false
+            loading: false,
+            timer: null
         };
     },
     computed: {},
     methods: {
-        clickExport(record){
+        query() {
+            return querystring.stringify({
+                number: this.form.number,
+                date: this.form.date,
+                page: this.pagination.current_page
+            });
+        },
+        getRecordsTimer(){
+            if(this.timer){
+                clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(() => {
+                this.getRecords();
+            }, 500);
+        },
+        clickExport(record) {
             window.open(`/${this.resource}/consolidateds/${record.id}/export`);
         },
         customIndex(index) {
@@ -104,24 +153,23 @@ export default {
             this.getRecords();
         },
         clickPrint(record) {
-            this.$http.get(`/${this.resource}/consolidateds/${record.id}/print`).
-            then(response => {
-                // window.open(response.data.url);
-                this.$message.success("Imprimiendo...");
-            })
-            .catch(error => {
-                console.error(error);
-            });
-            
+            this.$http
+                .get(`/${this.resource}/consolidateds/${record.id}/print`)
+                .then(response => {
+                    // window.open(response.data.url);
+                    this.$message.success("Imprimiendo...");
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
-    
             // window.open(`/${this.resource}/consolidateds/${record.id}/print`);
         },
         async getRecords() {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/${this.resource}/consolidateds`
+                    `/${this.resource}/consolidateds?${this.query()}`
                 );
                 this.pagination = response.data.meta;
                 this.pagination.current_page = Number(

@@ -19,9 +19,10 @@ class ConsolidateQuotationCollection extends ResourceCollection
             $quotations_ids = $row->quotations->pluck('id');
             return [
                 'id' => $row->id,
-                'user_name' => $row->user->name,
+                'identifier' =>'CON-'.STR_PAD($row->id, 6, '0', STR_PAD_LEFT),
+                'user_name' => $row->user->alias ? $row->user->alias." - ".  $row->user->name : $row->user->name,
                 'establishment' => $row->establishment->description,
-                'date' => $row->date_of_issue,
+                'date' => $row->created_at->format('Y-m-d H:i:s'),
                 'quotations' => $quotations_ids,
                 // 'total' => $total,
             ];
