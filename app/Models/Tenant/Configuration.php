@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'consolidated_quotations',
         'alias_pdf',
         'maderera',
         'is_promotion_document',
@@ -253,6 +254,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'consolidated_quotations' => 'boolean',
         'maderera' => 'boolean',
         'alias_pdf' => 'boolean',
         'is_promotion_document' => 'boolean',
@@ -447,6 +449,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'consolidated_quotations' => (bool)$this->consolidated_quotations,
             'maderera' => (bool)$this->maderera,
             'alias_pdf' => (bool)$this->alias_pdf,
             'is_promotion_document' => (bool)$this->is_promotion_document,

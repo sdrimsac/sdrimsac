@@ -723,6 +723,11 @@ if ($hostname) {
 
                 //quotations
                 Route::get('quotations', [App\Http\Controllers\Tenant\QuotationController::class, 'index'])->name('tenant.quotations.index')->middleware('redirect.level')->middleware('just.admin');
+                Route::get('quotations/to-consolidated', [App\Http\Controllers\Tenant\QuotationController::class, 'toConsolidated']);
+                Route::post('quotations/consolidated', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidated']);
+                Route::get('quotations/consolidateds', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidateds']);
+                Route::get('quotations/consolidateds/{id}/export', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExport']);
+                Route::get('quotations/consolidateds/{id}/print', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsPrint']);
                 Route::get('quotations/columns', [App\Http\Controllers\Tenant\QuotationController::class, 'columns']);
                 Route::get('quotations/items-to-cash/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'itemsToCash']);
                 Route::get('quotations/items-to-cash2/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'itemsToCash2']);

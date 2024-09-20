@@ -215,6 +215,15 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
+                                                <!-- Consolidado de cotizaciones -->
+                                                <div class="col-md-3 mt-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label w-100">
+                                                            <i ref="quotationIcon" class="fas fa-file-invoice-dollar tab-icon"></i> Consolidado de cotizaciones
+                                                        </label>
+                                                        <el-switch v-model="form.consolidated_quotations" active-text="HABILITADO" inactive-text="DESHABILITADO" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="() => submit('Consolidade de cotizaciones', form.consolidated_quotations, 'quotationIcon')"></el-switch>
+                                                    </div>
+                                                </div>
                                                 <!-- Habilitar Contabilidad -->
                                                 <div class="col-md-3 mt-4">
                                                     <div class="form-group">

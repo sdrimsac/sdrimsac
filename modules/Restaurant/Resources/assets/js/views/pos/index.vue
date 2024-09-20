@@ -1813,7 +1813,9 @@
             :configuration="configuration"
             :showDialog.sync="showSaleNoteCreditCash"
         ></sale-note-credit-cash>
-
+        <consolidated-list-modal
+            :showDialog.sync="showConsolidatedList"
+        ></consolidated-list-modal>
         <iframe ref="pdfFrame" style="display: none;"></iframe>
         <el-dialog
             class="no-header"
@@ -1910,6 +1912,8 @@ const CategoryDrag = () => import("./partials/category_drag.vue");
 const ProductsDue = () => import("./partials/products_due.vue");
 const ItemSet = () =>
     import("../../../../../../../resources/js/views/item_sets/form.vue");
+const ConsolidatedListModal = () =>
+    import("./partials/consolidated_list_modal.vue");
 const options = {
     text: "Loading ...",
     customClass: "login_loading",
@@ -1931,6 +1935,7 @@ export default {
         "areaId"
     ],
     components: {
+        ConsolidatedListModal,
         DetractionPayment,
         ItemSet,
         ProductsDue,
@@ -1962,6 +1967,7 @@ export default {
 
     data() {
         return {
+            showConsolidatedList: false,
             promotions_document: [],
             currencyIdChoice: "PEN",
             showDialogDetraction: false,
@@ -2129,7 +2135,7 @@ export default {
         this.area_id = this.worker.area_id;
         this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");
-        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller)
+        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller);
         this.isAnalist = this.checkWorkerType("analista");
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
@@ -2222,10 +2228,13 @@ export default {
             this.formVariation = {};
         },
         insertOrdenQuotation(quotation_id, identifier, item) {
-            console.log(identifier, " dsadas");
             this.quotationId = quotation_id;
             this.cotIdentifier = identifier;
-            this.insertOrden(item, item.id, null, false);
+            let type = null;
+            if (item.type_quotation) {
+                type = item.type_quotation;
+            }
+            this.insertOrden(item, item.id, type, false);
         },
         closeModal() {
             this.showDialogCreditReportDaily = false;
@@ -2365,6 +2374,12 @@ export default {
         },
         setMenuOptions() {
             this.optionsMenu = [
+                {
+                    id: 63,
+                    title: ["Cot.", "Consolidaciones"],
+                    icon: "fas fa-money-check-alt",
+                    visible: this.configuration.consolidated_quotations
+                },
                 {
                     id: 97,
                     title: ["Pagos", "Detracciones"],
@@ -3032,6 +3047,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 63:
+                    this.showConsolidatedList = true;
+                    break;
                 case 209:
                     this.openBillar();
                     break;
@@ -3138,7 +3156,10 @@ export default {
             this.isCreatingOrden = false;
             this.idOrden = undefined;
 
-            if(!this.configuration.all_items_pos && this.configuration.restaurant){
+            if (
+                !this.configuration.all_items_pos &&
+                this.configuration.restaurant
+            ) {
                 this.search_items(null);
             }
         },
@@ -3470,8 +3491,14 @@ export default {
 
             return true;
         },
-        insertOrden(orden, food_id, type, selectSerie = false,categoriaMadera = null) {
-            console.log("categoria: ",categoriaMadera)
+        insertOrden(
+            orden,
+            food_id,
+            type,
+            selectSerie = false,
+            categoriaMadera = null
+        ) {
+            console.log("categoria: ", categoriaMadera);
             let { food: item } = orden;
             let passDetraction = this.checkDetractionItems(item);
             if (!passDetraction && this.configuration.detraction) {
@@ -3527,7 +3554,7 @@ export default {
                     orden.price = this.getDefaultPrice(type);
                 }
 
-                if(categoriaMadera){
+                if (categoriaMadera) {
                     orden.price = categoriaMadera.price;
                 }
 
@@ -3616,11 +3643,10 @@ export default {
                     }
 
                     //y si no agregarla como nueva
-                }
-                
-                else if(categoriaMadera){
-                      let indexFind = this.localOrden.findIndex(
-                        orden => orden.categoriaMadera.key == categoriaMadera.key
+                } else if (categoriaMadera) {
+                    let indexFind = this.localOrden.findIndex(
+                        orden =>
+                            orden.categoriaMadera.key == categoriaMadera.key
                     );
                     if (indexFind != -1) {
                         this.localOrden[indexFind].quantity =
@@ -3628,22 +3654,18 @@ export default {
                         // Number(type.quantity_unit);
                     } else {
                         // orden.quantity = Number(type.quantity_unit);
-                        orden.quantity =  1;
+                        orden.quantity = 1;
                         orden.price = categoriaMadera.price;
-                        orden.categoriaMadera=categoriaMadera;
+                        orden.categoriaMadera = categoriaMadera;
                         orden.to_carry = false;
                         orden.change_subtotal = false;
                         orden.series = [];
                         orden.lotes = [];
                         orden.color_size = [];
-                      
-                      
-                      
+
                         this.localOrden.unshift(orden);
                     }
-
-                }
-                else {
+                } else {
                     let {
                         food: { series }
                     } = orden;
@@ -5318,7 +5340,7 @@ export default {
                     this.customer_default
                 ];
                 this.user = response.data.user;
-                console.log("🚀 ~ awaitthis.$http.get ~ this.user:", this.user)
+                console.log("🚀 ~ awaitthis.$http.get ~ this.user:", this.user);
                 // this.desarrollador=response.data.desarrollador
                 this.currency_types.length > 0
                     ? this.currency_types[0].id

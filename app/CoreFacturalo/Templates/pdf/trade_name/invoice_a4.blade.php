@@ -22,7 +22,7 @@
     }
 
     $payments = $document->payments;
-    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
+    $configuration = \App\Models\Tenant\Configuration::first();
     $total_payment = $document->payments->sum('payment');
     $balance = $document->total - $total_payment - $document->payments->sum('change');
 
@@ -171,7 +171,7 @@
                     <td height="20px">{{ $customer->number }}</td>
                     <td height="20px"><b>CLIENTE</b></td>
                     <td height="20px">:</td>
-                    <td height="20px">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
+                    <td height="20px">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
 
 
 

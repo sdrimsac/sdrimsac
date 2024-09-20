@@ -8,7 +8,7 @@
     $accounts = \App\Models\Tenant\BankAccount::all();
     $document_base = $document->note ? $document->note : null;
     $payments = $document->payments;
-    
+    $configuration = \App\Models\Tenant\Configuration::first();
     if ($document_base) {
         $affected_document_number = $document_base->affected_document ? $document_base->affected_document->series . '-' . str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT) : $document_base->data_affected_document->series . '-' . str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
     } else {
@@ -127,7 +127,7 @@
                 <p class="desc-9">Cliente:</p>
             </td>
             <td>
-                <p class="desc-9">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
+                <p class="desc-9">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
             </td>
         </tr>
         <tr>

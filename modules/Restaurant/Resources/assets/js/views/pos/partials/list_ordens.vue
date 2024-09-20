@@ -68,6 +68,14 @@
                     >
                         Disponible S/ {{ cashAvailable.toFixed(2) }}
                     </button>
+                    <button
+                        v-if="configuration.consolidated_quotations"
+                        class="btn btn-primary"
+                        type="button"
+                        @click="consolidatedQuotations"
+                    >
+                        Consolidar
+                    </button>
                     <div
                         class="dropdown-menu dropdown-menu-end col-md-2 col-1 "
                         style="width: 153px;"
@@ -1144,7 +1152,7 @@
                                                                     >
                                                                 </small>
                                                             </span>
-                                                             <span
+                                                            <span
                                                                 v-if="
                                                                     ord.categoriaMadera
                                                                 "
@@ -1153,7 +1161,7 @@
                                                                 <small
                                                                     ><strong
                                                                         >*{{
-                                                                           `${ ord.categoriaMadera.selectedGrosor}x${ ord.categoriaMadera.selectedAncho}x${ ord.categoriaMadera.selectedLargo}`
+                                                                            `${ord.categoriaMadera.selectedGrosor}x${ord.categoriaMadera.selectedAncho}x${ord.categoriaMadera.selectedLargo}`
                                                                         }}</strong
                                                                     >
                                                                 </small>
@@ -1445,20 +1453,20 @@
                                                                         >
                                                                     </small>
                                                                 </span>
-                                                                  <span
-                                                                v-if="
-                                                                    order_pend.categoriaMadera
-                                                                "
-                                                                class="text-primary"
-                                                            >
-                                                                <small
-                                                                    ><strong
-                                                                        >{{
-                                                                           `${ order_pend.categoriaMadera.selectedGrosor}x${ order_pend.categoriaMadera.selectedAncho}x${ order_pend.categoriaMadera.selectedLargo}`
-                                                                        }}</strong
-                                                                    >
-                                                                </small>
-                                                            </span>
+                                                                <span
+                                                                    v-if="
+                                                                        order_pend.categoriaMadera
+                                                                    "
+                                                                    class="text-primary"
+                                                                >
+                                                                    <small
+                                                                        ><strong
+                                                                            >{{
+                                                                                `${order_pend.categoriaMadera.selectedGrosor}x${order_pend.categoriaMadera.selectedAncho}x${order_pend.categoriaMadera.selectedLargo}`
+                                                                            }}</strong
+                                                                        >
+                                                                    </small>
+                                                                </span>
                                                                 <el-tooltip
                                                                     v-if="
                                                                         configuration.edit_name_product
@@ -2485,6 +2493,9 @@
             @limpiarForm="limpiarForm"
         >
         </consignment-form>
+        <consolidated-modal
+            :showDialog.sync="showConsolidated"
+        ></consolidated-modal>
         <credit-list-modal
             :showDialog.sync="showCreditListModal"
             :amountToAdd="creditListAmount"
@@ -2574,10 +2585,12 @@ const ShowLotesProduct = () => import("../partials/show_lotes_product.vue");
 const TransfersModal = () => import("../partials/transfer_modal.vue");
 const CreditListModal = () => import("../partials/credit_list_modal.vue");
 const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
+const ConsolidatedModal = () => import("../partials/consolidated_modal.vue");
 import { exchangeRate } from "@mixins/functions";
 export default {
     mixins: [exchangeRate],
     components: {
+        ConsolidatedModal,
         CreditListDialog,
         CreditListModal,
         ConsignmentForm,
@@ -2628,6 +2641,7 @@ export default {
 
     data() {
         return {
+            showConsolidated: false,
             // exchange_rate_sale: 1,
             currency_id: "S/",
             cashAvailable: 0,
@@ -2742,7 +2756,6 @@ export default {
     },
 
     async mounted() {
-
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
@@ -2757,7 +2770,7 @@ export default {
         }
         this.ordenInBox = ordens;
         setTimeout(() => {
-            console.log("isSeller: ",this.isSeller);
+            console.log("isSeller: ", this.isSeller);
         }, 1000);
         Echo.channel("insert_cash").listen(
             `.insert-cash-${this.configuration.socket_channel}`,
@@ -2807,6 +2820,9 @@ export default {
         this.checkCashAvailable();
     },
     methods: {
+        consolidatedQuotations() {
+            this.showConsolidated = true;
+        },
         changeCurrency() {
             // console.log(this.currency_id);
             this.$emit("updateCurrencyChoice", this.currency_id);

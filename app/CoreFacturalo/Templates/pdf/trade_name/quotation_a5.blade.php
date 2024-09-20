@@ -2,6 +2,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     $seller = $document->seller;
+    $configuration = \App\Models\Tenant\Configuration::first();
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $accounts = \App\Models\Tenant\BankAccount::all();
     $tittle = $document->prefix.'-'.str_pad($document->id, 8, '0', STR_PAD_LEFT);
@@ -61,7 +62,7 @@
 <table class="full-width mt-5">
     <tr>
         <td width="15%">Cliente:</td>
-        <td width="45%">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
+        <td width="45%">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
         <td width="25%">Fecha de emisión:</td>
         <td width="15%">{{ $document->date_of_issue }}</td>
     </tr>

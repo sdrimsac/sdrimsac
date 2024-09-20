@@ -31,12 +31,7 @@
     } else {
         $affected_document_number = null;
     }
-    $configuration = \App\Models\Tenant\Configuration::select([
-        'show_logo_in_documents',
-        'show_internal_code_ticket',
-        'correo_red_salud_ticket',
-        'numero_accion_independiente_admin',
-    ])->first();
+    $configuration = \App\Models\Tenant\Configuration::first();
     $total_payment = $document->payments ? $document->payments->sum('payment') : 0;
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
@@ -282,7 +277,7 @@
                 <p class="desc">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
+                <p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
             </td>
         </tr>
         <tr>

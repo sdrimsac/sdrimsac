@@ -3,6 +3,7 @@
     $customer = $document->customer;
     $invoice = $document->invoice;
     $seller = $document->seller;
+    $configuration = \App\Models\Tenant\Configuration::first();
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $left =  ($document->series) ? $document->series : $document->prefix;
     $tittle = $left.'-'.str_pad($document->number, 8, '0', STR_PAD_LEFT);
@@ -69,7 +70,7 @@
 
     <tr>
         <td class="align-top"><p class="desc">Cliente:</p></td>
-        <td><p class="desc">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</p></td>
+        <td><p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</p></td>
     </tr>
     <tr>
         <td><p class="desc">{{ $customer->identity_document_type->description }}:</p></td>

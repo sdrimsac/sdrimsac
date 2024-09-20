@@ -128,7 +128,7 @@
                     <td height="20px" colspan="5">
                         <b>CLIENTE</b>
                         :
-                        {{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}
+                        {{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}
                     </td>
 
 

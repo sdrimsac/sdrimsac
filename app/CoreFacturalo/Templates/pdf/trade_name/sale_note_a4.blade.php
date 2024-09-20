@@ -8,7 +8,7 @@
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
-    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
+    $configuration = \App\Models\Tenant\Configuration::first();
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
@@ -86,7 +86,7 @@
     <table class="full-width mt-4">
         <tr>
             <td width="80" height="18px"><b>Cliente:</b></td>
-            <td>{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
+            <td>{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</td>
             <td><b>{{ $customer->identity_document_type->description }}:</b></td>
             <td>{{ $customer->number }}</td>
 

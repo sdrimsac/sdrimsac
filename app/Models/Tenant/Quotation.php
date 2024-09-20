@@ -62,6 +62,7 @@ class Quotation extends ModelTenant
         'changed',
         'account_number',
         'terms_condition',
+        'consolidated_id',
 
     ];
 
@@ -100,7 +101,10 @@ class Quotation extends ModelTenant
     {
         $this->attributes['charges'] = (is_null($value)) ? null : json_encode($value);
     }
-
+    public function consolidated()
+    {
+        return $this->belongsTo(Consolidated::class);
+    }
     public function getDiscountsAttribute($value)
     {
         return (is_null($value)) ? null : (object) json_decode($value);

@@ -30,6 +30,8 @@ use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\CoreFacturalo\Template;
+use App\Exports\ConsolidatedExport;
+use App\Http\Resources\Tenant\ConsolidateQuotationCollection;
 use Mpdf\Mpdf;
 use Mpdf\HTMLParserMode;
 use Mpdf\Config\ConfigVariables;
@@ -41,6 +43,8 @@ use App\Models\Tenant\Cash;
 use App\Models\Tenant\PaymentMethodType;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Consolidated;
+use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
 use Carbon\Carbon;
@@ -58,16 +62,17 @@ class QuotationController extends Controller
     protected $quotation;
     protected $company;
 
-    public function itemsToCash2($id){
+    public function itemsToCash2($id)
+    {
         $quotation = Quotation::find($id);
         $cash = Cash::where('user_id', auth()->user()->id)->where('state', 1)->first();
-        if(!$cash){
+        if (!$cash) {
             return [
                 'success' => false,
                 'message' => 'No se encontró caja activa'
             ];
         }
-        try{
+        try {
             DB::beginTransaction();
             $configuration = Configuration::firstOrFail();
             $customer_id = $quotation->customer_id;
@@ -75,25 +80,36 @@ class QuotationController extends Controller
             $customer_name = $customer->name;
             $items = $quotation->items;
             $user_id = auth()->id();
-           $items_restore = [];
+            $items_restore = [];
             foreach ($items as $it) {
+            
                 $item_restore = [];
                 $item = Item::find($it->item_id)
-                ->load('food');
+                    ->load('food');
                 $item = $item->toArray();
                 $item_restore['id'] = $item["food"]["id"];
                 $item_restore['food'] = $item["food"];
                 $item_restore['observation'] = null;
                 $item_restore['price'] = $it->unit_price;
                 $item_restore['quantity'] = $it->quantity;
-                $items_restore[]=$item_restore;
-               
+                if($it->item->from_unit_type_id){
+                    $unit_type_id = $it->item->from_unit_type_id;
+                    $unit_type = ItemUnitType::find($unit_type_id);
+                    $item_restore['type_quotation'] = $unit_type;
+                    // $item_restore['type_description'] = $unit_type->description;
+                    // $item_restore['type_id'] = $unit_type->unit_type_id;
+                    // $item_restore['type_quantity'] = $unit_type->quantity_unit;
+                }
+                
+                $items_restore[] = $item_restore;
+                
+
                 // $isFromBox = $this->isArea("CAJ", $user->area_id);
-    
+
                 // if ($print_box) {
                 //     event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
                 // }
-                
+
             }
             DB::commit();
             return [
@@ -103,25 +119,25 @@ class QuotationController extends Controller
                 'message' => 'Items enviados a caja',
                 'items' => $items_restore,
             ];
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return [
                 'success' => false,
                 'message' => $e->getMessage()
             ];
         }
     }
-    public function itemsToCash($id){
+    public function itemsToCash($id)
+    {
         $quotation = Quotation::find($id);
         $cash = Cash::where('user_id', auth()->user()->id)->where('state', 1)->first();
-        if(!$cash){
+        if (!$cash) {
             return [
                 'success' => false,
                 'message' => 'No se encontró caja activa'
             ];
         }
         // $cash_id = $cash->id;
-        try{
+        try {
             DB::beginTransaction();
             $configuration = Configuration::firstOrFail();
             $customer_id = $quotation->customer_id;
@@ -144,7 +160,7 @@ class QuotationController extends Controller
             $orden_items_ids_for_kitchen = [];
             foreach ($items as $it) {
                 $item = Item::find($it->item_id)
-                ->load('food');
+                    ->load('food');
                 $item = $item->toArray();
                 $orden_item = new OrdenItem;
                 $orden_item->food_id = $item["food"]["id"];
@@ -179,11 +195,11 @@ class QuotationController extends Controller
                     }
                 }
                 // $isFromBox = $this->isArea("CAJ", $user->area_id);
-    
+
                 // if ($print_box) {
                 //     event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
                 // }
-                
+
             }
             DB::commit();
             return [
@@ -192,8 +208,7 @@ class QuotationController extends Controller
                 'orden' => Orden::find($orden->id),
                 'message' => 'Items enviados a caja'
             ];
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -221,6 +236,90 @@ class QuotationController extends Controller
         return view('tenant.quotations.form_edit', compact('resourceId'));
     }
 
+    public function consolidatedsPrint($id){
+        $consolidated= Consolidated::find($id);
+        $quotation_ids = $consolidated->quotations->pluck('id');
+        foreach ($quotation_ids as $quotation_id) {
+            event(new PrintEvent($quotation_id, "CO", true));
+            sleep(2);
+        }
+        return [
+            'success' => true,
+            'message' => 'Impresión enviada a la cola de impresión'
+        ];
+    }
+    public function consolidatedsExport($id)
+    {
+        $consolidated = Consolidated::with('quotations.items')->find($id);
+
+        $quotationItems = $consolidated->quotations->flatMap(function ($quotation) {
+            return $quotation->items;
+        });
+
+        $groupedItems = $quotationItems->groupBy(function ($item) {
+            $itemData = $item->item;
+            return $item->item_id . '-' . ($itemData->from_unit_type_id ?? 'null');
+        });
+
+        $transformedItems = $groupedItems->map(function ($items, $key) {
+            $firstItem = $items->first();
+            $itemData = $firstItem->item;
+            $totalQuantity = $items->sum('quantity');
+            $itemDescription = $itemData->description;
+            $unitTypeDescription = null;
+
+            if (isset($itemData->from_unit_type_id)) {
+                $unitType = ItemUnitType::find($itemData->from_unit_type_id);
+                $unitTypeDescription = $unitType ? $unitType->description : 'Unknown';
+            }
+
+            return (object) [
+                'item_id' => $firstItem->item_id,
+                'total_quantity' => $totalQuantity,
+                'item_description' => $itemDescription,
+                'unit_type_description' => $unitTypeDescription,
+            ];
+        });
+        return (new ConsolidatedExport())
+            ->records($transformedItems)
+            ->consolidated($consolidated)
+            ->company(Company::active())
+            ->download("Consolidado_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
+    }
+    public function consolidateds(Request $request)
+    {
+        $records = Consolidated::query();
+
+        return new ConsolidateQuotationCollection($records->paginate(config('tenant.items_per_page')));
+        // return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function consolidated(Request $request)
+    {
+        $excludes = $request->excludes;
+        $consolidated = new Consolidated();
+        $consolidated->user_id = auth()->id();
+        $consolidated->establishment_id = auth()->user()->establishment_id;
+        $consolidated->date_of_issue = date('Y-m-d');
+        $consolidated->save();
+        Quotation::where('consolidated', false)
+            ->whereNotIn('id', $excludes)
+            ->update([
+                'consolidated' => true,
+                'consolidated_id' => $consolidated->id
+            ]);
+
+        return [
+            'success' => true,
+            'message' => 'Cotizaciones consolidadas'
+        ];
+    }
+    public function toConsolidated()
+    {
+        $records = Quotation::where('consolidated', false);
+
+
+        return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function columns()
     {
         return [
@@ -236,7 +335,7 @@ class QuotationController extends Controller
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $state_types = StateType::whereIn('id', ['01', '05', '09'])->get();
 
-        return compact('state_types','sellers');
+        return compact('state_types', 'sellers');
     }
 
     public function records(Request $request)

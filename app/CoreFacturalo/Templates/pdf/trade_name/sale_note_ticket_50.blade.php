@@ -2,6 +2,7 @@
     
     $establishment = $document->establishment;
     $customer = $document->customer;
+    $configuration = \App\Models\Tenant\Configuration::first();
     $invoice = $document->invoice;
     $seller = $document->seller;
     $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
@@ -192,7 +193,7 @@
                 <p class="desc">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ isset($customer->alias) ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
+                <p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' ' . $customer->name : $customer->name }}</p>
             </td>
         </tr>
         <tr>
