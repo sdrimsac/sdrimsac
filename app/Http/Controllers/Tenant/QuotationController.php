@@ -240,7 +240,7 @@ class QuotationController extends Controller
         $consolidated= Consolidated::find($id);
         $quotation_ids = $consolidated->quotations->pluck('id');
         foreach ($quotation_ids as $quotation_id) {
-            event(new PrintEvent($quotation_id, "CO", true));
+            event(new PrintEvent($quotation_id, "COT", true));
             sleep(2);
         }
         return [

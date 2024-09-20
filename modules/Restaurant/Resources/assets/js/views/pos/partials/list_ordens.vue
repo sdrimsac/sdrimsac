@@ -69,7 +69,7 @@
                         Disponible S/ {{ cashAvailable.toFixed(2) }}
                     </button>
                     <button
-                        v-if="configuration.consolidated_quotations"
+                        v-if="configuration.consolidated_quotations && !isSeller && cash_id"
                         class="btn btn-primary"
                         type="button"
                         @click="consolidatedQuotations"

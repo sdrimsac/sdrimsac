@@ -9,6 +9,7 @@ use App\Models\Tenant\SaleNote;
 use Illuminate\Support\Str;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Quotation;
 use Modules\Restaurant\Models\Area;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -150,6 +151,10 @@ class PrintEvent implements ShouldBroadcast
             case "COL":
                 $doc = $id;
                 $documentLink = url('') .  "/consignment/format_ticket_liquidated/{$doc}";
+                break;
+            case "COT":
+                $doc = Quotation::where('id', $id)->first();
+                $documentLink = url('') .  "/quotations/print/{$doc->external_id}/{$format}";
                 break;
         }
         $printer = $area_printer->printer;

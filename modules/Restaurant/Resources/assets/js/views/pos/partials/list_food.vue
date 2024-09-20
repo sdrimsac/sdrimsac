@@ -62,7 +62,7 @@
                             v-for="(data,
                                                         index) in foods"
                             :key="index"
-                            @click="addFood(index)"
+                            @click="configuration.consolidated_quotations ? clickCommand(data.types[0]) :addFood(index)"
                           >
                             <td>{{ data.code }}</td>
                             <td>
@@ -327,7 +327,7 @@
                                         }`
                                     "
                 >
-                  <div @click="addFood(index)">
+                  <div   @click="configuration.consolidated_quotations ? clickCommand(data.types[0]) :addFood(index)">
                     <div>
                       <span
                         :class="
@@ -594,7 +594,8 @@
                                     }`
                                 "
               >
-                <div @click="addFood(index)">
+                <div   @click="configuration.consolidated_quotations ? clickCommand(data.types[0]) :addFood(index)"
+                >
                   <div>
                     <span
                       :class="
