@@ -83,6 +83,9 @@ class Template
                                 $row->unit_desc = " X " . number_format($unds, 2);
                                 $row->unit_qty = number_format($row->quantity / $unds, 2);
                                 $row->price_unit = number_format($unit_type->total, 2);
+                                if($config->consolidated_quotations){
+                                    $row->unit_desc = "({$row->unit_desc})";
+                                }
                             }
                         }
                     }
