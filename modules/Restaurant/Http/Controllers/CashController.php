@@ -1013,7 +1013,8 @@ class CashController extends Controller
                 $documents = $documents->where('number', $value);
             } else {
                 $documents = $documents->whereHas('person', function ($query) use ($value) {
-                    $query->where('name', 'like', '%' . $value . '%')->orWhere('number', 'like', '%' . $value . '%');
+                    $query->where('name', 'like', '%' . $value . '%')->orWhere('number', 'like', '%' . $value . '%')
+                    ->orWhere('alias', 'like', '%' . $value . '%');
                 });
             }
         }
