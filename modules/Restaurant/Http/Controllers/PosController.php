@@ -149,6 +149,7 @@ class PosController extends Controller
         $category_id = $request->category;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
+        $value = addslashes($value);
         $establishment_id = auth()->user()->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
