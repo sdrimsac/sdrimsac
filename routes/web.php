@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\CashController;
 use Modules\Inventory\Http\Controllers\TransferPlaceController;
 use Modules\Restaurant\Http\Controllers\IncomesController;
+use Modules\Restaurant\Http\Controllers\MaderaController;
 
 $hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home']);
@@ -45,6 +46,14 @@ if ($hostname) {
             /* Route::post('transfers/cancel_transfer', [TransferPlaceController::class, 'cancel_transfer']); */
             Route::get('transfers/print_places/{code?}', [TransferPlaceController::class, 'print_transfer']);
             Route::get('report_cash/report/{type}', [CashController::class, 'report_cash_export']);
+            /* para reporte de madera  */
+            Route::get('/madera', [MaderaController::class, 'index_madera'])->name('tenant.madera.index');
+            Route::get('/report-madera', [MaderaController::class, 'report_madera'])->name('report_madera');
+            Route::get('report_closed_cash', [MaderaController::class, 'index_report_closed_cash'])->name('reports.cash_closes.index');
+            Route::get('report_madera/records', [MaderaController::class, 'report_madera']);
+            Route::get('get_stock_file/{id}', [MaderaController::class, 'get_stock_file']);
+            Route::get('report_madera/report/{type}', [MaderaController::class, 'report_cash_export']);
+
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'downloadExternal'])->name('tenant.download.external_id');
             Route::get('print/{model}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'toPrint']);
             Route::get('quotations/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\QuotationController::class, 'toPrint']);
@@ -56,7 +65,7 @@ if ($hostname) {
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
-            
+
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
@@ -165,6 +174,10 @@ if ($hostname) {
                 Route::get('report_cash/records', [CashController::class, 'report_cash']);
                 Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
 
+                /* agragdo para el nuevo reporte de maderera */
+
+
+
                 Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
                 Route::post('whatsapp/reprint/{type}/{external_id}', [App\Http\Controllers\Tenant\WhatsappController::class, 'reprintDocument']);
                 Route::post('whatsapp/save', [App\Http\Controllers\Tenant\WhatsappController::class, 'saveWhatsapp']);
@@ -223,8 +236,8 @@ if ($hostname) {
                 Route::get('documents/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excel']);
 
 
-                Route::get('sale-notes/get-payments/{sale_note_id}',[SaleNoteController::class,'getPayments']);
-                Route::put('sale-notes/update-payment',[SaleNoteController::class,'updatePayment']);
+                Route::get('sale-notes/get-payments/{sale_note_id}', [SaleNoteController::class, 'getPayments']);
+                Route::put('sale-notes/update-payment', [SaleNoteController::class, 'updatePayment']);
 
                 Route::get('catalogs', [App\Http\Controllers\Tenant\CatalogController::class, 'index'])->name('tenant.catalogs.index')->middleware('just.admin');
                 Route::get('expenses', [Modules\Restaurant\Http\Controllers\PosController::class, 'expenses_admin'])->name('expenses.index')->middleware('just.admin');
@@ -465,7 +478,7 @@ if ($hostname) {
                         Route::get('columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns_detraction']);
                         Route::get('records', [App\Http\Controllers\Tenant\DocumentController::class, 'records_detraction']);
                         Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
-                });
+                    });
                 Route::prefix('documents_ventas')
                     ->group(function () {
                         Route::get('', [App\Http\Controllers\Tenant\DocumentController::class, 'index_ventas'])->name('tenant.ventas.index')->middleware(['just.admin']);
@@ -473,7 +486,7 @@ if ($hostname) {
                         Route::get('records', [App\Http\Controllers\Tenant\DocumentController::class, 'records_ventas']);
                         Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
                         Route::get('/ventas/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excelVentas']);
-                });
+                    });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
                 Route::get('/records-suma', [App\Http\Controllers\Tenant\DocumentController::class, 'recordsSuma']);
 
@@ -851,7 +864,7 @@ if ($hostname) {
                     Route::post('/', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'store']);
                     Route::delete('/{id}', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'destroy']);
                 });
-                
+
                 //Promotion
                 Route::get('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');
                 Route::get('promotions/columns', [App\Http\Controllers\Tenant\PromotionController::class, 'columns']);
@@ -892,7 +905,7 @@ if ($hostname) {
                 Route::post('receta/upload', [App\Http\Controllers\Tenant\RecetaController::class, 'upload']);
                 Route::post('receta/visible_store', [App\Http\Controllers\Tenant\RecetaController::class, 'visibleStore']);
                 Route::get('receta/item/tables', [App\Http\Controllers\Tenant\RecetaController::class, 'item_tables']);
-                
+
                 //personas o clientes 
                 Route::get('person-types/columns', [App\Http\Controllers\Tenant\PersonTypeController::class, 'columns']);
                 Route::get('person-types', [App\Http\Controllers\Tenant\PersonTypeController::class, 'index'])->name('tenant.person_types.index')->middleware('just.admin');
@@ -979,8 +992,7 @@ if ($hostname) {
                 Route::post('incomebox', [App\Http\Controllers\Tenant\BoxController::class, 'store']);
                 Route::get('incomebox/records', [App\Http\Controllers\Tenant\BoxController::class, 'records2']);
                 Route::delete('incomebox/{boxes}', [App\Http\Controllers\Tenant\BoxController::class, 'destroy']);
-                Route::middleware(['just.admin'])->group(function () {
-                });
+                Route::middleware(['just.admin'])->group(function () {});
             });
         }
     );

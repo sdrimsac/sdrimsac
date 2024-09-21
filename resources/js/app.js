@@ -460,6 +460,10 @@ const app = new Vue({
             import(
                 "../../modules/Report/Resources/assets/js/views/cash/index.vue"
             ),
+        "tenant-madera-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/madera/index.vue"
+            ),
 
         "tenant-series-configurations-index": () =>
             import(

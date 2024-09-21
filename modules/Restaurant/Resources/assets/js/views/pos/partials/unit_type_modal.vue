@@ -7,90 +7,98 @@
     @close="close"
     append-to-body
   >
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Categoria</th>
-            <th>Pie Tablar</th>
-            <th>PU</th>
-            <th>Grosor</th>
-            <th>Ancho</th>
-            <th>Largo</th>
-            <th>Precio</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <el-select v-model="unit.selectedCategoria" @change="filterRelatedData">
-                <el-option
-                  v-for="(madera, index) in categoria_madera_select"
-                  :key="index"
-                  filterable
-                  :label="madera.description"
-                  :value="madera.id"
-                ></el-option>
-              </el-select>
-            </td>
-            <td>{{unit.fot}}</td>
-            <td>
-              <el-input v-model="unit.unitPrice" type="number"></el-input>
-            </td>
-            <td>
-              <el-select
-                style="width:50px;"
-                v-model="unit.selectedGrosor"
-                clearable
+    <div>
+      <div class>
+        <div class="row">
+          <div class="col-md-2 col-12">
+            <label>Categoria</label>
+            <el-select v-model="unit.selectedCategoria" @change="filterRelatedData">
+              <el-option
+                v-for="(madera, index) in categoria_madera_select"
+                :key="index"
                 filterable
-                :disabled="!unit.selectedCategoria"
-              >
-                <el-option
-                  v-for="(grosor, index) in medida_grosor_select"
-                  :key="index"
-                  :label="grosor.grosor"
-                  :value="grosor.grosor"
-                ></el-option>
-              </el-select>
-            </td>
-            <td>
-              <el-select
-                style="width:50px;"
-                v-model="unit.selectedAncho"
-                clearable
-                filterable
-                :disabled="!unit.selectedCategoria"
-              >
-                <el-option
-                  v-for="(ancho, index) in medida_ancho_select"
-                  :key="index"
-                  :label="ancho.ancho"
-                  :value="ancho.ancho"
-                ></el-option>
-              </el-select>
-            </td>
-            <td>
-              <el-select
-                style="width:50px;"
-                filterable
-                clearable
-                v-model="unit.selectedLargo"
-                :disabled="!unit.selectedCategoria"
-              >
-                <el-option
-                  v-for="(alto, index) in medida_alto_select"
-                  :key="index"
-                  :label="alto.alto"
-                  :value="alto.alto"
-                ></el-option>
-              </el-select>
-            </td>
-            <td>
-              <span>{{price.toFixed(2)}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                :label="madera.description"
+                :value="madera.id"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="col-md-1 col-12">
+            <label>PIE</label>
+            <br />
+            <span>{{unit.fot.toFixed(2)}}</span>
+          </div>
+          <div class="col-sm-2 col-12">
+            <div>
+              <label>P. Unit.</label>
+              <br />
+              <el-input
+                v-model="unit.unitPrice"
+                type="tel"
+                :min="1"
+                :max="999"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+              ></el-input>
+            </div>
+            <!-- <input placeholder="" type="text"> -->
+          </div>
+          <div class="col-md-2 col-12">
+            <label>Grosor</label>
+            <el-select
+              v-model="unit.selectedGrosor"
+              clearable
+              filterable
+              :disabled="!unit.selectedCategoria"
+            >
+              <el-option
+                v-for="(grosor, index) in medida_grosor_select"
+                :key="index"
+                :label="grosor.grosor"
+                :value="grosor.grosor"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="col-md-2 col-12">
+            <label>Ancho</label>
+            <el-select
+              v-model="unit.selectedAncho"
+              clearable
+              filterable
+              :disabled="!unit.selectedCategoria"
+            >
+              <el-option
+                v-for="(ancho, index) in medida_ancho_select"
+                :key="index"
+                :label="ancho.ancho"
+                :value="ancho.ancho"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="col-md-2 col-12">
+            <label>Largo</label>
+            <el-select
+              filterable
+              clearable
+              v-model="unit.selectedLargo"
+              :disabled="!unit.selectedCategoria"
+            >
+              <el-option
+                v-for="(alto, index) in medida_alto_select"
+                :key="index"
+                :label="alto.alto"
+                :value="alto.alto"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="col-md-1 col-12">
+            <label>S/.</label>
+            <br />
+            <span>{{price.toFixed(2)}}</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="form-actions text-end pt-2 pb-2">
       <el-button @click="selectUnit" class="bg-primary text-white" :disabled="price == 0">
@@ -120,7 +128,7 @@ export default {
   ],
   data() {
     return {
-      index:null,
+      index: null,
       search: "",
       medida_alto_select: [],
       medida_ancho_select: [],
@@ -141,13 +149,11 @@ export default {
         unitPrice: 0,
         fot: 0,
         price: 0,
-        key:null,
-      },
-      
+        key: null
+      }
     };
   },
-  created() {
-  },
+  created() {},
   computed: {
     dialogTitle() {
       return this.item && this.item.description
@@ -175,9 +181,16 @@ export default {
         return result;
       }
       return 0;
-    },
+    }
   },
+  /* mounted() {
+    this.screenWidth = window.innerWidth;
+    window.addEventListener("resize", this.handleResize);
+  }, */
   methods: {
+    /* handleResize() {
+      this.screenWidth = window.innerWidth;
+    }, */
     filter() {
       if (this.search) {
         this.filteredUnits = this.unit_types.filter(unit =>
@@ -223,7 +236,7 @@ export default {
       toAdd.selectedAncho = Number(toAdd.selectedAncho);
       toAdd.selectedGrosor = Number(toAdd.selectedGrosor);
       toAdd.selectedLargo = Number(toAdd.selectedLargo);
-      this.$emit("addCategoriaMadera", toAdd,this.index);
+      this.$emit("addCategoriaMadera", toAdd, this.index);
 
       this.resetForm();
     },
@@ -233,7 +246,7 @@ export default {
     open() {
       // console.log(this.item);
 
-      if(this.item){
+      if (this.item) {
         this.index = this.currentIndex;
         let { categoria_madera_item } = this.item;
         this.categoria_madera_item = categoria_madera_item;

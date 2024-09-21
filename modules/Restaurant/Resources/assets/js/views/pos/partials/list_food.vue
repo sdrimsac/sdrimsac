@@ -994,10 +994,7 @@ export default {
         return {
             showUnitTypeModal: false,
             addingType: false,
-            /* medidaAlto: null,
-      medidaAncho: null,
-      medidaGrosor: null, */
-            currentIndex: null,
+                  currentIndex: null,
             itemId: null,
             currentItem: null,
             unit_type: [],
@@ -1017,10 +1014,7 @@ export default {
             orden: [],
             currentFood: {},
             item: null,
-            /* medida_ancho: null,
-      medida_alto: null,
-      medida_grosor: null, */
-            search: "Buscar por Codigo",
+                  search: "Buscar por Codigo",
             currentImage: null,
             showImage: false,
             listFoods: [],

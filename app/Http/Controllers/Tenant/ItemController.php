@@ -245,7 +245,10 @@ class ItemController extends Controller
             'document_items.total',
             'persons.name as customer_name',
             'persons.number as customer_number',
-            'items.description as item_description'
+            'items.description as item_description',
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(document_items.item, "$.categoriaMadera.selectedAncho")) as selectedAncho'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(document_items.item, "$.categoriaMadera.selectedLargo")) as selectedLargo'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(document_items.item, "$.categoriaMadera.selectedGrosor")) as selectedGrosor')
         )
             ->join('documents', 'document_items.document_id', '=', 'documents.id')
             ->join('persons', 'documents.customer_id', '=', 'persons.id')
@@ -260,7 +263,10 @@ class ItemController extends Controller
                 'documents.series',
                 'documents.number',
                 'document_items.total',
-                'documents.date_of_issue'
+                'documents.date_of_issue',
+                'selectedAncho',
+                'selectedLargo',
+                'selectedGrosor'
             );
 
         $sale_note_items->select(
@@ -273,7 +279,10 @@ class ItemController extends Controller
             'sale_note_items.total',
             'persons.name as customer_name',
             'persons.number as customer_number',
-            'items.description as item_description'
+            'items.description as item_description',
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_items.item, "$.categoriaMadera.selectedAncho")) as selectedAncho'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_items.item, "$.categoriaMadera.selectedLargo")) as selectedLargo'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_items.item, "$.categoriaMadera.selectedGrosor")) as selectedGrosor')
         )
             ->join('sale_notes', 'sale_note_items.sale_note_id', '=', 'sale_notes.id')
             ->join('persons', 'sale_notes.customer_id', '=', 'persons.id') // Agrega la relación con la tabla "persons"
@@ -288,7 +297,10 @@ class ItemController extends Controller
                 'sale_notes.series',
                 'sale_notes.number',
                 'sale_note_items.total',
-                'sale_notes.date_of_issue'
+                'sale_notes.date_of_issue',
+                'selectedAncho',
+                'selectedLargo',
+                'selectedGrosor'
             );
 
         // Combina las consultas de DocumentItem y SaleNoteItem
@@ -380,13 +392,15 @@ class ItemController extends Controller
             'document_items.total',
             'persons.name as customer_name',
             'persons.number as customer_number',
-            'items.description as item_description'
+            'items.description as item_description',
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(document_items.item, "$.categoriaMadera.selectedAncho")) as selectedAncho'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(document_items.item, "$.categoriaMadera.selectedLargo")) as selectedLargo'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(document_items.item, "$.categoriaMadera.selectedGrosor")) as selectedGrosor')
         )
             ->join('documents', 'document_items.document_id', '=', 'documents.id')
             ->join('persons', 'documents.customer_id', '=', 'persons.id')
             //join con item
             ->join('items', 'document_items.item_id', '=', 'items.id')
-            // ->where('documents.establishment_id', '=', $establishment_id)
             ->groupBy(
                 'documents.customer_id',
                 'document_items.item_id',
@@ -395,7 +409,10 @@ class ItemController extends Controller
                 'documents.series',
                 'documents.number',
                 'document_items.total',
-                'documents.date_of_issue'
+                'documents.date_of_issue',
+                'selectedAncho',
+                'selectedLargo',
+                'selectedGrosor'
             );
 
         $sale_note_items->select(
@@ -408,7 +425,10 @@ class ItemController extends Controller
             'sale_note_items.total',
             'persons.name as customer_name',
             'persons.number as customer_number',
-            'items.description as item_description'
+            'items.description as item_description',
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_items.item, "$.categoriaMadera.selectedAncho")) as selectedAncho'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_items.item, "$.categoriaMadera.selectedLargo")) as selectedLargo'),
+            DB::raw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_items.item, "$.categoriaMadera.selectedGrosor")) as selectedGrosor')
         )
             ->join('sale_notes', 'sale_note_items.sale_note_id', '=', 'sale_notes.id')
             ->join('persons', 'sale_notes.customer_id', '=', 'persons.id') // Agrega la relación con la tabla "persons"
@@ -423,7 +443,10 @@ class ItemController extends Controller
                 'sale_notes.series',
                 'sale_notes.number',
                 'sale_note_items.total',
-                'sale_notes.date_of_issue'
+                'sale_notes.date_of_issue',
+                'selectedAncho',
+                'selectedLargo',
+                'selectedGrosor'
             );
 
         // Combina las consultas de DocumentItem y SaleNoteItem

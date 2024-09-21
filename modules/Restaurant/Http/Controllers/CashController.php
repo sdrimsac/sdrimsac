@@ -249,6 +249,17 @@ class CashController extends Controller
                 $documents_items = $documents_items->get();
                 foreach ($documents_items as  $d_it) {
 
+                    $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
+
+
+                    if (isset($item['categoriaMadera'])) {
+                        $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
+                        $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
+                        $selectedGrosor = isset($item['categoriaMadera']->selectedGrosor) ? $item['categoriaMadera']->selectedGrosor : '';
+                    } else {
+                        $selectedAncho = $selectedLargo = $selectedGrosor = null;
+                    }
+
                     if ($categoria_id == null) {
                         $item = $d_it->item;
                         $factor = null;
@@ -289,6 +300,9 @@ class CashController extends Controller
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
                                     "unit_type_name" => $unit_type_name,
+                                    "selectedAncho" => $selectedAncho,
+                                    "selectedLargo" => $selectedLargo,
+                                    "selectedGrosor" => $selectedGrosor,
                                 ];
                             }
                             $items[$d_it->item_id]["count"] +=   $quantity;
@@ -309,6 +323,9 @@ class CashController extends Controller
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
                                     ]
                                 ],
                             ];
@@ -375,6 +392,9 @@ class CashController extends Controller
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
                                         ]
                                     ],
                                 ];
@@ -411,6 +431,17 @@ class CashController extends Controller
                 $sale_notes_items = $sale_notes_items->get();
 
                 foreach ($sale_notes_items as  $d_it) {
+
+                    $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
+
+
+                    if (isset($item['categoriaMadera'])) {
+                        $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
+                        $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
+                        $selectedGrosor = isset($item['categoriaMadera']->selectedGrosor) ? $item['categoriaMadera']->selectedGrosor : '';
+                    } else {
+                        $selectedAncho = $selectedLargo = $selectedGrosor = null;
+                    }
                     if ($categoria_id == null) {
                         $item = $d_it->item;
                         $factor = null;
@@ -453,6 +484,9 @@ class CashController extends Controller
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
                                     "unit_type_name" => $unit_type_name,
+                                    "selectedAncho" => $selectedAncho,
+                                    "selectedLargo" => $selectedLargo,
+                                    "selectedGrosor" => $selectedGrosor,
                                 ];
                             }
                             $items[$d_it->item_id]["count"] +=  $quantity;
@@ -473,6 +507,9 @@ class CashController extends Controller
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
                                     ]
                                 ],
                             ];
@@ -541,6 +578,9 @@ class CashController extends Controller
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
                                         ]
                                     ],
                                 ];
@@ -596,7 +636,7 @@ class CashController extends Controller
         $total = 0;
 
         //total venta -> jalar documentos
-        $recordsDocument =  Document::where('state_type_id', '<>', 11);
+        $recordsDocument =  Document::whereNotIn('state_type_id', ['09', '11']);
         if ($date_start) {
             if ($date_end) {
                 $recordsDocument = $recordsDocument->whereBetween('date_of_issue', [$date_start, $date_end]);
@@ -609,13 +649,16 @@ class CashController extends Controller
         if ($establishment_id) {
             $recordsDocument = $recordsDocument->where('establishment_id', $establishment_id);
         }
+        // [1,2,3,4,5,6,7,8,9]
+        //[[1,2,3],...]
 
         $recordsDocument->chunk(50, function ($documents)
         use (&$items, &$total, &$categoria_id, $item_id_variation, $item_id) {
 
             foreach ($documents as  $document) {
                 $total_items = 0;
-                $documents_items = DocumentItem::where('document_id', $document->id);
+                $documents_items = $document->items; //nogal
+                // $documents_items = DocumentItem::where('document_id',$document->id)->get();
                 if ($item_id) {
                     $documents_items = $documents_items->where('item_id', $item_id);
                 }
@@ -623,10 +666,18 @@ class CashController extends Controller
                     $documents_items = $documents_items->where('item_id', '<>', $item_id_variation);
                 }
 
-                $documents_items = $documents_items->get();
-
                 foreach ($documents_items as  $d_it) {
 
+                    $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
+
+
+                    if (isset($item['categoriaMadera'])) {
+                        $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
+                        $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
+                        $selectedGrosor = isset($item['categoriaMadera']->selectedGrosor) ? $item['categoriaMadera']->selectedGrosor : '';
+                    } else {
+                        $selectedAncho = $selectedLargo = $selectedGrosor = null;
+                    }
 
                     if ($categoria_id == null) {
                         $item = $d_it->item;
@@ -654,10 +705,11 @@ class CashController extends Controller
                             }
                         }
 
-
                         $total += $d_it->total;
                         $total_items += $d_it->total;
                         if (array_key_exists($d_it->item_id, $items)) {
+                            //[1,2,3,4,5]
+                            //[0=>1,1=>3]
 
                             $price = $d_it->unit_price;
 
@@ -668,13 +720,18 @@ class CashController extends Controller
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
                                     "unit_type_name" => $unit_type_name,
+                                    "selectedAncho" => $selectedAncho,
+                                    "selectedLargo" => $selectedLargo,
+                                    "selectedGrosor" => $selectedGrosor,
                                 ];
                             }
                             $items[$d_it->item_id]["count"] +=   $quantity;
                             $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
                         } else {
+
                             $items[$d_it->item_id] = [
                                 "description" => $d_it->item->description,
+
                                 "count" => $quantity,
                                 "purchase_unit_price" => $purchase_unit_price,
                                 "total" => $d_it->total,
@@ -688,6 +745,9 @@ class CashController extends Controller
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
                                     ]
                                 ],
                             ];
@@ -737,6 +797,9 @@ class CashController extends Controller
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=   $quantity;
@@ -744,6 +807,7 @@ class CashController extends Controller
                             } else {
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
+
                                     "count" => $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
                                     "total" => $d_it->total,
@@ -757,6 +821,9 @@ class CashController extends Controller
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
                                         ]
                                     ],
                                 ];
@@ -794,6 +861,18 @@ class CashController extends Controller
                 $sale_notes_items = $sale_notes_items->get();
 
                 foreach ($sale_notes_items as  $d_it) {
+
+                    $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
+
+                    if (isset($item['categoriaMadera'])) {
+                        $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
+                        $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
+                        $selectedGrosor = isset($item['categoriaMadera']->selectedGrosor) ? $item['categoriaMadera']->selectedGrosor : '';
+                    } else {
+                        // Asignar valores vacíos si 'categoriaMadera' no existe
+                        $selectedAncho = $selectedLargo = $selectedGrosor = null;
+                    }
+
                     if ($categoria_id == null) {
                         $item = $d_it->item;
                         $catI = $d_it->item->category;
@@ -805,8 +884,6 @@ class CashController extends Controller
 
                                 $catItem = $d_it->item->category->id;
                             }
-
-
 
                             $factor = null;
                             $unit_type = null;
@@ -848,6 +925,9 @@ class CashController extends Controller
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=  $quantity;
@@ -868,6 +948,9 @@ class CashController extends Controller
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
                                         ]
                                     ],
                                 ];
@@ -919,6 +1002,9 @@ class CashController extends Controller
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=  $quantity;
@@ -939,6 +1025,9 @@ class CashController extends Controller
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
                                         ]
                                     ],
                                 ];
@@ -952,7 +1041,6 @@ class CashController extends Controller
             'total',
             'items'
         );
-        //
     }
 
     public function incomes_expenses(Request $request)
@@ -1341,7 +1429,8 @@ class CashController extends Controller
                 "desc" => "Izypay",
                 "quantity" => $sales_izypay_quantity,
                 "sum" => $sales_izypay_sum,
-            ], "niubiz" => [
+            ],
+            "niubiz" => [
                 "desc" => "Niubiz",
                 "quantity" => $sales_niubiz_quantity,
                 "sum" => $sales_niubiz_sum,
@@ -1586,6 +1675,7 @@ class CashController extends Controller
         $users = array();
         $configuration = Configuration::select(['health_network'])
             ->first();
+            /* dump($configuration); */
         $turnsTable = Turns::where('turn_active',  1)->get();
         switch ($type) {
             case 'admin':
@@ -1598,7 +1688,6 @@ class CashController extends Controller
                 break;
             case 'seller':
                 $users = User::where('id', $user->id)->get();
-
                 break;
         }
 
@@ -1977,7 +2066,7 @@ class CashController extends Controller
                 })
                 ->where('principal', 1);
             if ($health_network) {
-    
+
                 $establishment_id = $cash_user->establishment_id;
                 $cash_principal = $cash_principal->whereHas('user', function ($query) use ($establishment_id) {
                     $query->where('establishment_id', $establishment_id);

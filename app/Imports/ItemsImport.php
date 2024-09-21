@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tenant\Kardex;
 use App\Models\Tenant\InventoryKardex;
+use App\Models\Tenant\ItemCategoriaMadera;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\ItemWarehousePrice;
 use Carbon\Carbon;
@@ -218,7 +219,6 @@ class ItemsImport implements ToCollection
                         'item_code' => $item_code,
                         'unit_type_id' => $unit_type_id,
                         'currency_type_id' => $currency_type_id,
-
                         'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
                         'has_igv' => $has_igv,
                         'purchase_unit_price' => $purchase_unit_price,
@@ -396,4 +396,11 @@ class ItemsImport implements ToCollection
             ]);
         }
     }
+    /* function insertCategoriaMadera($item_id, $price, $warehouse_id){
+        if ($this->ckeckCategoriaMadera($price)){
+            ItemCategoriaMadera::create([
+
+            ])
+        }
+    } */
 }

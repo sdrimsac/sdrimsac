@@ -1169,7 +1169,7 @@
                                                         </h3>
                                                         <p
                                                             class="
-                                badge
+                                                                 badge
                                 bg-foreground
                                 text-uppercase
                                 font-weight-light
@@ -2649,7 +2649,6 @@ export default {
             currentColorSize: null,
             loadingCommercialTreatment: false,
             ordenNumber: null,
-            /* categoriaMadera: [], */
             timer: null,
             promotionCode: null,
             currentArea: null,

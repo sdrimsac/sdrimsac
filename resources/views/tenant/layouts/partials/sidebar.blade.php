@@ -753,6 +753,14 @@
                             </a>
                         </li>
                     @endif
+                    @if ($config->maderera)
+                        <li>
+                            <a class="{{ $path[0] === 'madera' ? 'active' : '' }}"
+                                href="{{ route('tenant.madera.index') }}">
+                                <i class="icofont-list"></i> Reporte de Madera
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
