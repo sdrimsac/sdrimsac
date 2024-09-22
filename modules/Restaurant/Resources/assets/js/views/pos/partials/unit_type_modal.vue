@@ -1,17 +1,19 @@
 <template>
   <el-dialog
     :visible="showDialog"
-    width="80%"
+    width="60%"
     :title="dialogTitle"
     @open="open"
     @close="close"
     append-to-body
+    :close-on-click-modal="false"
   >
     <div>
       <div class>
+        <br>
         <div class="row">
-          <div class="col-md-2 col-12">
-            <label>Categoria</label>
+          <div class="col-md-4 col-12">
+            <label class="fw-bold">Categoría</label>
             <el-select v-model="unit.selectedCategoria" @change="filterRelatedData">
               <el-option
                 v-for="(madera, index) in categoria_madera_select"
@@ -22,14 +24,9 @@
               ></el-option>
             </el-select>
           </div>
-          <div class="col-md-1 col-12">
-            <label>PIE</label>
-            <br />
-            <span>{{unit.fot.toFixed(2)}}</span>
-          </div>
-          <div class="col-sm-2 col-12">
+          <div class="col-sm-4 col-12">
             <div>
-              <label>P. Unit.</label>
+              <label class="fw-bold">P. Unit.</label>
               <br />
               <el-input
                 v-model="unit.unitPrice"
@@ -45,7 +42,33 @@
             <!-- <input placeholder="" type="text"> -->
           </div>
           <div class="col-md-2 col-12">
-            <label>Grosor</label>
+            <label class="fw-bold">PIE (S)</label>
+            <br />
+            <span>{{totalPie.toFixed(2)}}</span>
+          </div>
+          <div class="col-md-2 col-12">
+            <label class="fw-bold">S/.</label>
+            <br />
+            <span>{{totalPrice.toFixed(2)}}</span>
+          </div>
+          <div class="col-md-4 col-sm-3">
+            <br>
+            <div class="form-group">
+              <label class="fw-bold">Cantidad</label>
+              <el-input-number
+                v-model="unit.quantity"
+                :min="1"
+                :precision="0"
+                >
+              </el-input-number>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div>
+            </div>
+          </div>
+          <div class="col-md-3 col-12">
+            <label class="fw-bold">Grosor</label>
             <el-select
               v-model="unit.selectedGrosor"
               clearable
@@ -60,8 +83,8 @@
               ></el-option>
             </el-select>
           </div>
-          <div class="col-md-2 col-12">
-            <label>Ancho</label>
+          <div class="col-md-3 col-12">
+            <label class="fw-bold">Ancho</label>
             <el-select
               v-model="unit.selectedAncho"
               clearable
@@ -76,8 +99,8 @@
               ></el-option>
             </el-select>
           </div>
-          <div class="col-md-2 col-12">
-            <label>Largo</label>
+          <div class="col-md-3 col-12">
+            <label class="fw-bold">Largo</label>
             <el-select
               filterable
               clearable
@@ -92,17 +115,16 @@
               ></el-option>
             </el-select>
           </div>
-          <div class="col-md-1 col-12">
-            <label>S/.</label>
-            <br />
-            <span>{{price.toFixed(2)}}</span>
-          </div>
         </div>
       </div>
     </div>
     <div class="form-actions text-end pt-2 pb-2">
-      <el-button @click="selectUnit" class="bg-primary text-white" :disabled="price == 0">
+      <el-button @click="close" class="bg-white text-light" :disabled="price == 0">
         <i class="fas fa-times fa-lg"></i>
+        Cancelar
+      </el-button>
+      <el-button @click="selectUnit" class="bg-primary text-white" :disabled="price == 0">
+        <!-- <i class="fas fa-ti fa-lg"></i> -->
         Agregar
       </el-button>
     </div>
@@ -133,7 +155,6 @@ export default {
       medida_alto_select: [],
       medida_ancho_select: [],
       medida_grosor_select: [],
-      /* title: "Categoría de Madera", */
       unit_type_selected: null,
       unit_types: [],
       has_unit_types: [],
@@ -149,7 +170,8 @@ export default {
         unitPrice: 0,
         fot: 0,
         price: 0,
-        key: null
+        key: null,
+        quantity: 1
       }
     };
   },
@@ -181,16 +203,35 @@ export default {
         return result;
       }
       return 0;
+    },
+    totalPie() {
+      if (
+        this.unit.selectedGrosor &&
+        this.unit.selectedAncho &&
+        this.unit.selectedLargo &&
+        this.unit.selectedCategoria
+      ) {
+        let grosor = Number(this.unit.selectedGrosor);
+        let ancho = Number(this.unit.selectedAncho);
+        let largo = Number(this.unit.selectedLargo);
+        let piePorUnidad = (grosor * ancho * largo) / 12;
+        let pieTotal = piePorUnidad * this.unit.quantity;
+        this.unit.fot = pieTotal;
+
+        return pieTotal;
+      }
+      return 0;
+    },
+     totalPrice() {
+      if (this.totalPie > 0 && this.unit.unitPrice > 0) {
+        let priceTotal = this.totalPie * this.unit.unitPrice;
+        this.unit.price = priceTotal.toFixed(2);
+        return priceTotal;
+      }
+      return 0;
     }
   },
-  /* mounted() {
-    this.screenWidth = window.innerWidth;
-    window.addEventListener("resize", this.handleResize);
-  }, */
   methods: {
-    /* handleResize() {
-      this.screenWidth = window.innerWidth;
-    }, */
     filter() {
       if (this.search) {
         this.filteredUnits = this.unit_types.filter(unit =>
@@ -232,20 +273,24 @@ export default {
     },
 
     selectUnit() {
+
+      console.log("Antes de agregar: Cantidad actual:", this.unit.quantity);
       let toAdd = { ...this.unit };
       toAdd.selectedAncho = Number(toAdd.selectedAncho);
       toAdd.selectedGrosor = Number(toAdd.selectedGrosor);
       toAdd.selectedLargo = Number(toAdd.selectedLargo);
+      toAdd.quantity = this.unit.quantity;
+      toAdd.fot = this.totalPie; // Asignar el total de PIE
+      toAdd.price = this.totalPrice;
+      console.log("Datos a enviar (con cantidad):", toAdd);
       this.$emit("addCategoriaMadera", toAdd, this.index);
-
       this.resetForm();
+      console.log("Después de agregar: Cantidad actual:", this.unit.quantity);
     },
     resetForm() {
       this.open();
     },
     open() {
-      // console.log(this.item);
-
       if (this.item) {
         this.index = this.currentIndex;
         let { categoria_madera_item } = this.item;
@@ -261,6 +306,7 @@ export default {
         this.unit.selectedCategoria = this.categoria_madera_select[0].id;
         this.filterRelatedData();
       }
+      this.unit.quantity = 1;
     },
     close() {
       this.$emit("update:showDialog", false);

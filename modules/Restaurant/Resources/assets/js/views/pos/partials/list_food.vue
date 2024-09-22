@@ -1136,15 +1136,11 @@ export default {
             this.addFood(this.currentIndex, type);
         },
         addCategoriaMadera(categoria, index) {
-            /* console.log(" :", categoria); */
+            console.log(" :", categoria);
             this.currentIndex = index;
             this.addingType = true;
             this.addFood(this.currentIndex, null, false, categoria);
         },
-        /* medida_ancho(){
-      this.medida_ancho = true;
-
-    }, */
         clickWarehouseDetail(id, hasSerie, warehouses, unit_type, item) {
             this.currentItem = item;
             this.itemId = id;
@@ -1347,7 +1343,7 @@ export default {
                 JSON.stringify(this.listFoods[index])
             );
             if (!this.selectedFood) return;
-            /* console.log("dasasda", this.selectedFood); */
+            console.log("dasasda", this.selectedFood);
             let { categoria_madera_item } = this.selectedFood;
             if (
                 this.configuration.maderera &&

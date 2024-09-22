@@ -104,7 +104,7 @@
                     <span>Nuevo</span>
                 </el-button>
                 <el-button 
-                        v-if="resource == 'caja/tables' || resource == 'caja/rooms'"
+                        v-if="resource == 'caja/tables' || resource == 'caja/rooms' || resource == 'caja/billar'"
                         type="primary"
                         class="custom-button" 
                         href="javascript:void(0)"
@@ -121,14 +121,15 @@
                         <th class="text-white"
                                  v-if="
                                     type != 'caja/tables' &&
-                                        type != 'caja/rooms'
+                                        type != 'caja/rooms' && type != 'caja/billar'
                                 ">
                             Descripción
                         </th>
                         <th class="text-white"
                          v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms'
+                                        type == 'caja/rooms' || 
+                                        type == 'caja/billar'
                                 ">
                             Número
                         </th>
@@ -139,14 +140,16 @@
                         <th class="text-white"
                         v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms'
+                                        type == 'caja/rooms' || 
+                                        type == 'caja/billar'
                                 ">
                             Área
                         </th>
                         <th class="text-white"
                         v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms'
+                                        type == 'caja/rooms' ||
+                                        type == 'caja/billar'
                                 ">
                             Establecimiento
                         </th>
@@ -179,13 +182,13 @@
                         <td>{{ index }}</td>
                         <td v-if="
                                     type != 'caja/tables' &&
-                                        type != 'caja/rooms'
+                                        type != 'caja/rooms' && type != 'caja/billar'
                                 ">
                             {{ row.description }}
                         </td>
                         <td v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms'
+                                        type == 'caja/rooms' || type == 'caja/billar'
                                 ">
                             {{ row.number }}
                         </td>
@@ -194,13 +197,13 @@
                         </td>
                         <td v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms'
+                                        type == 'caja/rooms' || type == 'caja/billar'
                                 ">
                             {{ row.area.description }}
                         </td>
                         <td v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms'
+                                        type == 'caja/rooms' || type == 'caja/billar'
                                 ">
                             {{ row.establishment }}
                         </td>
@@ -352,7 +355,7 @@ export default {
     },
     created() {
         console.log(this.type);
-        if (this.type == "caja/tables" || this.type == "caja/rooms") {
+        if (this.type == "caja/tables" || this.type == "caja/rooms" || this.type == "caja/billar") {
             this.getTables();
         }
         // this.getData();

@@ -12,7 +12,7 @@
             <div class="form-body">
                 <br>
                 <div class="row">
-                    <div v-if="type !== 'caja/tables' && type !== 'caja/rooms'" class="col-md-12">
+                    <div v-if="type !== 'caja/tables' && type !== 'caja/rooms' && type !== 'caja/billar'" class="col-md-12">
                         <div class="form-group" :class="{ 'has-danger': errors.description }">
                             <label class="control-label">
                                 <i class="fas fa-info-circle mr-2"></i> Descripción
@@ -39,7 +39,7 @@
                             <small class="text-danger" v-if="errors.copies" v-text="errors.copies[0]"></small>
                         </div>
                     </div>
-                    <template v-if="type == 'caja/tables' || type == 'caja/rooms'">
+                    <template v-if="type == 'caja/tables' || type == 'caja/rooms' || type !== 'caja/billar'">
                         <div class="col-md-4">
                             <div class="form-group" :class="{ 'has-danger': errors.number }">
                                 <label class="control-label">
