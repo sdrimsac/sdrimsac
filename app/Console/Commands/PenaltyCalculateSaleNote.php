@@ -58,7 +58,8 @@ class PenaltyCalculateSaleNote extends Command
             $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
             $payments = Payment::where('sale_note_id', $sale_note->id)
                 ->where('paid', 0)
-                ->where('date_payment', '<=', $date_now);
+                ->where('date_payment', '<=', $date_now)->get();
+    
             $penalty_amount = 0;
             foreach ($payments as $key => $payment) {
                 $days = Carbon::parse($payment->date_payment)->diffInDays($date_now);
