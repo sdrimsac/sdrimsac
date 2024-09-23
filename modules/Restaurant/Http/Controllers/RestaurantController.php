@@ -114,7 +114,7 @@ class RestaurantController extends Controller
             return [
                 'students' => $students,
                 'id' => $row->id,
-                'description' =>( $row->alias ? $row->alias." - " : '' ). $row->number . ' - ' . $row->name,
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -289,6 +289,7 @@ class RestaurantController extends Controller
             } else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
+                $billar = strripos(strtolower($user->area->description), "billar");
                 $hotel = strripos(strtolower($user->area->description), "hotel");
                 $peaje = strripos(strtolower($user->area->description), "peaje");
                 if ($cocina !== false) {
@@ -297,11 +298,13 @@ class RestaurantController extends Controller
                     $pos = true;
                 } else if ($hotel !== false) {
                     $pos = true;
+                } else if ($billar !== false) {
+                    $pos = true;
                 } else {
                     $kitchen = true;
                 }
             }
-            
+
             return [
                 'area' => $area,
                 'series' => $series,

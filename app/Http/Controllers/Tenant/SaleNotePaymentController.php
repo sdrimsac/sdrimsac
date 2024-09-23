@@ -103,10 +103,16 @@ class SaleNotePaymentController extends Controller
                 $today = Carbon::now();
                 $date_of_payment = Carbon::parse($value->date_payment);
                 $diff_days = $today->diffInDays($date_of_payment);
+                $amount_withouth_penalty = $value->amount - $value->amount_paid;
+                if($amount_withouth_penalty < 0){
+                    $value->penalty_amount += $amount_withouth_penalty;
+                    $value->save();
+                    $amount_withouth_penalty = 0;
+                }
                 $current_payment = [
                     'num' => $key + 1,
                     'amount' => $amount,
-                    'amount_withouth_penalty' => $value->amount - $value->amount_paid,
+                    'amount_withouth_penalty' => $amount_withouth_penalty,
                     'penalty' => $penalty_amount,
                     'diff_days' => $diff_days,
                     
@@ -311,6 +317,7 @@ class SaleNotePaymentController extends Controller
                                 $amount_payed_remain -= $amount_to_pay;
                             } else {
                                 $value->paid = false;
+                                $num_cuota = $key + 1;
                                 $value->amount_paid = $amount_payed_remain;
                                 $amount_payed_remain = 0;
                             }

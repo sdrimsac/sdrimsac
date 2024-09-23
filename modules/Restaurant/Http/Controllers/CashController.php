@@ -56,6 +56,7 @@ use Hyn\Tenancy\Environment;
 use Hyn\Tenancy\Models\Website;
 use Modules\Restaurant\Models\Turns;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Item\Models\CategoryItem;
 use Modules\Report\Exports\GainReportExport;
 use Modules\Restaurant\Http\Resources\CashIncomePrincipalCollection;
@@ -1939,6 +1940,24 @@ class CashController extends Controller
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }
+    function generaIncomeAdjust($cash_id,$amount){
+        $box = new Box();
+        $box->cash_id = $cash_id;
+        $box->date = date('Y-m-d');
+        $box->amount = $amount;
+        $box->establishment_id = auth()->user()->establishment_id;
+        $box->user_id = auth()->user()->id;
+        $box->group_id = 1;
+        $box->category_id = 1;
+        $box->soap_type_id = 1;
+        $box->state = 2;
+        $box->subcategory_id = 1;
+        $box->description = 'Ajuste de caja por centavos';
+        $box->method = 'Efectivo';
+        $box->type = 1;
+        $box->incomes = 1;
+        $box->save();
+    }
     public function close(Request $request)
     {
 
@@ -1950,6 +1969,17 @@ class CashController extends Controller
         $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
+        if($difference > 0){
+            try{
+                $this->generaIncomeAdjust($id,$difference);
+            }catch(Exception $e){
+                Log::info($e->getMessage());
+                return [
+                    'success' => false,
+                    'message' => 'Error al generar el ajuste de caja por centavos'
+                ];
+            }
+        }
         $cash->final_balance = $final_balance;
         $cash->counter = $counter;
         $cash->bill_series = $bill_series;

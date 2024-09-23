@@ -3,8 +3,6 @@
         <div class="row" v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row">
-                    
-
                     <div class="d-flex" style="margin-top:29px">
                         <span style="margin-right:5px">
                             <strong class="h4">
@@ -20,20 +18,21 @@
                             >Buscar</el-button
                         >
 
-                        <template
-                            v-if="
-                                records.length > 0 &&
-                                    resource !== 'reports/document-detractions'
-                            "
-                        >
+                        <template v-if="records.length > 0">
+                            <el-button
+                                class="submit"
+                                type="success"
+                                @click.prevent="clickDownload('excel_today')"
+                                ><i class="fa fa-file-excel"></i> Exporta Excel
+                                Pagos de hoy</el-button
+                            >
                             <el-button
                                 class="submit"
                                 type="success"
                                 @click.prevent="clickDownload('excel')"
-                                ><i class="fa fa-file-excel"></i> Exportal
-                                Excel</el-button
+                                ><i class="fa fa-file-excel"></i> Exporta Excel
+                                atrasados</el-button
                             >
-                        
                         </template>
                     </div>
                 </div>
@@ -273,7 +272,10 @@ export default {
                         row.visible = false;
                         return row;
                     });
-                    console.log("🚀 ~ getRecords ~ this.records:", this.records)
+                    console.log(
+                        "🚀 ~ getRecords ~ this.records:",
+                        this.records
+                    );
 
                     //sort records by dues property (int) in descending order
 

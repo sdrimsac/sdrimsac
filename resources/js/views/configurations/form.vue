@@ -1676,7 +1676,7 @@
                                             <div class="col-md-3 mt-4">
                                                 <div class="form-group">
                                                     <label for="text-3">
-                                                        <i class="fas fa-quote-right fa-lg"></i> Imrpimir Texto pie de página
+                                                        <i class="fas fa-quote-right fa-lg"></i> Imprimir Texto pie de página
                                                         <el-tooltip class="item" effect="dark" content="Imprimir Texto que va en la parte inferior de los documentos" placement="top-start">
                                                             <i class="fa fa-info-circle"></i>
                                                         </el-tooltip>
@@ -3402,7 +3402,7 @@ export default {
                     Swal.fire({
                         position: "center", // Centrado en la pantalla
                         icon: isActive ? "success" : "error", // Icono de éxito o error dependiendo del estado
-                        title: optionName.toUpperCase(),
+                        title: optionName ? optionName.toUpperCase() :'ACTUALIZADO',
                         html: `<strong style="color: ${actionColor};">${action}</strong>${iconHtml ? `<br>${iconHtml}` : ''}`,
                         background: backgroundColor,
                         showConfirmButton: false,

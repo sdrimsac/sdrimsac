@@ -92,20 +92,25 @@ class ReportCreditController extends Controller
 
         return compact('establishments', 'sellers', 'persons', 'users');
     }
-    private function get_daily_cash_records(Request $request)
+    private function get_daily_cash_records(Request $request, $today = false)
     {
         $date = $request->date;
         $credits = SaleNote::where('state_type_id', '!=', '11')
             ->whereHas(
                 'creditPayments',
-                function ($query) use ($date) {
-                    $query->where('date_payment', '<=', $date)
-                        ->where('paid', 0);
+                function ($query) use ($date, $today) {
+                    if ($today) {
+                        $query->where('date_payment', '=', $date)
+                            ->where('paid', 0);
+                    } else {
+                        $query->where('date_payment', '<=', $date)
+                            ->where('paid', 0);
+                    }
                 }
             )
             ->with(['customer', 'user', 'sale_note_credit', 'creditPayments']);
-        
-            // Cargar relaciones necesarias
+
+        // Cargar relaciones necesarias
         return $credits;
     }
     public function daily_cash_records(Request $request)
@@ -113,6 +118,79 @@ class ReportCreditController extends Controller
         $records = $this->get_daily_cash_records($request);
 
         return new ReportCreditDailyCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function daily_cash_excel_today(Request $request)
+    {
+
+        $records = $this->get_daily_cash_records($request, true)->get()->transform(function ($row) {
+            $advances  = $row->advances;
+            $paid = $row->paid;
+            $sale_note_credit = $row->sale_note_credit;
+            $penalty_amount_by_day = $sale_note_credit->penalty_amount_by_day;
+            // $payment = Payment::where('sale_note_id', $row->id);
+            $today = Carbon::now()->startOfDay();
+            $payments = Payment::where('sale_note_id', $row->id)
+                ->where('paid', 0)
+                ->where('date_payment', '<=', $today)
+                ->get()
+                ->transform(function ($row_payment, $key) use (&$row, &$paid, $penalty_amount_by_day) {
+                    $existing_payments_count = Payment::where('sale_note_id', $row->id)
+                        ->where('id', '<=', $row_payment->id)
+                        ->count();
+                    if ($row->paid == 0) {
+                        $paid = false;
+                        $row->paid = false;
+                    }
+                    $diffence_days = 0;
+                    if ($row_payment->date_payment) {
+                        $diffence_days = Carbon::parse($row_payment->date_payment)->diffInDays(Carbon::now()->startOfDay(), false);
+                    }
+                    $total = $row_payment->amount + $row_payment->penalty_amount;
+                    $total_penalty = $penalty_amount_by_day *  $diffence_days;
+
+                    return [
+                        'total_penalty' => $total_penalty,
+                        'id' => $row_payment->id,
+                        'date_payment' => $row_payment->date_payment,
+                        'payment' => $row_payment->amount,
+                        'penalty_amount' => $row_payment->penalty_amount,
+                        'tasa' => $row_payment->tasa,
+                        'paid' => $row_payment->paid,
+                        'diffence_days' => $diffence_days,
+                        'total' => $total,
+                        'installment_number' => $existing_payments_count
+                    ];
+                });
+            $customer = $row->customer;
+            $user_name = $row->user->name;
+            $observation = $row->observation;
+            if ($row->state_type_id == '11' || $row->state === 'O') {
+                $observation_credit = $row->sale_note_credit->reason_to_anulate_credit;
+                $observation .= " " . $observation_credit;
+            }
+            return [
+                'penalty_amount_by_day' => $penalty_amount_by_day,
+                'is_cash' => (bool) $row->is_cash,
+                'is_product' => (bool) $row->is_product,
+                'user_name' => $user_name,
+                'id' => $row->id,
+                'status' => $row->status,
+                'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
+                'customer' => ["name" => $customer->name, "number" => $customer->number],
+                'number' => $row->number_full,
+                'advances' => $advances,
+                'payments' => $payments,
+                'type_payment' => $row->type_payment,
+            ];
+        });
+
+        $company = Company::first();
+        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+        return (new ReportCreditDailyExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Diario_Crédito_Pagan_Hoy_' . Carbon::now() . '.xlsx');
     }
     public function daily_cash_excel(Request $request)
     {
@@ -130,8 +208,8 @@ class ReportCreditController extends Controller
                 ->get()
                 ->transform(function ($row_payment, $key) use (&$row, &$paid, $penalty_amount_by_day) {
                     $existing_payments_count = Payment::where('sale_note_id', $row->id)
-                    ->where('id', '<=', $row_payment->id)
-                    ->count();
+                        ->where('id', '<=', $row_payment->id)
+                        ->count();
                     if ($row->paid == 0) {
                         $paid = false;
                         $row->paid = false;

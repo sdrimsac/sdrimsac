@@ -30,6 +30,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('credits/daily_credit', [ReportCreditController::class, 'daily_cash'])->name('reports.credits.daily_index');
         Route::get('credits/daily_credit/filter', [ReportCreditController::class, 'daily_cash_filter']);
         Route::get('credits/daily_credit/records', [ReportCreditController::class, 'daily_cash_records']);
+        Route::get('credits/daily_credit/excel_today', [ReportCreditController::class, 'daily_cash_excel_today']);
         Route::get('credits/daily_credit/excel', [ReportCreditController::class, 'daily_cash_excel']);
         
         Route::get('credits/records', [ReportCreditController::class, 'records']);

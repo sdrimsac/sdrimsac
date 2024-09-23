@@ -84,9 +84,10 @@ class ReceiptController extends Controller
             $position = $all_payments->search(function ($item) use ($next_payment) {
                 return $item->id == $next_payment->id;
             });
-
         }
-
+        if($data->num_cuota + 1 != $position){
+            $next_payment = null;
+        }
         $recibo = PDF::loadView('tenant.receipt.index', [
             'quote' => number_format($quote, 2, ".", ""),
             'position' => $position,

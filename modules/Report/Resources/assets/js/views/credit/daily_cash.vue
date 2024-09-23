@@ -13,6 +13,7 @@
                         <th class="text-center">TIPO</th>
                         <th class="text-center">CLIENTE</th>
                         <th class="text-end">DNI</th>
+                        <th class="text-end">N° CUOTA</th>
                         <th class="text-end">DIAS DE ATRASO</th>
                         <th class="text-end">COBRO POR MORA</th>
                         <th class="text-end">TOTAL MORA</th>
@@ -37,6 +38,7 @@
                             <td class="text-center">
                                 {{ row.customer.number }}
                             </td>
+                            <td></td>
                             <!-- <td class="text-center">{{ row.differenc_days }}</td>
                         <td class="text-end">{{ row.penalty }}</td>
                         <td class="text-end">{{ row.quote_payment }}</td>
@@ -98,6 +100,9 @@
                             <td class="text-end"></td>
                             <td class="text-end"></td>
                             <td class="text-end"></td>
+                            <td class="text-end">
+                                {{payment.installment_number}}
+                            </td>
                             <td class="text-end">
                                 {{ payment.diffence_days }}
                             </td>

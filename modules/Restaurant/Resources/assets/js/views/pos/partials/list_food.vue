@@ -1468,6 +1468,9 @@ export default {
             if (this.selectedFood.item.has_color_size) {
                 setQuantity = 0;
             }
+            if(categoria){
+                setQuantity =  categoria.quantity;
+            }
             this.currentFood = {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
