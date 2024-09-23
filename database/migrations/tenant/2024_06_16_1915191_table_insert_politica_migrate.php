@@ -57,7 +57,7 @@ class TableInsertPoliticaMigrate extends Migration
             ['id' => 10, 'categoria_madera_id' => 2, 'ancho' => 10],
             ['id' => 11, 'categoria_madera_id' => 2, 'ancho' => 11],
             ['id' => 12, 'categoria_madera_id' => 2, 'ancho' => 12],
-            ['id' => 12, 'categoria_madera_id' => 2, 'ancho' => 13],
+            ['id' => 13, 'categoria_madera_id' => 2, 'ancho' => 13],
             ['id' => 14, 'categoria_madera_id' => 2, 'ancho' => 14],
             ['id' => 15, 'categoria_madera_id' => 2, 'ancho' => 15],
             ['id' => 16, 'categoria_madera_id' => 2, 'ancho' => 16],
@@ -75,57 +75,47 @@ class TableInsertPoliticaMigrate extends Migration
             ['id' => 28, 'categoria_madera_id' => 2, 'ancho' => 28],
             ['id' => 29, 'categoria_madera_id' => 2, 'ancho' => 29],
             ['id' => 30, 'categoria_madera_id' => 2, 'ancho' => 30],
-
-            ['id' => 31, 'categoria_madera_id' => 1, 'ancho' => 31],
-            ['id' => 32, 'categoria_madera_id' => 1, 'ancho' => 32],
-            ['id' => 33, 'categoria_madera_id' => 1, 'ancho' => 33],
-            ['id' => 34, 'categoria_madera_id' => 1, 'ancho' => 34],
-            ['id' => 35, 'categoria_madera_id' => 1, 'ancho' => 35],
-            ['id' => 36, 'categoria_madera_id' => 1, 'ancho' => 36],
-            ['id' => 37, 'categoria_madera_id' => 1, 'ancho' => 37],
-            ['id' => 38, 'categoria_madera_id' => 1, 'ancho' => 38],
-            ['id' => 39, 'categoria_madera_id' => 1, 'ancho' => 39],
-            ['id' => 40, 'categoria_madera_id' => 1, 'ancho' => 40],
-
-            ['id' => 41, 'categoria_madera_id' => 1, 'ancho' => 2],
-            ['id' => 42, 'categoria_madera_id' => 1, 'ancho' => 3],
-            ['id' => 43, 'categoria_madera_id' => 1, 'ancho' => 4],
-            ['id' => 44, 'categoria_madera_id' => 1, 'ancho' => 5],
-            ['id' => 45, 'categoria_madera_id' => 1, 'ancho' => 6],
-            ['id' => 46, 'categoria_madera_id' => 1, 'ancho' => 7],
-            ['id' => 47, 'categoria_madera_id' => 1, 'ancho' => 8],
-            ['id' => 48, 'categoria_madera_id' => 1, 'ancho' => 9],
-            ['id' => 49, 'categoria_madera_id' => 1, 'ancho' => 10],
-            ['id' => 50, 'categoria_madera_id' => 1, 'ancho' => 11],
-            ['id' => 51, 'categoria_madera_id' => 1, 'ancho' => 12],
-            ['id' => 52, 'categoria_madera_id' => 1, 'ancho' => 13],
-            ['id' => 53, 'categoria_madera_id' => 1, 'ancho' => 14],
+            ['id' => 31, 'categoria_madera_id' => 2, 'ancho' => 31],
+            ['id' => 32, 'categoria_madera_id' => 2, 'ancho' => 32],
+            ['id' => 33, 'categoria_madera_id' => 2, 'ancho' => 33],
+            ['id' => 34, 'categoria_madera_id' => 2, 'ancho' => 34],
+            ['id' => 35, 'categoria_madera_id' => 2, 'ancho' => 35],
+            ['id' => 36, 'categoria_madera_id' => 2, 'ancho' => 36],
+            ['id' => 37, 'categoria_madera_id' => 2, 'ancho' => 37],
+            ['id' => 38, 'categoria_madera_id' => 2, 'ancho' => 38],
+            ['id' => 39, 'categoria_madera_id' => 2, 'ancho' => 39],
+            ['id' => 40, 'categoria_madera_id' => 2, 'ancho' => 40],
+            ['id' => 41, 'categoria_madera_id' => 1, 'ancho' => 1],
+            ['id' => 42, 'categoria_madera_id' => 1, 'ancho' => 2],
+            ['id' => 43, 'categoria_madera_id' => 1, 'ancho' => 3],
+            ['id' => 44, 'categoria_madera_id' => 1, 'ancho' => 4],
+            ['id' => 45, 'categoria_madera_id' => 1, 'ancho' => 5],
+            ['id' => 46, 'categoria_madera_id' => 1, 'ancho' => 6],
+            ['id' => 47, 'categoria_madera_id' => 1, 'ancho' => 7],
+            ['id' => 48, 'categoria_madera_id' => 1, 'ancho' => 8],
+            ['id' => 49, 'categoria_madera_id' => 1, 'ancho' => 9],
+            ['id' => 50, 'categoria_madera_id' => 1, 'ancho' => 10],
+            ['id' => 51, 'categoria_madera_id' => 1, 'ancho' => 11],
+            ['id' => 52, 'categoria_madera_id' => 1, 'ancho' => 12],
+            ['id' => 53, 'categoria_madera_id' => 1, 'ancho' => 13],
+            ['id' => 54, 'categoria_madera_id' => 1, 'ancho' => 14],
 
 
         ]);
         DB::connection('tenant')->table('categoria_madera_medida_grosor')->insert([
 
-            ['id' => 1, 'categoria_madera_id' => 2, 'grosor' => 1.5],
-
-            ['id' => 2, 'categoria_madera_id' => 2, 'grosor' => 2],
-
-
-            ['id' => 3, 'categoria_madera_id' => 2, 'grosor' => 3],
-
-            ['id' => 4, 'categoria_madera_id' => 2, 'grosor' => 4],
-
-
-            ['id' => 5, 'categoria_madera_id' => 1, 'grosor' => 1],
-
-            ['id' => 6, 'categoria_madera_id' => 1, 'grosor' => 1.5],
-
-            ['id' => 7, 'categoria_madera_id' => 1, 'grosor' => 2],
-
-            ['id' => 8, 'categoria_madera_id' => 1, 'grosor' => 3],
-
-            ['id' => 9, 'categoria_madera_id' => 1, 'grosor' => 4],
-
-            ['id' => 10, 'categoria_madera_id' => 1, 'grosor' => 5],
+            ['id' => 1, 'categoria_madera_id' => 2, 'grosor' => 1],
+            ['id' => 2, 'categoria_madera_id' => 2, 'grosor' => 1.5],
+            ['id' => 3, 'categoria_madera_id' => 2, 'grosor' => 2],
+            ['id' => 4, 'categoria_madera_id' => 2, 'grosor' => 3],
+            ['id' => 5, 'categoria_madera_id' => 2, 'grosor' => 4],
+            ['id' => 6, 'categoria_madera_id' => 2, 'grosor' => 5],
+            ['id' => 7, 'categoria_madera_id' => 1, 'grosor' => 1],
+            ['id' => 8, 'categoria_madera_id' => 1, 'grosor' => 1.5],
+            ['id' => 9, 'categoria_madera_id' => 1, 'grosor' => 2],
+            ['id' => 10, 'categoria_madera_id' => 1, 'grosor' => 3],
+            ['id' => 11, 'categoria_madera_id' => 1, 'grosor' => 4],
+            ['id' => 12, 'categoria_madera_id' => 1, 'grosor' => 5],
 
         ]);
     }

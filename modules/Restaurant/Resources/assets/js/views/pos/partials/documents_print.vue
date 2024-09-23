@@ -4,7 +4,7 @@
         append-to-body
         @close="close"
         @open="open"
-        width="60%"
+        width="80%"
         v-loading="loading"
         title="Imprimir documento"
     >

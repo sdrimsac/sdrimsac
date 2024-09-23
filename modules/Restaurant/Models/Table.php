@@ -32,7 +32,8 @@ class Table extends ModelTenant
         'status_table_id',
         'establishment_id',
         'price',
-        'description'
+        'description',
+        'has_billar'
     ];
     protected $casts = [
         'has_frigobar' => 'boolean',

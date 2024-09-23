@@ -71,7 +71,9 @@
     <table class="full-width mt-5">
         <tr>
             <td width="15%">Cliente:</td>
-            <td width="45%">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}</td>
+            <td width="45%">
+                {{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}
+            </td>
             <td width="25%">Fecha de emisión:</td>
             <td width="15%">{{ $document->date_of_issue }}</td>
         </tr>
@@ -205,7 +207,8 @@
                             {{ number_format($row->quantity, 0) }}
                         @endif
                     </td>
-                    <td class="text-center align-top">{{ $row->item->unit_type_id }}</td>
+                    <td class="text-center align-top">{{ $row->item->unit_type_id }}
+                    </td>
                     <td class="text-left align-top" width="40%">
                         @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}

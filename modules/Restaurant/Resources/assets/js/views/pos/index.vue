@@ -2061,7 +2061,11 @@ export default {
           id: 209,
           title: [" Zona Billar "],
           icon: "fas fa-map-pin ",
-          visible: !this.isSeller && this.configuration.modo_billar
+          visible: 
+            this.configuration.modo_billar &&
+            this.worker.area.description.toUpperCase() == "BILLAR" &&
+            !this.isSeller &&
+            !this.isAnalist
         },
 
         {
@@ -2305,6 +2309,9 @@ export default {
     },
     isCurrentAreaHotel() {
       return this.worker.area.description.toUpperCase() == "HOTEL";
+    },
+    isCurrentAreaBillar() {
+      return this.worker.area.description.toUpperCase() == "BILLAR";
     },
     setItemsToLiquidate(items, consignment_id) {
       this.consignment_id = consignment_id;
@@ -3258,11 +3265,11 @@ export default {
           );
           if (indexFind != -1) {
             this.localOrden[indexFind].quantity =
-              Number(this.localOrden[indexFind].quantity) + 1;
+              Number(this.localOrden[indexFind].quantity) + (categoriaMadera.quantity || 1);
             // Number(type.quantity_unit);
           } else {
             // orden.quantity = Number(type.quantity_unit);
-            orden.quantity = 1;
+            orden.quantity = categoriaMadera.quantity;
             orden.price = categoriaMadera.price;
             orden.categoriaMadera = categoriaMadera;
             orden.to_carry = false;

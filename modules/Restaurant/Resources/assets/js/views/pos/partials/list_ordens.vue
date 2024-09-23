@@ -1473,7 +1473,7 @@
                                                                 <span
                                                                     class="fw-bold"
                                                                 >
-                                                                    Cantidadx
+                                                                    Cantidad
                                                                     <br />
                                                                     <div
                                                                         class="input-group spinner"

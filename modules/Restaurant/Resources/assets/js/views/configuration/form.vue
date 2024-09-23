@@ -46,8 +46,15 @@
                     <div class="form-group" :class="{ 'has-danger': errors.number }">
                         <label class="control-label">
                             <i class="fas fa-hashtag mr-2"></i> Número de {{
-                                //type == "caja/tables" ? "mesa" : type === 'billar' ? 'mesa billar' : "habitación"
-                                type === 'caja/tables' ? 'mesa' : type === 'billar' ? 'mesa billar' : 'habitación'
+                                // type == "caja/tables" ? "mesa" : type === 'billar' ? 'mesa billar' : "habitación"
+                                //type === 'caja/tables' ? 'mesa'  : 'habitacion' : 'Mesa Billar'
+
+                                type === 'caja/tables' 
+                                            ? 'mesa' 
+                                            : type === 'billar' 
+                                            ? 'mesa billar' 
+                                            : 'habitacion'
+
                             }}
                         </label>
                         <el-input v-model="form.number"></el-input>

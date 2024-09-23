@@ -159,15 +159,15 @@
         </tr>
 
 
-        @if($establishment)
-        <tr>
-            <td class="text-center">
-                {{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
-                {{ $establishment->district_id !== '-' ? '' . $establishment->district->description : '' }}
-                {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
-                {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
-            </td>
-        </tr>
+        @if ($establishment)
+            <tr>
+                <td class="text-center">
+                    {{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
+                    {{ $establishment->district_id !== '-' ? '' . $establishment->district->description : '' }}
+                    {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
+                    {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
+                </td>
+            </tr>
         @endif
         @if ($print_company_address)
             @isset($establish_model->trade_address)
@@ -188,7 +188,7 @@
         @endif
 
         <tr>
-            @unless ($configuration->correo_red_salud_ticket &&$establishment)
+            @unless ($configuration->correo_red_salud_ticket && $establishment)
                 <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}
                 </td>
             @endunless
@@ -277,7 +277,9 @@
                 <p class="desc">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}</p>
+                <p class="desc">
+                    {{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}
+                </p>
             </td>
         </tr>
         <tr>
@@ -648,6 +650,7 @@
                             @endif
                         @endif
                     </td>
+    
                     <td class="text-center desc-9 align-top">
                         {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                     </td>
@@ -666,16 +669,16 @@
                                 {!! $row->item->description !!}
                             @endif
                             @if (isset($row->item->categoriaMadera))
-                            -
-                            @php
-                                $madera = $row->item->categoriaMadera;
-                                $ancho = $madera->selectedAncho;
-                                $largo = $madera->selectedLargo;
-                                $grosor = $madera->selectedGrosor;
-                                $m_description = "${grosor}x${ancho}x${largo}";
-                            @endphp
-                            {{ $m_description }}
-                        @endif
+                                -
+                                @php
+                                    $madera = $row->item->categoriaMadera;
+                                    $ancho = $madera->selectedAncho;
+                                    $largo = $madera->selectedLargo;
+                                    $grosor = $madera->selectedGrosor;
+                                    $m_description = "${grosor}x${ancho}x${largo}";
+                                @endphp
+                                {{ $m_description }}
+                            @endif
                             @if (isset($row->item->lots))
                                 @foreach ($row->item->lots as $lot)
                                     <br />{!! $lot->series !!}

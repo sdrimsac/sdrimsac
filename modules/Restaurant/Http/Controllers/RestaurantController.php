@@ -291,6 +291,7 @@ class RestaurantController extends Controller
                 $caja = strripos(strtolower($user->area->description), "caja");
                 $billar = strripos(strtolower($user->area->description), "billar");
                 $hotel = strripos(strtolower($user->area->description), "hotel");
+                $billar = strripos(strtolower($user->area->description), "billar");
                 $peaje = strripos(strtolower($user->area->description), "peaje");
                 if ($cocina !== false) {
                     $kitchen = true;

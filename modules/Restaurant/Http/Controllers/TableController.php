@@ -59,7 +59,7 @@ class TableController extends Controller
         $establishment_id = $user->establishment_id;
         $tables = Table::where('status_table_id', 2)
             ->where('number', 'not like', '%caj%')
-            ->where('is_room', false)
+            ->where('is_room', false)->where('has_billar', false)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
             })
@@ -122,7 +122,7 @@ class TableController extends Controller
             $query->where('establishment_id', $establishment_table_id)
                 ->where(function ($q) {
                     $q->where(function ($query) {
-                        $query->where('is_room', 1)->where('status_table_id', 2);
+                        $query->where('is_room', 1)->where('has_billar', 1)->where('status_table_id', 2);
                     })
                         ->orWhere(function ($query) {
                             $query->where('is_room', 0);
@@ -135,8 +135,8 @@ class TableController extends Controller
                 ->where(function ($q) use ($establishment_id) {
                     $q->where('establishment_id', $establishment_id)
                         ->orWhereNull('establishment_id');
-                })
-                ->where('has_billar', 0);
+                });
+                /* ->where('has_billar', 0); */
         }
 
         $tables = new TableCollection($query
@@ -171,13 +171,13 @@ class TableController extends Controller
     {
 
         // $this->checkTables();
-        $records = Table::where('is_room', false);
+        $records = Table::where('is_room', false)->where('has_billar', false);
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 
 
     }
     function checkTables($establishment_id)
-{
+    {
     Table::where('status_table_id', 2)
         ->where('is_room', false)
         ->where('has_billar', false)
@@ -272,7 +272,7 @@ class TableController extends Controller
         //check in Table if exist the number
         $tables = Table::whereIn('number', $numbers)
             ->where('is_room', false)
-            ->where('has_bilar', 1)
+            ->where('has_bilar', false)
             ->where('establishment_id', $request->input('establishment_id'))
             ->where('area_id', $request->input('area_id'))
             ->get();

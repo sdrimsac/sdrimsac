@@ -1136,7 +1136,7 @@ export default {
             this.addFood(this.currentIndex, type);
         },
         addCategoriaMadera(categoria, index) {
-            console.log(" :", categoria);
+        
             this.currentIndex = index;
             this.addingType = true;
             this.addFood(this.currentIndex, null, false, categoria);

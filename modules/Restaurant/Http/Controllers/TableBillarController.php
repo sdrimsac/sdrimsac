@@ -60,7 +60,7 @@ class TableBillarController extends Controller
         $establishment_id = $user->establishment_id;
         $tables = Table::where('status_table_id', 2)
             ->where('number', 'not like', '%caj%')
-            ->where('is_room', false)
+            ->where('has_billar', false)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
             })
@@ -108,7 +108,7 @@ class TableBillarController extends Controller
     public function columns()
     {
         return [
-            'number' => 'Nº Mesa',
+            'number' => 'Nº Mesa Billar',
         ];
     }
     public function recordsByArea($id)
@@ -123,15 +123,14 @@ class TableBillarController extends Controller
             $query->where('establishment_id', $establishment_table_id)
                 ->where(function ($q) {
                     $q->where(function ($query) {
-                        $query->where('is_room', 1)->where('status_table_id', 2);
+                        $query->where('has_billar', 1)->where('status_table_id', 2);
                     })
                         ->orWhere(function ($query) {
-                            $query->where('is_room', 0);
+                            $query->where('has_billar', 0);
                         });
                 });
         } else {
             $query->where('area_id', $id)
-                // ->where('is_room', false)
                 ->where(function ($q) use ($establishment_id) {
                     $q->where('establishment_id', $establishment_id)
                         ->orWhereNull('establishment_id');
@@ -145,6 +144,7 @@ class TableBillarController extends Controller
             'success' => true,
             'data' => $tables
         ];
+        /* dump($tables); */
     }
     public function get_tables()
     {
@@ -153,7 +153,7 @@ class TableBillarController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
-        $tables = Table::where('is_room', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+        $tables = Table::where('has_billar', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
             ->get();
 
         return compact('tables');
@@ -166,12 +166,31 @@ class TableBillarController extends Controller
 
         return compact('ordens');
     }
-    public function records()
+    /* public function records()
     {
 
         // $this->checkTables();
         $records = Table::where('has_billar', true);
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
+    } */
+    public function records(Request $request)
+    {
+        $column = $request->input('column');
+        $value = $request->input('value');
+        // $this->checkReserves();
+        $records = Table::where('has_billar', true);
+
+        if ($column && $value) {
+            $records = $records->where($column, 'like', "%{$value}%");
+        }
+        dump($records);
+
+        return new TableCollection($records->paginate(config('tenant.items_per_page')));
+
+        // return [
+        //     'success' => true,
+        //     'data' => $tables
+        // ];
     }
     function checkTables($establishment_id)
     {
@@ -253,7 +272,6 @@ class TableBillarController extends Controller
             'message' => 'Mesas creadas con éxito'
         ];
     }
-    
 
     public function store(TableRequest $request)
     {
@@ -261,17 +279,7 @@ class TableBillarController extends Controller
         $table = Table::firstOrNew(['id' => $id]);
         $table->fill($request->all());
         $table->has_billar = true;
-        /* $services = $request->input('services'); */
-        /* TableRoomService::where('table_id', $table->id)->delete(); */
         $table->save();
-
-        /* foreach ($services as $service) {
-            $table_room_service = new TableRoomService;
-            $table_room_service->table_id = $table->id;
-            $table_room_service->room_service_id = $service;
-            $table_room_service->save();
-        } */
-
         return [
             'success' => true,
             'message' => ($id) ? 'Mesa Billar actualizada con éxito' : 'Mesa Billar creada con éxito'

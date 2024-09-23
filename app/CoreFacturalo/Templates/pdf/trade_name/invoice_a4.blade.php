@@ -171,7 +171,9 @@
                     <td height="20px">{{ $customer->number }}</td>
                     <td height="20px"><b>CLIENTE</b></td>
                     <td height="20px">:</td>
-                    <td height="20px">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}</td>
+                    <td height="20px">
+                        {{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}
+                    </td>
 
 
 
@@ -441,7 +443,7 @@
                                     @if (isset($row->item->has_unit_type))
                                         - {!! $row->item->has_unit_type !!}
                                     @endif
-                                   
+
                                     @if (isset($row->item->lots))
                                         @foreach ($row->item->lots as $lot)
                                             <br />{!! $lot->series !!}
@@ -461,16 +463,16 @@
                                     @endif
                                 @endif
                                 @if (isset($row->item->categoriaMadera))
-                                -
-                                @php
-                                    $madera = $row->item->categoriaMadera;
-                                    $ancho = $madera->selectedAncho;
-                                    $largo = $madera->selectedLargo;
-                                    $grosor = $madera->selectedGrosor;
-                                    $m_description = "${grosor}x${ancho}x${largo}";
-                                @endphp
-                                {{ $m_description }}
-                            @endif
+                                    -
+                                    @php
+                                        $madera = $row->item->categoriaMadera;
+                                        $ancho = $madera->selectedAncho;
+                                        $largo = $madera->selectedLargo;
+                                        $grosor = $madera->selectedGrosor;
+                                        $m_description = "${grosor}x${ancho}x${largo}";
+                                    @endphp
+                                    {{ $m_description }}
+                                @endif
                                 @if (!empty($row->item->presentation))
                                     {{-- $row->item->presentation->description --}}
                                 @endif
