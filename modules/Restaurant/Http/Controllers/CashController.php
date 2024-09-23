@@ -1971,7 +1971,7 @@ class CashController extends Controller
         $cash = Cash::findOrFail($id);
         if($difference > 0){
             try{
-                $this->generaIncomeAdjust($id,$difference);
+                // $this->generaIncomeAdjust($id,$difference);
             }catch(Exception $e){
                 Log::info($e->getMessage());
                 return [
