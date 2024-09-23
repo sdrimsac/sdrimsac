@@ -177,6 +177,7 @@ export default {
                 unitPrice: 0,
                 fot: 0,
                 price: 0,
+                total_price:0,
                 key: null,
                 quantity: 1
             }
@@ -294,7 +295,7 @@ export default {
             toAdd.selectedLargo = Number(toAdd.selectedLargo);
             toAdd.quantity = this.unit.quantity;
             toAdd.fot = this.totalPie; // Asignar el total de PIE
-            toAdd.price = this.totalPrice;
+            toAdd.price = this.totalPrice/this.unit.quantity;
             console.log("Datos a enviar (con cantidad):", toAdd);
             this.$emit("addCategoriaMadera", toAdd, this.index);
             this.resetForm();
@@ -307,6 +308,19 @@ export default {
             this.open();
         },
         open() {
+              this.unit = {
+                selectedCategoria: null,
+                selectedLargo: null,
+                selectedAncho: null,
+                selectedGrosor: null,
+                selected: null,
+                unitPrice: 0,
+                fot: 0,
+                price: 0,
+                total_price:0,
+                key: null,
+                quantity: 1
+            };
             if (this.item) {
                 this.index = this.currentIndex;
                 let { categoria_madera_item } = this.item;

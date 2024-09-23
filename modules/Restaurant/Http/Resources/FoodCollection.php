@@ -3,7 +3,9 @@
 namespace Modules\Restaurant\Http\Resources;
 
 use App\Http\Controllers\Tenant\StoreController;
+use App\Models\Tenant\CategoriaMadera;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\ItemCategoriaMadera;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
@@ -34,7 +36,7 @@ class FoodCollection extends ResourceCollection
             $item = $row->item;
             $has_igv = (bool) $item->has_igv;
             $hasAffectationIgv = $item->hasAffectationIgv();
-             $igv = (new StoreController)->getIgvByUser();
+            $igv = (new StoreController)->getIgvByUser();
             if ($item->lots_enabled && $item->lot_code == null) {
                 $lot_group = ItemLotsGroup::where('item_id', $item->id)->first();
                 if ($lot_group) {
@@ -85,7 +87,7 @@ class FoodCollection extends ResourceCollection
                         $igv = (new StoreController)->getIgvByUser();
                         $price =  $price * ($igv / 100 + 1);
                     }
-                } 
+                }
                 // else {
                 //     //si no es afectado se le reduce, si es afectado el precio se queda igual
                 //     $igv = (new StoreController)->getIgvByUser();
@@ -95,11 +97,18 @@ class FoodCollection extends ResourceCollection
                 // }
             }
             $categoria_madera_item = $item->categoria_madera;
-            if($configuracion->consolidated_quotations){
+            if ($configuracion->consolidated_quotations) {
                 $item_id = $item->id;
                 $unit_type = ItemUnitType::where('item_id', $item_id)->first();
-                if($unit_type){
+                if ($unit_type) {
                     $price = $unit_type->total;
+                }
+            }
+            if ($categoria_madera_item) {
+                $item_id = $item->id;
+                $categoria_madera = ItemCategoriaMadera::where('item_id', $item_id)->first();
+                if ($categoria_madera) {
+                    $price = $categoria_madera->precio;
                 }
             }
             return [
