@@ -55,18 +55,20 @@ class PenaltyCalculateSaleNote extends Command
         foreach ($sale_notes as $sale_note) {
             $date_now =  Carbon::now()->startOfDay();
             $sale_note_credit = $sale_note->sale_note_credit;
-            $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
-            $payments = Payment::where('sale_note_id', $sale_note->id)
-                ->where('paid', 0)
-                ->where('date_payment', '<=', $date_now)->get();
-    
-            $penalty_amount = 0;
-            foreach ($payments as $key => $payment) {
-                $days = Carbon::parse($payment->date_payment)->diffInDays($date_now);
-                $penalty = $days * $penalty_by_day;
-                $penalty_amount += $penalty;
-                $payment->penalty_amount = $penalty;
-                $payment->save();
+            if ($sale_note_credit) {
+                $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
+                $payments = Payment::where('sale_note_id', $sale_note->id)
+                    ->where('paid', 0)
+                    ->where('date_payment', '<=', $date_now)->get();
+
+                $penalty_amount = 0;
+                foreach ($payments as $key => $payment) {
+                    $days = Carbon::parse($payment->date_payment)->diffInDays($date_now);
+                    $penalty = $days * $penalty_by_day;
+                    $penalty_amount += $penalty;
+                    $payment->penalty_amount = $penalty;
+                    $payment->save();
+                }
             }
         }
 
