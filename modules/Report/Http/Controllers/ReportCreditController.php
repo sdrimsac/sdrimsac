@@ -493,7 +493,7 @@ class ReportCreditController extends Controller
 
     public function records(Request $request)
     {
-        $paid = $request->paid;
+        $paid = $request->paid ? ($request->paid == "1") : null;
         $isFromAdmin = $request->isFromAdmin;
         $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
@@ -525,7 +525,7 @@ class ReportCreditController extends Controller
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
         }
-        if ($paid === "1" || $paid === "0") {
+        if ($paid) {
             $records = $records->where('paid', $paid);
         }
         if ($type != null) {
