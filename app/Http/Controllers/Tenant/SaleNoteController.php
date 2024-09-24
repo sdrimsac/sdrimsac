@@ -117,9 +117,8 @@ class SaleNoteController extends Controller
             if ($to_paid_amount >= $paid_amount) {
                 $payment->paid = 1;
             }
-            
-            $payment->save();
         }
+        $payment->save();
         HistoryPayment::create([
             'user_id' => auth()->user()->id,
             'payment_id' => $payment_id,
