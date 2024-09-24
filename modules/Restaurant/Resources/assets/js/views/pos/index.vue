@@ -1871,10 +1871,14 @@ export default {
       this.cotIdentifier = identifier;
             this.form.quotation_customer_number = customer_number;
             let type = null;
+            let categoriaMadera = null;
             if (item.type_quotation) {
                 type = item.type_quotation;
             }
-      this.insertOrden(item, item.id, type, false);
+            if (item.categoriaMadera) {
+                categoriaMadera = item.categoriaMadera;
+            }
+      this.insertOrden(item, item.id, type, false,categoriaMadera);
     },
     closeModal() {
       this.showDialogCreditReportDaily = false;

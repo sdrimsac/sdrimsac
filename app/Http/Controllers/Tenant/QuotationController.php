@@ -82,7 +82,7 @@ class QuotationController extends Controller
             $user_id = auth()->id();
             $items_restore = [];
             foreach ($items as $it) {
-            
+
                 $item_restore = [];
                 $item = Item::find($it->item_id)
                     ->load('food');
@@ -92,24 +92,15 @@ class QuotationController extends Controller
                 $item_restore['observation'] = null;
                 $item_restore['price'] = $it->unit_price;
                 $item_restore['quantity'] = $it->quantity;
-                if($it->item->from_unit_type_id){
+                if ($it->item->from_unit_type_id) {
                     $unit_type_id = $it->item->from_unit_type_id;
                     $unit_type = ItemUnitType::find($unit_type_id);
                     $item_restore['type_quotation'] = $unit_type;
-                    // $item_restore['type_description'] = $unit_type->description;
-                    // $item_restore['type_id'] = $unit_type->unit_type_id;
-                    // $item_restore['type_quantity'] = $unit_type->quantity_unit;
                 }
-                
+                if ($it->item->categoriaMadera) {
+                    $item_restore['categoriaMadera'] = $it->item->categoriaMadera;
+                }
                 $items_restore[] = $item_restore;
-                
-
-                // $isFromBox = $this->isArea("CAJ", $user->area_id);
-
-                // if ($print_box) {
-                //     event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
-                // }
-
             }
             DB::commit();
             return [
@@ -236,8 +227,9 @@ class QuotationController extends Controller
         return view('tenant.quotations.form_edit', compact('resourceId'));
     }
 
-    public function consolidatedsPrint($id){
-        $consolidated= Consolidated::find($id);
+    public function consolidatedsPrint($id)
+    {
+        $consolidated = Consolidated::find($id);
         $quotation_ids = $consolidated->quotations->pluck('id');
         foreach ($quotation_ids as $quotation_id) {
             event(new PrintEvent($quotation_id, "COT", true));
