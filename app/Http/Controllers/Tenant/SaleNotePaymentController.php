@@ -80,11 +80,11 @@ class SaleNotePaymentController extends Controller
         $total_difference = round($total  - $total_paid, 2);
         $total_difference_document = round($total_difference + $penalties_payed, 2);
 
-        if ($total_difference_document < 0.01) {
-            $sale_note->paid = true;
-        }else{
-            $sale_note->paid = false;
-        }
+        // if ($total_difference_document < 0.01) {
+        //     $sale_note->paid = true;
+        // }else{
+        //     $sale_note->paid = false;
+        // }
         $sale_note->save();
         $num_schedule = Payment::where('sale_note_id', $sale_note_id)->where('paid', 0)->count();
         ///the first  payment by id with paid 0
