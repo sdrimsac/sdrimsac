@@ -1695,7 +1695,6 @@ class BoxesController extends Controller
         $total_discount = 0;
         $cash_id = $request->cash_id;
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
-        Box::where('cash_id', $cash_id)->where('description', 'Ajuste de caja por centavos' )->delete();
         $credit_list_ordens = $this->credit_list_ordens($cash_id);
         $credit_list_orden = $credit_list_ordens["items"];
         $credit_list_ordens_customers = $credit_list_ordens["customers"];

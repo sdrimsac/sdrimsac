@@ -183,7 +183,6 @@ class TableBillarController extends Controller
         if ($column && $value) {
             $records = $records->where($column, 'like', "%{$value}%");
         }
-        dump($records);
 
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 

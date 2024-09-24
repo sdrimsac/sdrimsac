@@ -1955,7 +1955,7 @@ class CashController extends Controller
         $box->description = 'Ajuste de caja por centavos';
         $box->method = 'Efectivo';
         $box->type = 1;
-        $box->incomes = 1;
+        $box->incomes= 1;
         $box->save();
     }
     public function close(Request $request)
@@ -1969,9 +1969,16 @@ class CashController extends Controller
         $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
-        if($difference > 0){
+        $amount_difference = $final_balance + $difference;
+        if($amount_difference > 0){
             try{
-                // $this->generaIncomeAdjust($id,$difference);
+                if (fmod($amount_difference, 1) != 0 && substr($amount_difference, -1) > 0) {
+                    $second_decimal = substr($amount_difference, -1);
+                    $second_decimal = 10 - $second_decimal;
+                    $second_decimal = 0.01 * $second_decimal;
+                    $difference -= $second_decimal;
+                    $this->generaIncomeAdjust($id,$second_decimal);
+                }
             }catch(Exception $e){
                 Log::info($e->getMessage());
                 return [
