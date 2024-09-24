@@ -92,12 +92,13 @@ class QuotationController extends Controller
                 $item_restore['observation'] = null;
                 $item_restore['price'] = $it->unit_price;
                 $item_restore['quantity'] = $it->quantity;
-                if ($it->item->from_unit_type_id) {
+                if (isset($it->item->from_unit_type_id)) {
+
                     $unit_type_id = $it->item->from_unit_type_id;
                     $unit_type = ItemUnitType::find($unit_type_id);
                     $item_restore['type_quotation'] = $unit_type;
                 }
-                if ($it->item->categoriaMadera) {
+                if (isset($it->item->categoriaMadera)) {
                     $item_restore['categoriaMadera'] = $it->item->categoriaMadera;
                 }
                 $items_restore[] = $item_restore;
