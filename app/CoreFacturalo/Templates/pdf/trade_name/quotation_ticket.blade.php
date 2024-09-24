@@ -55,9 +55,7 @@
                 @isset($establishment->trade_address)
                     <h6>{{ $establishment->trade_address !== '-' ? '  ' . $establishment->trade_address : '' }}</h6>
                 @endisset
-                <h6>{{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}</h6>
 
-                <h6>{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}</h6>
 
                 @isset($establishment->web_address)
                     <h6>{{ $establishment->web_address !== '-' ? 'Web: ' . $establishment->web_address : '' }}</h6>
