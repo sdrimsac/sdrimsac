@@ -114,7 +114,10 @@ class SaleNoteController extends Controller
         if ($type !== 'paid') {
             $to_paid_amount = $payment->amount_paid + $payment->penalty_amount;
             $paid_amount = $payment->amount;
-            $payment->paid = ($to_paid_amount >= $paid_amount) ? 1 : 0;
+            if ($to_paid_amount >= $paid_amount) {
+                $payment->paid = 1;
+            }
+            
             $payment->save();
         }
         HistoryPayment::create([
