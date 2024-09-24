@@ -201,6 +201,7 @@
                                                         row.date_of_payment
                                                     "
                                                     type="date"
+                                                    :disabled="configuration.sale_note_credit_penalty"
                                                     :clearable="false"
                                                     format="dd/MM/yyyy"
                                                     value-format="yyyy-MM-dd"
