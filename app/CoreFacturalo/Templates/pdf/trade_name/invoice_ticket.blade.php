@@ -637,6 +637,10 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $fot_totals = 0;
+                $quantity_totals = 0;
+            @endphp
             @foreach ($document->items as $row)
                 <tr>
                     <td class="text-center desc-9 align-top">
@@ -650,7 +654,7 @@
                             @endif
                         @endif
                     </td>
-    
+
                     <td class="text-center desc-9 align-top">
                         {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                     </td>
@@ -675,6 +679,10 @@
                                     $ancho = $madera->selectedAncho;
                                     $largo = $madera->selectedLargo;
                                     $grosor = $madera->selectedGrosor;
+                                    if (isset($madera->sumTotals) && $madera->sumTotals == true) {
+                                        $quantity_totals += $row->quantity;
+                                        $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                                    }
                                     $m_description = "${grosor}x${ancho}x${largo}";
                                 @endphp
                                 {{ $m_description }}
@@ -830,6 +838,15 @@
         </tbody>
     </table>
     <table class="full-width" style="margin-left:15px;margin-right:15px;">
+        @if ($fot_totals > 0)
+            <tr>
+                <td class="desc pt-3"> TOTAL PIES: <span
+                        class="font-bold">{{ number_format($fot_totals, 2) }}</span>
+                        TOTAL CANTIDAD: <span
+                        class="font-bold">{{ number_format($quantity_totals, 2) }}</span>
+                    </td>
+            </tr>
+        @endif
         <tr>
 
             @foreach (array_reverse((array) $document->legends) as $row)

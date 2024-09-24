@@ -172,6 +172,7 @@ export default {
                 selectedCategoria: null,
                 selectedLargo: null,
                 selectedAncho: null,
+                sumTotals: false,
                 selectedGrosor: null,
                 selected: null,
                 unitPrice: 0,
@@ -259,7 +260,14 @@ export default {
             if (categoria) {
                 this.unit.unitPrice = categoria.precio;
             }
+            let cat_madera = this.categoria_madera.find(
+                cm => cm.id == unit.selectedCategoria
+            );
+            if (cat_madera) {
+                this.unit.sumTotals = cat_madera.sum_totals || false;
+            }
             if (unit.selectedCategoria) {
+
                 this.medida_alto_select = this.medida_alto.filter(
                     alto => alto.categoria_madera_id === unit.selectedCategoria
                 );
@@ -294,6 +302,7 @@ export default {
             toAdd.selectedGrosor = Number(toAdd.selectedGrosor);
             toAdd.selectedLargo = Number(toAdd.selectedLargo);
             toAdd.quantity = this.unit.quantity;
+            toAdd.sumTotals = this.unit.sumTotals;
             toAdd.fot = this.totalPie; // Asignar el total de PIE
             toAdd.price = this.totalPrice/this.unit.quantity;
             console.log("Datos a enviar (con cantidad):", toAdd);
@@ -311,6 +320,7 @@ export default {
               this.unit = {
                 selectedCategoria: null,
                 selectedLargo: null,
+                sumTotals: false,
                 selectedAncho: null,
                 selectedGrosor: null,
                 selected: null,
@@ -319,6 +329,7 @@ export default {
                 price: 0,
                 total_price:0,
                 key: null,
+                
                 quantity: 1
             };
             if (this.item) {

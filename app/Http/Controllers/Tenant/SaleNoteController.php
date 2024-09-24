@@ -1838,7 +1838,7 @@ class SaleNoteController extends Controller
             $user = User::findOrFail($sale->user_id);
             $establishment = Establishment::find($user->establishment_id);
             $recibo = PDf::loadView('tenant.schedule.index', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
-            $altura = 250;
+            $altura = 350;
             // $height = $height + 30; //Cronograma
             // $height = $height + 30; //FECHA
             // $height = $height + 60; //CLIENTE

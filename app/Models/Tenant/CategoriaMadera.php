@@ -10,8 +10,11 @@ class CategoriaMadera extends ModelTenant
     protected $fillable = [
         'id', 
         'description',
+        'sum_totals'
     ];
-
+    protected $casts = [
+        'sum_totals' => 'boolean'
+    ];
     public function item()
     {
         return $this->belongsTo(Item::class);
