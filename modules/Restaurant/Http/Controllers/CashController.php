@@ -1964,13 +1964,13 @@ class CashController extends Controller
 
         $id = $request->id;
         $final_balance = $request->final_balance;
-
+        $configuration = Configuration::first();
         $counter = $request->counter;
         $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
         $amount_difference = $final_balance + $difference;
-        if($amount_difference > 0){
+        if($amount_difference > 0 && $configuration->sale_note_credit_confirm){
             try{
                 if (fmod($amount_difference, 1) != 0 && substr($amount_difference, -1) > 0) {
                     $second_decimal = substr($amount_difference, -1);
