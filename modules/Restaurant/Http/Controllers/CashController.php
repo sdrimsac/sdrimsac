@@ -1103,7 +1103,7 @@ class CashController extends Controller
             } else {
                 $documents = $documents->whereHas('person', function ($query) use ($value) {
                     $query->where('name', 'like', '%' . $value . '%')->orWhere('number', 'like', '%' . $value . '%')
-                    ->orWhere('alias', 'like', '%' . $value . '%');
+                        ->orWhere('alias', 'like', '%' . $value . '%');
                 });
             }
         }
@@ -1676,7 +1676,7 @@ class CashController extends Controller
         $users = array();
         $configuration = Configuration::select(['health_network'])
             ->first();
-            /* dump($configuration); */
+        /* dump($configuration); */
         $turnsTable = Turns::where('turn_active',  1)->get();
         switch ($type) {
             case 'admin':
@@ -1940,7 +1940,8 @@ class CashController extends Controller
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }
-    function generaIncomeAdjust($cash_id,$amount){
+    function generaIncomeAdjust($cash_id, $amount)
+    {
         $box = new Box();
         $box->cash_id = $cash_id;
         $box->date = date('Y-m-d');
@@ -1955,7 +1956,7 @@ class CashController extends Controller
         $box->description = 'Ajuste de caja por centavos';
         $box->method = 'Efectivo';
         $box->type = 1;
-        $box->incomes= 1;
+        $box->incomes = 1;
         $box->save();
     }
     public function close(Request $request)
@@ -1969,17 +1970,21 @@ class CashController extends Controller
         $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
-        $amount_difference = $final_balance + $difference;
-        if($amount_difference > 0 && $configuration->sale_note_credit_confirm){
-            try{
+        $amount_difference = $final_balance + $difference; //51.70
+        if ($amount_difference > 0 && $configuration->sale_note_credit_confirm) {
+            try {
                 if (fmod($amount_difference, 1) != 0 && substr($amount_difference, -1) > 0) {
                     $second_decimal = substr($amount_difference, -1);
-                    $second_decimal = 10 - $second_decimal;
-                    $second_decimal = 0.01 * $second_decimal;
-                    $difference -= $second_decimal;
-                    $this->generaIncomeAdjust($id,$second_decimal);
+                    $second_decimal = intval($second_decimal);
+                    Log::info($second_decimal);
+                    if ($second_decimal > 0) {
+                        $second_decimal = 10 - $second_decimal;
+                        $second_decimal = 0.01 * $second_decimal;
+                        $difference -= $second_decimal;
+                        $this->generaIncomeAdjust($id, $second_decimal);
+                    }
                 }
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 Log::info($e->getMessage());
                 return [
                     'success' => false,
