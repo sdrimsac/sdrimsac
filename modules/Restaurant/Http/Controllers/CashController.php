@@ -1971,9 +1971,12 @@ class CashController extends Controller
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
         $amount_difference = $final_balance + $difference; //51.70
+        Log::info($amount_difference);
         if ($amount_difference > 0 && $configuration->sale_note_credit_confirm) {
             try {
                 if (fmod($amount_difference, 1) != 0 && substr($amount_difference, -1) > 0) {
+                    Log::info('fmod '.fmod($amount_difference, 1));
+                    Log::info('substr '.substr($amount_difference, -1));
                     $second_decimal = substr($amount_difference, -1);
                     $second_decimal = intval($second_decimal);
                     Log::info($second_decimal);
