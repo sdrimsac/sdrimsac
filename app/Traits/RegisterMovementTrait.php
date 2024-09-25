@@ -15,7 +15,11 @@ trait RegisterMovementTrait
     use HelperTrait;
 
     public static function registerMovement($event, $model, $request_data, $description = null, $data = [])
-    {   $id = $model->id;
+    {  
+        
+
+    
+        $id = $model->id;
         $class_model = get_class($model);
         $user_id = auth()->id();
         if($user_id == null){
@@ -25,18 +29,18 @@ trait RegisterMovementTrait
         $userAgent = $request_data->userAgent();
         $browser_so = self::func_get_browser_so($userAgent);
         $platform = $browser_so['platform'];
+        
 
-
-       $register = RegisterMovement::create([
-            "ip" => $ip ?? "SERVIDOR",
-            "browser" => $platform,
-            "user_id" => $user_id,
-            "event" => $event,
-            "model" => $class_model,
-            "model_id" => $id,
-            "description" => $description,
-            "data" => json_encode($data),
-        ]);
+    //    $register = RegisterMovement::create([
+    //         "ip" => $ip ?? "SERVIDOR",
+    //         "browser" => $platform,
+    //         "user_id" => $user_id,
+    //         "event" => $event,
+    //         "model" => $class_model,
+    //         "model_id" => $id,
+    //         "description" => $description,
+    //         "data" => json_encode($data),
+    //     ]);
         // event(new RegisterEvent($register));
     }
 
