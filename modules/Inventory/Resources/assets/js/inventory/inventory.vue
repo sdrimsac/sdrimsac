@@ -35,15 +35,22 @@
                     <i class="fas fa-box fa-lg"></i>
                     Regularizar Stock de Productos
                 </el-button>
+
+                <el-button type="primary" @click="resetKardex">
+                    <i class="fas fa-trash fa-lg"></i>
+                    Regularización de kardex
+                </el-button>
             </div>
-            <div class="card-body">
+            <div class="card-body" v-loading="loading">
                 <data-table :resource="resource" ref="dataTable">
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white text-center">#</th>
                         <th class="text-white text-left">Producto</th>
                         <th class="text-white text-left">Almacén</th>
                         <th class="text-white text-center">Stock</th>
-                        <th class="text-white text-center">Stock real</th>
+                        <th class="text-white text-center"
+                        v-if="typeUser == 'superadmin'"
+                        >Stock real</th>
                     </tr>
                     <tr slot-scope="{ index, row }">
                         <td class="text-center">{{ index }}</td>
@@ -88,7 +95,9 @@
                         </td>
                         <td class="text-left">{{ row.warehouse_description }}</td>
                         <td class="text-center">{{ parseFloat(row.stock).toFixed(2) }}</td>
-                        <td class="text-center">
+                        <td class="text-center"
+                        v-if="typeUser == 'superadmin'"
+                        >
                             <div class="flex">
                                 <el-input :disabled="row.series_enabled || row.has_color_size" size="mini" class="w-50" type="number" v-model="row.realStock" :min="1" :precision="2" @keypress="onlyAllowNumbers" controls-position="right">
                                     <el-button :disabled="row.series_enabled || row.has_color_size" @click="clickSetStockReal(row.item_id, row.realStock, row.stock, row.warehouse_id)" slot="append" icon="el-icon-top-right"></el-button>
@@ -138,6 +147,7 @@ export default {
             resource: "reports/inventory",
             recordId: null,
             isModalVisible: false,
+            loading:false,
             typeTransaction: null,
             warehouses: []
         };
@@ -154,6 +164,43 @@ async mounted() {
         await this.getRecords()*/
     }, 
     methods: {
+        resetKardex(){
+            this.$confirm('¿Estás seguro de querer resetear el kardex?', 'Advertencia', {
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'No',
+                type: 'warning'
+            }).then(() => {
+                this.loading = true;
+                this.$http.post(`/inventory/resetKardex`)
+                    .then(response => {
+                        if (response.data.success) {
+                            this.$message({
+                                type: "success",
+                                message: response.data.message
+                            });
+                            this.$refs.dataTable.getRecords();
+                        } else {
+                            this.$message({
+                                type: "error",
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: 'Operación interrumpida'
+                        });
+                    }).finally(() => {
+                        this.loading = false;
+                    });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'Operación cancelada'
+                });
+            }).finally(() => {
+            });
+        },
         openModal() {
             console.log("Opening modal, warehouses:", this.warehouses);
             this.showDialogAlmacen = true;

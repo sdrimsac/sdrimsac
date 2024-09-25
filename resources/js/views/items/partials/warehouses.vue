@@ -54,6 +54,22 @@
                             <i class="fa fa-info-circle"></i>
                           </el-tooltip>
                         </button>
+                          <!-- <button
+                          v-if="user.type == 'superadmin'"
+                          type="button"
+                          class="btn waves-effect waves-light btn-sm btn-warning"
+                          @click.prevent="clickStockRestoreKardex(row.id)"
+                        >
+                          <i class="fa fa-trash"></i>
+                          <el-tooltip
+                            class="item"
+                            content="Elimina todo los registros del kardex e inserta la cantidad actual como stock inicial"
+                            effect="dark"
+                            placement="top"
+                          >
+                            <i class="fa fa-info-circle"></i>
+                          </el-tooltip>
+                        </button> -->
                       </th>
                     </tr>
                     <tr>
@@ -318,8 +334,40 @@ export default {
       this.close();
     });
   },
-  mounted() {},
+  mounted() {
+    console.log(this.user);
+  },
   methods: {
+    async clickStockRestoreKardex(item_warehouse_id){
+      // console.log("🚀 ~ clickStockRestoreKardex ~ warehouse_id:", warehouse_id)
+      // return;
+      try {
+        this.$confirm("¿Está seguro de realizar esta acción?", "Advertencia", {
+          confirmButtonText: "Sí",
+          cancelButtonText: "No",
+          type: "warning"
+        }).then(async () => {
+          this.loading = true;
+          const response = await this.$http.get(
+            `/items/restore-kardex/${item_warehouse_id}`
+          );
+          this.$toast.success(response.data.message);
+          this.getRecords();
+        }).catch(() => {
+          this.$toast.info("Operación cancelada");
+        });
+      } catch (e) {
+        console.log(e);
+        const {
+          response: {
+            data: { message }
+          }
+        } = e;
+        this.$toast.error(message);
+      } finally {
+        this.loading = false;
+      }
+    },
     customIndex(index, type = "sales_") {
       //2
       //5 * (1 - 1) + 0 + 1 = 5 * (0) + 0 + 1 = 1

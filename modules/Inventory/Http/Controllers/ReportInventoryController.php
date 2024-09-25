@@ -30,7 +30,7 @@ class ReportInventoryController extends Controller
     public function records(Request $request) {
         $category_id=$request->category_id;
         //->paginate(config('tenant.items_per_page'))
-      
+        $item_id = $request->item_id;
         if($request->warehouse_id==null  && $request->category_id==null){
          
             $reports = ItemWarehouse::with(['item'])->whereHas('item',function($q){
@@ -54,12 +54,21 @@ class ReportInventoryController extends Controller
                 })->where([['item_type_id', '01'],['unit_type_id', '!=','ZZ']])->whereNotIsSet();          
             })
             ->latest();    
-        }else{
+        }
+    
+        else{
            
             $reports = ItemWarehouse::with(['item'])->whereHas('item',function($q){
                 $q->where([['item_type_id', '01'], ['unit_type_id', '!=','ZZ']]);
                 $q->whereNotIsSet();
             })->latest();
+        }
+
+        if($item_id!=null){
+            $reports = $reports->whereHas('item', function($q) use($item_id){
+                $q->where('description', 'like', "%{$item_id}%")
+                ->orWhere('internal_id', 'like', "%{$item_id}%");
+            });
         }
        
         return new InventoryCollection($reports->paginate(config('tenant.items_per_page')));

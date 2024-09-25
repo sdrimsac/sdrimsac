@@ -25,6 +25,7 @@ use Modules\Inventory\Http\Resources\InventoryCollection;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\NumberActivity;
+use App\Models\Tenant\SaleNoteItem;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 class InventoryController extends Controller
@@ -95,6 +96,33 @@ class InventoryController extends Controller
         return [
             "success" => true,
             "message" => "Se actualizo el inventario de Producto"
+        ];
+    }
+    public function resetKardex()
+    {
+        SaleNoteItem::whereNotNull('inventory_kardex_id')->update(['inventory_kardex_id' => null]);
+        InventoryKardex::query()->delete();
+        ItemWarehouse::chunk(500, function ($itemWarehouses) {
+            DB::transaction(function () use ($itemWarehouses) {
+                $inventoryData = [];
+                foreach ($itemWarehouses as $itemWarehouse) {
+                    $inventoryData[] = [
+                        'type' => 1,
+                        'description' => 'Stock inicial',
+                        'item_id' => $itemWarehouse->item_id,
+                        'warehouse_id' => $itemWarehouse->warehouse_id,
+                        'quantity' => max($itemWarehouse->stock, 0), // Asegurar que el stock sea al menos 0
+                    ];
+                }
+        
+                foreach ($inventoryData as $data) {
+                    Inventory::create($data);
+                }
+            });
+        });
+        return [
+            "success" => true,
+            "message" => "Se reseteo el inventario de Producto"
         ];
     }
     public function columns()
@@ -280,37 +308,37 @@ class InventoryController extends Controller
         }
 
         $items = ItemWarehouse::where('stock', '<', 0)
-                 ->where('warehouse_id', $warehouse_id)
-                 ->get();
+            ->where('warehouse_id', $warehouse_id)
+            ->get();
         if ($items->isEmpty()) {
             return response()->json([
                 'success' => true,
                 'message' => 'No se encontraron productos con stock negativo en el almacén especificado.'
             ]);
         }
-       foreach ($items as $item) {
+        foreach ($items as $item) {
 
-        $quantity_new = abs($item->stock);
+            $quantity_new = abs($item->stock);
 
-        $inventory = new Inventory();
-        $inventory->type = 1;
-        $inventory->description = 'Stock regularizado';
-        $inventory->item_id = $item->item_id;
-        $inventory->warehouse_id = $item->warehouse_id;
-        $inventory->detail = 'Ajuste a 0 por Rectificación';
-        $inventory->quantity = $quantity_new;
-        $inventory->inventory_transaction_id = 28;
-        $inventory->real_stock = 0;
-        $inventory->system_stock = $item->stock;
-        $inventory->save();
+            $inventory = new Inventory();
+            $inventory->type = 1;
+            $inventory->description = 'Stock regularizado';
+            $inventory->item_id = $item->item_id;
+            $inventory->warehouse_id = $item->warehouse_id;
+            $inventory->detail = 'Ajuste a 0 por Rectificación';
+            $inventory->quantity = $quantity_new;
+            $inventory->inventory_transaction_id = 28;
+            $inventory->real_stock = 0;
+            $inventory->system_stock = $item->stock;
+            $inventory->save();
 
-        $item->stock = 0;
-        $item->save();
-       }
+            $item->stock = 0;
+            $item->save();
+        }
         return [
-            'success'=> true,
-            'message'=> 'stock regularizado con exito'
-        ];    
+            'success' => true,
+            'message' => 'stock regularizado con exito'
+        ];
     }
 
     public function store(Request $request)

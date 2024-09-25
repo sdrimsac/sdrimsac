@@ -218,7 +218,7 @@
                     </div>
 
                     <div class="col-6">
-                        <div class="row">
+                        <div class="row" v-if="!isSellerConsolidated">
                             <h3
                                 v-if="!clientTableData.table"
                                 class="text-white"
@@ -665,7 +665,7 @@
                                 <span class="text-white">Variación</span>
                             </el-checkbox>
                         </template>
-                        <template v-if="!isAnalist">
+                        <template v-if="!isAnalist && !isSellerConsolidated">
                             <el-checkbox
                                 class="margin-left:5px;"
                                 :disabled="isSeller"
@@ -709,6 +709,21 @@
                                     :value="item.id"
                                 ></el-option>
                             </el-select>
+                        </template>
+                        <template
+                        v-if="isSellerConsolidated"
+                        >
+                            <!-- <el-select v-model="form.customer_id" filterable remote class="border-left rounded-left border-info" popper-class="el-select-customers"
+                                        dusk="customer_id"
+                                        placeholder="Escriba el nombre o número de documento del cliente"
+                                        :remote-method="searchRemoteCustomers"
+                                        :loading="loading_search"
+                                        @change="changeCustomer"
+                                        @keyup.enter.native="keyupCustomer">
+
+                                        <el-option v-for="option in customers" :key="option.id" :value="option.id" :label="option.description"></el-option>
+
+                                    </el-select> -->
                         </template>
                         <template>
                             <el-input
@@ -1468,7 +1483,14 @@
                                                             class="row align-items-end"
                                                         >
                                                             <div
-                                                                class="col-4 col-md-5 col-lg-4 col-xl-4"
+                                                                :class="
+                                                                    `${
+                                                                        isSeller &&
+                                                                        configuration.consolidated_quotations
+                                                                            ? 'col-12'
+                                                                            : 'col-4 col-md-5 col-lg-4 col-xl-4'
+                                                                    }`
+                                                                "
                                                             >
                                                                 <span
                                                                     class="fw-bold"
@@ -1632,45 +1654,53 @@
                                                                     </div>
                                                                 </span>
                                                             </div>
-                                                            <div
-                                                                class="col-4 col-md-5 col-lg-5 col-xl-4"
+                                                            <template
+                                                                v-if="
+                                                                    !(
+                                                                        isSeller &&
+                                                                        configuration.consolidated_quotations
+                                                                    )
+                                                                "
                                                             >
-                                                                <span
-                                                                    class="time font-weight-light"
+                                                                <div
+                                                                    class="col-4 col-md-5 col-lg-5 col-xl-4"
                                                                 >
                                                                     <span
-                                                                        class="fw-bold"
+                                                                        class="time font-weight-light"
                                                                     >
-                                                                        Precio
-                                                                        <br />
-                                                                        <el-input
-                                                                            class="custom_input"
-                                                                            :disabled="
-                                                                                configuration.editar_precio_politica ==
-                                                                                    false
-                                                                            "
-                                                                            type="number"
-                                                                            v-model="
-                                                                                order_pend.price
-                                                                            "
-                                                                            @input="
-                                                                                update_price(
-                                                                                    indexx,
-                                                                                    order_pend.price
-                                                                                )
-                                                                            "
+                                                                        <span
+                                                                            class="fw-bold"
                                                                         >
-                                                                            <template
-                                                                                slot="prepend"
+                                                                            Precio
+                                                                            <br />
+                                                                            <el-input
+                                                                                class="custom_input"
+                                                                                :disabled="
+                                                                                    configuration.editar_precio_politica ==
+                                                                                        false
+                                                                                "
+                                                                                type="number"
+                                                                                v-model="
+                                                                                    order_pend.price
+                                                                                "
+                                                                                @input="
+                                                                                    update_price(
+                                                                                        indexx,
+                                                                                        order_pend.price
+                                                                                    )
+                                                                                "
                                                                             >
-                                                                                {{
-                                                                                    currency_id ==
-                                                                                    "USD"
-                                                                                        ? "$"
-                                                                                        : "S/"
-                                                                                }}
-                                                                            </template>
-                                                                            <!-- <template
+                                                                                <template
+                                                                                    slot="prepend"
+                                                                                >
+                                                                                    {{
+                                                                                        currency_id ==
+                                                                                        "USD"
+                                                                                            ? "$"
+                                                                                            : "S/"
+                                                                                    }}
+                                                                                </template>
+                                                                                <!-- <template
                                                                                 slot="prepend"
                                                                                 v-if="
                                                                                     order_pend
@@ -1682,109 +1712,110 @@
                                                                             >
                                                                                 $
                                       </template>-->
-                                                                        </el-input>
+                                                                            </el-input>
+                                                                        </span>
                                                                     </span>
-                                                                </span>
-                                                            </div>
-                                                            <div
-                                                                class="col-4 col-md-2 col-lg-3 mt-2"
-                                                            >
-                                                                <el-tag
-                                                                    :disable-transitions="
-                                                                        true
-                                                                    "
-                                                                    v-if="
-                                                                        !order_pend.change_subtotal
-                                                                    "
-                                                                    size="medium"
-                                                                >
-                                                                    <strong
-                                                                        style="font-weight: 700"
-                                                                    >
-                                                                        {{
-                                                                            parseFloat(
-                                                                                order_pend.price *
-                                                                                    order_pend.quantity
-                                                                            ).toFixed(
-                                                                                2
-                                                                            )
-                                                                        }}
-                                                                    </strong>
-                                                                </el-tag>
-                                                                <el-input
-                                                                    v-else
-                                                                    class="input-new-tag1"
-                                                                    v-model="
-                                                                        order_pend.newSubtotal
-                                                                    "
-                                                                    @input="
-                                                                        justNumber(
-                                                                            indexx
-                                                                        )
-                                                                    "
-                                                                    placeholder="0.00"
-                                                                    size="medium"
-                                                                ></el-input>
-                                                                <template
-                                                                    v-if="
-                                                                        configuration.edit_subtotal_box
-                                                                    "
+                                                                </div>
+                                                                <div
+                                                                    class="col-4 col-md-2 col-lg-3 mt-2"
                                                                 >
                                                                     <el-tag
+                                                                        :disable-transitions="
+                                                                            true
+                                                                        "
                                                                         v-if="
                                                                             !order_pend.change_subtotal
                                                                         "
-                                                                        role="button"
                                                                         size="medium"
-                                                                        @click="
-                                                                            changeSubtotal(
-                                                                                indexx
-                                                                            )
-                                                                        "
                                                                     >
-                                                                        <i
-                                                                            class="fas fa-edit text-primary"
-                                                                        ></i>
+                                                                        <strong
+                                                                            style="font-weight: 700"
+                                                                        >
+                                                                            {{
+                                                                                parseFloat(
+                                                                                    order_pend.price *
+                                                                                        order_pend.quantity
+                                                                                ).toFixed(
+                                                                                    2
+                                                                                )
+                                                                            }}
+                                                                        </strong>
                                                                     </el-tag>
-
-                                                                    <el-tag
+                                                                    <el-input
                                                                         v-else
-                                                                        role="button"
-                                                                        size="medium"
-                                                                        @click="
-                                                                            saveSubtotal(
+                                                                        class="input-new-tag1"
+                                                                        v-model="
+                                                                            order_pend.newSubtotal
+                                                                        "
+                                                                        @input="
+                                                                            justNumber(
                                                                                 indexx
                                                                             )
                                                                         "
-                                                                    >
-                                                                        <i
-                                                                            class="fas fa-save text-primary"
-                                                                        ></i>
-                                                                    </el-tag>
-                                                                </template>
-                                                                <el-tooltip
-                                                                    v-if="
-                                                                        configuration.change_price_product
-                                                                    "
-                                                                    content="Guardar precio del producto"
-                                                                    effect="dark"
-                                                                >
-                                                                    <el-tag
-                                                                        @click="
-                                                                            savePriceProduct(
-                                                                                indexx
-                                                                            )
-                                                                        "
-                                                                        role="button"
+                                                                        placeholder="0.00"
                                                                         size="medium"
-                                                                        type="success"
+                                                                    ></el-input>
+                                                                    <template
+                                                                        v-if="
+                                                                            configuration.edit_subtotal_box
+                                                                        "
                                                                     >
-                                                                        <i
-                                                                            class="fas fa-save text-primary"
-                                                                        ></i>
-                                                                    </el-tag>
-                                                                </el-tooltip>
-                                                            </div>
+                                                                        <el-tag
+                                                                            v-if="
+                                                                                !order_pend.change_subtotal
+                                                                            "
+                                                                            role="button"
+                                                                            size="medium"
+                                                                            @click="
+                                                                                changeSubtotal(
+                                                                                    indexx
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            <i
+                                                                                class="fas fa-edit text-primary"
+                                                                            ></i>
+                                                                        </el-tag>
+
+                                                                        <el-tag
+                                                                            v-else
+                                                                            role="button"
+                                                                            size="medium"
+                                                                            @click="
+                                                                                saveSubtotal(
+                                                                                    indexx
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            <i
+                                                                                class="fas fa-save text-primary"
+                                                                            ></i>
+                                                                        </el-tag>
+                                                                    </template>
+                                                                    <el-tooltip
+                                                                        v-if="
+                                                                            configuration.change_price_product
+                                                                        "
+                                                                        content="Guardar precio del producto"
+                                                                        effect="dark"
+                                                                    >
+                                                                        <el-tag
+                                                                            @click="
+                                                                                savePriceProduct(
+                                                                                    indexx
+                                                                                )
+                                                                            "
+                                                                            role="button"
+                                                                            size="medium"
+                                                                            type="success"
+                                                                        >
+                                                                            <i
+                                                                                class="fas fa-save text-primary"
+                                                                            ></i>
+                                                                        </el-tag>
+                                                                    </el-tooltip>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                         <div
                                                             v-if="
@@ -2596,7 +2627,9 @@ export default {
             currentFoodDefault: null,
             commercialTreatments: [],
             currentCommercialTreatment: null,
-            isHotel: false
+            isHotel: false,
+            customersSearch:[],
+
         };
     },
 
@@ -2633,7 +2666,11 @@ export default {
             this.calculateTotal(this.ordens);
         }
     },
-
+    computed:{
+        isSellerConsolidated () {
+            return this.isSeller && this.configuration.consolidated_quotations;
+        },
+    },
     async mounted() {
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
@@ -2699,6 +2736,25 @@ export default {
         this.checkCashAvailable();
     },
     methods: {
+        searchRemoteCustomers(input) {
+
+                if (input.length > 0) {
+                    this.loading_search = true
+                    let parameters = `input=${input}`
+
+                    this.$http.get(`/documents/search/customers?${parameters}`)
+                            .then(response => {
+                                this.customersSearch = response.data.customers
+                                this.loading_search = false
+                                /* if(this.customers.length == 0){this.allCustomers()} */
+                                this.input_person.number=(this.customers.length==0)? input : null
+                            })
+                } else {
+                    this.allCustomers()
+                    this.input_person.number= null
+                }
+
+            },
         consolidatedQuotations() {
             this.showConsolidated = true;
         },
@@ -4174,8 +4230,7 @@ export default {
             }
         },
         calculateTotal(w = null) {
-            console.log(this.localOrden);
-            console.log(this.ordens);
+
             this.totalOrdenItems = 0.0;
 
             this.total = 0.0;
