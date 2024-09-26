@@ -113,13 +113,14 @@ class Table extends ModelTenant
     {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
-        $table = Table::where('establishment_id', $establishment_id)->where('is_room', false)
+        $table = Table::where('establishment_id', $establishment_id)->where('is_room', 'has_billar', false)
             ->where('number', 'like', 'CAJA%')->first();
         if ($table) return $table->id;
         //crear una tabla
         $table = new Table();
         $table->establishment_id = $establishment_id;
         $table->is_room = false;
+        $table->has_billar = false;
         $table->status_table_id = 1;
         $table->number = "CAJA";
         $area_id = Area::getAreaCajaId();

@@ -924,9 +924,17 @@
                                                                 <el-switch v-model="form.editar_precio_politica" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Editar Politica de Precios En Caja', form.editar_precio_politica, 'view_daily_cash_pin', 'lockIcon')"></el-switch>
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-2 mt-4">
+                                                            <div class="form-group">
+                                                                <label class="control-label w-100">
+                                                                    <i class="el-icon-s-grid icon-tab"></i>
+                                                                   Aparcado en Caja
+                                                                </label>
+                                                                <el-switch v-model="form.aparcado" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Aparcado en Caja', form.aparcado, 'view_daily_cash_pin', 'lockIcon')"></el-switch>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-
                                                 <div slot="header" class="card-header bg-primary text-white">
                                                     <i class="fas fa-box fa-lg"></i>
                                                     Gestión de WhatsApp

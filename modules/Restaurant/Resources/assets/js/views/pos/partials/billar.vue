@@ -41,7 +41,7 @@
         >{{ addingOrden ? "Seleccione mesa" : "Nueva orden" }}</button>
         <button type="button" style="margin-left:15px;" class="btn btn-light" @click="close">Cerrar</button>
       </div>
-      <div v-if="tables.length > 0"  class="d-flex flex-wrap justify-content-center">
+      <div v-if="tables.length > 0" class="d-flex flex-wrap justify-content-center">
         <div
           v-for="(table, idx) in filteredTables"
           :class="
@@ -67,10 +67,10 @@
             <span class="h4 text-white">{{ formatTime(table.elapsedTime) }}</span>
           </div>
           <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn btn-success btn-sm" @click.stop="startTableTimer(table)">
+            <button class="btn btn-success btn-sm" @click.stop="showTableTime(table)">
               <i class="iconfont-clock-time"></i> Iniciar
             </button>
-            <button class="btn btn-warning btn-sm" @click.stop="showTableTime(table)">
+            <button class="btn btn-warning btn-sm" @click.stop="startTableTimer(table)">
               <i class="fa fas-stopwatch"></i> Hora
             </button>
           </div>
@@ -101,9 +101,8 @@
         <button type="button" class="btn btn-light" @click="closeOrden">Regresar</button>
       </div>
     </div>
-    <timer 
-    :showDialog.sync="showDialogTimer">
-    </timer>
+    <timer :showDialog.sync="showDialogTimer"></timer>
+    <click :showDialog.sync="showDialogClick"></click>
   </el-dialog>
 </template>
 <style scoped>
@@ -117,17 +116,20 @@
 
 <script>
 import Swal from "sweetalert2";
-import Timer from "./timer.vue"
+import Timer from "./timer.vue";
+import click from "./click.vue";
 export default {
   //tabla color verde
   props: ["showBillar", "table", "configuration"],
   components: {
     Swal,
-    Timer
+    Timer,
+    click
   },
   data() {
     return {
       showDialogTimer: false,
+      showDialogClick: false,
       addingOrden: false,
       ordens: [],
       loading: false,
@@ -152,12 +154,11 @@ export default {
   },
   methods: {
 
-    startTableTimer(){
-        this.showDialogTimer = true;
+    startTableTimer() {
+      this.showDialogTimer = true;
     },
-    showTableTime(){
-        this.showDialogTimer = true;
-        
+    showTableTime() {
+      this.showDialogClick = true;
     },
     async disabledTable(id) {
       try {
@@ -299,7 +300,7 @@ export default {
           text: "La mesa no tiene ordenes",
           icon: "warning"
         }); */
-        this.$toast.warning("La mesa no tiene ordenes");
+        this.$toast.warning("La mesa billor no tiene ordenes");
         return;
       }
 

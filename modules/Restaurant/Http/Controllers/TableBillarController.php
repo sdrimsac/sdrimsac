@@ -14,6 +14,8 @@ use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use App\Events\MessageEvent;
+use Carbon\Carbon;
+use Modules\Restaurant\Models\Billar;
 
 class TableBillarController extends Controller
 {
@@ -111,6 +113,25 @@ class TableBillarController extends Controller
             'number' => 'Nº Mesa Billar',
         ];
     }
+    public  function desocupied($id)
+    {
+        $hotel_rent_item = Table::find($id);
+        $table = $hotel_rent_item->table;
+        $table->status_table_id = 5;
+        $table->sendMessageDesocupied();
+        $table->save();
+        if ($hotel_rent_item && $hotel_rent_item->is_month_rent) {
+            $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
+            $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
+            $hotel_rent_item->payment_status = "Pagado";
+            $hotel_rent_item->save();
+        }
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Habitación desocupada'
+        ];
+    }
     public function recordsByArea($id)
     {
         $user = auth()->user();
@@ -144,7 +165,6 @@ class TableBillarController extends Controller
             'success' => true,
             'data' => $tables
         ];
-        /* dump($tables); */
     }
     public function get_tables()
     {
@@ -153,9 +173,8 @@ class TableBillarController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
-        $tables = Table::where('has_billar', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+        $tables = Table::where('has_billar', true)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
             ->get();
-
         return compact('tables');
     }
     public function get_ordens($id)
@@ -166,13 +185,6 @@ class TableBillarController extends Controller
 
         return compact('ordens');
     }
-    /* public function records()
-    {
-
-        // $this->checkTables();
-        $records = Table::where('has_billar', true);
-        return new TableCollection($records->paginate(config('tenant.items_per_page')));
-    } */
     public function records(Request $request)
     {
         $column = $request->input('column');
@@ -248,14 +260,14 @@ class TableBillarController extends Controller
         $numbers = $request->input('numbers');
         //check in Table if exist the number
         $tables = Table::whereIn('number', $numbers)
-            ->where('has_billar', false)
+            ->where('has_billar', true)
             ->where('establishment_id', $request->input('establishment_id'))
             ->where('area_id', $request->input('area_id'))
             ->get();
         if (count($tables) > 0) {
             return [
                 'success' => false,
-                'message' => 'Ya existen mesas con los números ingresados'
+                'message' => 'Ya existen mesas billar con los números ingresados'
             ];
         }
         foreach ($numbers as $number) {
@@ -283,6 +295,33 @@ class TableBillarController extends Controller
             'success' => true,
             'message' => ($id) ? 'Mesa Billar actualizada con éxito' : 'Mesa Billar creada con éxito'
         ];
+    }
+    public function store2(TableRequest $request)
+    {
+        $request->validate([
+            'reference' => 'required|string',
+        ]);
+
+        $table_id = auth()->user()->table_id;
+
+        $date_start = Carbon::now()->toDateString();
+
+        $time_start = Carbon::now()->toTimeString();
+
+        $minutes = 0;
+
+        $casino = Billar::create([
+            'table_id' => $table_id,
+            'date_start' => $date_start,  
+            'time_start' => $time_start,  
+            'minutes' => $minutes,
+            'reference' => $request->reference,
+        ]);
+
+        return response()->json([
+            'message' => 'Datos guardados exitosamente',
+            'data' => $casino,
+        ], 201);
     }
     public function destroy($id)
     {

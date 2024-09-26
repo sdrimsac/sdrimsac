@@ -1675,7 +1675,6 @@ class MaderaController extends Controller
         $users = array();
         $configuration = Configuration::select(['health_network'])
             ->first();
-            /* dump($configuration); */
         $turnsTable = Turns::where('turn_active',  1)->get();
         switch ($type) {
             case 'admin':

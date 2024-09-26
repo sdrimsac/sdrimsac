@@ -4,7 +4,7 @@
     @close="close"
     append-to-body
     :visible="showDialog"
-    title="INGRESE REFERECIA"
+    title="modal del timer regresivo"
     close-on-click-modal
     width="25%"
   >
@@ -17,22 +17,43 @@
               <el-input type="text" v-model="imput" clearable></el-input>
             </div>
           </div>
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="control-label">
-                <i class="fas fa-align-left"></i> Ingrese Tiempo
-              </label>
-              <el-input type="time">
-                <i slot="prefix" class="el-icon-edit-outline"></i>
-              </el-input>
-              <small class="form-control-feedback"></small>
-            </div>
+          <div>
+            <el-card>
+              <el-card>
+                <div class="card-body text-center">{{ formattedTime}}</div>
+              </el-card>
+              <el-card>
+                <div class="text-center">
+                  <label>Ingrese Hora</label>
+                  <el-input-number v-model="inputHours" :min="0" label="Horas" placeholder></el-input-number>
+                </div>
+              </el-card>
+              <el-card>
+                <div class="text-center">
+                  <label>Ingrese Minutos</label>
+                  <el-input-number
+                    v-model="inputMinutes"
+                    :min="0"
+                    :max="59"
+                    label="Minutos"
+                    placeholder
+                  ></el-input-number>
+                </div>
+              </el-card>
+              <el-card>
+                <div class="text-center">
+                  <el-button type="primary" @click="startTimer" :disabled="isRunning">Iniciar</el-button>
+                  <el-button type="danger" @click="stopTimer" :disabled="!isRunning">Detener</el-button>
+                  <el-button type="warning" @click="resetTimer">Reiniciar</el-button>
+                </div>
+              </el-card>
+            </el-card>
           </div>
         </div>
       </div>
       <div class="form-actions text-end pt-2 pb-2">
         <el-button icon="fas fa-times" @click.prevent="close()">Cancelar</el-button>
-        <el-button type="primary" native-type="submit">Iniciar tiempo</el-button>
+        <el-button type="primary" @click="startTimer" native-type="submit">Iniciar tiempo</el-button>
       </div>
     </form>
   </el-dialog>
@@ -40,14 +61,55 @@
 
 <script>
 export default {
-  props: ["showDialog", "form"],
+  props: ["showDialog", "form", "table"],
   data() {
     return {
       imput: "",
-      timerInicial: false
+      totalTime: 0,
+      interval: null,
+      isRunning: false,
+      inputHours: 0,
+      inputMinutes: 0
     };
   },
+  computed: {
+    formattedTime() {
+      let hours = Math.floor(this.totalTime / 3600);
+      let minutes = Math.floor((this.totalTime % 3600) / 60);
+      let seconds = this.totalTime % 60;
+      return `${hours < 10 ? "0" : ""}${hours}:${
+        minutes < 10 ? "0" : ""
+      }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }
+  },
   methods: {
+    startTimer() {
+      if (!this.isRunning && (this.inputHours > 0 || this.inputMinutes > 0)) {
+        this.isRunning = true;
+        this.totalTime = this.inputHours * 3600 + this.inputMinutes * 60;
+        this.interval = setInterval(() => {
+          if (this.totalTime > 0) {
+            this.totalTime--;
+          } else {
+            this.stopTimer();
+            this.$message({
+              message: "¡El tiempo ha terminado!",
+              type: "warning"
+            });
+          }
+        }, 1000);
+      }
+    },
+    stopTimer() {
+      clearInterval(this.interval);
+      this.isRunning = false;
+    },
+    resetTimer() {
+      this.stopTimer();
+      this.totalTime = 0;
+      this.inputHours = 0;
+      this.inputMinutes = 0;
+    },
     initForm() {
       this.errors = {};
       this.form = {
@@ -56,14 +118,40 @@ export default {
       };
     },
     open() {
-      this.timerInicial = this.form.timerInicial;
+      console.log("Datos recibidos en table:", this.table);
+      console.log("datos recibidos de", this.form);
     },
-    async submit() {
+    /* async submit() {
       try {
-        const response = await this.$http.get("/caja/casino/store");
+        const response = await this.$http.get("/caja/tableBillar/store2");
         this.timerInicial = response.data.data;
       } catch (error) {
         console.error("Error en la solicitud:", error);
+      }
+    }, */
+    async submit() {
+      try {
+        const now = new Date();
+        const data = {
+          reference: this.imput,
+          time_start: this.inputHours,
+          minutes: this.inputMinutes
+        };
+
+        const response = await this.$http.post(`/caja/billar/${this.resource}`, data);
+
+        this.$message({
+          message: "Datos enviados correctamente",
+          type: "success"
+        });
+
+        this.close();
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+        this.$message({
+          message: "Hubo un error al enviar los datos",
+          type: "error"
+        });
       }
     },
     close() {

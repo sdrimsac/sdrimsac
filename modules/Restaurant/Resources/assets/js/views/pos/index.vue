@@ -25,7 +25,7 @@
                       title
                       data-bs-original-title="Item Count"
                       aria-label="Item Count"
-                    >Menu De Acciones</span>
+                    >Menú De Acciones</span>
                   </button>
 
                   <template

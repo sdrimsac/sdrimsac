@@ -293,11 +293,11 @@
     }
 
     .custom-button:hover {
-        transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
+        transform: scale(1.05);
     }
 
     .custom-button:active {
-        transform: scale(0.95); /* Reduce ligeramente el tamaño al hacer clic */
+        transform: scale(0.95);
     }
 </style>
 
@@ -414,6 +414,7 @@ export default {
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {
                     this.areas = response.data.data;
+                    console.log("rfrsfsdf", this.areas);
                 });
             this.$http
                 .get(
@@ -421,6 +422,7 @@ export default {
                 )
                 .then(response => {
                     this.statusTable = response.data.data;
+                    console.log("aaaaaa", this.statusTable);
                 });
             this.$http.get(`/caja/rooms/types`).then(response => {
                 this.types = response.data.data;
