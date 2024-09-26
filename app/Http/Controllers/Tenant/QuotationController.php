@@ -99,7 +99,9 @@ class QuotationController extends Controller
                     $item_restore['type_quotation'] = $unit_type;
                 }
                 if (isset($it->item->categoriaMadera)) {
+                    $key = Str::random(10);
                     $item_restore['categoriaMadera'] = $it->item->categoriaMadera;
+                    $item_restore['categoriaMadera']['key'] = $key;
                 }
                 $items_restore[] = $item_restore;
             }
