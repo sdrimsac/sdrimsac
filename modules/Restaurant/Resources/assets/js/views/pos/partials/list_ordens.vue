@@ -624,26 +624,32 @@
                 <el-option
                   v-for="(item,
                                     index) in commercialTreatments"
-                  :key="index"
-                  :label="item.description"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </template>
-            <template
-             v-if="isSellerConsolidated"
-                        >
-                            <!-- <el-select v-model="form.customer_id" filterable remote class="border-left rounded-left border-info" popper-class="el-select-customers"
-                                        dusk="customer_id"
-                                        placeholder="Escriba el nombre o número de documento del cliente"
-                                        :remote-method="searchRemoteCustomers"
-                                        :loading="loading_search"
-                                        @change="changeCustomer"
-                                        @keyup.enter.native="keyupCustomer">
-
-                                        <el-option v-for="option in customers" :key="option.id" :value="option.id" :label="option.description"></el-option>
-
-                                    </el-select> -->
+                                    :key="index"
+                                    :label="item.description"
+                                    :value="item.id"
+                                ></el-option>
+                            </el-select>
+                        </template>
+                        <template v-if="isSellerConsolidated">
+                            <el-select
+                                v-model="customer_search_id"
+                                filterable
+                                remote
+                                class="border-left rounded-left border-info"
+                                popper-class="el-select-customers"
+                                dusk="customer_search_id"
+                                placeholder="Escriba el nombre o número de documento del cliente"
+                                :remote-method="searchRemoteCustomers"
+                                :loading="loading_search"
+                                @change="changeCustomer"
+                            >
+                                <el-option
+                                    v-for="option in customersSearch"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
                         </template>
             <template>
               <el-input
@@ -2241,126 +2247,129 @@ export default {
     "exchange_rate_sale"
   ],
 
-  data() {
-    return {
-      showConsolidated: false,
-      // exchange_rate_sale: 1,
-      currency_id: "S/",
-      cashAvailable: 0,
-      showColorSize: false,
-      currentColorSize: null,
-      loadingCommercialTreatment: false,
-      ordenNumber: null,
-      timer: null,
-      promotionCode: null,
-      currentArea: null,
-      showCreditListDialog: false,
-      showCreditListModal: false,
-      creditListAmount: 0,
-      commercialTreatmentId: null,
-      quotation_stock: false,
-      name_pdf: null,
-      showChangeName: false,
-      isConsignment: false,
-      showConsignmentForm: false,
-      deleteGeneralOrden: false,
-      deleteOrdenLoading: false,
-      reasonToDelete: null,
-      ordenIdToDelete: null,
-      showPinRequest: false,
-      showCreditForm: false,
-      showQuotationForm: false,
-      limitQty: 0,
-      showTransfersDialog: false,
-      descriptionTemp: null,
-      showChangeDescriptionVariation: false,
-      variation: false,
-      showObservations: false,
-      boxOperation: "Abrir",
-      showDialogCash: false,
-      tags: [],
-      showSeries: false,
-      current: null,
-      showDialogClose: false,
-      showPendingOrdens: false,
-      ordenLoading: false,
-      listApart: false,
-      apart: false,
-      numberCustomerApart: null,
-      ordenInBox: [],
-      pin: "",
-      totalOrdenItems: 0.0,
-      total: 0.0,
-      disableSend: false,
-      totalOrden: 0.0,
-      loading: false,
-      commands_fisico: "",
-      AllSelected: false,
-      showDialogPing: false,
-      dialogLocalObservation: false,
-      currentLocalOrden: null,
-      localObservation: null,
-      dialogObservation: false,
-      observation: null,
-      loadingObservation: false,
-      currentOrden: null,
-      form_ped: {},
-      to_carry: false,
-      optionsMenu: [],
-      foodDefault: null,
-      showExpensesIncomes: false,
-      showLotes: false,
-      ordenLot: null,
-      currentIdx: null,
-      currentItem: null,
-      currentSeries: [],
-      screenWidth: 0,
-      printing: false,
-      foodDefaults: [],
-      currentFoodDefault: null,
-      commercialTreatments: [],
-      currentCommercialTreatment: null,
-      isHotel: false
-    };
-  },
+    data() {
+        return {
+            showConsolidated: false,
+            // exchange_rate_sale: 1,
+            currency_id: "S/",
+            cashAvailable: 0,
+            showColorSize: false,
+            currentColorSize: null,
+            loadingCommercialTreatment: false,
+            ordenNumber: null,
+            timer: null,
+            promotionCode: null,
+            currentArea: null,
+            showCreditListDialog: false,
+            showCreditListModal: false,
+            creditListAmount: 0,
+            commercialTreatmentId: null,
+            quotation_stock: false,
+            name_pdf: null,
+            showChangeName: false,
+            isConsignment: false,
+            showConsignmentForm: false,
+            deleteGeneralOrden: false,
+            deleteOrdenLoading: false,
+            reasonToDelete: null,
+            ordenIdToDelete: null,
+            showPinRequest: false,
+            showCreditForm: false,
+            showQuotationForm: false,
+            limitQty: 0,
+            showTransfersDialog: false,
+            descriptionTemp: null,
+            showChangeDescriptionVariation: false,
+            variation: false,
+            showObservations: false,
+            boxOperation: "Abrir",
+            showDialogCash: false,
+            tags: [],
+            showSeries: false,
+            current: null,
+            showDialogClose: false,
+            showPendingOrdens: false,
+            ordenLoading: false,
+            listApart: false,
+            apart: false,
+            numberCustomerApart: null,
+            ordenInBox: [],
+            pin: "",
+            totalOrdenItems: 0.0,
+            total: 0.0,
+            disableSend: false,
+            totalOrden: 0.0,
+            loading: false,
+            commands_fisico: "",
+            AllSelected: false,
+            showDialogPing: false,
+            dialogLocalObservation: false,
+            currentLocalOrden: null,
+            localObservation: null,
+            dialogObservation: false,
+            observation: null,
+            loadingObservation: false,
+            currentOrden: null,
+            form_ped: {},
+            to_carry: false,
+            optionsMenu: [],
+            foodDefault: null,
+            showExpensesIncomes: false,
+            showLotes: false,
+            ordenLot: null,
+            currentIdx: null,
+            currentItem: null,
+            currentSeries: [],
+            screenWidth: 0,
+            printing: false,
+            foodDefaults: [],
+            currentFoodDefault: null,
+            commercialTreatments: [],
+            currentCommercialTreatment: null,
+            isHotel: false,
+            customersSearch: [],
+            loading_search: false,
+            customer_search_id: null,
+        };
+    },
 
-  watch: {
-    isHotelArea(value, __) {
-      this.isHotel = value;
-      this.setOptionMenu();
-    },
-    variationShow(variat, _) {
-      if (this.variation && !variat) {
-        this.variation = false;
-      }
-    },
-    /*  aqui se puede modificar esto  */
-    itemDefault(newItem, _) {
-      this.foodDefault = this.itemDefault;
-      this.foodDefault.quantity = 1;
-      /* this.foodDefault.quantity = newItem.quantity ? newItem.quantity : 1; */
-      this.foodDefault.sale_unit_price = Number(
-        this.foodDefault.sale_unit_price
-      );
-      this.foodDefaults = [{ ...this.foodDefault }];
-    },
-    cash_id(newCash, _) {
-      this.boxOperation = newCash ? "Cerrar" : "Abrir";
-      this.optionsMenu[2].title = [this.boxOperation, " Caja"];
-    },
-    ordens(newOrdens, _) {
-      console.log("aqui=");
-      if (newOrdens == null) return;
-      this.calculateTotal(newOrdens);
-    },
-    localOrden(newOrdens, _) {
-      this.calculateTotal(this.ordens);
-    }
-  },
-    computed:{
-        isSellerConsolidated () {
-            return this.isSeller && this.configuration.consolidated_quotations;
+    watch: {
+        isHotelArea(value, __) {
+            this.isHotel = value;
+            this.setOptionMenu();
         },
+        variationShow(variat, _) {
+            if (this.variation && !variat) {
+                this.variation = false;
+            }
+        },
+        /*  aqui se puede modificar esto  */
+        itemDefault(newItem, _) {
+            this.foodDefault = this.itemDefault;
+            this.foodDefault.quantity = 1;
+            /* this.foodDefault.quantity = newItem.quantity ? newItem.quantity : 1; */
+            this.foodDefault.sale_unit_price = Number(
+                this.foodDefault.sale_unit_price
+            );
+            this.foodDefaults = [{ ...this.foodDefault }];
+        },
+        cash_id(newCash, _) {
+            this.boxOperation = newCash ? "Cerrar" : "Abrir";
+            this.optionsMenu[2].title = [this.boxOperation, " Caja"];
+        },
+        ordens(newOrdens, _) {
+            console.log("aqui=");
+            if (newOrdens == null) return;
+            this.calculateTotal(newOrdens);
+        },
+        localOrden(newOrdens, _) {
+            this.calculateTotal(this.ordens);
+        }
+    },
+    computed: {
+        isSellerConsolidated() {
+            return this.isSeller && this.configuration.consolidated_quotations;
+        }
     },
   async mounted() {
     this.quotation_stock = this.isSeller;
@@ -2422,49 +2431,50 @@ export default {
       };
     });
 
-    await this.getTags();
-    this.getCommercialTreatments();
-    this.checkCashAvailable();
-  },
-  methods: {
+        await this.getTags();
+        this.getCommercialTreatments();
+        this.checkCashAvailable();
+    },
+    methods: {
+        changeCustomer() {},
         searchRemoteCustomers(input) {
+            if (input.length > 0) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
 
-                if (input.length > 0) {
-                    this.loading_search = true
-                    let parameters = `input=${input}`
-
-                    this.$http.get(`/documents/search/customers?${parameters}`)
-                            .then(response => {
-                                this.customersSearch = response.data.customers
-                                this.loading_search = false
-                                /* if(this.customers.length == 0){this.allCustomers()} */
-                                this.input_person.number=(this.customers.length==0)? input : null
-                            })
-                } else {
-                    this.allCustomers()
-                    this.input_person.number= null
-                }
-
-            },
-    consolidatedQuotations() {
-      this.showConsolidated = true;
-    },
-    changeCurrency() {
-      // console.log(this.currency_id);
-      this.$emit("updateCurrencyChoice", this.currency_id);
-      this.calculateTotal();
-    },
-    async savePriceProduct(idx) {
-      try {
-        await this.$confirm(
-          "¿Está seguro de guardar el precio del producto?",
-          "Atención",
-          {
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        );
+                this.$http
+                    .get(`/documents/search/customers?${parameters}`)
+                    .then(response => {
+                        this.customersSearch = response.data.customers;
+                        this.loading_search = false;
+                        /* if(this.customers.length == 0){this.allCustomers()} */
+                        this.input_person.number =
+                            this.customers.length == 0 ? input : null;
+                    });
+            } else {
+                this.allCustomers();
+                this.input_person.number = null;
+            }
+        },
+        consolidatedQuotations() {
+            this.showConsolidated = true;
+        },
+        changeCurrency() {
+            // console.log(this.currency_id);
+            this.$emit("updateCurrencyChoice", this.currency_id);
+            this.calculateTotal();
+        },
+        async savePriceProduct(idx) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de guardar el precio del producto?",
+                    "Atención",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
 
         let orden = this.localOrden[idx];
         console.log("🚀 ~ savePriceProduct ~ orden:", orden);
@@ -3839,30 +3849,28 @@ export default {
         }
       });
 
-      const arregloResultado = Object.values(resultado);
-      return arregloResultado;
-    },
-    formatUrlImage(url) {
-      if (!url) return;
-      let formated = "storage/uploads/items/" + url;
-      return `/${formated}`;
-    },
-    getPriceCurrency(price, currency_id) {
-      let localCurrencyId = this.currency_id == "S/" ? "PEN" : "USD";
-      if (localCurrencyId == currency_id) {
-        return price;
-      }
-      if (localCurrencyId == "PEN" && currency_id != "PEN") {
-        return price * this.exchange_rate_sale;
-      }
-      if (localCurrencyId != "PEN" && currency_id == "PEN") {
-        return price / this.exchange_rate_sale;
-      }
-    },
-    calculateTotal(w = null) {
-      console.log(this.localOrden);
-      console.log(this.ordens);
-      this.totalOrdenItems = 0.0;
+            const arregloResultado = Object.values(resultado);
+            return arregloResultado;
+        },
+        formatUrlImage(url) {
+            if (!url) return;
+            let formated = "storage/uploads/items/" + url;
+            return `/${formated}`;
+        },
+        getPriceCurrency(price, currency_id) {
+            let localCurrencyId = this.currency_id == "S/" ? "PEN" : "USD";
+            if (localCurrencyId == currency_id) {
+                return price;
+            }
+            if (localCurrencyId == "PEN" && currency_id != "PEN") {
+                return price * this.exchange_rate_sale;
+            }
+            if (localCurrencyId != "PEN" && currency_id == "PEN") {
+                return price / this.exchange_rate_sale;
+            }
+        },
+        calculateTotal(w = null) {
+            this.totalOrdenItems = 0.0;
 
       this.total = 0.0;
       this.totalOrden = 0.0;

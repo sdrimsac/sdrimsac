@@ -178,7 +178,7 @@ export default {
                 unitPrice: 0,
                 fot: 0,
                 price: 0,
-                total_price:0,
+                total_price: 0,
                 key: null,
                 quantity: 1
             }
@@ -264,22 +264,30 @@ export default {
                 cm => cm.id == unit.selectedCategoria
             );
             if (cat_madera) {
+                console.log("🚀 ~ filterRelatedData ~ cat_madera:", cat_madera)
                 this.unit.sumTotals = cat_madera.sum_totals || false;
             }
             if (unit.selectedCategoria) {
-
                 this.medida_alto_select = this.medida_alto.filter(
                     alto => alto.categoria_madera_id === unit.selectedCategoria
                 );
                 if (this.medida_alto_select.length > 0) {
-                    this.unit.selectedLargo = this.medida_alto_select[0].alto;
+                    if (cat_madera && cat_madera.largo_default) {
+                        this.unit.selectedLargo = cat_madera.largo_default;
+                    } else {
+                        this.unit.selectedLargo = this.medida_alto_select[0].alto;
+                    }
                 }
                 this.medida_ancho_select = this.medida_ancho.filter(
                     ancho =>
                         ancho.categoria_madera_id === unit.selectedCategoria
                 );
                 if (this.medida_ancho_select.length > 0) {
-                    this.unit.selectedAncho = this.medida_ancho_select[0].ancho;
+                    if (cat_madera && cat_madera.ancho_default) {
+                        this.unit.selectedAncho = cat_madera.ancho_default;
+                    } else {
+                        this.unit.selectedAncho = this.medida_ancho_select[0].ancho;
+                    }
                 }
                 this.medida_grosor_select = this.medida_grosor.filter(
                     grosor =>
@@ -287,7 +295,11 @@ export default {
                 );
 
                 if (this.medida_grosor_select.length > 0) {
-                    this.unit.selectedGrosor = this.medida_grosor_select[0].grosor;
+                    if (cat_madera && cat_madera.grosor_default) {
+                        this.unit.selectedGrosor = cat_madera.grosor_default;
+                    } else {
+                        this.unit.selectedGrosor = this.medida_grosor_select[0].grosor;
+                    }
                 }
             }
         },
@@ -304,7 +316,7 @@ export default {
             toAdd.quantity = this.unit.quantity;
             toAdd.sumTotals = this.unit.sumTotals;
             toAdd.fot = this.totalPie; // Asignar el total de PIE
-            toAdd.price = this.totalPrice/this.unit.quantity;
+            toAdd.price = this.totalPrice / this.unit.quantity;
             console.log("Datos a enviar (con cantidad):", toAdd);
             this.$emit("addCategoriaMadera", toAdd, this.index);
             this.resetForm();
@@ -317,7 +329,7 @@ export default {
             this.open();
         },
         open() {
-              this.unit = {
+            this.unit = {
                 selectedCategoria: null,
                 selectedLargo: null,
                 sumTotals: false,
@@ -327,9 +339,9 @@ export default {
                 unitPrice: 0,
                 fot: 0,
                 price: 0,
-                total_price:0,
+                total_price: 0,
                 key: null,
-                
+
                 quantity: 1
             };
             if (this.item) {

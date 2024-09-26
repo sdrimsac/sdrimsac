@@ -4775,6 +4775,11 @@ export default {
                 lt => lt.warehouse_id == this.worker.establishment_id
               );
             }
+            if(d.categoria_madera_item.length > 0){
+              d.categoria_madera_item = d.categoria_madera_item.filter(
+                lt => Number(lt.precio) > 0
+              );
+            }
             return d;
           });
           this.listFoods = this.allLocalFoods;
