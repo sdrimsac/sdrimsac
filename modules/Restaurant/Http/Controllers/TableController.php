@@ -156,7 +156,6 @@ class TableController extends Controller
         $this->checkTables($establishment_id);
         $tables = Table::where('is_room', false)->where('has_billar', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
             ->get();
-            dump($tables);
 
         return compact('tables');
     }
