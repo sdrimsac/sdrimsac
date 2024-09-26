@@ -96,7 +96,7 @@ class FoodCollection extends ResourceCollection
                 //     }
                 // }
             }
-            $categoria_madera_item = $item->categoria_madera;
+            $categoria_madera_item = $item->categoria_madera->where('precio', '!=', null)->where('precio', '!=', 0)->first();
             if ($configuracion->consolidated_quotations) {
                 $item_id = $item->id;
                 $unit_type = ItemUnitType::where('item_id', $item_id)->first();
