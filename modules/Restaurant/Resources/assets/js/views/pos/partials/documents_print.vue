@@ -8,7 +8,8 @@
         v-loading="loading"
         title="Imprimir documento"
     >
-        <div class="card p-2">
+        <div class="">
+            <div class="">
             <div class="d-flex">
                 <div class="col-6 p-1 col-md-3">
                     <el-select v-model="typeSearch">
@@ -154,6 +155,7 @@
             <document-salud-modal
                 :showDialog.sync="showDialogDocumentSalud"
             ></document-salud-modal>
+            </div>
         </div>
     </el-dialog>
 </template>

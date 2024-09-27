@@ -440,12 +440,8 @@ export default {
                 .post(`${this.resource}`, this.form)
                 .then(response => {
                     if (response.data.success) {
-                        // this.$toast.success(response.data.message);
-                        this.$showSAlert(
-                            "ok",
-                            response.data.message,
-                            "<i class='fa fa-cogs'></i>"
-                        );
+                        this.$toast.success(response.data.message);
+                      
                         this.$eventHub.$emit("reloadData");
                         this.close();
                     } else {

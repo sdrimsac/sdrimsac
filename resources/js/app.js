@@ -36,30 +36,32 @@ Vue.prototype.$setStorage = function(name, obj) {
 /* Vue toast (notificaciones personalizadas )  */
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 const options = {
     timeout: 5000
 };
 
 // Vue.use(Swal);
-Vue.prototype.$showSAlert = (title, text, iconHtml, backgroundColor = null) =>{
+Vue.prototype.$showSAlert = (title, text, type = "success") => {
     Swal.fire({
-        title: `<div style="text-align: center;">${title}</div>`, // Título en mayúsculas y centrado
-        html: `
-    <div style="display: flex; align-items: center; justify-content: center;">
-        ${iconHtml}
-    </div>
-    <p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
+        title: title.toUpperCase(), // Título en mayúsculas y centrado
+        html: `<p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
 `, // Texto normal
-        timer: 2000, // Duración de 2 segundos
+        timer: 1000000, // Duración de 2 segundos
         showConfirmButton: false,
-        background: backgroundColor ? backgroundColor : undefined,
         customClass: {
-            popup: 'swal2-no-border', // Clase personalizada
+            popup: "swal2-no-border"
+
+            // Clase personalizada
         },
-        position: 'center'
+        didOpen: popup => {
+         
+            popup.style.zIndex = "2010"; // Ajusta este valor según necesites
+        },
+        position: "center",
+        icon: type
     });
-}
+};
 
 Vue.use(Toast, options);
 
@@ -218,9 +220,7 @@ const app = new Vue({
 
     components: {
         "tenant-promotions-document-index": () =>
-            import(
-                "@views/promotions_document/index.vue"
-            ),
+            import("@views/promotions_document/index.vue"),
         "tenant-report-methods-index": () =>
             import(
                 "../../modules/Report/Resources/assets/js/views/methods/index.vue"
@@ -596,7 +596,7 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/reports/rooms.vue"
             ),
-            
+
         "tenant-login-default": () => import("./views/login/index.vue"),
 
         "cash-report": () =>

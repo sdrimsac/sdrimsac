@@ -42,6 +42,14 @@
         @endif
     </title>
     @laravelPWA
+
+    <style type="text/css">
+         .swal2-container.swal2-center.swal2-backdrop-show {
+            z-index: 3000 !important;
+        }
+
+        
+    </style>
 </head>
 
 <body>
@@ -58,8 +66,8 @@
                             @if ($vc_company->logo)
                                 <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}" />
                             @else
-                                <img style="max-width: 80%  ; max-height: 80% "
-                                    src="{{ asset('logo/logo.png') }}" class="icono" />
+                                <img style="max-width: 80%  ; max-height: 80% " src="{{ asset('logo/logo.png') }}"
+                                    class="icono" />
                             @endif
 
 
@@ -620,18 +628,16 @@
                             registration.unregister();
                         }
                     });
-                   
 
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         });
-      </script>
-
-    <script>
-   
     </script>
+
+    <script></script>
 
 
 </body>

@@ -3399,7 +3399,7 @@ export default {
                 iconHtml = `<img src="${iconOrImgSrc}" alt="${optionName} Logo" class="payment-logo" style="width: 80px; height: auto; vertical-align: middle; margin-right: 10px; border-radius: 0;" />`;
             }
 
-            console.log('Enviando datos a la API:', this.form, `/${this.resource}`);
+            /* console.log('Enviando datos a la API:', this.form, `/${this.resource}`); */
 
             this.loading_submit = true;
             try {

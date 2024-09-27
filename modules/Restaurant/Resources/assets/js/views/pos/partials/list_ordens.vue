@@ -3753,6 +3753,7 @@ export default {
       return pass;
     },
     async payOrden() {
+
       if (!this.checkIfHasZeroTotal()) {
         this.$toast.error(
           "No puede realizar una venta de productos con total 0"

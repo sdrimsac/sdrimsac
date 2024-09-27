@@ -526,6 +526,9 @@
     </div>
 
     <style>
+      .swal2-container.swal2-center.swal2-backdrop-show {
+            z-index: 3000 !important;
+        }
         @media (min-width: 320px) and (max-width: 768px) {
 
             .card .card-body,

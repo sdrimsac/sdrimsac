@@ -958,6 +958,7 @@ export default {
             });
         },
         submit() {
+
             this.nuevoMetodo();
             if (!this.form.seller_id) {
                 this.$toast.error("Debe seleccionar un asesor");

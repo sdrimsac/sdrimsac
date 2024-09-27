@@ -1907,6 +1907,8 @@ export default {
       this.loading = false;
     },
     async create() {
+   
+      console.log("dsadasda")
       /* console.log("🚀 ~ create ~ this.configuration:", this.configuration);
       console.log("🚀 ~ create ~ this.configuration:", this.allEstablishment); */
       this.categoria_madera = this.categoria_madera.map(c => {

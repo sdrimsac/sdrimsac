@@ -102,6 +102,8 @@ export default {
             }, 500);
         },
         open() {
+
+
             console.log("open");
             this.getRecords();
         },

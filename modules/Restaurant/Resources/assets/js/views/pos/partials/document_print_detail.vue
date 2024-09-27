@@ -1,5 +1,12 @@
 <template>
-    <div v-loading="loading">
+    <div v-loading="loading" class="card-body">
+        <el-pagination
+            @current-change="getRecords"
+            layout="total, prev, pager, next"
+            :total="pagination.total"
+            :current-page.sync="pagination.current_page"
+            :page-size="pagination.per_page"
+        ></el-pagination>
         <div class="container table-responsive col-md-12">
             <table
                 class="table table-hover table-striped table-condensed  table-responsive"
@@ -505,13 +512,17 @@
                                     style="margin-bottom:3px;"
                                     @click="clickOpenWhatsapp(data)"
                                 >
-                                    <i
-                                        class="fab fa-whatsapp"
+                                <el-tooltip class="item" effect="dark" content="Enviar a WhatsApp" placement="top-start">
+                                    <i 
+                                        class="fab fa-whatsapp fa-lg"
                                         aria-hidden="true"
                                     ></i>
+                                </el-tooltip>
+                                    
                                 </el-button>
 
                                 <el-button
+                                    type="primary"
                                     v-if="
                                         data.state_type_id != '11' &&
                                             data.state_type_id != '13' &&
@@ -526,9 +537,14 @@
                                         )
                                     "
                                 >
-                                    <i class="fas fa-print"></i>
+                                <el-tooltip class="item" effect="dark" content="Reimprimir Documento" placement="top-start">
+                                    <i class="fas fa-print text-white fa-lg"></i>
+                                </el-tooltip>
+                                    
                                 </el-button>
                                 <el-button
+                                
+                                    type="danger"
                                     size="mini"
                                     plain
                                     @click="
@@ -538,7 +554,9 @@
                                         )
                                     "
                                 >
-                                    <i class="far fa-file-pdf"></i>
+                                <el-tooltip class="item" effect="dark" content="Previsualización de pdf (Descargar)" placement="top-start">
+                                    <i class="far fa-file-pdf  text-white fa-lg"></i>
+                                </el-tooltip>
                                 </el-button>
                             </template>
                         </td>
@@ -688,9 +706,9 @@
             :current-page.sync="pagination.current_page"
             :page-size="pagination.per_page"
         ></el-pagination>
-        <br /><br /><br /><br />
+        <!-- <br /><br /><br /><br />
         <br />
-        <br />
+        <br /> -->
         <whatsapp-modal
             :documentNumber="currentNumber"
             :company="company"
