@@ -29,6 +29,7 @@ class LotItemsImport implements ToCollection
         unset($rows[0]);
         foreach ($rows as $row) {
             $internal_id = $row[0];
+            $internal_id = trim($internal_id);
             $serie = $row[1];
             $date = Carbon::now()->format('Y-m-d');
             $warehouse_id = request('warehouse_id');
