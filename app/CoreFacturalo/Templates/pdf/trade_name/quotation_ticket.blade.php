@@ -254,6 +254,35 @@
                 </td>
             </tr>
         @endif
+        @php
+            $fot_totals = 0;
+            $quantity_totals = 0;
+        @endphp
+        @foreach ($document->items as $row)
+            @php
+            // Aquí calculas los totales en base a los items
+                if (isset($row->item->categoriaMadera)) {
+                    $madera = $row->item->categoriaMadera;
+                    $ancho = $madera->selectedAncho;
+                    $largo = $madera->selectedLargo;
+                    $grosor = $madera->selectedGrosor;
+                $quantity_totals += $row->quantity;
+                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                }
+            @endphp
+        @endforeach
+        @if($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+        <tr>
+            <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                        <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        @endif
     </table>
 
     <table class="full-width mt-10 mb-10">
@@ -409,12 +438,6 @@
         </tbody>
     </table>
     <table class="full-width">
-        @if($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
-        <tr>
-            <td class="desc pt-3"> TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
-            <td colspan="2" class="desc pt-3"> TOTAL CANTIDAD: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
-        </tr>
-        @endif
         <tr>
 
             @foreach (array_reverse((array) $document->legends) as $row)

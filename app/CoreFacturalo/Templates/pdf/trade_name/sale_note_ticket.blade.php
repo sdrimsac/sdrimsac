@@ -452,16 +452,17 @@ contain"
                 @endisset
             </td>
         </tr>
-        @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == false)
-            <tr>
-                <td class="desc-9 border-top-bottom"> TOTAL PIES: <span
-                        class="font-bold">{{ number_format($fot_totals, 2) }}</span>
-                </td>
-                <td class="border-top-bottom"></td>
-                <td class="desc-9 border-top-bottom text-left"> TOTAL CANT: <span
-                    class="font-bold text-end">{{ number_format($quantity_totals, 2) }}</span>
-                </td>
-            </tr>
+        @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+        <tr>
+            <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                        <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
         @endif
     </table>
 

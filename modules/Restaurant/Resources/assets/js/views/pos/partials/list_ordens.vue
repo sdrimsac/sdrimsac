@@ -346,17 +346,7 @@
                 <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
                 <br/> Crédito
             </button>
-            <!-- <button
-                  alt="Cobrar La venta "
-                  v-if=" configuration.credits && isCreatingOrden == false"
-                  class="btn btn-light mt-2"
-                  type="button"
-                  @click="openCredit"
-                  style="max-height: 45px ; max-width: 80px;"
-                >
-                  <i class="fas fa-money-bill-wave" style="color: var(--primary) !important"></i>
-                  <br />Credito
-            </button> -->
+            
             <button
               v-if="
                                 isCreatingOrden == false &&
@@ -434,13 +424,13 @@
               <i class="fas fa-window-close" style="color: var(--primary) !important"></i>
               <br />Cancelar
             </button>
-            <!-- <div
+            <div
               v-if="localOrden.length != 0"
               class="dropdown-as-select d-inline-block mt-2"
               data-childselector="span"
             >
               <template v-if="!configuration.sale_note_credit_confirm">
-                <button
+                <!-- <button
                   class="btn p-0"
                   type="button"
                   data-bs-toggle="dropdown"
@@ -460,12 +450,12 @@
                     Mas Opciones..
                     <i class="fas fa-list" style="color: var(--primary) !important"></i>
                   </span>
-                </button>
+                </button> -->
                 <div
                   class="dropdown-menu dropdown-menu-start col-md-2 col-1"
                   style="max-width: 154px;"
                 >
-                  <div class="col-12">
+                   <!-- <div class="col-12">
                     <el-button
                       v-if="
                                                 isCreatingOrden == false &&
@@ -484,8 +474,8 @@
                       <div></div>
                     </el-button>
                     <div></div>
-                  </div>
-                  <div class="col-12">
+                  </div> -->
+                  <!-- <div class="col-12">
                     <el-button
                       v-if="
                              configuration.consignment &&
@@ -503,7 +493,7 @@
                       </div>
                       <div></div>
                     </el-button>
-                  </div>
+                  </div> -->
                   <div class="col-12">
                     <el-button
                       v-if="
@@ -537,7 +527,7 @@
                   <br />Credito
                 </button>
               </template>
-            </div> -->
+            </div>
           </div>
 
           <div v-if="clientTableData.table" class="col-md-3">

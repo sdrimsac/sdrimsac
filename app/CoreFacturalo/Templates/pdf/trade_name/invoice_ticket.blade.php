@@ -462,6 +462,23 @@
                 }
             @endphp
         @endif
+        @php
+            $fot_totals = 0;
+            $quantity_totals = 0;
+        @endphp
+        @foreach ($document->items as $row)
+            @php
+                // Aquí calculas los totales en base a los items
+                if (isset($row->item->categoriaMadera)) {
+                    $madera = $row->item->categoriaMadera;
+                    $ancho = $madera->selectedAncho;
+                    $largo = $madera->selectedLargo;
+                    $grosor = $madera->selectedGrosor;
+                    $quantity_totals += $row->quantity;
+                    $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                }
+            @endphp
+        @endforeach
         <tr>
             <td colspan="2" class="align-top">
                 <b>Observación:</b> {{ trim($document->observation) }}
@@ -479,6 +496,18 @@
                 @endisset
             </td>
         </tr>
+            @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+            <tr>
+                <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                            <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            @endif
         @if ($document->comercial_treatment)
             <tr>
                 <td colspan="2" class="align-top">
@@ -630,10 +659,10 @@
         <thead class="">
             <tr>
                 <th class="border-top-bottom desc-9 text-left">CANT.</th>
-                <th class="border-top-bottom desc-9 text-left">UNIDAD</th>
-                <th class="border-top-bottom desc-9 text-left">DESCRIPCIÓN</th>
+                <th class="border-top-bottom desc-9 text-left">UNID.</th>
+                <th class="border-top-bottom desc-9 text-center">DESCRIPCIÓN</th>
                 <th class="border-top-bottom desc-9 text-left">P.UNIT</th>
-                <th class="border-top-bottom desc-9 text-left">TOTAL</th>
+                <th class="border-top-bottom desc-9 text-end">TOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -688,22 +717,20 @@
                                 {{ $m_description }}
                             @endif --}}
                             @if (isset($row->item->categoriaMadera))
-                            -
-                            @php
-                                $madera = $row->item->categoriaMadera;
-                                $ancho = $madera->selectedAncho;
-                                $largo = $madera->selectedLargo;
-                                $grosor = $madera->selectedGrosor;
-                                $quantity_totals += $row->quantity;
-                                //if (isset($madera->sumTotals) && $madera->sumTotals == true) {
-                                  //  $quantity_totals += $row->quantity;
-                                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
-                                //}
-                                $m_description = "${grosor}x${ancho}x${largo}";
-                            @endphp
-                            {{ $m_description }} <br/>
+                                -
+                                @php
+                                    $madera = $row->item->categoriaMadera;
+                                    $ancho = $madera->selectedAncho;
+                                    $largo = $madera->selectedLargo;
+                                    $grosor = $madera->selectedGrosor;
+                                    $quantity_totals += $row->quantity;
+                                    $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                                    //}
+                                    $m_description = "${grosor}x${ancho}x${largo}";
+                                @endphp
+                                {{ $m_description }} <br />
                                 ({{ number_format($fot_totals, 2) }} PIES)
-                        @endif
+                            @endif
                             @if (isset($row->item->lots))
                                 @foreach ($row->item->lots as $lot)
                                     <br />{!! $lot->series !!}
@@ -859,9 +886,8 @@
             <tr>
                 <td class="desc pt-3"> TOTAL PIES: <span
                         class="font-bold">{{ number_format($fot_totals, 2) }}</span>
-                        TOTAL CANTIDAD: <span
-                        class="font-bold">{{ number_format($quantity_totals, 2) }}</span>
-                    </td>
+                    TOTAL CANTIDAD: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span>
+                </td>
             </tr>
         @endif
         <tr>
