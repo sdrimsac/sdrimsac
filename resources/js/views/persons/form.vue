@@ -728,6 +728,53 @@
                         </div>
                     </div>
                 </template>
+                <div class="row">
+                    <div class="col-8 col-lg-8 col-xl-8">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Politica de precio
+                            </label>
+                            <el-select
+                                v-model="item_unit_type"
+                                filterable
+                                clearable
+                                popper-class="el-select-identity_document_type"
+                                dusk="item_unit_type"
+                            >
+                                <el-option
+                                    v-for="(option, idx) in item_unit_types"
+                                    :key="idx"
+                                    :value="option"
+                                    :label="option"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="col-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <br />
+                            <el-button
+                                type="primary"
+                                @click="clickAddItemUnitType"
+                                icon="el-icon-plus"
+                                >Agregar</el-button
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="row" v-if="form.item_unit_types && form.item_unit_types.length > 0">
+                    <el-button-group>
+                        <el-button
+                            type="primary"
+                            icon="el-icon-delete"
+                            v-for="(item, index) in form.item_unit_types"
+                            :key="index"
+                            @click="removeItemUnitType(index)"
+                        >
+                            {{ item }}
+                        </el-button>
+                    </el-button-group>
+                </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
                 <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
@@ -772,6 +819,9 @@ export default {
     ],
     data() {
         return {
+            item_unit_type: null,
+            // item_unit_types: [],
+            item_unit_types_general: [],
             zones: [],
             social_medias: [],
             loading_submit: false,
@@ -779,7 +829,9 @@ export default {
             resource: this.worker ? "caja/worker/persons" : "persons",
             errors: {},
             api_service_token: false,
-            form: {},
+            form: {
+                item_unit_types: []
+            },
             countries: [],
             all_departments: [],
             all_provinces: [],
@@ -790,9 +842,11 @@ export default {
             person_types: [],
             identity_document_types: [],
             all_users: [],
-            configuration: {}
+            configuration: {},
+            item_unit_types: [],
         };
     },
+    
     async created() {
         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
@@ -809,9 +863,12 @@ export default {
             this.locations = response.data.locations;
             this.person_types = response.data.person_types;
             this.configuration = response.data.configuration;
+            this.item_unit_types_general = response.data.item_unit_types;
+            this.item_unit_types = this.item_unit_types_general;
         });
     },
     computed: {
+        
         maxLength: function() {
             if (this.form.identity_document_type_id === "6") {
                 return 11;
@@ -822,6 +879,22 @@ export default {
         }
     },
     methods: {
+        removeItemUnitType(idx){
+            this.form.item_unit_types.splice(idx, 1);
+            this.item_unit_types = this.item_unit_types_general.filter(
+                item => !this.form.item_unit_types.includes(item)
+            );
+        },
+        clickAddItemUnitType() {
+            if (this.item_unit_type) {
+                console.log(this.form);
+                this.form.item_unit_types.push(this.item_unit_type);
+                this.item_unit_types = this.item_unit_types_general.filter(
+                    item => !this.form.item_unit_types.includes(item)
+                );
+                this.item_unit_type = null;
+            }
+        },
         nuevoMetodo() {
             let admin = this.all_users.find(user => user.type == "admin");
             if (admin) {
@@ -857,7 +930,8 @@ export default {
                 person_type_id: null,
                 comment: null,
                 addresses: [],
-                seller_id: null
+                seller_id: null,
+                item_unit_types: []
             };
         },
         async opened() {
@@ -936,6 +1010,7 @@ export default {
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
+                        
                         this.filterProvinces();
                         this.filterDistricts();
                     });

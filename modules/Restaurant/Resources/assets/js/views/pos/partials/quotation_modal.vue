@@ -5,6 +5,7 @@
         @open="open"
         @close="close"
         v-loading="loading"
+     element-loading-text="Cotizando..."
     >
         <div class="m-2">
             <div class="row">
@@ -106,6 +107,7 @@
 
 <script>
 import moment from "moment";
+import timerVue from './timer.vue';
 const QuotationOptions = () =>
     import(
         "../../../../../../../../resources/js/views/quotations/partials/options.vue"
@@ -114,6 +116,8 @@ const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
     props: [
+        "formQtn",
+        "quotationDirect",
         "items",
         "cash_id",
         "all_customers",
@@ -360,7 +364,7 @@ export default {
                 if (response.status == 200) {
                     this.quotationNewId = response.data.data.id;
                     this.$emit("limpiarForm");
-                    if (this.configuration.seller_quotation_cash) {
+                    if (this.configuration.seller_quotation_cash || this.quotationDirect) {
                         this.directPrint(response.data.data.external_id);
                         this.close();
                     } else {
@@ -423,9 +427,16 @@ export default {
             };
             this.paymentsOrden();
             this.customers = this.all_customers;
+            console.log("🚀 ~ open ~ this.all_customers:", this.all_customers)
             let customer = this.customers.find(c => c.number == "99999999");
             if (customer) {
                 this.form.customer_id = customer.id;
+            }
+            if(this.quotationDirect){
+                if(this.formQtn.customer_id){
+                    this.form.customer_id = this.formQtn.customer_id;
+                }
+                this.submit();
             }
         },
         close() {

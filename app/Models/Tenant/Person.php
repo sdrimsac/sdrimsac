@@ -210,6 +210,9 @@ class Person extends ModelTenant
 
         return $data;
     }
+    public function item_unit_types(){
+        return $this->hasMany(UnitTypePerson::class, 'customer_id');
+    }
     public function zone()
     {
         return $this->belongsTo(ClientZone::class, 'client_zone_id');

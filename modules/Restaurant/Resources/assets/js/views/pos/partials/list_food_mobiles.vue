@@ -1,174 +1,198 @@
 <template>
-  <el-dialog title="Buscar Producto" width="30%" @close="close" :visible="showDialogViewItems">
-    <div class="row col-12">
-      <div class="col-6">
-        <template>
-          <h2 class="text-muted text-small">Categorias</h2>
-          <el-select
-            v-model="categoryChild"
-            filterable
-            clearable
-            placeholder="Selecionar aqui...."
-            @change="UpdateparentCategory"
-          >
-            <el-option
-              v-for="item in categories"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </template>
-      </div>
-      <div class="col-6">
-        <h2 class="text-muted text-small">Buscar</h2>
-        <template v-if="selectOption == 4">
-          <el-input
-            ref="input_items"
-            size="small"
-            v-model="input_itemMobil"
-            @input="emitData()"
-            @focus="clear_input()"
-            autofocus
-            placeholder="Ingrese aca Un Producto"
-          >
-            <el-button slot="append" icon="el-icon-search" @click="emitData"></el-button>
-          </el-input>
-        </template>
+    <el-dialog
+        title="Buscar Producto"
+        width="30%"
+        @close="close"
+        :visible="showDialogViewItems"
+    >
+        <div class="row col-12">
+            <div class="col-6">
+                <template>
+                    <h2 class="text-muted text-small">Categorias</h2>
+                    <el-select
+                        v-model="categoryChild"
+                        filterable
+                        clearable
+                        placeholder="Selecionar aqui...."
+                        @change="UpdateparentCategory"
+                    >
+                        <el-option
+                            v-for="item in categories"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                        ></el-option>
+                    </el-select>
+                </template>
+            </div>
+            <div class="col-6">
+                <h2 class="text-muted text-small">Buscar</h2>
+                <template v-if="selectOption == 4">
+                    <el-input
+                        ref="input_items"
+                        size="small"
+                        v-model="input_itemMobil"
+                        @input="emitData()"
+                        @focus="clear_input()"
+                        autofocus
+                        placeholder="Ingrese aca Un Producto"
+                    >
+                        <el-button
+                            slot="append"
+                            icon="el-icon-search"
+                            @click="emitData"
+                        ></el-button>
+                    </el-input>
+                </template>
 
-        <template v-else>
-          <el-input
-            ref="input_itemMobil"
-            size="small"
-            v-model="input_itemMobil"
-            @input="emitData()"
-            @focus="clear_input()"
-            autofocus
-            placeholder="Ingrese aca Un Producto"
-          >
-            <el-button slot="append" icon="el-icon-search" @click="emitData"></el-button>
-          </el-input>
-        </template>
-      </div>
-    </div>
-    <div class="row">
-      <div
-        class="col-6 col-lg-4 col-xl-4 col-xxl-4 p-1"
-        v-for="(data, index) in foods"
-        :key="index"
-      >
-        <el-tooltip
-          effect="dark"
-          :disabled="
+                <template v-else>
+                    <el-input
+                        ref="input_itemMobil"
+                        size="small"
+                        v-model="input_itemMobil"
+                        @input="emitData()"
+                        @focus="clear_input()"
+                        autofocus
+                        placeholder="Ingrese aca Un Producto"
+                    >
+                        <el-button
+                            slot="append"
+                            icon="el-icon-search"
+                            @click="emitData"
+                        ></el-button>
+                    </el-input>
+                </template>
+            </div>
+        </div>
+        <div class="row">
+            <div
+                class="col-6 col-lg-4 col-xl-4 col-xxl-4 p-1"
+                v-for="(data, index) in foods"
+                :key="index"
+            >
+                <el-tooltip
+                    effect="dark"
+                    :disabled="
                         data.item.warehouses.length == 1 ||
                             !configuration.show_stock_establishment_box
                     "
-        >
-          <div slot="content">
-            Stock Almacenes
-            <br />
-            <span v-for="(info, idx) in data.item.warehouses" :key="idx">
-              <label v-if="info.warehouse.id != establishmentId">
-                <template v-if="data.item.max_quantity">
-                  <!-- {{
+                >
+                    <div slot="content">
+                        Stock Almacenes
+                        <br />
+                        <span
+                            v-for="(info, idx) in data.item.warehouses"
+                            :key="idx"
+                        >
+                            <label v-if="info.warehouse.id != establishmentId">
+                                <template v-if="data.item.max_quantity">
+                                    <!-- {{
                                                 `${
                                                     info.warehouse.description
                                                 }: ${Number(info.stock) /
                                                     data.item.max_quantity}`
                   }}-->
-                  {{
-                  formatedStockPresentation(
-                  data.item,
-                  info.stock
-                  )
-                  }}
-                </template>
-                <template v-else>
-                  {{
-                  `${
-                  info.warehouse.description
-                  }: ${Number(info.stock).toFixed(2)}`
-                  }}
-                </template>
-              </label>
-              <br />
-            </span>
-          </div>
-          <div
-            id="card"
-            class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
-          >
-            <div @click="addFood(index)">
-              <div>
-                <span class="lead-font-weight-700 h5">{{ data.description.toUpperCase() }}</span>
-              </div>
-              <div class="d-flex align-items-end justify-content-between">
-                <div class="p-1">
-                  <div class="icon-container">
-                    <div class="icon-container_box">
-                      <template
-                        v-if="
+                                    {{
+                                        formatedStockPresentation(
+                                            data.item,
+                                            info.stock
+                                        )
+                                    }}
+                                </template>
+                                <template v-else>
+                                    {{
+                                        `${
+                                            info.warehouse.description
+                                        }: ${Number(info.stock).toFixed(2)}`
+                                    }}
+                                </template>
+                            </label>
+                            <br />
+                        </span>
+                    </div>
+                    <div
+                        id="card"
+                        class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
+                    >
+                        <div @click="addFood(index)">
+                            <div>
+                                <span class="lead-font-weight-700 h5">{{
+                                    data.description.toUpperCase()
+                                }}</span>
+                            </div>
+                            <div
+                                class="d-flex align-items-end justify-content-between"
+                            >
+                                <div class="p-1">
+                                    <div class="icon-container">
+                                        <div class="icon-container_box">
+                                            <template
+                                                v-if="
                                                     data.image ==
                                                         'imagen-no-disponible.jpg'
                                                 "
-                      >
-                        <img
-                          hidden
-                          src="/images/imagen-no-disponible.jpg"
-                          alt="User Img"
-                          class="thumbail"
-                        />
-                      </template>
-                      <template v-else>
-                        <img
-                          :src="
+                                            >
+                                                <img
+                                                    hidden
+                                                    src="/images/imagen-no-disponible.jpg"
+                                                    alt="User Img"
+                                                    class="thumbail"
+                                                />
+                                            </template>
+                                            <template v-else>
+                                                <img
+                                                    :src="
                                                         formatUrlImage(
                                                             data.image
                                                         )
                                                     "
-                          class="thumbail"
-                        />
-                      </template>
-                    </div>
-                  </div>
-                </div>
-                <div>{{ data.code }}</div>
-                <div class="d-flex flex-column align-items-end">
-                  <!-- <div class="text-uppercase font-weight-light h5">
+                                                    class="thumbail"
+                                                />
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>{{ data.code }}</div>
+                                <div class="d-flex flex-column align-items-end">
+                                    <!-- <div class="text-uppercase font-weight-light h5">
                         {{ data.category.name }}
                   </div>-->
-                  <div class="block mb-2">
-                    <span class="time font-weight-light">
-                      <span class="text-muted lead-font-weight-700">
-                        S/
-                        {{ data.price }}
-                      </span>
-                    </span>
-                  </div>
-                  <div
-                    v-if="
+                                    <div class="block mb-2">
+                                        <span class="time font-weight-light">
+                                            <span
+                                                class="text-muted lead-font-weight-700"
+                                            >
+                                                S/
+                                                {{ data.price }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div
+                                        v-if="
                                             data.item.is_set == 0 &&
                                                 data.item.unit_type_id !=
                                                     'ZZ' &&
                                                 configuration.sales_stock ==
                                                     true
                                         "
-                  >
-                    <template v-if="data.item.stock > 0">
-                      <span class="badge rounded-pill bg-primary m-l-0">
-                        Stock
-                        <template
-                          v-if="
+                                    >
+                                        <template v-if="data.item.stock > 0">
+                                            <span
+                                                class="badge rounded-pill bg-primary m-l-0"
+                                            >
+                                                Stock
+                                                <template
+                                                    v-if="
                                                         data.item.max_quantity
                                                     "
-                        >
-                          {{
-                          formatedStockPresentation(
-                          data.item,
-                          data.item.stock
-                          )
-                          }}
-                          <!-- {{
+                                                >
+                                                    {{
+                                                        formatedStockPresentation(
+                                                            data.item,
+                                                            data.item.stock
+                                                        )
+                                                    }}
+                                                    <!-- {{
                                                                 parseFloat(
                                                                     data.item
                                                                         .stock /
@@ -177,529 +201,557 @@
                                                                             .max_quantity
                                                                 )
                           }}-->
-                        </template>
-                        <template v-else>
-                          {{
-                          parseFloat(
-                          data.item.stock
-                          )
-                          }}
-                        </template>
-                      </span>
-                    </template>
-                    <template v-else>
-                      <span class="badge rounded-pill bg-danger m-l-0">Agotado</span>
-                    </template>
-                  </div>
-                </div>
-              </div>
+                                                </template>
+                                                <template v-else>
+                                                    {{
+                                                        parseFloat(
+                                                            data.item.stock
+                                                        )
+                                                    }}
+                                                </template>
+                                            </span>
+                                        </template>
+                                        <template v-else>
+                                            <span
+                                                class="badge rounded-pill bg-danger m-l-0"
+                                                >Agotado</span
+                                            >
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            @click="nthing"
+                            v-if="data.types.length > 0"
+                            class="d-flex justify-content-end"
+                            style="padding-right: 10px; margin-top: 5px"
+                        >
+                            <el-dropdown @command="clickCommand">
+                                <span class="el-dropdown-link">
+                                    Precios
+                                    <i
+                                        class="el-icon-arrow-down el-icon--right"
+                                    ></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item
+                                        v-for="(type, idx) in data.types"
+                                        :key="idx"
+                                        :command="type"
+                                        >{{
+                                            formatDescriptionType(type)
+                                        }}</el-dropdown-item
+                                    >
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </div>
+                </el-tooltip>
             </div>
-            <div
-              @click="nthing"
-              v-if="data.types.length > 0"
-              class="d-flex justify-content-end"
-              style="padding-right: 10px; margin-top: 5px"
-            >
-              <el-dropdown @command="clickCommand">
-                <span class="el-dropdown-link">
-                  Precios
-                  <i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item
-                    v-for="(type, idx) in data.types"
-                    :key="idx"
-                    :command="type"
-                  >{{ formatDescriptionType(type) }}</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <el-button @click="close">Cancel</el-button>
             </div>
-          </div>
-        </el-tooltip>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <el-button @click="close">Cancel</el-button>
-      </div>
-    </div>
-    <unit-type-modal
-      @addUnitType="addUnitType"
-      @addCategoriaMadera="addCategoriaMadera"
-      :showDialog.sync="showUnitTypeModal"
-      :medida_alto="medida_alto"
-      :medida_ancho="medida_ancho"
-      :medida_grosor="medida_grosor"
-      :categoria_madera="categoria_madera"
-      :item="selectedFood"
-      :currentIndex="currentIndex"
-    ></unit-type-modal>
-  </el-dialog>
+        </div>
+        <unit-type-modal
+            @addUnitType="addUnitType"
+            @addCategoriaMadera="addCategoriaMadera"
+            :showDialog.sync="showUnitTypeModal"
+            :medida_alto="medida_alto"
+            :medida_ancho="medida_ancho"
+            :medida_grosor="medida_grosor"
+            :categoria_madera="categoria_madera"
+            :item="selectedFood"
+            :currentIndex="currentIndex"
+        ></unit-type-modal>
+    </el-dialog>
 </template>
 
 <script>
-
 import UnitTypeModal from "./unit_type_modal.vue";
 export default {
     components: { UnitTypeModal },
-  props: [
-    "foods",
-    "configuration",
-    "worker",
-    "pagination",
-    "blockAdd",
-    "localOrden",
-    "category",
-    "categories",
-    "showDialogViewItems",
-    "selectOption",
-    "medida_ancho",
-    "medida_alto",
-    "medida_grosor",
-    "categoria_madera"
-  ],
-  data() {
-    return {
-      showUnitTypeModal: false,
-      currentIndex: null,
-      addingType: false,
-      selectCategory: 0,
-      activeName: "menu",
-      loading: true,
-      ordenItems: [],
-      orden: [],
-      currentFood: {},
-      item: null,
-      search: "Buscar por Codigo",
-      currentImage: null,
-      showImage: false,
-      listFoods: [],
-      selectedFood: null,
-      allFalse: true,
-      title: null,
-      total: null,
-      ordenId: null,
-      optionsSelected: 0,
-      generalOrdens: 1,
-      establishmentId: this.worker.establishment_id,
-      settings: {
-        dots: false,
-        dotsClass: "slick-dots custom-dot-class",
-        edgeFriction: 0.35,
-        infinite: false,
-        speed: 500,
-        centerMode: true,
-        centerPadding: "10px",
-        focusOnSelect: true,
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        swipeToSlide: true,
-        speed: 500,
-        responsive: [
-          {
-            breakpoint: 1024,
+    props: [
+        "canAddItem",
+        "foods",
+        "configuration",
+        "worker",
+        "pagination",
+        "blockAdd",
+        "localOrden",
+        "category",
+        "categories",
+        "showDialogViewItems",
+        "selectOption",
+        "medida_ancho",
+        "medida_alto",
+        "medida_grosor",
+        "categoria_madera"
+    ],
+    data() {
+        return {
+            showUnitTypeModal: false,
+            currentIndex: null,
+            addingType: false,
+            selectCategory: 0,
+            activeName: "menu",
+            loading: true,
+            ordenItems: [],
+            orden: [],
+            currentFood: {},
+            item: null,
+            search: "Buscar por Codigo",
+            currentImage: null,
+            showImage: false,
+            listFoods: [],
+            selectedFood: null,
+            allFalse: true,
+            title: null,
+            total: null,
+            ordenId: null,
+            optionsSelected: 0,
+            generalOrdens: 1,
+            establishmentId: this.worker.establishment_id,
             settings: {
-              slidesToShow: 3,
-              slidesToScroll: 3,
-              infinite: true,
-              dots: true
-            }
-          },
-          {
-            breakpoint: 600,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2,
-              initialSlide: 2
-            }
-          },
-          {
-            breakpoint: 480,
-            settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ]
-      },
-      settings_tables: {
-        dots: true,
-        dotsClass: "slick-dots custom-dot-class",
-        infinite: false,
-        speed: 500,
-        centerMode: true,
-        centerPadding: "10px",
-        focusOnSelect: true,
-        infinite: true,
-        slidesToShow: 5,
-        slidesToScroll: 5,
-        swipeToSlide: true,
-        responsive: [
-          {
-            breakpoint: 1024,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2,
-              infinite: true,
-              dots: true
-            }
-          },
-          {
-            breakpoint: 600,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2,
-              initialSlide: 2
-            }
-          },
-          {
-            breakpoint: 480,
-            settings: {
-              slidesToShow: 2,
-              slidesToScroll: 2
-            }
-          }
-        ]
-      },
-      screenWidth: 0,
-      input_itemMobil: "",
-      categoryChild: ""
-    };
-  },
-  mounted() {
-    this.screenWidth = window.innerWidth;
-    window.addEventListener("resize", this.handleResize);
+                dots: false,
+                dotsClass: "slick-dots custom-dot-class",
+                edgeFriction: 0.35,
+                infinite: false,
+                speed: 500,
+                centerMode: true,
+                centerPadding: "10px",
+                focusOnSelect: true,
+                infinite: true,
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                swipeToSlide: true,
+                speed: 500,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 3,
+                            infinite: true,
+                            dots: true
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+                            initialSlide: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            },
+            settings_tables: {
+                dots: true,
+                dotsClass: "slick-dots custom-dot-class",
+                infinite: false,
+                speed: 500,
+                centerMode: true,
+                centerPadding: "10px",
+                focusOnSelect: true,
+                infinite: true,
+                slidesToShow: 5,
+                slidesToScroll: 5,
+                swipeToSlide: true,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+                            infinite: true,
+                            dots: true
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+                            initialSlide: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2
+                        }
+                    }
+                ]
+            },
+            screenWidth: 0,
+            input_itemMobil: "",
+            categoryChild: ""
+        };
+    },
+    mounted() {
+        this.screenWidth = window.innerWidth;
+        window.addEventListener("resize", this.handleResize);
 
-    if (this.foods.length > 0) {
-      this.loading = false;
-    }
-  },
-  watch: {
-    foods(__, _) {
-      this.updateListFoods();
-    }
-  },
-  created() {
-    this.ordenItems = [];
-    this.orden = [];
-    this.updateListFoods();
-  },
-
-  methods: {
-    addUnitType(type) {
-      this.addFood(this.currentIndex, type);
-    },
-    addCategoriaMadera(categoria,index) {
-      /* console.log(" :", categoria); */
-      this.currentIndex = index;
-      this.addingType = true;
-      this.addFood(this.currentIndex, null, false, categoria);
-    },
-    UpdateparentCategory() {
-      this.$emit("update:category", this.categoryChild);
-      this.$emit("data-received", this.input_itemMobil);
-    },
-
-    emitData() {
-      //this.$emit("update:category")
-      if (this.input_itemMobil.length > 2) {
-        this.$emit("data-received", this.input_itemMobil);
-      }
-    },
-
-    handleResize() {
-      this.screenWidth = window.innerWidth;
-    },
-    nthing() {},
-    getDefaultPrice(type) {
-      let listPricesDescription = ["price1", "price2", "price3"];
-      let currentPriceIndx = listPricesDescription[type.price_default - 1];
-      let price = type[currentPriceIndx];
-      if (type.total == null) {
-        // this.$toast.error(
-        //     "Politica de precio sin total: Tomando precio unitario.."
-        // );
-      } else {
-        price = Number(type.total);
-      }
-      return price;
-    },
-    formatDescriptionType(type) {
-      let price = this.getDefaultPrice(type);
-      return `${type.description} (${Number(
-        type.quantity_unit
-      )}) - S/ ${price}`;
-    },
-
-    clickCommand(type) {
-      let idxFood = this.listFoods.findIndex(
-        food => food.item.id == type.item_id
-      );
-      if (idxFood >= 0) {
-        this.addFood(idxFood, type);
-      }
-    },
-    updateListFoods() {
-      this.listFoods = this.foods.map(f => {
-        return { ...f, select: false };
-      });
-    },
-    formatedStockPresentation(
-      {
-        max_quantity,
-        item_unit_types,
-
-        unit_type
-      },
-      stock
-    ) {
-      let general = Math.trunc(stock / max_quantity);
-      let part = ((stock / max_quantity) % 1).toFixed(2);
-
-      let text = `${general} ${unit_type.id}`;
-      if (part != 0) {
-        let item_unit = item_unit_types.find(
-          i => Number(i.quantity_unit) == Number(max_quantity)
-        );
-        if (item_unit) {
-          text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+        if (this.foods.length > 0) {
+            this.loading = false;
         }
-      }
-
-      return text;
     },
-    getRecords() {
-      let currentPage = this.pagination.current_page;
-      this.$emit("changePage", currentPage);
-    },
-    deleteOrden(id) {
-      this.ordenItems = this.ordenItems.filter(o => o.id != id);
-    },
-    calculateOrden() {
-      // this.$refs.ordenRef.calculateTotal();
-    },
-    selectSearch(value) {
-      this.optionsSelected = value;
-    },
-
-    deleteFood(idx) {
-      this.orden.splice(idx, 1);
-    },
-    setCategory(id) {
-      this.selectCategory = id;
-      !this.allFalse && this.setFalse();
-      if (id == 0) {
-        this.listFoods = this.foods;
-      } else {
-        this.listFoods = [];
-        this.listFoods = _.filter(this.foods, { category_food_id: id });
-      }
-    },
-    addFood(index = 0, type = null, categoria = null) {
-      let quotation_stock = localStorage.getItem("quotation_stock") || 0;
-      quotation_stock = quotation_stock == 1;
-      if (this.blockAdd && !this.configuration.box_orden) {
-        this.$toast.error("No puede agregar productos a esta orden.");
-        return;
-      }
-      this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[index]));
-      console.log("dasasda", this.selectedFood);
-      if (!this.selectedFood) return;
-
-      let { categoria_madera_item } = this.selectedFood;
-      if (
-        this.configuration.maderera &&
-        Array.isArray(categoria_madera_item) &&
-        categoria_madera_item.length > 0 &&
-        !this.addingType
-      ) {
-        this.showUnitTypeModal = true;
-        this.currentIndex = index;
-        return;
-      }
-      this.currentIndex = null;
-      this.addingType = false;
-
-      if (
-        Number(this.selectedFood.item.stock) <= 0 &&
-        this.configuration.sales_stock == true &&
-        !quotation_stock &&
-        this.selectedFood.item.unit_type_id != "ZZ"
-      ) {
-        this.$toast.warning("Stock insuficiente");
-        return;
-      }
-      let foodFound = this.localOrden.filter(f => f.id == this.selectedFood.id);
-
-      if (foodFound.length != 0) {
-        let { item } = this.selectedFood;
-        if (item.lots_enabled) {
-          if (item.item_unit_types.length == 0) {
-            let message = "Producto con lote, ya  agregado";
-            this.$toast.warning(message);
-            return;
-          }
+    watch: {
+        foods(__, _) {
+            this.updateListFoods();
         }
+    },
+    created() {
+        this.ordenItems = [];
+        this.orden = [];
+        this.updateListFoods();
+    },
 
-        if (item.series_enabled) {
-          if (item.item_unit_types.length == 0) {
-            let message = "Producto con serie, ya  agregado";
-            this.$toast.warning(message);
-            return;
-          } else {
-            if (type) {
-              if (foodFound.some(i => i.type_id == type.id)) {
-                let message = "Producto con serie, ya  agregado";
-                this.$toast.warning(message);
-                return;
-              }
+    methods: {
+        addUnitType(type) {
+            this.addFood(this.currentIndex, type);
+        },
+        addCategoriaMadera(categoria, index) {
+            /* console.log(" :", categoria); */
+            this.currentIndex = index;
+            this.addingType = true;
+            this.addFood(this.currentIndex, null, false, categoria);
+        },
+        UpdateparentCategory() {
+            this.$emit("update:category", this.categoryChild);
+            this.$emit("data-received", this.input_itemMobil);
+        },
+
+        emitData() {
+            //this.$emit("update:category")
+            if (this.input_itemMobil.length > 2) {
+                this.$emit("data-received", this.input_itemMobil);
             }
-          }
-        }
-        let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+        },
 
-        if (type) {
-          // qty += Number(type.quantity_unit);
+        handleResize() {
+            this.screenWidth = window.innerWidth;
+        },
+        nthing() {},
+        getDefaultPrice(type) {
+            let listPricesDescription = ["price1", "price2", "price3"];
+            let currentPriceIndx =
+                listPricesDescription[type.price_default - 1];
+            let price = type[currentPriceIndx];
+            if (type.total == null) {
+                // this.$toast.error(
+                //     "Politica de precio sin total: Tomando precio unitario.."
+                // );
+            } else {
+                price = Number(type.total);
+            }
+            return price;
+        },
+        formatDescriptionType(type) {
+            let price = this.getDefaultPrice(type);
+            return `${type.description} (${Number(
+                type.quantity_unit
+            )}) - S/ ${price}`;
+        },
 
-          qty += 1;
-        } else {
-          qty += 1;
-        }
-        if (
-          this.configuration.sales_stock == true &&
-          this.selectedFood.item.is_set == 0 &&
-          !quotation_stock &&
-          this.selectedFood.item.unit_type_id != "ZZ"
+        clickCommand(type) {
+            let idxFood = this.listFoods.findIndex(
+                food => food.item.id == type.item_id
+            );
+            if (idxFood >= 0) {
+                this.addFood(idxFood, type);
+            }
+        },
+        updateListFoods() {
+            this.listFoods = this.foods.map(f => {
+                return { ...f, select: false };
+            });
+        },
+        formatedStockPresentation(
+            {
+                max_quantity,
+                item_unit_types,
+
+                unit_type
+            },
+            stock
         ) {
-          if (qty > Number(this.selectedFood.item.stock)) {
-            this.$toast.warning("Limite de stock alcanzado");
-            return;
-          }
-        }
-      } else {
-        if (type) {
-          let qty = type.quantity_unit;
-          if (
-            this.configuration.sales_stock == true &&
-            this.selectedFood.item.is_set == 0 &&
-            !quotation_stock &&
-            this.selectedFood.item.unit_type_id != "ZZ"
-          ) {
-            let stock = Number(this.selectedFood.item.stock);
-            if (qty > stock) {
-              this.$toast.warning("Limite de stock alcanzado");
-              return;
+            let general = Math.trunc(stock / max_quantity);
+            let part = ((stock / max_quantity) % 1).toFixed(2);
+
+            let text = `${general} ${unit_type.id}`;
+            if (part != 0) {
+                let item_unit = item_unit_types.find(
+                    i => Number(i.quantity_unit) == Number(max_quantity)
+                );
+                if (item_unit) {
+                    text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+                }
             }
-          }
+
+            return text;
+        },
+        getRecords() {
+            let currentPage = this.pagination.current_page;
+            this.$emit("changePage", currentPage);
+        },
+        deleteOrden(id) {
+            this.ordenItems = this.ordenItems.filter(o => o.id != id);
+        },
+        calculateOrden() {
+            // this.$refs.ordenRef.calculateTotal();
+        },
+        selectSearch(value) {
+            this.optionsSelected = value;
+        },
+
+        deleteFood(idx) {
+            this.orden.splice(idx, 1);
+        },
+        setCategory(id) {
+            this.selectCategory = id;
+            !this.allFalse && this.setFalse();
+            if (id == 0) {
+                this.listFoods = this.foods;
+            } else {
+                this.listFoods = [];
+                this.listFoods = _.filter(this.foods, { category_food_id: id });
+            }
+        },
+        addFood(index = 0, type = null, categoria = null) {
+            if (!this.canAddItem) {
+                this.$showSAlert(
+                    "Error",
+                    "Debe seleccionar un clientes",
+                    "error"
+                );
+                return;
+            }
+            let quotation_stock = localStorage.getItem("quotation_stock") || 0;
+            quotation_stock = quotation_stock == 1;
+            if (this.blockAdd && !this.configuration.box_orden) {
+                this.$toast.error("No puede agregar productos a esta orden.");
+                return;
+            }
+            this.selectedFood = JSON.parse(
+                JSON.stringify(this.listFoods[index])
+            );
+            console.log("dasasda", this.selectedFood);
+            if (!this.selectedFood) return;
+
+            let { categoria_madera_item } = this.selectedFood;
+            if (
+                this.configuration.maderera &&
+                Array.isArray(categoria_madera_item) &&
+                categoria_madera_item.length > 0 &&
+                !this.addingType
+            ) {
+                this.showUnitTypeModal = true;
+                this.currentIndex = index;
+                return;
+            }
+            this.currentIndex = null;
+            this.addingType = false;
+
+            if (
+                Number(this.selectedFood.item.stock) <= 0 &&
+                this.configuration.sales_stock == true &&
+                !quotation_stock &&
+                this.selectedFood.item.unit_type_id != "ZZ"
+            ) {
+                this.$toast.warning("Stock insuficiente");
+                return;
+            }
+            let foodFound = this.localOrden.filter(
+                f => f.id == this.selectedFood.id
+            );
+
+            if (foodFound.length != 0) {
+                let { item } = this.selectedFood;
+                if (item.lots_enabled) {
+                    if (item.item_unit_types.length == 0) {
+                        let message = "Producto con lote, ya  agregado";
+                        this.$toast.warning(message);
+                        return;
+                    }
+                }
+
+                if (item.series_enabled) {
+                    if (item.item_unit_types.length == 0) {
+                        let message = "Producto con serie, ya  agregado";
+                        this.$toast.warning(message);
+                        return;
+                    } else {
+                        if (type) {
+                            if (foodFound.some(i => i.type_id == type.id)) {
+                                let message =
+                                    "Producto con serie, ya  agregado";
+                                this.$toast.warning(message);
+                                return;
+                            }
+                        }
+                    }
+                }
+                let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+
+                if (type) {
+                    // qty += Number(type.quantity_unit);
+
+                    qty += 1;
+                } else {
+                    qty += 1;
+                }
+                if (
+                    this.configuration.sales_stock == true &&
+                    this.selectedFood.item.is_set == 0 &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
+                    if (qty > Number(this.selectedFood.item.stock)) {
+                        this.$toast.warning("Limite de stock alcanzado");
+                        return;
+                    }
+                }
+            } else {
+                if (type) {
+                    let qty = type.quantity_unit;
+                    if (
+                        this.configuration.sales_stock == true &&
+                        this.selectedFood.item.is_set == 0 &&
+                        !quotation_stock &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
+                        let stock = Number(this.selectedFood.item.stock);
+                        if (qty > stock) {
+                            this.$toast.warning("Limite de stock alcanzado");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            this.currentFood = {
+                id: this.selectedFood.id,
+                food: this.selectedFood,
+                observation: null,
+                price: this.selectedFood.price,
+                quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
+            };
+            this.$emit(
+                "insertOrden",
+                this.currentFood,
+                this.selectedFood.id,
+                type,
+                categoria
+            );
+            this.$notify({
+                title: this.currentFood.food.description.toLowerCase(),
+                duration: 800,
+                iconClass: "el-icon-food",
+                message: "Agregado con èxito",
+                position: "bottom-left"
+            });
+
+            this.currentFood = {
+                food: null,
+                observation: null,
+                quantity: 0,
+                price: 0
+            };
+            this.selectedFood = null;
+            this.item = null;
+            //this.setFalse();
+            //this.$emit("buscarnuevo");
+            //this.$forceUpdate();
+        },
+        setFalse() {
+            this.listFoods = this.listFoods.map(f => {
+                f.select = false;
+                return f;
+            });
+            this.allFalse = true;
+        },
+        selectFood(index) {
+            //  this.$refs.description.$el.getElementsByTagName("input")[0].focus();
+            if (this.listFoods[index].select) {
+                this.listFoods[index].select = false;
+                this.allFalse = true;
+                this.selectedFood = null;
+                return;
+            }
+
+            !this.allFalse && this.setFalse();
+            this.listFoods[index].select = true;
+            this.selectedFood = this.listFoods[index];
+            this.allFalse = false;
+        },
+        searchFoodCategories(value) {
+            if (value == 0) {
+                this.listFoods = this.foods;
+            } else {
+                this.listFoods = _.filter(this.foods, {
+                    category_food_id: value
+                });
+            }
+        },
+        searchFood(value = null, optionsSelected = "Descripcion") {
+            !this.allFalse && this.setFalse();
+            if (value) {
+                if (optionsSelected == "Descripcion") {
+                    this.listFoods = this.foods.filter(f =>
+                        f.description.toLowerCase().includes(value)
+                    );
+                } else {
+                    //this.listFoods=_.filter(this.foods,{'code':value})
+                    this.listFoods = this.foods.filter(ff =>
+                        ff.code.toLowerCase().includes(value)
+                    );
+                }
+            } else {
+                this.listFoods = this.foods;
+            }
+        },
+        formatUrlImage(url) {
+            if (!url) return;
+            let formated = "storage/uploads/items/" + url;
+            return `/${formated}`;
+        },
+        open() {
+            this.ordenItems = [];
+            this.orden = [];
+            if (this.table.orden.length != 0) {
+                this.ordenItems = this.table.orden.orden_items;
+
+                // this.activeName = "orden";
+                this.ordenId = this.table.orden.id;
+                setTimeout(() => this.calculateOrden(), 50);
+            }
+            if (!this.categories.some(c => c.id == 0)) {
+                this.categories.unshift({
+                    id: 0,
+                    description: "todos"
+                });
+            }
+            this.listFoods = this.foods.map(f => ({ ...f, select: false }));
+            this.title = `Mesa N°${this.table.number}`;
+        },
+        close() {
+            this.$emit("update:showDialogViewItems");
+        },
+        clear_input() {
+            this.input_itemMobil = "";
         }
-      }
-
-      this.currentFood = {
-        id: this.selectedFood.id,
-        food: this.selectedFood,
-        observation: null,
-        price: this.selectedFood.price,
-        quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
-      };
-      this.$emit("insertOrden", this.currentFood, this.selectedFood.id, type, categoria);
-      this.$notify({
-        title: this.currentFood.food.description.toLowerCase(),
-        duration: 800,
-        iconClass: "el-icon-food",
-        message: "Agregado con èxito",
-        position: "bottom-left"
-      });
-
-      this.currentFood = {
-        food: null,
-        observation: null,
-        quantity: 0,
-        price: 0
-      };
-      this.selectedFood = null;
-      this.item = null;
-      //this.setFalse();
-      //this.$emit("buscarnuevo");
-      //this.$forceUpdate();
-    },
-    setFalse() {
-      this.listFoods = this.listFoods.map(f => {
-        f.select = false;
-        return f;
-      });
-      this.allFalse = true;
-    },
-    selectFood(index) {
-      //  this.$refs.description.$el.getElementsByTagName("input")[0].focus();
-      if (this.listFoods[index].select) {
-        this.listFoods[index].select = false;
-        this.allFalse = true;
-        this.selectedFood = null;
-        return;
-      }
-
-      !this.allFalse && this.setFalse();
-      this.listFoods[index].select = true;
-      this.selectedFood = this.listFoods[index];
-      this.allFalse = false;
-    },
-    searchFoodCategories(value) {
-      if (value == 0) {
-        this.listFoods = this.foods;
-      } else {
-        this.listFoods = _.filter(this.foods, {
-          category_food_id: value
-        });
-      }
-    },
-    searchFood(value = null, optionsSelected = "Descripcion") {
-      !this.allFalse && this.setFalse();
-      if (value) {
-        if (optionsSelected == "Descripcion") {
-          this.listFoods = this.foods.filter(f =>
-            f.description.toLowerCase().includes(value)
-          );
-        } else {
-          //this.listFoods=_.filter(this.foods,{'code':value})
-          this.listFoods = this.foods.filter(ff =>
-            ff.code.toLowerCase().includes(value)
-          );
-        }
-      } else {
-        this.listFoods = this.foods;
-      }
-    },
-    formatUrlImage(url) {
-      if (!url) return;
-      let formated = "storage/uploads/items/" + url;
-      return `/${formated}`;
-    },
-    open() {
-      this.ordenItems = [];
-      this.orden = [];
-      if (this.table.orden.length != 0) {
-        this.ordenItems = this.table.orden.orden_items;
-
-        // this.activeName = "orden";
-        this.ordenId = this.table.orden.id;
-        setTimeout(() => this.calculateOrden(), 50);
-      }
-      if (!this.categories.some(c => c.id == 0)) {
-        this.categories.unshift({
-          id: 0,
-          description: "todos"
-        });
-      }
-      this.listFoods = this.foods.map(f => ({ ...f, select: false }));
-      this.title = `Mesa N°${this.table.number}`;
-    },
-    close() {
-      this.$emit("update:showDialogViewItems");
-    },
-    clear_input() {
-      this.input_itemMobil = "";
     }
-  }
 };
 </script>

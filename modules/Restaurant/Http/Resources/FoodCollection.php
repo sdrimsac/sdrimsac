@@ -8,6 +8,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemCategoriaMadera;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\UnitTypePerson;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -31,7 +32,9 @@ class FoodCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function ($row, $key) {
+        $customer_unit_type_id = $request->customer_unit_type_id;
+        return $this->collection->transform(function ($row, $key) use ($customer_unit_type_id) {
+            
             $user = auth()->user();
             $item = $row->item;
             $has_igv = (bool) $item->has_igv;
@@ -66,10 +69,18 @@ class FoodCollection extends ResourceCollection
                 }
             }
             if (count($item->item_unit_types) > 0) {
+                $item_types_descp = [];
+                if($customer_unit_type_id){
+                    $item_types_descp = UnitTypePerson::where('customer_id', $customer_unit_type_id)->pluck('description')->values();
+                }
                 // $item_unit_types = $item->item_unit_types->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
                 $item_unit_types = ItemUnitType::where('item_id', $item->id)->where(function ($q) use ($user) {
                     $q->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
-                })->get();
+                });
+                if(count($item_types_descp) > 0){
+                    $item_unit_types = $item_unit_types->whereIn('description', $item_types_descp);
+                }
+                $item_unit_types = $item_unit_types->get();
             }
             if ($this->with_series) {
                 $lots = ItemLot::where('item_id', $item->id)->where('warehouse_id', $user->establishment_id)
@@ -99,7 +110,7 @@ class FoodCollection extends ResourceCollection
             $categoria_madera_item = $item->categoria_madera;
             if ($configuracion->consolidated_quotations) {
                 $item_id = $item->id;
-                $unit_type = ItemUnitType::where('item_id', $item_id)->first();
+                $unit_type = $item_unit_types->first();
                 if ($unit_type) {
                     $price = $unit_type->total;
                 }

@@ -39,6 +39,7 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaAncho;
 use App\Models\Tenant\ItemMedidaGrosor;
+use App\Models\Tenant\UnitTypePerson;
 use App\Traits\JobReportTrait;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
@@ -51,6 +52,7 @@ use Modules\Restaurant\Http\Resources\FoodCollection;
 use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Events\OrdenPendingEvent;
 use Modules\Restaurant\Events\PrintEvent;
+
 class PosController extends Controller
 {
     use JobReportTrait;
@@ -136,12 +138,14 @@ class PosController extends Controller
     }
     public function foods(Request $request)
     {
+        dump($request->all());
+        $configuration = Configuration::first();
+        $customer_unit_type_id = $request->customer_unit_type_id;
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
         $category_ins_id = null;
         if ($category_ins) {
             $category_ins_id = $category_ins->id;
         }
-        $configuration = Configuration::first();
         // $user = User::find(auth()->user()->id);
         $search_by_second_name = $configuration->search_by_second_name;
         $datafoods = $request->all();
@@ -165,7 +169,7 @@ class PosController extends Controller
         $brand = $request->brand;
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment, $brand) {
+            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment, $brand, $customer_unit_type_id) {
                 $query
                     ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
@@ -176,6 +180,13 @@ class PosController extends Controller
                             $query->where('warehouse_id', $warehouse_id)->where('has_sale', 0)
                                 ->where('series', 'like', '%' . $value . '%');
                         });
+                }
+                $consolidated_quotations = $configuration->consolidated_quotations;
+                if ($consolidated_quotations && $customer_unit_type_id ) {
+                    $item_unit_types_person = UnitTypePerson::where('customer_id', $customer_unit_type_id)->pluck('description')->values();
+                    $query->whereHas('item_unit_types', function ($query) use ($item_unit_types_person) {
+                        $query->whereIn('description', $item_unit_types_person);
+                    });
                 }
                 if ($configuration->health_network) {
                     if ($establishment->is_service) {
@@ -500,8 +511,16 @@ class PosController extends Controller
         if ($config->item_variation_id) {
             $item_default = Item::find($config->item_variation_id);
         }
-        return compact('gruop', 'users',  'category', 'subcategory', 'company', 'methods', 'desarrollador', 
-        'item_default');
+        return compact(
+            'gruop',
+            'users',
+            'category',
+            'subcategory',
+            'company',
+            'methods',
+            'desarrollador',
+            'item_default'
+        );
     }
     public function columns() //buscador x campo
     {

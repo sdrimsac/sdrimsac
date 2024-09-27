@@ -1,4 +1,4 @@
-f<template>
+<template>
     <div>
         <div
             v-loading.fullscreen="loading"

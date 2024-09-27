@@ -45,7 +45,7 @@ const options = {
 Vue.prototype.$showSAlert = (title, text, type = "success") => {
     Swal.fire({
         title: title.toUpperCase(), // Título en mayúsculas y centrado
-        html: `<p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
+        html: `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>
 `, // Texto normal
         timer: 2000, // Duración de 2 segundos
         showConfirmButton: false,

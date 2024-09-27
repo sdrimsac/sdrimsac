@@ -23,6 +23,8 @@ use App\Http\Resources\Tenant\PersonCollection;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\UnitTypePerson;
 use App\Services\RoleService;
 use Modules\Vip\Models\SocialMedias;
 
@@ -142,7 +144,8 @@ class PersonController extends Controller
     public function tables()
     {
         $users = User::orderBy('name')->get();
-
+        // $item_unit_types = ItemUnitType::
+        $item_unit_types = ItemUnitType::pluck('description')->unique()->values();
         $countries = Country::whereActive()->orderByDescription()->get();
         $departments = Department::whereActive()->orderByDescription()->get();
         $provinces = Province::whereActive()->orderByDescription()->get();
@@ -155,6 +158,7 @@ class PersonController extends Controller
         $locations = $this->getLocationCascade();
         $api_service_token = config('configuration.api_service_token');
         return compact(
+            'item_unit_types',
             'configuration',
             'social_media',
             'zones',
@@ -192,6 +196,14 @@ class PersonController extends Controller
         $person = Person::firstOrNew(['id' => $id]);
         $person->fill($request->all());
         $person->save();
+
+        UnitTypePerson::where('customer_id', $person->id)->delete();
+        $item_unit_types = $request->input('item_unit_types');
+        if ($request->input('item_unit_types')) {
+            foreach ($item_unit_types as $row) {
+                $person->item_unit_types()->create(['description' => $row]);
+            }
+        }
 
         $person->addresses()->delete();
         $addresses = $request->input('addresses');

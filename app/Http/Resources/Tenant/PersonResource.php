@@ -49,6 +49,7 @@ class PersonResource extends JsonResource
                 ];
             }),
             'client_zone_id' => $this->client_zone_id,
+            'item_unit_types' => $this->item_unit_types->pluck('description')->values(),
 
             // 'more_address' =>  $this->more_address,
         ];
