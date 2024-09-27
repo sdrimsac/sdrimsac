@@ -88,12 +88,13 @@ export default {
     },
     async sendFiles() {
       if (!this.number) {
-        this.$toast.warning("Ingrese un número");
+        /* this.$toast.warning("Ingrese un número"); */
+        this.$showSAlert("WARNING","Ingrese un número", "warning");
         return;
       }
       if (!this.existNumber()) {
         /* this.$toast.error("Número para envío whatsapp inválido"); */
-        this.$showSAlert("ERROR","Número para envío whatsapp inválido");
+        this.$showSAlert("ERROR","Número para envío whatsapp inválido", "error");
         return;
       }
       let formWhatsapp = {
@@ -120,12 +121,15 @@ export default {
           response = await this.$http.post(`/whatsapp`, formWhatsapp);
         }
         if (response.status == 200) {
-          this.$toast.success("El mensaje se envió correctamente");
+          /* this.$toast.success("El mensaje se envió correctamente"); */
+          this.$showSAlert("WHATSAPP","El mensaje se envió correctamente");
         } else {
-          this.$toast.error("Ocurrió un error en el envio");
+          /* this.$toast.error("Ocurrió un error en el envio"); */
+          this.$showSAlert("ERROR","Ocurrió un error en el envio", "error");
         }
       } catch (e) {
-        this.$toast.error("Ocurrió un error en el envio");
+        /* this.$toast.error("Ocurrió un error en el envio"); */
+        this.$showSAlert("ERROR","Ocurrió un error en el envio", "error");
       } finally {
         this.loading = false;
         this.close();

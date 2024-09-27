@@ -47,7 +47,7 @@ Vue.prototype.$showSAlert = (title, text, type = "success") => {
         title: title.toUpperCase(), // Título en mayúsculas y centrado
         html: `<p style="font-weight: bold; font-size: 1.2rem;">${text}</p>
 `, // Texto normal
-        timer: 1000000, // Duración de 2 segundos
+        timer: 2000, // Duración de 2 segundos
         showConfirmButton: false,
         customClass: {
             popup: "swal2-no-border"

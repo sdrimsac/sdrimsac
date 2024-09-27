@@ -46,6 +46,7 @@
                         <data-table ref="datatable" :resource="resource">
                             <tr slot="heading" class="bg-primary">
                                 <th class="text-white">#</th>
+                                <th class="text-white">Codigo Interno</th>
                                 <th class="text-white">Serie</th>
                                 <th class="text-white">Producto</th>
                                 <th class="text-white">Fecha</th>
@@ -59,6 +60,7 @@
                             <tr slot-scope="{ index, row }">
                                 
                                 <td>{{ index }}</td>
+                                <td>{{ row.item.internal_id }}</td>
                                 <td>{{ row.series }}</td>
                                 <td>{{ row.item.description }}</td>
                                 <td>{{ row.date }}</td>

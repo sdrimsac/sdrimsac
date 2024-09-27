@@ -13,10 +13,10 @@
                 style="width:100%;     white-space: nowrap;"
             >
                 <thead>
-                    <tr>
-                        <th v-if="type == 'documents'">SUNAT</th>
-                        <th v-if="type == 'saleNotes'">Acciones</th>
-                        <th>
+                    <tr class="bg-primary">
+                        <th v-if="type == 'documents'" class="text-white">SUNAT</th>
+                        <th v-if="type == 'saleNotes'" class="text-white">Acciones</th>
+                        <th class="text-white">
                             Acciones
                         </th>
                         <th
@@ -24,32 +24,32 @@
                                 configuration.restaurant &&
                                     (type == 'documents' || type == 'saleNotes')
                             "
-                        >
+                        class="text-white">
                             N° Mesa
                         </th>
-                        <th>
+                        <th class="text-white">
                             Número
                         </th>
-                        <th>Fecha</th>
-                        <th>
+                        <th class="text-white">Fecha</th>
+                        <th class="text-white">
                             Cliente
                         </th>
-                        <th v-if="type == 'quotations'">
+                        <th v-if="type == 'quotations'" class="text-white">
                             Vendedor
                         </th>
-                        <th v-if="type == 'quotations'">
+                        <th v-if="type == 'quotations'" class="text-white">
                             Dctos
                         </th>
-                        <th v-if="type == 'documents'">
+                        <th v-if="type == 'documents'" class="text-white">
                             N/V
                         </th>
-                        <th>
+                        <th class="text-white">
                             Estado
                         </th>
-                        <th v-if="type == 'documents' || type == 'saleNotes'">
+                        <th v-if="type == 'documents' || type == 'saleNotes'" class="text-white">
                             Saldo
                         </th>
-                        <th>
+                        <th class="text-white">
                             Monto
                         </th>
                     </tr>

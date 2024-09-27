@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>Reporte Inventario</strong></h3>
+        <h3 align="center" class="title"><strong>Reporte Inventario Series Productos</strong></h3>
     </div>
     <br>
     <div style="margin-top:20px; margin-bottom:15px;">
@@ -52,6 +52,7 @@
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <th>#</th>
+                <th>Codigo Interno</th>
                 <th>Serie</th>
                 <th>Producto</th>
                 <th>Fecha</th>
@@ -63,6 +64,7 @@
             @foreach ($records as $record)
                 <tr>
                     <td class="celda">{{ $loop->iteration }}</td>
+                    <td class="celda">&nbsp;{{$record->item->internal_id}}</td>
                     <td class="celda">&nbsp;{{$record->series}}</td>
                     <td class="celda">{{ $record->item->description }}</td>
                     <td class="celda">{{ $record->date }}</td>

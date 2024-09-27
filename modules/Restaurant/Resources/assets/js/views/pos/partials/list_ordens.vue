@@ -3400,7 +3400,8 @@ export default {
     },
     async sendOrden() {
       if (this.localOrden.length == 0 && !this.variation) {
-        this.$toast.warning("Orden sin productos");
+        /* this.$toast.warning("Orden sin productos"); */
+        this.$showSAlert("ALERTA","No Tienes Productos Para Cobrar", "warning");
         return;
       }
       let orden = {
@@ -3770,12 +3771,14 @@ export default {
       }
       if (this.clientTableData.table) {
         if (this.ordens.length == 0) {
-          this.$toast.warning("Orden sin productos");
+          /* this.$toast.warning("Orden sin productos"); */
+          this.$showSAlert("ALERTA","No Tienes Productos Para Cobrar", "warning");
           return;
         }
       } else {
         if (this.localOrden.length == 0 && !this.variation) {
-          this.$toast.warning("Orden sin productos");
+          /* this.$toast.warning("Orden sin productos"); */
+          this.$showSAlert("ALERTA","No Tienes Productos Para Cobrar", "warning");
           return;
         }
       }
