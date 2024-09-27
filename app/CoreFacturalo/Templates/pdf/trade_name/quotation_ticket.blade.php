@@ -292,7 +292,7 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
-                        @if (isset($row->item->categoriaMadera))
+                        {{-- @if (isset($row->item->categoriaMadera))
                             -
                             @php
                                 $madera = $row->item->categoriaMadera;
@@ -305,7 +305,24 @@
                                 }
                                 $m_description = "${grosor}x${ancho}x${largo}";
                             @endphp
-                            {{ $m_description }}
+                            {{ $m_description }} ({{ number_format($fot_totals, 2) }} PIES)
+                        @endif --}}
+                        @if (isset($row->item->categoriaMadera))
+                            -
+                            @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $quantity_totals += $row->quantity;
+                                //if (isset($madera->sumTotals) && $madera->sumTotals == true) {
+                                  //  $quantity_totals += $row->quantity;
+                                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                                //}
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                            @endphp
+                            {{ $m_description }} <br/>
+                                ({{ number_format($fot_totals, 2) }} PIES)
                         @endif
                         @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
                             - {!! $row->item->from_unit_type_id_desc !!}
@@ -392,7 +409,7 @@
         </tbody>
     </table>
     <table class="full-width">
-        @if($fot_totals > 0)
+        @if($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
         <tr>
             <td class="desc pt-3"> TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
             <td colspan="2" class="desc pt-3"> TOTAL CANTIDAD: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>

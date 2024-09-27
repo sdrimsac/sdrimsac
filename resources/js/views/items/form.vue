@@ -1423,7 +1423,7 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="Categoria Madera">
+          <el-tab-pane label="Categoria Madera" v-if="configuration.maderera">
             <div class="row">
               <div class="col-12">
                 <h4 class="separator-title mt-0">

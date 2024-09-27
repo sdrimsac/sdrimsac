@@ -6,7 +6,7 @@
     <link href="{{ $path_style }}" rel="stylesheet" />
 </head>
 <body>
-<table class="full-width" style="margin-top: 25px;">
+{{-- <table class="full-width" style="margin-top: 25px;">
     @if ($footer_text)
         
     <tr>
@@ -16,5 +16,5 @@
     <tr>
         <td class="text-center desc font-bold">Para consultar el comprobante ingresar a {!! url('/buscar') !!}</td>
     </tr>
-</table>
+</table> --}}
 </body>

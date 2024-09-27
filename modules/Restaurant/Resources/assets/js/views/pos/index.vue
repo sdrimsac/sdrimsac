@@ -3264,8 +3264,9 @@ export default {
 
           //y si no agregarla como nueva
         } else if (categoriaMadera) {
+        console.log(categoriaMadera);
           let indexFind = this.localOrden.findIndex(
-            orden => orden.categoriaMadera.key == categoriaMadera.key
+            orden => orden.categoriaMadera && orden.categoriaMadera.key == categoriaMadera.key
           );
           if (indexFind != -1) {
             this.localOrden[indexFind].quantity =

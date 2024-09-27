@@ -425,6 +425,24 @@ contain"
                 }
             @endphp
         @endif
+        @php
+            $fot_totals = 0;
+            $quantity_totals = 0;
+        @endphp
+        @foreach ($document->items as $row)
+            @php
+            // Aquí calculas los totales en base a los items
+                if (isset($row->item->categoriaMadera)) {
+                    $madera = $row->item->categoriaMadera;
+                    $ancho = $madera->selectedAncho;
+                    $largo = $madera->selectedLargo;
+                    $grosor = $madera->selectedGrosor;
+                $quantity_totals += $row->quantity;
+                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                }
+            @endphp
+        @endforeach
+
         <tr>
             <td height="18px"><b>OBSERVACION:</b></td>
             <td colspan="3" class="align-top">{{ trim($document->observation) }}
@@ -434,25 +452,35 @@ contain"
                 @endisset
             </td>
         </tr>
-
+        @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == false)
+            <tr>
+                <td class="desc-9 border-top-bottom"> TOTAL PIES: <span
+                        class="font-bold">{{ number_format($fot_totals, 2) }}</span>
+                </td>
+                <td class="border-top-bottom"></td>
+                <td class="desc-9 border-top-bottom text-left"> TOTAL CANT: <span
+                    class="font-bold text-end">{{ number_format($quantity_totals, 2) }}</span>
+                </td>
+            </tr>
+        @endif
     </table>
 
     <table class="full-width mt-10 mb-10">
         <thead class="">
             <tr>
                 <th class="border-top-bottom desc-9 text-left">CANT.</th>
-                <th class="border-top-bottom desc-9 text-left">UNIDAD</th>
+                <th class="border-top-bottom desc-9 text-left">UNID.</th>
                 <th class="border-top-bottom desc-9 text-left">DESCRIPCIÓN</th>
                 <th class="border-top-bottom desc-9 text-left">P.UNIT</th>
-                <th class="border-top-bottom desc-9 text-left">TOTAL</th>
+                <th class="border-top-bottom desc-9 text-end">TOTAL</th>
             </tr>
         </thead>
         <tbody>
-            @php
-            $fot_totals = 0;
-            $quantity_totals = 0;
-        @endphp
             @foreach ($document->items as $row)
+                @php
+                    $fot_totals = 0;
+                    $quantity_totals = 0;
+                @endphp
                 <tr>
                     <td class="text-center desc-9 align-top">
                         @if ((int) $row->quantity != $row->quantity)
@@ -492,13 +520,15 @@ contain"
                                 $ancho = $madera->selectedAncho;
                                 $largo = $madera->selectedLargo;
                                 $grosor = $madera->selectedGrosor;
-                                if(isset($madera->sumTotals) && $madera->sumTotals == true){
-                                    $quantity_totals += $row->quantity;
-                                    $fot_totals += $row->quantity * (($ancho * $largo * $grosor)/12);
-                                }
+                                $quantity_totals += $row->quantity;
+                                //if (isset($madera->sumTotals) && $madera->sumTotals == true) {
+                                //  $quantity_totals += $row->quantity;
+                                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                                //}
                                 $m_description = "${grosor}x${ancho}x${largo}";
                             @endphp
-                            {{ $m_description }}
+                            {{ $m_description }} <br />
+                            ({{ number_format($fot_totals, 2) }} PIES)
                         @endif
                         @if (isset($row->item->from_unit_type_id_desc))
                             - {!! $row->item->from_unit_type_id_desc !!}
@@ -591,7 +621,8 @@ contain"
                 </tr>
             @endif
             <tr>
-                <td colspan="4" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}</td>
+                <td colspan="4" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}
+                </td>
                 <td class="text-right font-bold desc">{{ number_format($document->total_igv, 2) }}</td>
             </tr>
             <tr>
@@ -618,12 +649,6 @@ contain"
         </tbody>
     </table>
     <table class="full-width">
-        @if($fot_totals > 0)
-        <tr>
-            <td class="desc pt-3"> TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
-            <td colspan="2" class="desc pt-3"> TOTAL CANTIDAD: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
-        </tr>
-        @endif
         <tr>
 
             @foreach (array_reverse((array) $document->legends) as $row)
@@ -671,9 +696,6 @@ contain"
                     {{ number_format(Session::get('difference'), 2) }}</td>
             </tr>
         @endif
-        {{-- <tr>
-            <td class="desc pt-3"><b>OBSERVACION:</b>{{ $document->observation }}</td>
-        </tr> --}}
         <tr>
             <td class="desc pt-3">
                 <b>Usuario</b>: {{ $document->user->name }} <br>
@@ -692,9 +714,15 @@ contain"
                 @endif
             </td>
         </tr>
-        {{-- <tr>
-            <td align="center" height="60"><b>Gracias por su Preferencia</b></td>
-        </tr> --}}
+        @if ($footer_text)
+            <tr>
+                <td colspan="6" class="text-center desc pt-3 font-bold">{{ $footer_text }}</td>
+            </tr>
+        @endif
+        <tr>
+            <td colspan="6" class="text-center desc pt-3 font-bold">Para consultar el comprobante ingresar a
+                {!! url('/buscar') !!}</td>
+        </tr>
     </table>
 
 </body>

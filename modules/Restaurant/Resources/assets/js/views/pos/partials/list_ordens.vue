@@ -335,6 +335,7 @@
             <button
               v-if="
                  configuration.credits &&
+                 !configuration.sale_note_credit_confirm &&
                  localOrden.length != 0 &&
                  !isSeller
                  "
@@ -345,7 +346,7 @@
                 <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
                 <br/> Crédito
             </button>
-            <button
+            <!-- <button
                   alt="Cobrar La venta "
                   v-if=" configuration.credits && isCreatingOrden == false"
                   class="btn btn-light mt-2"
@@ -355,7 +356,7 @@
                 >
                   <i class="fas fa-money-bill-wave" style="color: var(--primary) !important"></i>
                   <br />Credito
-            </button>
+            </button> -->
             <button
               v-if="
                                 isCreatingOrden == false &&
