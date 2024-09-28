@@ -59,7 +59,7 @@ class BoxCollection extends ResourceCollection
                 } else {
                     $customers = "";
                 }
-                /* dump($customers); */
+                /*  */
             }
             $items = $row->items->transform(function ($item, $key) {
                 return [

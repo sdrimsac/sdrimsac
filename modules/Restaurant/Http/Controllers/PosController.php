@@ -138,7 +138,6 @@ class PosController extends Controller
     }
     public function foods(Request $request)
     {
-        dump($request->all());
         $configuration = Configuration::first();
         $customer_unit_type_id = $request->customer_unit_type_id;
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();

@@ -710,7 +710,7 @@ class ItemController extends Controller
     public function getRecordsUltima_Compra(Request $request, $item_id)
     {
         // $date_of_issue = $request->date_of_issue;
-        // dump($request->all());
+        // 
         $records = PurchaseItem::query()
             ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')
             ->join('persons', 'purchases.supplier_id', '=', 'persons.id')
@@ -876,7 +876,7 @@ class ItemController extends Controller
 
         /* ItemCategoriaMadera::where('item_id', $item->id)->delete();
         $categoria_madera = $request->input('categoria_madera');
-        dump($categoria_madera);
+        
         if ($categoria_madera) {
             foreach ($categoria_madera as $categoria_madera) {
                 $newCategoriaMadera = new ItemCategoriaMadera;
@@ -888,7 +888,7 @@ class ItemController extends Controller
         } */
         ItemCategoriaMadera::where('item_id', $item->id)->delete();
         $categoria_madera = $request->input('categoria_madera');
-        /* dump($categoria_madera); */
+        /*  */
 
         if (is_array($categoria_madera) && !empty($categoria_madera)) {
             foreach ($categoria_madera as $categoria) { // Usar un nombre diferente para la variable interna
@@ -900,7 +900,7 @@ class ItemController extends Controller
                     $newCategoriaMadera->save();
                 }
             }
-            /* dump($categoria_madera); */
+            /*  */
         }
 
         if ($all_establishment) {
