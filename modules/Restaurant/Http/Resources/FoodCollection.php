@@ -108,7 +108,7 @@ class FoodCollection extends ResourceCollection
                 // }
             }
             $categoria_madera_item = $item->categoria_madera;
-            if ($configuracion->consolidated_quotations) {
+            if ($configuracion->consolidated_quotations && !is_array($item_unit_types)) {
                 $item_id = $item->id;
                 $unit_type = $item_unit_types->first();
                 if ($unit_type) {
