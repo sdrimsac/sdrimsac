@@ -23,7 +23,6 @@ class LotItemsImport implements ToCollection
     {
         //try {
         $total = count($rows);
-
         $registered = 0;
         $exist = 0;
         unset($rows[0]);
