@@ -20,7 +20,10 @@ class TableCollection extends ResourceCollection
         $credit_line_hotel_limit = $configuration->credit_line_hotel_limit ?? 150;
         return $this->collection->transform(function ($row, $key) use ($credit_line_hotel_limit) {
             $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)
+            //without     protected $with = ['orden_items', 'status_orden', 'salenote', 'document', 'customer', 'mesa'];
+            
             ->where('status_orden_id', '!=', 5)
+            ->without(['orden_items',  'salenote', 'document', 'customer'])
             ->get();
             $tower = optional(optional($row->floor)->tower)->name;
             return [
