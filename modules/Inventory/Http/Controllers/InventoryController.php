@@ -113,8 +113,10 @@ class InventoryController extends Controller
                         'warehouse_id' => $itemWarehouse->warehouse_id,
                         'quantity' => max($itemWarehouse->stock, 0), // Asegurar que el stock sea al menos 0
                     ];
+                    $itemWarehouse->stock = 0;
+                    $itemWarehouse->save();
                 }
-        
+
                 foreach ($inventoryData as $data) {
                     Inventory::create($data);
                 }
