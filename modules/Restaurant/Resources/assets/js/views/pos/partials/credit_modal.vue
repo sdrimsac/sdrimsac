@@ -94,8 +94,8 @@
                         <el-radio-button label="Quincenal"></el-radio-button>
                         <el-radio-button label="Mensual"></el-radio-button>
                         <el-radio-button
+    
                             label="Unico"
-                            v-if="configuration.sale_note_credit_confirm"
                         ></el-radio-button>
                     </el-radio-group>
                     <small

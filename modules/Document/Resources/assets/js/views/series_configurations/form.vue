@@ -82,7 +82,7 @@
             async changeSeries(){
                 let serie = await _.find(this.series,{'id':this.form.series_id})
                 this.form.series = serie.number
-                // console.log(this.form.series)
+                // 
             },
             async changeDocumentType() {
                 await this.filterSeries();

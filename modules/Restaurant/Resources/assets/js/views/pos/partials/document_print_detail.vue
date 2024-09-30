@@ -959,7 +959,7 @@ export default {
                     format = "ticket";
                     break;
                 default:
-                    console.log(JSON.stringify(format_printer), " default");
+                    
                     format = "ticket_50";
                     break;
             }

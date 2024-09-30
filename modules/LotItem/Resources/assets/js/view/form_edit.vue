@@ -72,7 +72,7 @@ export default {
                 .get(`/lotitem/record/${this.recordId}`)
                 .then(response => {
                     this.form = response.data.record;
-                    console.log(this.form);
+                    
                     this.loading = false;
                 })
                 .catch(error => {

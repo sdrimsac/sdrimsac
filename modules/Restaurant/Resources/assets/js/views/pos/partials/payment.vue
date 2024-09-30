@@ -2652,7 +2652,7 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-            console.log(this.form," xx");
+            
             this.form.promotion_document_id =
                 this.promotions_document.length > 0
                     ? this.promotions_document[0].id
@@ -3430,7 +3430,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // console.log(this.form.payments)
+            // 
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)
@@ -3638,7 +3638,9 @@ export default {
                 form.printerOn = form.printDocument;
             }
             form.detraction = this.form.detraction;
-
+            if (this.formVariation.items.length == 0) {
+                form.variation = false;
+            }
             await this.clickPayment(form);
 
             if (this.formVariation.items.length != 0) {

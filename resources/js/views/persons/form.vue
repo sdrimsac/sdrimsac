@@ -887,7 +887,7 @@ export default {
         },
         clickAddItemUnitType() {
             if (this.item_unit_type) {
-                console.log(this.form);
+                
                 this.form.item_unit_types.push(this.item_unit_type);
                 this.item_unit_types = this.item_unit_types_general.filter(
                     item => !this.form.item_unit_types.includes(item)

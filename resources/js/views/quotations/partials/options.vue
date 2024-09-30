@@ -712,7 +712,7 @@ export default {
                     );
                     this.document.payments =
                         response.data.data.quotation.payments;
-                    // console.log(this.form)
+                    // 
                     // this.validateIdentityDocumentType()
                     this.getCustomer();
                     let type = this.type == "edit" ? "editada" : "registrada";

@@ -991,8 +991,10 @@ class DocumentController extends Controller
         $orden_id = isset($request['orden_id']) ? $request['orden_id'] : null;
         $order_ids = isset($request['order_ids']) ? $request['order_ids'] : null;
         if ($orden_id) {
+            
             $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
             foreach ($orden_items as $orden_item) {
+                
                 $orden_item->restoreRestaurant();
             }
         }
@@ -1006,7 +1008,14 @@ class DocumentController extends Controller
             }
         }
     }
-
+    // function restoreOrderItems($request)
+    // {
+    //     $orden_id = isset($request['orden_id']) ? $request['orden_id'] : null;
+    //     $order_ids = isset($request['order_ids']) ? $request['order_ids'] : null;
+    //     if ($orden_id) {
+    //         $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
+    //     }
+    // }
     public function store(DocumentRequest $request)
     {
 
@@ -1019,14 +1028,7 @@ class DocumentController extends Controller
 
             Orden::where('document_id', $document_id)->update(["document_id" => null]);
         }
-        function restoreOrderItems($request)
-        {
-            $orden_id = isset($request['orden_id']) ? $request['orden_id'] : null;
-            $order_ids = isset($request['order_ids']) ? $request['order_ids'] : null;
-            if ($orden_id) {
-                $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
-            }
-        }
+      
         try {
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $facturalo = new Facturalo();

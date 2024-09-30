@@ -113,7 +113,7 @@ export default ({
                     console.log(filtro)
                     this.form.item_id = filtro[0].brnd_supp_id;
                     this.$emit("update:branchsupplies", data);
-                    console.log(this.form)
+                    
                     this.$toast.success('Marcar Agregada correctamente ');
                     this.shownewBranch = false
                 }

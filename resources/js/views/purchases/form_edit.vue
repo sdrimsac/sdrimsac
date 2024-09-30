@@ -1480,7 +1480,7 @@ export default {
             if (this.form.includes == true) {
                 unit_price_igv = 0;
             }
-            // console.log(this.form.items)
+            // 
 
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);

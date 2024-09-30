@@ -2964,7 +2964,7 @@ export default {
                     id: 4,
                     title: ["Aparcado"],
                     icon: "fas fa-cart-arrow-down",
-                    visible: !this.configuration.college
+                    visible: !this.configuration.college && this.configuration.aparcado
                 },
 
                 {
@@ -4102,7 +4102,7 @@ export default {
       return pass;
     },
     async payOrden() {
-
+    
       if (!this.checkIfHasZeroTotal()) {
         this.$toast.error(
           "No puede realizar una venta de productos con total 0"
@@ -4160,7 +4160,7 @@ export default {
             this.loading = true;
 
             this.commands_fisico = "";
-
+            
             form_submit.is_for_carry = this.to_carry;
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;

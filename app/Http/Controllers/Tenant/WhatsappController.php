@@ -153,6 +153,10 @@ class WhatsappController extends Controller
     }
     public function sendMessage($message, $number = null)
     {
+        $company = Company::first();
+        $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
+        $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
+        $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
         if ($number == null) {
             $configuration = Configuration::first();
             $number = $configuration->number_activity;
@@ -162,32 +166,65 @@ class WhatsappController extends Controller
             Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
             return;
         }
-        $web_whatsapp = config('app.web_whatsapp');
-        $url = "https://".$web_whatsapp."/api/send-message";
-
-
-
-        try {
-            $response = Http::post($url, [
-                'number' => "51" . $number,
-                'sender' => 'sdrimsac',
-                'message' => $message,
+        if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+            $client = new Client([
+                'verify' => false,
+                'stream' => false,
+                'headers' => [
+                    'User-Agent' => 'Testing 1.0'
+                ]
             ]);
-
-            $status = $response->status();
-            $body = $response->body();
-            return [
-                "success" => $status == 200,
-                "message" => $body
-
-
-            ];
-        } catch (\Exception $e) {
-
-            return [
-                "message" => $e->getMessage(),
-                "line" => $e->getLine(),
-            ];
+            //
+            try {
+        
+        
+                
+                $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
+                    'json' => [
+                        'appkey' => $api_extern_whatsapp_token,
+                        'authkey' => $api_extern_whatsapp_token2,
+                        'to' => "+51" . $number,
+                        'message' => $message,
+                    ]
+                ]);
+    
+                return  $response->getBody()->getContents();
+            } catch (\Exception $e) {
+                Log::warning($e->getMessage());
+                return response([
+                    "message" => $e->getMessage(),
+                    "line" => $e->getLine(),
+                ], 500);
+                exit;
+            }
+        }else{
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://".$web_whatsapp."/api/send-message";
+    
+    
+    
+            try {
+                $response = Http::post($url, [
+                    'number' => "51" . $number,
+                    'sender' => 'sdrimsac',
+                    'message' => $message,
+                ]);
+    
+                $status = $response->status();
+                $body = $response->body();
+                return [
+                    "success" => $status == 200,
+                    "message" => $body
+    
+    
+                ];
+            } catch (\Exception $e) {
+    
+                return [
+                    "message" => $e->getMessage(),
+                    "line" => $e->getLine(),
+                ];
+            }
         }
     }
     public function getStatus(Request $request)

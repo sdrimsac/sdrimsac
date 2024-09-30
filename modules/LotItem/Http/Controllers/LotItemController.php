@@ -109,7 +109,6 @@ class LotItemController extends Controller
     }
     public function tables()
     {
-
         $warehouses = Warehouse::all();
         return compact('warehouses');
     }

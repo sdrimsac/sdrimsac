@@ -862,7 +862,7 @@
 
                 let IdLoteSelected = this.form.IdLoteSelected
 
-                // console.log(this.form)
+                // 
                 // return
                 // console.log
                 this.row = calculateRowItem(this.form, this.currencyTypeIdActive, this.exchangeRateSale);

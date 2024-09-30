@@ -988,7 +988,7 @@ export default {
                 this.input_barcode = this.form.item.full_description;
                 this.changing_name = false;
             }
-            console.log(this.form.item);
+            
             this.form.unit_price = this.form.item.purchase_unit_price;
             this.form.sale_unit_price = this.form.item.sale_unit_price;
             this.form.affectation_igv_type_id = this.form.item.purchase_affectation_igv_type_id;

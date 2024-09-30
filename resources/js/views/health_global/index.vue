@@ -104,7 +104,7 @@ export default {
     },
     created() {
         this.initForm();
-        console.log(this.form);
+        
         //                .then(response => {
         //                    if (response.data !== '') {
         //                        this.form = response.data.data

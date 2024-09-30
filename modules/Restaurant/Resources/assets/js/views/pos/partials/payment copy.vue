@@ -1348,7 +1348,7 @@ export default {
                 }
             }
             // this.form.difference = this.enter_amount - this.form.total
-            // console.log(this.form.discounts)
+            // 
         },
         method_payment(method_pay) {
             this.form.payment_condition_id = "01";
@@ -1484,7 +1484,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // console.log(this.form.payments)
+            // 
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)

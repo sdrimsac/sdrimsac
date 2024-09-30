@@ -357,7 +357,7 @@
                     this.form.total_value = this.saleOpportunity.total_value
                     this.form.total = this.saleOpportunity.total
                     this.form.sale_opportunity_id = this.saleOpportunity.id
-                    // console.log(this.form)
+                    // 
                 }
                 
             },
@@ -600,7 +600,7 @@
                 let total_value = 0
                 let total = 0
 
-                // console.log(this.form.items)
+                // 
 
                 this.form.items.forEach((row) => {
                     total_discount += parseFloat(row.total_discount)

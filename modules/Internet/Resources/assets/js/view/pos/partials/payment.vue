@@ -1816,7 +1816,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // console.log(this.form.payments)
+            // 
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)

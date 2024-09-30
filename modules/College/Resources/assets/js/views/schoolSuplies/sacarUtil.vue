@@ -208,7 +208,7 @@ export default ({
         async sacarIntoAlmacenUtil(){
             
             this.botonLoadingsacarItem = true ; 
-            console.log(this.form.observacion)
+            
             
             if(this.form.salon == undefined || this.form.util == undefined || this.form.profesor == undefined || this.ToRetire =='' || this.form.observacion == '' || this.form.observacion == undefined){
                 this.$toast.warning('recuerde rellenar todos los campos ')

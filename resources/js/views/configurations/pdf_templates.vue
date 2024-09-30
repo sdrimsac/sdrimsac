@@ -91,7 +91,7 @@
     
             await this.$http.get(`/${this.resource}/getFormats`).then(response => {
                 if (response.data !== '') this.formatos = response.data
-                // console.log(this.formatos)
+                // 
             });
     
         },

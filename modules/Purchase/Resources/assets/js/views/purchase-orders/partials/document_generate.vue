@@ -503,7 +503,7 @@ export default {
               let total_value = 0;
               let total = 0;
 
-              // console.log(this.form.items)
+              // 
 
               this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
@@ -610,7 +610,7 @@ export default {
             },
             async submit() {
               
-              // console.log(this.form)
+              // 
 
               let validate = await this.validate_payments()
               if(validate.acum_total > parseFloat(this.form.total) || validate.error_by_item > 0) {

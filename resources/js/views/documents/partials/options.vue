@@ -510,7 +510,7 @@ export default {
                 this.clickPrintPos(this.form.printer, this.form.print_a5);
             }
             if (format == "ticket") {
-                console.log(this.form);
+                
                 this.clickPrintPos(this.form.printer, this.form.ticket);
             }
             if (format == "ticket_50") {

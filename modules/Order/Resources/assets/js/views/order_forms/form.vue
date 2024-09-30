@@ -526,7 +526,7 @@
             },
             submit() {
 
-                // console.log(this.form)
+                // 
                 if(this.form.origin.location_id.length != 3 || this.form.delivery.location_id.length != 3)
                     return this.$message.error('El campo ubigeo es obligatorio')
 

@@ -180,7 +180,7 @@
 
                 this.show_levels = false
 
-                // console.log(this.form.levels)
+                // 
             },
               searchCustomer() {
                 this.searchServiceNumberByType()
@@ -239,7 +239,7 @@
                  
            },
             submit() {
-                // console.log(this.form)
+                // 
                 this.loading_submit = true
                 this.$http.post(`/${this.resource}`, this.form)
                     .then(response => {

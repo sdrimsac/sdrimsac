@@ -84,8 +84,10 @@ class WhatsappSendMessageProccess implements ShouldQueue
                             'message' => $message,
                         ]
                     ]);
+                    Log::info( $response->getBody()->getContents());
                     return  $response->getBody()->getContents();
                 } catch (\Exception $e) {
+                    Log::alert("Error al enviar mensaje a whatsapp: ".$e->getMessage());
                     return [
                         "message" => $e->getMessage(),
                         "line" => $e->getLine(),

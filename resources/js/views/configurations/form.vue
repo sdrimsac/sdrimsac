@@ -3342,7 +3342,7 @@ export default {
                 this.form = response.data.data;
             }
         });
-        console.log(this.form.hotels);
+        
         if(this.isArca){
             this.activeTab = "hotel"
         }

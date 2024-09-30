@@ -4423,6 +4423,8 @@ export default {
                 commands_fisico: null,
                 to_carry: false
             };
+            
+            
             this.formQtn = {
                 customer_id: null
             };
@@ -5852,6 +5854,7 @@ export default {
                 false,
                 categoria
             );
+            
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,

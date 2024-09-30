@@ -299,9 +299,9 @@
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
                                                         @php
-                                                            // dump($data->sale_note->total);
-                                                            // dump($data->sale_note->advances);
-                                                            // dump($interes);
+                                                            // 
+                                                            // 
+                                                            // 
                                                         @endphp
                                                         {{ number_format($data->sale_note->total - $data->sale_note->advances + $interes, 2) }}
                                                         <?php

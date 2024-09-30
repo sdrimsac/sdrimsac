@@ -314,7 +314,7 @@ export default {
                     this.locked_emission = response.data;
                 });
 
-            console.log(this.form);
+            
         },
         async clickPrintPos(printerName, formatoPdf) {
             try {

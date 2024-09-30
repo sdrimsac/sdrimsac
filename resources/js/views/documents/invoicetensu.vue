@@ -499,7 +499,7 @@
                 this.formStage.fileContent = fileCont
 
                 
-                console.log(this.formStage)
+                
 
             },
            

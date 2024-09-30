@@ -245,7 +245,7 @@ export default {
         async getRecordsByFilter() {
 
             this.loading_submit = await true;
-            console.log(this.form.method);
+            
             await this.getRecords();
             this.loading_submit = await false;
         },
