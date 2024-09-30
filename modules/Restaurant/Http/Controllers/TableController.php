@@ -169,7 +169,7 @@ class TableController extends Controller
     }
     public function records()
     {
-
+        ini_set('memory_limit', '3500M');
         // $this->checkTables();
         $records = Table::where('is_room', false)->where('has_billar', false);
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
