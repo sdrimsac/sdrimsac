@@ -514,19 +514,19 @@ class WhatsappController extends Controller
             $client2 = new Client();
             $response2 = $client2->get($resource, ['stream' => true]);
             $pdfContent = $response2->getBody()->getContents();
-    
+            $type = $request->type ?? '.pdf';
             // Crear un archivo temporal
-            $tempFilePath = storage_path('app/public/temp_pdf_' . time() . '.pdf');
+            $tempFilePath = storage_path('app/public/temp_pdf_' . time() . $type);
             file_put_contents($tempFilePath, $pdfContent);
     
             // Generar una URL para descargar el archivo temporal
-            $downloadUrl = url('storage/temp_pdf_' . time() . '.pdf');
+            $downloadUrl = url('storage/temp_pdf_' . time() . $type);
             //remove domain fot the $downloadUrl
             $downloadUrl = str_replace(url(''), '', $downloadUrl);
             $downloadUrl = $baseUrl . $downloadUrl;
             // $downloadUrl = $request->root() . $downloadUrl;
             //change domain fot the $urlx
-            
+            Log::info($downloadUrl);
             $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
                 'json' => [
                     'appkey' => $api_extern_whatsapp_token,
