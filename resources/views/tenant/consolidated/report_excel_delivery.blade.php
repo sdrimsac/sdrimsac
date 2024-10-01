@@ -101,7 +101,7 @@
                                 <strong>TOTAL</strong>
                             </td>
                             <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                <strong>{{ $total }}</strong>
+                                <strong>S/ {{ $total }}</strong>
                             </td>
                         </tr>
                     </tfoot>
