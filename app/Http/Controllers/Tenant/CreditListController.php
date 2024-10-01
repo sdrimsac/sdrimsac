@@ -39,7 +39,7 @@ class CreditListController extends Controller
         $establishment_id = $request->establishment_id;
         $person_id = $request->person_id;
         $date = $request->date;
-        $paid = $request->paid != null ? ($request->paid == "0" ? false : true) : null;
+        $paid = $request->paid == "0" ? false : true;
         $orden_items = OrdenItem::query();
         $orden_items->whereHas('orden', function ($q) use ($establishment_id, $person_id, $date, $paid) {
             $q->whereHas('credit_list', function ($qq) use ($establishment_id, $person_id, $date, $paid) {
@@ -141,9 +141,9 @@ class CreditListController extends Controller
     {
 
         $orden_items = $this->getData($request);
-      
+        $orden_items = $orden_items->orderBy('date', 'asc');
 
-        return new CreditListPersonCollection($orden_items->paginate(100));
+        return new CreditListPersonCollection($orden_items->get());
     }
     public function credit_list_report_index(Request $request)
     {
@@ -282,7 +282,7 @@ class CreditListController extends Controller
             // $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
-                event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
+                // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
             }
             $credit_list =  CreditList::create([
                 'cash_id' => $cash_id,
