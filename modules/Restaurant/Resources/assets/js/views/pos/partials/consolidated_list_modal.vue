@@ -82,6 +82,7 @@
                                     <i class="el-icon-printer"></i>
                                 </el-button>
                             </el-tooltip>
+                            
                         </td>
                     </tr>
                 </tbody>
@@ -121,6 +122,9 @@ export default {
     },
     computed: {},
     methods: {
+        clickReport(){
+            window.open(`/${this.resource}/consolidateds/${record.id}/report`);
+        },
         query() {
             return querystring.stringify({
                 number: this.form.number,

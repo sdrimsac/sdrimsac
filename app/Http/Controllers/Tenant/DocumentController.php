@@ -489,7 +489,7 @@ class DocumentController extends Controller
         $credit_list = $request->credit_list;
         $customers = Person::where('number', 'like', "%{$request->input}%")
             ->orWhere('name', 'like', "%{$request->input}%")
-            ->orWhere('address', 'like', "%{$request->input}%")
+            ->orWhere('alias', 'like', "%{$request->input}%")
             ->whereType('customers')->orderBy('name')
             ->whereIn('identity_document_type_id', $identity_document_type_id)
             ->whereIsEnabled();
@@ -499,7 +499,7 @@ class DocumentController extends Controller
         $customers = $customers->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' => $row->number . ' - ' . $row->name,
+                'description' => ($row->alias ? $row->alias.' - ':'').  $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'has_credit_line' => (bool) $row->has_credit_line,

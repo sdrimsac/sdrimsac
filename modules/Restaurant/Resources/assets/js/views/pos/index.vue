@@ -941,6 +941,12 @@
                 <!-- Modo Celular/ Movil -->
                 <div class="d-flex flex-wrap">
                     <button
+                        v-if="
+                            isSellerConsolidated
+                                ? customer_unit_type_id != null &&
+                                  customer_unit_type_id != ''
+                                : true
+                        "
                         type="button"
                         class="btn settings-button bg-primary text-white border border-white"
                         data-bs-toggle="modal"
@@ -979,13 +985,12 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <div class="scroll-track-visible"
+                                    <div
+                                        class="scroll-track-visible"
                                         style="overflow-y: auto;"
                                     >
                                         <div class="row">
-                                            <div class="col-12">
-                            
-                                            </div>
+                                            <div class="col-12"></div>
 
                                             <div class="col-12">
                                                 <template>
@@ -1145,9 +1150,16 @@
                                                         style="height: 125px; width: 297px ; margin-left: 9px; "
                                                     >
                                                         <div
-                                                            @click="
-                                                                addFood(index)
-                                                            "
+                                                        @click="
+                                                            configuration.consolidated_quotations &&
+                                                            data.types.length >
+                                                                0
+                                                                ? clickCommand(
+                                                                      data
+                                                                          .types[0]
+                                                                  )
+                                                                : addFood(index)
+                                                        "
                                                         >
                                                             <div>
                                                                 <span
@@ -1214,6 +1226,9 @@
                                                                         class="block mb-2"
                                                                     >
                                                                         <span
+                                                                            v-if="
+                                                                                !isSellerConsolidated
+                                                                            "
                                                                             class="time font-weight-light"
                                                                         >
                                                                             <span
@@ -1304,8 +1319,13 @@
                                                         </div>
                                                         <div
                                                             v-if="
-                                                                data.types
-                                                                    .length > 0
+                                                                isSellerConsolidated
+                                                                    ? data.types
+                                                                          .length >
+                                                                      1
+                                                                    : data.types
+                                                                          .length >
+                                                                      0
                                                             "
                                                             class="d-flex justify-content-end"
                                                             style="padding-right: 10px; margin-top: 5px"
@@ -1360,6 +1380,7 @@
                         data-childselector="span"
                     >
                         <button
+                            v-if="!isSellerConsolidated"
                             class="btn p-0"
                             type="button"
                             data-bs-toggle="dropdown"
@@ -1378,7 +1399,14 @@
                                 <i class="fas fa-list"></i>
                             </span>
                         </button>
-
+                        <button
+                            v-if="isSellerConsolidated"
+                            type="button"
+                            class="btn btn-primary"
+                            @click="openQuotationDialog"
+                        >
+                            <i class="fas fa-list"></i>
+                        </button>
                         <div
                             class="dropdown-menu dropdown-menu-end col-md-2 col-1"
                         >
@@ -1428,7 +1456,7 @@
                         :company.sync="company"
                         :customer_variation="customer_variation"
                         :variationShow.sync="variation"
-                                :customers.sync="all_customers"
+                        :customers.sync="all_customers"
                         :establishments="establishments"
                         :itemDefault.sync="itemDefault"
                         :cash_id.sync="cashId"
@@ -1700,6 +1728,9 @@
         <consolidated-list-modal
             :showDialog.sync="showConsolidatedList"
         ></consolidated-list-modal>
+        <quotation-list-modal
+            :showDialog.sync="showQuotationListDialog"
+        ></quotation-list-modal>
         <iframe ref="pdfFrame" style="display: none;"></iframe>
         <el-dialog
             class="no-header"
@@ -1758,6 +1789,8 @@ import {
 import { calculateRowItem } from "../../../../../../../resources/js/helpers/functions";
 
 import queryString from "query-string";
+
+const QuotationListModal = () => import("./partials/quotation_list_modal.vue");
 const DispatchModal = () => import("./partials/dispatch_modal.vue");
 
 const PaymentForm = () => import("./partials/payment.vue");
@@ -1820,6 +1853,7 @@ export default {
         "areaId"
     ],
     components: {
+        QuotationListModal,
         UnitTypeModal,
         ConsolidatedListModal,
         DetractionPayment,
@@ -1853,7 +1887,8 @@ export default {
 
     data() {
         return {
-                customersSearch: [],
+            showQuotationListDialog: false,
+            customersSearch: [],
             loading_search: false,
             selectedFood: null,
             showUnitTypeModal: false,
@@ -2021,7 +2056,7 @@ export default {
                 customer_id: null
             },
             customer_unit_type_id: null,
-                  recomputeTrigger: 0
+            recomputeTrigger: 0
         };
     },
     beforeDestroy() {
@@ -2124,28 +2159,43 @@ export default {
             return this.isSeller && this.configuration.consolidated_quotations;
         },
         canAddItem() {
-            
-            console.log("🚀 ~ canAddItem ~ this.isSeller :", this.isSeller )
-                console.log("🚀 ~ canAddItem ~ this.configuration.consolidated_quotations:", this.configuration.consolidated_quotations)
+            console.log("🚀 ~ canAddItem ~ this.isSeller :", this.isSeller);
+            console.log(
+                "🚀 ~ canAddItem ~ this.configuration.consolidated_quotations:",
+                this.configuration.consolidated_quotations
+            );
             if (this.isSeller && this.configuration.consolidated_quotations) {
-                
-                console.log("🚀 ~ canAddItem ~ this.customer_unit_type_id:", this.customer_unit_type_id)
-                return !(this.customer_unit_type_id == null || this.customer_unit_type_id == '');
+                console.log(
+                    "🚀 ~ canAddItem ~ this.customer_unit_type_id:",
+                    this.customer_unit_type_id
+                );
+                return !(
+                    this.customer_unit_type_id == null ||
+                    this.customer_unit_type_id == ""
+                );
             }
             return true;
         }
     },
     methods: {
-          changeCustomer() {
+        openQuotationDialog() {
+            this.showQuotationListDialog = true;
+        },
+        changeCustomer() {
             this.localOrden = [];
             // this.$emit("update:localOrden", []);
-            this.searchFoodByCustomerUnitTypeId(this.formQtn.customer_id)
+            console.log(
+                "🚀 ~ changeCustomer ~ this.formQtn.customer_id:",
+                this.formQtn.customer_id
+            );
+            this.searchFoodByCustomerUnitTypeId(this.formQtn.customer_id);
+            this.$forceUpdate();
             // this.$emit(
             //     "searchFoodByCustomerUnitTypeId",
             //     this.formQtn.customer_id
             // );
         },
-          searchRemoteCustomers(input) {
+        searchRemoteCustomers(input) {
             if (input.length > 0) {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
@@ -2160,9 +2210,15 @@ export default {
         },
         searchFoodByCustomerUnitTypeId(id) {
             this.customer_unit_type_id = id;
-            console.log("🚀 ~ searchFoodByCustomerUnitTypeId ~ this.customer_unit_type_id:", this.customer_unit_type_id)
-                console.log("🚀 ~ canAddItem ~ this.isSeller :", this.isSeller )
-                    console.log("🚀 ~ canAddItem ~ this.configuration.consolidated_quotations:", this.configuration.consolidated_quotations)
+            console.log(
+                "🚀 ~ searchFoodByCustomerUnitTypeId ~ this.customer_unit_type_id:",
+                this.customer_unit_type_id
+            );
+            console.log("🚀 ~ canAddItem ~ this.isSeller :", this.isSeller);
+            console.log(
+                "🚀 ~ canAddItem ~ this.configuration.consolidated_quotations:",
+                this.configuration.consolidated_quotations
+            );
             this.getFoods("customer_unit_type_id=" + id ?? "");
         },
         addUnitType(type) {
@@ -3606,26 +3662,29 @@ export default {
                         this.localOrden.unshift(orden);
                     }
 
-          //y si no agregarla como nueva
-        } else if (categoriaMadera) {
-        console.log(categoriaMadera);
-          let indexFind = this.localOrden.findIndex(
-            orden => orden.categoriaMadera && orden.categoriaMadera.key == categoriaMadera.key
-          );
-          if (indexFind != -1) {
-            this.localOrden[indexFind].quantity =
-              Number(this.localOrden[indexFind].quantity) + (categoriaMadera.quantity || 1);
-            // Number(type.quantity_unit);
-          } else {
-            // orden.quantity = Number(type.quantity_unit);
-            orden.quantity = categoriaMadera.quantity;
-            orden.price = categoriaMadera.price;
-            orden.categoriaMadera = categoriaMadera;
-            orden.to_carry = false;
-            orden.change_subtotal = false;
-            orden.series = [];
-            orden.lotes = [];
-            orden.color_size = [];
+                    //y si no agregarla como nueva
+                } else if (categoriaMadera) {
+                    console.log(categoriaMadera);
+                    let indexFind = this.localOrden.findIndex(
+                        orden =>
+                            orden.categoriaMadera &&
+                            orden.categoriaMadera.key == categoriaMadera.key
+                    );
+                    if (indexFind != -1) {
+                        this.localOrden[indexFind].quantity =
+                            Number(this.localOrden[indexFind].quantity) +
+                            (categoriaMadera.quantity || 1);
+                        // Number(type.quantity_unit);
+                    } else {
+                        // orden.quantity = Number(type.quantity_unit);
+                        orden.quantity = categoriaMadera.quantity;
+                        orden.price = categoriaMadera.price;
+                        orden.categoriaMadera = categoriaMadera;
+                        orden.to_carry = false;
+                        orden.change_subtotal = false;
+                        orden.series = [];
+                        orden.lotes = [];
+                        orden.color_size = [];
 
                         this.localOrden.unshift(orden);
                     }
@@ -4423,8 +4482,7 @@ export default {
                 commands_fisico: null,
                 to_carry: false
             };
-            
-            
+
             this.formQtn = {
                 customer_id: null
             };
@@ -5730,7 +5788,7 @@ export default {
         },
         addFood(index = 0, type = null, categoria = null) {
             /* console.log("...x: ", categoria); */
-                if (!this.canAddItem) {
+            if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",
                     "Debe seleccionar un cliente",
@@ -5854,7 +5912,7 @@ export default {
                 false,
                 categoria
             );
-            
+
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,

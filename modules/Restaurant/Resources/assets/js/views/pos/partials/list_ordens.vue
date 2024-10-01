@@ -296,6 +296,23 @@
                                         this.isSeller
                                 "
                             >
+                                <!-- <button
+                                    alt="Cotizar"
+                                    class="btn btn-light mt-2"
+                                    type="button"
+                                    v-if="isSellerConsolidated"
+                                    @click="openQuotationList"
+                                    style="max-height: 45px ; max-width: 80px;"
+                                >
+                                    <i
+                                        class="fas fa-list"
+                                        style="color: var(--primary) !important"
+                                    ></i>
+                                    <br />
+                                    <small>
+                                        Cotizaciones
+                                    </small>
+                                </button> -->
                                 <button
                                     alt="Cotizar"
                                     class="btn btn-light mt-2"
@@ -2708,6 +2725,9 @@ export default {
         this.checkCashAvailable();
     },
     methods: {
+    openQuotationList(){
+
+    },
         changeCustomer() {
             this.$emit("update:localOrden", []);
             this.$emit(

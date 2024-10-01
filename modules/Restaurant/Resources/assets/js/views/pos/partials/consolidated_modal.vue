@@ -32,6 +32,12 @@
                             Cotización
                         </th>
                         <th>
+                            Preventa
+                        </th>
+                        <th>
+                            Fecha
+                        </th>
+                        <th>
                             Cliente
                         </th>
                         <th>
@@ -47,6 +53,8 @@
                             ></el-checkbox>
                         </td>
                         <td>{{ record.identifier }}</td>
+                        <td>{{ record.user_name }}</td>
+                        <td>{{ record.date_of_issue }}</td>
                         <td>
                             {{ record.customer_name }}
                             <br />

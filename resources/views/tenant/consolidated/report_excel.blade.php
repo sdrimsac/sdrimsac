@@ -40,6 +40,79 @@
         </table>
     </div>
     <br>
+    @if (!empty($groupedQuotations))
+        <div>
+            <table width="100%" class="">
+
+                <thead>
+                    <tr>
+                        <th class="encabezado">CODIGO PRODUCTO</th>
+                        <th class="encabezado">#</th>
+                        <th class="encabezado">PRODUCTO</th>
+                        <th class="encabezado">PRESENTACION</th>
+                        <th class="encabezado">CANTIDAD</th>
+                        <th class="encabezado">CLIENTE</th>
+                        <th class="encabezado">ZONA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $idx_g = 0;
+                    @endphp
+                    @foreach ($groupedQuotations as $idx => $value)
+                        @php
+                            $idx_iteration = $loop->iteration;
+                            //count all items
+                            $count_zone_items = 0;
+                            foreach ($value as $idx2 => $value2) {
+                                $count_zone_items += count($value2->items);
+                            }
+                        @endphp
+                        @foreach ($value as $idx2 => $value2)
+                            
+                            @foreach ($value2->items as $item)
+                                @php
+                                    $idx_g++;
+                                    $unitTypeDescription = '-';
+                                    if (isset($item->item->from_unit_type_id)) {
+                                        $unitType = \App\Models\Tenant\ItemUnitType::find(
+                                            $item->item->from_unit_type_id,
+                                        );
+                                        $unitTypeDescription = $unitType ? $unitType->description : '-';
+                                    }
+                                @endphp
+                                <tr>
+                                    <td>
+                                        {{ $item->item->internal_id }}
+                                    </td>
+                                    <td>
+                                        {{ $idx_g }}
+                                    </td>
+                                    <td>
+                                        {{ $item->item->description }}
+                                    </td>
+                                    <td>
+                                        {{ $unitTypeDescription }}
+                                    </td>
+                                    <td>
+                                        {{ $item->quantity }}
+                                    </td>
+                                    <td>
+                                        {{ $value2->customer->name }} {{$idx2}} {{$idx_g}} {{$idx}}
+                                    </td>
+                                    @if ($idx_iteration == 0)
+                                        <td colrow={$count_zone_items}>
+                                            {{ $value2->person->zone->description }}
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
     @if (!empty($records))
         <div class="">
             <div class=" ">
@@ -54,12 +127,9 @@
                     </tr>
                     <tbody>
                         @foreach ($records as $idx => $value)
-                    
                             <tr>
                                 <td>
-                                    {{
-                                        $loop->iteration 
-                                    }}
+                                    {{ $loop->iteration }}
                                 </td>
                                 <td>
                                     {{ $value->item_description }}
@@ -71,7 +141,7 @@
                                     {{ $value->total_quantity }}
 
                                 </td>
-                                
+
 
                             </tr>
                         @endforeach

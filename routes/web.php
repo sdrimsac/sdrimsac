@@ -738,6 +738,7 @@ if ($hostname) {
                 //quotations
                 Route::get('quotations', [App\Http\Controllers\Tenant\QuotationController::class, 'index'])->name('tenant.quotations.index')->middleware('redirect.level')->middleware('just.admin');
                 Route::get('quotations/to-consolidated', [App\Http\Controllers\Tenant\QuotationController::class, 'toConsolidated']);
+                Route::get('quotations/records-current-user', [App\Http\Controllers\Tenant\QuotationController::class, 'recordsCurrentUser']);
                 Route::post('quotations/consolidated', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidated']);
                 Route::get('quotations/consolidateds', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidateds']);
                 Route::get('quotations/consolidateds/{id}/export', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExport']);

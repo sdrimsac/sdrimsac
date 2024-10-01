@@ -246,7 +246,15 @@ class QuotationController extends Controller
     public function consolidatedsExport($id)
     {
         $consolidated = Consolidated::with('quotations.items')->find($id);
+        $quotations = $consolidated->quotations()->with(['person.zone'])->get();
 
+        // Agrupar las cotizaciones por zonas
+        $groupedQuotations = $quotations->groupBy(function ($quotation) {
+            return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
+        });
+        
+        // Ejemplo de cómo podrías iterar sobre las cotizaciones agrupadas
+        
         $quotationItems = $consolidated->quotations->flatMap(function ($quotation) {
             return $quotation->items;
         });
@@ -277,6 +285,7 @@ class QuotationController extends Controller
         });
         return (new ConsolidatedExport())
             ->records($transformedItems)
+            ->groupedQuotations($groupedQuotations)
             ->consolidated($consolidated)
             ->company(Company::active())
             ->download("Consolidado_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
@@ -321,7 +330,8 @@ class QuotationController extends Controller
     }
     public function toConsolidated()
     {
-        $records = Quotation::where('consolidated', false);
+        $records = Quotation::where('consolidated', false)
+        ->orderBy('id', 'desc');
 
 
         return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
@@ -344,6 +354,13 @@ class QuotationController extends Controller
         return compact('state_types', 'sellers');
     }
 
+    public function recordsCurrentUser(Request $request)
+    {
+        $records = Quotation::where('user_id', auth()->id())->latest()
+            ->orderBy('date_of_issue', 'desc');
+
+        return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function records(Request $request)
     {
         $records = $this->getRecords($request);

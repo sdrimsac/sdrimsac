@@ -3978,7 +3978,7 @@ export default {
 
                 if (
                     (ordenId == undefined || ordenId == null) &&
-                    (form.variation == undefined || form.variation == null) &&
+                    (form.variation == undefined || form.variation == null || form.variation.items.length == 0) &&
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table &&
                     printOrdenHotel

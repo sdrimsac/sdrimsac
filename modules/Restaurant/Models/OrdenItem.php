@@ -85,7 +85,7 @@ class OrdenItem extends ModelTenant
     public function stockRestaurant()
     {
         $configuration = Configuration::first();
-        if ($configuration->restaurant) {
+        if ($configuration->restaurant && $configuration->hot) {
             $establishment_id = auth()->user()->establishment_id;
             $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
             $warehouse_id = $warehouse->id;
