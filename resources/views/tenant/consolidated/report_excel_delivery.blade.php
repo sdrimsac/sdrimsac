@@ -37,6 +37,13 @@
                 </td>
                 <td align="center">{{ $company->number }}</td>
             </tr>
+            <tr>
+                <td colspan="2">
+                    <p>
+                        <strong>Número de cotizaciones:</strong> {{ $count }}
+                    </p>
+                </td>
+            </tr>
         </table>
     </div>
     <br>

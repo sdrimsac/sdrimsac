@@ -24,6 +24,7 @@ class ConsolidateQuotationCollection extends ResourceCollection
                 'establishment' => $row->establishment->description,
                 'date' => $row->created_at->format('Y-m-d H:i:s'),
                 'quotations' => $quotations_ids,
+                'zone' => isset($row->person->zone) ? $row->person->zone->description : '',
                 // 'total' => $total,
             ];
         });

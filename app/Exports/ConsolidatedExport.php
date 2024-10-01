@@ -13,6 +13,7 @@ class ConsolidatedExport implements  FromView, ShouldAutoSize
 {
     use Exportable;
     protected $records;
+    protected $count= 0;
     protected $company;
     protected $delivery = false;
     protected $groupedQuotations;
@@ -23,6 +24,10 @@ class ConsolidatedExport implements  FromView, ShouldAutoSize
         return $this;
     }
 
+    public function count($value) {
+        $this->count = $value;
+        return $this;
+    }
     public function company($value) {
         $this->company = $value;
         return $this;
@@ -49,6 +54,7 @@ class ConsolidatedExport implements  FromView, ShouldAutoSize
             $view = 'tenant.consolidated.report_excel_delivery';
         }
         return view($view, [
+            'count' => $this->count,
             'records'=> $this->records,
             'company'=> $this->company,
             'consolidated'=> $this->consolidated,

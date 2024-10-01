@@ -247,7 +247,7 @@ class QuotationController extends Controller
     {
         $consolidated = Consolidated::with('quotations.items')->find($id);
         $quotations = $consolidated->quotations()->with(['person.zone'])->get();
-
+        $count = $quotations->count();
         // Agrupar las cotizaciones por zonas
         $groupedQuotations = $quotations->groupBy(function ($quotation) {
             return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
@@ -287,6 +287,7 @@ class QuotationController extends Controller
             ];
         });
         return (new ConsolidatedExport())
+            ->count($count)
             ->delivery(true)
             ->records($transformedItems)
             ->groupedQuotations($groupedQuotations)

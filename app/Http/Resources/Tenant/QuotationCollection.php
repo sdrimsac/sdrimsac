@@ -28,6 +28,7 @@ class QuotationCollection extends ResourceCollection
                 'delivery_date' => ($row->delivery_date) ? $row->delivery_date->format('Y-m-d') : null,
                 'identifier' => $row->identifier,
                 'user_name' => $row->user->name,
+                'zone' => isset($row->person->zone) ? $row->person->zone->description : '',
                 'customer_name' =>$row->person->alias ? ($row->person->alias." - ".$row->customer->name)  :   $row->customer->name,
                 'customer_number' => $row->customer->number,
                 'currency_type_id' => $row->currency_type_id,
