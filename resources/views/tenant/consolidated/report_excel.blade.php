@@ -85,11 +85,12 @@
                                 @endphp
                                 <tr>
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                        {{ $item->item->internal_id }}
-                                    </td>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $idx_g }}
                                     </td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                        {{ $item->item->internal_id }}
+                                    </td>
+                            
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->description }}
                                     </td>
