@@ -27,7 +27,6 @@
                     format="yyyy-MM-dd"
                 ></el-date-picker>
             </div>
-        
         </div>
 
         <div class="table-responsive">
@@ -70,6 +69,19 @@
                                 <i class="el-icon-download"></i>
                             </el-button>
                             <el-tooltip
+                                content="Exportar formato de entrega"
+                                placement="top"
+                                effect="dark"
+                            >
+                                <el-button
+                                    type="primary"
+                                    size="mini"
+                                    @click="clickExportDelivery(record)"
+                                >
+                                    <i class="fas fa-truck"></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
                                 content="Imprimir cotizaciones"
                                 placement="top"
                                 effect="dark"
@@ -82,7 +94,6 @@
                                     <i class="el-icon-printer"></i>
                                 </el-button>
                             </el-tooltip>
-                            
                         </td>
                     </tr>
                 </tbody>
@@ -122,7 +133,7 @@ export default {
     },
     computed: {},
     methods: {
-        clickReport(){
+        clickReport() {
             window.open(`/${this.resource}/consolidateds/${record.id}/report`);
         },
         query() {
@@ -132,8 +143,8 @@ export default {
                 page: this.pagination.current_page
             });
         },
-        getRecordsTimer(){
-            if(this.timer){
+        getRecordsTimer() {
+            if (this.timer) {
                 clearTimeout(this.timer);
             }
             this.timer = setTimeout(() => {
@@ -142,6 +153,11 @@ export default {
         },
         clickExport(record) {
             window.open(`/${this.resource}/consolidateds/${record.id}/export`);
+        },
+        clickExportDelivery(record) {
+            window.open(
+                `/${this.resource}/consolidateds/${record.id}/export-delivery`
+            );
         },
         customIndex(index) {
             return (

@@ -1228,9 +1228,7 @@
                                                                         class="block mb-2"
                                                                     >
                                                                         <span
-                                                                            v-if="
-                                                                                !isSellerConsolidated
-                                                                            "
+                                                                        
                                                                             class="time font-weight-light"
                                                                         >
                                                                             <span
@@ -1370,7 +1368,11 @@
                                                     </div>
                                                 </el-tooltip>
                                             </div>
+                                        
                                         </div>
+                                            <div
+                                            style="margin-top: 150px;"
+                                            ></div>
                                     </div>
                                 </div>
                             </div>
@@ -2561,7 +2563,8 @@ export default {
         formatDescriptionType(type) {
             let price = this.getDefaultPrice(type);
             let quantityUnit = Number(type.quantity_unit);
-            let priceString = this.isSellerConsolidated ? "" : `- S/ ${price}`;
+            // let priceString = this.isSellerConsolidated ? "" : `- S/ ${price}`;
+            let priceString = `- S/ ${price}`;
 
             return `${type.description} (${quantityUnit}) ${priceString}`;
         },

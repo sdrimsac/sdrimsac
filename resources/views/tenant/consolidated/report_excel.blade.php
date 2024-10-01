@@ -46,13 +46,27 @@
 
                 <thead>
                     <tr>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CODIGO PRODUCTO</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRODUCTO</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRESENTACION</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CANTIDAD</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CLIENTE</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">ZONA</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#
+                        </th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            CODIGO PRODUCTO</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            PRODUCTO</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            PRESENTACION</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            CANTIDAD</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            CLIENTE</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            ZONA</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,7 +104,7 @@
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->internal_id }}
                                     </td>
-                            
+
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->description }}
                                     </td>
@@ -100,13 +114,20 @@
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->quantity }}
                                     </td>
-                                    @if ($loop->first)
-                                        <td valign="middle" rowspan="{{ $count_client_items }}" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                            {{ $value2->customer->name }}
-                                        </td>
-                                    @endif
+                                    <td valign="middle" rowspan="{{ $count_client_items }}"
+                                        style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                        @php
+                                            $name = $value2->customer->name;
+                                            if (isset($value2->person->alias)) {
+                                                $name = $value2->person->alias . ' - ' . $name;
+                                            }
+
+                                        @endphp
+                                        {{ $name }}
+                                    </td>
                                     @if ($loop->first && $idx2 == 0)
-                                        <td valign="middle" rowspan="{{ $count_zone_items }}" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                        <td valign="middle" rowspan="{{ $count_zone_items }}"
+                                            style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                             {{ $idx }}
                                         </td>
                                     @endif
@@ -118,50 +139,7 @@
             </table>
         </div>
     @endif
-    @if (!empty($records))
-        <div class="">
-            <div class=" ">
 
-                <table width="100%" class="">
-
-                    <tr>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CODIGO</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRODUCTO</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRESENTACION</th>
-                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CANTIDAD</th>
-                    </tr>
-                    <tbody>
-                        @foreach ($records as $idx => $value)
-                            <tr>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $loop->iteration }}
-                                </td>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $value->item_internal_id }}
-                                </td>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $value->item_description }}
-                                </td>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $value->unit_type_description }}
-                                </td>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $value->total_quantity }}
-
-                                </td>
-
-
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-                </table>
-            @else
-                <div class="callout callout-info">
-                    <p>No se encontraron registros.</p>
-                </div>
-    @endif
 </body>
 
 </html>

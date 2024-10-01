@@ -742,6 +742,7 @@ if ($hostname) {
                 Route::post('quotations/consolidated', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidated']);
                 Route::get('quotations/consolidateds', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidateds']);
                 Route::get('quotations/consolidateds/{id}/export', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExport']);
+                Route::get('quotations/consolidateds/{id}/export-delivery', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExportDelivery']);
                 Route::get('quotations/consolidateds/{id}/print', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsPrint']);
                 Route::get('quotations/columns', [App\Http\Controllers\Tenant\QuotationController::class, 'columns']);
                 Route::get('quotations/items-to-cash/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'itemsToCash']);

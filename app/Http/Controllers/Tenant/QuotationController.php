@@ -243,6 +243,56 @@ class QuotationController extends Controller
             'message' => 'Impresión enviada a la cola de impresión'
         ];
     }
+    public function consolidatedsExportDelivery($id)
+    {
+        $consolidated = Consolidated::with('quotations.items')->find($id);
+        $quotations = $consolidated->quotations()->with(['person.zone'])->get();
+
+        // Agrupar las cotizaciones por zonas
+        $groupedQuotations = $quotations->groupBy(function ($quotation) {
+            return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
+        });
+        
+        // Ejemplo de cómo podrías iterar sobre las cotizaciones agrupadas
+        
+        $quotationItems = $consolidated->quotations->flatMap(function ($quotation) {
+            return $quotation->items;
+        });
+
+        $groupedItems = $quotationItems->groupBy(function ($item) {
+            $itemData = $item->item;
+            return $item->item_id . '-' . ($itemData->from_unit_type_id ?? 'null');
+        });
+
+        $transformedItems = $groupedItems->map(function ($items, $key) {
+            $firstItem = $items->first();
+            $itemData = $firstItem->item;
+            $totalQuantity = $items->sum('quantity');
+            $itemDescription = $itemData->description;
+            $itemInternalId = $itemData->internal_id;
+            $unitTypeDescription = null;
+
+            if (isset($itemData->from_unit_type_id)) {
+                $unitType = ItemUnitType::find($itemData->from_unit_type_id);
+                $unitTypeDescription = $unitType ? $unitType->description : 'Unknown';
+            }
+
+            return (object) [
+                'item_id' => $firstItem->item_id,
+                'total_quantity' => $totalQuantity,
+                'item_description' => $itemDescription,
+                'unit_type_description' => $unitTypeDescription,
+                'item_internal_id' => $itemInternalId,
+            ];
+        });
+        return (new ConsolidatedExport())
+            ->delivery(true)
+            ->records($transformedItems)
+            ->groupedQuotations($groupedQuotations)
+            ->consolidated($consolidated)
+            ->company(Company::active())
+            ->download("Reparto_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
+    }
     public function consolidatedsExport($id)
     {
         $consolidated = Consolidated::with('quotations.items')->find($id);
