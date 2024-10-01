@@ -114,14 +114,13 @@
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->quantity }}
                                     </td>
-                                    <td valign="middle" rowspan="{{ $count_client_items }}"
+                                    <td valign="middle" 
                                         style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         @php
                                             $name = $value2->customer->name;
                                             if (isset($value2->person->alias)) {
                                                 $name = $value2->person->alias . ' - ' . $name;
                                             }
-
                                         @endphp
                                         {{ $name }}
                                     </td>
