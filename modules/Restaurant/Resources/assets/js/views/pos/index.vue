@@ -1150,16 +1150,18 @@
                                                         style="height: 125px; width: 297px ; margin-left: 9px; "
                                                     >
                                                         <div
-                                                        @click="
-                                                            configuration.consolidated_quotations &&
-                                                            data.types.length >
-                                                                0
-                                                                ? clickCommand(
-                                                                      data
-                                                                          .types[0]
-                                                                  )
-                                                                : addFood(index)
-                                                        "
+                                                            @click="
+                                                                configuration.consolidated_quotations &&
+                                                                data.types
+                                                                    .length > 0
+                                                                    ? clickCommand(
+                                                                          data
+                                                                              .types[0]
+                                                                      )
+                                                                    : addFood(
+                                                                          index
+                                                                      )
+                                                            "
                                                         >
                                                             <div>
                                                                 <span
@@ -2558,9 +2560,10 @@ export default {
         },
         formatDescriptionType(type) {
             let price = this.getDefaultPrice(type);
-            return `${type.description} (${Number(
-                type.quantity_unit
-            )}) - S/ ${price}`;
+            let quantityUnit = Number(type.quantity_unit);
+            let priceString = this.isSellerConsolidated ? "" : `- S/ ${price}`;
+
+            return `${type.description} (${quantityUnit}) ${priceString}`;
         },
         saveInLocalStorageSearchSeries(searchSeries) {
             localStorage.setItem("searchSeries", searchSeries ? "1" : "0");
