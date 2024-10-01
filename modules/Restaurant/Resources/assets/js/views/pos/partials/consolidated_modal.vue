@@ -28,6 +28,9 @@
                                 @change="handleCheckAll"
                             ></el-checkbox>
                         </th>
+                                <th>
+                            Zona
+                        </th>
                         <th>
                             Cotización
                         </th>
@@ -37,9 +40,7 @@
                         <th>
                             Fecha
                         </th>
-                            <th>
-                            Zona
-                        </th>
+                    
                         <th>
                             Cliente
                         </th>
@@ -55,10 +56,11 @@
                             @change="handleCheck(record)"
                             ></el-checkbox>
                         </td>
+                        <td>{{ record.zone }}</td>
                         <td>{{ record.identifier }}</td>
                         <td>{{ record.user_name }}</td>
                         <td>{{ record.date_of_issue }}</td>
-                        <td>{{ record.zone }}</td>
+                        
                         <td>
                             {{ record.customer_name }}
                             <br />
