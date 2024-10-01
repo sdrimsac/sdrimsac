@@ -30,11 +30,50 @@ use Modules\Vip\Models\SocialMedias;
 
 class PersonController extends Controller
 {
+    /* public function generateNumber()
+    {
+        $regex = '/^\d+$/';
+        $new_code = "";
+        $persons = Person::where('number', 'regexp', '^1[0-9]{7}$')->orderBy('number', 'desc')->first();
+
+        if (!$persons) {
+            $new_code = "10000001";
+        } else {
+            $number = $persons->number;
+            if (preg_match($regex, $number) === 1) {
+                $new_code = intval($number) + 1;
+            } else {
+                $new_code = "10000001";
+            }
+        }
+        return response()->json(['number' => $new_code]);
+    } */
+
+    public function generateNumber()
+    {
+        $regex = '/^1[0-9]{7}$/';
+        $new_code = "";
+
+        $persons = Person::where('number', 'regexp', '^1[0-9]{7}$')->orderBy('number', 'desc')->first();
+
+        if (!$persons) {
+            $new_code = "10000001";
+        } else {
+            $number = $persons->number;
+            if (preg_match($regex, $number) === 1) {
+                $new_code = str_pad(intval($number) + 1, 8, '0', STR_PAD_LEFT);
+            } else {
+                $new_code = "10000001";
+            }
+        }
+
+        return response()->json(['number' => $new_code]);
+    }
     public function index($type)
-    {       
+    {
         $is_arca = (new RoleService)->isArca();
         $api_service_token = config('configuration.api_service_token');
-        return view('tenant.persons.index', compact('type', 'api_service_token','is_arca'));
+        return view('tenant.persons.index', compact('type', 'api_service_token', 'is_arca'));
     }
     public function client_default()
     {

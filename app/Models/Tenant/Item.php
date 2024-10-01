@@ -50,14 +50,12 @@ class Item extends ModelTenant
         'stock',
         'stock_min',
         'percentage_of_profit',
-
         'attributes',
         'has_perception',
         'percentage_perception',
         'image',
         'image_medium',
         'image_small',
-
         'account_id',
         'amount_plastic_bag_taxes',
         'date_of_due',
@@ -114,14 +112,11 @@ class Item extends ModelTenant
             $currentColors = [];
             $ItemUnitsPerPackage = [];
             $ItemMoldProperty = [];
-
-
             $ItemProductFamily = [];
             $ItemMoldCavity = [];
             $ItemPackageMeasurement = [];
             $ItemStatus = [];
             $ItemUnitBusiness = [];
-
             $ItemSize = [];
         }
         if ($with_lots_has_sale == true) {
