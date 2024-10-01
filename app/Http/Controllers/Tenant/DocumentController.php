@@ -187,13 +187,13 @@ class DocumentController extends Controller
         $fecha7Dias = Carbon::now()->subDays(7)->format('Y-m-d');
         $infoCompleta = [];
         $domain = $request->domain;
-        if($domain == null){
+        if ($domain == null) {
             $domain = "XYZ";
         }
         $number = [995764963,  987828697, 972053723, 927498983, 935921640];
         // $number = 
         $message = 'Reporte de sistemas que no completaron el envio de documentos ';
-        $file_name = 'Tenant_Procesos_Caidos_'.$domain."_". Carbon::now() . '.xlsx';
+        $file_name = 'Tenant_Procesos_Caidos_' . $domain . "_" . Carbon::now() . '.xlsx';
         $sender = 'sdrimsac';
         $envio = new WhatsappController;
 
@@ -991,10 +991,10 @@ class DocumentController extends Controller
         $orden_id = isset($request['orden_id']) ? $request['orden_id'] : null;
         $order_ids = isset($request['order_ids']) ? $request['order_ids'] : null;
         if ($orden_id) {
-            
+
             $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
             foreach ($orden_items as $orden_item) {
-                
+
                 $orden_item->restoreRestaurant();
             }
         }
@@ -1028,7 +1028,7 @@ class DocumentController extends Controller
 
             Orden::where('document_id', $document_id)->update(["document_id" => null]);
         }
-      
+
         try {
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $facturalo = new Facturalo();
@@ -2328,6 +2328,7 @@ class DocumentController extends Controller
             $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
+                $orden_id = $record->orden_id;
                 $establishment_id = $record->establishment_id;
                 $date_of_issue = $record->date_of_issue;
                 $issued_date = Carbon::parse($date_of_issue);
@@ -2362,15 +2363,17 @@ class DocumentController extends Controller
                         // ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $warehouse_id)->increment('stock', $quantity);
                     }
                     Box::where('document_id', $document_id)->delete();
-                    $orden = Orden::where('document_id', $document_id)->first();
                     $desc = "App\Models\Tenant\Document";
                     InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
                     $record->save();
+                    if ($orden_id) {
+                        $orden = Orden::find($orden_id);
 
-                    if ($orden) {
-                        OrdenItem::where('orden_id', $orden->id)->update(["status_orden_id" => 5]);
-                        $orden->status_orden_id = 5;
-                        $orden->save();
+                        if ($orden) {
+                            OrdenItem::where('orden_id', $orden->id)->update(["status_orden_id" => 5]);
+                            $orden->status_orden_id = 5;
+                            $orden->save();
+                        }
                     }
                     $configuration = Configuration::first();
                     if ($configuration->college) {
