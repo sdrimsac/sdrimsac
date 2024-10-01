@@ -260,13 +260,13 @@ class QuotationController extends Controller
         });
 
         $groupedItems = $quotationItems->groupBy(function ($item) {
-            $itemData = $item->item;
-            return $item->item_id . '-' . ($itemData->from_unit_type_id ?? 'null');
+            return $item->item_id ;
         });
 
         $transformedItems = $groupedItems->map(function ($items, $key) {
             $firstItem = $items->first();
             $itemData = $firstItem->item;
+            $total = $items->sum('total');
             $totalQuantity = $items->sum('quantity');
             $itemDescription = $itemData->description;
             $itemInternalId = $itemData->internal_id;
@@ -283,6 +283,7 @@ class QuotationController extends Controller
                 'item_description' => $itemDescription,
                 'unit_type_description' => $unitTypeDescription,
                 'item_internal_id' => $itemInternalId,
+                'total' => $total,
             ];
         });
         return (new ConsolidatedExport())
@@ -316,6 +317,7 @@ class QuotationController extends Controller
 
         $transformedItems = $groupedItems->map(function ($items, $key) {
             $firstItem = $items->first();
+            $total = $items->sum('total');
             $itemData = $firstItem->item;
             $totalQuantity = $items->sum('quantity');
             $itemDescription = $itemData->description;
@@ -333,6 +335,7 @@ class QuotationController extends Controller
                 'item_description' => $itemDescription,
                 'unit_type_description' => $unitTypeDescription,
                 'item_internal_id' => $itemInternalId,
+                'total' => $total,
             ];
         });
         return (new ConsolidatedExport())

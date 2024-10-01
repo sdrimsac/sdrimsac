@@ -63,7 +63,16 @@
                             CANTIDAD</th>
                     </tr>
                     <tbody>
+                        @php
+                            $total = 0; 
+                            $total_quantity = 0; 
+                        @endphp
                         @foreach ($records as $idx => $value)
+                            @php
+                                $total += $value->total;
+                                $total_quantity += $value->total_quantity;
+                            @endphp
+
                             <tr>
                                 <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $loop->iteration }}
@@ -79,12 +88,23 @@
                                     {{ $value->total_quantity }}
 
                                 </td>
+                                
 
 
                             </tr>
                         @endforeach
 
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; padding: 8px; border: 1px solid #ddd;">
+                                <strong>TOTAL</strong>
+                            </td>
+                            <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                <strong>{{ $total }}</strong>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             @else
                 <div class="callout callout-info">
