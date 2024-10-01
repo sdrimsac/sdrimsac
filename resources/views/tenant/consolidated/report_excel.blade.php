@@ -55,9 +55,7 @@
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             PRODUCTO</th>
-                        <th class="encabezado"
-                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
-                            PRESENTACION</th>
+                    
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             CANTIDAD</th>
@@ -108,9 +106,7 @@
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->description }}
                                     </td>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                        {{ $unitTypeDescription }}
-                                    </td>
+                                
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->quantity }}
                                     </td>
