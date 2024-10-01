@@ -269,6 +269,7 @@ class QuotationController extends Controller
             $itemData = $firstItem->item;
             $totalQuantity = $items->sum('quantity');
             $itemDescription = $itemData->description;
+            $itemInternalId = $itemData->internal_id;
             $unitTypeDescription = null;
 
             if (isset($itemData->from_unit_type_id)) {
@@ -281,6 +282,7 @@ class QuotationController extends Controller
                 'total_quantity' => $totalQuantity,
                 'item_description' => $itemDescription,
                 'unit_type_description' => $unitTypeDescription,
+                'item_internal_id' => $itemInternalId,
             ];
         });
         return (new ConsolidatedExport())

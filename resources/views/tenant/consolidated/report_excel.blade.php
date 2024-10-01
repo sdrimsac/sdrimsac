@@ -46,13 +46,13 @@
 
                 <thead>
                     <tr>
-                        <th class="encabezado">CODIGO PRODUCTO</th>
-                        <th class="encabezado">#</th>
-                        <th class="encabezado">PRODUCTO</th>
-                        <th class="encabezado">PRESENTACION</th>
-                        <th class="encabezado">CANTIDAD</th>
-                        <th class="encabezado">CLIENTE</th>
-                        <th class="encabezado">ZONA</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CODIGO PRODUCTO</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRODUCTO</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRESENTACION</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CANTIDAD</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CLIENTE</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">ZONA</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,7 +69,9 @@
                             }
                         @endphp
                         @foreach ($value as $idx2 => $value2)
-                            
+                            @php
+                                $count_client_items = count($value2->items);
+                            @endphp
                             @foreach ($value2->items as $item)
                                 @php
                                     $idx_g++;
@@ -82,29 +84,31 @@
                                     }
                                 @endphp
                                 <tr>
-                                    <td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->internal_id }}
                                     </td>
-                                    <td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $idx_g }}
                                     </td>
-                                    <td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->description }}
                                     </td>
-                                    <td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $unitTypeDescription }}
                                     </td>
-                                    <td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->quantity }}
                                     </td>
-                                    <td>
-                                        {{ $value2->customer->name }} 
-                                    </td>
-                                    {{-- @if ($idx_iteration == 0) --}}
-                                        <td colrow={$count_zone_items}>
-                                            {{$idx}}
+                                    @if ($loop->first)
+                                        <td valign="middle" rowspan="{{ $count_client_items }}" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                            {{ $value2->customer->name }}
                                         </td>
-                                    {{-- @endif --}}
+                                    @endif
+                                    @if ($loop->first && $idx2 == 0)
+                                        <td valign="middle" rowspan="{{ $count_zone_items }}" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                            {{ $idx }}
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         @endforeach
@@ -120,24 +124,28 @@
                 <table width="100%" class="">
 
                     <tr>
-                        <th class="encabezado">#</th>
-                        <th class="encabezado">PRODUCTO</th>
-                        <th class="encabezado">PRESENTACION</th>
-                        <th class="encabezado">CANTIDAD</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CODIGO</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRODUCTO</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">PRESENTACION</th>
+                        <th class="encabezado" style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">CANTIDAD</th>
                     </tr>
                     <tbody>
                         @foreach ($records as $idx => $value)
                             <tr>
-                                <td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $loop->iteration }}
                                 </td>
-                                <td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    {{ $value->item_internal_id }}
+                                </td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $value->item_description }}
                                 </td>
-                                <td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $value->unit_type_description }}
                                 </td>
-                                <td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $value->total_quantity }}
 
                                 </td>
