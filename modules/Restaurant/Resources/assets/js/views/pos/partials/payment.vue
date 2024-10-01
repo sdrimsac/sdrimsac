@@ -3976,9 +3976,10 @@ export default {
                     printOrdenHotel = resultado;
                 }
 
+                    console.log("🚀 ~ clickPayment ~ form.variation:", form.variation)
                 if (
                     (ordenId == undefined || ordenId == null) &&
-                    (form.variation == undefined || form.variation == null || form.variation.items.length == 0) &&
+                    (form.variation == undefined || form.variation == null || form.variation == false) &&
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table &&
                     printOrdenHotel

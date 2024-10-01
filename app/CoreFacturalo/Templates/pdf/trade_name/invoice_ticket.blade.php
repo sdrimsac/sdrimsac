@@ -38,6 +38,14 @@
     $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('document_id', $document->id)->first();
     $stablishment = \App\Models\Tenant\Establishment::find($document->establishment_id);
+    if (!function_exists('getUnitTypeId')) {
+        function getUnitTypeId($id)
+        {   
+            $item_unit_types = \ App\Models\Tenant\ItemUnitType::find($id);
+            return $item_unit_types->unit_type_id;
+        }
+    }
+
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
@@ -685,7 +693,11 @@
                     </td>
 
                     <td class="text-center desc-9 align-top">
+                        @if(isset($row->item->from_unit_type_id))
+                        {{ getUnitTypeId($row->item->from_unit_type_id) }}
+                        @else
                         {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
+                        @endif
                     </td>
                     <td class="text-left desc-9 align-top">
                         @if ($configuration->show_internal_code_ticket)
