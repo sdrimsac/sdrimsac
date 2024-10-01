@@ -98,13 +98,13 @@
                                         {{ $item->quantity }}
                                     </td>
                                     <td>
-                                        {{ $value2->customer->name }} {{$idx2}} {{$idx_g}} {{$idx}}
+                                        {{ $value2->customer->name }} 
                                     </td>
-                                    @if ($idx_iteration == 0)
+                                    {{-- @if ($idx_iteration == 0) --}}
                                         <td colrow={$count_zone_items}>
-                                            {{ $value2->person->zone->description }}
+                                            {{$idx}}
                                         </td>
-                                    @endif
+                                    {{-- @endif --}}
                                 </tr>
                             @endforeach
                         @endforeach

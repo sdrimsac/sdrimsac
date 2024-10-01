@@ -302,7 +302,7 @@ class QuotationController extends Controller
             $remove_zero_from_start = ltrim($number, '0');
             $records->where('id', $remove_zero_from_start);
         }
-
+        $records = $records->orderBy('id', 'desc');
         return new ConsolidateQuotationCollection($records->paginate(config('tenant.items_per_page')));
         // return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
     }
