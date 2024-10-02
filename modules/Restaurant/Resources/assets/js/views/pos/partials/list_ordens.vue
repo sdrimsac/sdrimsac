@@ -419,7 +419,7 @@
                                 isCreatingOrden == false &&
                                     configuration.credit_list &&
                                     localOrden.length != 0 &&
-                                    !this.isSeller
+                                    !isSeller && isRestaurantWarehouse
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -2537,6 +2537,7 @@ export default {
 
     data() {
         return {
+            isRestaurantWarehouse:true,
             showConsolidated: false,
             quotationDirect:false,
             // exchange_rate_sale: 1,
@@ -2661,12 +2662,14 @@ export default {
         }
     },
     async mounted() {
+            this.isRestaurantWarehouse = this.establishments.description.includes("RESTAURANT");
+
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
         this.foodDefault = this.itemDefault;
         this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
-
+    console.log("estblia, " ,this.establishments);
         this.setOptionMenu();
         let ordens = [];
         let ordensSave = localStorage.ordens;

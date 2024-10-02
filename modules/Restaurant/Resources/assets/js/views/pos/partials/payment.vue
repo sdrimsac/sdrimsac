@@ -1711,6 +1711,7 @@ export default {
                 description: "Consumo",
                 price: 0
             },
+            isRestaurantWarehouse:false,
             showDialogDocumentDetraction: false,
             hasDetraction: false,
             methodsValidate: [
@@ -2649,6 +2650,7 @@ export default {
             }
         },
         async date_of_issue() {
+
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
@@ -3845,7 +3847,7 @@ export default {
                     "El establecimiento no tiene series disponibles para el comprobante"
                 );
             }
-            form.date_of_issue = moment().format("YYYY-MM-DD");
+            // form.date_of_issue = moment().format("YYYY-MM-DD");
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
                 
