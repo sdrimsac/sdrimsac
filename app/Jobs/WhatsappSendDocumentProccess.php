@@ -158,7 +158,7 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                     $url = config('app.whatsapp_url') . '/api/send-media';
                 }
                 // $url = 'http://localhost:3800/api/send-media';
-
+                Log::info('url: ' . $url);
                 $content_file = null;
 
                 if (!$xml) {

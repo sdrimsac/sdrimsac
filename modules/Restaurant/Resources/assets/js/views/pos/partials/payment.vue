@@ -2947,15 +2947,15 @@ export default {
             }
 
             //si el documento es una boleta solo permitir emitir si la fecha de emision tiene el mismo mes que la fecha actual
-            if (this.form.document_type_id == "03") {
-                let date = moment();
-                if (moment(this.form.date_of_issue).month() != date.month()) {
-                    this.$toast.error(
-                        "La fecha de emisión debe ser del mismo mes"
-                    );
-                    this.form.date_of_issue = moment().format("YYYY-MM-DD");
-                }
-            }
+            // if (this.form.document_type_id == "03") {
+            //     let date = moment();
+            //     if (moment(this.form.date_of_issue).month() != date.month()) {
+            //         this.$toast.error(
+            //             "La fecha de emisión debe ser del mismo mes"
+            //         );
+            //         this.form.date_of_issue = moment().format("YYYY-MM-DD");
+            //     }
+            // }
             // if(this.configuration.restrict_receipt_date){
             //     return;
             // }

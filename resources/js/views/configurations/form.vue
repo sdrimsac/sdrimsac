@@ -656,6 +656,19 @@
                                                 </div>
                                                 <div class="section-content">
                                                     <div class="row">
+                                                        <div class="col-md-2 mt-4">
+                                                            <div class="form-group">
+                                                                <label class="control-label w-100">
+                                                                      <i class="fas fa-sort-numeric-up tab-icon"></i>
+                                                                      Orden de items
+                                                                    
+                                                                    <el-tooltip class="item" effect="dark" content="Desactivado coloca el item nuevo arriba" placement="top-start">
+                                                                        <i class="fa fa-info-circle"></i>
+                                                                    </el-tooltip>
+                                                                </label>
+                                                                <el-switch v-model="form.order_desc_items" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Multiples Cajas', form.multiple_boxes, 'multiple_boxes', 'cashRegisterIcon')"></el-switch>
+                                                            </div>
+                                                        </div>
                                                         <!-- Multiples Caja (Usuario Cajero) -->
                                                         <div class="col-md-2 mt-4">
                                                             <div class="form-group">

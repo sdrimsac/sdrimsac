@@ -350,76 +350,98 @@
                                 isCreatingOrden == true ||
                                     clientTableData.table == undefined
                             "
-              class="btn btn-light mt-2"
-              type="button"
-              @click="cancelOrden"
-              style="max-height: 45px ; max-width: 80px;"
-            >
-              <i class="fas fa-trash" style="color: var(--primary) !important"></i>
-              <br />Limpiar
-            </button>
-            <button
-              :disabled="isSeller"
-              v-if="configuration.quotation && !isSeller && !isAnalist && !isSellerConsolidated"
-              alt="Cotizar "
-              class="btn btn-light mt-2"
-              type="button"
-              @click="openQuotation"
-              style="max-height: 45px ; max-width: 80px;"
-            >
-              <i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
-              <br />Cotizar
-            </button>
-            <button
-              v-if=" configuration.aparcado &&
-                   isCreatingOrden == false &&
-                   clientTableData.table ==
-                   undefined &&
-                   !configuration.college
-                    "
-              @click="openApart"
-              class="btn btn-light mt-2"
-              type="button"
-              style="max-height: 45px ; max-width: 80px;"
-            >
-              <i class="fas fa-cart-arrow-down" style="color: var(--primary) !important"></i>
-              <br />Aparcar
-            </button>
-            <button
-              v-if="
-                   configuration.consignment &&
-                   localOrden.length != 0 &&
-                   !isSeller
-                  "
-              class="btn btn-light mt-2"
-              type="button"
-              @click="openConsignment"
-              style="max-height: 45px ; max-width: 80px;"
-            >
-              <i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
-              <br />Consignar
-            </button>
-            <button
-              v-if="
-                 configuration.credits &&
-                 !configuration.sale_note_credit_confirm &&
-                 localOrden.length != 0 &&
-                 !isSeller
-                 "
-              @click="openCredit"
-              class="btn btn-light mt-2"
-              style="max-height: 45px ; max-width: 80px;"
-            >  
-                <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
-                <br/> Crédito
-            </button>
-            
-            <button
-              v-if="
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="cancelOrden"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-trash"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />Limpiar
+                        </button>
+                        <button
+                            :disabled="isSeller"
+                            v-if="
+                                configuration.quotation &&
+                                    !isSeller &&
+                                    !isAnalist &&
+                                    !isSellerConsolidated
+                            "
+                            alt="Cotizar "
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="openQuotation"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-clipboard-list"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />Cotizar
+                        </button>
+                        <button
+                            v-if="
+                                configuration.aparcado &&
+                                    isCreatingOrden == false &&
+                                    clientTableData.table == undefined &&
+                                    !configuration.college
+                            "
+                            @click="openApart"
+                            class="btn btn-light mt-2"
+                            type="button"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-cart-arrow-down"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />Aparcar
+                        </button>
+                        <button
+                            v-if="
+                                configuration.consignment &&
+                                    localOrden.length != 0 &&
+                                    !isSeller
+                            "
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="openConsignment"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-clipboard-list"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />Consignar
+                        </button>
+                        <button
+                            v-if="
+                                configuration.credits &&
+                                    !configuration.sale_note_credit_confirm &&
+                                    localOrden.length != 0 &&
+                                    !isSeller
+                            "
+                            @click="openCredit"
+                            class="btn btn-light mt-2"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-credit-card"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />
+                            Crédito
+                        </button>
+
+                        <button
+                            v-if="
                                 isCreatingOrden == false &&
                                     configuration.credit_list &&
                                     localOrden.length != 0 &&
-                                    !isSeller && isRestaurantWarehouse
+                                    !isSeller &&
+                                    isRestaurantWarehouse
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -499,17 +521,22 @@
                             @click="
                                 cancelGeneralOrden(clientTableData.orden_id)
                             "
-            >
-              <i class="fas fa-window-close" style="color: var(--primary) !important"></i>
-              <br />Cancelar
-            </button>
-            <div
-              v-if="localOrden.length != 0"
-              class="dropdown-as-select d-inline-block mt-2"
-              data-childselector="span"
-            >
-              <template v-if="!configuration.sale_note_credit_confirm">
-                <!-- <button
+                        >
+                            <i
+                                class="fas fa-window-close"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />Cancelar
+                        </button>
+                        <div
+                            v-if="localOrden.length != 0"
+                            class="dropdown-as-select d-inline-block mt-2"
+                            data-childselector="span"
+                        >
+                            <template
+                                v-if="!configuration.sale_note_credit_confirm"
+                            >
+                                <!-- <button
                   class="btn p-0"
                   type="button"
                   data-bs-toggle="dropdown"
@@ -530,11 +557,11 @@
                     <i class="fas fa-list" style="color: var(--primary) !important"></i>
                   </span>
                 </button> -->
-                <div
-                  class="dropdown-menu dropdown-menu-start col-md-2 col-1"
-                  style="max-width: 154px;"
-                >
-                   <!-- <div class="col-12">
+                                <div
+                                    class="dropdown-menu dropdown-menu-start col-md-2 col-1"
+                                    style="max-width: 154px;"
+                                >
+                                    <!-- <div class="col-12">
                     <el-button
                       v-if="
                                                 isCreatingOrden == false &&
@@ -554,7 +581,7 @@
                     </el-button>
                     <div></div>
                   </div> -->
-                  <!-- <div class="col-12">
+                                    <!-- <div class="col-12">
                     <el-button
                       v-if="
                              configuration.consignment &&
@@ -573,41 +600,53 @@
                       <div></div>
                     </el-button>
                   </div> -->
-                  <div class="col-12">
-                    <el-button
-                      v-if="
-                             configuration.credits &&
-                             localOrden.length != 0 &&
-                             !isSeller
-                            "
-                      @click="openCredit"
-                      class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                      style="max-width: 150px;"
-                    >
-                      <div class="text-center" style="margin-bottom: 2px">
-                        <span style="margin: 0 !important; padding: 0 !important">Crédito</span>
-                        <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
-                      </div>
-                      <div></div>
-                    </el-button>
-                  </div>
-                </div>
-              </template>
-              <template v-else>
-                <button
-                  alt="Cobrar La venta "
-                  v-if="isCreatingOrden == false"
-                  class="btn btn-light mt-2"
-                  type="button"
-                  @click="openCredit"
-                  style="max-height: 45px ; max-width: 80px;"
-                >
-                  <i class="fas fa-money-bill-wave" style="color: var(--primary) !important"></i>
-                  <br />Credito
-                </button>
-              </template>
-            </div>
-          </div>
+                                    <div class="col-12">
+                                        <el-button
+                                            v-if="
+                                                configuration.credits &&
+                                                    localOrden.length != 0 &&
+                                                    !isSeller
+                                            "
+                                            @click="openCredit"
+                                            class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
+                                            style="max-width: 150px;"
+                                        >
+                                            <div
+                                                class="text-center"
+                                                style="margin-bottom: 2px"
+                                            >
+                                                <span
+                                                    style="margin: 0 !important; padding: 0 !important"
+                                                    >Crédito</span
+                                                >
+                                                <i
+                                                    class="fas fa-credit-card"
+                                                    style="color: var(--primary) !important"
+                                                ></i>
+                                            </div>
+                                            <div></div>
+                                        </el-button>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <button
+                                    alt="Cobrar La venta "
+                                    v-if="isCreatingOrden == false"
+                                    class="btn btn-light mt-2"
+                                    type="button"
+                                    @click="openCredit"
+                                    style="max-height: 45px ; max-width: 80px;"
+                                >
+                                    <i
+                                        class="fas fa-money-bill-wave"
+                                        style="color: var(--primary) !important"
+                                    ></i>
+                                    <br />Credito
+                                </button>
+                            </template>
+                        </div>
+                    </div>
 
                     <div v-if="clientTableData.table" class="col-md-3">
                         <button
@@ -1283,7 +1322,9 @@
                                             v-show="localOrden.length > 0"
                                             class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
                                             v-for="(order_pend,
-                                            indexx) in localOrden"
+                                            indexx) in configuration.order_desc_items
+                                                ? localOrden.slice().reverse()
+                                                : localOrden"
                                             :key="indexx"
                                             v-loading="
                                                 loadingCommercialTreatment
@@ -1480,11 +1521,17 @@
                                                             class="row align-items-end"
                                                         >
                                                             <div
-                                                                :class="`${isSellerConsolidated ? 'col-12':'col-4 col-md-5 col-lg-4 col-xl-4'}`"
+                                                                :class="
+                                                                    `${
+                                                                        isSellerConsolidated
+                                                                            ? 'col-12'
+                                                                            : 'col-4 col-md-5 col-lg-4 col-xl-4'
+                                                                    }`
+                                                                "
                                                             >
                                                                 <span
                                                                     class="fw-bold"
->
+                                                                >
                                                                     Cantidad
                                                                     <br />
                                                                     <div
@@ -1644,46 +1691,50 @@
                                                                     </div>
                                                                 </span>
                                                             </div>
-                                                          <template v-if="!isSellerConsolidated">
-                                                              <div
-                                                                class="col-4 col-md-5 col-lg-5 col-xl-4"
+                                                            <template
+                                                                v-if="
+                                                                    !isSellerConsolidated
+                                                                "
                                                             >
-                                                                <span
-                                                                    class="time font-weight-light"
+                                                                <div
+                                                                    class="col-4 col-md-5 col-lg-5 col-xl-4"
                                                                 >
                                                                     <span
-                                                                        class="fw-bold"
+                                                                        class="time font-weight-light"
                                                                     >
-                                                                        Precio
-                                                                        <br />
-                                                                        <el-input
-                                                                            class="custom_input"
-                                                                            :disabled="
-                                                                                configuration.editar_precio_politica ==
-                                                                                    false
-                                                                            "
-                                                                            type="number"
-                                                                            v-model="
-                                                                                order_pend.price
-                                                                            "
-                                                                            @input="
-                                                                                update_price(
-                                                                                    indexx,
-                                                                                    order_pend.price
-                                                                                )
-                                                                            "
+                                                                        <span
+                                                                            class="fw-bold"
                                                                         >
-                                                                            <template
-                                                                                slot="prepend"
+                                                                            Precio
+                                                                            <br />
+                                                                            <el-input
+                                                                                class="custom_input"
+                                                                                :disabled="
+                                                                                    configuration.editar_precio_politica ==
+                                                                                        false
+                                                                                "
+                                                                                type="number"
+                                                                                v-model="
+                                                                                    order_pend.price
+                                                                                "
+                                                                                @input="
+                                                                                    update_price(
+                                                                                        indexx,
+                                                                                        order_pend.price
+                                                                                    )
+                                                                                "
                                                                             >
-                                                                                {{
-                                                                                    currency_id ==
-                                                                                    "USD"
-                                                                                        ? "$"
-                                                                                        : "S/"
-                                                                                }}
-                                                                            </template>
-                                                                            <!-- <template
+                                                                                <template
+                                                                                    slot="prepend"
+                                                                                >
+                                                                                    {{
+                                                                                        currency_id ==
+                                                                                        "USD"
+                                                                                            ? "$"
+                                                                                            : "S/"
+                                                                                    }}
+                                                                                </template>
+                                                                                <!-- <template
                                                                                 slot="prepend"
                                                                                 v-if="
                                                                                     order_pend
@@ -1695,110 +1746,110 @@
                                                                             >
                                                                                 $
                                       </template>-->
-                                                                        </el-input>
+                                                                            </el-input>
+                                                                        </span>
                                                                     </span>
-                                                                </span>
-                                                            </div>
-                                                            <div
-                                                                class="col-4 col-md-2 col-lg-3 mt-2"
-                                                            >
-                                                                <el-tag
-                                                                    :disable-transitions="
-                                                                        true
-                                                                    "
-                                                                    v-if="
-                                                                        !order_pend.change_subtotal
-                                                                    "
-                                                                    size="medium"
-                                                                >
-                                                                    <strong
-                                                                        style="font-weight: 700"
-                                                                    >
-                                                                        {{
-                                                                            parseFloat(
-                                                                                order_pend.price *
-                                                                                    order_pend.quantity
-                                                                            ).toFixed(
-                                                                                2
-                                                                            )
-                                                                        }}
-                                                                    </strong>
-                                                                </el-tag>
-                                                                <el-input
-                                                                    v-else
-                                                                    class="input-new-tag1"
-                                                                    v-model="
-                                                                        order_pend.newSubtotal
-                                                                    "
-                                                                    @input="
-                                                                        justNumber(
-                                                                            indexx
-                                                                        )
-                                                                    "
-                                                                    placeholder="0.00"
-                                                                    size="medium"
-                                                                ></el-input>
-                                                                <template
-                                                                    v-if="
-                                                                        configuration.edit_subtotal_box
-                                                                    "
+                                                                </div>
+                                                                <div
+                                                                    class="col-4 col-md-2 col-lg-3 mt-2"
                                                                 >
                                                                     <el-tag
+                                                                        :disable-transitions="
+                                                                            true
+                                                                        "
                                                                         v-if="
                                                                             !order_pend.change_subtotal
                                                                         "
-                                                                        role="button"
                                                                         size="medium"
-                                                                        @click="
-                                                                            changeSubtotal(
-                                                                                indexx
-                                                                            )
-                                                                        "
                                                                     >
-                                                                        <i
-                                                                            class="fas fa-edit text-primary"
-                                                                        ></i>
+                                                                        <strong
+                                                                            style="font-weight: 700"
+                                                                        >
+                                                                            {{
+                                                                                parseFloat(
+                                                                                    order_pend.price *
+                                                                                        order_pend.quantity
+                                                                                ).toFixed(
+                                                                                    2
+                                                                                )
+                                                                            }}
+                                                                        </strong>
                                                                     </el-tag>
-
-                                                                    <el-tag
+                                                                    <el-input
                                                                         v-else
-                                                                        role="button"
-                                                                        size="medium"
-                                                                        @click="
-                                                                            saveSubtotal(
+                                                                        class="input-new-tag1"
+                                                                        v-model="
+                                                                            order_pend.newSubtotal
+                                                                        "
+                                                                        @input="
+                                                                            justNumber(
                                                                                 indexx
                                                                             )
                                                                         "
-                                                                    >
-                                                                        <i
-                                                                            class="fas fa-save text-primary"
-                                                                        ></i>
-                                                                    </el-tag>
-                                                                </template>
-                                                                <el-tooltip
-                                                                    v-if="
-                                                                        configuration.change_price_product
-                                                                    "
-                                                                    content="Guardar precio del producto"
-                                                                    effect="dark"
-                                                                >
-                                                                    <el-tag
-                                                                        @click="
-                                                                            savePriceProduct(
-                                                                                indexx
-                                                                            )
-                                                                        "
-                                                                        role="button"
+                                                                        placeholder="0.00"
                                                                         size="medium"
-                                                                        type="success"
+                                                                    ></el-input>
+                                                                    <template
+                                                                        v-if="
+                                                                            configuration.edit_subtotal_box
+                                                                        "
                                                                     >
-                                                                        <i
-                                                                            class="fas fa-save text-primary"
-                                                                        ></i>
-                                                                    </el-tag>
-                                                                </el-tooltip>
-                                                            </div>
-                                                          </template>
+                                                                        <el-tag
+                                                                            v-if="
+                                                                                !order_pend.change_subtotal
+                                                                            "
+                                                                            role="button"
+                                                                            size="medium"
+                                                                            @click="
+                                                                                changeSubtotal(
+                                                                                    indexx
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            <i
+                                                                                class="fas fa-edit text-primary"
+                                                                            ></i>
+                                                                        </el-tag>
+
+                                                                        <el-tag
+                                                                            v-else
+                                                                            role="button"
+                                                                            size="medium"
+                                                                            @click="
+                                                                                saveSubtotal(
+                                                                                    indexx
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            <i
+                                                                                class="fas fa-save text-primary"
+                                                                            ></i>
+                                                                        </el-tag>
+                                                                    </template>
+                                                                    <el-tooltip
+                                                                        v-if="
+                                                                            configuration.change_price_product
+                                                                        "
+                                                                        content="Guardar precio del producto"
+                                                                        effect="dark"
+                                                                    >
+                                                                        <el-tag
+                                                                            @click="
+                                                                                savePriceProduct(
+                                                                                    indexx
+                                                                                )
+                                                                            "
+                                                                            role="button"
+                                                                            size="medium"
+                                                                            type="success"
+                                                                        >
+                                                                            <i
+                                                                                class="fas fa-save text-primary"
+                                                                            ></i>
+                                                                        </el-tag>
+                                                                    </el-tooltip>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                         <div
                                                             v-if="
@@ -2537,9 +2588,9 @@ export default {
 
     data() {
         return {
-            isRestaurantWarehouse:true,
+            isRestaurantWarehouse: true,
             showConsolidated: false,
-            quotationDirect:false,
+            quotationDirect: false,
             // exchange_rate_sale: 1,
             currency_id: "S/",
             cashAvailable: 0,
@@ -2662,14 +2713,16 @@ export default {
         }
     },
     async mounted() {
-            this.isRestaurantWarehouse = this.establishments.description.includes("RESTAURANT");
+        this.isRestaurantWarehouse = this.establishments.description.includes(
+            "RESTAURANT"
+        );
 
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
         this.foodDefault = this.itemDefault;
         this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
-    console.log("estblia, " ,this.establishments);
+        console.log("estblia, ", this.establishments);
         this.setOptionMenu();
         let ordens = [];
         let ordensSave = localStorage.ordens;
@@ -2728,9 +2781,7 @@ export default {
         this.checkCashAvailable();
     },
     methods: {
-    openQuotationList(){
-
-    },
+        openQuotationList() {},
         changeCustomer() {
             this.$emit("update:localOrden", []);
             this.$emit(
@@ -2987,7 +3038,9 @@ export default {
                     id: 4,
                     title: ["Aparcado"],
                     icon: "fas fa-cart-arrow-down",
-                    visible: !this.configuration.college && this.configuration.aparcado
+                    visible:
+                        !this.configuration.college &&
+                        this.configuration.aparcado
                 },
 
                 {
@@ -3262,15 +3315,18 @@ export default {
             return true;
         },
         openQuotation() {
-          this.quotationDirect=false;
+            this.quotationDirect = false;
             if (this.localOrden.length > 0) {
-              if (this.isSellerConsolidated) {
-                console.log("enviar");
-                  console.log("🚀 ~ openQuotation ~ this.:", this.quotationDirect)
-                  this.quotationDirect=true;
-                } 
-                
-            this.showQuotationForm = true;
+                if (this.isSellerConsolidated) {
+                    console.log("enviar");
+                    console.log(
+                        "🚀 ~ openQuotation ~ this.:",
+                        this.quotationDirect
+                    );
+                    this.quotationDirect = true;
+                }
+
+                this.showQuotationForm = true;
             }
         },
         savePrint() {
@@ -3749,29 +3805,33 @@ export default {
                 if (responses.status != 200) {
                     this.$toast.warning("Ocurrió un error");
 
-          return;
-        }
-        this.to_carry = false;
-        this.$emit("cancelOrden");
-        this.$emit("update:isCreatingOrden", false);
-        let msg = `Se agregó correctamente a la cuenta.`;
-        this.$toast.success(msg);
-      } catch (e) {
-        this.ordenLoading = false;
-        this.$toast.error("Ocurrió un error");
-      }
-    },
-    async sendOrden() {
-      if (this.localOrden.length == 0 && !this.variation) {
-        /* this.$toast.warning("Orden sin productos"); */
-        this.$showSAlert("ALERTA","No Tienes Productos Para Cobrar", "warning");
-        return;
-      }
-      let orden = {
-        status_orden_id: 1,
-        table_id: this.clientTableData.table_id,
-        to_carry: this.to_carry
-      };
+                    return;
+                }
+                this.to_carry = false;
+                this.$emit("cancelOrden");
+                this.$emit("update:isCreatingOrden", false);
+                let msg = `Se agregó correctamente a la cuenta.`;
+                this.$toast.success(msg);
+            } catch (e) {
+                this.ordenLoading = false;
+                this.$toast.error("Ocurrió un error");
+            }
+        },
+        async sendOrden() {
+            if (this.localOrden.length == 0 && !this.variation) {
+                /* this.$toast.warning("Orden sin productos"); */
+                this.$showSAlert(
+                    "ALERTA",
+                    "No Tienes Productos Para Cobrar",
+                    "warning"
+                );
+                return;
+            }
+            let orden = {
+                status_orden_id: 1,
+                table_id: this.clientTableData.table_id,
+                to_carry: this.to_carry
+            };
 
             this.ordenLoading = true;
             try {
@@ -4100,59 +4160,66 @@ export default {
             for (let ord of this.localOrden) {
                 let { series_enabled } = ord.food.item;
 
-        if (series_enabled && ord.series.length == 0) {
-          hasError = true;
-          break;
-        }
-      }
-      return hasError;
-    },
-    checkIfHasZeroTotal() {
-      let { localOrden } = this;
-      let pass = true;
-      for (let ord of localOrden) {
-        let {
-          food: { item }
-        } = ord;
-        let is15 =
-          item.sale_affectation_igv_type_id == "15" ||
-          item.sale_affectation_igv_type_id == 15;
-        if ((ord.price == 0 || ord.quantity == 0) && !is15) {
-          pass = false;
-          break;
-        }
-      }
-      return pass;
-    },
-    async payOrden() {
-    
-      if (!this.checkIfHasZeroTotal()) {
-        this.$toast.error(
-          "No puede realizar una venta de productos con total 0"
-        );
-        return;
-      }
-      if (this.checkIsExistSerie()) {
-        this.$toast.error("Producto sin serie seleccionada");
-        return;
-      }
-      if (!this.cash_id) {
-        this.$toast.error("No tiene una caja abierta");
-        return;
-      }
-      if (this.clientTableData.table) {
-        if (this.ordens.length == 0) {
-          /* this.$toast.warning("Orden sin productos"); */
-          this.$showSAlert("ALERTA","No Tienes Productos Para Cobrar", "warning");
-          return;
-        }
-      } else {
-        if (this.localOrden.length == 0 && !this.variation) {
-          /* this.$toast.warning("Orden sin productos"); */
-          this.$showSAlert("ALERTA","No Tienes Productos Para Cobrar", "warning");
-          return;
-        }
-      }
+                if (series_enabled && ord.series.length == 0) {
+                    hasError = true;
+                    break;
+                }
+            }
+            return hasError;
+        },
+        checkIfHasZeroTotal() {
+            let { localOrden } = this;
+            let pass = true;
+            for (let ord of localOrden) {
+                let {
+                    food: { item }
+                } = ord;
+                let is15 =
+                    item.sale_affectation_igv_type_id == "15" ||
+                    item.sale_affectation_igv_type_id == 15;
+                if ((ord.price == 0 || ord.quantity == 0) && !is15) {
+                    pass = false;
+                    break;
+                }
+            }
+            return pass;
+        },
+        async payOrden() {
+            if (!this.checkIfHasZeroTotal()) {
+                this.$toast.error(
+                    "No puede realizar una venta de productos con total 0"
+                );
+                return;
+            }
+            if (this.checkIsExistSerie()) {
+                this.$toast.error("Producto sin serie seleccionada");
+                return;
+            }
+            if (!this.cash_id) {
+                this.$toast.error("No tiene una caja abierta");
+                return;
+            }
+            if (this.clientTableData.table) {
+                if (this.ordens.length == 0) {
+                    /* this.$toast.warning("Orden sin productos"); */
+                    this.$showSAlert(
+                        "ALERTA",
+                        "No Tienes Productos Para Cobrar",
+                        "warning"
+                    );
+                    return;
+                }
+            } else {
+                if (this.localOrden.length == 0 && !this.variation) {
+                    /* this.$toast.warning("Orden sin productos"); */
+                    this.$showSAlert(
+                        "ALERTA",
+                        "No Tienes Productos Para Cobrar",
+                        "warning"
+                    );
+                    return;
+                }
+            }
 
             this.disableSend = true;
             let form_submit = {
@@ -4183,7 +4250,7 @@ export default {
             this.loading = true;
 
             this.commands_fisico = "";
-            
+
             form_submit.is_for_carry = this.to_carry;
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;
