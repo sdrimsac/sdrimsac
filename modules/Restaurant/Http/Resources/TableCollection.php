@@ -23,7 +23,7 @@ class TableCollection extends ResourceCollection
             //without     protected $with = ['orden_items', 'status_orden', 'salenote', 'document', 'customer', 'mesa'];
             
             ->where('status_orden_id', '!=', 5)
-            ->without(['orden_items',  'salenote', 'document', 'customer'])
+            ->without(['salenote', 'document', 'customer'])
             ->get();
             $tower = optional(optional($row->floor)->tower)->name;
             return [
