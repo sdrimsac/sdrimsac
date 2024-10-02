@@ -387,10 +387,11 @@ class QuotationController extends Controller
     public function toConsolidated()
     {
         $records = Quotation::where('consolidated', false)
-        ->orderBy('id', 'desc');
+        ->orderBy('id', 'desc')
+        ->get();
 
 
-        return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
+        return new QuotationCollection($records);
     }
     public function columns()
     {

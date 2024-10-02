@@ -2663,7 +2663,7 @@ export default {
                 this.value = null;
                 this.form.customer_id = null;
             }
-            if (!this.configuration.restrict_receipt_date) {
+            if (this.configuration.restrict_receipt_date) {
                 this.form.date_of_issue = moment().format("YYYY-MM-DD");
             }
             let { documents, document_default } = this.establishments;
@@ -3640,6 +3640,9 @@ export default {
             form.detraction = this.form.detraction;
             if (this.formVariation.items.length == 0) {
                 form.variation = false;
+            }
+            if(this.variation == true){
+                form.variation = true;
             }
             await this.clickPayment(form);
 

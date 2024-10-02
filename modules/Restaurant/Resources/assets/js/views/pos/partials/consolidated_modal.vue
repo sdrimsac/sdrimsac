@@ -28,7 +28,7 @@
                                 @change="handleCheckAll"
                             ></el-checkbox>
                         </th>
-                                <th>
+                        <th>
                             Zona
                         </th>
                         <th>
@@ -40,7 +40,7 @@
                         <th>
                             Fecha
                         </th>
-                    
+
                         <th>
                             Cliente
                         </th>
@@ -52,15 +52,16 @@
                 <tbody>
                     <tr v-for="record in records" :key="record.id">
                         <td>
-                            <el-checkbox v-model="record.checked"
-                            @change="handleCheck(record)"
+                            <el-checkbox
+                                v-model="record.checked"
+                                @change="handleCheck(record)"
                             ></el-checkbox>
                         </td>
                         <td>{{ record.zone }}</td>
                         <td>{{ record.identifier }}</td>
                         <td>{{ record.user_name }}</td>
                         <td>{{ record.date_of_issue }}</td>
-                        
+
                         <td>
                             {{ record.customer_name }}
                             <br />
@@ -120,7 +121,7 @@ export default {
             } catch (e) {
                 this.$message.error("Ocurrió un error al consolidar");
                 console.error(e);
-            }finally {
+            } finally {
                 this.loading = false;
             }
         },
@@ -146,18 +147,21 @@ export default {
                 const response = await this.$http(
                     `/${this.resource}/to-consolidated`
                 );
-                this.pagination = response.data.meta;
-                this.pagination.current_page = Number(
-                    this.pagination.current_page
-                );
-                this.records = response.data.data.map(record => {
-                    return {
-                        ...record,
-                        checked: true
-                    };
-                });
-                // this.checkAll = true;
-                // this.handleCheckAll();
+            
+                this.records = response.data.data
+                    .map(record => {
+                        return {
+                            ...record,
+                            checked: true
+                        };
+                    })
+                    .sort((a, b) => {
+                        if (a.zone < b.zone) return -1;
+                        if (a.zone > b.zone) return 1;
+                        if (a.identifier < b.identifier) return -1;
+                        if (a.identifier > b.identifier) return 1;
+                        return 0;
+                    });
             } catch (e) {
                 console.error(e);
             } finally {
