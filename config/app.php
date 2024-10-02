@@ -14,7 +14,7 @@ return [
     */
   'desarrollador' => env('DESARROLLADOR', 'SDRIMSAC SOLUTIONS'),
   'web_whatsapp' => env('WEB_WHATSAPP', 'sdrclientes.shop'),
-  'whatsapp_url' => env('API_SERVICE_URL'),
+  'whatsapp_url' => env('API_SERVICE_URL','sdrclientes.shop'),
   'whatsapp_token' => env('API_SERVICE_TOKEN'),
   'api_peru_service_url' => env('API_PERU_SERVICE_URL'),
   'api_peru_service_token' => env('API_PERU_SERVICE_TOKEN'),

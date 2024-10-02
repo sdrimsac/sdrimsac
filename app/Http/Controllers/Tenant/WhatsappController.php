@@ -404,7 +404,7 @@ class WhatsappController extends Controller
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
         // $url = 'http://localhost:3800/api/send-media';
-
+        Log::info("la url es: " . $url);
         $content_file = null;
 
         if (!$xml) {
