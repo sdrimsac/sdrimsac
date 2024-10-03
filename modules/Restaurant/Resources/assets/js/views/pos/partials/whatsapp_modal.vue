@@ -89,12 +89,12 @@ export default {
     async sendFiles() {
       if (!this.number) {
         /* this.$toast.warning("Ingrese un número"); */
-        this.$showSAlert("WARNING","Ingrese un número", "warning");
+        this.$showSAlert("ALERTA","Ingrese un número", "warning");
         return;
       }
       if (!this.existNumber()) {
         /* this.$toast.error("Número para envío whatsapp inválido"); */
-        this.$showSAlert("ERROR","Número para envío whatsapp inválido", "error");
+        this.$showSAlert("INVALIDO","Número para envío whatsapp inválido", "error");
         return;
       }
       let formWhatsapp = {

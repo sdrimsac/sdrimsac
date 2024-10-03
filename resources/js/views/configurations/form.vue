@@ -646,6 +646,18 @@
                                                                 <el-switch v-model="form.internal_voided" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Permitir anulado interno', form.internal_voided, 'internal_voided', 'banIcon')"></el-switch>
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-2 mt-4">
+                                                            <div class="form-group">
+                                                                <label class="control-label w-100">
+                                                                    <!-- <i class="fas fa-ban tab-icon"></i> -->
+                                                                    Mostrar el alias de cliente
+                                                                    <el-tooltip class="item" effect="dark" content=" Alias Cliente" placement="top-start">
+                                                                        <i class="fa fa-info-circle"></i>
+                                                                    </el-tooltip>
+                                                                </label>
+                                                                <el-switch v-model="form.alias_client" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Mostar Alias Cliente', form.alias_client, 'alias_client', 'banIcon')"></el-switch>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 

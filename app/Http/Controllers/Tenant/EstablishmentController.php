@@ -14,7 +14,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\EstablishmentRequest;
 use App\Http\Resources\Tenant\EstablishmentResource;
 use App\Http\Resources\Tenant\EstablishmentCollection;
-
 use App\Models\Tenant\Company;
 use App\Models\Tenant\ConfEstablishment;
 use App\Models\Tenant\Configuration;
@@ -32,7 +31,6 @@ class EstablishmentController extends Controller
         $config = Configuration::first();
         return view('tenant.establishments.index', compact('company','config'));
     }
-
     public function create()
     {
         return view('tenant.establishments.form');

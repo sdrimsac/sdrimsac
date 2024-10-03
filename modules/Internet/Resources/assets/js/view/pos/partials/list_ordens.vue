@@ -2325,21 +2325,25 @@ export default {
         },
         async payOrden() {
             if (this.checkIsExistSerie()) {
-                this.$toast.error("Producto sin serie seleccionada");
+                /* this.$toast.error("Producto sin serie seleccionada"); */
+                this.$showSAlert("error", "Producto sin serie seleccionada", "error");
                 return;
             }
             if (!this.cash_id) {
-                this.$toast.error("No tiene una caja abierta");
+                /* this.$toast.error("No tiene una caja abierta"); */
+                this.$showSAlert("error", "No tiene una caja abierta", "error");
                 return;
             }
             if (this.clientTableData.table) {
                 if (this.ordens.length == 0) {
-                    this.$toast.warning("Orden sin productos");
+                    /* this.$toast.warning("Orden sin productos"); */
+                    this.$showSAlert("warning", "Producto sin serie seleccionada", "warning");
                     return;
                 }
             } else {
                 if (this.localOrden.length == 0 && !this.variation) {
-                    this.$toast.warning("Orden sin productos");
+                    /* this.$toast.warning("Orden sin productos"); */
+                    this.$showSAlert("warning", "Producto sin serie seleccionada", "warning");
                     return;
                 }
             }

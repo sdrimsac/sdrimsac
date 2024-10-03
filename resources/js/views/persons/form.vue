@@ -121,7 +121,7 @@
               <small class="text-danger" v-if="errors.name" v-text="errors.name[0]"></small>
             </div>
           </div>
-          <div class="col-12 col-lg-12 col-xl-12">
+          <div class="col-12 col-lg-12 col-xl-12" v-if="configuration.alias_client">
             <div class="form-group" :class="{ 'has-danger': errors.alias }">
               <label class="control-label">
                 <i class="fas fa-tag"></i>

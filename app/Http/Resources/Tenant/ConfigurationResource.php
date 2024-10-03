@@ -16,6 +16,7 @@ class ConfigurationResource extends JsonResource
     {
         return [
             'order_desc_items' => (bool) $this->order_desc_items,
+            'alias_client' => (bool)$this->alias_client,
             'aparcado' => (bool) $this->aparcado,
             'consolidated_quotations' => (bool) $this->consolidated_quotations,
             'alias_pdf' => (bool) $this->alias_pdf,

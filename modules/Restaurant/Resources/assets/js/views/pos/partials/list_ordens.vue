@@ -2699,7 +2699,7 @@ export default {
             this.optionsMenu[2].title = [this.boxOperation, " Caja"];
         },
         ordens(newOrdens, _) {
-            console.log("aqui=");
+            ;
             if (newOrdens == null) return;
             this.calculateTotal(newOrdens);
         },
@@ -2731,12 +2731,12 @@ export default {
         }
         this.ordenInBox = ordens;
         setTimeout(() => {
-            console.log("isSeller: ", this.isSeller);
+            ;
         }, 1000);
         Echo.channel("insert_cash").listen(
             `.insert-cash-${this.configuration.socket_channel}`,
             e => {
-                console.log("🚀 ~ mounted ~ e:", e);
+                ;
                 let { amount, cash_id } = e;
                 if (this.$cashId == cash_id) {
                     // this.cashAvailable = Number(amount);
@@ -2806,7 +2806,7 @@ export default {
             this.showConsolidated = true;
         },
         changeCurrency() {
-            // console.log(this.currency_id);
+            // ;
             this.$emit("updateCurrencyChoice", this.currency_id);
             this.calculateTotal();
         },
@@ -2823,7 +2823,7 @@ export default {
                 );
 
                 let orden = this.localOrden[idx];
-                console.log("🚀 ~ savePriceProduct ~ orden:", orden);
+                ;
                 // return;
                 let {
                     price,
@@ -2858,10 +2858,10 @@ export default {
                 if (response.status == 200) {
                     this.$toast.success("Precio guardado");
                     this.$emit("reloadProduct");
-                    console.log("🚀 ~ savePriceProduct ~ reloadProduct:");
+                    ;
                 }
             } catch (e) {
-                console.log("🚀 ~ savePriceProduct ~ e:", e);
+                ;
 
                 return;
             }
@@ -2942,7 +2942,7 @@ export default {
                     this.$toast.success("Promoción desactivada");
                 }
             } catch (e) {
-                console.log(e);
+                ;
                 this.$toast.error("Error al desactivar promoción");
             } finally {
                 this.loading = false;
@@ -2979,7 +2979,7 @@ export default {
                                 });
                                 await this.promotionDesactive(id);
                             } catch (e) {
-                                console.log(e);
+                                ;
                             }
                         } else {
                             this.$toast.success("Cargando productos");
@@ -3136,7 +3136,7 @@ export default {
                                 }
                             }
                         } catch (e) {
-                            console.log("🚀 ~ getCommercialTreatment ~ e:", e);
+                            ;
                             this.$toast.error(
                                 "Error al obtener el tratamiento comercial"
                             );
@@ -3197,7 +3197,7 @@ export default {
                     this.commercialTreatments = res.data;
                 })
                 .catch(err => {
-                    console.log(err);
+                    ;
                 });
         },
         setQuotationStock() {
@@ -3260,7 +3260,7 @@ export default {
                 );
                 this.$toast.success(response.data.message);
             } catch (e) {
-                console.log(e);
+                ;
             }
         },
         deleteDefaultFood(index) {
@@ -3317,16 +3317,13 @@ export default {
         openQuotation() {
             this.quotationDirect = false;
             if (this.localOrden.length > 0) {
-                if (this.isSellerConsolidated) {
-                    console.log("enviar");
-                    console.log(
-                        "🚀 ~ openQuotation ~ this.:",
-                        this.quotationDirect
-                    );
-                    this.quotationDirect = true;
-                }
-
-                this.showQuotationForm = true;
+              if (this.isSellerConsolidated) {
+                ;
+                  
+                  this.quotationDirect=true;
+                } 
+                
+            this.showQuotationForm = true;
             }
         },
         savePrint() {
@@ -3335,7 +3332,7 @@ export default {
         },
         handleResize() {
             this.screenWidth = window.innerWidth;
-            console.log(this.user);
+            ;
             this.quotation_stock = this.isSeller;
         },
         showTransfers() {
@@ -3614,7 +3611,7 @@ export default {
                 }
             } catch (e) {
                 if (e != "cancel") {
-                    console.log(e);
+                    ;
                     // this.$toast.error("Ocurrió un error");
                 }
             } finally {
@@ -3656,7 +3653,7 @@ export default {
                     }
                 } catch (e) {
                     if (e != "cancel") {
-                        console.log(e);
+                        ;
                         this.$toast.error("Ocurrió un error");
                     }
                 } finally {
@@ -3925,7 +3922,7 @@ export default {
 
                                     this.$emit("sendOrdensAllTables", items);
                                 } catch (e) {
-                                    console.log(e);
+                                    ;
                                 }
                             }
                         } else {
@@ -4084,7 +4081,7 @@ export default {
                 let url = response.data.print;
                 if (pdf) {
                     window.open(url, "_blank");
-                    console.log("regresando");
+                    ;
                     return;
                 }
                 await this.$http.post("/caja/re-print", {
@@ -4112,7 +4109,7 @@ export default {
                         data: url
                     }
                 ];
-                console.log("🚀 ~ qz.print ~ config:", config);
+                ;
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
@@ -4379,7 +4376,7 @@ export default {
                             }
                         }
                     } catch (e) {
-                        console.log(e);
+                        ;
                         this.$toast.error("Ocurrió un error");
                     } finally {
                         this.pin = "";
@@ -4430,7 +4427,7 @@ export default {
                     }
                 } catch (e) {
                     //todo
-                    console.log(e);
+                    ;
                     if (e != "cancel") {
                         this.$toast.error("Ocurrió un error");
                     }
@@ -4457,7 +4454,7 @@ export default {
                     this.$emit("update:ordens", cloneOrdenItems);
                 }
             } catch (e) {
-                console.log(e);
+                ;
                 this.$toast.error("Ocurrió un error");
             } finally {
                 this.loading = false;

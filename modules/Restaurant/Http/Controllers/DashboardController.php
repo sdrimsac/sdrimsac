@@ -25,8 +25,6 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-
-
     public function foods(Request $request)
     {
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();

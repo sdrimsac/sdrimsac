@@ -11,6 +11,7 @@ class Configuration extends ModelTenant
 {
     protected $fillable = [
         'order_desc_items',
+        'alias_client',
         'aparcado',
         'consolidated_quotations',
         'alias_pdf',
@@ -257,6 +258,7 @@ class Configuration extends ModelTenant
     ];
     protected $casts = [
         'order_desc_items' => 'boolean',
+        'alias_client' => 'boolean',
         'aparcado' => 'boolean',
         'consolidated_quotations' => 'boolean',
         'maderera' => 'boolean',
@@ -454,6 +456,7 @@ class Configuration extends ModelTenant
         $skins = [];
         return [
             'order_desc_items' => (bool)$this->order_desc_items,
+            'alias_client' => (bool)$this->alias_client,
             'aparcado' => (bool)$this->aparcado,
             'consolidated_quotations' => (bool)$this->consolidated_quotations,
             'maderera' => (bool)$this->maderera,
