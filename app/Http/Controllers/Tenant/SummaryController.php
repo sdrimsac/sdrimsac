@@ -69,6 +69,8 @@ class SummaryController extends Controller
     }
     
     public function store(SummaryRequest $request) {
+        ini_set('max_execution_time', 6000);
+        ini_set('memory_limit', '-1');
         return $this->save($request);
     }
     
