@@ -723,7 +723,14 @@ class Facturalo
             ];
             return;
         }
-        $this->onlySenderXmlSignedBill();
+        try{
+            $this->onlySenderXmlSignedBill();
+        }catch(Exception $e){
+            $this->response = [
+                'sent' => false,
+                // 'message' => $e->getMessage()
+            ];
+        }
     }
 
     public function onlySenderXmlSignedBill()
