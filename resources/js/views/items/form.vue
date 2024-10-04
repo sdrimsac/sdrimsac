@@ -1594,7 +1594,9 @@
                                 form.item_unit_types.length > 0
                         "
                     >
-                        <el-tab-pane label="Bonificaciones">
+                        <el-tab-pane label="Bonificaciones"
+                        name="bonus"
+                        >
                             <div class="row">
                                 <div
                                     v-if="form.unit_type_id != 'ZZ'"
@@ -1659,9 +1661,9 @@
                                                         </el-tooltip>
                                                     </th>
 
-                                                    <th>Cant. Min.</th>
-                                                    <th>Cant. Max.</th>
-                                                    <th>Cant Bon.</th>
+                                                    <th class="text-white text-center">Cant. Min.</th>
+                                                    <!-- <th class="text-white text-center">Cant. Max.</th> -->
+                                                    <th class="text-white text-center">Cant Bon.</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1689,15 +1691,9 @@
                                                         <td class="text-center">
                                                             <el-input
                                                                 v-model="
-                                                                    row.price2
+                                                                    row.qty_min
                                                                 "
-                                                                @input="
-                                                                    undToTotal(
-                                                                        index,
-                                                                        row.price2,
-                                                                        row.quantity_unit
-                                                                    )
-                                                                "
+                                                                
                                                             >
                                                                 <i
                                                                     slot="prefix"
@@ -1709,17 +1705,11 @@
                                                         <td class="text-center">
                                                             <el-input
                                                                 v-model="
-                                                                    row.total
+                                                                    row.qty_free
                                                                 "
-                                                                @input="
-                                                                    totalToUnd(
-                                                                        index,
-                                                                        row.total,
-                                                                        row.quantity_unit
-                                                                    )
-                                                                "
+                                                                
                                                                 type="number"
-                                                                step="0.01"
+                                                                step="1"
                                                                 pattern="^\d*(\.\d{0,2})?$"
                                                             >
                                                                 <i
@@ -1728,7 +1718,7 @@
                                                                 ></i>
                                                             </el-input>
                                                         </td>
-                                                        <td class="text-center">
+                                                        <!-- <td class="text-center">
                                                             <el-input
                                                                 v-model="
                                                                     row.total
@@ -1749,7 +1739,7 @@
                                                                     class="el-icon-edit-outline"
                                                                 ></i>
                                                             </el-input>
-                                                        </td>
+                                                        </td> -->
                                                 
                                                     </template>
                                                 </tr>

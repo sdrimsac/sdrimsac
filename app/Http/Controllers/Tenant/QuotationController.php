@@ -252,18 +252,18 @@ class QuotationController extends Controller
         $groupedQuotations = $quotations->groupBy(function ($quotation) {
             return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
         });
-        
+
         // Ejemplo de cómo podrías iterar sobre las cotizaciones agrupadas
-        
+
         $quotationItems = $consolidated->quotations->flatMap(function ($quotation) {
             return $quotation->items;
         });
 
         $groupedItems = $quotationItems->groupBy(function ($item) {
-            return $item->item_id ;
+            return $item->item_id;
         });
-
-        $transformedItems = $groupedItems->map(function ($items, $key) {
+        $bonus_items = [];
+        $transformedItems = $groupedItems->map(function ($items, $key) use (&$bonus_items) {
             $firstItem = $items->first();
             $itemData = $firstItem->item;
             $total = $items->sum('total');
@@ -272,10 +272,39 @@ class QuotationController extends Controller
             $itemInternalId = $itemData->internal_id;
             $unitTypeDescription = null;
 
-            if (isset($itemData->from_unit_type_id)) {
-                $unitType = ItemUnitType::find($itemData->from_unit_type_id);
-                $unitTypeDescription = $unitType ? $unitType->description : 'Unknown';
+            foreach ($items as $item) {
+                if (isset($item->item->from_unit_type_id)) {
+                    $unitType = ItemUnitType::find($item->item->from_unit_type_id);
+                    if ($unitType->qty_min > 0 && $unitType->qty_free > 0) {
+                        $quantity = $item->quantity;
+                        $bonus_quantity = $unitType->qty_free * floor($quantity / $unitType->qty_min);
+                        if ($bonus_quantity > 0) {
+                            //check if exists item with same item_id aand same unit_type_description, if exists, sum quantity
+                            $bonus_item = collect($bonus_items)->where('item_id', $item->item_id)->where('unit_type_description', $unitType->description)->first();
+                            if ($bonus_item) {
+                                $bonus_item->quantity += $bonus_quantity;
+                            } else {
+                                $bonus_items[] = (object) [
+                                    'item_id' => $item->item_id,
+                                    'quantity' => $bonus_quantity,
+                                    'description' => $itemDescription,
+                                    'unit_type_description' => $unitType->description,
+                                    'internal_id' => $itemInternalId,
+                                    'total' => 0,
+                                ];
+                            }
+                        
+                        }
+                    }
+                }
             }
+            // if (isset($itemData->from_unit_type_id)) {
+            //     $unitType = ItemUnitType::find($itemData->from_unit_type_id);
+            //     // $unitTypeDescription = $unitType ? $unitType->description : '-';
+            //     if($unitType->qty_min > 0 && $unitType->qty_free > 0){
+
+            //     }
+            // }
 
             return (object) [
                 'item_id' => $firstItem->item_id,
@@ -287,6 +316,7 @@ class QuotationController extends Controller
             ];
         });
         return (new ConsolidatedExport())
+            ->bonusItems($bonus_items)
             ->count($count)
             ->delivery(true)
             ->records($transformedItems)
@@ -304,9 +334,9 @@ class QuotationController extends Controller
         $groupedQuotations = $quotations->groupBy(function ($quotation) {
             return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
         });
-        
+
         // Ejemplo de cómo podrías iterar sobre las cotizaciones agrupadas
-        
+
         $quotationItems = $consolidated->quotations->flatMap(function ($quotation) {
             return $quotation->items;
         });
@@ -387,8 +417,8 @@ class QuotationController extends Controller
     public function toConsolidated()
     {
         $records = Quotation::where('consolidated', false)
-        ->orderBy('id', 'desc')
-        ->get();
+            ->orderBy('id', 'desc')
+            ->get();
 
 
         return new QuotationCollection($records);

@@ -511,11 +511,7 @@ export default {
             }
         },
         calculate(advance = 0) {
-            // let dias = 0;
-            console.log(
-                "🚀 ~ calculate ~ this.credit.type_payment:",
-                this.credit.type_payment
-            );
+
             let tasa_interes = 0;
             if (this.form.total > 0 && this.credit.month > 0) {
                 switch (this.credit.type_payment) {
@@ -548,8 +544,8 @@ export default {
                     let total_financiar =
                         parseFloat(this.form.total || "0") -
                         parseFloat(this.credit.advances || "0");
-                    tasa_interes = this.tasaInteres * this.credit.month || 0;
-                    tasa_interes = tasa_interes.toFixed(2);
+                    // tasa_interes = this.tasaInteres * this.credit.month || 0;
+                    // tasa_interes = tasa_interes.toFixed(2);
                     let calcular_cuota =
                         (total_financiar *
                             ((this.tasaInteres * this.credit.month) / 100) +
@@ -563,7 +559,8 @@ export default {
                         parseInt(this.credit.num_cuota);
                     this.credit.amount = amount.toFixed(2);
                 }
-                this.credit.tasadefault = tasa_interes;
+                // this.credit.tasadefault = tasa_interes
+                this.credit.tasadefault = this.tasaInteres.toFixed(2);
             }
             if (this.isMigration) {
                 this.payments = [];

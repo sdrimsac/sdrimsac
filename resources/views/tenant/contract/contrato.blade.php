@@ -164,6 +164,7 @@
             CONTRATO DE COMPRA-VENTA
         </h3>
         @php
+            $company = \App\Models\Tenant\Company::first();
             $date_of_issue = \Carbon\Carbon::parse($sale->date_of_issue);
             $items = $sale->items;
             $count_items = count($items);
@@ -197,7 +198,7 @@
     </div>
     <p>
         En la ciudad de {{ $date_description }}, fueron presentes en forma voluntaria
-        y en mutuo acuerdo; en el que comparen de una parte en calidad de vendedor CREDIHOGAR, con RUC:10753874106 y de
+        y en mutuo acuerdo; en el que comparen de una parte en calidad de vendedor {{ strtoupper($company->name) }}, con RUC:10753874106 y de
         otra
         parte en calidad de comprador sr(a) <strong>
             {{ strtoupper($customer_name) }}
@@ -294,7 +295,7 @@
         <strong>
             SEGUNDO - GARANTIA - </strong> El comprador da la suma de S/. {{ $sale->total }}
         ({{ \App\CoreFacturalo\Helpers\Number\NumberLetter::convertToLetter($sale->total) }}) a
-        <strong>CREDIHOGAR</strong> quien declara recibirla a su entera y completa satisfacción, como garantía a cuota
+        <strong>{{ strtoupper($company->name) }}</strong> quien declara recibirla a su entera y completa satisfacción, como garantía a cuota
         inicial, con un interes del {{$first_payment->tasa}}%
         @if($sale->advances) {{$sale->type_payment}} habiendo abonado la suma de S/. {{ number_format($sale->advances,2 )}} 
         ({{ \App\CoreFacturalo\Helpers\Number\NumberLetter::convertToLetter($sale->advances) }})
@@ -320,7 +321,7 @@
     </p>
     <p>
         <strong>
-            CUARTO - PENALIDAD O MOROSIDAD - </strong> En caso de incumplimiento <strong>CREDIHOGAR</strong> tiene la
+            CUARTO - PENALIDAD O MOROSIDAD - </strong> En caso de incumplimiento <strong>{{ strtoupper($company->name) }}</strong> tiene la
         facultad de hacer
         uso del
         documento
@@ -330,7 +331,7 @@
         agravio a él(la) vendedor(a).
     </p>
     <p>
-        <strong>QUINTO - CANCELACIÓN DEL PRODUCTO - CREDIHOGAR</strong>
+        <strong>QUINTO - CANCELACIÓN DEL PRODUCTO - {{ strtoupper($company->name) }}</strong>
         está obligado a brindar boleta/factura al momento de la
         cancelación
         del producto.

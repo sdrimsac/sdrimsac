@@ -37,6 +37,10 @@ class ReceiptController extends Controller
     public function toPrint($external_id)
     {
         $data = Receipt::where("external_id", $external_id)->first();
+        // $previous_receipt = Receipt::where("sale_note_id", $data->sale_note_id)->where("id", "<", $data->id)->orderBy("id", "desc")->first();
+        //change for a bool, return a boolean instead a register
+        $previous_receipt = Receipt::where("sale_note_id", $data->sale_note_id)->where("id", "<", $data->id)->orderBy("id", "desc")->exists();
+        
         $payment = null;
         if ($data->sale_note_id) {
             $payment = $data->sale_note_payment;
@@ -56,7 +60,12 @@ class ReceiptController extends Controller
                 $quote = $data_payments->amount;
                 $interes = ($data->sale_note->total - $data->sale_note->advances) * ($data_payments->tasa / 100);
             }
-            $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
+            $sale_note = SaleNote::find($data->sale_note_id);
+            if ($sale_note->creditPayments) {
+                $payments = Payment::select(DB::raw('SUM(amount_paid) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
+            } else {
+                $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
+            }
             $deuda = $data->sale_note->total - $data->sale_note->advances - $payments->total_payment;
         } else {
             $payments = DocumentPayment::select(DB::raw('SUM(payment) as total_payment'))->where('document_id', $data->document_id)->first();
@@ -82,13 +91,14 @@ class ReceiptController extends Controller
             $all_payments = Payment::where('sale_note_id', $data->sale_note_id)
                 ->get();
             $position = $all_payments->search(function ($item) use ($next_payment) {
-                return $item->id == $next_payment->id;
+                return ($item->id == $next_payment->id);
             });
         }
-        if($data->num_cuota + 1 != $position){
+        if ($data->num_cuota != $position +1) {
             $next_payment = null;
         }
         $recibo = PDF::loadView('tenant.receipt.index', [
+            'previous_receipt' => $previous_receipt,
             'quote' => number_format($quote, 2, ".", ""),
             'position' => $position,
             'next_payment' => $next_payment,

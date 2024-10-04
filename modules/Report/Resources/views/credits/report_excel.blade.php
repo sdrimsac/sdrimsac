@@ -20,7 +20,7 @@
         <table>
             <tr>
                 <td colspan="15" style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
-                <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
+                    <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
                 </td>
             </tr>
             <tr>
@@ -45,33 +45,61 @@
                 <table class="">
                     <thead>
                         <tr>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">#</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">#
+                            </th>
                             @if ($configuration->sale_note_credit_confirm)
-                                <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Tipo</th>
+                                <th
+                                    style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                    Tipo</th>
                             @endif
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">NV-CREDITO</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Fecha Emisión</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">DNI</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Cliente</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Direccion</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Teléfono</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">ESTADO</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Cuotas vencidas</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Fecha de cobro</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Dias de atraso</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Penalidad</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Cuota</th>
-                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">Total</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                NV-CREDITO</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Fecha Emisión</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">DNI
+                            </th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Cliente</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Direccion</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Teléfono</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                ESTADO</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Cuotas vencidas</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Fecha de cobro</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Dias de atraso</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Penalidad</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Cuota</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Total</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">N°
+                                Cuotas</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Total en cuotas</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Crédito</th>
+                            <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
+                                Ganacia</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                        $amount_due = 0;
+                            $amount_due = 0;
+                            $total_credit = 0;
+                            $total_gain = 0;
                         @endphp
                         @foreach ($records as $key => $value)
-                        @php
-                        $amount_due += $value['total_amount'];
-                        @endphp
+                            @php
+                                $amount_due += $value['total_amount'];
+                                $total_credit += $value['total'];
+                                $total_gain += $value['int'];
+                            @endphp
                             <tr>
                                 <td class="celda" style="border: 1px solid black;">{{ $loop->iteration }}</td>
                                 @if ($configuration->sale_note_credit_confirm)
@@ -109,8 +137,7 @@
                                     {{ $telephone }}
                                 </td>
                                 <td class="celda"
-                                style="color: {{ $value['state'] == 'PAGADO' ? 'green' : 'red' }}; border: 1px solid black;" 
-                                >
+                                    style="color: {{ $value['state'] == 'PAGADO' ? 'green' : 'red' }}; border: 1px solid black;">
                                     {{ $value['state'] }}
                                 </td>
                                 <td class="celda" style="border: 1px solid black;">
@@ -132,16 +159,37 @@
                                 <td class="celda" style="border: 1px solid black;">
                                     {{ $value['total_amount'] }}
                                 </td>
+                                <td class="celda" style="border: 1px solid black;">
+                                    {{ $value['total_number_payments'] }}
+                                </td>
+                                <td class="celda" style="border: 1px solid black;">
+                                    {{ $value['total_quotes_payment'] }}
+                                </td>
+                                <td class="celda" style="border: 1px solid black;">
+                                    {{ $value['total'] }}
+                                </td>
+                                <td class="celda" style="border: 1px solid black;">
+                                    {{ $value['int'] }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="14" style="text-align: right; background: #afd095; color:#006100;border:1px solid black;">
+                            <td colspan="14"
+                                style="text-align: right; background: #afd095; color:#006100;border:1px solid black;">
                                 <strong>Total:</strong>
                             </td>
                             <td style="border: 1px solid black; bacground: silver;">
                                 <strong>{{ number_format($amount_due, 2) }}</strong>
+                            </td>
+                            <td colspan="2" style="border: 1px solid black; bacground: silver;">
+                            </td>
+                            <td  style="border: 1px solid black; bacground: silver;">
+                                {{ number_format($total_credit, 2,'.','') }}
+                            </td>
+                            <td style="border: 1px solid black; bacground: silver;">
+                                {{ number_format($total_gain, 2,'.','') }}
                             </td>
                         </tr>
                     </tfoot>

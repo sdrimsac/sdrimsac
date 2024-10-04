@@ -52,7 +52,12 @@ class SaleNotePaymentController extends Controller
     {
         $sale_note = SaleNote::find($sale_note_id);
         $penalty = $sale_note->credit_cash == 0 ? $sale_note->getPenalties() : 0;
-        $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
+        if ($sale_note->creditPayments->count() > 0) {
+            $total_paid = $sale_note->creditPayments->sum('penalty');
+        } else {
+            $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
+        }
+        // $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
         $penalties_payed = Payment::where('sale_note_id', $sale_note_id)
             ->where('paid', 1)
             ->sum('penalty_amount');
@@ -104,7 +109,7 @@ class SaleNotePaymentController extends Controller
                 $date_of_payment = Carbon::parse($value->date_payment);
                 $diff_days = $today->diffInDays($date_of_payment);
                 $amount_withouth_penalty = $value->amount - $value->amount_paid;
-                if($amount_withouth_penalty < 0){
+                if ($amount_withouth_penalty < 0) {
                     $value->penalty_amount += $amount_withouth_penalty;
                     $value->save();
                     $amount_withouth_penalty = 0;
@@ -115,7 +120,7 @@ class SaleNotePaymentController extends Controller
                     'amount_withouth_penalty' => $amount_withouth_penalty,
                     'penalty' => $penalty_amount,
                     'diff_days' => $diff_days,
-                    
+
                 ];
                 break;
             }
@@ -133,7 +138,9 @@ class SaleNotePaymentController extends Controller
             'series' => $sale_note->series,
             'number' => $sale_note->number,
             'total_paid' => $total_paid,
+            // 'total' => $total + $penalty,
             'total' => $total + $interes + $penalty,
+            //lo que falta por pagar
             'total_difference' => $total_difference + $interes + $penalty,
             'paid' => (bool) $sale_note->paid,
             'penalties_payed' => $penalties_payed,
@@ -167,7 +174,15 @@ class SaleNotePaymentController extends Controller
         $creditDiscountPenalty = $request->input('creditDiscountPenalty');
         // DB::connection('tenant')->transaction(function () use ($id, $request) {
         $record = SaleNotePayment::firstOrNew(['id' => $id]);
+        $documentRealAmount = $request->input('documentRealAmount');
+        $amount = $request->input('payment');
+        $remain_pay = $amount - $documentRealAmount;
         $record->fill($request->all());
+        if($documentRealAmount){
+            $record->payment = $documentRealAmount;
+        }else{
+            $documentRealAmount = $amount;
+        }
         $record->save();
         $this->createGlobalPayment($record, $request->all());
         $this->saveFiles($record, $request, 'sale_notes');
@@ -178,7 +193,7 @@ class SaleNotePaymentController extends Controller
             $boxes->group_id = 1;
             $boxes->category_id = 1;
             $boxes->subcategory_id = 1;
-            $boxes->amount = $request->input('payment');
+            $boxes->amount = $documentRealAmount;
             $boxes->date = Carbon::parse($request->input('date_of_payment'))->format('Y-m-d');
             $boxes->type = '1';
             $boxes->state = '1';
@@ -217,7 +232,7 @@ class SaleNotePaymentController extends Controller
             $number = str_pad(1, 7, "0", STR_PAD_LEFT);
         }
         $receipt->number = $number;
-        $receipt->amount = $request->input('payment');
+        $receipt->amount = $documentRealAmount;
         $receipt->external_id = Str::uuid()->toString();
         $receipt->save();
 
@@ -250,7 +265,7 @@ class SaleNotePaymentController extends Controller
                     ->first();
                 if ($payment) {
                     $payment->paid = true;
-                    $payment->amount_paid = $request->input('payment');
+                    $payment->amount_paid = $documentRealAmount;
                     $payment->save();
                 }
             }
@@ -269,7 +284,7 @@ class SaleNotePaymentController extends Controller
 
                     $amount_to_paid = $payment->amount;
                     $penalty_paid += $payment->penalty_amount;
-                    $payment->amount_paid += $request->input('payment');
+                    $payment->amount_paid += $documentRealAmount;
                     if ($payment->amount_paid >= $payment->amount) {
                         $payment->paid = true;
                     }
@@ -287,7 +302,7 @@ class SaleNotePaymentController extends Controller
                 }
             } else {
                 $amount_to_paid = $payment->first() ? $payment->first()->amount : 0;
-                $amount_payed = $request->input('payment');
+                $amount_payed = $documentRealAmount;
                 $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
                     ->where('paid', 0)
                     ->first();
@@ -351,6 +366,10 @@ class SaleNotePaymentController extends Controller
         if ($configuration->print_payment_credit_sale_note) {
             event(new PrintEvent(null, 'URL', true, null, [], false, false, $pdf));
         }
+
+        if($remain_pay > 0){
+            $this->generaIncomeAdjust($cash->id, $remain_pay);
+        }
         return response()->json([
             "success" => true,
             "message" => ($id) ? 'Pago editado con éxito' : 'Pago registrado con éxito',
@@ -366,7 +385,25 @@ class SaleNotePaymentController extends Controller
         //     'message' => ($id)?'Pago editado con éxito':'Pago registrado con éxito'
         // ];
     }
-
+function generaIncomeAdjust($cash_id, $amount)
+    {
+        $box = new Box();
+        $box->cash_id = $cash_id;
+        $box->date = date('Y-m-d');
+        $box->amount = $amount;
+        $box->establishment_id = auth()->user()->establishment_id;
+        $box->user_id = auth()->user()->id;
+        $box->group_id = 1;
+        $box->category_id = 1;
+        $box->soap_type_id = 1;
+        $box->state = 2;
+        $box->subcategory_id = 1;
+        $box->description = 'Ajuste de caja por centavos';
+        $box->method = 'Efectivo';
+        $box->type = 1;
+        $box->incomes = 1;
+        $box->save();
+    }
     public function destroy($id)
     {
         $item = SaleNotePayment::findOrFail($id);

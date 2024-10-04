@@ -465,9 +465,18 @@
                                         <td class="celda_sm">
                                             {{ number_format($data[$idx]['amount'], 2) }}
                                         </td>
-                                        <td class="celda_sm"></td>
-                                        <td class="celda_sm"></td>
-                                        <td class="celda_sm"></td>
+                                        <td class="celda_sm">
+                                            {{-- {{ number_format($data[$idx]['amortization'], 2) }} --}}
+                                        </td>
+                                        <td class="celda_sm">
+                                            {{ number_format($data[$idx]['penalty_amount'], 2) }}
+                                        </td>
+                                        <td class="celda_sm">
+                                            @if ($data[$idx]['paid'])
+                                            <strong
+                                            style="font-size: 25px !important;">X</strong>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @else
                                     <tr>

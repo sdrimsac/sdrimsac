@@ -398,6 +398,8 @@ if ($hostname) {
                 //Items
                 Route::get('items', [App\Http\Controllers\Tenant\ItemController::class, 'index'])->name('tenant.items.index')->middleware(['redirect.level', 'just.admin']);
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
+                Route::get('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'bonusUnitType']);
+                Route::post('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'storeBonusUnitType']);
                 Route::post('items/import_stock', [App\Http\Controllers\Tenant\ItemController::class, 'importStock']);
 
                 Route::get('items/ultima-venta/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_Venta']);

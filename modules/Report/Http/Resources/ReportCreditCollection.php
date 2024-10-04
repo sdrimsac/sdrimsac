@@ -22,6 +22,7 @@ class ReportCreditCollection extends ResourceCollection
             $advances  = $row->advances;
             $paid = $row->paid;
             $payment = Payment::where('sale_note_id', $row->id);
+            $total_number_payments = $payment->count();
             $payment_to_due = Payment::where('sale_note_id', $row->id)
                 ->where('paid', 0)
                 ->first();
@@ -114,7 +115,9 @@ class ReportCreditCollection extends ResourceCollection
             }
             // $penalty = $row->c
             return [
-                'quote_payment' => number_format($quote_payment,2),
+                'total_quotes_payment' => $total_number_payments * $quote_payment, 
+                'total_number_payments' => $total_number_payments,
+                'quote_payment' => number_format($quote_payment,2,".",""),
                 'state_type_id' => $row->state_type_id,
                 'quotes' => $quotes,
                 'schedules' => $schedules,
@@ -141,6 +144,7 @@ class ReportCreditCollection extends ResourceCollection
                 'differenc_days' => $differenc_days,
                 'is_credit' => true,
                 'observation' => $observation,
+                'int' => $int,
             ];
         });
     }

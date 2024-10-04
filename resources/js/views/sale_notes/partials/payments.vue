@@ -118,7 +118,11 @@
                                         TOTAL A PAGAR
                                     </td>
                                     <td class="text-end">
-                                        {{ document.total }}
+                                        {{
+                                            roundUpToOneDecimal(
+                                                Number(document.total)
+                                            )
+                                        }}
                                     </td>
                                     <td v-if="cancelCredit" class="text-end">
                                         DESCUENTO
@@ -201,7 +205,9 @@
                                                         row.date_of_payment
                                                     "
                                                     type="date"
-                                                    :disabled="configuration.sale_note_credit_penalty"
+                                                    :disabled="
+                                                        configuration.sale_note_credit_penalty
+                                                    "
                                                     :clearable="false"
                                                     format="dd/MM/yyyy"
                                                     value-format="yyyy-MM-dd"
@@ -680,6 +686,9 @@ export default {
                 });
             this.$eventHub.$emit("reloadDataUnpaid");
         },
+        roundUpToOneDecimal(number) {
+            return Math.ceil(number * 10) / 10;
+        },
         clickAddRow() {
             let payment_destination_id = null;
             if (this.payment_destinations.length > 0) {
@@ -690,6 +699,16 @@ export default {
                     payment_destination_id = payment_with_cash_id.id;
                 }
             }
+            let payment = 0;
+            if (
+                this.document.current_payment &&
+                this.document.current_payment.amount
+            ) {
+                payment = this.roundUpToOneDecimal(
+                    this.document.current_payment.amount
+                );
+            }
+
             this.records.unshift({
                 id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
@@ -698,7 +717,7 @@ export default {
                 reference: null,
                 filename: null,
                 temp_path: null,
-                payment: 0,
+                payment,
                 errors: {},
                 loading: false
             });
@@ -808,7 +827,8 @@ export default {
                 payment: this.records[index].payment,
                 paid: paid,
                 creditDiscount: this.creditDiscount,
-                creditDiscountPenalty: this.creditDiscountPenalty
+                creditDiscountPenalty: this.creditDiscountPenalty,
+                documentRealAmount: this.document.current_payment.amount
             };
             try {
                 this.is_paying = true;

@@ -236,7 +236,11 @@
                                     <tr>
                                         @if ($data->num_cuota)
                                             <td class="negrita">N° Cuota : </td>
-                                            <td>{{ $data->num_cuota }}</td>
+                                            @if ($next_payment && $next_payment->amount_paid > 0 && $data->num_cuota > 1)
+                                                <td>{{ $data->num_cuota - 1 }}</td>
+                                            @else
+                                                <td>{{ $data->num_cuota }}</td>
+                                            @endif
                                         @endif
                                         @if ($data->penalty_paid)
                                             <td class="negrita">Penalidad : </td>
@@ -299,9 +303,9 @@
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
                                                         @php
-                                                            // 
-                                                            // 
-                                                            // 
+                                                            //
+                                                            //
+                                                            //
                                                         @endphp
                                                         {{ number_format($data->sale_note->total - $data->sale_note->advances + $interes, 2) }}
                                                         <?php
@@ -310,18 +314,20 @@
                                                     </span></b>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td colspan="2" align="right" valign="top"
-                                                class="border-right border-top" style="padding: 5px !important;">
-                                                <b>PAGOS ANTERIORES S/.</b>
-                                            </td>
-                                            <td align="center" valign="top" class="border-top"
-                                                style="padding: 5px !important;">
-                                                <b><span style="font-size: 17px;">
-                                                        {{ number_format($payments->total_payment - $data->amount, 2) }}
-                                                    </span></b>
-                                            </td>
-                                        </tr>
+                                        @if ($previous_receipt)
+                                            <tr>
+                                                <td colspan="2" align="right" valign="top"
+                                                    class="border-right border-top" style="padding: 5px !important;">
+                                                    <b>PAGOS ANTERIORES S/.</b>
+                                                </td>
+                                                <td align="center" valign="top" class="border-top"
+                                                    style="padding: 5px !important;">
+                                                    <b><span style="font-size: 17px;">
+                                                            {{ number_format($payments->total_payment - $data->amount, 2) }}
+                                                        </span></b>
+                                                </td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
                                                 class="border-right border-top" style="padding: 5px !important;">
@@ -385,6 +391,7 @@
                                                             {{ number_format($deuda + $interes, 2) }}
                                                             {{-- {{ number_format($deuda, 2) }} --}}
                                                         @else
+                                        
                                                             {{ number_format($deuda + $interes + $penalties, 2) }}
                                                         @endif
 

@@ -64,15 +64,15 @@
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             PRODUCTO</th>
-                    
+
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             CANTIDAD</th>
                     </tr>
                     <tbody>
                         @php
-                            $total = 0; 
-                            $total_quantity = 0; 
+                            $total = 0;
+                            $total_quantity = 0;
                         @endphp
                         @foreach ($records as $idx => $value)
                             @php
@@ -90,12 +90,12 @@
                                 <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $value->item_description }}
                                 </td>
-                        
+
                                 <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                     {{ $value->total_quantity }}
 
                                 </td>
-                                
+
 
 
                             </tr>
@@ -118,6 +118,76 @@
                     <p>No se encontraron registros.</p>
                 </div>
     @endif
+    @if (!empty($bonusItems))
+        <div class="">
+            <div class=" ">
+
+                <table width="100%" class="">
+                    <tr>
+                        <th colspan="4"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            <strong>BONIFICACIONES</strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#
+                        </th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            CODIGO</th>
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            PRODUCTO</th>
+                        <th class="encabezado
+                            "
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            CANTIDAD</th>
+                    </tr>
+                    <tbody>
+                        @php
+                            $total_quantity = 0;
+                        @endphp
+                        @foreach ($bonusItems as $idx => $value)
+                            @php
+                                $total_quantity += $value->quantity;
+                            @endphp
+
+                            <tr>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    {{ $loop->iteration }}
+                                </td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    {{ $value->internal_id }}
+                                </td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    {{ $value->description }}
+                                </td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    {{ $value->quantity }}
+                                </td>
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; padding: 8px; border: 1px solid #ddd;">
+                                <strong>TOTAL</strong>
+                            </td>
+                            <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                <strong>{{ $total_quantity }}</strong>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            @else
+                <div class="callout callout-info">
+                    <p>No se encontraron registros de bonificación.</p>
+                </div>
+    @endif
+
+
 </body>
 
 </html>

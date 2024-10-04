@@ -764,7 +764,8 @@ class ReportCreditController extends Controller
                 } else {
                     $amount_due = $last_payment->amount;
                 }
-                $total_paid = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
+                // $total_paid = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
+                $total_paid = Payment::where('sale_note_id', $row->id)->sum('amount_paid');
                 $all_records[] = [
                     'total_paid' => $total_paid,
                     'id' => $row->id,
@@ -827,6 +828,7 @@ class ReportCreditController extends Controller
         // if ($person_id) {
         //     $records = $records->where('customer_id', $person_id);
         // }
+
         $all_records = [];
         if ($status == "R") {
             $records = SaleNote::where('status', 'R');
@@ -870,7 +872,15 @@ class ReportCreditController extends Controller
         $records->orderBy('created_at', 'desc')->chunk(50, function ($rows) use (&$all_records) {
 
             foreach ($rows as $row) {
+                $advances  = $row->advances;
                 $payment = Payment::where('sale_note_id', $row->id);
+                $int = 0;
+                if ($payment->count() > 0) {
+                    $payment_first = $payment->first();
+
+                    $int = ($row->total - $advances) * ($payment_first->tasa / 100);
+                }
+                $total_number_payments = $payment->count();
                 $payment_not_paid = $payment->where('paid', 0)
                     ->where('date_payment', '<=', Carbon::now()->startOfDay())
                     ->orderBy('date_payment', 'desc');
@@ -878,6 +888,7 @@ class ReportCreditController extends Controller
                     ->where('paid', 0)
                     ->orderBy('date_payment', 'asc')
                     ->first();
+                $quote_payment = $last_payment->amount;
                 $dues = $payment_not_paid->count();
                 $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
                 $differenc_days = 0;
@@ -904,13 +915,19 @@ class ReportCreditController extends Controller
                     $penalty_amount = $last_payment->penalty_amount;
                 }
                 $total_amount = $amount_due + $penalty_amount;
+
                 $all_records[] = [
+                    'total_quotes_payment' => $total_number_payments * $quote_payment,
+                    'total_number_payments' => $total_number_payments,
+                    'quote_payment' => number_format($quote_payment, 2, ".", ""),
                     'id' => $row->id,
                     'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
                     'customer' => ["name" => $customer->name, "number" => $customer->number, "address" => $customer->address],
                     'number' => $row->number_full,
                     'customer_id' => $row->customer_id,
                     'dues' => $dues,
+                    'int' => $int,
+                    'total' => $row->total - $row->advances + $int,
                     'date_of_due' => $date_of_due,
                     'is_cash' => $row->is_cash,
                     'is_product' => $row->is_product,

@@ -69,6 +69,7 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\Purchase;
 use App\Http\Resources\Tenant\ItemUltima_ventaCollection;
 use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
+use App\Models\Tenant\BonusUnitType;
 
 class ItemController extends Controller
 {
@@ -1075,6 +1076,37 @@ class ItemController extends Controller
         ];
     }
 
+    public function storeBonusUnitType(Request $request)
+    {
+
+        // 
+        $bonus_unit_type = $request->item_unit_type;
+        BonusUnitType::query()->delete();
+        foreach ($bonus_unit_type as $unit) {
+            $newUnitType = new BonusUnitType;
+            $newUnitType->fill($unit);
+            $newUnitType->save();
+
+            ItemUnitType::where('description', $unit['description'])->update(['qty_min' => $unit['qty_min'], 'qty_free' => $unit['qty_free']]);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Registro exitoso'
+        ];
+    }
+    public function bonusUnitType()
+    {
+        $bonus_unit_type = BonusUnitType::all();
+        $item_unit_type = ItemUnitType::all()->pluck('description')->unique()->values();
+
+
+        return [
+            'success' => true,
+            'bonus_unit_type' => $bonus_unit_type,
+            'item_unit_type' => $item_unit_type
+        ];
+    }
     public function destroy($id)
     {
         try {

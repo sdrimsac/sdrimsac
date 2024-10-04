@@ -9,6 +9,7 @@ class Payment extends ModelTenant
     protected $table = "payments";
     //protected $with = ["sale_note","user"];
     protected $fillable = [
+        'discount', 
         'user_id',
         'date_payment',                   
         'sale_note_id',

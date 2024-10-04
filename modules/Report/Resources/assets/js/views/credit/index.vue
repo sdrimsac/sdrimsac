@@ -18,6 +18,11 @@
                         <th class="text-end">Fecha de cobro</th>
                         <th class="text-end">Monto</th>
                         <th class="text-end">Días de atraso</th>
+                        <th class="text-end">N° cuotas</th>
+                        <th class="text-end">Cuota</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-end">Crédito</th>
+                        <th class="text-end">Ganancia</th>
                     </tr>
 
                     <tr></tr>
@@ -32,6 +37,21 @@
                         <td class="text-end">{{ row.date_of_due }}</td>
                         <td class="text-end">{{ row.amount_due }}</td>
                         <td class="text-end">{{ row.differenc_days }}</td>
+                        <td class="text-end">
+                            {{row.total_number_payments}}
+                        </td>
+                        <td class="text-end">
+                            {{row.quote_payment}}
+                        </td>
+                        <td class="text-end">
+                            {{Number(row.total_quotes_payment ).toFixed(2)}}
+                        </td>
+                        <td class="text-end">
+                            {{Number(row.total).toFixed(2)}}
+                        </td>
+                        <td class="text-end">
+                            {{Number(row.int).toFixed(2)}}
+                        </td>
                     </tr>
                 </data-table>
             </div>
