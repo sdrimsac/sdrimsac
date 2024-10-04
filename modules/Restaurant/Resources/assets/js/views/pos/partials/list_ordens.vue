@@ -1322,9 +1322,8 @@
                                             v-show="localOrden.length > 0"
                                             class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
                                             v-for="(order_pend,
-                                            indexx) in configuration.order_desc_items
-                                                ? localOrden.slice().reverse()
-                                                : localOrden"
+                                            indexx) in 
+                                                 localOrden"
                                             :key="indexx"
                                             v-loading="
                                                 loadingCommercialTreatment

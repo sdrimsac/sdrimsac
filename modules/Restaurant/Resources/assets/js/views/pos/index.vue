@@ -1422,7 +1422,6 @@
       :user="user"
     ></credits-list>
     <unit-type-modal
-      :foods="foods"
       @addUnitType="addUnitType"
       @addCategoriaMadera="addCategoriaMadera"
       :showDialog.sync="showUnitTypeModal"
@@ -1642,6 +1641,7 @@ export default {
 
   data() {
     return {
+      showQuotationListDialog: false,
       customersSearch: [],
       loading_search: false,
       selectedFood: null,
@@ -3298,7 +3298,12 @@ export default {
         //     currency_type_id
         // );
         orden.original_price = orden.price;
-        this.localOrden.unshift(orden);
+        if (this.configuration.order_desc_items == true){
+          this.localOrden.push(orden);
+        }else{
+          this.localOrden.unshift(orden);
+        }
+        
       }
       //aca existe en original o en alguna  presentación
       else {
@@ -3344,7 +3349,12 @@ export default {
               }
             }
             orden.type_quantity = type ? Number(type.quantity_unit) : 0;
-            this.localOrden.unshift(orden);
+            if (this.configuration.order_desc_items == true){
+              this.localOrden.push(orden);
+            } else{
+              this.localOrden.unshift(orden);
+            }
+            
           }
 
                     //y si no agregarla como nueva
@@ -3375,8 +3385,12 @@ export default {
                         orden.series = [];
                         orden.lotes = [];
                         orden.color_size = [];
-
-            this.localOrden.unshift(orden);
+            if (this.configuration.order_desc_items == true){
+              this.localOrden.push(orden);
+            } else {
+              this.localOrden.unshift(orden);
+            }
+            
           }
         } else {
           let {
@@ -3413,14 +3427,24 @@ export default {
               Number(this.localOrden[indexFind].quantity) + 1;
             let itemAwait = this.localOrden[indexFind];
             this.localOrden.splice(indexFind, 1);
-            this.localOrden.unshift(itemAwait);
+            if(this.configuration.order_desc_items == true) {
+              this.localOrden.push(itemAwait);
+            } else{
+              this.localOrden.unshift(itemAwait);
+            }
+            
           } else {
             orden.to_carry = false;
             orden.change_subtotal = false;
             orden.series = [];
             orden.lotes = [];
             orden.color_size = [];
-            this.localOrden.unshift(orden);
+            if (this.configuration.order_desc_items == true) {
+              this.localOrden.push(orden);
+            } else {
+              this.localOrden.unshift(orden);
+            }
+            
           }
         }
 
