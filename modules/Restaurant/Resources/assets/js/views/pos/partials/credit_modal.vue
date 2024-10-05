@@ -513,7 +513,7 @@ export default {
         calculate(advance = 0) {
 
             let tasa_interes = 0;
-            if (this.form.total > 0 && this.credit.month > 0) {
+            if (this.form.total  > 0 && this.credit.month > 0) {
                 switch (this.credit.type_payment) {
                     case "Diario":
                         this.credit.num_cuota =
@@ -544,19 +544,26 @@ export default {
                     let total_financiar =
                         parseFloat(this.form.total || "0") -
                         parseFloat(this.credit.advances || "0");
+                        console.log("🚀 ~ calculate ~ total_financiar:", total_financiar)
                     // tasa_interes = this.tasaInteres * this.credit.month || 0;
                     // tasa_interes = tasa_interes.toFixed(2);
-                    let calcular_cuota =
-                        (total_financiar *
-                            ((this.tasaInteres * this.credit.month) / 100) +
-                            total_financiar) /
-                        this.credit.num_cuota;
+                    let ts = ((this.tasaInteres*this.credit.month) / 100) + 1;
+                    // ts = Math.ceil(ts * 10) / 10;
+                    // let calcular_cuota =
+                    //     (total_financiar *
+                    //         ((this.tasaInteres * this.credit.month) / 100) +
+                    //         total_financiar) /
+                    //     this.credit.num_cuota;
+                    // let total_withou_advance = total - advances;
+                    let calcular_cuota = total_financiar * (ts) / this.credit.num_cuota;
+                    calcular_cuota = Math.ceil(calcular_cuota * 10) / 10;
                     this.credit.amount = calcular_cuota.toFixed(2);
                 } else {
                     let amount =
                         (parseInt(this.form.total || "0") -
                             parseFloat(this.credit.advances || "0")) /
                         parseInt(this.credit.num_cuota);
+                    amount = Math.ceil(amount * 10) / 10;
                     this.credit.amount = amount.toFixed(2);
                 }
                 // this.credit.tasadefault = tasa_interes

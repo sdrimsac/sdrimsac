@@ -146,6 +146,22 @@ class SaleNote extends ModelTenant
     {
         return $this->hasOne(SaleNoteCredit::class);
     }
+    public function calculatePenalties(){
+        $date_now =  Carbon::now()->startOfDay();
+        $sale_note_credit = $this->sale_note_credit;
+        $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
+        $payments = $this->creditPayments
+            ->where('paid', 0)
+            ->where('date_payment', '<=', $date_now);
+        $penalty_amount = 0;
+        foreach ($payments as $key => $payment) {
+            $days = Carbon::parse($payment->date_payment)->diffInDays($date_now);
+            $penalty = $days * $penalty_by_day;
+            $penalty_amount += $penalty;
+            $payment->penalty_amount = $penalty;
+            $payment->save();
+        }
+    }
     public function getPenalties()
     {
 

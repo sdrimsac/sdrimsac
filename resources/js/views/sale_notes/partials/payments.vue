@@ -796,7 +796,8 @@ export default {
                 parseFloat(
                     this.document.total_difference +
                         this.document.current_payment.penalty
-                )
+                ) +
+                    0.1
             ) {
                 this.$toast.error(
                     "El monto ingresado supera al monto pendiente de pago, verifique."

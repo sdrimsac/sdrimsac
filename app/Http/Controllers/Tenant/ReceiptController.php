@@ -40,7 +40,7 @@ class ReceiptController extends Controller
         // $previous_receipt = Receipt::where("sale_note_id", $data->sale_note_id)->where("id", "<", $data->id)->orderBy("id", "desc")->first();
         //change for a bool, return a boolean instead a register
         $previous_receipt = Receipt::where("sale_note_id", $data->sale_note_id)->where("id", "<", $data->id)->orderBy("id", "desc")->exists();
-        
+
         $payment = null;
         if ($data->sale_note_id) {
             $payment = $data->sale_note_payment;
@@ -62,14 +62,32 @@ class ReceiptController extends Controller
             }
             $sale_note = SaleNote::find($data->sale_note_id);
             if ($sale_note->creditPayments) {
-                $payments = Payment::select(DB::raw('SUM(amount_paid) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
+                // Paso 1: Seleccionar los registros limitados
+                $limitedPayments = Payment::where('sale_note_id', $data->sale_note_id)
+                    ->orderBy('id') // Asegúrate de tener un criterio de ordenación
+                    ->limit($data->num_cuota)
+                    ->get();
+
+                // Paso 2: Sumar los valores de los registros seleccionados
+                $totalPayment = $limitedPayments->sum('amount_paid');
+                $totalPenalty = $limitedPayments->sum('penalty_amount');
+
+                // Crear un objeto para mantener la estructura original
+                $payments = (object) [
+                    'total_payment' => $totalPayment,
+                    'total_penalty' => $totalPenalty,
+                ];
+                $sum_payments = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
+        
+                $deuda = $sum_payments - ($payments->total_payment - $payments->total_penalty);
             } else {
                 $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
+                $deuda = $data->sale_note->total - $data->sale_note->advances -($payments->total_payment);
             }
-            $deuda = $data->sale_note->total - $data->sale_note->advances - $payments->total_payment;
+        
         } else {
             $payments = DocumentPayment::select(DB::raw('SUM(payment) as total_payment'))->where('document_id', $data->document_id)->first();
-            $deuda = $data->document->total - $data->document->advances - $payments->total_payment;
+            $deuda = $data->document->total - $data->document->advances - $payments->total_payment ;
         }
 
         if (!$data) throw new Exception("El código {$external_id} es inválido, no se encontro la cotización relacionada");
@@ -94,7 +112,7 @@ class ReceiptController extends Controller
                 return ($item->id == $next_payment->id);
             });
         }
-        if ($data->num_cuota != $position +1) {
+        if ($data->num_cuota != $position + 1) {
             $next_payment = null;
         }
         $recibo = PDF::loadView('tenant.receipt.index', [

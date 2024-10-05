@@ -1296,6 +1296,7 @@ class SaleNoteController extends Controller
                                     'state' => 0,
                                 ]);
                             }
+
                         }
 
                         // $payment = Payment::firstOrNew(['id' => $id]);
@@ -1559,6 +1560,9 @@ class SaleNoteController extends Controller
                     $this->sale_note,
                     $request->promotion_id
                 );
+            }
+            if ( $this->sale_note->creditPayments ) {
+                $this->sale_note->calculatePenalties();
             }
 
             return [

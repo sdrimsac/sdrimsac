@@ -307,7 +307,7 @@
                                                             //
                                                             //
                                                         @endphp
-                                                        {{ number_format($data->sale_note->total - $data->sale_note->advances + $interes, 2) }}
+                                                        {{ number_format($data->sale_note->total  + $interes, 2) }}
                                                         <?php
                                                         //dd($data->amount);
                                                         ?>
@@ -323,7 +323,9 @@
                                                 <td align="center" valign="top" class="border-top"
                                                     style="padding: 5px !important;">
                                                     <b><span style="font-size: 17px;">
-                                                            {{ number_format($payments->total_payment - $data->amount, 2) }}
+                                                            @dump('penalty: ' . $payments->total_penalty)
+                                                            @dump('payment: ' . $payments->total_payment)
+                                                            {{ number_format($payments->total_payment - $payments->total_penalty, 2) }}
                                                         </span></b>
                                                 </td>
                                             </tr>
@@ -387,14 +389,16 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
+                                                        {{-- @dump($penalties)
+                                                    @dump($interes)
+                                                    @dump($deuda) --}}
                                                         @if ($penalties == 0)
-                                                            {{ number_format($deuda + $interes, 2) }}
+                                                            {{-- {{ number_format($deuda + $interes, 2) }} --}}
                                                             {{-- {{ number_format($deuda, 2) }} --}}
                                                         @else
-                                        
-                                                            {{ number_format($deuda + $interes + $penalties, 2) }}
+                                                            {{-- {{ number_format($deuda + $interes + $penalties, 2) }} --}}
                                                         @endif
-
+                                                        {{ number_format($deuda, 2) }}
 
                                                     </span></b>
                                             </td>
