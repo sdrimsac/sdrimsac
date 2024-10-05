@@ -323,8 +323,6 @@
                                                 <td align="center" valign="top" class="border-top"
                                                     style="padding: 5px !important;">
                                                     <b><span style="font-size: 17px;">
-                                                            @dump('penalty: ' . $payments->total_penalty)
-                                                            @dump('payment: ' . $payments->total_payment)
                                                             {{ number_format($payments->total_payment - $payments->total_penalty, 2) }}
                                                         </span></b>
                                                 </td>
@@ -389,9 +387,7 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-                                                        {{-- @dump($penalties)
-                                                    @dump($interes)
-                                                    @dump($deuda) --}}
+                                            
                                                         @if ($penalties == 0)
                                                             {{-- {{ number_format($deuda + $interes, 2) }} --}}
                                                             {{-- {{ number_format($deuda, 2) }} --}}
