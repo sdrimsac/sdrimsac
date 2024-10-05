@@ -1419,7 +1419,6 @@ export default {
                 message: "Agregado con èxito",
                 position: "bottom-left"
       });
-
       } else {
         this.$showSAlert(
         this.currentFood.food.description.toLowerCase(),
