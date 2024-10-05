@@ -47,7 +47,7 @@
                             {{Number(row.total_quotes_payment ).toFixed(2)}}
                         </td>
                         <td class="text-end">
-                            {{Number(row.total).toFixed(2)}}
+                            {{Number(row.total_net).toFixed(2)}}
                         </td>
                         <td class="text-end">
                             {{Number(row.int).toFixed(2)}}

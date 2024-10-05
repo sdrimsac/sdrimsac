@@ -915,7 +915,7 @@ class ReportCreditController extends Controller
                     $penalty_amount = $last_payment->penalty_amount;
                 }
                 $total_amount = $amount_due + $penalty_amount;
-
+                $total_gain = $total_number_payments * $quote_payment - $row->total - $row->advances;
                 $all_records[] = [
                     'total_quotes_payment' => $total_number_payments * $quote_payment,
                     'total_number_payments' => $total_number_payments,
@@ -926,7 +926,8 @@ class ReportCreditController extends Controller
                     'number' => $row->number_full,
                     'customer_id' => $row->customer_id,
                     'dues' => $dues,
-                    'int' => $int,
+                    'int' => $total_gain,
+                    'total_net' => $row->total - $row->advances,
                     'total' => $row->total - $row->advances + $int,
                     'date_of_due' => $date_of_due,
                     'is_cash' => $row->is_cash,

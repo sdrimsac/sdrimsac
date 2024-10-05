@@ -85,7 +85,7 @@
                             <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
                                 Crédito</th>
                             <th style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
-                                Ganacia</th>
+                                Ganancia</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,7 +97,7 @@
                         @foreach ($records as $key => $value)
                             @php
                                 $amount_due += $value['total_amount'];
-                                $total_credit += $value['total'];
+                                $total_credit += $value['total_net'];
                                 $total_gain += $value['int'];
                             @endphp
                             <tr>
@@ -166,7 +166,7 @@
                                     {{ $value['total_quotes_payment'] }}
                                 </td>
                                 <td class="celda" style="border: 1px solid black;">
-                                    {{ $value['total'] }}
+                                    {{ $value['total_net'] }}
                                 </td>
                                 <td class="celda" style="border: 1px solid black;">
                                     {{ $value['int'] }}

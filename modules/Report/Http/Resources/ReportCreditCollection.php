@@ -115,6 +115,7 @@ class ReportCreditCollection extends ResourceCollection
             }
             // $penalty = $row->c
             return [
+                'int' =>  $total_number_payments * $quote_payment - $row->total - $row->advances,
                 'total_quotes_payment' => $total_number_payments * $quote_payment, 
                 'total_number_payments' => $total_number_payments,
                 'quote_payment' => number_format($quote_payment,2,".",""),
@@ -133,6 +134,7 @@ class ReportCreditCollection extends ResourceCollection
                 'number' => $row->number_full,
                 'dues' => $dues,
                 'total' => $row->total   - $advances + $int,
+                'total_net' => $row->total - $advances,
                 'advances' => $advances,
                 'payment' => $payments_records,
                 'type_payment' => $row->type_payment,
@@ -144,7 +146,7 @@ class ReportCreditCollection extends ResourceCollection
                 'differenc_days' => $differenc_days,
                 'is_credit' => true,
                 'observation' => $observation,
-                'int' => $int,
+                // 'int' => $int,
             ];
         });
     }

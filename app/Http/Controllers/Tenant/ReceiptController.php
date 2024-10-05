@@ -58,7 +58,7 @@ class ReceiptController extends Controller
             $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
             if ($data_payments != null) {
                 $quote = $data_payments->amount;
-                $interes = ($data->sale_note->total - $data->sale_note->advances) * ($data_payments->tasa / 100);
+                $interes = ($data->sale_note->total - $data->sale_note->advances) * (($data_payments->tasa / 100) ) ;
             }
             $sale_note = SaleNote::find($data->sale_note_id);
             if ($sale_note->creditPayments) {
@@ -115,7 +115,9 @@ class ReceiptController extends Controller
         if ($data->num_cuota != $position + 1) {
             $next_payment = null;
         }
+        $give = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
         $recibo = PDF::loadView('tenant.receipt.index', [
+            'give' =>$give,
             'previous_receipt' => $previous_receipt,
             'quote' => number_format($quote, 2, ".", ""),
             'position' => $position,

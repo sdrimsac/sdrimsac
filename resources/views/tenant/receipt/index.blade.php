@@ -307,7 +307,8 @@
                                                             //
                                                             //
                                                         @endphp
-                                                        {{ number_format($data->sale_note->total  + $interes, 2) }}
+                                                            {{number_format($give,2)}}
+                                                        {{-- {{ number_format($data->sale_note->total  + $interes, 2) }} --}}
                                                         <?php
                                                         //dd($data->amount);
                                                         ?>
