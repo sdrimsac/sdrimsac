@@ -149,6 +149,7 @@ class SaleNote extends ModelTenant
     public function calculatePenalties(){
         $date_now =  Carbon::now()->startOfDay();
         $sale_note_credit = $this->sale_note_credit;
+        if(!$sale_note_credit) return;
         $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
         $payments = $this->creditPayments
             ->where('paid', 0)
