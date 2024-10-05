@@ -1410,19 +1410,24 @@ export default {
         /* this.$toast.warning("Este producto esta sujeto a detracción"); */
         this.$showSAlert("DETRACCION", "Este producto esta sujeto a detracción", "warming")
       }
-      /* this.$notify({
+
+      if (this.configuration.restaurant == true){
+        this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,
                 iconClass: "el-icon-food",
                 message: "Agregado con èxito",
                 position: "bottom-left"
-            }); */
-      this.$showSAlert(
+      });
+
+      } else {
+        this.$showSAlert(
         this.currentFood.food.description.toLowerCase(),
         "Agregado con éxito",
         "success"
       );
 
+      }
       this.currentFood = {
         food: null,
         observation: null,

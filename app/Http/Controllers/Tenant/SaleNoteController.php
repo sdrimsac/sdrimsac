@@ -491,6 +491,7 @@ class SaleNoteController extends Controller
             ->company($company)
             ->download('Reporte_productos_nota_venta' . Carbon::now() . '.xlsx');
     }
+
     public function get_recordsNota(Request $request)
     {
         $customer_id = $request->customer_id;
@@ -601,27 +602,15 @@ class SaleNoteController extends Controller
 
         $date_of_issue = $request->date_of_issue;
 
-
         $customer_id = $request->customer_id;
-
-
 
         $records = SaleNote::where('date_of_issue', 'like', '%' . $date_of_issue . '%')
 
             ->latest();
 
-
-
-
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);
         }
-
-
-
-
-
-
         return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function setStatusCredit(Request $request)
@@ -1837,7 +1826,11 @@ class SaleNoteController extends Controller
                     'user' => $user,
                     'init_date' => $init_date,
                     'end_date' => $end_date,
-                    'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment, 'page' => $page
+                    'data' => $data,
+                    'sale' => $sale,
+                    'company' => $company,
+                    'establishment' => $establishment,
+                    'page' => $page
                 ]
             );
             return $recibo->setPaper(array(0, 0, 249.45, 260), 'portrait')->stream();
@@ -1867,7 +1860,11 @@ class SaleNoteController extends Controller
                     'quote' => $quote,
                     'init_date' => $init_date,
                     'end_date' => $end_date,
-                    'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment, 'page' => $page
+                    'data' => $data,
+                    'sale' => $sale,
+                    'company' => $company,
+                    'establishment' => $establishment,
+                    'page' => $page
                 ]
             );
             return $recibo->setPaper('a5', 'portrait')->stream();
@@ -1889,7 +1886,10 @@ class SaleNoteController extends Controller
             // return view('tenant.schedule.cash_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
             $recibo = PDf::loadView('tenant.schedule.cash_schedule', [
                 'page' => $page,
-                'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment
+                'data' => $data,
+                'sale' => $sale,
+                'company' => $company,
+                'establishment' => $establishment
             ]);
             $altura = 250;
 

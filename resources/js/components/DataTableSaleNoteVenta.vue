@@ -55,7 +55,7 @@
                         <label for="date_end">Fecha final</label>
 
                         <el-date-picker
-                            v-model="search.date_end"
+                            v-model="search.month_start"
                             type="date"
                             style="width: 100%;"
                             placeholder="Fecha final"
@@ -63,6 +63,15 @@
                             @change="getRecords"
                         >
                         </el-date-picker>
+                        <!-- <el-date-picker 
+                        v-model="form.month_start" 
+                        type="month" 
+                        @change="changeDisabledMonths" 
+                        class="w-100" 
+                        value-format="yyyy-MM" 
+                        format="MM/yyyy" 
+                        :clearable="false">
+                        </el-date-picker> -->
                     </div>
                     <!-- <div class="col-md-3 col-lg-3">
                         <label for="customer_id">Cliente</label>
