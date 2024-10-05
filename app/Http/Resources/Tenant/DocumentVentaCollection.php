@@ -31,6 +31,7 @@ class DocumentVentaCollection extends ResourceCollection
                     'establishment_description' => $establishment_description,
                     'number_full' => $row->number_full,
                     'date_of_issue' => $row->date_of_issue,
+                    'time_of_issue' => implode(':', array_slice(explode(':', $row->time_of_issue), 0, 2)),
                     'items' => $row->items->map(function ($item) {
                         return [
                             'item_id' => $item->id,

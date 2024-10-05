@@ -62,9 +62,9 @@
               </el-select>
             </div>
           </div>
-          <div class="col-lg-2 col-md-2 pb-2">
+          <!-- <div class="col-lg-2 col-md-2 pb-2">
             <div class="form-group">
-              <label class="control-label w-100">Fecha inicio</label>
+              <label class="control-label w-100">Fecha Unica</label>
 
               <el-date-picker
                 v-model="search.d_start"
@@ -75,16 +75,17 @@
                 @change="changeDisabledDates"
               ></el-date-picker>
             </div>
-          </div>
+          </div>-->
           <div class="col-lg-2 col-md-2 pb-2">
             <div class="form-group">
-              <label class="control-label w-100">Fecha término</label>
+              <label class="control-label w-100">Mes</label>
               <el-date-picker
                 v-model="search.d_end"
-                type="date"
+                type="month"
                 style="width: 100%;"
                 placeholder="Buscar"
-                value-format="yyyy-MM-dd"
+                value-format="yyyy-MM"
+                format="MM/yyyy"
                 :picker-options="pickerOptionsDates"
                 @change="changeEndDate"
               ></el-date-picker>
@@ -176,6 +177,7 @@
               v-if="records.length > 0"
               @click.prevent="exportRecordsVentas"
               icon="el-icon-download"
+              :disabled="!search.d_end && !search.date_of_issue"
             >Exportar</el-button>
           </div>
         </div>
@@ -288,6 +290,12 @@ export default {
     await this.cargalo();
   },
   methods: {
+    changeEndDate(value) {
+      this.search.d_end = value;
+    },
+    changeDateOfIssue(value) {
+      this.search.date_of_issue = value;
+    },
     getTotals(records) {
       this.totals = _.sumBy(records, it => parseFloat(it.total));
     },

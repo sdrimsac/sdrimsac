@@ -3,25 +3,6 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <!-- <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
-                        <div class="d-flex">
-                            <div style="width:100px">
-                                Filtrar por:
-                            </div>
-                            <el-select
-                                v-model="search.column"
-                                placeholder="Select"
-                                @change="changeClearInput"
-                            >
-                                <el-option
-                                    v-for="(label, key) in columns"
-                                    :key="key"
-                                    :value="key"
-                                    :label="label"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div> -->
                     <div class="col-lg-2 col-md-2">
                         <label for="serie">Serie</label>
                         <el-select
@@ -40,7 +21,7 @@
                         </el-select>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
-                        <label for="date_start">Fecha inicial</label>
+                        <label for="date_start">Fecha Unica</label>
                         <el-date-picker
                             v-model="search.date_start"
                             type="date"
@@ -52,50 +33,19 @@
                         </el-date-picker>
                     </div>
                     <div class="col-md-2 col-lg-3">
-                        <label for="date_end">Fecha final</label>
+                        <label for="date_end">Mes</label>
 
                         <el-date-picker
-                            v-model="search.month_start"
-                            type="date"
+                            v-model="search.date_end"
+                            type="month"
                             style="width: 100%;"
-                            placeholder="Fecha final"
-                            value-format="yyyy-MM-dd"
+                            placeholder="Mes"
+                            value-format="yyyy-MM"
+                            format="MM/yyyy"
                             @change="getRecords"
                         >
                         </el-date-picker>
-                        <!-- <el-date-picker 
-                        v-model="form.month_start" 
-                        type="month" 
-                        @change="changeDisabledMonths" 
-                        class="w-100" 
-                        value-format="yyyy-MM" 
-                        format="MM/yyyy" 
-                        :clearable="false">
-                        </el-date-picker> -->
                     </div>
-                    <!-- <div class="col-md-3 col-lg-3">
-                        <label for="customer_id">Cliente</label>
-
-                        <el-select
-                            v-model="search.customer_id"
-                            filterable
-                            remote
-                            class="border-left rounded-left border-info"
-                            popper-class="el-select-customers"
-                            dusk="customer_id"
-                            placeholder="Escriba el nombre o número de documento del cliente"
-                            :remote-method="searchRemoteCustomers"
-                            :loading="loading_search"
-                            @change="getRecords"
-                        >
-                            <el-option
-                                v-for="option in customers"
-                                :key="option.id"
-                                :value="option.id"
-                                :label="option.description"
-                            ></el-option>
-                        </el-select>
-                    </div> -->
                     <div class="col-md-3 col-lg-3">
                         <label for="seller_id">Vendedor</label>
 
@@ -139,18 +89,20 @@
                             size="small"
                             v-if="records.length > 0"
                             @click="exportRecords"
+                            :disabled="!search.date_start && !search.date_end"
                         >
+                        <el-tooltip 
+                            class="item" 
+                            effect="dark" 
+                            content="debe seleccionar al menos una fecha unico o mes para poder exportar a excel" 
+                            placement="top-start">
+                                <i class="fa fa-download"></i>
+                        </el-tooltip>
                             Exportar
                         </el-button>
                     </div>
-                    <!-- <div class="col-md-2">
-                        <el-tag>
-                            Total por cobrar {{ saleNotesPending.toFixed(2) }}
-                        </el-tag>
-                    </div> -->
                 </div>
             </div>
-
             <div class="col-md-12">
                 <div id="scroll1" style="overflow-x: auto">
                     <div style="height: 20px"></div>
@@ -168,21 +120,6 @@
                             <slot v-for="(row, index) in records" :row="row" :index_="customIndex(index) "></slot>
                         </tbody>
                     </table>
-
-                    <!-- <div class="row mb-5">
-                        <div class="col-md-4 text-center ">
-                            Total nota de venta en soles S/
-                            {{ totals.total_pen }}
-                        </div>
-                        <div class="col-md-4 text-center ">
-                            Total pagado en soles S/ {{ totals.total_paid_pen }}
-                        </div>
-                        <div class="col-md-4 text-center ">
-                            Total por cobrar en soles S/
-                            {{ totals.total_pending_paid_pen }}
-                        </div>
-                    </div> -->
-
                     <div>
                         <el-pagination
                             @current-change="getRecords"

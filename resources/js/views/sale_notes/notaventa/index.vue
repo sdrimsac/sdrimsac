@@ -45,9 +45,9 @@
 
             <tr></tr>
             <template slot-scope="{ index_, row }">
-              <tr v-for="(item, index) in row.items" :key="'item-' + row.id + '-'+ index">
+              <tr v-for="(item, index) in row.items" :key="'item-' + (row.id || index_) + '-' + index">
                 <td>{{  index == 0 ? index_ : '' }}</td>
-                <td  class="text-center">{{ row.number }}</td>
+                <td  class="text-center">{{ row.series }}-{{ row.alone_number }}</td>
 
                 <td class="text-center">{{ row.date_of_issue }}
                   <template>

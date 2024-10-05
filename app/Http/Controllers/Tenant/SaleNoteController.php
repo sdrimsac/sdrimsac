@@ -515,11 +515,17 @@ class SaleNoteController extends Controller
         if ($number) {
             $records = $records->where("number", $number);
         }
-        if ($date_start || $date_end) {
+        if ($date_end && preg_match('/^\d{4}-\d{2}$/', $date_end)) {
+            $startOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $date_end)->startOfMonth()->toDateString();
+            $endOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $date_end)->endOfMonth()->toDateString();
+    
+            $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
+        }
+        elseif ($date_start || $date_end) {
             if ($date_start && $date_end) {
-                $records = $records->whereBetween('date_of_issue', [$date_start, $date_end]);
+                $records->whereBetween('date_of_issue', [$date_start, $date_end]);
             } else {
-                $records = $records->where('date_of_issue', $date_start ?? $date_end);
+                $records->where('date_of_issue', $date_start ?? $date_end);
             }
         }
         if ($series) {

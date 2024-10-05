@@ -1881,10 +1881,23 @@ class DocumentController extends Controller
             ->orderBy('number', 'desc')
             ->latest();
 
-
-        if ($d_start && $d_end) {
+        /* if ($d_start && $d_end) {
             $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
         } else {
+            $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
+        } */
+
+        if ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
+            // Convertir `d_end` al primer día y último día del mes
+            $startOfMonth = Carbon::createFromFormat('Y-m', $d_end)->startOfMonth()->toDateString();
+            $endOfMonth = Carbon::createFromFormat('Y-m', $d_end)->endOfMonth()->toDateString();
+    
+            $records = $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
+        }
+        // Filtrar por rango de fechas si `d_start` y `d_end` tienen formato completo `YYYY-MM-DD`
+        elseif ($d_start && $d_end) {
+            $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
+        } elseif ($date_of_issue) {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
         }
 
