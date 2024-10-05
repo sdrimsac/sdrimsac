@@ -74,6 +74,7 @@ class CashCollection extends ResourceCollection
                 'reference_number' => $row->reference_number,
                 'counter' => $counter,
                 'stock_file' => $row->stock_file,
+                'active' => $row->active,
             ];
         });
     }

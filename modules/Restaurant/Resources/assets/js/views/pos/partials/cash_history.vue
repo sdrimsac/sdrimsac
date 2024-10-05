@@ -5,7 +5,8 @@
         @open="open"
         @close="close"
         :title="title"
-    >
+        width="60%"
+    > <br>
         <div class="card container table-responsive col-md-12">
             <table
                 class="table table-hover table-striped table-condensed  table-responsive"
@@ -119,6 +120,7 @@
             >
             </el-pagination>
         </div>
+        <br>
 
         <cash-modal
             v-if="currentBox"

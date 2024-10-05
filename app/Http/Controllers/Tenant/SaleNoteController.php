@@ -19,7 +19,6 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use Mpdf\HTMLParserMode;
 use App\Models\Tenant\Inventory;
-
 use App\Mail\SaleNoteEmail;
 use Illuminate\Support\Str;
 use App\Models\Tenant\PurchaseItem;
@@ -57,6 +56,7 @@ use Modules\Finance\Traits\FinanceTrait;
 use App\Http\Resources\Tenant\SaleNoteResource2;
 use Modules\Restaurant\Events\PrintEvent;
 use App\Http\Resources\Tenant\SaleNoteCollection;
+use App\Http\Resources\Tenant\SaleNoteVentaCollection;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\ChargeDiscountType;
 use Illuminate\Console\Scheduling\Schedule;
@@ -66,6 +66,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\Exports\NotaVentaExport;
 use App\Exports\SaleNoteExport;
 use App\Http\Resources\Tenant\SaleNoteCreditPenaltyCollection;
 use App\Jobs\WhatsappSendMessageProccess;
@@ -398,6 +399,15 @@ class SaleNoteController extends Controller
         $resource = "sale-notes";
         return view('tenant.sale_notes.index', compact('soap_company', 'company', 'configuration', 'user_type', 'resource'));
     }
+    public function indexNota()
+    {
+        $company = Company::select('soap_type_id', 'name')->first();
+        $soap_company  = $company->soap_type_id;
+        $configuration = Configuration::first();
+        $user_type = auth()->user()->type;
+        $resource = "notaventa";
+        return view('tenant.notaventa.index', compact('soap_company', 'company', 'configuration', 'user_type', 'resource'));
+    }
     public function pos()
     {
         $company = Company::select('soap_type_id')->first();
@@ -443,6 +453,16 @@ class SaleNoteController extends Controller
             'seller_id' => 'Asesor - Vendedor',
         ];
     }
+    public function columnsVenta()
+    {
+        return [
+            'number' => 'Numero de Nota de Venta',
+            'date_of_issue' => 'Fecha de emisión',
+            'customer_id' => 'Cliente',
+            'state_type_id' => 'Estado Comprobante',
+            'seller_id' => 'Asesor - Vendedor',
+        ];
+    }
 
     public function columns2()
     {
@@ -460,6 +480,52 @@ class SaleNoteController extends Controller
             ->records($records)
             ->company($company)
             ->download('Reporte_Nota_de_Venta_' . Carbon::now() . '.xlsx');
+    }
+    public function excelNota(Request $request)
+    {
+        $records = $this->get_recordsNota($request)->get();
+        $company = Company::active();
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        return (new NotaVentaExport)
+            ->records($records)
+            ->company($company)
+            ->download('Reporte_productos_nota_venta' . Carbon::now() . '.xlsx');
+    }
+    public function get_recordsNota(Request $request)
+    {
+        $customer_id = $request->customer_id;
+        $seller_id = $request->seller_id;
+        $state_type_id = $request->state_type_id;
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
+        $number = $request->number;
+        $series = $request->series;
+        $records = SaleNote::query();
+
+        if ($customer_id) {
+            $records = $records->where("customer_id", $customer_id);
+        }
+        if ($seller_id) {
+            $records = $records->where("seller_id", $seller_id);
+        }
+        if ($state_type_id) {
+            $records = $records->where("state_type_id", $state_type_id);
+        }
+        if ($number) {
+            $records = $records->where("number", $number);
+        }
+        if ($date_start || $date_end) {
+            if ($date_start && $date_end) {
+                $records = $records->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $records = $records->where('date_of_issue', $date_start ?? $date_end);
+            }
+        }
+        if ($series) {
+            $records = $records->where('series', 'like', '%' . $series . '%');
+        }
+        $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
+        return $records;
     }
     public function get_records(Request $request)
     {
@@ -518,6 +584,11 @@ class SaleNoteController extends Controller
 
         // if($request->)
         return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function recordsNota(Request $request)
+    {
+        $records = $this->get_recordsNota($request);
+        return new SaleNoteVentaCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function items($id)
     {

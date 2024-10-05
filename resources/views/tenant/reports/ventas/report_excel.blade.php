@@ -63,7 +63,6 @@
                     $establishment_description = $establishment ? $establishment->description : null;
                 @endphp
                     @foreach ($record->items as $index => $item)
-                   {{--  @dd($records) --}}
                         <tr>
                             @if ($index === 0)
                                 <td rowspan="{{ count($record->items) }}" style="border: 1px solid black;">

@@ -490,6 +490,16 @@ if ($hostname) {
                         Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
                         Route::get('/ventas/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excelVentas']);
                     });
+                Route::prefix('nota_venta')
+                    ->group(function () {
+                        Route::get('', [App\Http\Controllers\Tenant\SaleNoteController::class, 'indexNota'])->name('tenant.notaventa.index')->middleware(['just.admin']);
+                        /* Route::get('columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns']); */
+                        Route::get('/columnsVenta', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columnsVenta']);
+                        Route::get('records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'recordsNota']);
+                        Route::get('data_table', [App\Http\Controllers\Tenant\SaleNoteController::class, 'data_table']);
+                        Route::get('/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
+                        Route::get('excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excelNota']);
+                    });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
                 Route::get('/records-suma', [App\Http\Controllers\Tenant\DocumentController::class, 'recordsSuma']);
 

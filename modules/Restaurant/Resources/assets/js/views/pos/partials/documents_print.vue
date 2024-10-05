@@ -6,7 +6,7 @@
     @open="open"
     width="80%"
     v-loading="loading"
-    title="Imprimir documento"
+    title="Comprobantes"
   >
     <div class>
       <div class>

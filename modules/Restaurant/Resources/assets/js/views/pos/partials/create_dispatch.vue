@@ -9,6 +9,7 @@
         :close-on-press-escape="false"
         append-to-body
     >
+    <br>
         <dispatch-create
                 :parentId="parentId"
                 :parentTable="parentTable"
@@ -19,6 +20,7 @@
                 ref="dispatchCreate"
 
             ></dispatch-create>
+            <br>
     </el-dialog>
 </template>
 

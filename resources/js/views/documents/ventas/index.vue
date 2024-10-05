@@ -64,12 +64,12 @@
                                         
                                     
                                         
-                                        </td>
-                                    <td v-if="index === 0" :rowspan="row.items.length">
+                                    </td>
+                                    <td>
                                         {{ row.number_full }}
                                     </td>
 
-                                    <td v-if="index === 0" :rowspan="row.items.length">
+                                    <td>
                                         {{ row.date_of_issue }}
                                     </td>
                                     <td>{{ row.establishment_description }}</td>

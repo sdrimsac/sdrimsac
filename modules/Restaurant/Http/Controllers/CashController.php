@@ -1619,7 +1619,7 @@ class CashController extends Controller
             /* 'income' => 'Ingresos',
             'expense' => 'Egresos', */
             'date_opening' => 'Fecha de Apertura',
-            'reference_number' => 'Codigo de Referencias'
+            'reference_number' => 'Codigo de Referencias',
 
         ];
     }
@@ -1646,7 +1646,6 @@ class CashController extends Controller
     }
     public function records(Request $request)
     {
-
         ini_set('memory_limit', '3500M');
         ini_set('max_execution_time', 3000);
 
@@ -1658,6 +1657,7 @@ class CashController extends Controller
         }
 
         $records->whereTypeUser($fromAdmin);
+        $records->where('active', 0);
         $records->orderBy('date_opening', 'desc')
             ->orderBy('time_opening', 'desc');
 

@@ -749,10 +749,18 @@
                         <li>
                             <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
                                 href="{{ route('tenant.ventas.index') }}">
-                                <i class="icofont-list"></i> Productos Vendidos
+                                <i class="icofont-list"></i> Productos Vendidos Boletas Y Facturas
                             </a>
                         </li>
                     @endif
+                    {{-- @if ($config->productos_vendidos) --}}
+                        <li>
+                            <a class="{{ $path[0] === 'notaventa' ? 'active' : '' }}"
+                                href="{{ route('tenant.notaventa.index') }}">
+                                <i class="icofont-list"></i> Productos Vendidos Nota de Venta
+                            </a>
+                        </li>
+                    {{-- @endif --}}
                     @if ($config->maderera)
                         <li>
                             <a class="{{ $path[0] === 'madera' ? 'active' : '' }}"

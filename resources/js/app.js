@@ -376,6 +376,7 @@ const app = new Vue({
         "tenant-sale-notes-credit-penalty": () =>
             import("./views/sale_notes/credit_penalty.vue"),
         "tenant-sale-notes-index": () => import("./views/sale_notes/index.vue"),
+        "tenant-notaventa-index": () => import("./views/sale_notes/notaventa/index.vue"),
         "tenant-sale-notes-form": () => import("./views/sale_notes/form.vue"),
         "tenant-cash-transfer-index": () =>
             import(
