@@ -177,10 +177,10 @@
                             <tr>
                                 <td colspan="2">TOTALES</td>
                                 <td class="text-center">
-                                    {{ totals.acum_total }}
+                                    {{ Number(totals.acum_total).toFixed(2) }}
                                 </td>
                                 <td class="text-center">
-                                    {{ totals.acum_purchase_unit_price }}
+                                    {{ Number(totals.acum_purchase_unit_price).toFixed(2) }}
                                 </td>
                                 <td></td>
                                 <td colspan="2"></td>

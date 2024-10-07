@@ -4,6 +4,15 @@
         <div class="container-fluid p-l-0 p-r-0">
             <div class="page-header">
                 <div class="row">
+                    <div
+                        v-if="configuration.sale_note_credit_penalty"
+                        class="col-sm-12 col-lg-2 alert alert-success d-flex justify-content-start align-items-center"
+                    >
+                        <span
+                            >Efectivo disponible: S/
+                            {{ Number(total).toFixed(2) }}</span
+                        >
+                    </div>
                     <div class="col-sm-6">
                         <h6><span>Compras</span></h6>
                         <ol class="breadcrumb">
@@ -399,6 +408,7 @@ import queryString from "query-string";
 
 export default {
     mixins: [deletable],
+    props:['configuration'],
     // components: {DocumentsVoided, DocumentOptions, DataTable},
     components: {
         DataTable,
@@ -409,6 +419,7 @@ export default {
     },
     data() {
         return {
+            total: 0,
             showDialogVoided: false,
             resource: "purchases",
             recordId: null,
@@ -450,7 +461,16 @@ export default {
         };
     },
     created() {},
+    mounted() {
+        this.getAvaibleCash();
+    },
     methods: {
+        getAvaibleCash() {
+            this.$http("/caja/cash-transfer/available").then(response => {
+                console.log("🚀 ~ this.$http ~ response:", response)
+                this.total = response.data;
+            });
+        },
         calculate(item) {
             let {
                 quantity,

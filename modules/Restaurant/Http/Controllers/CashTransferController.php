@@ -238,6 +238,7 @@ class CashTransferController extends Controller
         $all_cash = $cash_principal->beginning_balance ?? 0;
         $all_incomes = Box::where('cash_id', $cash_principal->id)->where('incomes', 1)->sum('amount');
         $all_expenses = Box::where('cash_id', $cash_principal->id)->where('expenses', 1)->sum('amount');
+
         $all_transfer = CashTransfer::where('cash_principal_id', $cash_principal->id)->sum('amount');
         $all_cash += $all_incomes;
         $all_cash -= $all_expenses;

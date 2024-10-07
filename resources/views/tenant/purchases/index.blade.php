@@ -2,6 +2,8 @@
 
 @section('content')
 
-    <tenant-purchases-index></tenant-purchases-index>
+    <tenant-purchases-index
+    :configuration="{{\App\Models\Tenant\Configuration::getPublicConfig()}}"
+    ></tenant-purchases-index>
 
 @endsection

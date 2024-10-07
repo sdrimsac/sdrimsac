@@ -288,6 +288,14 @@ class ReportCreditController extends Controller
         return compact('establishments', 'sellers', 'persons', 'users');
     }
 
+    function roundToDecimalGreaterThanHalf($number, $decimals = 0)
+    {
+        $number = round($number, $decimals);
+        $decimals = $decimals ?: 0;
+        $number = number_format($number, $decimals, '.', '');
+        return $number;
+    }
+
     private function get_product_records($request)
     {
         $period = $this->getDatesOfPeriod($request);
@@ -323,10 +331,21 @@ class ReportCreditController extends Controller
                 });
             }
         }
-
         $records = $records->get()->groupBy(function ($saleNoteItem) {
             return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price . '|' . $saleNoteItem->sale_note->advances;
         })->map(function ($group) {
+            $t_payments = Payment::where('sale_note_id', $group->first()->sale_note->id)->sum('amount');
+            $total_net = $group->first()->sale_note->total - $group->first()->sale_note->advances;
+            $proportion =  $group->sum(function ($saleNoteItem) {
+                $saleNote = $saleNoteItem->sale_note;
+                $item_total = $saleNoteItem->total;
+                $sale_note_total = $saleNote->total;
+
+                $proportion = $item_total / $sale_note_total;
+
+
+                return $proportion;
+            });
             $total_advances = $group->sum(function ($saleNoteItem) {
                 $saleNote = $saleNoteItem->sale_note;
                 $item_total = $saleNoteItem->total;
@@ -350,22 +369,22 @@ class ReportCreditController extends Controller
                 return $penalty_amount * $proportion;
             });
             $product = $group->first()->item->description;
-            $total_count = $group->sum('total');
+            $total_count = $t_payments;
             // $total_advances = $group->sum('sale_note.advances');
             $tasa = $group->first()->sale_note->creditPayments->first()->tasa;
-            $tasa_percentage = ($tasa / 100)*$group->first()->sale_note->month;
-            $gain =  ($total_count - $total_advances) * $tasa_percentage;
-            $gain = round($gain, 2);
+            $tasa_percentage = ($tasa / 100) * $group->first()->sale_note->month;
+            $gain =  ($t_payments - $total_net) * $proportion;
+            $gain = floatval($this->roundToDecimalGreaterThanHalf($gain, 2));
             $total_gain = $total_penalties + $gain;
             return [
                 'sale_note_id' => $group->first()->sale_note->id,
                 'product' => $product,
                 'total_penalties' => $total_penalties,
-                'total' => round(floatval($group->first()->total) - $total_advances, 2),
+                'total' => floatval($this->roundToDecimalGreaterThanHalf($group->first()->total - $total_advances, 1)),
                 'type_payment' => $group->first()->sale_note->type_payment,
                 'tasa' => $group->first()->sale_note->creditPayments->first()->tasa,
                 'count' => $group->count(),
-                'total_count' => $group->sum('total') ,
+                'total_count' => $total_count,
                 'purchase_unit_price' => floatval($group->first()->item->purchase_unit_price),
                 'gain' => $gain,
                 'total_gain' => $total_gain,
@@ -897,7 +916,7 @@ class ReportCreditController extends Controller
                     ->where('paid', 0)
                     ->orderBy('date_payment', 'asc')
                     ->first();
-                $quote_payment = $last_payment ? $last_payment->amount :0;
+                $quote_payment = $last_payment ? $last_payment->amount : 0;
                 $dues = $payment_not_paid->count();
                 $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
                 $differenc_days = 0;

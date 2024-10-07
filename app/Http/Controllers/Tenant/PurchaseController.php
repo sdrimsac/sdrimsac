@@ -43,13 +43,17 @@ use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Template;
 use App\Exports\PurchaseExport;
+use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehousePrice;
 use App\Services\RoleService;
+use App\Traits\JobReportTrait;
 use Exception;
+use Hyn\Tenancy\Models\Hostname;
+use Modules\Restaurant\Http\Controllers\CashTransferController;
 use Modules\Restaurant\Models\Food;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
@@ -62,6 +66,8 @@ class PurchaseController extends Controller
 
     use FinanceTrait;
     use StorageDocument;
+    use JobReportTrait;
+
 
     public function ne76_correlative()
     {
@@ -499,6 +505,21 @@ class PurchaseController extends Controller
 
                 if (!$doc->filename) {
                     $this->setFilename($doc);
+                }   
+
+                $configuration = Configuration::first();
+                if($configuration->sale_note_credit_penalty){
+                    $total = (new CashTransferController)->available();
+                    if($total > 0){
+                        $date = date('Y-m-d');
+                        $time = date('H:i:s');
+                        $total_without_purshase = $total - $doc->total;
+                        $message = "El usuario arca - administrador hasta la fecha {$date} / {$time} contaba con monto de S/{$total} y ha realizado una compra el {$date} a las {$time} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total_without_purshase}";
+                        $website = $this->getTenantWebsite();
+                        WhatsappSendMessageProccess::dispatch($website->id, $message,null);
+                    }
+                    // El usuario arca - administrador hasta la fecha 07-10-2024 / 09:10:55am contaba con monto de S/5 mil y ha realizado una compra el 07-10-2024 a las 15:54:13 por un monto de S/2590, quedando un saldo a favor de S/2410
+
                 }
                 $this->createPdf($doc, "a4", $doc->filename);
 
