@@ -327,6 +327,15 @@ class ReportCreditController extends Controller
         $records = $records->get()->groupBy(function ($saleNoteItem) {
             return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price . '|' . $saleNoteItem->sale_note->advances;
         })->map(function ($group) {
+            $total_advances = $group->sum(function ($saleNoteItem) {
+                $saleNote = $saleNoteItem->sale_note;
+                $item_total = $saleNoteItem->total;
+                $sale_note_total = $saleNote->total;
+                $proportion = $item_total / $sale_note_total;
+                return $saleNote->advances * $proportion;
+            });
+
+
             $total_penalties = $group->sum(function ($saleNoteItem) {
                 $saleNote = $saleNoteItem->sale_note;
                 $item_total = $saleNoteItem->total;
@@ -342,9 +351,9 @@ class ReportCreditController extends Controller
             });
             $product = $group->first()->item->description;
             $total_count = $group->sum('total');
-            $total_advances = $group->sum('sale_note.advances');
+            // $total_advances = $group->sum('sale_note.advances');
             $tasa = $group->first()->sale_note->creditPayments->first()->tasa;
-            $tasa_percentage = $tasa / 100;
+            $tasa_percentage = ($tasa / 100)*$group->first()->sale_note->month;
             $gain =  ($total_count - $total_advances) * $tasa_percentage;
             $gain = round($gain, 2);
             $total_gain = $total_penalties + $gain;
