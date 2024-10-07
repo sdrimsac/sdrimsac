@@ -53,6 +53,12 @@ class SaleNoteCreditMessage extends Command
         
 
         try {
+            $configuration = DB::connection('tenant')->table('configurations')->first();
+
+            if(!$configuration->sale_note_credit_send_whatsapp){
+                $this->info('The command was finished because the configuration is disabled');
+                return 0;
+            }
             $messages = (new SaleNoteController)->generateMessages();    
 
             $website = $this->getTenantWebsite();
