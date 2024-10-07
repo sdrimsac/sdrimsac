@@ -2154,14 +2154,15 @@ export default {
             this.configuration.restaurant &&
             !this.configuration.college &&
             this.worker.area.description.toUpperCase() !== "HOTEL" &&
-            this.worker.area.description.toUpperCase() !== "CAJA PISCINA"
+            this.worker.area.description.toUpperCase() !== "CAJA PISCINA" && 
+            this.worker.area.description.toUpperCase() !== "BILLAR"
         },
         {
           id: 209,
           title: [" Zona Billar "],
           icon: "fas fa-map-pin ",
           visible:
-            this.configuration.modo_billar &&
+            this.configuration.modo_billlar &&
             this.worker.area.description.toUpperCase() == "BILLAR" &&
             !this.isSeller &&
             !this.isAnalist
@@ -4131,6 +4132,7 @@ export default {
         guides: [],
         payments: [],
         hotel: {},
+        billar: {},
         additional_information: null,
         payment_condition_id: "01",
         printerOn: false,
@@ -5016,6 +5018,9 @@ export default {
         }
         if (area.description == "CAJA PISCINA") {
           this.isPiscinaArea = true;
+        }
+        if (area.description == "BILLAR") {
+          this.has_billar = true;
         }
       });
 

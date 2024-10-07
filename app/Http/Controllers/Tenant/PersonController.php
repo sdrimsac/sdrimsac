@@ -120,16 +120,17 @@ class PersonController extends Controller
         return [
             'name' => 'Nombre',
             'number' => 'Número',
-            'district_id' => 'Distritos'
+            'district_id' => 'Distritos',
+            'alias' => 'Alias'
+
         ];
     }
     public function recordsApp(Request $request)
     {
-        //  return 'sd';
         $records = Person::where('name', 'like', "%{$request->value}%")
             ->orWhere('number', 'like', "%{$request->value}%")
+            ->orwhere('number', 'like', "%{$request->value}")
             ->where('type', 'customers');
-        // ->orderBy($request->column);
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }

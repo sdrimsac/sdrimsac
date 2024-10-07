@@ -814,7 +814,7 @@
                                         ></small>
                                     </div>
                                     <div
-                                        class="col-md-4"
+                                        class="col-md-12"
                                         v-if="form.soap_type_id == '02'"
                                     >
                                         <div

@@ -1,5 +1,6 @@
 <template>
     <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" class="certificate-form">
+        <br>
         <div class="form-body">
             <div class="row">
                 <div class="col-md-7">
@@ -34,6 +35,7 @@
                     <el-button type="primary" @click.prevent="clickUpload" :loading="loading_submit">Aceptar</el-button>
                 </div>
             </div>
+            <br>
         </div>
     </el-dialog>
 </template>
