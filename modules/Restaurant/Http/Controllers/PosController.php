@@ -382,7 +382,10 @@ class PosController extends Controller
         $total_sales = 0;
         $total_expenses = 0;
         $total_incomes = 0;
+    
         if ($cash_id) {
+            $cash = Cash::find($cash_id);
+            $beginning_balance = $cash->beginning_balance;
             $sales = Box::where('cash_id', $cash_id);
             if ($only_cash) {
                 $sales = $sales->where('method', 'Efectivo');
@@ -439,7 +442,7 @@ class PosController extends Controller
                     }
                 });
             }
-            $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out;
+            $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
             $configuration = Configuration::first();
             if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
                 $user_name = auth()->user()->name;
