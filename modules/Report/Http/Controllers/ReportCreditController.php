@@ -365,7 +365,7 @@ class ReportCreditController extends Controller
                 'type_payment' => $group->first()->sale_note->type_payment,
                 'tasa' => $group->first()->sale_note->creditPayments->first()->tasa,
                 'count' => $group->count(),
-                'total_count' => $group->sum('total'),
+                'total_count' => $group->sum('total') - $total_advances,
                 'purchase_unit_price' => floatval($group->first()->item->purchase_unit_price),
                 'gain' => $gain,
                 'total_gain' => $total_gain,
