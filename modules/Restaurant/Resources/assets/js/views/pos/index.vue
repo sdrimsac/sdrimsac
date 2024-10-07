@@ -28,31 +28,37 @@
                     >Menú De Acciones</span>
                   </button>
 
-                  <template
-                    v-if="
-                                            configuration.restaurant &&
-                                                !this.isSeller
-                                        "
-                  >
-                    <template
-                      v-if="
-                                                !configuration.hotels ||
-                                                    (configuration.hotels &&
-                                                        !isPiscinaArea)
-                                            "
-                    >
-                      <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables">
-                        <i v-if="isHotelArea" class="fas fa-door-closed"></i>
-                        <i
-                          v-else
-                          class="icofont-dining-table"
-                          style="font-size: 28px;
-                                                margin-top:-5px;
-                                                "
-                        ></i>
-                      </button>
+                  <!-- <template v-if=" configuration.restaurant && !this.isSeller ">
+                    <template v-if=" !configuration.hotels || (configuration.hotels && !isPiscinaArea) ">
+                      <template v-if="!configuration.modo_billar || (configuration.modo_billar) && !this.isSeller">
+                        <button
+                          class="btn btn-sm btn-primary"
+                          type="button"
+                          @click="buttonSmTables">
+                          <i v-if="has_billar" class="icofont-billiard-ball"></i>
+                          <i v-else-if="isHotelArea" class="fas fa-door-closed"></i>
+                          <i v-else class="icofont-dining-table" style="font-size: 28px; margin-top:-5px; "></i>
+                        </button>
+                      </template>
+                    </template>
+                  </template> -->
+                  <template v-if="configuration.restaurant && !this.isSeller">
+                    <template v-if="!configuration.hotels || (configuration.hotels && !isPiscinaArea)">
+                      <!-- Verifica si 'configuration.modo_billar' está activo y no es vendedor -->
+                      <template v-if="configuration.modo_billar && !this.isSeller">
+                        <button
+                          class="btn btn-sm btn-primary"
+                          type="button"
+                          @click="buttonSmTables"
+                          >
+                          <i v-if="has_billar" class="icofont-billiard-ball"></i>
+                          <i v-else-if="isHotelArea" class="fas fa-door-closed"></i>
+                          <i v-else class="icofont-dining-table" style="font-size: 28px; margin-top: -5px;"></i>
+                        </button>
+                      </template>
                     </template>
                   </template>
+                  
                   <template
                     v-if="
                                             configuration.sale_note_credit_cash &&
@@ -805,7 +811,7 @@
         <!-- Modo Celular/ Movil -->
         <div class="d-flex flex-wrap">
           <button
-                        v-if="
+            v-if="
                             isSellerConsolidated
                                 ? customer_unit_type_id != null &&
                                   customer_unit_type_id != ''
@@ -1164,11 +1170,8 @@
                           </div>
                         </el-tooltip>
                       </div>
-                                        
                     </div>
-                                            <div
-                                            style="margin-top: 150px;"
-                                            ></div>
+                    <div style="margin-top: 150px;"></div>
                   </div>
                 </div>
               </div>
@@ -1177,7 +1180,7 @@
           <!-- sidebarmodal fin  -->
           <div class="dropdown-as-select d-inline-block" data-childselector="span">
             <button
-                            v-if="!isSellerConsolidated"
+              v-if="!isSellerConsolidated"
               class="btn p-0"
               type="button"
               data-bs-toggle="dropdown"
@@ -1196,14 +1199,14 @@
                 <i class="fas fa-list"></i>
               </span>
             </button>
-                        <button
-                            v-if="isSellerConsolidated"
-                            type="button"
-                            class="btn btn-primary"
-                            @click="openQuotationDialog"
-                        >
-                            <i class="fas fa-list"></i>
-                        </button>
+            <button
+              v-if="isSellerConsolidated"
+              type="button"
+              class="btn btn-primary"
+              @click="openQuotationDialog"
+            >
+              <i class="fas fa-list"></i>
+            </button>
             <div class="dropdown-menu dropdown-menu-end col-md-2 col-1">
               <div
                 class="col-12"
@@ -1383,6 +1386,7 @@
       :configuration="configuration"
       @creatingOrden="creatingOrden"
       @sendOrdens="sendOrdens"
+      :billarSeeId="billarSeeId"
       :showBillar.sync="showBillar"
     ></billar>
     <tables-rooms
@@ -1488,9 +1492,7 @@
     ></item-set>
     <sale-note-credit-cash :configuration="configuration" :showDialog.sync="showSaleNoteCreditCash"></sale-note-credit-cash>
     <consolidated-list-modal :showDialog.sync="showConsolidatedList"></consolidated-list-modal>
-        <quotation-list-modal
-            :showDialog.sync="showQuotationListDialog"
-        ></quotation-list-modal>
+    <quotation-list-modal :showDialog.sync="showQuotationListDialog"></quotation-list-modal>
     <iframe ref="pdfFrame" style="display: none;"></iframe>
     <el-dialog
       class="no-header"
@@ -1604,10 +1606,10 @@ export default {
     "company",
     "lareaId",
     "area",
-    "areaId",
+    "areaId"
   ],
   components: {
-        QuotationListModal,
+    QuotationListModal,
     UnitTypeModal,
     ConsolidatedListModal,
     DetractionPayment,
@@ -1664,8 +1666,10 @@ export default {
       searchSecondName: false,
       area_id: null,
       isHotelArea: false,
+      has_billar: false,
       isPiscinaArea: false,
       roomSeeId: null,
+      billarSeeId: null,
       tablesClean: [],
       tablesLeave: [],
       clientSaleNoteNumber: null,
@@ -2154,7 +2158,7 @@ export default {
             this.configuration.restaurant &&
             !this.configuration.college &&
             this.worker.area.description.toUpperCase() !== "HOTEL" &&
-            this.worker.area.description.toUpperCase() !== "CAJA PISCINA" && 
+            this.worker.area.description.toUpperCase() !== "CAJA PISCINA" &&
             this.worker.area.description.toUpperCase() !== "BILLAR"
         },
         {
@@ -2162,7 +2166,7 @@ export default {
           title: [" Zona Billar "],
           icon: "fas fa-map-pin ",
           visible:
-            this.configuration.modo_billlar &&
+            this.configuration.modo_billar &&
             this.worker.area.description.toUpperCase() == "BILLAR" &&
             !this.isSeller &&
             !this.isAnalist
@@ -2367,6 +2371,14 @@ export default {
         if (this.isCurrentAreaHotel()) {
           this.roomSeeId = null;
           this.openTablesRooms();
+        }  else {
+          this.openTables();
+        }
+      } 
+      if (this.configuration.modo_billar){
+        if (this.isCurrentAreaBillar()){
+          this.billarSeeId = null;
+          this.openTablesBillar();
         } else {
           this.openTables();
         }
@@ -2391,6 +2403,14 @@ export default {
             if (this.isCurrentAreaHotel()) {
               this.roomSeeId = null;
               this.openTablesRooms();
+            } else {
+              this.openTables();
+            }
+          } 
+          if (this.configuration.modo_billar){
+            if (this.isCurrentAreaBillar()){
+              this.billarSeeId = null;
+              this.openTablesBillar();
             } else {
               this.openTables();
             }
@@ -2774,6 +2794,7 @@ export default {
           this.showConsolidatedList = true;
           break;
         case 209:
+          this.billarSeeId = null;
           this.openBillar();
           break;
         case 97:
@@ -3299,12 +3320,11 @@ export default {
         //     currency_type_id
         // );
         orden.original_price = orden.price;
-        if (this.configuration.order_desc_items == true){
+        if (this.configuration.order_desc_items == true) {
           this.localOrden.push(orden);
-        }else{
+        } else {
           this.localOrden.unshift(orden);
         }
-        
       }
       //aca existe en original o en alguna  presentación
       else {
@@ -3350,48 +3370,43 @@ export default {
               }
             }
             orden.type_quantity = type ? Number(type.quantity_unit) : 0;
-            if (this.configuration.order_desc_items == true){
-              this.localOrden.push(orden);
-            } else{
-              this.localOrden.unshift(orden);
-            }
-            
-          }
-
-                    //y si no agregarla como nueva
-                } else if (categoriaMadera) {
-                                let indexFind = this.localOrden.findIndex(
-                        orden =>
-                           
-              orden.categoriaMadera &&
-                           
-              orden.categoriaMadera.key == categoriaMadera.key
-                    );
-                    if (indexFind != -1) {
-                        this.localOrden[indexFind].quantity =
-                            Number(this.localOrden[indexFind].quantity) +
-                           
-              (categoriaMadera.quantity || 1);
-                        // Number(type.quantity_unit);
-                    } else {
-                        // orden.quantity = Number(type.quantity_unit);
-            
-            if (categoriaMadera.price) {
-              orden.quantity = categoriaMadera.quantity;
-                          orden.price = categoriaMadera.price;
-                          orden.categoriaMadera = categoriaMadera;
-                        }
-            orden.to_carry = false;
-                        orden.change_subtotal = false;
-                        orden.series = [];
-                        orden.lotes = [];
-                        orden.color_size = [];
-            if (this.configuration.order_desc_items == true){
+            if (this.configuration.order_desc_items == true) {
               this.localOrden.push(orden);
             } else {
               this.localOrden.unshift(orden);
             }
-            
+          }
+
+          //y si no agregarla como nueva
+        } else if (categoriaMadera) {
+          let indexFind = this.localOrden.findIndex(
+            orden =>
+              orden.categoriaMadera &&
+              orden.categoriaMadera.key == categoriaMadera.key
+          );
+          if (indexFind != -1) {
+            this.localOrden[indexFind].quantity =
+              Number(this.localOrden[indexFind].quantity) +
+              (categoriaMadera.quantity || 1);
+            // Number(type.quantity_unit);
+          } else {
+            // orden.quantity = Number(type.quantity_unit);
+
+            if (categoriaMadera.price) {
+              orden.quantity = categoriaMadera.quantity;
+              orden.price = categoriaMadera.price;
+              orden.categoriaMadera = categoriaMadera;
+            }
+            orden.to_carry = false;
+            orden.change_subtotal = false;
+            orden.series = [];
+            orden.lotes = [];
+            orden.color_size = [];
+            if (this.configuration.order_desc_items == true) {
+              this.localOrden.push(orden);
+            } else {
+              this.localOrden.unshift(orden);
+            }
           }
         } else {
           let {
@@ -3428,12 +3443,11 @@ export default {
               Number(this.localOrden[indexFind].quantity) + 1;
             let itemAwait = this.localOrden[indexFind];
             this.localOrden.splice(indexFind, 1);
-            if(this.configuration.order_desc_items == true) {
+            if (this.configuration.order_desc_items == true) {
               this.localOrden.push(itemAwait);
-            } else{
+            } else {
               this.localOrden.unshift(itemAwait);
             }
-            
           } else {
             orden.to_carry = false;
             orden.change_subtotal = false;
@@ -3445,7 +3459,6 @@ export default {
             } else {
               this.localOrden.unshift(orden);
             }
-            
           }
         }
 
@@ -5417,7 +5430,11 @@ export default {
       quotation_stock = quotation_stock == 1;
       if (this.blockAdd && !this.configuration.box_orden) {
         this.$toast.error("No puede agregar productos a esta orden.");
-        this.$showSAlert("ORDEN", "No puede agregar productos a esta orden.", "error")
+        this.$showSAlert(
+          "ORDEN",
+          "No puede agregar productos a esta orden.",
+          "error"
+        );
         return;
       }
       this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[index]));

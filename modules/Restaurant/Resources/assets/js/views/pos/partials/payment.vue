@@ -54,6 +54,7 @@
                                                     "
                                                     size="small"
                                                     @change="filterSeries()"
+                                                    :key="isInterno + invoice + receipt + sale_note + clientSaleNoteNumber"
                                                 >
                                                     <template v-if="!isInterno">
                                                         <el-radio-button

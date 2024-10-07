@@ -30,24 +30,6 @@ use Modules\Vip\Models\SocialMedias;
 
 class PersonController extends Controller
 {
-    /* public function generateNumber()
-    {
-        $regex = '/^\d+$/';
-        $new_code = "";
-        $persons = Person::where('number', 'regexp', '^1[0-9]{7}$')->orderBy('number', 'desc')->first();
-
-        if (!$persons) {
-            $new_code = "10000001";
-        } else {
-            $number = $persons->number;
-            if (preg_match($regex, $number) === 1) {
-                $new_code = intval($number) + 1;
-            } else {
-                $new_code = "10000001";
-            }
-        }
-        return response()->json(['number' => $new_code]);
-    } */
 
     public function generateNumber()
     {
@@ -237,7 +219,6 @@ class PersonController extends Controller
         $person = Person::firstOrNew(['id' => $id]);
         $person->fill($request->all());
         $person->save();
-
         UnitTypePerson::where('customer_id', $person->id)->delete();
         $item_unit_types = $request->input('item_unit_types');
         if ($request->input('item_unit_types')) {

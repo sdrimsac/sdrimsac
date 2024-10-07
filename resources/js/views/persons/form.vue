@@ -800,6 +800,9 @@ export default {
         this.$toast.error("La longitud del DNI debe ser de 8");
         return;
       }
+      if (!this.form.alias || this.form.alias.trim() === "") {
+        delete this.form.alias;
+      }
       this.loading_submit = true;
       console.log("🚀 ~ file: form.vue:893 ~ submit ~ this.form:", this.form);
       this.$http

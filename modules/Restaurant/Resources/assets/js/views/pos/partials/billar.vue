@@ -9,7 +9,8 @@
     :close-on-click-modal="false"
     :class="{ top }"
   >
-    <div class="card" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
+  <br>
+    <div class="" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
       <div class="d-flex justify-content-end p-2">
         <button
           type="button"
@@ -80,6 +81,7 @@
         <span>Sin mesas</span>
       </div>
     </div>
+    <br>
     <div class="card-body p-2" v-if="ordens.length > 0 && !hasSelectedOrdenToChange">
       <div class="row" v-if="hasSelectedTableToChange">
         <h3>Seleccione la orden a cambiar</h3>
