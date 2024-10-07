@@ -888,7 +888,7 @@ class ReportCreditController extends Controller
                     ->where('paid', 0)
                     ->orderBy('date_payment', 'asc')
                     ->first();
-                $quote_payment = $last_payment->amount;
+                $quote_payment = $last_payment ? $last_payment->amount :0;
                 $dues = $payment_not_paid->count();
                 $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
                 $differenc_days = 0;
