@@ -30,13 +30,14 @@
                         <el-select
                             v-model="search.column"
                             placeholder="Select"
-                            @change="changeClearInput"
+                            @change="changeClearInput" 
                         >
                             <el-option
                                 v-for="(label, key) in columns"
                                 :key="key"
                                 :value="key"
                                 :label="label"
+                                clearable
                             ></el-option>
                         </el-select>
                     </div>
