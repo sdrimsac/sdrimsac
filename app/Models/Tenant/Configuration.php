@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'pricing_policy_venta',
+        'sale_note_venta',
+        'house',
+        'diary',
         'order_desc_items',
         'alias_client',
         'aparcado',
@@ -257,6 +261,10 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'pricing_policy_venta' => 'boolean',
+        'sale_note_venta' => 'boolean',
+        'house' => 'boolean',
+        'diary' => 'boolean',
         'order_desc_items' => 'boolean',
         'alias_client' => 'boolean',
         'aparcado' => 'boolean',
@@ -455,6 +463,10 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'pricing_policy_venta' => (bool)$this->pricing_policy_venta,
+            'sale_note_venta' => (bool)$this->sale_note_venta,
+            'house' => (bool)$this->house,
+            'diary' => (bool)$this->diary,
             'order_desc_items' => (bool)$this->order_desc_items,
             'alias_client' => (bool)$this->alias_client,
             'aparcado' => (bool)$this->aparcado,

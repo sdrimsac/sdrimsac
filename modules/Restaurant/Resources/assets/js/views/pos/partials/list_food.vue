@@ -1255,7 +1255,11 @@ export default {
         this.configuration.restaurant
       ) {
         /* this.$toast.error("No puede agregar productos a esta orden."); */
-        this.$showSAlert("ORDEN", "No puede agregar productos a esta orden.", "error");
+        this.$showSAlert(
+          "ORDEN",
+          "No puede agregar productos a esta orden.",
+          "error"
+        );
         return;
       }
       this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[index]));
@@ -1372,7 +1376,11 @@ export default {
             let stock = Number(this.selectedFood.item.stock);
             if (qty > stock) {
               /* this.$toast.warning("Limite de stock alcanzado"); */
-              this.$showSAlert("LIMITE", "Limite de stock alcanzado", "warning");
+              this.$showSAlert(
+                "LIMITE",
+                "Limite de stock alcanzado",
+                "warning"
+              );
               return;
             }
           }
@@ -1407,26 +1415,27 @@ export default {
       );
       let { item } = this.selectedFood;
       if (item.subject_to_detraction == 1) {
-        /* this.$toast.warning("Este producto esta sujeto a detracción"); */
-        this.$showSAlert("DETRACCION", "Este producto esta sujeto a detracción", "warming")
-      }
-
-      if (this.configuration.restaurant == true){
-        this.$notify({
-                title: this.currentFood.food.description.toLowerCase(),
-                duration: 800,
-                iconClass: "el-icon-food",
-                message: "Agregado con èxito",
-                position: "bottom-left"
-      });
-      } else {
         this.$showSAlert(
+          "DETRACCION",
+          "Este producto esta sujeto a detracción",
+          "warming"
+        );
+      }
+      /* if (this.configuration.restaurant == true){ */
+      this.$notify({
+        title: this.currentFood.food.description.toLowerCase(),
+        duration: 800,
+        iconClass: "el-icon-food",
+        message: "Agregado con èxito",
+        position: "bottom-left"
+      });
+      /* } else {
+        /* this.$showSAlert(
         this.currentFood.food.description.toLowerCase(),
         "Agregado con éxito",
         "success"
       );
-
-      }
+      } */
       this.currentFood = {
         food: null,
         observation: null,

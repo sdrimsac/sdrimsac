@@ -75,7 +75,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->cuentas_bancarias)
+                        @if ($user->type == 'superadmin' || $config->cuentas_bancarias)
                             <li>
                                 <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.bank_accounts.index') }}">
@@ -84,7 +84,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->bancos)
+                        @if ($user->type == 'superadmin' || $config->bancos)
                             <li>
                                 <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.banks.index') }}">
@@ -92,7 +92,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->vendedores)
+                        @if ($user->type == 'superadmin' || $config->vendedores)
                             <li>
                                 <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.sellers.index') }}">
@@ -100,7 +100,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->registro_actividad)
+                        @if ($user->type == 'superadmin' || $config->registro_actividad)
                             <li>
                                 <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
                                     href="{{ route('tenant.registers.index') }}">
@@ -108,7 +108,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->college)
+                        @if ( $config->college)
                             <li>
                                 <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.items.index') }}">
@@ -116,7 +116,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->categorias)
+                        @if ($user->type == 'superadmin' || $config->categorias)
                             <li>
                                 <a class="{{ $path[0] === 'category' ? 'active' : '' }}"
                                     href="{{ route('tenant.categories.index') }}">
@@ -124,7 +124,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->marca)
+                        @if ($user->type == 'superadmin' || $config->marca)
                             <li>
                                 <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
                                     href="{{ route('tenant.brands.index') }}">
@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->clientes)
+                        @if ($user->type == 'superadmin' || $config->clientes)
                             <li>
                                 <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
                                     href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
@@ -140,7 +140,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->provedores)
+                        @if ($user->type == 'superadmin' || $config->provedores)
                             <li>
                                 <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
                                     href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
@@ -148,7 +148,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->atributos)
+                        @if ($user->type == 'superadmin' || $config->atributos)
                             <li>
                                 <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.attribute_types.index') }}">
@@ -156,7 +156,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->unidad_medida)
+                        @if ($user->type == 'superadmin' || $config->unidad_medida)
                             <li>
                                 <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.unit_types.index') }}">
@@ -164,21 +164,6 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- <li>
-                            <a class="{{ $path[0] === 'etiquetas' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.etiquetas.index') }}">
-                                <i class="fa fa-solid fa-ruler"></i> Prueba Etiquetas
-                            </a>
-                        </li> --}}
-
-
-                        <!-- @if ($config->restaurant)
-<li>
-                    <a class="{{ $path[0] === 'caja' && $path[1] === 'observations' ? 'active' : '' }}" href="{{ route('restaurant.observations') }}">
-                        <i class="icofont-dining-table"></i> Observaciones
-                    </a>
-                </li>
-@endif -->
                         @if ($config->personal_phone)
                             <li>
                                 <a class="{{ $path[0] === 'whatsapp' ? 'active' : '' }}"
@@ -227,7 +212,7 @@
         </ul>
         </li> --}}
             {{-- @if (!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) --}}
-            @if ((!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) && $config->lista_compras)
+            @if ($user->type == 'superadmin' || (!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) && $config->lista_compras)
                 <li>
                     <a href="#compras" data-bs-toggle="collapse" data-role="button"
                         aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
@@ -263,7 +248,7 @@
                     <span class="label">Inventario</span>
                 </a>
                 <ul id="invetories" class="collapse ">
-                    @if ($config->listado_productos)
+                    @if ($user->type == 'superadmin' || $config->listado_productos)
                         <li>
                             <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.items.index') }}">
@@ -272,7 +257,7 @@
                         </li>
                     @endif
                     @if (!$roleService->isArca())
-                        @if ($config->transform_item)
+                        @if ($user->type == 'superadmin' || $config->transform_item)
                             <li>
                                 <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.manufactured.index') }}">
@@ -281,7 +266,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->receive_merchandise)
+                        @if ($user->type == 'superadmin' || $config->receive_merchandise)
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('transfers.index') }}">
@@ -295,7 +280,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->guias_remision)
+                        @if ($user->type == 'superadmin' || $config->guias_remision)
                             <li>
                                 <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.dispatches.index') }}">
@@ -304,7 +289,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($has_series && $config->series_enabled)
+                        @if ($user->type == 'superadmin' || $has_series && $config->series_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('itemlots') }}">
@@ -313,7 +298,7 @@
                             </li>
                         @endif
 
-                        @if ($config->lots_enabled)
+                        @if ($user->type == 'superadmin' || $config->lots_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('lotes') }}">
@@ -321,7 +306,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->is_promotion_document)
+                        @if ($user->type == 'superadmin' || $config->is_promotion_document)
                             <li>
                                 <a href="{{ route('tenant.promotions_document.index') }}">
                                     <i class="icofont-price"></i>
@@ -329,7 +314,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->promocion_oferta)
+                        @if ( $config->promocion_oferta)
                             <li>
                                 <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.item_sets.index') }}">
@@ -337,7 +322,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->color_size_enabled)
+                        @if ( $config->color_size_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'item-color-size' ? 'active' : '' }}"
                                     href="{{ route('tenant.item_color_size.index') }}">
@@ -353,14 +338,14 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- @if ($config->ingreso_salida_productos) --}}
-                            <li>
-                                <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
-                                    href="{{ route('tenant.productos.index') }}">
-                                    <i class="icofont-box"></i> Listado de Politica de Precios
-                                </a>
-                            </li>
-                        {{-- @endif --}}
+                        @if ($config->pricing_policy_venta)
+                        <li>
+                            <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
+                                href="{{ route('tenant.productos.index') }}">
+                                <i class="icofont-box"></i> Listado de Politica de Precios
+                            </a>
+                        </li>
+                        @endif
                         @if ($config->tipo_transacciones_inventario)
                             <li>
                                 <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
@@ -369,7 +354,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->ver_etiqueta_logistica)
+                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica)
                             <li>
                                 <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}"
                                     href="{{ route('etiquetas.index') }}">
@@ -434,7 +419,7 @@
                                 </a>
                             </li> --}}
                         @endif
-                        @if ($config->listado_boleta_factura_nuevo)
+                        @if ($user->type == 'superadmin' || $config->listado_boleta_factura_nuevo)
                             <li>
                                 <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.index') }}">
@@ -442,7 +427,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->detraction)
+                        @if ($user->type == 'superadmin' || $config->detraction)
                             <li>
                                 <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
                                     href="{{ route('tenant.detractions.index') }}">
@@ -450,7 +435,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->no_enviados)
+                        @if ($user->type == 'superadmin' || $config->no_enviados)
                             <li>
                                 <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.not_sent') }}">
@@ -467,7 +452,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->nota_credito)
+                    @if ($user->type == 'superadmin' || $config->nota_credito)
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] == 'note_other' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.note_other') }}">
@@ -485,7 +470,7 @@
                         </li>
                     @endif
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
-                        @if ($config->resumenes)
+                        @if ($user->type == 'superadmin' || $config->resumenes)
                             <li>
                                 <a class="{{ $path[0] === 'summaries' ? 'active' : '' }}"
                                     href="{{ route('tenant.summaries.index') }}">
@@ -493,7 +478,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->anulaciones)
+                        @if ($user->type == 'superadmin' || $config->anulaciones)
                             <li>
                                 <a class="{{ $path[0] === 'voided' ? 'active' : '' }}"
                                     href="{{ route('tenant.voided.index') }}">
@@ -533,7 +518,7 @@
                                 <span class="label">Caja principal</span>
                             </a>
                         </li>
-                        @if ($config->credit_list)
+                        @if ($user->type == 'superadmin' || $config->credit_list)
                             <li>
                                 <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
                                     href="{{ route('tenant.credit_list.index') }}">
@@ -575,14 +560,14 @@
                         @endif
 
                     </li>
-                    @if ($config->reporte_caja)
+                    @if ($user->type == 'superadmin' || $config->reporte_caja)
                         <li>
                             <a class="{{ $path[0] === 'boxes' ? 'active' : '' }}" href="{{ route('boxes') }}">
                                 <i class="icofont-patient-file"></i> Reporte de Caja
                             </a>
                         </li>
                     @endif
-                    @if ($config->reporte_cierre_caja)
+                    @if ($user->type == 'superadmin' || $config->reporte_cierre_caja)
                         <li>
                             <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
                                 href="{{ route('reports.cash_closes.index') }}">
@@ -591,7 +576,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->reporte_globalizado)
+                    @if ($user->type == 'superadmin' || $config->reporte_globalizado)
                         <li>
                             <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
                                 href="{{ route('tenant.reportincomebox.global_index') }}">
@@ -614,7 +599,7 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
-                    @if ($config->reporte_metodos_pago)
+                    @if ($user->type == 'superadmin' || $config->reporte_metodos_pago)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                                 href="{{ route('reports.methods.index') }}">
@@ -642,7 +627,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->consignment)
+                    @if ( $config->consignment)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
                                 href="{{ route('reports.consignment.index') }}">
@@ -652,7 +637,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->credits)
+                    @if ($user->type == 'superadmin' || $config->credits)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
                                 href="{{ route('reports.credits.index') }}">
@@ -661,23 +646,27 @@
                                 Créditos
                             </a>
                         </li>
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'daily_credit' ? 'active' : '' }}"
-                                href="{{ route('reports.credits.daily_index') }}">
-                                <i class="icofont-money-bag"></i>
-                                Reporte diario - crédito
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
-                                href="{{ route('reports.credits.credit_index') }}">
-                                <i class="icofont-money-bag"></i>
-                                Ganancias Hogar / Efectivo
-                            </a>
-                        </li>
+                        @if ($user->type == 'superadmin' || $config->diary)
+                            <li>
+                                <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'daily_credit' ? 'active' : '' }}"
+                                    href="{{ route('reports.credits.daily_index') }}">
+                                    <i class="icofont-money-bag"></i>
+                                    Reporte diario - crédito
+                                </a>
+                            </li>
+                        @endif
+                        @if ($user->type == 'superadmin' || $config->house)
+                            <li>
+                                <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
+                                    href="{{ route('reports.credits.credit_index') }}">
+                                    <i class="icofont-money-bag"></i>
+                                    Ganancias Hogar / Efectivo
+                                </a>
+                            </li>
+                        @endif
                     @endif
                     @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm)
-                        @if ($config->reporte_ganancias)
+                        @if ($user->type == 'superadmin' || $config->reporte_ganancias)
                             <li>
                                 <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                                     href="{{ route('reports.cash.index') }}">
@@ -686,7 +675,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->reporte_productos)
+                        @if ($user->type == 'superadmin' || $config->reporte_productos)
                             <li>
                                 <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
                                     href="{{ route('reports.products-clients.index') }}">
@@ -695,7 +684,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($config->stock_valorizado)
+                        @if ($user->type == 'superadmin' || $config->stock_valorizado)
                             <li>
                                 <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
                                     href="{{ route('reports.valued.index') }}">
@@ -705,7 +694,7 @@
                             </li>
                         @endif
                     @endif
-                    @if ($config->stock_minino)
+                    @if ($user->type == 'superadmin' || $config->stock_minino)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
                                 href="{{ route('reports.stockmin.index') }}">
@@ -713,7 +702,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->stock_producto)
+                    @if ($user->type == 'superadmin' || $config->stock_producto)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                                 href="{{ route('reports.inventory.index') }}">
@@ -721,7 +710,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->kardex)
+                    @if ($user->type == 'superadmin' || $config->kardex)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
                                 href="{{ route('reports.kardex.index') }}">
@@ -737,7 +726,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($has_series && $config->reporte_series_vendidas)
+                    @if ($user->type == 'superadmin' || ($has_series && $config->reporte_series_vendidas))
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
                                 href="{{ route('reports.series.index') }}">
@@ -745,7 +734,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->productos_vendidos)
+                    @if ($user->type == 'superadmin' || $config->productos_vendidos)
                         <li>
                             <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
                                 href="{{ route('tenant.ventas.index') }}">
@@ -753,14 +742,15 @@
                             </a>
                         </li>
                     @endif
-                    {{-- @if ($config->productos_vendidos) --}}
+                    @if ($user->type == 'superadmin' || $config->sale_note_venta)
                         <li>
                             <a class="{{ $path[0] === 'notaventa' ? 'active' : '' }}"
                                 href="{{ route('tenant.notaventa.index') }}">
                                 <i class="icofont-list"></i> Productos Vendidos Nota de Venta
                             </a>
                         </li>
-                    {{-- @endif --}}
+                    @endif
+                    
                     @if ($config->maderera)
                         <li>
                             <a class="{{ $path[0] === 'madera' ? 'active' : '' }}"

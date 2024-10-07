@@ -1731,7 +1731,7 @@
 
                                 </el-tab-pane>
 
-                                <el-tab-pane label="Crédito NV" v-if="form.credits">
+                                <!-- <el-tab-pane label="Crédito NV" v-if="form.credits">
                                     <div class="row">
                                         <div class="col-md-3 mt-4">
                                             <div class="form-group">
@@ -1814,7 +1814,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </el-tab-pane>
+                                </el-tab-pane> -->
                                 <!-- Panel de Arca---- -->
                                 <el-tab-pane name="Arca">
                                     <template #label>
@@ -2132,6 +2132,17 @@
                                                             <el-switch v-model="form.ver_etiqueta_logistica" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Etiquetas', form.ver_etiqueta_logistica, 'ver_etiqueta_logistica', 'tagsIcon')"></el-switch>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fa fa-tags"></i> Listado De Politica De Precios
+                                                                <el-tooltip class="item" effect="dark" content="Aquí podemos imprimir nuestras etiquetas de nuestros productos" placement="top-start">
+                                                                    <i class="fa fa-info-circle"></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch v-model="form.pricing_policy_venta" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Listado De Politica De Precios', form.pricing_policy_venta, 'Listado De Politica De Precios', 'tagsIcon')"></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </el-tab-pane>
@@ -2281,9 +2292,9 @@
                                                     <div class="col-md-2 mt-4">
                                                         <div class="form-group">
                                                             <label class="control-label w-100">
-                                                                <i class="icofont-list"></i> Productos Vendidos
+                                                                <i class="icofont-list"></i> Productos Vendidos Boletas y Facturas
                                                             </label>
-                                                            <el-switch v-model="form.productos_vendidos" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Productos Vendidos', form.productos_vendidos, 'productos_vendidos', 'listIcon')"></el-switch>
+                                                            <el-switch v-model="form.productos_vendidos" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Productos Vendidos Boletas y Facturas', form.productos_vendidos, 'productos_vendidos Boletas y Facturas', 'listIcon')"></el-switch>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2 mt-4">
@@ -2348,6 +2359,30 @@
                                                                 <i class="fas fa-fingerprint"></i> Reporte De Series Vendidas
                                                             </label>
                                                             <el-switch v-model="form.reporte_series_vendidas" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Reporte De Series Vendidas', form.reporte_series_vendidas, 'reporte_series_vendidas', 'fingerprintIcon')"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-boxes"></i> Ganancias Hogar Efectivo
+                                                            </label>
+                                                            <el-switch v-model="form.house" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Ganancias Hogar / Efectivo', form.house, 'Ganacias Hogar / Efectivo', 'fingerprintIcon')"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-boxes"></i> Reporte Diario - Credito
+                                                            </label>
+                                                            <el-switch v-model="form.diary" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Reporte Diario - Credito', form.diary, 'Reporte Diario - Credito', 'fingerprintIcon')"></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label w-100">
+                                                                <i class="fas fa-boxes"></i> Productos Vendidos Nota de venta
+                                                            </label>
+                                                            <el-switch v-model="form.sale_note_venta" active-text="Si" inactive-text="No" :active-color="'#28a745'" :inactive-color="'#6c757d'" @change="submit('Reporte Productos Vendidos Nota de Venta', form.sale_note_venta, 'Reporte Productos Vendidos Nota de Venta', 'fingerprintIcon')"></el-switch>
                                                         </div>
                                                     </div>
                                                 </div>
