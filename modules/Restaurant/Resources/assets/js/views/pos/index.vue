@@ -28,36 +28,21 @@
                     >Menú De Acciones</span>
                   </button>
 
-                  <!-- <template v-if=" configuration.restaurant && !this.isSeller ">
+                  <template v-if=" configuration.restaurant && !this.isSeller ">
                     <template v-if=" !configuration.hotels || (configuration.hotels && !isPiscinaArea) ">
-                      <template v-if="!configuration.modo_billar || (configuration.modo_billar) && !this.isSeller">
+                      <!-- <template v-if="!configuration.modo_billar || (configuration.modo_billar) && !this.isSeller"> -->
                         <button
                           class="btn btn-sm btn-primary"
                           type="button"
                           @click="buttonSmTables">
-                          <i v-if="has_billar" class="icofont-billiard-ball"></i>
-                          <i v-else-if="isHotelArea" class="fas fa-door-closed"></i>
+                          <!-- <i v-if="has_billar" class="icofont-billiard-ball"></i> -->
+                          <i v-if="isHotelArea" class="fas fa-door-closed"></i>
                           <i v-else class="icofont-dining-table" style="font-size: 28px; margin-top:-5px; "></i>
                         </button>
-                      </template>
-                    </template>
-                  </template> -->
-                  <template v-if="configuration.restaurant && !this.isSeller">
-                    <template v-if="!configuration.hotels || (configuration.hotels && !isPiscinaArea)">
-                      <!-- Verifica si 'configuration.modo_billar' está activo y no es vendedor -->
-                      <template v-if="configuration.modo_billar && !this.isSeller">
-                        <button
-                          class="btn btn-sm btn-primary"
-                          type="button"
-                          @click="buttonSmTables"
-                          >
-                          <i v-if="has_billar" class="icofont-billiard-ball"></i>
-                          <i v-else-if="isHotelArea" class="fas fa-door-closed"></i>
-                          <i v-else class="icofont-dining-table" style="font-size: 28px; margin-top: -5px;"></i>
-                        </button>
-                      </template>
+                      <!-- </template> -->
                     </template>
                   </template>
+                  
                   
                   <template
                     v-if="
