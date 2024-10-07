@@ -115,7 +115,7 @@ class ReportCreditCollection extends ResourceCollection
             }
             // $penalty = $row->c
             return [
-                'int' =>  ($total_number_payments * $quote_payment) - ($row->total + $advances),
+                'int' =>  ($total_number_payments * $quote_payment) - ($row->total - $advances),
                 'total_quotes_payment' => $total_number_payments * $quote_payment, 
                 'total_number_payments' => $total_number_payments,
                 'quote_payment' => number_format($quote_payment,2,".",""),
