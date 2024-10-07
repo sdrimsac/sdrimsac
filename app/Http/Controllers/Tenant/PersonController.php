@@ -121,7 +121,8 @@ class PersonController extends Controller
             'name' => 'Nombre',
             'number' => 'Número',
             'district_id' => 'Distritos',
-            'alias' => 'Alias'
+            'alias' => 'Alias',
+            /* 'zone_description' => 'Zona' */
 
         ];
     }
@@ -129,7 +130,7 @@ class PersonController extends Controller
     {
         $records = Person::where('name', 'like', "%{$request->value}%")
             ->orWhere('number', 'like', "%{$request->value}%")
-            ->orwhere('number', 'like', "%{$request->value}")
+            ->orwhere('alias', 'like', "%{$request->value}")
             ->where('type', 'customers');
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));

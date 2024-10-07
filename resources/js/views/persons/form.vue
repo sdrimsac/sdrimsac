@@ -504,7 +504,7 @@
             </div>
           </div>
         </template>
-        <div class="row">
+        <div class="row" v-if="configuration.consolidated_quotations">
           <div class="col-8 col-lg-8 col-xl-8">
             <div class="form-group">
               <label class="control-label">Politica de precio</label>
@@ -675,6 +675,7 @@ export default {
         identity_document_type_id: "6",
         number: null,
         name: null,
+        alias: null,
         trade_name: null,
         country_id: "PE",
         department_id: null,

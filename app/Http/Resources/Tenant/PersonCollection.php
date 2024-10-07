@@ -16,6 +16,7 @@ class PersonCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             return [
+                'alias' => $row->alias,
                 'credit_line' => $row->credit_line,
                 'has_credit_line' => (bool) $row->has_credit_line,
                 'id' => $row->id,
@@ -39,7 +40,6 @@ class PersonCollection extends ResourceCollection
                 'comment' => $row->comment,
                 'enabled' => (bool) $row->enabled,
                 'zone' => $row->zone,
-                'alias' => $row->alias,
                 'zone_description' => optional($row->zone)->description,
                 'created_at' => $row->created_at ? $row->created_at->format('Y-m-d H:i:s') : '',
                 'updated_at' => $row->updated_at ? $row->updated_at->format('Y-m-d H:i:s') : '',
