@@ -78,7 +78,7 @@
                         >Nuevo</el-button
                     >
                     <el-button
-                        v-if="configuration.sale_note_credit_penalty"
+                        v-if="configuration && configuration.sale_note_credit_penalty"
                         type="primary"
                         icon="el-icon-payment"
                         @click="clickAddCancelCredit"
@@ -90,7 +90,7 @@
                         type="primary"
                         @click="seeDetail"
                         icon="el-icon-view"
-                        v-if="configuration.sale_note_credit_penalty"
+                        v-if="configuration && configuration.sale_note_credit_penalty"
                         >Ajustes</el-button
                     >
                 </div>
@@ -206,7 +206,7 @@
                                                     "
                                                     type="date"
                                                     :disabled="
-                                                        configuration.sale_note_credit_penalty
+                                                        configuration && configuration.sale_note_credit_penalty
                                                     "
                                                     :clearable="false"
                                                     format="dd/MM/yyyy"

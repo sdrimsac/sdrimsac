@@ -478,6 +478,9 @@ class PurchaseController extends Controller
                     ->latest()->first();
                 $company = Company::active();
                 $soap_type_id = $company->soap_type_id;
+                $last_box = Box::where('cash_id', $cash->id)->latest()->first();
+                $time_box = $last_box ? $last_box->created_at->format('H:i:s') : date('H:i:s');
+                $date_box = $last_box ? $last_box->date : date('Y-m-d');
                 foreach ($data['payments'] as $payment) {
                     $record_payment = $doc->purchase_payments()->create($payment);
                     $box = new Box;
@@ -505,18 +508,19 @@ class PurchaseController extends Controller
 
                 if (!$doc->filename) {
                     $this->setFilename($doc);
-                }   
+                }
 
                 $configuration = Configuration::first();
-                if($configuration->sale_note_credit_penalty){
+                if ($configuration->sale_note_credit_penalty) {
                     $total = (new CashTransferController)->available();
-                    if($total > 0){
+                    if ($total > 0) {
                         $date = date('Y-m-d');
-                        $time = date('H:i:s');
+                        $time_box = $time_box;
+                        $time_now = date('H:i:s');
                         $total_without_purshase = $total - $doc->total;
-                        $message = "El usuario arca - administrador hasta la fecha {$date} / {$time} contaba con monto de S/{$total} y ha realizado una compra el {$date} a las {$time} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total_without_purshase}";
+                        $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total_without_purshase}";
                         $website = $this->getTenantWebsite();
-                        WhatsappSendMessageProccess::dispatch($website->id, $message,null);
+                        WhatsappSendMessageProccess::dispatch($website->id, $message, null);
                     }
                     // El usuario arca - administrador hasta la fecha 07-10-2024 / 09:10:55am contaba con monto de S/5 mil y ha realizado una compra el 07-10-2024 a las 15:54:13 por un monto de S/2590, quedando un saldo a favor de S/2410
 
