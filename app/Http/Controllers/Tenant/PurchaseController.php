@@ -478,9 +478,15 @@ class PurchaseController extends Controller
                     ->latest()->first();
                 $company = Company::active();
                 $soap_type_id = $company->soap_type_id;
-                $last_box = Box::where('cash_id', $cash->id)->latest()->first();
-                $time_box = $last_box ? $last_box->created_at->format('H:i:s') : date('H:i:s');
-                $date_box = $last_box ? $last_box->date : date('Y-m-d');
+                $last_box = null;
+                $time_box = null;
+                $date_box = null;
+
+                if ($cash) {
+                    $last_box = Box::where('cash_id', $cash->id)->latest()->first();
+                    $time_box = $last_box ? $last_box->created_at->format('H:i:s') : date('H:i:s');
+                    $date_box = $last_box ? $last_box->date : date('Y-m-d');
+                }
                 foreach ($data['payments'] as $payment) {
                     $record_payment = $doc->purchase_payments()->create($payment);
                     $box = new Box;
@@ -511,7 +517,7 @@ class PurchaseController extends Controller
                 }
 
                 $configuration = Configuration::first();
-                if ($configuration->sale_note_credit_penalty) {
+                if ($configuration->sale_note_credit_penalty && $cash) {
                     $total = (new CashTransferController)->available();
                     if ($total > 0) {
                         $date = date('Y-m-d');
