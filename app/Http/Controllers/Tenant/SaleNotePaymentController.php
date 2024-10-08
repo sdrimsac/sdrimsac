@@ -367,7 +367,7 @@ class SaleNotePaymentController extends Controller
             event(new PrintEvent(null, 'URL', true, null, [], false, false, $pdf));
         }
 
-        if($remain_pay > 0){
+        if($remain_pay > 0 && $configuration->sale_note_credit_confirm ){
             $this->generaIncomeAdjust($cash->id, $remain_pay);
         }
         return response()->json([
