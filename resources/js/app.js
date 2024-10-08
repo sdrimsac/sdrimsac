@@ -56,10 +56,21 @@ Vue.prototype.$showSAlert = (title, text, type = "success") => {
         },
         didOpen: popup => {
          
-            popup.style.zIndex = "2010"; // Ajusta este valor según necesites
+            // popup.style.zIndex = "2010"; // Ajusta este valor según necesites
+            const swalContainer = Swal.getPopup();
+            // let timerInterval;
+        
+            swalContainer.addEventListener('mouseenter', () => {
+              Swal.stopTimer();
+            });
+        
+            swalContainer.addEventListener('mouseleave', () => {
+              Swal.resumeTimer();
+            });
         },
         position: "center",
-        icon: type
+        icon: type,
+
     });
 };
 

@@ -70,6 +70,7 @@
             :showDialog.sync="showDialogPayments"
             :documentId="recordId"
             @reloadData="getRecords"
+            :configuration="configuration"
         ></sale-note-payments>
     </el-dialog>
 </template>

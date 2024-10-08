@@ -78,7 +78,10 @@
                         >Nuevo</el-button
                     >
                     <el-button
-                        v-if="configuration && configuration.sale_note_credit_penalty"
+                        v-if="
+                            configuration &&
+                                configuration.sale_note_credit_penalty
+                        "
                         type="primary"
                         icon="el-icon-payment"
                         @click="clickAddCancelCredit"
@@ -90,7 +93,10 @@
                         type="primary"
                         @click="seeDetail"
                         icon="el-icon-view"
-                        v-if="configuration && configuration.sale_note_credit_penalty"
+                        v-if="
+                            configuration &&
+                                configuration.sale_note_credit_penalty
+                        "
                         >Ajustes</el-button
                     >
                 </div>
@@ -206,7 +212,8 @@
                                                     "
                                                     type="date"
                                                     :disabled="
-                                                        configuration && configuration.sale_note_credit_penalty
+                                                        configuration &&
+                                                            configuration.sale_note_credit_penalty
                                                     "
                                                     :clearable="false"
                                                     format="dd/MM/yyyy"
@@ -730,6 +737,22 @@ export default {
             this.fileList = [];
         },
         async clickSubmit(index) {
+            console.log(
+                "🚀 ~ clickSubmit ~ this.configuration:",
+                this.configuration
+            );
+            if (this.configuration.sale_note_credit_cash) {
+                if (
+                    this.records[index].payment > this.document.total_difference
+                ) {
+                    this.$showSAlert(
+                        "Error",
+                        "El monto ingresado no puede ser mayor al monto de la cuota.",
+                        "error"
+                    );
+                    return;
+                }
+            }
             if (
                 this.creditDiscountPenalty >
                 this.document.current_payment.penalty
@@ -747,9 +770,7 @@ export default {
                 return;
             }
             //si el monto ingresado tiene dos decimales
-            console.log("🚀 ~ clickSubmit ~ payment11:", payment);
             if (payment % 1 != 0) {
-                console.log("🚀 ~ clickSubmit ~ payment:", payment);
                 //si el segundo decimal es mayor a 0
                 let paymentString = payment.toString().split(".")[1];
 

@@ -276,7 +276,8 @@ class SaleNotePaymentController extends Controller
             // if($document_save->credit_cash == 1){
 
             // }else{
-            $count_payment = $payment->count();
+            if($document_save->sale_note_credit){
+                $count_payment = $payment->count();
             if ($count_payment == 1) {
                 $payment = $payment->first();
                 if ($payment) {
@@ -352,6 +353,8 @@ class SaleNotePaymentController extends Controller
                 }
                 // }
             }
+            }
+
         }
 
 
