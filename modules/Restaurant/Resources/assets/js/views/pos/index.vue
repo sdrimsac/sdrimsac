@@ -1909,6 +1909,10 @@ export default {
     }
   },
   methods: {
+     openQuotationDialog() {
+            this.showQuotationListDialog = true;
+        },
+
     changeCustomer() {
       this.localOrden = [];
       // this.$emit("update:localOrden", []);
@@ -3880,7 +3884,10 @@ export default {
     },
     filterCategorie(id, mod = false) {
       this.category_selected = id;
-      this.$refs.list_foods.searchFoodCategories(id);
+      if(this.$refs.list_foods){
+        console.log("aquiss?");
+        this.$refs.list_foods.searchFoodCategories(id);
+      }
     },
 
     initCurrencyType() {
