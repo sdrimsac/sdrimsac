@@ -329,6 +329,7 @@
                                                 </td>
                                             </tr>
                                         @endif
+1                                        @if( $data->sale_note->sale_note_credit)
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
                                                 class="border-right border-top" style="padding: 5px !important;">
@@ -353,6 +354,7 @@
                                                     </span></b>
                                             </td>
                                         </tr>
+                                        @endif
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
                                                 class="border-right border-top" style="padding: 5px !important;">
@@ -390,10 +392,9 @@
                                                 <b><span style="font-size: 17px;">
                                             
                                                         @if ($penalties == 0)
-                                                            {{-- {{ number_format($deuda + $interes, 2) }} --}}
-                                                            {{-- {{ number_format($deuda, 2) }} --}}
+                                                        
                                                         @else
-                                                            {{-- {{ number_format($deuda + $interes + $penalties, 2) }} --}}
+                                                        
                                                         @endif
                                                         {{ number_format($deuda, 2) }}
 

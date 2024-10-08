@@ -54,14 +54,15 @@ class ReceiptController extends Controller
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();
         $quote = null;
         $interes = 0;
+        
         if ($data->sale_note_id) {
             $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
             if ($data_payments != null) {
                 $quote = $data_payments->amount;
-                $interes = ($data->sale_note->total - $data->sale_note->advances) * (($data_payments->tasa / 100) ) ;
+                $interes = ($data->sale_note->total - $data->sale_note->advances) * (($data_payments->tasa / 100));
             }
             $sale_note = SaleNote::find($data->sale_note_id);
-            if ($sale_note->creditPayments) {
+            if ($sale_note->sale_note_credit) {
                 // Paso 1: Seleccionar los registros limitados
                 $limitedPayments = Payment::where('sale_note_id', $data->sale_note_id)
                     ->orderBy('id') // Asegúrate de tener un criterio de ordenación
@@ -78,16 +79,18 @@ class ReceiptController extends Controller
                     'total_penalty' => $totalPenalty,
                 ];
                 $sum_payments = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
-        
+                $give = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
                 $deuda = $sum_payments - ($payments->total_payment - $payments->total_penalty);
             } else {
                 $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
-                $deuda = $data->sale_note->total - $data->sale_note->advances -($payments->total_payment);
+                $give = $data->sale_note->total - $data->sale_note->advances;
+
+                $deuda = $data->sale_note->total - $data->sale_note->advances - ($payments->total_payment);
             }
-        
         } else {
             $payments = DocumentPayment::select(DB::raw('SUM(payment) as total_payment'))->where('document_id', $data->document_id)->first();
-            $deuda = $data->document->total - $data->document->advances - $payments->total_payment ;
+            $deuda = $data->document->total - $data->document->advances - $payments->total_payment;
+            $give = $data->document->total - $data->document->advances;
         }
 
         if (!$data) throw new Exception("El código {$external_id} es inválido, no se encontro la cotización relacionada");
@@ -115,9 +118,8 @@ class ReceiptController extends Controller
         if ($data->num_cuota != $position + 1) {
             $next_payment = null;
         }
-        $give = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
         $recibo = PDF::loadView('tenant.receipt.index', [
-            'give' =>$give,
+            'give' => $give,
             'previous_receipt' => $previous_receipt,
             'quote' => number_format($quote, 2, ".", ""),
             'position' => $position,
