@@ -54,7 +54,13 @@
                                                     "
                                                     size="small"
                                                     @change="filterSeries()"
-                                                    :key="isInterno + invoice + receipt + sale_note + clientSaleNoteNumber"
+                                                    :key="
+                                                        isInterno +
+                                                            invoice +
+                                                            receipt +
+                                                            sale_note +
+                                                            clientSaleNoteNumber
+                                                    "
                                                 >
                                                     <template v-if="!isInterno">
                                                         <el-radio-button
@@ -1712,7 +1718,7 @@ export default {
                 description: "Consumo",
                 price: 0
             },
-            isRestaurantWarehouse:false,
+            isRestaurantWarehouse: false,
             showDialogDocumentDetraction: false,
             hasDetraction: false,
             methodsValidate: [
@@ -1990,7 +1996,7 @@ export default {
     mounted() {},
     methods: {
         insertReferenceNumber() {
-            console.log("entra a referencia");
+            
             let pass = false;
             if (this.form.reference_number && this.form.bank_account_id) {
                 let bank = this.bank_accounts.find(
@@ -2528,7 +2534,11 @@ export default {
             }
             persons = [...persons, ...this.all_customers];
             let newData = [];
-            if (this.clientSaleNoteNumber || this.form.hotel_customer_number || this.form.quotation_customer_number) {
+            if (
+                this.clientSaleNoteNumber ||
+                this.form.hotel_customer_number ||
+                this.form.quotation_customer_number
+            ) {
                 newData = personsFromServer;
             } else {
                 newData = [...this.all_customers, ...persons];
@@ -2570,7 +2580,7 @@ export default {
                 }
 
                 this.form.customer_telephone = customer.phone;
-                this.setLocalStorageIndex("customer", this.customer);
+                // this.setLocalStorageIndex("customer", this.customer);
                 if (
                     this.clientSaleNoteNumber &&
                     customer.identity_document_type_id !== "6"
@@ -2583,6 +2593,8 @@ export default {
                 (thing, index, self) =>
                     index === self.findIndex(t => t.id === thing.id)
             );
+            
+
             this.setSeries();
         },
         setLocalStorageIndex(key, obj) {
@@ -2651,11 +2663,10 @@ export default {
             }
         },
         async date_of_issue() {
-
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-            
+
             this.form.promotion_document_id =
                 this.promotions_document.length > 0
                     ? this.promotions_document[0].id
@@ -2920,7 +2931,7 @@ export default {
                         }
                     }
                 } catch (e) {
-                    console.log(e, " error");
+                    
                 } finally {
                     this.loading = false;
                 }
@@ -3337,7 +3348,7 @@ export default {
             let base = parseFloat(this.form.total);
             let amount = parseFloat(this.chargeCredit.total_charge);
             let factor = _.round(amount / base, 5);
-            // console.log(base,factor, amount)
+            // 
             if (amount > 0) {
                 this.form.total_charge = _.round(amount, 2);
                 this.form.total = _.round(
@@ -3358,7 +3369,7 @@ export default {
             this.form.total_charge = 0;
         },
         deleteDiscountGlobal() {
-            // console.log("disque borrando");
+            // 
             // let discount = _.find(this.form.discounts, {
             //     discount_type_id: "03"
             // });
@@ -3433,7 +3444,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // 
+            //
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)
@@ -3644,7 +3655,7 @@ export default {
             if (this.formVariation.items.length == 0) {
                 form.variation = false;
             }
-            if(this.variation == true){
+            if (this.variation == true) {
                 form.variation = true;
             }
             await this.clickPayment(form);
@@ -3820,7 +3831,7 @@ export default {
             let customer = this.customers.find(c => c.id == form.customer_id);
 
             if (customer == undefined) {
-                console.log("entrando...");
+                
                 await this.reloadDataCustomers(form.customer_id);
                 customer = this.customers.find(c => c.id == form.customer_id);
             }
@@ -3851,7 +3862,7 @@ export default {
             // form.date_of_issue = moment().format("YYYY-MM-DD");
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
-                
+
                 form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
                 this.resource_payments = "sale_note_payments";
@@ -3982,10 +3993,15 @@ export default {
                     printOrdenHotel = resultado;
                 }
 
-                    console.log("🚀 ~ clickPayment ~ form.variation:", form.variation)
+                console.log(
+                    "🚀 ~ clickPayment ~ form.variation:",
+                    form.variation
+                );
                 if (
                     (ordenId == undefined || ordenId == null) &&
-                    (form.variation == undefined || form.variation == null || form.variation == false) &&
+                    (form.variation == undefined ||
+                        form.variation == null ||
+                        form.variation == false) &&
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table &&
                     printOrdenHotel
@@ -4160,7 +4176,7 @@ export default {
                                         this.back(true);
                                     }
                                 } else {
-                                    console.log(response2);
+                                    
                                 }
                             } else {
                                 if (this.conf.pos_quick_sale) {
@@ -4245,7 +4261,7 @@ export default {
                 .post(`/cash/cash_document`, this.form_cash_document)
                 .then(response => {
                     if (response.data.success) {
-                        // console.log(response)
+                        // 
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -4259,7 +4275,7 @@ export default {
                 .post(`/${this.resource_payments}`, this.form_payment)
                 .then(response => {
                     if (response.data.success) {
-                        // console.log(response)
+                        // 
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -4401,21 +4417,6 @@ export default {
 
         async filterSeries() {
             this.filterCustomers();
-            // let check = this.checkCustomers();
-            // if (!check && !this.started) {
-            //     let dcto = "DNI";
-            //     if (this.form.document_type_id == "01") {
-            //         dcto = "RUC";
-            //         this.form.document_type_id = "03";
-            //     } else {
-            //         this.form.document_type_id = "01";
-            //     }
-            //     this.$toast.warning(`Digite el número de ${dcto}`);
-
-            //     this.setSeries();
-            //     return;
-            // }
-            // this.started = false;
 
             if (this.form.document_type_id == "01") {
                 this.currentDocumentsType = [
@@ -4436,72 +4437,7 @@ export default {
                 currentClient = this.all_customers.find(
                     c => c.id == this.value
                 );
-
-                // if (currentClient.identity_document_type_id == "1") {
-                //     this.form.document_type_id = "03";
-                // }
             }
-
-            // if (
-            //     this.form.document_type_id == "01" &&
-            //     currentClient &&
-            //     currentClient.identity_document_type_id !== "6"
-            // ) {
-            //     this.customers = this.all_customers.filter(
-            //         f => f.identity_document_type_id == "6"
-            //     );
-            //     if (this.customers.length == 0) {
-            //         this.$toast.warning("Digite el número de RUC");
-            //         this.form.document_type_id = "03";
-
-            //         // this.customers = this.all_customers;
-            //     } else {
-            //         if (
-            //             currentClient &&
-            //             this.customers.some(c => c.id == currentClient.id)
-            //         ) {
-            //             this.form.customer_telephone = currentClient.phone;
-            //             return;
-            //         }
-
-            //         this.value = this.customers[0].id;
-            //         this.form.customer_telephone = this.customers[0].phone;
-            //     }
-            // }
-            // else if (
-            //     this.form.document_type_id == "03" ||
-            //     this.form.document_type_id == "80"
-            // ) {
-            //     this.customers = this.all_customers.filter(
-            //         f => f.identity_document_type_id != "6"
-            //     );
-            //     if (this.form.total > 300) {
-            //         this.customers = this.customers.filter(
-            //             c => c.identity_document_type_id == "1"
-            //         );
-            //     }
-
-            //     if (
-            //         currentClient &&
-            //         this.customers.some(c => c.id == currentClient.id)
-            //     ) {
-            //         this.form.customer_telephone = currentClient.phone;
-            //         return;
-            //     }
-            //     let client = this.customers.find(c => {
-            //         return c.name.toLowerCase().includes("varios");
-            //     });
-            //     if (client) {
-            //         this.value = client.id;
-            //         this.form.customer_telephone = client.phone;
-            //     } else {
-            //         this.value = this.customers[0].id;
-            //         this.form.customer_telephone = this.customers[0].phone;
-            //     }
-            // }
-            // else {
-            //     this.customers = this.all_customers;
-            // }
 
             this.customers = this.customers.filter(n => n.number != "88888888");
             this.customers = [
@@ -4513,14 +4449,21 @@ export default {
 
             if (this.form.hotel_customer_number) {
                 await this.searchClientOne(this.form.hotel_customer_number);
-                //                    this.changeCustomer();
             }
-            if(this.form.quotation_customer_number){
+            if (this.form.quotation_customer_number) {
                 await this.searchClientOne(this.form.quotation_customer_number);
-            
             }
-
+            
             this.changeCustomer();
+            
+            if (
+                this.value == null &&
+                this.form.customer_id == null &&
+                this.customers.length > 0
+            ) {
+                this.value = this.customers[0].id;
+                this.form.customer_id = this.customers[0].id;
+            }
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;
                 this.inputDiscountAmount();

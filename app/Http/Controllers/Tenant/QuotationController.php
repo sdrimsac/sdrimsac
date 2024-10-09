@@ -275,25 +275,26 @@ class QuotationController extends Controller
             foreach ($items as $item) {
                 if (isset($item->item->from_unit_type_id)) {
                     $unitType = ItemUnitType::find($item->item->from_unit_type_id);
-                    if ($unitType->qty_min > 0 && $unitType->qty_free > 0) {
-                        $quantity = $item->quantity;
-                        $bonus_quantity = $unitType->qty_free * floor($quantity / $unitType->qty_min);
-                        if ($bonus_quantity > 0) {
-                            //check if exists item with same item_id aand same unit_type_description, if exists, sum quantity
-                            $bonus_item = collect($bonus_items)->where('item_id', $item->item_id)->where('unit_type_description', $unitType->description)->first();
-                            if ($bonus_item) {
-                                $bonus_item->quantity += $bonus_quantity;
-                            } else {
-                                $bonus_items[] = (object) [
-                                    'item_id' => $item->item_id,
-                                    'quantity' => $bonus_quantity,
-                                    'description' => $itemDescription,
-                                    'unit_type_description' => $unitType->description,
-                                    'internal_id' => $itemInternalId,
-                                    'total' => 0,
-                                ];
+                    if ($unitType) {
+                        if ($unitType->qty_min > 0 && $unitType->qty_free > 0) {
+                            $quantity = $item->quantity;
+                            $bonus_quantity = $unitType->qty_free * floor($quantity / $unitType->qty_min);
+                            if ($bonus_quantity > 0) {
+                                //check if exists item with same item_id aand same unit_type_description, if exists, sum quantity
+                                $bonus_item = collect($bonus_items)->where('item_id', $item->item_id)->where('unit_type_description', $unitType->description)->first();
+                                if ($bonus_item) {
+                                    $bonus_item->quantity += $bonus_quantity;
+                                } else {
+                                    $bonus_items[] = (object) [
+                                        'item_id' => $item->item_id,
+                                        'quantity' => $bonus_quantity,
+                                        'description' => $itemDescription,
+                                        'unit_type_description' => $unitType->description,
+                                        'internal_id' => $itemInternalId,
+                                        'total' => 0,
+                                    ];
+                                }
                             }
-                        
                         }
                     }
                 }
