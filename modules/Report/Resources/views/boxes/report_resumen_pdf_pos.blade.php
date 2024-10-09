@@ -721,6 +721,9 @@
                         {{ number_format($n, 2) }}
                     </span>
                     @isset($difference)
+                        @php
+                                \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
+                        @endphp
                         @if ($difference != 0 && $difference != number_format($n, 2))
                             <br>
                             <span
