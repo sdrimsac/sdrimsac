@@ -186,6 +186,7 @@ class PrintEvent implements ShouldBroadcast
         if ($user_area) {
             $user_establishment_id = $user_area->establishment_id;
         }
+        Log::info('Imprimiendo:'.$documentLink );
         $data = array(
             'document_type' => $document_type,
             'printer' => $printer,

@@ -3396,7 +3396,8 @@ export default {
         const responses = await this.$http.post("/credit-list/send-credit", {
           customer_id,
           items: this.localOrden,
-          cash_id: this.cash_id
+          cash_id: this.cash_id,
+          ref: this.clientTableData.ref
         });
 
         this.ordenLoading = false;

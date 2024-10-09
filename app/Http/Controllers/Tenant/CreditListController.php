@@ -79,6 +79,7 @@ class CreditListController extends Controller
         $user = $credit_list->seller;
         $orden = $credit_list->orden;
         $total = $orden->getTotal();
+        $observation = $credit_list->observation;
         $company = Company::first();
         $count_items = $orden->orden_items->count();
 
@@ -91,6 +92,7 @@ class CreditListController extends Controller
             $pdf = PDF::loadView('restaurant::credit_list.receipt', compact(
                 "credit_list",
                 "customer",
+                "observation",
                 "user",
                 "orden",
                 "total",
@@ -229,6 +231,7 @@ class CreditListController extends Controller
         try {
             DB::beginTransaction();
             $customer_id = $request->customer_id;
+            $ref = $request->ref;
             $customer = Person::find($customer_id);
             $customer_name = $customer->name;
             $items = $request->items;
@@ -242,7 +245,7 @@ class CreditListController extends Controller
                 'table_id' => $table_caja_id,
                 'status_orden_id' => $status_orden_id,
                 'date' => date('Y-m-d'),
-                'ref' => $customer_name
+                'ref' => $customer_name . ' - ' . $ref,
             ]);
             $orden_items_ids = [];
             $orden_items_ids_for_kitchen = [];
@@ -290,7 +293,7 @@ class CreditListController extends Controller
                 'customer_id' => $customer_id,
                 'user_id' => $user_id,
                 'establishment_id' => auth()->user()->establishment_id,
-                'observation' => $request->observation,
+                'observation' => $request->ref,
                 'paid' => false,
             ]);
             $this->update_stock($credit_list);

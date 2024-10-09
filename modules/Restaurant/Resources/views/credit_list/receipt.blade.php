@@ -257,6 +257,7 @@ function format_serie($id)
     .text-left {
         text-align: left;
     }
+
     .border-box {
         border-bottom: 1px solid #000;
     }
@@ -266,8 +267,8 @@ function format_serie($id)
 ?>
 
 <body>
-    
-    
+
+
     <div id="register">
 
         <table border="0" style="border:0px solid;width:80%">
@@ -327,8 +328,22 @@ function format_serie($id)
 
                 </tr>
 
+                <tr>
+
+
+                    <td valign="top" class="header_title1 text-left">
+
+                        OBSERVACION:
+                    </td>
+                    <td valign="top" colspan="3" class="header_title1 text-left">
+                        {{ $observation }}
+                    </td>
+
+                </tr>
+
+
             </tbody>
-      
+
 
         </table>
         <table style="width:80%">
@@ -342,11 +357,10 @@ function format_serie($id)
             <tbody>
                 @foreach ($orden->orden_items as $orden_item)
                     <tr>
-                        <td  class="border-box" colspan="2">{{ $orden_item->food->description }}</td>
+                        <td class="border-box" colspan="2">{{ $orden_item->food->description }}</td>
                         <td class="text-end border-box">{{ $orden_item->quantity }}</td>
                         <td class="text-end border-box">{{ $orden_item->price * $orden_item->quantity }}</td>
                     </tr>
-                    
                 @endforeach
             </tbody>
         </table>
