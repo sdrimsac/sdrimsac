@@ -1996,7 +1996,6 @@ export default {
     mounted() {},
     methods: {
         insertReferenceNumber() {
-            
             let pass = false;
             if (this.form.reference_number && this.form.bank_account_id) {
                 let bank = this.bank_accounts.find(
@@ -2522,6 +2521,7 @@ export default {
                 this.updateAllCustomers(this.customers);
             }, 500);
         },
+
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
@@ -2549,11 +2549,12 @@ export default {
             );
             if (persons.length != 0) {
                 await this.$emit("update:all_customers", newData);
-                if (newData.length == 1) {
-                    this.value = newData[0].id;
-                    this.form.customer_id = newData[0].id;
-                    this.changeCustomer();
-                }
+                // if (newData.length == 1) {
+                //     this.changeCustomer();
+                //     this.value = newData[0].id;
+                //     this.form.customer_id = newData[0].id;
+                // }
+                this.filterCustomers();
             }
         },
         changeCustomer() {
@@ -2593,7 +2594,6 @@ export default {
                 (thing, index, self) =>
                     index === self.findIndex(t => t.id === thing.id)
             );
-            
 
             this.setSeries();
         },
@@ -2931,7 +2931,6 @@ export default {
                         }
                     }
                 } catch (e) {
-                    
                 } finally {
                     this.loading = false;
                 }
@@ -3348,7 +3347,7 @@ export default {
             let base = parseFloat(this.form.total);
             let amount = parseFloat(this.chargeCredit.total_charge);
             let factor = _.round(amount / base, 5);
-            // 
+            //
             if (amount > 0) {
                 this.form.total_charge = _.round(amount, 2);
                 this.form.total = _.round(
@@ -3369,7 +3368,7 @@ export default {
             this.form.total_charge = 0;
         },
         deleteDiscountGlobal() {
-            // 
+            //
             // let discount = _.find(this.form.discounts, {
             //     discount_type_id: "03"
             // });
@@ -3831,7 +3830,6 @@ export default {
             let customer = this.customers.find(c => c.id == form.customer_id);
 
             if (customer == undefined) {
-                
                 await this.reloadDataCustomers(form.customer_id);
                 customer = this.customers.find(c => c.id == form.customer_id);
             }
@@ -4176,7 +4174,6 @@ export default {
                                         this.back(true);
                                     }
                                 } else {
-                                    
                                 }
                             } else {
                                 if (this.conf.pos_quick_sale) {
@@ -4261,7 +4258,7 @@ export default {
                 .post(`/cash/cash_document`, this.form_cash_document)
                 .then(response => {
                     if (response.data.success) {
-                        // 
+                        //
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -4275,7 +4272,7 @@ export default {
                 .post(`/${this.resource_payments}`, this.form_payment)
                 .then(response => {
                     if (response.data.success) {
-                        // 
+                        //
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -4376,42 +4373,58 @@ export default {
                 this.customers = this.all_customers;
             }
             //si this.form.customer_id no es nulo y existe en this.customers
-            if (
-                this.form.customer_id &&
-                this.customers.some(c => c.id == this.form.customer_id)
-            ) {
-                this.value = this.form.customer_id;
+            // if (
+            //     this.form.customer_id &&
+            //     this.customers.some(c => c.id == this.form.customer_id)
+            // ) {
+            //     console.log("aqui");
+            //     this.value = this.form.customer_id;
 
-                this.form.customer_telephone = this.customers.find(
-                    c => c.id == this.form.customer_id
-                ).phone;
-            } else {
-                if (this.customers.length > 0) {
-                    let hasCustomerDefault = false;
-                    if (this.customer_default) {
-                        let { id } = this.customer_default;
-                        hasCustomerDefault = this.customers.some(
-                            c => c.id == id
-                        );
-                    }
-                    if (hasCustomerDefault) {
-                        let { id } = this.customer_default;
-                        this.value = id;
-                        this.form.customer_id = id;
-                    } else if (!hasCustomerDefault && this.customer_default) {
-                        this.customers.unshift(this.customer_default);
-                        this.value = this.customer_default.id;
-                        this.form.customer_id = this.customer_default.id;
-                    } else {
-                        this.value = this.customers[0].id;
-                        this.form.customer_id = this.customers[0].id;
-                    }
-                    this.changeCustomer();
+            //     this.form.customer_telephone = this.customers.find(
+            //         c => c.id == this.form.customer_id
+            //     ).phone;
+            // } else {
+            console.log("aqui44");
+            if (this.customers.length > 0) {
+                let hasCustomerDefault = false;
+                if (this.customer_default) {
+                    let { id } = this.customer_default;
+                    hasCustomerDefault = this.customers.some(c => c.id == id);
+                }
+                if (hasCustomerDefault) {
+                    console.log("aquii777");
+                    let { id } = this.customer_default;
+                    this.value = id;
+                    this.form.customer_id = id;
+                    // } else if (!hasCustomerDefault && this.customer_default) {1
+                    //     console.log("aquii666");
+                    //     console.log("🚀 ~ filterCustomers ~ this.customer_default:", this.customer_default)
+                    //     this.customers.unshift(this.customer_default);
+                    //     this.value = this.customer_default.id;
+                    //     this.form.customer_id = this.customer_default.id;
                 } else {
+                    console.log("aquii555");
+                    console.log(
+                        "🚀 ~ filterCustomers ~ this.customers:",
+                        JSON.stringify(this.customers)
+                    );
                     this.value = null;
                     this.form.customer_id = null;
                     this.form.customer_telephone = null;
+                    this.$refs.select_person.$el.getElementsByTagName(
+                            "input"
+                        )[0].value = "";
+                            this.$refs.select_person.$el.getElementsByTagName(
+                            "input"
+                        )[0].placeholder = "Cliente";
+                    // this.value = this.customers[0].id;
+                    // this.form.customer_id = this.customers[0].id;
                 }
+                this.changeCustomer();
+            } else {
+                this.value = null;
+                this.form.customer_id = null;
+                this.form.customer_telephone = null;
             }
         },
 
@@ -4453,9 +4466,9 @@ export default {
             if (this.form.quotation_customer_number) {
                 await this.searchClientOne(this.form.quotation_customer_number);
             }
-            
+
             this.changeCustomer();
-            
+
             if (
                 this.value == null &&
                 this.form.customer_id == null &&
