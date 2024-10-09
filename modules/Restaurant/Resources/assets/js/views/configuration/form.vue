@@ -147,7 +147,7 @@
                   <i class="fas fa-info-circle mr-2"></i>
                   Estado de {{
                   //type == "caja/tables" ? "mesa" : "habitación"
-                    getLabelText(type)
+                  getLabelText(type)
                   }}
                 </label>
                 <el-select :disabled="recordId != null" v-model="form.status_table_id">
@@ -171,7 +171,7 @@
                   <i class="fas fa-map-marker-alt mr-2"></i>
                   Área de {{
                   //type == "caja/tables" ? "mesa" : "habitación"
-                    getLabelText(type)
+                  getLabelText(type)
                   }}
                 </label>
                 <el-select v-model="form.area_id">
@@ -540,6 +540,7 @@ export default {
         );
 
         this.form = response.data.data;
+        if (this.type === "caja/rooms") {
         let { floor, description } = this.form;
         this.detail = description;
         this.restoreDetail();
@@ -555,6 +556,7 @@ export default {
           }
           return s;
         });
+      }
       }
 
       if (this.type == "caja/rooms") {

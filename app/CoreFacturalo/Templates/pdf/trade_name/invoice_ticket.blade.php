@@ -129,14 +129,15 @@
     @endif
     <table class="full-width" style="margin-left:15px;margin-right:15px;">
         <tr>
-
-            <td class="text-center">
-                @if ($is_chifa_china)
-                    <h1>{{ $company->trade_name }}</h1>
-                @else
-                    <h4>{{ $company->trade_name }}</h4>
-                @endif
-            </td>
+            @if($configuration->comercial_name)
+                <td class="text-center">
+                    @if ($is_chifa_china)
+                        <h1>{{ $company->trade_name }}</h1>
+                    @else
+                        <h4>{{ $company->trade_name }}</h4>
+                    @endif
+                </td>
+            @endif
         </tr>
         <tr>
             <td class="text-center">

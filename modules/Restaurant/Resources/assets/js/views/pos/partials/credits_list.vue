@@ -5,7 +5,7 @@
         v-loading="loading"
         @open="open"
         @close="close"
-        title="Lista de créditos"
+        title="Lista de créditos aaa"
         width="85%"
     >
         <div class="row mt-2">
@@ -513,7 +513,7 @@
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         row.status != 'O' &&
-                                                        row.can_edit &&
+                                                        row.can_edit && 
                                                         (user.can_accept_credit_sale_note
                                                             ? true
                                                             : isAnalist
@@ -630,7 +630,17 @@
                                             </template>
 
                                             <el-dropdown-item
-                                                v-if="row.state_type_id != '11'"
+                                                
+                                                v-if="
+                                                    row.state_type_id != '11' &&
+                                                        row.status != 'O' &&
+                                                        row.can_edit && 
+                                                        (user.can_accept_credit_sale_note
+                                                            ? true
+                                                            : isAnalist
+                                                            ? row.status == 'P'
+                                                            : false)
+                                                "
                                             >
                                                 <span
                                                     style="width:100%;display:block;"

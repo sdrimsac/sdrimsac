@@ -296,7 +296,7 @@ class TableBillarController extends Controller
             'message' => ($id) ? 'Mesa Billar actualizada con éxito' : 'Mesa Billar creada con éxito'
         ];
     }
-    public function store2(TableRequest $request)
+    /* public function store2(TableRequest $request)
     {
         $request->validate([
             'reference' => 'required|string',
@@ -322,7 +322,7 @@ class TableBillarController extends Controller
             'message' => 'Datos guardados exitosamente',
             'data' => $casino,
         ], 201);
-    }
+    } */
     public function destroy($id)
     {
         //

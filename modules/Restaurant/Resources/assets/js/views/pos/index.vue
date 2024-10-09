@@ -28,22 +28,17 @@
                     >Menú De Acciones</span>
                   </button>
 
-                  <template v-if=" configuration.restaurant && !this.isSeller ">
+                  <template v-if=" configuration.restaurant && !this.isSeller">
                     <template v-if=" !configuration.hotels || (configuration.hotels && !isPiscinaArea) ">
-                      <!-- <template v-if="!configuration.modo_billar || (configuration.modo_billar) && !this.isSeller"> -->
                         <button
                           class="btn btn-sm btn-primary"
                           type="button"
                           @click="buttonSmTables">
-                          <!-- <i v-if="has_billar" class="icofont-billiard-ball"></i> -->
                           <i v-if="isHotelArea" class="fas fa-door-closed"></i>
                           <i v-else class="icofont-dining-table" style="font-size: 28px; margin-top:-5px; "></i>
                         </button>
-                      <!-- </template> -->
                     </template>
                   </template>
-                  
-                  
                   <template
                     v-if="
                                             configuration.sale_note_credit_cash &&
@@ -2364,14 +2359,14 @@ export default {
           this.openTables();
         }
       } 
-      if (this.configuration.modo_billar){
+      /* if (this.configuration.modo_billar){
         if (this.isCurrentAreaBillar()){
           this.billarSeeId = null;
-          this.openTablesBillar();
+          this.openBillar();
         } else {
           this.openTables();
         }
-      } else {
+      } */ else {
         this.openTables();
       }
     },
@@ -2396,14 +2391,14 @@ export default {
               this.openTables();
             }
           } 
-          if (this.configuration.modo_billar){
+          /* if (this.configuration.modo_billar){
             if (this.isCurrentAreaBillar()){
               this.billarSeeId = null;
-              this.openTablesBillar();
+              this.openBillar();
             } else {
               this.openTables();
             }
-          } else {
+          } */ else {
             if (this.configuration.restaurant) {
               this.openTables();
             }
@@ -2872,9 +2867,6 @@ export default {
     },
     openTablesRooms(id) {
       this.showTablesRooms = true;
-    },
-    openBillar(id) {
-      this.showBillar = true;
     },
     openviewsItemsMobil() {
       this.showDialogViewItems = true;

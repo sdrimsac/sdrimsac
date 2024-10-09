@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'comercial_name',
         'pricing_policy_venta',
         'sale_note_venta',
         'house',
@@ -261,6 +262,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'comercial_name' => 'boolean',
         'pricing_policy_venta' => 'boolean',
         'sale_note_venta' => 'boolean',
         'house' => 'boolean',
@@ -418,7 +420,6 @@ class Configuration extends ModelTenant
         'pin_orden_delete' => 'boolean',
         'edit_product_pos' => 'boolean',
         'quotation' => 'boolean',
-
         'print_incomes_expenses' => 'boolean',
     ];
     public function scopeGetUnitPriceDispatchRelatedRecord($query)
@@ -463,6 +464,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'comercial_name' => (bool)$this->comercial_name,
             'pricing_policy_venta' => (bool)$this->pricing_policy_venta,
             'sale_note_venta' => (bool)$this->sale_note_venta,
             'house' => (bool)$this->house,
