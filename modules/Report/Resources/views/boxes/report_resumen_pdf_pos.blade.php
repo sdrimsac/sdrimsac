@@ -711,19 +711,17 @@
                     <span style="font-size:20px !important;">EFECTIVO : S/.</span>
                     <span style="font-size:20px !important; color: blue;">
                         @php
-                            $n = $cash->beginning_balance +
+                            $n =
+                                $cash->beginning_balance +
                                 $sales_detail['cash']['sum'] -
                                 $incomes_expenses_cash['expenses']['amount'] +
                                 $incomes_expenses_cash['incomes']['amount'];
 
                         @endphp
-                        {{ number_format(
-                            $n,
-                            2,
-                        ) }}
+                        {{ number_format($n, 2) }}
                     </span>
                     @isset($difference)
-                        @if ($difference != 0 && $difference != $n)
+                        @if ($difference != 0 && $difference != number_format($n, 2))
                             <br>
                             <span
                                 style="font-size:20px !important;@if ($difference < 0) color: red;@else color:blue; @endif">
@@ -1727,68 +1725,68 @@
 
             </div>
         @endif
-            @if($configuration->report_cash_methods)
-        @if ($all_methods_info && count($all_methods_info) > 0)
-            <div style="text-align:center;">
-                <span style="font-size: 18px !important;">
-                    DETALLE METODOS DE PAGO (NO EFECTIVO)
-                </span>
+        @if ($configuration->report_cash_methods)
+            @if ($all_methods_info && count($all_methods_info) > 0)
+                <div style="text-align:center;">
+                    <span style="font-size: 18px !important;">
+                        DETALLE METODOS DE PAGO (NO EFECTIVO)
+                    </span>
 
-                @foreach ($all_methods_info as $title_method => $moves)
-                    <table class="border">
-                        <thead>
-                            <tr>
-                                <th colspan="4" class="left">
-                                    <span class="f12">
-                                        {{ $title_method }}
-                                    </span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <span class="f12">DOCUMENTO</span>
-                                </th>
-                                <th>
-                                    <span class="f12">FECHA</span>
-                                </th>
-
-                                <th>
-                                    <span class="f12">CLIENTE</span>
-                                </th>
-                                <th>
-                                    <span class="f12">TOTAL</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($moves as $move)
+                    @foreach ($all_methods_info as $title_method => $moves)
+                        <table class="border">
+                            <thead>
                                 <tr>
-                                    <td class="f12 center">
-                                        {{ $move['document'] }}
-                                    </td>
-                                    <td class="f12 center">
-                                        {{ $move['date_of_issue'] }}
-                                    </td>
-
-                                    <td class="f12 center">
-                                        {{ $move['customer_name'] }}
-                                        <br>
-                                        <small>
-                                            {{ $move['customer_number'] }}
-                                        </small>
-                                    </td>
-                                    <td class="f12 right">
-                                        {{ number_format($move['amount'], 2) }}
-                                    </td>
+                                    <th colspan="4" class="left">
+                                        <span class="f12">
+                                            {{ $title_method }}
+                                        </span>
+                                    </th>
                                 </tr>
-                            @endforeach
-                            
-                        </tbody>
-                    </table>
-                @endforeach
+                                <tr>
+                                    <th>
+                                        <span class="f12">DOCUMENTO</span>
+                                    </th>
+                                    <th>
+                                        <span class="f12">FECHA</span>
+                                    </th>
 
-            </div>
-        @endif
+                                    <th>
+                                        <span class="f12">CLIENTE</span>
+                                    </th>
+                                    <th>
+                                        <span class="f12">TOTAL</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($moves as $move)
+                                    <tr>
+                                        <td class="f12 center">
+                                            {{ $move['document'] }}
+                                        </td>
+                                        <td class="f12 center">
+                                            {{ $move['date_of_issue'] }}
+                                        </td>
+
+                                        <td class="f12 center">
+                                            {{ $move['customer_name'] }}
+                                            <br>
+                                            <small>
+                                                {{ $move['customer_number'] }}
+                                            </small>
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ number_format($move['amount'], 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    @endforeach
+
+                </div>
+            @endif
         @endif
     </div>
 
