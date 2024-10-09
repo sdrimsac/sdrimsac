@@ -64,7 +64,29 @@ class TransferPlaceController extends Controller
         return new TransferPlaceCollection($records->paginate(config('tenant.items_per_page')));
     }
 
+    public function cancel_transfer(Request $request)
+    {
+        $code = $request->code;
 
+        $transfer = TransferPlace::where('code', $code)->where('status', 1)->first();
+
+        if ($transfer) {
+            $transfer->status = 3;
+            $transfer->save();
+        } else {
+            return response()->json(['success' => false, 'message' => 'transferencia con dato nulo.'], 404);
+        }
+
+        $result = DB::connection('tenant')->transaction(function () use ($transfer) {
+          
+            return [
+                'success' => true,
+                'message' => 'Traslado cancelado y stock revertido con éxito'
+            ];
+        });
+
+        return $result;
+    }
     public function tables()
     {
         $printers = Area::whereNotNull('printer')->get()
