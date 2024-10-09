@@ -710,16 +710,20 @@
                 <td width="65%" style="text-align: right;">
                     <span style="font-size:20px !important;">EFECTIVO : S/.</span>
                     <span style="font-size:20px !important; color: blue;">
-                        {{ number_format(
-                            $cash->beginning_balance +
+                        @php
+                            $n = $cash->beginning_balance +
                                 $sales_detail['cash']['sum'] -
                                 $incomes_expenses_cash['expenses']['amount'] +
-                                $incomes_expenses_cash['incomes']['amount'],
+                                $incomes_expenses_cash['incomes']['amount'];
+
+                        @endphp
+                        {{ number_format(
+                            $n,
                             2,
                         ) }}
                     </span>
                     @isset($difference)
-                        @if ($difference != 0)
+                        @if ($difference != 0 && $difference != $n)
                             <br>
                             <span
                                 style="font-size:20px !important;@if ($difference < 0) color: red;@else color:blue; @endif">
