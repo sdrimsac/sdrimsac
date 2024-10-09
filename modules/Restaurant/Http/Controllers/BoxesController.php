@@ -2098,7 +2098,7 @@ class BoxesController extends Controller
 
         if ($total_sales) {
 
-            $difference = $total_sales["total_sales"];
+            $difference = $total_sales["total_sales"] - $expenses_cash_sum;
         }
         $establishment = Establishment::find($user->establishment_id);
         $seriesDocs = DB::connection('tenant')->select('SELECT document_items.* ,
