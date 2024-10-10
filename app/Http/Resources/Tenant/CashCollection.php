@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
@@ -15,28 +16,48 @@ class CashCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+
+        $from_cash = $request->from_cash;
         // Preload related data to avoid N+1 problem
-        $this->collection->each->load(['user', 'user.establishment', 'boxes.salenote', 'boxes.document']);
+        if (!$from_cash) {
+            $this->collection->each->load(['user', 'user.establishment', 'boxes.salenote', 'boxes.document']);
+        }
 
-        return $this->collection->transform(function ($row) {
-            $incomes = $row->boxes->where('expenses', 0)->where('incomes', 0)->sum(function ($box) {
-                $amount = $box->amount;
-                if ($box->salenote) {
-                    if ($box->sale_note_payment_id) {
-                        return $amount;
-                    } else {
-                        return min($box->salenote->total, $amount);
+        return $this->collection->transform(function ($row) use ($from_cash) {
+            $final_cash = 0;
+            $has_ticket = false;
+            $has_a4 = false;
+            $path_ticket_url = url('caja/worker/cash/print-report?cash_id=1136');
+            if (!$from_cash) {
+            
+                $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
+                if (file_exists($path_ticket)) {
+                    $has_ticket = true;
+                }
+                $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
+                if (file_exists($path_a4)) {
+                    $has_a4 = true;
+                }
+
+                $incomes = $row->boxes->where('expenses', 0)->where('incomes', 0)->sum(function ($box) {
+                    $amount = $box->amount;
+                    if ($box->salenote) {
+                        if ($box->sale_note_payment_id) {
+                            return $amount;
+                        } else {
+                            return min($box->salenote->total, $amount);
+                        }
                     }
-                }
-                if ($box->document) {
-                    return min($box->document->total, $amount);
-                }
-                return $amount;
-            });
+                    if ($box->document) {
+                        return min($box->document->total, $amount);
+                    }
+                    return $amount;
+                });
 
-            $expense = $row->boxes->where('expenses', 1)->sum('amount');
-            $incomes_s = $row->boxes->where('incomes', 1)->sum('amount');
-            $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
+                $expense = $row->boxes->where('expenses', 1)->sum('amount');
+                $incomes_s = $row->boxes->where('incomes', 1)->sum('amount');
+                $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
+            }
 
             $counter = collect($row->counter)->map(function ($total, $value) {
                 return [
@@ -48,8 +69,15 @@ class CashCollection extends ResourceCollection
             $user_cash = $row->user;
             $establishment = $user_cash->establishment;
             $tab_single = (bool)$establishment->tab_single;
+    
+
+            
 
             return [
+                'has_ticket' => $has_ticket,
+                'has_a4' => $has_a4,
+                'path_ticket_url' => $path_ticket_url,
+                'from_cash' => (bool) $from_cash,
                 'tab_single' => $tab_single,
                 'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null,
                 'principal' => (bool) $row->principal,

@@ -30,6 +30,7 @@ use App\Http\Resources\Tenant\CashCollection;
 use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
+use App\Jobs\CashReportSmallProccess;
 use App\Jobs\WhatsappSendCashReportProccess;
 use App\Jobs\WhatsappSendCashReportStockProccess;
 use App\Jobs\WhatsappSendMessageProccess;
@@ -1297,6 +1298,15 @@ class CashController extends Controller
     public function print_report(Request $request)
     {
         $cash_id = $request->cash_id;
+        $cash = Cash::find($cash_id);
+        ini_set('memory_limit', '10096M');
+        ini_set('max_execution_time', '30000');
+
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '.pdf');
+        if (file_exists($path) && $cash->state == 0) {
+            return response()->file($path);
+        }
+
         $sales = Box::where('cash_id', $cash_id)->where('expenses', 0)->where('incomes', 0)->OrderBy('date', 'asc');
         $sales_quantity = $sales->count();
         $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
@@ -1540,6 +1550,8 @@ class CashController extends Controller
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
+
+        $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '.pdf'));
         return $pdf->stream('pdf_file.pdf');
     }
     function get_receipts($cash_id)
@@ -1648,29 +1660,56 @@ class CashController extends Controller
     {
         ini_set('memory_limit', '3500M');
         ini_set('max_execution_time', 3000);
-    
+
         $fromAdmin = $request->input('fromAdmin');
         $is_principal = $request->input('is_principal');
         $from_cash = $request->input('from_cash');
         $records = Cash::query();
-    
+
         if ($request->column) {
             $records = $records->where($request->column, 'like', "%{$request->value}%");
         }
-    
+
         $records->whereTypeUser($fromAdmin);
         $records->where('active', 0);
         $records->orderBy('date_opening', 'desc')
-                ->orderBy('time_opening', 'desc');
-    
+            ->orderBy('time_opening', 'desc');
+
         if ($from_cash) {
             $records = $records->limit(10)->get();
             return new CashCollection($records);
         }
-    
+
         return new CashCollection($records->paginate(20));
     }
 
+    public function getFinalBalance($id)
+    {
+        $row = Cash::findOrFail($id)->load(['user', 'user.establishment', 'boxes.salenote', 'boxes.document']);
+        $incomes = $row->boxes->where('expenses', 0)->where('incomes', 0)->sum(function ($box) {
+            $amount = $box->amount;
+            if ($box->salenote) {
+                if ($box->sale_note_payment_id) {
+                    return $amount;
+                } else {
+                    return min($box->salenote->total, $amount);
+                }
+            }
+            if ($box->document) {
+                return min($box->document->total, $amount);
+            }
+            return $amount;
+        });
+
+        $expense = $row->boxes->where('expenses', 1)->sum('amount');
+        $incomes_s = $row->boxes->where('incomes', 1)->sum('amount');
+        $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
+
+        return [
+            'success' => true,
+            'final_balance' => number_format($final_cash, 2, ".", ""),
+        ];
+    }
     public function create()
     {
         return view('tenant.items.form');
@@ -2058,6 +2097,7 @@ class CashController extends Controller
         $hostname =  app(Environment::class)->hostname();
         $fqdn = $hostname->fqdn;
         WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
+        CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
         $configuration = Configuration::first();
         WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id, $fqdn);
         // $number_activity = $configuration->number_activity;

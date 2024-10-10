@@ -49,16 +49,15 @@ class WhatsappSendCashReportProccess implements ShouldQueue
         try {
             $configuration = Configuration::first();
             $number_activity = $configuration->number_activity;
+            //caja/worker/cash/print-report?cash_id=1136
             $resource = "http://" . $this->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $this->cash_id;
-            Log::info("resource: " . $resource);
+            
             $sender = 'sdrimsac';
             if($configuration->whatsapp_client){
                 $sender = $subdomain;
             }
             $company = Company::first();
-            $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
-            $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
-            $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
+
             $user =  Cash::find($this->cash_id)->user;
             $establishment = Establishment::find($user->establishment_id);
             $company_name = $company->name;

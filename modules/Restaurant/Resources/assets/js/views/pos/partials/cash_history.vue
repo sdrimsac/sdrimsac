@@ -6,7 +6,8 @@
         @close="close"
         :title="title"
         width="60%"
-    > <br>
+    >
+        <br />
         <div class="card container table-responsive col-md-12">
             <table
                 class="table table-hover table-striped table-condensed  table-responsive"
@@ -49,12 +50,21 @@
                         <td>
                             {{ box.date_closed || "Sin cierre" }}
                         </td>
-                        <td>
-                            {{
-                                box.date_closed
-                                    ? box.final_balance.toFixed(2)
-                                    : ""
-                            }}
+                        <td class="text-center">
+                            <el-button
+                                type="success"
+                                class="text-white"
+                                @click="getFinalBalance(box.id,idx)"
+                            >
+                                <i 
+                                v-if="box.final_balance == 0"
+                                class="fas fa-eye"></i>
+                                {{
+                                    box.final_balance > 0
+                                        ? box.final_balance
+                                        : ""
+                                }}
+                            </el-button>
                         </td>
                         <td>
                             <el-button
@@ -67,7 +77,8 @@
                                     aria-hidden="true"
                                 ></i>
                             </el-button>
-                            <el-button type="primary" @click="seeDetail(box)">
+                            <el-button type="primary" @click="openDetail(box)">
+
                                 Ver
                             </el-button>
                             <el-button
@@ -120,7 +131,7 @@
             >
             </el-pagination> -->
         </div>
-        <br>
+        <br />
 
         <cash-modal
             v-if="currentBox"
@@ -146,6 +157,23 @@
                 </div>
             </div>
         </el-dialog>
+        <el-dialog
+            append-to-body
+            width="40%"
+            title="Detalle"
+            :visible.sync="showFrame"
+        >
+            <iframe
+                :src="currentUrlBox"
+                frameborder="0"
+                style="width:100%;height:550px"
+            ></iframe>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="print">Imprimir</el-button>
+                <el-button @click="showFrame = false">Cerrar</el-button>
+            </span>
+        </el-dialog>
     </el-dialog>
 </template>
 
@@ -166,10 +194,61 @@ export default {
             currentBox: null,
             showWhatsappForm: false,
             message: null,
-            resource: null
+            resource: null,
+            currentUrlBox: null,
+            showFrame:false,
         };
     },
     methods: {
+            async print() {
+            try {
+                this.loadingPrint = true;
+                const response = await this.$http(
+                    `cash/get_printer/${this.area_id}`
+                );
+
+                let {
+                    data: { printer }
+                } = response;
+                let config = qz.configs.create(printer, {
+                    scaleContent: false
+                });
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect(config);
+                }
+                let isPosd = printer.split(" ")[printer.split(" ").length - 1];
+                if (isPosd == "POSD") {
+                    config.density = 200;
+                }
+                let data = [
+                    {
+                        type: "pdf",
+                        format: "file",
+                        data: this.currentUrlBox
+                            
+                    }
+                ];
+                await qz.print(config, data);
+            } catch (e) {
+                this.$toast.error(e.message);
+            } finally {
+                this.loadingPrint = false;
+            }
+        },
+        openDetail(box){
+            this.showFrame = true;
+            this.currentUrlBox =  box.path_ticket_url;
+            console.log("🚀 ~ openDetail ~ this.currentUrlBox:", this.currentUrlBox)
+        },
+        getFinalBalance(id,idx){
+            this.$http(`/caja/worker/cash/get-final-balance/${id}`)
+            .then(response => {
+                if(response.status == 200){
+                    this.$toast.success(`Saldo final: ${response.data.final_balance}`);
+                    this.boxes[idx].final_balance = response.data.final_balance;
+                }
+            })
+        },
         openSaludSingle(id) {
             window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
         },
@@ -218,7 +297,7 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
-                from_cash:true,
+                from_cash: true
             });
         },
         async getRecords() {

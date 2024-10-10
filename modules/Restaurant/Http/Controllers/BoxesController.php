@@ -1696,8 +1696,9 @@ class BoxesController extends Controller
         // $pdf->save(storage_path('app/public/report_resumen_pdf_pos_'.$cash->id.'.pdf'));
         //check if the file exists
         $cash_id = $request->cash_id;
+        $cash = Cash::find($cash_id);
         $path = storage_path('app/public/report_resumen_pdf_pos_'.$cash_id.'.pdf');
-        if (file_exists($path)) {
+        if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
         $configuration = Configuration::first();

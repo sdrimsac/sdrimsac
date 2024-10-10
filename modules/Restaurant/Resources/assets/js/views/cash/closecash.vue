@@ -738,10 +738,10 @@ export default {
             }
 
             instance.confirmButtonText = "Cerrando caja...";
-            window.open(
-                `/caja/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
-                "_blank"
-            );
+            // window.open(
+            //     `/caja/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
+            //     "_blank"
+            // );
             // location.reload();
             // if(this.configuration.hotels){
             //     setTimeout(() => {
