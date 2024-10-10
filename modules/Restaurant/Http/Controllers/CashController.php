@@ -1546,7 +1546,7 @@ class CashController extends Controller
                 "time",
                 "counter"
             ))
-                ->setPaper(array(0, 0, 249.45, 300 + (100 + $counter_length * 15)));
+                ->setPaper(array(0, 0, 249.45, 650 + (100 + $counter_length * 15)));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
@@ -1675,10 +1675,10 @@ class CashController extends Controller
         $records->orderBy('date_opening', 'desc')
             ->orderBy('time_opening', 'desc');
 
-        if ($from_cash) {
-            $records = $records->limit(10)->get();
-            return new CashCollection($records);
-        }
+        // if ($from_cash) {
+        //     $records = $records->limit(10)->get();
+        //     return new CashCollection($records);
+        // }
 
         return new CashCollection($records->paginate(20));
     }

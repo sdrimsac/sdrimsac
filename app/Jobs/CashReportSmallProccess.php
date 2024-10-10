@@ -3,6 +3,7 @@
 
 namespace App\Jobs;
 
+use App\Events\MessageEvent;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
@@ -48,6 +49,10 @@ class CashReportSmallProccess implements ShouldQueue
             $resource = "http://" . $this->fqdn . "/caja/worker/cash/print-report?cash_id=" . $this->cash_id;
             Log::info("resource: " . $resource);
             Http::get($resource);
+            $cash = Cash::find($this->cash_id);
+            $user = $cash->user;
+            $area_id = $user->area_id;
+            event(new MessageEvent("Se ha generado el reporte de caja", $area_id));
         } catch (Exception $e) {
             $message = $e->getMessage();
             $message .= " - " . $e->getLine();

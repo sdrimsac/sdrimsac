@@ -3,6 +3,7 @@
 
 namespace App\Jobs;
 
+use App\Events\MessageEvent;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
@@ -19,7 +20,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use ParagonIE\Sodium\Core\Curve25519\H;
 
 class WhatsappSendCashReportProccess implements ShouldQueue
 {
@@ -75,7 +78,12 @@ class WhatsappSendCashReportProccess implements ShouldQueue
             if ($number_activity) {
 
                 (new WhatsappController)->sendHistorial($request);
+            }else{
+                Http::get($resource);
             }
+            
+        
+
             $numbers = NumberActivity::all();
             foreach ($numbers as $number) {
                 $request['number'] = $number->number;

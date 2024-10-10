@@ -36,7 +36,7 @@
                 <tbody>
                     <tr v-for="(box, idx) in boxes" :key="idx">
                         <td>
-                            {{ idx + 1 }}
+                            {{customIndex(idx)}}
                         </td>
                         <td>
                             {{
@@ -54,11 +54,12 @@
                             <el-button
                                 type="success"
                                 class="text-white"
-                                @click="getFinalBalance(box.id,idx)"
+                                @click="getFinalBalance(box.id, idx)"
                             >
-                                <i 
-                                v-if="box.final_balance == 0"
-                                class="fas fa-eye"></i>
+                                <i
+                                    v-if="box.final_balance == 0"
+                                    class="fas fa-eye"
+                                ></i>
                                 {{
                                     box.final_balance > 0
                                         ? box.final_balance
@@ -78,7 +79,6 @@
                                 ></i>
                             </el-button>
                             <el-button type="primary" @click="openDetail(box)">
-
                                 Ver
                             </el-button>
                             <el-button
@@ -122,14 +122,14 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- <el-pagination
+            <el-pagination
                 @current-change="getRecords"
                 layout="total, prev, pager, next"
                 :total="pagination.total"
                 :current-page.sync="pagination.current_page"
                 :page-size="Number(pagination.per_page)"
             >
-            </el-pagination> -->
+            </el-pagination>
         </div>
         <br />
 
@@ -186,7 +186,7 @@ export default {
     data() {
         return {
             boxes: [],
-            // pagination: {},
+            pagination: {},
             number: null,
             loading: false,
             title: "Sin registros",
@@ -196,11 +196,14 @@ export default {
             message: null,
             resource: null,
             currentUrlBox: null,
-            showFrame:false,
+            showFrame: false
         };
     },
     methods: {
-            async print() {
+        customIndex(idx) {
+            return this.pagination.per_page * (this.pagination.current_page - 1) + idx + 1;
+        },
+        async print() {
             try {
                 this.loadingPrint = true;
                 const response = await this.$http(
@@ -225,7 +228,6 @@ export default {
                         type: "pdf",
                         format: "file",
                         data: this.currentUrlBox
-                            
                     }
                 ];
                 await qz.print(config, data);
@@ -235,19 +237,26 @@ export default {
                 this.loadingPrint = false;
             }
         },
-        openDetail(box){
+        openDetail(box) {
             this.showFrame = true;
-            this.currentUrlBox =  box.path_ticket_url;
-            console.log("🚀 ~ openDetail ~ this.currentUrlBox:", this.currentUrlBox)
+            this.currentUrlBox = box.path_ticket_url;
+            console.log(
+                "🚀 ~ openDetail ~ this.currentUrlBox:",
+                this.currentUrlBox
+            );
         },
-        getFinalBalance(id,idx){
-            this.$http(`/caja/worker/cash/get-final-balance/${id}`)
-            .then(response => {
-                if(response.status == 200){
-                    this.$toast.success(`Saldo final: ${response.data.final_balance}`);
-                    this.boxes[idx].final_balance = response.data.final_balance;
+        getFinalBalance(id, idx) {
+            this.$http(`/caja/worker/cash/get-final-balance/${id}`).then(
+                response => {
+                    if (response.status == 200) {
+                        this.$toast.success(
+                            `Saldo final: ${response.data.final_balance}`
+                        );
+                        this.boxes[idx].final_balance =
+                            response.data.final_balance;
+                    }
                 }
-            })
+            );
         },
         openSaludSingle(id) {
             window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
@@ -297,6 +306,8 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
+                page: this.pagination.current_page,
+
                 from_cash: true
             });
         },
@@ -306,13 +317,13 @@ export default {
                 this.loading = true;
                 const response = await this.$http(`cash/records?${query}`);
                 if (response.status == 200) {
-                    const data = response.data.data;
+                    const {data,meta} = response.data;
                     this.boxes = data;
                     console.log(data);
                     if (this.boxes.length != 0) {
                         this.title = `Usuario: ${this.boxes[0].user}`;
                     }
-                    // this.pagination = meta;
+                    this.pagination = meta;
                 }
             } catch (e) {
                 this.$toast.error("Ocurrió un erro");

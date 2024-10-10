@@ -57,6 +57,9 @@ class WorkerController extends Controller
 
     public function report_products_w(Request $request)
     {
+
+        ini_set('max_execution_time', 30000);
+        ini_set('memory_limit', '3024M');
         $user_id = $request->user_id;
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
