@@ -1302,8 +1302,9 @@ class CashController extends Controller
         $cash = Cash::find($cash_id);
         ini_set('memory_limit', '10096M');
         ini_set('max_execution_time', '30000');
-
-        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '.pdf');
+        $company = Company::first();
+        $company_number = $company->number;
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id .'_'.$company_number.'.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -1550,9 +1551,10 @@ class CashController extends Controller
                 ->setPaper(array(0, 0, 249.45, 650 + (100 + $counter_length * 15)));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
-        }
+        }        $company = Company::first();
+        $company_number = $company->number;
 
-        $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '.pdf'));
+        $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id.'_'.$company_number.'.pdf'));
         return $pdf->stream('pdf_file.pdf');
     }
     function get_receipts($cash_id)

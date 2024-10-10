@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -23,16 +24,20 @@ class CashCollection extends ResourceCollection
             $this->collection->each->load(['user', 'user.establishment', 'boxes.salenote', 'boxes.document']);
         }
 
-        return $this->collection->transform(function ($row) use ($from_cash) {
+        $company = Company::first();
+        $company_number = $company->number;
+        return $this->collection->transform(function ($row) use ($from_cash,$company_number) {
             $final_cash = 0;
             $has_ticket = false;
             $has_a4 = false;
             $path_ticket_url = url('caja/worker/cash/print-report?cash_id='.$row->id);
-            $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
+            // $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
+            $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id .'_'.$company_number.'.pdf');
             if (file_exists($path_ticket)) {
                 $has_ticket = true;
             }
-            $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
+            $path_a4 = storage_path('app/public/report_resumen_pdf_pos_'.$row->id.'_'.$company_number.'.pdf');
+            // $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
             if (file_exists($path_a4)) {
                 $has_a4 = true;
             }

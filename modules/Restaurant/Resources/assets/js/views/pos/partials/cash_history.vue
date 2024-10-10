@@ -283,16 +283,20 @@ export default {
             );
         },
         generateReports(id, idx) {
+            this.loading = true;
+            this.boxes[idx].is_loading_report = true;
             this.$http(`/caja/worker/cash/generate_reports/${id}`).then(
                 response => {
                     if (response.status == 200) {
                         this.$toast.success(
                             "Se están generando los reportes, espere un momento por favor"
                         );
-                        this.boxes[idx].is_loading_report = true;
+                    
                     }
                 }
-            );
+            ).finally(() => {
+                this.loading = false;
+            });
         },
         openSaludSingle(id) {
             window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);

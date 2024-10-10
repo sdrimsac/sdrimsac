@@ -41,7 +41,7 @@ trait RegisterMovementTrait
              "description" => $description,
              "data" => json_encode($data),
          ]);
-         event(new RegisterEvent($register));
+        //  event(new RegisterEvent($register));
     }
 
     public function registerUpdate($model, $request_data, $description = null, $data = [])

@@ -1693,11 +1693,11 @@ class BoxesController extends Controller
         ini_set('memory_limit', '10096M');
         ini_set('max_execution_time', '30000');
 
-        // $pdf->save(storage_path('app/public/report_resumen_pdf_pos_'.$cash->id.'.pdf'));
-        //check if the file exists
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
-        $path = storage_path('app/public/report_resumen_pdf_pos_'.$cash_id.'.pdf');
+        $company = Company::first();
+        $company_number = $company->number;
+        $path = storage_path('app/public/report_resumen_pdf_pos_'.$cash_id.'_'.$company_number.'.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -2223,8 +2223,10 @@ class BoxesController extends Controller
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
+        $company = Company::first();
+        $company_number = $company->number;
         //duardar el pdf 
-        $pdf->save(storage_path('app/public/report_resumen_pdf_pos_'.$cash->id.'.pdf'));
+        $pdf->save(storage_path('app/public/report_resumen_pdf_pos_'.$cash->id.'_'.$company_number.'.pdf'));
 
         return $pdf->stream('pdf_file.pdf');
     }
