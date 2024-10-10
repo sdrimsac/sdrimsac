@@ -111,14 +111,14 @@
                     </tr>
                 </tbody>
             </table>
-            <el-pagination
+            <!-- <el-pagination
                 @current-change="getRecords"
                 layout="total, prev, pager, next"
                 :total="pagination.total"
                 :current-page.sync="pagination.current_page"
                 :page-size="Number(pagination.per_page)"
             >
-            </el-pagination>
+            </el-pagination> -->
         </div>
         <br>
 
@@ -158,7 +158,7 @@ export default {
     data() {
         return {
             boxes: [],
-            pagination: {},
+            // pagination: {},
             number: null,
             loading: false,
             title: "Sin registros",
@@ -218,11 +218,7 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
-                page: this.pagination.current_page
-                // column: "state",
-                // value: 0
-
-                // limit: this.limit
+                from_cash:true,
             });
         },
         async getRecords() {
@@ -231,13 +227,13 @@ export default {
                 this.loading = true;
                 const response = await this.$http(`cash/records?${query}`);
                 if (response.status == 200) {
-                    const { data, meta } = response.data;
+                    const data = response.data.data;
                     this.boxes = data;
                     console.log(data);
                     if (this.boxes.length != 0) {
                         this.title = `Usuario: ${this.boxes[0].user}`;
                     }
-                    this.pagination = meta;
+                    // this.pagination = meta;
                 }
             } catch (e) {
                 this.$toast.error("Ocurrió un erro");

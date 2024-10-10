@@ -466,7 +466,7 @@ export default {
     },
     methods: {
         getAvaibleCash() {
-            this.$http("/caja/cash-transfer/available").then(response => {
+            this.$http("/caja/cash-transfer/available?with_all=1").then(response => {
                 console.log("🚀 ~ this.$http ~ response:", response)
                 this.total = response.data;
             });

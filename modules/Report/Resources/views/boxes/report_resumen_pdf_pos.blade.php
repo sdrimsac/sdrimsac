@@ -722,8 +722,8 @@
                     </span>
                     @isset($difference)
                         @php
-                                \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
-                                $result = $difference - $cash->final_balance + $cash->beginning_balance;
+                            \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
+                            $result = $difference - $cash->final_balance + $cash->beginning_balance;
                         @endphp
                         @if ($difference != 0 && $difference != number_format($n, 2) && $result != 0)
                             <br>
@@ -731,15 +731,12 @@
                             @endphp
                             <span
                                 style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
-                                @if($result < 0)
-                                SOBRANTE
-                                {{ number_format($result * -1, 2) }}
-
-
+                                @if ($result < 0)
+                                    SOBRANTE
+                                    {{ number_format($result * -1, 2) }}
                                 @else
-                                DIFERENCIA DE CONTEO
-                                {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
-
+                                    DIFERENCIA DE CONTEO
+                                    {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
                                 @endif
                             </span>
                         @endif

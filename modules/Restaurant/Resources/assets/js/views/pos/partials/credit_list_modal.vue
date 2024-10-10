@@ -82,6 +82,10 @@ export default {
                 );
                 return;
             }
+            if(!this.form.customer_id){
+                this.$toast.error("Seleccione un cliente/personal");
+                return;
+            }
             this.$emit("sendOrdenToCreditList", this.form.customer_id);
             this.close();
         },

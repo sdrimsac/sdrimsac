@@ -1648,19 +1648,26 @@ class CashController extends Controller
     {
         ini_set('memory_limit', '3500M');
         ini_set('max_execution_time', 3000);
-
+    
         $fromAdmin = $request->input('fromAdmin');
         $is_principal = $request->input('is_principal');
+        $from_cash = $request->input('from_cash');
         $records = Cash::query();
+    
         if ($request->column) {
             $records = $records->where($request->column, 'like', "%{$request->value}%");
         }
-
+    
         $records->whereTypeUser($fromAdmin);
         $records->where('active', 0);
         $records->orderBy('date_opening', 'desc')
-            ->orderBy('time_opening', 'desc');
-
+                ->orderBy('time_opening', 'desc');
+    
+        if ($from_cash) {
+            $records = $records->limit(10)->get();
+            return new CashCollection($records);
+        }
+    
         return new CashCollection($records->paginate(20));
     }
 
