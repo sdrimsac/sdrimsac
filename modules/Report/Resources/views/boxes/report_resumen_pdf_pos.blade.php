@@ -731,8 +731,16 @@
                             @endphp
                             <span
                                 style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
+                                @if($result < 0)
+                                SOBRANTE
+                                {{ number_format($result * -1, 2) }}
+
+
+                                @else
                                 DIFERENCIA DE CONTEO
                                 {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
+
+                                @endif
                             </span>
                         @endif
                     @endisset
