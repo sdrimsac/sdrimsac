@@ -31,17 +31,17 @@ trait RegisterMovementTrait
         $platform = $browser_so['platform'];
         
 
-    //    $register = RegisterMovement::create([
-    //         "ip" => $ip ?? "SERVIDOR",
-    //         "browser" => $platform,
-    //         "user_id" => $user_id,
-    //         "event" => $event,
-    //         "model" => $class_model,
-    //         "model_id" => $id,
-    //         "description" => $description,
-    //         "data" => json_encode($data),
-    //     ]);
-        // event(new RegisterEvent($register));
+    $register = RegisterMovement::create([
+            "ip" => $ip ?? "SERVIDOR",
+             "browser" => $platform,
+             "user_id" => $user_id,
+            "event" => $event,
+             "model" => $class_model,
+             "model_id" => $id,
+             "description" => $description,
+             "data" => json_encode($data),
+         ]);
+         event(new RegisterEvent($register));
     }
 
     public function registerUpdate($model, $request_data, $description = null, $data = [])

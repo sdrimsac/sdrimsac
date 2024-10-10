@@ -147,6 +147,7 @@ Route::prefix('caja')->group(function () {
         Route::get('workers-type/record/{id}', 'WorkersTypeController@record');
         Route::get('workers-type/{id}', 'WorkersTypeController@active');
         Route::post('workers-type', 'WorkersTypeController@store');
+        Route::get('workers-type/recordsActivity', 'WorkersTypeController@recordsActivity');
         //**** AREAS */
         Route::get('areas', 'AreaController@index')->name('restaurant.areas')->middleware("just.super");
         Route::get('areas/columns', 'AreaController@columns');

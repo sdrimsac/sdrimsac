@@ -19,9 +19,25 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Requests\WorkerRequest;
+use App\Models\Tenant\RegisterMovement;
+use App\Http\Resources\Tenant\RegisterMovementCollection;
 
 class WorkerController extends Controller
 {
+    protected $all_models = [];
+    public function __construct() {
+        $this->all_models = [
+            "orden" => "Modules\Restaurant\Models\Orden",
+            "table" => "Modules\Restaurant\Models\Table",
+            "area" => "Modules\Restaurant\Models\Area",
+            "food" => "Modules\Restaurant\Models\Food",
+            "ordenItem" => "Modules\Restaurant\Models\OrdenItem",
+            "document" => "App\Models\Document",
+            "saleNote" => "App\Models\SaleNote",
+            "purchase" => "App\Models\Purchase",
+            "box" => "App\Models\Box",
+        ];
+    }
 
 
     public function index()
@@ -125,7 +141,6 @@ class WorkerController extends Controller
             }
         }
         if ($status !== null) {
-            // Filtrar por estado (0 o 1)
             $records = $records->where('active', $status);
         } else {
             $records = $records->where('active', 1);
@@ -135,6 +150,39 @@ class WorkerController extends Controller
         }
 
         return new UserCollection($records->paginate(150),);
+    }
+    public function recordsActivity(Request $request){
+
+        $records = RegisterMovement::query();
+        $column = $request->column;
+        $value = $request->value;
+
+        if($column && $value){
+            switch ($column) {
+                case 'user_id':
+                    $records = $records->where('user_id', $value);
+                    break;
+                case 'date_of_issue':
+                    $records = $records->whereDate('created_at', $value);
+                    break;
+                case 'description':
+                    $records = $records->where('description', 'like', "%{$value}%");
+                    break;
+                case 'event_description':
+                    $records = $records->where('event', $value);
+                    break;
+                case 'model':
+                    $model = $this->get_model($value);
+                    if($model){
+                        $records = $records->where('model', $model);
+                    }
+                    break;
+            }
+        }
+
+        $records = $records->orderBy('id', 'desc');
+        return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
+
     }
     public function record($id) //8
     {

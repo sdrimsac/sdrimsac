@@ -27,9 +27,6 @@ class RegisterController extends Controller
             "box" => "App\Models\Box",
         ];
     }
-          
-            
-
     
     public function tables() {
         $users = User::all();
@@ -54,7 +51,7 @@ class RegisterController extends Controller
         return view('tenant.registers.index', compact('configuration', 'user_type'));
     }
     
-    public function records(Request $request){
+    /* public function records(Request $request){
 
         $records = RegisterMovement::query();
         $column = $request->column;
@@ -85,10 +82,9 @@ class RegisterController extends Controller
 
         $records = $records->orderBy('id', 'desc');
 
-
         return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
 
-    }
+    } */
      function get_model($model){
         if(array_key_exists($model, $this->all_models)){
             return $this->all_models[$model];
@@ -96,20 +92,4 @@ class RegisterController extends Controller
             return null;
         }
      }
-
-    public function record(){
-
-
-    }
-
-    public function store(){
-
-
-    }
-
-    public function destroy(){
-
-
-    }
-
 }

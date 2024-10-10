@@ -357,7 +357,7 @@
                             </template>
                         </td>
                         <td class="">
-                            <a :href="`http://${row.hostname}`" style="color:black" target="_blank">{{ row.hostname }}</a>
+                            <a :href="`http://${row.hostname}`" style="color:blue" target="_blank">{{ row.hostname }}</a>
                         </td>
                         <td>{{ row.name }}</td>
                         <td>{{ row.number }}</td>

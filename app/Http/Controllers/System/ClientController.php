@@ -269,7 +269,6 @@ class ClientController extends Controller
         ];
     }
 
-
     public function record($id)
     {
         $client = Client::findOrFail($id);

@@ -79,6 +79,7 @@
                   <th class="text-white text-center">Tipo de Usuario</th>
                   <th class="text-white text-center">Área</th>
                   <th class="text-white text-center">PIN</th>
+                  <th class="text-white text-center">Actividad</th>
                   <th class="text-white text-center">Establecimiento</th>
                   <th class="text-white text-center">Serie</th>
                   <th class="text-white text-center text-end">Acciones</th>
@@ -98,7 +99,6 @@
                             }"
                     >{{ row.active ? 'Activo' : 'Suspendido' }}</button>
                   </td>
-
                   <td class="text-center">{{ row.name }}</td>
 
                   <td class="text-center">{{ row.type }}</td>
@@ -120,6 +120,21 @@
                     >
                       <i class="fas fa-edit"></i>
                     </button>
+                  </td>
+                  <td class="tex-center">
+                    <template v-if=" row.last_register && row.last_register.user" class="text-center">
+                      <span class="text-center fw-bold">{{ row.last_register.user }}</span> :
+                      <span class="text-primary">
+                        {{ row.last_register.description }}
+                      </span>
+                      <br />
+                      <span
+                        :class=" `${ row.last_register.date_time .is24Hours ? 'text-danger' : ''}`">
+                        {{
+                        formatDateTime( row.last_register.date_time)
+                        }}
+                      </span>
+                    </template>
                   </td>
 
                   <td class="text-center">{{ row.establishment_description }}</td>
@@ -237,7 +252,7 @@ export default {
       allEstablishments: [],
       form: {},
       loading_submit: false,
-      commercial_treatment:[],
+      commercial_treatment: []
     };
   },
   created() {
@@ -252,6 +267,26 @@ export default {
     this.getData();
   },
   methods: {
+    formatDateTime(date) {
+      let days = date.days;
+      let hours = date.hours;
+      let minutes = date.minutes;
+      let text = "Hace: ";
+      if (days > 0) {
+        text += `${days} días`;
+      } else if (hours > 0) {
+        text += `${hours} horas`;
+      }
+      if (days == 0 && hours == 0) {
+        if (minutes == 0) {
+          text += `Recientemente`;
+        } else {
+          text += `${minutes} minutos`;
+        }
+      }
+
+      return text;
+    },
     async updatePin() {
       try {
         this.loading = true;
@@ -288,7 +323,10 @@ export default {
       this.allWarehouses = response.data.warehouses;
       this.allEstablishments = response.data.establishments;
       this.commercial_treatment = response.data.commercial_treatment;
-      console.log("🚀 ~ getTables ~ this.commercial_treatment:", this.commercial_treatment)
+      console.log(
+        "🚀 ~ getTables ~ this.commercial_treatment:",
+        this.commercial_treatment
+      );
       /* console.log(series); */
     },
     initForm() {

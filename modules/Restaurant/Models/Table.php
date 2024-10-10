@@ -67,7 +67,7 @@ class Table extends ModelTenant
             $table_origin = Table::find($table->id);
 
             $newStatus = $table_origin->status_table->description;
-            $description = "Mesa actualizada: $newStatus";
+            $description = "Mesa: $newStatus";
             RegisterMovementTrait::registerUpdate(
                 $table,
                 $request,

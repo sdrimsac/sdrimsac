@@ -64,7 +64,7 @@ class Cash extends ModelTenant
         static::updated(function ($model) {
             $request = Request::capture();
             $original_model = Cash::find($model->id);
-            $description = "Caja actualizado";
+            $description = "Caja cerrada";
             $data = $original_model->toArray();
             RegisterMovementTrait::registerUpdate(
                 $model,

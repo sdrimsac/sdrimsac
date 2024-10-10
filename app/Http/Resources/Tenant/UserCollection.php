@@ -4,6 +4,9 @@ namespace App\Http\Resources\Tenant;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
+use Carbon\Carbon;
+use App\Models\Tenant\RegisterMovement;
+use Hyn\Tenancy\Environment;
 
 class UserCollection extends ResourceCollection
 {
@@ -37,6 +40,7 @@ class UserCollection extends ResourceCollection
             }
 
             return [
+                'last_register' => $this->get_last_document($row),
                 'id' => $row->id,
                 'email' => $row->email,
                 'name' => $row->name,
@@ -53,7 +57,49 @@ class UserCollection extends ResourceCollection
                 'active' => (bool) $row->active,
                 'establishment_table_id' => $row->establishment_table_id,
                 'warehouse_product_id' => $row->warehouse_product_id,
+                'state' => $row->state,
             ];
         });
+    }
+    function get_last_document($row){
+
+        $last_register_movement = RegisterMovement::where('user_id', $row->id)->orderBy('id', 'desc')->first();
+        $data = [
+            'user'=>'',
+            'date_time' => '',
+            'description' => '',
+        ];
+        if($last_register_movement){
+            $date_time = $last_register_movement->created_at;
+            $data = [
+                'user'=>$last_register_movement->user->name,
+                'description' =>$last_register_movement->description,
+                'date_time' => $this->get_date_difference($date_time),
+                
+            ];
+        }
+        return $data;
+    }
+    function get_date_difference($created_at){
+        $currentDay = Carbon::now();
+        $created_at = Carbon::parse($created_at);
+        
+        $difference = $created_at->diff($currentDay);
+        $days = $difference->days;
+        $hours = $difference->h;
+        $minutes = $difference->i;
+        $seconds = $difference->s;
+        $is24Hours = false;
+        if($days > 0){
+            $is24Hours = true;
+        }
+        $data = [
+            'is24Hours' => $is24Hours,
+            'days' => $days,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds
+        ];
+        return $data;
     }
 }

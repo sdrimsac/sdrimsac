@@ -229,19 +229,106 @@ class BoxController extends Controller
 
         $cash = Cash::where('date_closed', $date_close)->where('user_id', $user_id)->get()->last();
 
-        $data1 = Box::where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data2 = Box::where('type', '2')->whereBetween('date', [$d_start, $d_end])->where('expenses', 1)->where('state', 0)->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data3 = Box::where('type', '1')->where('method', 'Transferencia')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data4 = Box::where('type', '1')->where('method', 'Deposito Bancario')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data5 = Box::where('type', '1')->where('method', 'Tarjeta')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data6 = Box::where('type', '1')->where('method', 'Yape')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data7 = Box::where('type', '1')->where('method', 'PLIN')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data8 = Box::where('type', '1')->where('method', 'CULQUI')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data9 = Box::where('type', '1')->where('method', 'BBVA')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data10 = Box::where('type', '1')->where('method', 'BCP')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data11 = Box::where('type', '1')->where('method', 'BCO NACION')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $data12 = Box::where('type', '1')->where('method', 'Scotiabank')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
-        $dataingresos_all = Box::where('type', '1')->where('method', 'Efectivo')->where('incomes', 1)->where('state', 0)->whereBetween('date', [$d_start, $d_end])->where('user_id', $user_id)->OrderBy('date', 'asc');
+        $data1 = Box::where('type', '1')
+        ->where('method', 'Efectivo')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data2 = Box::where('type', '2')
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('expenses', 1)->where('state', 0)
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data3 = Box::where('type', '1')
+        ->where('method', 'Transferencia')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data4 = Box::where('type', '1')
+        ->where('method', 'Deposito Bancario')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data5 = Box::where('type', '1')
+        ->where('method', 'Tarjeta')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data6 = Box::where('type', '1')
+        ->where('method', 'Yape')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data7 = Box::where('type', '1')
+        ->where('method', 'PLIN')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data8 = Box::where('type', '1')
+        ->where('method', 'CULQUI')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data9 = Box::where('type', '1')
+        ->where('method', 'BBVA')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data10 = Box::where('type', '1')
+        ->where('method', 'BCP')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data11 = Box::where('type', '1')
+        ->where('method', 'BCO NACION')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $data12 = Box::where('type', '1')
+        ->where('method', 'Scotiabank')
+        ->where('expenses', 0)
+        ->where('incomes', 0)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
+        $dataingresos_all = Box::where('type', '1')
+        ->where('method', 'Efectivo')
+        ->where('incomes', 1)
+        ->where('state', 0)
+        ->whereBetween('date', [$d_start, $d_end])
+        ->where('user_id', $user_id)
+        ->OrderBy('date', 'asc');
 
         $row_ingresos = $data1->get();
 

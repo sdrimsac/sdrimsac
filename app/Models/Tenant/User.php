@@ -330,4 +330,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserCommission::class);
     }
+    
 }

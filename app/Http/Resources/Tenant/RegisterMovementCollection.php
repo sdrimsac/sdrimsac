@@ -34,6 +34,9 @@ class RegisterMovementCollection extends ResourceCollection
             $model = app($row->model);
             $model = get_class($model);
             $this->model = $model::find($row->model_id);
+            if (!$this->model){
+                return ['error' => 'mdelo no encontrado'];
+            }
             $this->event = $row->event;
             $detail = $this->get_model_type($model);
             return [

@@ -145,7 +145,7 @@ if ($hostname) {
                 });
                 Route::prefix('/registers')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\RegisterController::class, 'index'])->name('tenant.registers.index');
-                    Route::get('/records', [App\Http\Controllers\Tenant\RegisterController::class, 'records']);
+                    /* Route::get('/records', [App\Http\Controllers\Tenant\RegisterController::class, 'records']); */
                     Route::get('/columns', [App\Http\Controllers\Tenant\RegisterController::class, 'columns']);
                     Route::get('/tables', [App\Http\Controllers\Tenant\RegisterController::class, 'tables']);
                     Route::get('/record/{id}', [App\Http\Controllers\Tenant\RegisterController::class, 'record']);

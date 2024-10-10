@@ -305,7 +305,7 @@ class DashboardSalePurchase
         $order_column = ($enabled_move_item) ? 'move_quantity' : 'total';
         $sorted = $items_by_sales->sortByDesc($order_column);
         return $sorted->values();
-    }
+    }    
 
     /**
      * @param $purchases

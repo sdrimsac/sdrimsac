@@ -54,7 +54,7 @@ class Orden extends ModelTenant
             $description = null;
             $original_orden = Orden::find($orden->id);
             $newStatus = $original_orden->status_orden->description;
-            $description = "Orden actualizado: $newStatus";
+            $description = "Orden: $newStatus";
             RegisterMovementTrait::registerUpdate(
                $orden,
                 $request,
