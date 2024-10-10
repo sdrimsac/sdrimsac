@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class NameComercialStablishment extends Migration
+class AddLoadingReport extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class NameComercialStablishment extends Migration
      */
     public function up()
     {
-        Schema::table('configurations', function (Blueprint $table) {
-            $table->boolean('comercial_name')->default(true);
+        Schema::table('cash', function (Blueprint $table) {
+            $table->boolean('is_loading_report')->default(false);
         });
     }
     /**
@@ -24,8 +24,9 @@ class NameComercialStablishment extends Migration
      */
     public function down()
     {
-        Schema::table('configurations', function (Blueprint $table) {
-            $table->dropColumn('comercial_name');
-        });   
+        Schema::table('cash', function (Blueprint $table) {
+            $table->dropColumn('is_loading_report');
+        });
+    
     } 
 }
