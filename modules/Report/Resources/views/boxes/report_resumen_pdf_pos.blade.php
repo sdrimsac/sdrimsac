@@ -726,8 +726,11 @@
                         @endphp
                         @if ($difference != 0 && $difference != number_format($n, 2))
                             <br>
+                            @php
+                        $result = $difference - $cash->final_balance + $cash->beginning_balance;
+                            @endphp
                             <span
-                                style="font-size:20px !important;@if ($difference < 0) color: red;@else color:blue; @endif">
+                                style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
                                 DIFERENCIA DE CONTEO
                                 {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
                             </span>
