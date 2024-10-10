@@ -27,7 +27,7 @@ class CashCollection extends ResourceCollection
             $final_cash = 0;
             $has_ticket = false;
             $has_a4 = false;
-            $path_ticket_url = url('caja/worker/cash/print-report?cash_id=1136');
+            $path_ticket_url = url('caja/worker/cash/print-report?cash_id='.$row->id);
             if (!$from_cash) {
             
                 $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
