@@ -181,7 +181,7 @@ class PosController extends Controller
                         });
                 }
                 $consolidated_quotations = $configuration->consolidated_quotations;
-                if ($consolidated_quotations && $customer_unit_type_id ) {
+                if ($consolidated_quotations && $customer_unit_type_id) {
                     $item_unit_types_person = UnitTypePerson::where('customer_id', $customer_unit_type_id)->pluck('description')->values();
                     $query->whereHas('item_unit_types', function ($query) use ($item_unit_types_person) {
                         $query->whereIn('description', $item_unit_types_person);
@@ -377,12 +377,13 @@ class PosController extends Controller
     {
         $cash_id = $request->cash_id;
         $only_cash = $request->only_cash;
+        $with_all = $request->with_all;
         $send = $request->send;
         $sum = 0;
         $total_sales = 0;
         $total_expenses = 0;
         $total_incomes = 0;
-    
+
         if ($cash_id) {
             $cash = Cash::find($cash_id);
             $beginning_balance = $cash->beginning_balance;
@@ -442,11 +443,10 @@ class PosController extends Controller
                     }
                 });
             }
-            if($request->to_cash){
-                $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out;
-
-            }else{
+            if ($request->with_all) {
                 $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
+            } else {
+                $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out;
             }
             $configuration = Configuration::first();
             if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
