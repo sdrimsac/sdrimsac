@@ -30,6 +30,7 @@ use App\Http\Resources\Tenant\CashCollection;
 use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
+use App\Jobs\CashReportProccess;
 use App\Jobs\CashReportSmallProccess;
 use App\Jobs\WhatsappSendCashReportProccess;
 use App\Jobs\WhatsappSendCashReportStockProccess;
@@ -2096,6 +2097,8 @@ class CashController extends Controller
         $website = $this->getTenantWebsite();
         $hostname =  app(Environment::class)->hostname();
         $fqdn = $hostname->fqdn;
+        $cash->is_loading_report = true;
+        $cash->save();
         WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
         CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
         $configuration = Configuration::first();
@@ -2220,6 +2223,21 @@ class CashController extends Controller
     }
 
 
+    public function generate_reports($cash_id){
+        $cash = Cash::findOrFail($cash_id);
+        $cash->is_loading_report = true;
+        $cash->save();
+        $website = $this->getTenantWebsite();
+        $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn;
+        CashReportProccess::dispatch($website->id, $cash->id, $fqdn);
+        CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
+        return [
+            'success' => true,
+            'message' => 'Se está generando el reporte de caja, por favor espere unos minutos',
+        ];
+
+    }
     public function get_stock_file($id)
     {
         $cash = Cash::findOrFail($id);

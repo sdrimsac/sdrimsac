@@ -346,6 +346,7 @@ Route::prefix('caja')->group(function () {
             Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');;
             Route::get('cash/get-final-balance/{cash_id}', [CashController::class, 'getFinalBalance']);
             Route::get('cash/columns', [CashController::class, 'columns']);
+            Route::get('cash/generate_reports/{cash_id}', [CashController::class, 'generate_reports']);
             Route::get('cash/records', [CashController::class, 'records']);
             Route::get('cash/records_closed', [CashController::class, 'recordsClosed']);
             Route::get('cash/create', [CashController::class, 'create'])->name('tenant.cash_pos.create')->middleware('just.worker');;

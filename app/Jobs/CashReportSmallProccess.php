@@ -53,6 +53,7 @@ class CashReportSmallProccess implements ShouldQueue
             $user = $cash->user;
             $area_id = $user->area_id;
             event(new MessageEvent("Se ha generado el reporte de caja", $area_id));
+            $cash->update(['is_loading_report' => false]);
         } catch (Exception $e) {
             $message = $e->getMessage();
             $message .= " - " . $e->getLine();

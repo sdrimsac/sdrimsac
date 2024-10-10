@@ -17,10 +17,12 @@ class Cash extends ModelTenant
         'bill_series' => 'array',
         'counter' => 'array',
         'principal' => 'boolean',
+        'is_loading_report' => 'boolean',
 
     ];
     protected $table = 'cash';
     protected $fillable = [
+        'is_loading_report',
         'cash_type_id',
         'group_code',
         'bill_series',

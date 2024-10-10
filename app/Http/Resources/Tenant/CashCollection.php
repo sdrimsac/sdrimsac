@@ -28,16 +28,18 @@ class CashCollection extends ResourceCollection
             $has_ticket = false;
             $has_a4 = false;
             $path_ticket_url = url('caja/worker/cash/print-report?cash_id='.$row->id);
+            $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
+            dump($path_ticket);
+            if (file_exists($path_ticket)) {
+                $has_ticket = true;
+            }
+            $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
+            if (file_exists($path_a4)) {
+                $has_a4 = true;
+            }
             if (!$from_cash) {
             
-                $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
-                if (file_exists($path_ticket)) {
-                    $has_ticket = true;
-                }
-                $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
-                if (file_exists($path_a4)) {
-                    $has_a4 = true;
-                }
+            
 
                 $incomes = $row->boxes->where('expenses', 0)->where('incomes', 0)->sum(function ($box) {
                     $amount = $box->amount;
@@ -74,6 +76,7 @@ class CashCollection extends ResourceCollection
             
 
             return [
+                'is_loading_report' => (bool) $row->is_loading_report,
                 'has_ticket' => $has_ticket,
                 'has_a4' => $has_a4,
                 'path_ticket_url' => $path_ticket_url,

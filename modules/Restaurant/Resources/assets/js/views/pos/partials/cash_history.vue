@@ -36,7 +36,7 @@
                 <tbody>
                     <tr v-for="(box, idx) in boxes" :key="idx">
                         <td>
-                            {{customIndex(idx)}}
+                            {{ customIndex(idx) }}
                         </td>
                         <td>
                             {{
@@ -68,26 +68,45 @@
                             </el-button>
                         </td>
                         <td>
-                            <el-button
-                                type="success"
-                                class="text-white"
-                                @click="openWhastappForm(box)"
-                            >
-                                <i
-                                    class="fab fa-whatsapp"
-                                    aria-hidden="true"
-                                ></i>
-                            </el-button>
-                            <el-button type="primary" @click="openDetail(box)">
-                                Ver
-                            </el-button>
-                            <el-button
-                                class="margin-left:10px;"
-                                type="primary"
-                                @click="openA4(box)"
-                            >
-                                A4
-                            </el-button>
+                            <template v-if="box.is_loading_report">
+                                <el-button type="primary" disabled>
+                                    <i class="el-icon-loading"></i>
+                                    Generando reportes
+                                </el-button>
+                            </template>
+                            <template v-else>
+                                <el-button
+                                    type="success"
+                                    class="text-white"
+                                    @click="openWhastappForm(box)"
+                                >
+                                    <i
+                                        class="fab fa-whatsapp"
+                                        aria-hidden="true"
+                                    ></i>
+                                </el-button>
+                                <el-button
+                                    :type="
+                                        `${
+                                            box.has_ticket
+                                                ? 'primary'
+                                                : 'danger'
+                                        }`
+                                    "
+                                    @click="openDetail(box, idx)"
+                                >
+                                    Ver
+                                </el-button>
+                                <el-button
+                                    class="margin-left:10px;"
+                                    :type="
+                                        `${box.has_a4 ? 'primary' : 'danger'}`
+                                    "
+                                    @click="openA4(box, idx)"
+                                >
+                                    A4
+                                </el-button>
+                            </template>
                             <!-- un boton para bajar un excel -->
                             <el-tooltip
                                 class="item"
@@ -201,7 +220,11 @@ export default {
     },
     methods: {
         customIndex(idx) {
-            return this.pagination.per_page * (this.pagination.current_page - 1) + idx + 1;
+            return (
+                this.pagination.per_page * (this.pagination.current_page - 1) +
+                idx +
+                1
+            );
         },
         async print() {
             try {
@@ -237,13 +260,14 @@ export default {
                 this.loadingPrint = false;
             }
         },
-        openDetail(box) {
-            this.showFrame = true;
-            this.currentUrlBox = box.path_ticket_url;
-            console.log(
-                "🚀 ~ openDetail ~ this.currentUrlBox:",
-                this.currentUrlBox
-            );
+        openDetail(box, idx) {
+            if (box.has_ticket) {
+                this.showFrame = true;
+                this.currentUrlBox = box.path_ticket_url;
+        
+            } else {
+                this.generateReports(box.id, idx);
+            }
         },
         getFinalBalance(id, idx) {
             this.$http(`/caja/worker/cash/get-final-balance/${id}`).then(
@@ -254,6 +278,18 @@ export default {
                         );
                         this.boxes[idx].final_balance =
                             response.data.final_balance;
+                    }
+                }
+            );
+        },
+        generateReports(id, idx) {
+            this.$http(`/caja/worker/cash/generate_reports/${id}`).then(
+                response => {
+                    if (response.status == 200) {
+                        this.$toast.success(
+                            "Se están generando los reportes, espere un momento por favor"
+                        );
+                        this.boxes[idx].is_loading_report = true;
                     }
                 }
             );
@@ -295,10 +331,14 @@ export default {
                 this.loading = false;
             }
         },
-        openA4(cash) {
-            window.open(
-                `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`
-            );
+        openA4(cash, idx) {
+            if (cash.has_a4) {
+                window.open(
+                    `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`
+                );
+            } else {
+                this.generateReports(cash.id, idx);
+            }
         },
         seeDetail(cash) {
             this.currentBox = cash;
@@ -317,7 +357,7 @@ export default {
                 this.loading = true;
                 const response = await this.$http(`cash/records?${query}`);
                 if (response.status == 200) {
-                    const {data,meta} = response.data;
+                    const { data, meta } = response.data;
                     this.boxes = data;
                     console.log(data);
                     if (this.boxes.length != 0) {
