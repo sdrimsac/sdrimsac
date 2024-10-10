@@ -2091,13 +2091,13 @@ class BoxesController extends Controller
         $requestSales = new Request();
         $requestSales->merge([
             'cash_id' => $cash_id,
-            'only_cash' => '1'
+            'only_cash' => '1',
+            'to_cash' => true,
         ]);
 
         $total_sales = (new PosController())->total_sales($requestSales);
 
         if ($total_sales) {
-
             $difference = $total_sales["total_sales"] ;
         }
         $establishment = Establishment::find($user->establishment_id);

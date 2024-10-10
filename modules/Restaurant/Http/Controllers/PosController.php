@@ -442,7 +442,12 @@ class PosController extends Controller
                     }
                 });
             }
-            $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
+            if($request->to_cash){
+                $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out;
+
+            }else{
+                $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
+            }
             $configuration = Configuration::first();
             if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
                 $user_name = auth()->user()->name;
