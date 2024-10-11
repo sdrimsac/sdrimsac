@@ -1337,6 +1337,7 @@ class CashController extends Controller
                     $to_sum = $sale_note->total;
                 }
                 // $sales_cash_sum += $sale_note->total;
+                $sales_cash_sum += $to_sum;
             }
         }
         $sales_amount += $sales_cash_sum;
