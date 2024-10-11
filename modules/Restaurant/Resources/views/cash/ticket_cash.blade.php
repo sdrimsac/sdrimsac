@@ -124,8 +124,8 @@
                             {{ formatMoney($cash->difference) }}
                         </td>
 
-                    </tr>
-                @endif --}}
+                    </tr>--}}
+                @endif 
             @endisset
         </table>
 
