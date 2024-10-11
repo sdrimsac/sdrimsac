@@ -1033,6 +1033,7 @@ if ($hostname) {
             });
             Route::get('dashboard', 'System\HomeController@index')->name('system.dashboard');
             Route::post('logos', 'System\UserController@setLogo');
+            Route::post('monitor', 'System\MonitorController@index')->name('system.monitor.index');
             //Clients
             Route::get('clients', 'System\ClientController@index')->name('system.clients.index');
             Route::get('clients/records', 'System\ClientController@records');

@@ -1,5 +1,7 @@
 <template>
-    <el-dialog @close="close" @open="open" :visible="showPendingOrdens"  title="Ordenes pendientes">
+    <el-dialog @close="close" @open="open" :visible="showPendingOrdens"  title="Ordenes pendientes"
+    width="75%"
+    >
         <div v-loading="loading" class="card">
             <div class="d-flex">
                 <div class="col-4" style="    margin-top: 15px;">

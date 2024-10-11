@@ -5,6 +5,8 @@ namespace Modules\Restaurant\Http\Controllers;
 use App\CoreFacturalo\Requests\Api\Transform\Functions;
 use App\Http\Controllers\Tenant\WhatsappController;
 use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\User;
@@ -39,6 +41,7 @@ use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
 use App\Events\MessageEvent;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
 
@@ -399,10 +402,20 @@ class OrdenController extends Controller
     }
     public function ordenspending(Request $request)
     {
+        $user = User::where('id', auth()->user()->id)->first();
+        $cash_id =  $user->get_cash_id();
+        $cash = Cash::find($cash_id);
 
+        //if no exists cash return collection empty
+        if (!$cash) {
+            $emptyCollection = new Collection();
+            $paginated = new LengthAwarePaginator($emptyCollection, 0, 10);
 
-        // $ordens = Orden::where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5);
+            return new OrdenCollection($paginated);
+        }
+
         $ordens = Orden::query();
+        $ordens = $ordens->where('created_at', '>=', $cash->created_at);
         if ($request->value) {
             $ordens = $ordens->where('id', 'like', '%' . $request->value . '%');
         }

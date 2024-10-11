@@ -73,8 +73,8 @@ $path[0] = ($path[0] === '')?'documents':$path[0];
             <nav id="menu" class="nav-main" role="navigation">
                 <ul class="nav nav-main">
                     <li class="">
-                        <a class="nav-link" href="{{url('docs')}}" target="_BLANK">
-                            <i class="fas fa-book-open"></i><span>Wiki</span>
+                        <a class="nav-link" href="{{url('monitor')}}" target="_BLANK">
+                            <i class="fas fa-book-open"></i><span>Monitorear</span>
                         </a>
                     </li>
                 </ul>

@@ -39,7 +39,9 @@
                     <label>Fecha de emisión</label>
                     <el-date-picker
                         class="w-100"
-                        value-format="Y-m-d"
+                        value-format="yyyy-MM-dd"
+                        format="yyyy-MM-dd"
+
                         v-model="form.date_of_issue"
                     >
                     </el-date-picker>
