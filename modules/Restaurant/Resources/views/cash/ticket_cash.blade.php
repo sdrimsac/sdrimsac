@@ -116,7 +116,7 @@
             </tr>
             @isset($cash->difference)
                 @if ($cash->difference != 0)
-                    <tr>
+                    {{-- <tr>
                         <td class="text-left lead-font-weight-700 " style="border: solid 1px black;">
                             DIFERENCIA
                         </td>
@@ -125,7 +125,7 @@
                         </td>
 
                     </tr>
-                @endif
+                @endif --}}
             @endisset
         </table>
 
