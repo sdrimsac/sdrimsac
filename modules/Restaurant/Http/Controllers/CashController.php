@@ -1319,11 +1319,24 @@ class CashController extends Controller
         foreach ($sales_cash_records as $ringreso) {
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
-                $sales_cash_sum += $sale_note->total;
+                $to_sum = 0;
+                if ($sale_note->total > $ringreso["amount"]) {
+
+                    $to_sum = $ringreso["amount"];
+                } else {
+                    $to_sum = $sale_note->total;
+                }
+                $sales_cash_sum += $to_sum;
             }
             if ($ringreso["document_id"]) {
                 $sale_note = Document::find($ringreso["document_id"]);
-                $sales_cash_sum += $sale_note->total;
+                $to_sum = 0;
+                if ($sale_note->total > $ringreso["amount"]) {
+                    $to_sum =  $ringreso["amount"];
+                } else {
+                    $to_sum = $sale_note->total;
+                }
+                // $sales_cash_sum += $sale_note->total;
             }
         }
         $sales_amount += $sales_cash_sum;
