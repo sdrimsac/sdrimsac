@@ -33,12 +33,12 @@ class CashCollection extends ResourceCollection
             $path_ticket_url = url('caja/worker/cash/print-report?cash_id='.$row->id);
             // $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
             $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id .'_'.$company_number.'.pdf');
-            if (file_exists($path_ticket)||$row->state = 1) {
+            if (file_exists($path_ticket)||$row->state == 1) {
                 $has_ticket = true;
             }
             $path_a4 = storage_path('app/public/report_resumen_pdf_pos_'.$row->id.'_'.$company_number.'.pdf');
             // $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
-            if (file_exists($path_a4) || $row->state = 1) {
+            if (file_exists($path_a4) || $row->state == 1) {
                 $has_a4 = true;
             }
             if (!$from_cash) {
