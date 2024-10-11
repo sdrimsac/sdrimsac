@@ -50,9 +50,7 @@ class CashReportSmallProccess implements ShouldQueue
             Log::info("resource: " . $resource);
             Http::get($resource);
             $cash = Cash::find($this->cash_id);
-            $user = $cash->user;
-            $area_id = $user->area_id;
-            event(new MessageEvent("Se ha generado el reporte de caja", $area_id));
+        
             $cash->update(['is_loading_report' => false]);
         } catch (Exception $e) {
             $message = $e->getMessage();

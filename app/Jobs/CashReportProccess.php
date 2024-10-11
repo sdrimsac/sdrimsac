@@ -3,7 +3,8 @@
 
 namespace App\Jobs;
 
-
+use App\Events\MessageEvent;
+use App\Models\Tenant\Cash;
 use App\Traits\JobReportTrait;
 use Exception;
 use Hyn\Tenancy\Environment;
@@ -40,7 +41,12 @@ class CashReportProccess implements ShouldQueue
         try {
             $resource = "http://" . $this->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $this->cash_id;
             Log::info("resource: " . $resource);
+            $cash = Cash::find($this->cash_id);
+            $user = $cash->user;
+            $area_id = $user->area_id;
             Http::get($resource);
+            event(new MessageEvent("Se ha generado el reporte de caja", $area_id));
+
         } catch (Exception $e) {
             $message = $e->getMessage();
             $message .= " - " . $e->getLine();
