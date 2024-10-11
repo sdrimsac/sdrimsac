@@ -41,6 +41,10 @@ class CashCollection extends ResourceCollection
             if (file_exists($path_a4) || $row->state == 1) {
                 $has_a4 = true;
             }
+            if($has_ticket || $has_a4){
+                $row->is_loading_report = false;
+                $row->save();
+            }
             if (!$from_cash) {
             
             
