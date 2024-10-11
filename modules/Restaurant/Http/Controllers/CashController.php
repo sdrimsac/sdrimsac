@@ -1706,6 +1706,10 @@ class CashController extends Controller
 
         $expense = $row->boxes->where('expenses', 1)->sum('amount');
         $incomes_s = $row->boxes->where('incomes', 1)->sum('amount');
+        Log::info('incomes: ' . $incomes);
+        Log::info('expense: ' . $expense);
+        Log::info('incomes_s: ' . $incomes_s);
+        Log::info('beginning_balance: ' . $row->beginning_balance);
         $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
 
         return [
@@ -2234,6 +2238,8 @@ class CashController extends Controller
         $fqdn = $hostname->fqdn;
         CashReportProccess::dispatch($website->id, $cash->id, $fqdn);
         CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
+
+        
         return [
             'success' => true,
             'message' => 'Se está generando el reporte de caja, por favor espere unos minutos',
