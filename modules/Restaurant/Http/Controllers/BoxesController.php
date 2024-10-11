@@ -498,7 +498,8 @@ class BoxesController extends Controller
             "documents_info" => $documents,
         ];
     } */
-    function add_method(&$all_methods, $method, $amount, $document, $date_of_issue, $customer) {
+    function add_method(&$all_methods, $method, $amount, $document, $date_of_issue, $customer)
+    {
         if (!isset($all_methods[$method])) {
             $all_methods[$method] = [];
         }
@@ -507,7 +508,7 @@ class BoxesController extends Controller
             'document' => $document,
             'date_of_issue' => $date_of_issue,
             'customer_name' => $customer->name,
-            'customer_number' =>$customer->number
+            'customer_number' => $customer->number
         ];
     }
     function get_items_from_box($cash_id)
@@ -528,11 +529,11 @@ class BoxesController extends Controller
 
         foreach ($boxes as $box) {
             $total = 0;
-            $method=$box->method;
+            $method = $box->method;
             if ($box->document_id) {
                 $document = Document::find($box->document_id);
-                if($method != "Efectivo"){
-                    $this->add_method($all_methods,$method,$document->total,$document->number_full,$document->date_of_issue,$document->customer);
+                if ($method != "Efectivo") {
+                    $this->add_method($all_methods, $method, $document->total, $document->number_full, $document->date_of_issue, $document->customer);
                 }
                 $boxes = Box::where('document_id', $box->document_id)->get()->pluck('amount')->toArray();
                 if ($document) {
@@ -600,8 +601,8 @@ class BoxesController extends Controller
 
             if ($box->sale_note_id && $box->sale_note_payment_id == null) {
                 $sale_note = SaleNote::find($box->sale_note_id);
-                if($method != "Efectivo"){
-                    $this->add_method($all_methods,$method,$sale_note->total,$sale_note->number_full,$sale_note->date_of_issue->format('d-m-Y'),$sale_note->customer);
+                if ($method != "Efectivo") {
+                    $this->add_method($all_methods, $method, $sale_note->total, $sale_note->number_full, $sale_note->date_of_issue->format('d-m-Y'), $sale_note->customer);
                 }
                 $boxes = Box::where('sale_note_id', $box->sale_note_id)
 
@@ -1566,7 +1567,7 @@ class BoxesController extends Controller
                     }
                     if ($box->document_id) {
 
-                        $document = Document::select(['id', 'document_type_id', 'total','number'])
+                        $document = Document::select(['id', 'document_type_id', 'total', 'number'])
                             ->with('items')
                             ->find($box->document_id);
                         if ($document->document_type_id == '01') {
@@ -1600,7 +1601,7 @@ class BoxesController extends Controller
                     foreach ($document_items as $item) {
                         $original_item = Item::select(['barcode', 'category_id'])->find($item->item_id);
                         $description = $item->item->description;
-                        Log::info("Agregando item: " . $description." del documento: ".$document->number);
+                        Log::info("Agregando item: " . $description . " del documento: " . $document->number);
                         $internal_id = $item->item->internal_id;
                         $key = $description . "-" . $internal_id;
                         $price = floatval($item->unit_price);
@@ -1697,14 +1698,14 @@ class BoxesController extends Controller
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_'.$cash_id.'_'.$company_number.'.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
         $configuration = Configuration::first();
         $total_discount = 0;
-        if(!$configuration->sale_note_credit_confirm){
-            Box::where('cash_id', $cash_id)->where('description','Ajuste de caja por centavos')->delete();
+        if (!$configuration->sale_note_credit_confirm) {
+            Box::where('cash_id', $cash_id)->where('description', 'Ajuste de caja por centavos')->delete();
         }
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
         $credit_list_ordens = $this->credit_list_ordens($cash_id);
@@ -2107,7 +2108,7 @@ class BoxesController extends Controller
         $total_sales = (new PosController())->total_sales($requestSales);
 
         if ($total_sales) {
-            $difference = $total_sales["total_sales"] ;
+            $difference = $total_sales["total_sales"];
         }
         $establishment = Establishment::find($user->establishment_id);
         $seriesDocs = DB::connection('tenant')->select('SELECT document_items.* ,
@@ -2226,7 +2227,9 @@ class BoxesController extends Controller
         $company = Company::first();
         $company_number = $company->number;
         //duardar el pdf 
-        $pdf->save(storage_path('app/public/report_resumen_pdf_pos_'.$cash->id.'_'.$company_number.'.pdf'));
+        if ($cash->state == 0) {
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $cash->id . '_' . $company_number . '.pdf'));
+        }
 
         return $pdf->stream('pdf_file.pdf');
     }
@@ -2593,141 +2596,141 @@ class BoxesController extends Controller
         // }
     }
     public function get_boxes($cash_id)
-{   
+    {
 
-    ini_set('memory_limit', '3500M');
-    ini_set('max_execution_time', 3000);
-    // 1. Use eager loading to reduce database queries
-    $boxes = Box::with(['saleNote', 'document'])
-        ->where('cash_id', $cash_id)
-        ->where('state', 0)
-        ->get();
+        ini_set('memory_limit', '3500M');
+        ini_set('max_execution_time', 3000);
+        // 1. Use eager loading to reduce database queries
+        $boxes = Box::with(['saleNote', 'document'])
+            ->where('cash_id', $cash_id)
+            ->where('state', 0)
+            ->get();
 
-    // 2. Use collections to group and sum data
-    $sales = $boxes->where('expenses', 0)->where('incomes', 0);
-    $sales_quantity = $sales->count();
-    $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
+        // 2. Use collections to group and sum data
+        $sales = $boxes->where('expenses', 0)->where('incomes', 0);
+        $sales_quantity = $sales->count();
+        $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
 
-    $sales_cash = $sales->where('method', 'Efectivo');
-    $sales_cash_sum = $sales_cash->reduce(function ($sum, $ringreso) {
-        $total = $ringreso->saleNote->total ?? $ringreso->document->total ?? 0;
-        return $sum + min($ringreso->amount, $total);
-    }, 0);
+        $sales_cash = $sales->where('method', 'Efectivo');
+        $sales_cash_sum = $sales_cash->reduce(function ($sum, $ringreso) {
+            $total = $ringreso->saleNote->total ?? $ringreso->document->total ?? 0;
+            return $sum + min($ringreso->amount, $total);
+        }, 0);
 
-    $sales_amount += $sales_cash_sum;
-    $sales_cash_quantity = $sales_cash->count();
+        $sales_amount += $sales_cash_sum;
+        $sales_cash_quantity = $sales_cash->count();
 
-    // 3. Simplify method calculation
-    $all_methods = [
-        'TARJETA: IZYPAY', 'TARJETA: NIUBIZ', 'Transferencia', 'Deposito Bancario',
-        'Tarjeta', 'TARJETA: OPENPAY', 'Yape', 'PLIN', 'Culqui', 'BBVA', 'BCP',
-        'BCO NACION', 'Scotiabank',
-    ];
-
-    $methods = $sales->groupBy('method')->map(function ($group) {
-        return [
-            'sum' => $group->sum('amount'),
-            'quantity' => $group->count(),
+        // 3. Simplify method calculation
+        $all_methods = [
+            'TARJETA: IZYPAY', 'TARJETA: NIUBIZ', 'Transferencia', 'Deposito Bancario',
+            'Tarjeta', 'TARJETA: OPENPAY', 'Yape', 'PLIN', 'Culqui', 'BBVA', 'BCP',
+            'BCO NACION', 'Scotiabank',
         ];
-    })->toArray();
 
-    // 4. Simplify incomes and expenses calculations
-    $incomes = $boxes->where('type', '1')->where('incomes', 1);
-    $incomes_cash = $incomes->where('method', 'Efectivo');
-    $expenses = $boxes->where('type', '2')->where('expenses', 1);
-    $expenses_cash = $expenses->where('method', 'Efectivo');
-
-    // 5. Optimize item and document processing
-    $info = $this->get_items_from_box($cash_id);
-    $items = $info['items'];
-    $documents = $info['documents'];
-    $documents_info = $info['documents_info'];
-    $categories = $info['categories'];
-    $all_items = $info['items'];
-
-    $items_detail = [
-        "items" => $items,
-        "uniques" => count(array_unique(array_column($items, 'description'))),
-        "unds" => array_sum(array_column($items, 'quantity')),
-    ];
-
-    // 6. Simplify sales detail construction
-    $sales_detail = $this->buildSalesDetail($methods, $boxes);
-
-    // 7. Simplify incomes and expenses cash
-    $incomes_expenses_cash = [
-        "incomes" => [
-            "quantity" => $incomes_cash->count(),
-            "amount" => $incomes_cash->sum('amount'),
-        ],
-        "expenses" => [
-            "quantity" => $expenses_cash->count(),
-            "amount" => $expenses_cash->sum('amount'),
-        ],
-    ];
-
-    // 8. Optimize receipts processing
-    $receipts = $this->get_receipts($cash_id);
-    $documents["recibos"] = [
-        "total" => $receipts->sum('amount'),
-        "quantity" => $receipts->count(),
-    ];
-
-    return compact(
-        "all_items",
-        "categories",
-        "sales_quantity",
-        "sales_amount",
-        "sales_detail",
-        "items_detail",
-        "incomes_expenses_cash",
-        "documents",
-        "documents_info"
-    );
-}
-
-private function buildSalesDetail($methods, $boxes)
-{
-    $sales_detail = [
-        "cash" => ["desc" => "Efectivo"],
-        "card" => ["desc" => "Tarjeta"],
-        "yape" => ["desc" => "Yape"],
-        "plin" => ["desc" => "Plin"],
-        "culqui" => ["desc" => "Culqui"],
-        "izypay" => ["desc" => "Izypay"],
-        "niubiz" => ["desc" => "Niubiz"],
-        "bbva" => ["desc" => "BBVA"],
-        "bcp" => ["desc" => "BCP"],
-        "nacion" => ["desc" => "BCO NACION"],
-        "scotiabank" => ["desc" => "Scotiabank"],
-        "openpay" => ["desc" => "Openpay"],
-    ];
-
-    foreach ($sales_detail as $key => &$detail) {
-        $method = strtoupper(str_replace('_', ' ', $key));
-        $detail += $methods[$method] ?? ['quantity' => 0, 'sum' => 0];
-    }
-
-    $banks = $boxes->whereNotNull('bank_account_id');
-    foreach ($banks as $bank_account) {
-        $method = strtolower($bank_account->method);
-        if (isset($sales_detail[$method])) {
-            $sales_detail[$method]["quantity"] += 1;
-            $sales_detail[$method]["sum"] += $bank_account->amount;
-        } else {
-            $bk_account = BankAccount::find($bank_account->bank_account_id);
-            $bank_description = $bk_account->bank->description;
-            $sales_detail[$method] = [
-                "desc" => $bank_description . " " . $bank_account->method,
-                "quantity" => 1,
-                "sum" => $bank_account->amount,
-                "is_bank" => true,
+        $methods = $sales->groupBy('method')->map(function ($group) {
+            return [
+                'sum' => $group->sum('amount'),
+                'quantity' => $group->count(),
             ];
-        }
+        })->toArray();
+
+        // 4. Simplify incomes and expenses calculations
+        $incomes = $boxes->where('type', '1')->where('incomes', 1);
+        $incomes_cash = $incomes->where('method', 'Efectivo');
+        $expenses = $boxes->where('type', '2')->where('expenses', 1);
+        $expenses_cash = $expenses->where('method', 'Efectivo');
+
+        // 5. Optimize item and document processing
+        $info = $this->get_items_from_box($cash_id);
+        $items = $info['items'];
+        $documents = $info['documents'];
+        $documents_info = $info['documents_info'];
+        $categories = $info['categories'];
+        $all_items = $info['items'];
+
+        $items_detail = [
+            "items" => $items,
+            "uniques" => count(array_unique(array_column($items, 'description'))),
+            "unds" => array_sum(array_column($items, 'quantity')),
+        ];
+
+        // 6. Simplify sales detail construction
+        $sales_detail = $this->buildSalesDetail($methods, $boxes);
+
+        // 7. Simplify incomes and expenses cash
+        $incomes_expenses_cash = [
+            "incomes" => [
+                "quantity" => $incomes_cash->count(),
+                "amount" => $incomes_cash->sum('amount'),
+            ],
+            "expenses" => [
+                "quantity" => $expenses_cash->count(),
+                "amount" => $expenses_cash->sum('amount'),
+            ],
+        ];
+
+        // 8. Optimize receipts processing
+        $receipts = $this->get_receipts($cash_id);
+        $documents["recibos"] = [
+            "total" => $receipts->sum('amount'),
+            "quantity" => $receipts->count(),
+        ];
+
+        return compact(
+            "all_items",
+            "categories",
+            "sales_quantity",
+            "sales_amount",
+            "sales_detail",
+            "items_detail",
+            "incomes_expenses_cash",
+            "documents",
+            "documents_info"
+        );
     }
 
-    return $sales_detail;
-}
+    private function buildSalesDetail($methods, $boxes)
+    {
+        $sales_detail = [
+            "cash" => ["desc" => "Efectivo"],
+            "card" => ["desc" => "Tarjeta"],
+            "yape" => ["desc" => "Yape"],
+            "plin" => ["desc" => "Plin"],
+            "culqui" => ["desc" => "Culqui"],
+            "izypay" => ["desc" => "Izypay"],
+            "niubiz" => ["desc" => "Niubiz"],
+            "bbva" => ["desc" => "BBVA"],
+            "bcp" => ["desc" => "BCP"],
+            "nacion" => ["desc" => "BCO NACION"],
+            "scotiabank" => ["desc" => "Scotiabank"],
+            "openpay" => ["desc" => "Openpay"],
+        ];
+
+        foreach ($sales_detail as $key => &$detail) {
+            $method = strtoupper(str_replace('_', ' ', $key));
+            $detail += $methods[$method] ?? ['quantity' => 0, 'sum' => 0];
+        }
+
+        $banks = $boxes->whereNotNull('bank_account_id');
+        foreach ($banks as $bank_account) {
+            $method = strtolower($bank_account->method);
+            if (isset($sales_detail[$method])) {
+                $sales_detail[$method]["quantity"] += 1;
+                $sales_detail[$method]["sum"] += $bank_account->amount;
+            } else {
+                $bk_account = BankAccount::find($bank_account->bank_account_id);
+                $bank_description = $bk_account->bank->description;
+                $sales_detail[$method] = [
+                    "desc" => $bank_description . " " . $bank_account->method,
+                    "quantity" => 1,
+                    "sum" => $bank_account->amount,
+                    "is_bank" => true,
+                ];
+            }
+        }
+
+        return $sales_detail;
+    }
     // public function get_boxes($cash_id)
     // {
     //     $sales = Box::where('cash_id', $cash_id)->where('expenses', 0)->where('incomes', 0)->OrderBy('date', 'asc');
