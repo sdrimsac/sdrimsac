@@ -1,0 +1,13 @@
+{
+    "name": "Billar",
+    "alias": "billar",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Billar\\Providers\\BillarServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

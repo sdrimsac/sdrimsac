@@ -263,16 +263,18 @@
                         <th class="text-center border text-white"> #</th>
                         <th class="text-white text-center border">Acciones</th>
                         <th class="text-white text-center border">Logo</th>
+                        <th class="text-white text-center border">Entorno</th>
                         <th class="text-white text-center border">Bloquear cuenta</th>
                         <th class="text-white text-center border">Notificaciones</th>
                         <th class="text-white text-center border">Último Registro</th>
                         <th class="text-white text-center border">Hostname</th>
+                        <th class="text-white text-center border">Ruc</th>
                         <th class="text-white text-center border">Nombre</th>
-                        <th class="text-white text-center border">RUC</th>
+                        
                         <!-- <th class="text-white text-right">Inicio Ciclo Facturacion</th> -->
                         <!-- <th class="text-white">Plan</th> -->
                         <!-- <th class="text-white">Correo</th> -->
-                        <th class="text-white text-center border">Entorno</th>
+                        <!-- <th class="text-white text-center border">Ruc</th> -->
                         <th class="text-white text-center border">Total CPE</th>
                         <!-- <th class="text-white text-center">CPE Ciclo Facturacion</th> -->
                         <th class="text-white text-center border">Usuarios</th>
@@ -317,6 +319,11 @@
                         <td class="">
                             <img :src="`/storage/uploads/logos/${row.imgClient}` " alt="" style="  max-width: 70px;  max-height: 70px;" />
                         </td>
+                        <td>
+                            <span v-if="row.soap_type == '01'" class="badge badge-demo">Demo</span>
+                            <span v-if="row.soap_type == '02'" class="badge badge-produccion">Producción</span>
+                            <span v-if="row.soap_type == '03'" class="badge badge-interno">Interno</span>
+                        </td>
                         <td class="text-center">
                             <template v-if="!row.locked">
                                 <el-switch v-model="row.locked_tenant" style="display: block" @change="changeLockedTenant(row)"></el-switch>
@@ -359,8 +366,9 @@
                         <td class="">
                             <a :href="`http://${row.hostname}`" style="color:blue" target="_blank">{{ row.hostname }}</a>
                         </td>
-                        <td>{{ row.name }}</td>
                         <td>{{ row.number }}</td>
+                        <td>{{ row.name }}</td>
+                        
 
                         <!-- <td>
                             <template v-if="row.start_billing_cycle">
@@ -386,11 +394,7 @@
                             <span v-if="row.soap_type == '03'" class="badge badge-info">Interno</span>
                         </td> -->
 
-                        <td>
-                            <span v-if="row.soap_type == '01'" class="badge badge-demo">Demo</span>
-                            <span v-if="row.soap_type == '02'" class="badge badge-produccion">Producción</span>
-                            <span v-if="row.soap_type == '03'" class="badge badge-interno">Interno</span>
-                        </td>
+                        
                         <!-- <td class="text-center">
                             <label>
                                 <strong>{{ row.count_doc }}</strong>

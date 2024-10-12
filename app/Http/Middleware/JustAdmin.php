@@ -94,12 +94,14 @@ class JustAdmin
             } else {
 
                 $internet = (bool) $config->internet;
+                $billar = (bool) $config->billar;
                 $configuration = Configuration::first();
                 if ($configuration->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
                     return redirect($redirect_to);
                 }
-                $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/";
+                /* $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/"; */
+                $redirect_to = $internet ? "/internet/worker/" : ($billar ? "/billar/worker/" : "/caja/worker/");
 
                 $worker_type = WorkersType::find($user->worker_type_id);
                 if ($worker_type) {
@@ -108,7 +110,7 @@ class JustAdmin
                 } else {
                     $description_type = "";
                 }
-
+                
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
                 } else if (str_contains($description_type, 'CAJ')||str_contains($description_type, 'VEN')||str_contains($description_type, 'ANALISTA')) {

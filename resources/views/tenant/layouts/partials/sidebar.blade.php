@@ -909,21 +909,19 @@
                         </a>
                     </li>
                 </ul>
-
-
             </li>
         @endif
         @if ($config->restaurant && !$roleService->isLogistic())
             <li>
-                <a href="#configuration" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
-                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'catalogs' ? 'active' : '' }}{{ $path[0] === 'advanced' ? 'active' : '' }}{{ $path[0] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
-                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }}{{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}">
+                <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-restaurant icon-parent"></i>
                     <span class="label ">Restaurante</span>
                 </a>
 
-                <ul id="configuration" class="collapse">
+                <ul id="restaurantUl" class="collapse">
 
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
@@ -963,15 +961,14 @@
 
         @if ($config->hotels && !$roleService->isLogistic())
             <li>
-                <a href="#configuration" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
-                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'catalogs' ? 'active' : '' }}{{ $path[0] === 'advanced' ? 'active' : '' }}{{ $path[0] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
-                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }}{{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}">
-                    <!-- <i class="icofont-5-star-hotel icon-parent"></i> -->
+                <a href="#hotelUl" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-hotel icon-parent"></i>
                     <span class="label">Hotel</span>
                 </a>
-                <ul id="configuration" class="collapse">
+                <ul id="hotelUl" class="collapse">
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
                             href="{{ route('restaurant.rooms') }}">
@@ -985,18 +982,17 @@
 
         @if ($config->modo_billar && !$roleService->isLogistic())
             <li>
-                <a href="#configuration" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
-                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'catalogs' ? 'active' : '' }}{{ $path[0] === 'advanced' ? 'active' : '' }}{{ $path[0] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
-                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }}{{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}">
-                    <!-- <i class="icofont-5-star-hotel icon-parent"></i> -->
+                <a href="#billarUl" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-billiard-ball icon-parent"></i>
                     <span class="label">Casino</span>
                 </a>
-                <ul id="configuration" class="collapse">
+                <ul id="billar" class="collapse">
                     <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
-                            href="{{ route('restaurant.billar') }}">
+                        <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
+                            href="{{ route('billar.billar') }}">
                             <i class="fas fa-biliard"></i>
                             Mesas Billar
                         </a>

@@ -254,11 +254,6 @@ const app = new Vue({
             import(
                 "../../modules/Inventory/Resources/assets/js/inventory/inventory.vue"
             ),
-
-        /* "productos-index": () =>
-            import(
-                "../../modules/Inventory/Resources/assets/js/inventory/productos.vue"
-            ), */
         "restaurant-food-list": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/food/index.vue"
@@ -278,6 +273,10 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/configuration/items.vue"
             ),
+        "tenant-billar-items": () =>
+            import(
+                "../../modules/Billar/Resources/assets/js/views/configuration/items.vue"
+            ),
 
         "restaurant-ordens-index": () =>
             import(
@@ -288,7 +287,6 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/login/login.vue"
             ),
-
         "tenant-item-color-size-index": () =>
             import("./views/item_color_size/index.vue"),
         "tenant-item-sets-index": () => import("./views/item_sets/index.vue"),
@@ -309,6 +307,10 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/pos/index.vue"
             ),
+            "tenant-billar-pos": () =>
+                import(
+                    "../../modules/Billar/Resources/assets/js/views/pos/index.vue"
+                ),
         "tenant-dashboard-index": () =>
             import(
                 "../../modules/Dashboard/Resources/assets/js/views/index.vue"
@@ -687,6 +689,9 @@ const app = new Vue({
         "tenant-internet-planes": () =>
             import(
                 "../../modules/Internet/Resources/assets/js/view/planes/index.vue"
+            ),
+        "tenant-billar-pos": () => 
+            import("../../modules/Billar/Resources/assets/js/views/pos/index.vue"   
             ),
         "items-stock": () => import("./views/items/check_stock.vue"),
 

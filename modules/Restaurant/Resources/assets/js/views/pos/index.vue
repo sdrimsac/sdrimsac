@@ -1362,13 +1362,6 @@
       @sendOrdens="sendOrdens"
       :showTables.sync="showTables"
     ></tables>
-    <billar
-      :configuration="configuration"
-      @creatingOrden="creatingOrden"
-      @sendOrdens="sendOrdens"
-      :billarSeeId="billarSeeId"
-      :showBillar.sync="showBillar"
-    ></billar>
     <tables-rooms
       :cash_id.sync="cashId"
       :configuration="configuration"
@@ -1541,7 +1534,6 @@ const WarehousesDetail = () =>
   );
 const DetractionPayment = () => import("./partials/detraction_payment.vue");
 const Tables = () => import("./partials/tables.vue");
-const billar = () => import("./partials/billar.vue");
 const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
 const DocumentsPrint = () => import("./partials/documents_print.vue");
@@ -1613,7 +1605,6 @@ export default {
     ListFood,
     ListOrden,
     Tables,
-    billar,
     ListFoodMobiles,
     PromotionCanje,
     TablesRooms,
@@ -1646,10 +1637,8 @@ export default {
       searchSecondName: false,
       area_id: null,
       isHotelArea: false,
-      has_billar: false,
       isPiscinaArea: false,
       roomSeeId: null,
-      billarSeeId: null,
       tablesClean: [],
       tablesLeave: [],
       clientSaleNoteNumber: null,
@@ -1688,12 +1677,10 @@ export default {
       ordensPending: 0,
       isCreatingOrden: false,
       table: {},
-      billar: {},
       tableSelectedNumber: null,
       clientTableData: {},
       tactil: false,
       showTables: false,
-      showBillar: false,
       showTablesRooms: false,
       showHistoryCash: false,
       itemDefault: null,
@@ -2142,18 +2129,8 @@ export default {
             this.configuration.restaurant &&
             !this.configuration.college &&
             this.worker.area.description.toUpperCase() !== "HOTEL" &&
-            this.worker.area.description.toUpperCase() !== "CAJA PISCINA" &&
-            this.worker.area.description.toUpperCase() !== "BILLAR"
-        },
-        {
-          id: 209,
-          title: [" Zona Billar "],
-          icon: "fas fa-map-pin ",
-          visible:
-            this.configuration.modo_billar &&
-            this.worker.area.description.toUpperCase() == "BILLAR" &&
-            !this.isSeller &&
-            !this.isAnalist
+            this.worker.area.description.toUpperCase() !== "CAJA PISCINA"
+            
         },
 
         {
@@ -2358,15 +2335,7 @@ export default {
         }  else {
           this.openTables();
         }
-      } 
-      /* if (this.configuration.modo_billar){
-        if (this.isCurrentAreaBillar()){
-          this.billarSeeId = null;
-          this.openBillar();
-        } else {
-          this.openTables();
-        }
-      } */ else {
+      }  else {
         this.openTables();
       }
     },
@@ -2390,15 +2359,7 @@ export default {
             } else {
               this.openTables();
             }
-          } 
-          /* if (this.configuration.modo_billar){
-            if (this.isCurrentAreaBillar()){
-              this.billarSeeId = null;
-              this.openBillar();
-            } else {
-              this.openTables();
-            }
-          } */ else {
+          }  else {
             if (this.configuration.restaurant) {
               this.openTables();
             }
@@ -2413,9 +2374,6 @@ export default {
     },
     isCurrentAreaHotel() {
       return this.worker.area.description.toUpperCase() == "HOTEL";
-    },
-    isCurrentAreaBillar() {
-      return this.worker.area.description.toUpperCase() == "BILLAR";
     },
     setItemsToLiquidate(items, consignment_id) {
       this.consignment_id = consignment_id;
@@ -2777,10 +2735,6 @@ export default {
         case 63:
           this.showConsolidatedList = true;
           break;
-        case 209:
-          this.billarSeeId = null;
-          this.openBillar();
-          break;
         case 97:
           this.showDialogDetraction = true;
           break;
@@ -2861,9 +2815,6 @@ export default {
     },
     openTables() {
       this.showTables = true;
-    },
-    openBillar(id) {
-      this.showBillar = true;
     },
     openTablesRooms(id) {
       this.showTablesRooms = true;
@@ -4129,7 +4080,6 @@ export default {
         guides: [],
         payments: [],
         hotel: {},
-        billar: {},
         additional_information: null,
         payment_condition_id: "01",
         printerOn: false,
@@ -5015,9 +4965,6 @@ export default {
         }
         if (area.description == "CAJA PISCINA") {
           this.isPiscinaArea = true;
-        }
-        if (area.description == "BILLAR") {
-          this.has_billar = true;
         }
       });
 

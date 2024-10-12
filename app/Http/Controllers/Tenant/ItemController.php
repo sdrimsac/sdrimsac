@@ -852,23 +852,23 @@ class ItemController extends Controller
             $item->image = $file_name;
             $food->image = $file_name;
             //--- IMAGE SIZE MEDIUM
-            /* $image = \Image::make($temp_path);
+            $image = \Image::make($temp_path);
             $file_name = Str::slug($item->description) . '-' . $datenow . '_medium' . '.' . $file_name_old_array[1];
             $image->resize(512, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
             Storage::put($directory . $file_name,  (string) $image->encode('jpg', 30));
-            $item->image_medium = $file_name; */
+            $item->image_medium = $file_name;
             //--- IMAGE SIZE SMALL
-            /* $image = \Image::make($temp_path);
+            $image = \Image::make($temp_path);
             $file_name = Str::slug($item->description) . '-' . $datenow . '_small' . '.' . $file_name_old_array[1];
             $image->resize(256, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
             Storage::put($directory . $file_name,  (string) $image->encode('jpg', 20));
-            $item->image_small = $file_name;*/
+            $item->image_small = $file_name;
         } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
             $item->image = 'imagen-no-disponible.jpg';
             $food->image = 'imagen-no-disponible.jpg';

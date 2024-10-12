@@ -243,18 +243,7 @@ Route::prefix('caja')->group(function () {
         Route::get('room_services/record/{id}', 'TableRoomServiceController@record');
         Route::delete('room_services/record/{id}', 'TableRoomServiceController@destroy');
         //MESAS BILLAR */
-        Route::get('billar', 'TableBillarController@index')->name('restaurant.billar');
-        Route::get('billar/columns', 'TableBillarController@columns');
-        Route::get('billar/check', 'TableBillarController@check');
-        Route::get('billar/records', 'TableBillarController@records');
-        Route::get('billar/tables', 'TableBillarController@get_tables');
-        Route::get('billar/orden/{id}', 'TableBillarController@get_ordens');
-        Route::get('billar/record/{id}', 'TableBillarController@record');
-        Route::post('billar', 'TableBillarController@store');
-        Route::post('billar', 'TableBillarController@store2');
-        Route::post('billar/disabled-table', 'TableBillarController@disabled');
-        Route::post('billar/enabled-table', 'TableBillarController@enabled');
-        Route::post('billar/massive', 'TableBillarController@store_massive');
+        
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');
@@ -267,9 +256,7 @@ Route::prefix('caja')->group(function () {
         Route::post('tables/disabled-table', 'TableController@disabled');
         Route::post('tables/enabled-table', 'TableController@enabled');
         Route::post('tables/massive', 'TableController@store_massive');
-        //casino */
-        /* Route::post('casino/store', 'CasinoController@store'); */
-        /* Route::post('casino', 'CasinoController@store'); */
+        
         //**** TRABAJADORES */
         Route::get('workers', 'WorkerController@index')->name('restaurant.workers');
         Route::get('workers/records', 'WorkerController@records');
@@ -337,11 +324,6 @@ Route::prefix('caja')->group(function () {
             Route::delete('incomes/{id}', [IncomesController::class, 'destroy']);
             Route::get('incomes/columns', [IncomesController::class, 'columns']);
             Route::get('incomes/tables', [IncomesController::class, 'tables']);
-
-
-            //Ingresos
-
-            //Cash
 
             Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');;
             Route::get('cash/get-final-balance/{cash_id}', [CashController::class, 'getFinalBalance']);
