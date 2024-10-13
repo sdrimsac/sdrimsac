@@ -189,6 +189,15 @@ class BillarController extends Controller
 
         return compact('ordens');
     }
+    public function record($id)
+    {
+        $table = Table::find($id);
+
+        return [
+            'success' => true,
+            'data' => $table
+        ];
+    }
     public function records(Request $request)
     {
         $column = $request->input('column');
@@ -249,15 +258,6 @@ class BillarController extends Controller
                     }
                 }
             );
-    }
-    public function record($id)
-    {
-        $table = Table::find($id);
-
-        return [
-            'success' => true,
-            'data' => $table
-        ];
     }
     public function store_massive(Request $request)
     {

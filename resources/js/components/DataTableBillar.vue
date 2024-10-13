@@ -21,7 +21,7 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label for="value">
                             Buscar
                         </label>
@@ -116,8 +116,8 @@
                             >
                             </el-input>
                         </template>
-                    </div>
-                    <div
+                    </div> -->
+                    <!-- <div
                         v-if="
                             search.column == 'date_of_issue' ||
                                 search.column == 'date_of_due' ||
@@ -141,8 +141,8 @@
                             @change="getRecords"
                         >
                         </el-date-picker>
-                    </div>
-                    <div
+                    </div> -->
+                    <!-- <div
                         class="col-lg-3 col-md-3 col-sm-12 pb-2"
                         v-if="resource == 'items'"
                     >
@@ -163,8 +163,8 @@
                             >
                             </el-option>
                         </el-select>
-                    </div>
-                    <div
+                    </div> -->
+                    <!-- <div
                         class="col-lg-3 col-md-3 col-sm-12 pb-2"
                         v-if="resource == 'items'"
                     >
@@ -186,7 +186,7 @@
                             >
                             </el-option>
                         </el-select>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div v-if="resource == 'items'" class="row"></div>

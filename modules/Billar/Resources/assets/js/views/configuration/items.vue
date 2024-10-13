@@ -68,35 +68,23 @@
               <th class="text-white">#</th>
               <th
                 class="text-white"
-                v-if="
-                                    type != 'caja/tables' &&
-                                        type != 'caja/rooms' && 
-                                        type != 'caja/billar'
+                v-if=" type != 'billar'
                                 "
               >Descripción</th>
               <th
                 class="text-white"
-                v-if="
-                                    type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                v-if=" type == 'billar'
                                 "
               >Número</th>
               <th class="text-white" v-if="type == 'caja/rooms'">Tipo</th>
               <th
                 class="text-white"
-                v-if="
-                                    type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                v-if="  type == 'billar'
                                 "
               >Área</th>
               <th
                 class="text-white"
-                v-if="
-                                    type == 'caja/tables' ||
-                                        type == 'caja/rooms' ||
-                                        type == 'caja/billar'
+                v-if=" type == 'billar'
                                 "
               >Establecimiento</th>
               <th class="text-white text-end">Acciones</th>
@@ -106,37 +94,21 @@
             <tr slot-scope="{ index, row }">
               <td>{{ index }}</td>
               <td
-                v-if="
-                                    type != 'caja/tables' &&
-                                        type != 'caja/rooms' && 
-                                        type != 'caja/billar'
-                                "
+                v-if=" type != 'billar' "
               >{{ row.description }}</td>
               <td
-                v-if="
-                                    type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                v-if=" type == 'billar'
                                 "
               >{{ row.number }}</td>
               <td v-if="type == 'caja/rooms'">{{ row.type }}</td>
               <td
-                v-if="
-                                    type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                v-if="  type == 'billar'
                                 "
               >{{ row.area.description }}</td>
               <td
-                v-if="
-                                    type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                v-if="  type == 'billar'
                                 "
               >{{ row.establishment }}</td>
-              <td v-if="type == 'caja/rooms'">{{ row.tower }}</td>
-              <td v-if="type == 'caja/rooms'">{{ row.floor }}</td>
-              <td v-if="type == 'caja/areas'">{{ row.printer }}</td>
               <td v-if="type == 'caja/areas'">
                 <el-switch
                   v-if="row.printer == null"
@@ -248,7 +220,7 @@
 <script>
 import CreateForm from "./form.vue";
 import CreateFormMassive from "./formTableMassive.vue";
-import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
+import DataTable from "../../../../../../../resources/js/components/DataTableBillar.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 export default {
@@ -290,9 +262,7 @@ export default {
   created() {
     console.log(this.type);
     if (
-      this.type == "caja/tables" ||
-      this.type == "caja/rooms" ||
-      this.type == "caja/billar"
+      this.type == "billar"
     ) {
       this.getTables();
     }
@@ -333,20 +303,17 @@ export default {
     },
     async getTables() {
       this.$http
-        .get(`/caja/areas/records?column=description&page=1&value`)
+        .get(`/billar/areas/records?column=description&page=1&value`)
         .then(response => {
           this.areas = response.data.data;
           console.log("rfrsfsdf", this.areas);
         });
       this.$http
-        .get(`/caja/status-tables/records?column=description&page=1&value`)
+        .get(`/billar/status-tables/records?column=description&page=1&value`)
         .then(response => {
           this.statusTable = response.data.data;
           console.log("aaaaaa", this.statusTable);
         });
-      this.$http.get(`/caja/rooms/types`).then(response => {
-        this.types = response.data.data;
-      });
       this.$http.get(`/establishments/records`).then(response => {
         this.establishments = response.data.data;
 

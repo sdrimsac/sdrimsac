@@ -171,16 +171,6 @@ export default {
     this.initForm();
   },
   methods: {
-    getLabelText(type) {
-      switch (type) {
-        case "caja/tables":
-          return "mesa";
-        case "caja/billar":
-          return "mesa billar";
-        case "caja/rooms":
-          return "habitación";
-      }
-    },
     async getDetails() {
       const response = await this.$http.get("/billar/detail_table");
       if (response.status == 200) {
@@ -277,24 +267,24 @@ export default {
           ...s,
           selected: false
         }));
-        this.all_floors = floors;
+        /* this.all_floors = floors;
         this.all_towers = towers;
         this.towers = towers;
         let [tower] = towers;
         this.form.tower_id = tower.id;
 
-        this.filterFloorsByTower(tower.id);
+        this.filterFloorsByTower(tower.id); */
       } else {
         this.$toast.warning("Ocurrió un error");
       }
     },
-    filterFloorsByTower(tower_id) {
+    /* filterFloorsByTower(tower_id) {
       this.form.floor_id = null;
       this.form.tower_id = tower_id;
       this.floors = this.all_floors.filter(f => {
         return f.tower_id == tower_id;
       });
-    },
+    }, */
     selectService(idx) {
       this.all_services[idx].selected = !this.all_services[idx].selected;
     },
@@ -354,7 +344,7 @@ export default {
         );
 
         this.form = response.data.data;
-        if (this.type === "billar") {
+        /* if (this.type === "billar") {
         let { floor, description } = this.form;
         this.detail = description;
         this.restoreDetail();
@@ -370,7 +360,7 @@ export default {
           }
           return s;
         });
-      }
+      } */
       }
 
       /* if (this.type == "caja/rooms") {
@@ -440,7 +430,7 @@ export default {
         .filter(s => s.selected)
         .map(s => s.id);
       this.$http
-        .post(`/${this.resource}`, this.form)
+        .post(`/billar/${this.resource}`, this.form)
         .then(response => {
           if (response.data.success) {
             this.$toast.success(response.data.message);

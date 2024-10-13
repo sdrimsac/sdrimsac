@@ -118,7 +118,7 @@ export default {
         return {
             title: null,
             showDialog: false,
-            resource: "caja/worker/incomes",
+            resource: "billar/worker/incomes",
             recordId: null,
             showDialog_report: false
         };

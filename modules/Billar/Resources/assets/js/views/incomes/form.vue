@@ -364,7 +364,7 @@ export default {
         },
         submit_Category() {
             this.$http
-                .post(`/caja/worker/category`, this.form_category)
+                .post(`/billar/worker/category`, this.form_category)
                 .then(response => {
                     if (response.data.success) {
                         this.register_category = false;
@@ -391,7 +391,7 @@ export default {
         },
         submit_Subcategory() {
             this.$http
-                .post(`/caja/worker/subcategories`, this.form_subcategory)
+                .post(`/billar/worker/subcategories`, this.form_subcategory)
                 .then(response => {
                     if (response.data.success) {
                         this.register_subcategory = false;

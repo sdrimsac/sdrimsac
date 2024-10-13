@@ -166,7 +166,7 @@ export default {
         return {
             title: null,
             showDialog: false,
-            resource: "caja/worker/expenses",
+            resource: "billar/worker/expenses",
             recordId: null,
             showDialog_report: false,
             showItemsDetalle: [],
@@ -187,7 +187,7 @@ export default {
             let { column, value } = query;
 
             window.open(
-                `/caja/report-boxes/reports_type?type_box=expenses&column=${column}&value=${value}&type=${type}`
+                `/billar/report-boxes/reports_type?type_box=expenses&column=${column}&value=${value}&type=${type}`
             );
             console.log("report-boxes/reports_type");
         },

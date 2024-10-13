@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>Consolidado</strong></h3>
+        <h3 align="center" class="title"><strong>Consolidado aaa</strong></h3>
     </div>
     <br>
     <div style="margin-top:20px; margin-bottom:15px;">
@@ -43,6 +43,9 @@
                         <strong>Número de cotizaciones:</strong> {{ $count }}
                     </p>
                 </td>
+                {{-- <td> TOTAL
+                     {{ $total}}
+                </td> --}}
             </tr>
         </table>
     </div>
@@ -53,7 +56,25 @@
             <div class=" ">
 
                 <table width="100%" class="">
-
+                    @php
+                        $total = 0;
+                        $total_quantity = 0;
+                    @endphp
+                    @foreach ($records as $idx => $value)
+                        @php
+                            $total += $value->total;
+                            $total_quantity += $value->total_quantity;
+                        @endphp
+                    @endforeach
+                    <tr>
+                        <td colspan="3" style="text-align: right; padding: 8px; border: 1px solid #ddd;">
+                            <strong>TOTAL</strong>
+                        </td>
+                        <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                            <strong>S/ {{ $total }}</strong>
+                        </td>
+                    </tr>
+                    <tr></tr>
                     <tr>
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">#
@@ -105,10 +126,10 @@
                     <tfoot>
                         <tr>
                             <td colspan="3" style="text-align: right; padding: 8px; border: 1px solid #ddd;">
-                                <strong>TOTAL</strong>
+                                <strong>TOTAL PAQUETES</strong>
                             </td>
                             <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                <strong>S/ {{ $total }}</strong>
+                                <strong>{{ $total_quantity }}</strong>
                             </td>
                         </tr>
                     </tfoot>
@@ -173,7 +194,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="3" style="text-align: right; padding: 8px; border: 1px solid #ddd;">
-                                <strong>TOTAL</strong>
+                                <strong>TOTAL UNIDAD</strong>
                             </td>
                             <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                 <strong>{{ $total_quantity }}</strong>

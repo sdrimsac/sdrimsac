@@ -48,7 +48,7 @@ use Modules\Restaurant\Events\OrdenPaidEvent;
 use Modules\Restaurant\Http\Requests\ExpensesRequest;
 use Modules\Restaurant\Http\Resources\OrdenCollection;
 use Modules\Restaurant\Http\Resources\ExpensesResource;
-use Modules\Restaurant\Http\Resources\FoodCollection;
+use Modules\Billar\Http\Resources\FoodCollection;
 use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Events\OrdenPendingEvent;
 use Modules\Restaurant\Events\PrintEvent;

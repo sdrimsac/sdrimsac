@@ -178,7 +178,7 @@
           </div>
 
           <div class="col-6">
-            <div class="row" v-if="!isSellerConsolidated">
+            <div class="row" >
               <h3 v-if="!clientTableData.table" class="text-white" style="text-align: right">
                 Total {{ currency_id }}
                 {{ (total + totalOrdenItems).toFixed(2) }}
@@ -243,30 +243,11 @@
           <div>
             <template v-if="!configuration.sale_note_credit_confirm">
               <template
-                v-if="
-                                    (this.quotation_stock &&
-                                        configuration.quotation &&
-                                        localOrden.length != 0) ||
-                                        this.isSeller
-                                "
+                v-if=" (this.quotation_stock &&
+                       configuration.quotation &&
+                       localOrden.length != 0) ||
+                       this.isSeller"
               >
-                <!-- <button
-                                    alt="Cotizar"
-                                    class="btn btn-light mt-2"
-                                    type="button"
-                                    v-if="isSellerConsolidated"
-                                    @click="openQuotationList"
-                                    style="max-height: 45px ; max-width: 80px;"
-                                >
-                                    <i
-                                        class="fas fa-list"
-                                        style="color: var(--primary) !important"
-                                    ></i>
-                                    <br />
-                                    <small>
-                                        Cotizaciones
-                                    </small>
-                </button>-->
                 <button
                   alt="Cotizar"
                   class="btn btn-light mt-2"
@@ -311,12 +292,10 @@
             </button>
             <button
               :disabled="isSeller"
-              v-if="
-                                configuration.quotation &&
-                                    !isSeller &&
-                                    !isAnalist &&
-                                    !isSellerConsolidated
-                            "
+              v-if=" configuration.quotation &&
+                !isSeller &&
+                !isAnalist &&
+                !isSellerConsolidated"
               alt="Cotizar "
               class="btn btn-light mt-2"
               type="button"
@@ -604,22 +583,6 @@
                 <span class="text-white">Variación</span>
               </el-checkbox>
             </template>
-            <!-- <template v-if="!isAnalist && !isSellerConsolidated">
-              <el-checkbox
-                class="margin-left:5px;"
-                :disabled="isSeller"
-                v-model="quotation_stock"
-                @change="setQuotationStock"
-                v-if="configuration.quotation" 
-              >
-                <span class="text-white">
-                  Para cotizar
-                  <el-tooltip content="No se toma en cuenta el stock de los productos">
-                    <i class="el-tooltip fa fa-info-circle item"></i>
-                  </el-tooltip>
-                </span>
-              </el-checkbox>
-            </template>-->
             <template
               v-if="
                                 (commercialTreatments.length > 0 &&

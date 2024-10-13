@@ -11,9 +11,8 @@
                             <th v-if="!item_id">Producto</th>
                             <th>Fecha y hora transacción</th>
                             <th>Tipo transacción</th>
-                                                        <th>Comentario</th>
+                            <th>Comentario</th>
                             <th>Número</th>
-
                             <th>NV. Asociada</th>
                             <th>Feha emisión</th>
                             <th>Entrada</th>
@@ -49,7 +48,7 @@
     import DataTable from '../../components/DataTableKardex.vue'
 
     export default {
-        props: ["establecimiento"],
+        props: ["establecimiento", "configurations"],
         components: {DataTable},
         data() {
             return {

@@ -24,5 +24,5 @@
 
 
 @section('content')
-    <tenant-restaurant-index :configuration="{{ $configuration }}"></tenant-restaurant-index>
+    <tenant-billar-index :configuration="{{ $configuration }}"></tenant-billar-index>
 @endsection
