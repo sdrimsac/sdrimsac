@@ -4,6 +4,7 @@
         title="Notas de venta - Crédito"
         @open="open"
         @close="close"
+        width="80%"
         append-to-body
     >
         <div class="row m-2">
@@ -49,9 +50,9 @@
                             </small>
                         </td>
                         <td>{{ record.full_number }}</td>
-                        <td>{{ record.total }}</td>
+                        <td>{{ Number(record.total).toFixed(2) }}</td>
                         <td class="text-warning">
-                            {{ record.remain.toFixed(2) }}
+                            {{ Number(record.remain).toFixed(2) }}
                         </td>
                         <td>
                             <button

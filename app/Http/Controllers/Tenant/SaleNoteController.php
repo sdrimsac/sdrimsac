@@ -273,6 +273,7 @@ class SaleNoteController extends Controller
     {
         $value = $request->value;
         $records = SaleNote::where('credit_cash', true)
+            ->where('total', '>', DB::raw('total_payment'))
             ->where('paid', false);
         if ($value) {
             $records = $records->whereHas('customer', function ($query) use ($value) {
@@ -1448,30 +1449,32 @@ class SaleNoteController extends Controller
                     foreach ($request->payments as $payment) {
 
                         $total_payment += $payment['payment'];
-                    }
-
-                    if (isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "01" || isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "10") {
-                        if ($total_payment >= $this->sale_note->total) {
-                            $paid = 1;
-                        }
-                        // $paid = 1;
-                    }
-                    //si el index payment_method_type_id no existe poner paid a true
-                    if (!isset($request->payments[0]['payment_method_type_id'])) {
-                        $paid = 1;
-                    } else {
-
+                        
                         if ($payment['payment'] > 0) {
                             $record = new SaleNotePayment;
                             $record->fill($payment);
                             $payment["payment_destination_id"] = "cash";
                             $record->sale_note_id = $this->sale_note->id;
                             $record->save();
-
                             $this->createGlobalPayment($record, $payment);
                         }
                     }
+
+                
+                    //si el index payment_method_type_id no existe poner paid a true
+                    if (!isset($request->payments[0]['payment_method_type_id'])) {
+                        $paid = 1;
+                    } else {
+
+                    }
+                    if (isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "01" || isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "10") {
+                        if ($total_payment >= $this->sale_note->total) {
+                            $paid = 1;
+                        }
+                        // $paid = 1;
+                    }
                 }
+                
 
                 if ($request->generate === null || $request->generate === false) {
                     //advances
