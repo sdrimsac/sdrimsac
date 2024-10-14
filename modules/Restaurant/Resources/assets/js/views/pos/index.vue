@@ -1160,7 +1160,7 @@
           <!-- sidebarmodal fin  -->
           <div class="dropdown-as-select d-inline-block" data-childselector="span">
             <button
-              v-if="!isSellerConsolidated"
+              
               class="btn p-0"
               type="button"
               data-bs-toggle="dropdown"
@@ -1178,14 +1178,6 @@
               >
                 <i class="fas fa-list"></i>
               </span>
-            </button>
-            <button
-              v-if="isSellerConsolidated"
-              type="button"
-              class="btn btn-primary"
-              @click="openQuotationDialog"
-            >
-              <i class="fas fa-list"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-end col-md-2 col-1">
               <div
@@ -1518,7 +1510,7 @@ import {
 import { calculateRowItem } from "../../../../../../../resources/js/helpers/functions";
 
 import queryString from "query-string";
-
+// cotizaciones de modal
 const QuotationListModal = () => import("./partials/quotation_list_modal.vue");
 const DispatchModal = () => import("./partials/dispatch_modal.vue");
 
@@ -2092,6 +2084,12 @@ export default {
           id: 63,
           title: ["Cot.", "Consolidaciones"],
           icon: "fas fa-money-check-alt",
+          visible: this.configuration.consolidated_quotations && !this.isSeller
+        },
+        {
+          id: 214,
+          title: ["Cotizaciones"],
+          icon: "fas fa-money-check-alt",
           visible: this.configuration.consolidated_quotations
         },
         {
@@ -2118,7 +2116,7 @@ export default {
           title: ["Clientes"],
           //icon: "fas fa-hand-holding-water"
           icon: "fas fa-user ",
-          visible: true
+          visible: this.isSeller ? this.configuration.button_consolidate : true
         },
         {
           id: 5,
@@ -2732,6 +2730,9 @@ export default {
     },
     trigerFunction(id) {
       switch (id) {
+        case 214:
+          this.showQuotationListDialog = true;
+          break;
         case 63:
           this.showConsolidatedList = true;
           break;

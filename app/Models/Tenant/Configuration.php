@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'button_consolidate',
         'comercial_name',
         'pricing_policy_venta',
         'sale_note_venta',
@@ -262,6 +263,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'button_consolidate' => 'boolean',
         'comercial_name' => 'boolean',
         'pricing_policy_venta' => 'boolean',
         'sale_note_venta' => 'boolean',
@@ -464,6 +466,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'button_consolidate' => (bool)$this->button_consolidate,
             'comercial_name' => (bool)$this->comercial_name,
             'pricing_policy_venta' => (bool)$this->pricing_policy_venta,
             'sale_note_venta' => (bool)$this->sale_note_venta,

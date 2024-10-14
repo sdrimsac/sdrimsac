@@ -1085,6 +1085,26 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="fas fa-hand-holding-usd tab-icon"></i> Clientes en Vendedor
+                                  </label>
+                                  <el-tooltip
+                                    content="Otorgar Créditos en Notas de Venta, SIN CUOTAS"
+                                  >
+                                    <i class="fa fa-info-circle"></i>
+                                  </el-tooltip>
+                                  <el-switch
+                                    v-model="form.button_consolidate"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('clientes vendedor', form.button_consolidate, 'button_consolidate', 'handHoldingUsdIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
                             </div>
                           </div>
 
