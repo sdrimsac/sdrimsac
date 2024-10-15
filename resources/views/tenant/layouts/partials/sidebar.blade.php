@@ -1000,7 +1000,7 @@
                 </ul>
             </li>
         @endif
-        {{-- @if ($config->workshop && !$roleService->isLogistic()) --}}
+        @if ($config->workshop && !$roleService->isLogistic())
             <li>
                 <a href="#workshopUl" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
@@ -1027,7 +1027,7 @@
                     </li>
                 </ul>
             </li>
-        {{-- @endif --}}
+        @endif
 
 
         @if ($user->type == 'superadmin' || ($roleService->isArca() && $config->hotels))

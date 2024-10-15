@@ -1249,34 +1249,17 @@
                             <div class="row align-items-end">
                               <div
                                 :class="
-                                                                    `${
-                                                                        isSellerConsolidated
-                                                                            ? 'col-6'
-                                                                            : 'col-4 col-md-5 col-lg-4 col-xl-4'
-                                                                    }`
-                                                                "
+                                `${
+                                  isSellerConsolidated
+                                  ? 'col-6'
+                                  : 'col-4 col-md-5 col-lg-4 col-xl-4'
+                                  }`
+                                  "
                               >
                                 <span class="fw-bold">
                                   Cantidad
                                   <br />
                                   <div class="input-group spinner" data-trigger="spinner">
-                                    <!-- <template v-if="configuration.maderera">
-                                      <input
-                                        v-if="order_pend.categoriaMadera"
-                                        type="text"
-                                        class="form-control text-center"
-                                        v-model="
-                                                                                order_pend.categoriaMadera.quantity
-                                                                            "
-                                        data-rule="currency"
-                                        @input="
-                                                                                verifyStock(
-                                                                                    order_pend,
-                                                                                    indexx
-                                                                                )
-                                                                            "
-                                      />
-                                    </template>-->
                                     <input
                                       type="text"
                                       :readonly="
@@ -1409,8 +1392,6 @@
                               </div>
                                <!-- vendedor  -->
                               <template
-                                 
-                                v-if="isSellerConsolidated"
                               >
                                 <div class="col-4 col-md-5 col-lg-5 col-xl-4">
                                   <span class="time font-weight-light">
@@ -1420,7 +1401,7 @@
                                       <el-input
                                         class="custom_input"
                                         :disabled="
-                                               configuration.editar_precio_politica == false
+                                              isSellerConsolidated || configuration.editar_precio_politica === false
                                                                                 "
                                         type="number"
                                         v-model=" order_pend.price"
@@ -1491,7 +1472,7 @@
                                     size="medium"
                                   ></el-input>
                                   <template
-                                    v-if="configuration.edit_subtotal_box && !isSeller"
+                                    v-if="configuration.edit_subtotal_box && !isSellerConsolidated"
                                   >
                                     <el-tag
                                       v-if="!order_pend.change_subtotal"

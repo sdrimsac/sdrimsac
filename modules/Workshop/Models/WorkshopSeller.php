@@ -4,7 +4,7 @@ namespace App\Models\Tenant;
 
 
 
-class Seller extends ModelTenant
+class WorkshopSeller extends ModelTenant
 {
     protected $table = 'sellers';
     
