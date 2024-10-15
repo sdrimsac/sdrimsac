@@ -1000,6 +1000,34 @@
                 </ul>
             </li>
         @endif
+        {{-- @if ($config->workshop && !$roleService->isLogistic()) --}}
+            <li>
+                <a href="#workshopUl" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                    {{-- <i class="icofont-billiard-ball icon-parent"></i> --}}
+                    <i class="icofont-ui-settings icon-parent"></i>
+                    <span class="label">Mecanica</span>
+                </a>
+                <ul id="workshop" class="collapse">
+                    <li>
+                        <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
+                            href="{{ route('billar.billar') }}">
+                            <i class="fas fa-biliard"></i>
+                            Personal Mecanica
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
+                            href="{{ route('billar.billar') }}">
+                            <i class="fas fa-biliard"></i>
+                            Tipos Vehiculos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {{-- @endif --}}
 
 
         @if ($user->type == 'superadmin' || ($roleService->isArca() && $config->hotels))

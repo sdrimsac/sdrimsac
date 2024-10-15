@@ -92,7 +92,6 @@
           </div>
         </div>
       </div>
-
       <div v-if="screenWidth < 600" class="d-flex flex-wrap">
         <div v-for="(option, idx) in optionsMenu" :key="idx" v-show="option.visible">
           <div
@@ -830,8 +829,8 @@
                                       style="width: 100%"
                                       type="number"
                                       v-model="
-                                                                                variationItem.sale_unit_price
-                                                                            "
+                                      variationItem.sale_unit_price
+                                      "
                                     >
                                       <span
                                         slot="prepend"
@@ -961,11 +960,11 @@
                                       style="width: 100%"
                                       type="number"
                                       v-model="
-                                                                                ord.price
-                                                                            "
+                                        ord.price
+                                        "
                                       @input="
-                                                                                calculateTotal
-                                                                            "
+                                        calculateTotal
+                                        "
                                     >
                                       <template slot="prepend">
                                         {{
@@ -1252,7 +1251,7 @@
                                 :class="
                                                                     `${
                                                                         isSellerConsolidated
-                                                                            ? 'col-12'
+                                                                            ? 'col-6'
                                                                             : 'col-4 col-md-5 col-lg-4 col-xl-4'
                                                                     }`
                                                                 "
@@ -1281,34 +1280,34 @@
                                     <input
                                       type="text"
                                       :readonly="
-                                                                                (order_pend
-                                                                                    .food
-                                                                                    .item
-                                                                                    .is_set &&
-                                                                                    !configuration.item_set_quantity_pos) ||
-                                                                                    isConsignment ||
-                                                                                    !configuration.quantity_cash ||
-                                                                                    order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .series_enabled ==
-                                                                                        1 ||
-                                                                                    order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .has_color_size ==
-                                                                                        1 ||
-                                                                                    (order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .lots_enabled ==
-                                                                                        1 &&
-                                                                                        order_pend
-                                                                                            .food
-                                                                                            .item
-                                                                                            .lots_group
-                                                                                            .length >
-                                                                                            1)
+                                          (order_pend
+                                          .food
+                                          .item
+                                          .is_set &&
+                                          !configuration.item_set_quantity_pos) ||
+                                          isConsignment ||
+                                          !configuration.quantity_cash ||
+                                          order_pend
+                                          .food
+                                          .item
+                                          .series_enabled ==
+                                          1 ||
+                                          order_pend
+                                          .food
+                                          .item
+                                          .has_color_size ==
+                                          1 ||
+                                          (order_pend
+                                          .food
+                                          .item
+                                          .lots_enabled ==
+                                          1 &&
+                                          order_pend
+                                          .food
+                                          .item
+                                          .lots_group
+                                          .length >
+                                          1)
                                                                             "
                                       class="form-control text-center"
                                       v-model="
@@ -1408,10 +1407,10 @@
                                   </div>
                                 </span>
                               </div>
+                               <!-- vendedor  -->
                               <template
-                                v-if="
-                                                                    !isSellerConsolidated
-                                                                "
+                                 
+                                v-if="isSellerConsolidated"
                               >
                                 <div class="col-4 col-md-5 col-lg-5 col-xl-4">
                                   <span class="time font-weight-light">
@@ -1421,19 +1420,16 @@
                                       <el-input
                                         class="custom_input"
                                         :disabled="
-                                                                                    configuration.editar_precio_politica ==
-                                                                                        false
+                                               configuration.editar_precio_politica == false
                                                                                 "
                                         type="number"
-                                        v-model="
-                                                                                    order_pend.price
-                                                                                "
+                                        v-model=" order_pend.price"
                                         @input="
-                                                                                    update_price(
-                                                                                        indexx,
-                                                                                        order_pend.price
-                                                                                    )
-                                                                                "
+                                         update_price(
+                                         indexx,
+                                         order_pend.price
+                                         )
+                                        "
                                       >
                                         <template slot="prepend">
                                           {{
@@ -1495,14 +1491,10 @@
                                     size="medium"
                                   ></el-input>
                                   <template
-                                    v-if="
-                                                                            configuration.edit_subtotal_box
-                                                                        "
+                                    v-if="configuration.edit_subtotal_box && !isSeller"
                                   >
                                     <el-tag
-                                      v-if="
-                                                                                !order_pend.change_subtotal
-                                                                            "
+                                      v-if="!order_pend.change_subtotal"
                                       role="button"
                                       size="medium"
                                       @click="
@@ -1528,18 +1520,12 @@
                                     </el-tag>
                                   </template>
                                   <el-tooltip
-                                    v-if="
-                                                                            configuration.change_price_product
-                                                                        "
+                                    v-if="configuration.change_price_product"
                                     content="Guardar precio del producto"
                                     effect="dark"
                                   >
                                     <el-tag
-                                      @click="
-                                                                                savePriceProduct(
-                                                                                    indexx
-                                                                                )
-                                                                            "
+                                      @click=" savePriceProduct( indexx )"
                                       role="button"
                                       size="medium"
                                       type="success"

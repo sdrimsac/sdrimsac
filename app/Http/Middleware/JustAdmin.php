@@ -95,13 +95,25 @@ class JustAdmin
 
                 $internet = (bool) $config->internet;
                 $billar = (bool) $config->billar;
+                $workshop = (bool) $config->workshop;
                 $configuration = Configuration::first();
+
                 if ($configuration->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
                     return redirect($redirect_to);
                 }
+                if ($internet) {
+                    $redirect_to = "/internet/worker/";
+                } else if ($billar) {
+                    $redirect_to = "/billar/worker/";
+                } else if ($workshop) {
+                    $redirect_to = "/workshop/worker/";
+                } else {
+                    $redirect_to = "/caja/worker/";
+                }
                 /* $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/"; */
-                $redirect_to = $internet ? "/internet/worker/" : ($billar ? "/billar/worker/" : "/caja/worker/");
+                /* $redirect_to = $internet ? "/internet/worker/" : ($billar ? "/billar/worker/" : "/caja/worker/") 
+                : ($workshop ? "/workshop/worker/" : "/caja/worker"); */
 
                 $worker_type = WorkersType::find($user->worker_type_id);
                 if ($worker_type) {

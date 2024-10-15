@@ -693,6 +693,9 @@ const app = new Vue({
         "tenant-billar-pos": () => 
             import("../../modules/Billar/Resources/assets/js/views/pos/index.vue"   
             ),
+        "tenant-workshop-pos": () => 
+            import("../../modules/Workshop/Resources/assets/js/views/pos/index.vue"
+            ),
         "items-stock": () => import("./views/items/check_stock.vue"),
 
         "tenant-quotations-index": () => import("./views/quotations/index.vue"),

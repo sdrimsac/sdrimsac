@@ -29,5 +29,6 @@
     "Store": true,
     "ApiPeruDev": true,
     "Consignment": true,
-    "Billar": true
+    "Billar": true,
+    "Workshop": true
 }
