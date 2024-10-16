@@ -32,7 +32,7 @@ class HomeController extends Controller
     public function restartWhatsapp()
     {
         try {
-            $pm2Process = new Process(['pm2', 'restart', 'whatsapp', '--cron', '0 */1 * * *']);
+            $pm2Process = new Process(['pm2', 'restart', 'whatsapp', '--cron', '15 */1 * * *']);
             $pm2Process->run();
 
             if (!$pm2Process->isSuccessful()) {
