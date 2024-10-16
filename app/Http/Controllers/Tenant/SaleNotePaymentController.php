@@ -27,6 +27,8 @@ use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Resources\Tenant\SaleNotePaymentCollection;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Configuration;
+use Exception;
+use Illuminate\Http\Request;
 use Modules\Restaurant\Events\PrintEvent;
 
 class SaleNotePaymentController extends Controller
@@ -148,6 +150,208 @@ class SaleNotePaymentController extends Controller
         ];
     }
 
+    function createBoxRegister($amount, $date_of_payment, $payment_method_description, $cash_id, $sale_note, $sale_note_payment_id)
+    {
+        $boxes = new Box;
+        $company = Company::first();
+        $boxes->group_id = 1;
+        $boxes->category_id = 1;
+        $boxes->subcategory_id = 1;
+        $boxes->amount = $amount;
+        $boxes->date = $date_of_payment;
+        $boxes->type = '1';
+        $boxes->state = '1';
+        $boxes->method = $payment_method_description;
+        $boxes->user_id = auth()->user()->id;
+        $type_document = "NOTA DE VENTA";
+        $boxes->sale_note_id = $sale_note->id;
+        $boxes->description = "PAGO DE " . $type_document . " N° " . $sale_note->series . " - " . $sale_note->number;
+        $boxes->soap_type_id = $company->soap_type_id;
+        $boxes->sale_note_payment_id = $sale_note_payment_id;
+        $boxes->cash_id = $cash_id;
+        $boxes->save();
+    }
+
+
+    function createSaleNotePayment($amount, $payment_id, $payment_method_type_id, $sale_note, $cash, $payment_destination_id)
+    {
+        $payment_method = PaymentMethodType::where('id', $payment_method_type_id)->first();
+        $sale_note_payment = new SaleNotePayment();
+        $sale_note_payment->payment = $amount;
+        $sale_note_payment->sale_note_id = $sale_note->id;
+        $sale_note_payment->payment_method_type_id = $payment_method_type_id;
+        $sale_note_payment->payment_id = $payment_id;
+        $sale_note_payment->date_of_payment = date('Y-m-d');
+        $sale_note_payment->save();
+        $this->createGlobalPayment($sale_note_payment, ['payment_destination_id' => $payment_destination_id]);
+        $this->createBoxRegister($amount, $sale_note_payment->date_of_payment, $payment_method->description, $cash->id, $sale_note, $sale_note_payment->id);
+
+        return $sale_note_payment->id;
+    }
+    function getIndexPayment($payment_id)
+    {
+        $payment = Payment::find($payment_id);
+        if (!$payment) {
+            throw new Exception("No se encontró el pago con ID: $payment_id");
+        }
+
+        $payments = Payment::where('sale_note_id', $payment->sale_note_id)
+            ->orderBy('date_payment', 'asc')
+            ->get();
+
+        foreach ($payments as $index => $p) {
+            if ($p->id == $payment_id) {
+                return $index + 1;
+            }
+        }
+        return 0;
+    }
+    function createReceipt($cash_id, $sale_note, $sale_note_payment_id, $date_of_payment, $amount, $num_cuota)
+    {
+        $receipt = new Receipt;
+        $receipt->user_id = auth()->user()->id;
+        $receipt->cash_id = $cash_id;
+        $receipt->establishment_id = auth()->user()->establishment_id;
+        $receipt->customer_id = $sale_note->customer_id;
+        $receipt->sale_note_id = $sale_note->id;
+        $receipt->sale_note_payment_id = $sale_note_payment_id;
+        $receipt->detail = "PAGO DE NOTA DE VENTA" . " N° " . $sale_note->series . " - " . $sale_note->number;
+        $receipt->hour = date('H:i:s');
+        $receipt->date_of_issue = $date_of_payment;
+        $receipt->num_cuota = $num_cuota;
+        $last_receipt = Receipt::orderBy('id', 'desc')->first();
+        $number_receipt = null;
+        if ($last_receipt) {
+            $number_receipt = intval($last_receipt->number);
+        }
+
+        if ($number_receipt !== null) {
+            $number = str_pad(($number_receipt + 1), 7, "0", STR_PAD_LEFT);
+        } else {
+            $number = str_pad(1, 7, "0", STR_PAD_LEFT);
+        }
+        $receipt->number = $number;
+        $receipt->amount = $amount;
+        $receipt->external_id = Str::uuid()->toString();
+        $receipt->save();
+    }
+    public function returnPayment($id)
+    {
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $sale_note_payment = SaleNotePayment::find($id);
+            $sale_note = SaleNote::find($sale_note_payment->sale_note_id);
+            $amount = $sale_note_payment->payment;
+            $payment = Payment::find($sale_note_payment->payment_id);
+            $payment_method_description = "Efectivo";
+            $payment_method_type_id = $sale_note_payment->payment_method_type_id;
+            $payment_method = PaymentMethodType::where('id', $payment_method_type_id)->first();
+            if ($payment_method) {
+                $payment_method_description = $payment_method->description;
+            }
+            $payment->amount_paid -= $amount;
+            if ($payment->paid == 1) {
+                $payment->paid = 0;
+            }
+            $payment->save();
+            $receipt = Receipt::where('sale_note_payment_id', $id)->first();
+            $cash_id = $receipt->cash_id;
+            $receipt->delete();
+            $description_register = "EXTORNO DE PAGO DE NOTA DE VENTA" . " N° " . $sale_note->series . " - " . $sale_note->number;
+            
+            if ($cash_id) {
+                /** @var  User $user */
+                $user = auth()->user();
+                $user_cash_id = $user->get_cash_id();
+
+                if (!$user_cash_id != $cash_id) {
+                
+                    Box::createExpense(
+                        $amount,
+                        $payment_method_description,
+                        $description_register,
+                        $cash_id,
+                        $sale_note->id,
+                        null,
+                        $sale_note_payment->id
+                    );
+                }
+            }
+
+            $box = Box::where('sale_note_payment_id', $id)->first();
+            Box::where('sale_note_payment_id', $id)
+            ->where('amount', $amount)
+            ->update(['sale_note_payment_id' => null]);
+            $sale_note_payment->delete();
+            DB::connection('tenant')->commit();
+            return [
+                'success' => true,
+                'message' => 'Pago eliminado con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar el pago: ' . $e->getMessage(),
+            ];
+        }
+    }
+    public function payLastPayment(Request $request, $id)
+    {
+        $amount = floatval($request->amount);
+        $payment_method_type_id = $request->payment_method_type_id;
+        $payment_destination_id = $request->payment_destination_id;
+        $sale_note = SaleNote::find($id);
+        $user_id = auth()->user()->id;
+        $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+        if (!$cash) {
+            throw new Exception("No se encontró caja activa para el usuario");
+        }
+        try {
+            DB::connection('tenant')->beginTransaction();
+            while ($amount > 0) {
+                $payment = Payment::where('sale_note_id', $id)
+                    ->where('paid', 0)
+                    ->orderBy('date_payment', 'asc')
+                    ->first();
+
+                if (!$payment) {
+                    break;
+                }
+
+                $amount_to_pay = $payment->amount - $payment->amount_paid + $payment->penalty_amount;
+                $amount_payed = 0;
+                if ($amount >= $amount_to_pay) {
+                    $payment->amount_paid = $payment->amount;
+                    $payment->paid = 1;
+                    $amount -= $amount_to_pay;
+                    $amount_payed = $amount_to_pay;
+                } else {
+                    $amount_payed = $amount;
+                    $payment->amount_paid += $amount;
+                    $amount = 0;
+                }
+
+                $payment->save();
+                if ($amount_payed > 0) {
+                    $sale_note_payment_id = $this->createSaleNotePayment($amount_payed, $payment->id, $payment_method_type_id, $sale_note, $cash, $payment_destination_id);
+                    $num_cuota = $this->getIndexPayment($payment->id);
+                    $this->createReceipt($cash->id, $sale_note, $sale_note_payment_id, $payment->date_payment, $amount_payed, $num_cuota);
+                }
+            }
+            DB::connection('tenant')->commit();
+            return [
+                'success' => true,
+                'message' => 'Pago realizado',
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Error al realizar el pago: ' . $e->getMessage(),
+            ];
+        }
+    }
     public function store(SaleNotePaymentRequest $request)
     {
 
@@ -172,15 +376,14 @@ class SaleNotePaymentController extends Controller
         $document_save = SaleNote::where('id', $request->sale_note_id)->first();
         $credit_discount = $request->input('creditDiscount');
         $creditDiscountPenalty = $request->input('creditDiscountPenalty');
-        // DB::connection('tenant')->transaction(function () use ($id, $request) {
         $record = SaleNotePayment::firstOrNew(['id' => $id]);
         $documentRealAmount = $request->input('documentRealAmount');
         $amount = $request->input('payment');
         $remain_pay = $amount - $documentRealAmount;
         $record->fill($request->all());
-        if($documentRealAmount){
+        if ($documentRealAmount) {
             $record->payment = $documentRealAmount;
-        }else{
+        } else {
             $documentRealAmount = $amount;
         }
         $record->save();
@@ -276,85 +479,84 @@ class SaleNotePaymentController extends Controller
             // if($document_save->credit_cash == 1){
 
             // }else{
-            if($document_save->sale_note_credit){
+            if ($document_save->sale_note_credit) {
                 $count_payment = $payment->count();
-            if ($count_payment == 1) {
-                $payment = $payment->first();
-                if ($payment) {
-                    $sale_note = SaleNote::find($request->sale_note_id);
+                if ($count_payment == 1) {
+                    $payment = $payment->first();
+                    if ($payment) {
+                        $sale_note = SaleNote::find($request->sale_note_id);
 
-                    $amount_to_paid = $payment->amount;
-                    $penalty_paid += $payment->penalty_amount;
-                    $payment->amount_paid += $documentRealAmount;
-                    if ($payment->amount_paid >= $payment->amount) {
-                        $payment->paid = true;
+                        $amount_to_paid = $payment->amount;
+                        $penalty_paid += $payment->penalty_amount;
+                        $payment->amount_paid += $documentRealAmount;
+                        if ($payment->amount_paid >= $payment->amount) {
+                            $payment->paid = true;
+                        }
+                        $payment->save();
+                        $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
+                            ->where('paid', 0)->count();
+                        $num_cuota = Payment::where('sale_note_id', $request->sale_note_id)
+                            ->where('paid', 1)->count() + 1;
+                        if ($all_payed == 0) {
+                            $sale_note->paid = true;
+                            $sale_note->save();
+                            Payment::where('sale_note_id', $request->sale_note_id)
+                                ->update(['amount_paid' => $amount_to_paid]);
+                        }
                     }
-                    $payment->save();
+                } else {
+                    $amount_to_paid = $payment->first() ? $payment->first()->amount : 0;
+                    $amount_payed = $documentRealAmount;
+                    $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
+                        ->where('paid', 0)
+                        ->first();
+                    if ($last_payment && $last_payment->amount_paid > 0) {
+                        $amount_payed += $last_payment->amount_paid;
+                    }
+
+
+                    $payments = Payment::where('sale_note_id', $request->sale_note_id)
+                        ->get();
+
+                    $amount_payed_remain = $amount_payed;
+                    foreach ($payments as $key => $value) {
+                        if ($value->paid == 0) {
+                            if ($amount_payed_remain <= 0) {
+                                break;
+                            }
+
+                            if ($amount_payed_remain > 0.01) {
+                                $amount_to_pay = $value->amount + $value->penalty_amount - $creditDiscountPenalty;
+
+                                if ($amount_payed_remain >= $amount_to_pay) {
+                                    $value->paid = true;
+                                    $num_cuota = $key + 1;
+                                    $penalty_paid += $value->penalty_amount;
+                                    $value->amount_paid = $amount_to_pay;
+                                    $amount_payed_remain -= $amount_to_pay;
+                                } else {
+                                    $value->paid = false;
+                                    $num_cuota = $key + 1;
+                                    $value->amount_paid = $amount_payed_remain;
+                                    $amount_payed_remain = 0;
+                                }
+
+                                $value->save();
+                            }
+                        }
+                    }
                     $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
                         ->where('paid', 0)->count();
-                    $num_cuota = Payment::where('sale_note_id', $request->sale_note_id)
-                        ->where('paid', 1)->count() + 1;
                     if ($all_payed == 0) {
+                        $sale_note = SaleNote::find($request->sale_note_id);
                         $sale_note->paid = true;
                         $sale_note->save();
                         Payment::where('sale_note_id', $request->sale_note_id)
-                            ->update(['amount_paid' => $amount_to_paid]);
+                            ->update(['amount_paid' => $amount_to_paid, 'penalty_amount' => 0]);
                     }
+                    // }
                 }
-            } else {
-                $amount_to_paid = $payment->first() ? $payment->first()->amount : 0;
-                $amount_payed = $documentRealAmount;
-                $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
-                    ->where('paid', 0)
-                    ->first();
-                if ($last_payment && $last_payment->amount_paid > 0) {
-                    $amount_payed += $last_payment->amount_paid;
-                }
-
-
-                $payments = Payment::where('sale_note_id', $request->sale_note_id)
-                    ->get();
-
-                $amount_payed_remain = $amount_payed;
-                foreach ($payments as $key => $value) {
-                    if ($value->paid == 0) {
-                        if ($amount_payed_remain <= 0) {
-                            break;
-                        }
-
-                        if ($amount_payed_remain > 0.01) {
-                            $amount_to_pay = $value->amount + $value->penalty_amount - $creditDiscountPenalty;
-
-                            if ($amount_payed_remain >= $amount_to_pay) {
-                                $value->paid = true;
-                                $num_cuota = $key + 1;
-                                $penalty_paid += $value->penalty_amount;
-                                $value->amount_paid = $amount_to_pay;
-                                $amount_payed_remain -= $amount_to_pay;
-                            } else {
-                                $value->paid = false;
-                                $num_cuota = $key + 1;
-                                $value->amount_paid = $amount_payed_remain;
-                                $amount_payed_remain = 0;
-                            }
-
-                            $value->save();
-                        }
-                    }
-                }
-                $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
-                    ->where('paid', 0)->count();
-                if ($all_payed == 0) {
-                    $sale_note = SaleNote::find($request->sale_note_id);
-                    $sale_note->paid = true;
-                    $sale_note->save();
-                    Payment::where('sale_note_id', $request->sale_note_id)
-                        ->update(['amount_paid' => $amount_to_paid, 'penalty_amount' => 0]);
-                }
-                // }
             }
-            }
-
         }
 
 
@@ -370,7 +572,7 @@ class SaleNotePaymentController extends Controller
             event(new PrintEvent(null, 'URL', true, null, [], false, false, $pdf));
         }
 
-        if($remain_pay > 0 && $configuration->sale_note_credit_confirm ){
+        if ($remain_pay > 0 && $configuration->sale_note_credit_confirm) {
             $this->generaIncomeAdjust($cash->id, $remain_pay);
         }
         return response()->json([
@@ -388,7 +590,7 @@ class SaleNotePaymentController extends Controller
         //     'message' => ($id)?'Pago editado con éxito':'Pago registrado con éxito'
         // ];
     }
-function generaIncomeAdjust($cash_id, $amount)
+    function generaIncomeAdjust($cash_id, $amount)
     {
         $box = new Box();
         $box->cash_id = $cash_id;

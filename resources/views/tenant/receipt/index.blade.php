@@ -236,11 +236,8 @@
                                     <tr>
                                         @if ($data->num_cuota)
                                             <td class="negrita">N° Cuota : </td>
-                                            @if ($next_payment && $next_payment->amount_paid > 0 && $data->num_cuota > 1)
-                                                <td>{{ $data->num_cuota - 1 }}</td>
-                                            @else
-                                                <td>{{ $data->num_cuota }}</td>
-                                            @endif
+
+                                            <td>{{ $data->num_cuota }}</td>
                                         @endif
                                         @if ($data->penalty_paid)
                                             <td class="negrita">Penalidad : </td>
@@ -307,7 +304,7 @@
                                                             //
                                                             //
                                                         @endphp
-                                                            {{number_format($give,2)}}
+                                                        {{ number_format($give, 2) }}
                                                         {{-- {{ number_format($data->sale_note->total  + $interes, 2) }} --}}
                                                         <?php
                                                         //dd($data->amount);
@@ -329,31 +326,31 @@
                                                 </td>
                                             </tr>
                                         @endif
-1                                        @if( $data->sale_note->sale_note_credit)
-                                        <tr>
-                                            <td colspan="2" align="right" valign="top"
-                                                class="border-right border-top" style="padding: 5px !important;">
-                                                <b>MONTO CUOTA S/.</b>
-                                            </td>
-                                            <td align="center" valign="top" class="border-top"
-                                                style="padding: 5px !important;">
-                                                <b><span style="font-size: 17px;">
-                                                        {{ $quote }}
-                                                    </span></b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" align="right" valign="top"
-                                                class="border-right border-top" style="padding: 5px !important;">
-                                                <b>MONTO POR MORA S/.</b>
-                                            </td>
-                                            <td align="center" valign="top" class="border-top"
-                                                style="padding: 5px !important;">
-                                                <b><span style="font-size: 17px;">
-                                                        {{ $data->penalty_paid }}
-                                                    </span></b>
-                                            </td>
-                                        </tr>
+                                        1 @if ($data->sale_note->sale_note_credit)
+                                            <tr>
+                                                <td colspan="2" align="right" valign="top"
+                                                    class="border-right border-top" style="padding: 5px !important;">
+                                                    <b>MONTO CUOTA S/.</b>
+                                                </td>
+                                                <td align="center" valign="top" class="border-top"
+                                                    style="padding: 5px !important;">
+                                                    <b><span style="font-size: 17px;">
+                                                            {{ $quote }}
+                                                        </span></b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" align="right" valign="top"
+                                                    class="border-right border-top" style="padding: 5px !important;">
+                                                    <b>MONTO POR MORA S/.</b>
+                                                </td>
+                                                <td align="center" valign="top" class="border-top"
+                                                    style="padding: 5px !important;">
+                                                    <b><span style="font-size: 17px;">
+                                                            {{ $data->penalty_paid }}
+                                                        </span></b>
+                                                </td>
+                                            </tr>
                                         @endif
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
@@ -367,7 +364,7 @@
                                                     </span></b>
                                             </td>
                                         </tr>
-                                        @if ($next_payment && $next_payment->amount_paid > 0)
+                                        {{-- @if ($next_payment && $next_payment->amount_paid > 0)
                                             <tr>
                                                 <td colspan="2" align="right" valign="top"
                                                     class="border-right border-top" style="padding: 5px !important;">
@@ -381,7 +378,7 @@
                                                         </span></b>
                                                 </td>
                                             </tr>
-                                        @endif
+                                        @endif --}}
                                         <tr>
                                             <td colspan="2" align="right" valign="top"
                                                 class="border-right border-top" style="padding: 5px !important;">
@@ -390,11 +387,9 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-                                            
+
                                                         @if ($penalties == 0)
-                                                        
                                                         @else
-                                                        
                                                         @endif
                                                         {{ number_format($deuda, 2) }}
 

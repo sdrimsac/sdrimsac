@@ -182,6 +182,13 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Fecha de pago</th>
+                                    <th
+                                        v-if="
+                                            configuration.sale_note_credit_penalty
+                                        "
+                                    >
+                                        Fecha de cuota
+                                    </th>
                                     <th>Método de pago</th>
                                     <th>Destino</th>
                                     <th>Referencia</th>
@@ -232,6 +239,11 @@
                                                 ></small>
                                             </div>
                                         </td>
+                                        <td
+                                            v-if="
+                                                configuration.sale_note_credit_penalty
+                                            "
+                                        ></td>
                                         <td>
                                             <div
                                                 class="form-group mb-0"
@@ -393,6 +405,18 @@
                                         >
                                             <button
                                                 :disabled="is_paying"
+                                                v-if="
+                                                    configuration.sale_note_credit_penalty
+                                                "
+                                                type="button"
+                                                class="btn waves-effect waves-light btn-sm btn-success"
+                                                @click.prevent="payLastPayment"
+                                            >
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                            <button
+                                                v-else
+                                                :disabled="is_paying"
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-info"
                                                 @click.prevent="
@@ -401,6 +425,7 @@
                                             >
                                                 <i class="fa fa-check"></i>
                                             </button>
+
                                             <button
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-danger"
@@ -415,6 +440,7 @@
                                     <template v-else>
                                         <td>PAGO-{{ row.id }}</td>
                                         <td>{{ row.date_of_payment }}</td>
+                                        <td>{{ row.quote_date }}</td>
                                         <td>
                                             {{
                                                 row.payment_method_type_description
@@ -471,6 +497,16 @@
                                             >
                                                 Eliminar
                                             </button> -->
+                                            <button
+                                                v-if="row.canCancel"
+                                                type="button"
+                                                class="btn waves-effect waves-light btn-sm btn-danger"
+                                                @click.prevent="
+                                                    returnPayment(row)
+                                                "
+                                            >
+                                                Extornar
+                                            </button>
                                             <button
                                                 v-if="
                                                     row.receipt_link &&
@@ -569,6 +605,58 @@ export default {
         }
     },
     methods: {
+        async returnPayment(record) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de extornar el pago?",
+                    "Extornar Pago",
+                    {
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        type: "warning"
+                    }
+                );
+                this.loading = true;
+                this.$http
+                    .get(`/sale-notes/return-payment/${record.id}`)
+                    .then(response => {
+                        this.$toast.success(response.data.message);
+                        this.getData();
+                        this.$eventHub.$emit("reloadData");
+                        this.$emit("reloadData");
+                        console.log("🚀 ~ returnPayment ~ response:", response);
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            } catch (e) {
+                this.$toast.error(e.message);
+            }
+        },
+        payLastPayment() {
+            this.is_paying = true;
+            this.loading = true;
+            let [payment] = this.records;
+            let amount = payment.payment;
+            let payment_method_type_id = payment.payment_method_type_id;
+            let payment_destination_id = payment.payment_destination_id;
+            this.$http
+                .post(`/sale-notes/pay-last-payment/${this.documentId}`, {
+                    amount,
+                    payment_method_type_id,
+                    payment_destination_id
+                })
+                .then(response => {
+                    this.$toast.success(response.data.message);
+                    this.getData();
+                    this.$eventHub.$emit("reloadData");
+                    this.$emit("reloadData");
+                })
+                .finally(() => {
+                    this.is_paying = false;
+                    this.loading = false;
+                });
+        },
         seeDetail() {
             this.showDetails = true;
         },
@@ -684,6 +772,12 @@ export default {
                 .then(response => {
                     this.records = response.data.data;
                     this.records = this.records.reverse();
+                    if (this.records.length > 0) {
+                        let [record] = this.records;
+                        if (record.quote_date) {
+                            this.records[0].canCancel = true;
+                        }
+                    }
                 })
                 .catch(e => {
                     this.$toast.error(e.message);
@@ -737,10 +831,6 @@ export default {
             this.fileList = [];
         },
         async clickSubmit(index) {
-            console.log(
-                "🚀 ~ clickSubmit ~ this.configuration:",
-                this.configuration
-            );
             if (this.configuration.sale_note_credit_cash) {
                 if (
                     this.records[index].payment > this.document.total_difference

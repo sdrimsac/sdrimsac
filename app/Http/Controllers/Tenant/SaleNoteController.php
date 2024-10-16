@@ -87,6 +87,7 @@ use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
 use App\Traits\PromotionDocumentTrait;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Modules\Report\Exports\ReportConsolidatedCreditExport;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
@@ -104,6 +105,122 @@ class SaleNoteController extends Controller
     protected $document;
     protected $configuration;
 
+
+
+
+
+    public function export_consolidated(Request $request){
+        $data = $this->getRecordsConsolidated($request);
+        $period = $request->period;
+        //obtener la fecha inicial y final
+        $date_start = null;
+        $date_end = null;
+        switch ($period) {
+            case 'date':
+                $date_start = $request->date_start;
+                $date_end = $request->date_start;
+                break;
+            case 'between_dates':
+                $date_start = $request->date_start;
+                $date_end = $request->date_end;
+                break;
+            case 'month':
+                $date_start = $request->month_start;
+                $date_end = Carbon::createFromFormat('Y-m', $request->month_start)->endOfMonth()->format('Y-m-d');
+                break;
+            case 'between_months':
+                $date_start = Carbon::createFromFormat('Y-m', $request->date_start)->startOfMonth()->format('Y-m-d');
+                $date_end = Carbon::createFromFormat('Y-m', $request->date_end)->endOfMonth()->format('Y-m-d');
+                break;
+        }
+        $data['date_start'] = $date_start;
+        $data['date_end'] = $date_end;
+        $company = Company::active();
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        return (new ReportConsolidatedCreditExport)
+            ->data($data)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Crédito_Consolidado_' . Carbon::now() . '.xlsx');
+
+    }
+    public function records_consolidated(Request $request){
+        $data = $this->getRecordsConsolidated($request);
+
+        return response()->json($data);
+    }
+    public function getRecordsConsolidated(Request $request)
+    {
+        $period = $request->period;
+        $expenses = Box::whereNull('purchase_id')->where('expenses', true);
+        $purchases = Box::whereNotNull('purchase_id');
+        $sale_notes = SaleNote::whereIn('state_type_id', ['01', '05'])
+            ->where('status', 'A');
+
+        switch ($period) {
+            case 'date':
+                $sale_notes->where('date_of_issue', $request->date_start);
+                $expenses->where('date', $request->date_start);
+                $purchases->where('date', $request->date_start);
+                break;
+            case 'between_dates':
+                $sale_notes->whereBetween('date_of_issue', [$request->date_start, $request->date_end]);
+                $expenses->whereBetween('date', [$request->date_start, $request->date_end]);
+                $purchases->whereBetween('date', [$request->date_start, $request->date_end]);
+                break;
+            case 'month':
+                $month_start = $request->month_start;
+                $year = Carbon::createFromFormat('Y-m', $month_start)->year;
+                $month = Carbon::createFromFormat('Y-m', $month_start)->month;
+                $sale_notes->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+                $expenses->whereMonth('date', $month)
+                    ->whereYear('date', $year);
+                $purchases->whereMonth('date', $month)
+                    ->whereYear('date', $year);
+                break;
+            case 'between_months':
+                $date_start = Carbon::createFromFormat('Y-m', $request->date_start)->startOfMonth()->format('Y-m-d');
+                $date_end = Carbon::createFromFormat('Y-m', $request->date_end)->endOfMonth()->format('Y-m-d');
+                $sale_notes->whereBetween('date_of_issue', [$date_start, $date_end]);
+                $expenses->whereBetween('date', [$date_start, $date_end]);
+                $purchases->whereBetween('date', [$date_start, $date_end]);
+                break;
+        }
+
+        $plucked_ids = $sale_notes->pluck('id')->values();
+        $sum_total_by_user = $sale_notes->selectRaw('user_id, SUM(total - advances) as sum_total')
+            ->groupBy('user_id')
+            ->get()
+            ->pluck('sum_total', 'user_id');
+
+        $user_ids = $sale_notes->select('user_id')->distinct()->get()->pluck('user_id')->values();
+        $user_names = User::whereIn('id', $user_ids)->pluck('name', 'id');
+        
+        $sum_total_by_user_with_names = $sum_total_by_user->mapWithKeys(function ($sum_total, $user_id) use ($user_names) {
+            return [$user_names[$user_id] => $sum_total];
+        });
+        $sum_total_general = $sum_total_by_user->sum();
+        $payments = Payment::whereIn('sale_note_id', $plucked_ids)->selectRaw('SUM(amount) as total')->value('total');
+        $expenses = $expenses->selectRaw('SUM(amount) as sum_total')
+            ->value('sum_total');
+        $purchases = $purchases->selectRaw('SUM(amount) as sum_total')
+            ->value('sum_total');
+        $gain = $payments- $sum_total_general ;
+        return [
+            'success' => true,
+            'data' => $sum_total_by_user_with_names,
+            'payments' => $payments,
+            'expenses' => $expenses,
+            'purchases' => $purchases,
+            'sum_total_general' => $sum_total_general,
+            'gain' => $gain,
+        ];
+    }
+    public function index_consolidated()
+    {
+        return view('tenant.sale_notes.consolidated');
+    }
     public function updatePayment(Request $request)
     {
         $type = $request->type;
@@ -519,10 +636,9 @@ class SaleNoteController extends Controller
         if ($date_end && preg_match('/^\d{4}-\d{2}$/', $date_end)) {
             $startOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $date_end)->startOfMonth()->toDateString();
             $endOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $date_end)->endOfMonth()->toDateString();
-    
+
             $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
-        }
-        elseif ($date_start || $date_end) {
+        } elseif ($date_start || $date_end) {
             if ($date_start && $date_end) {
                 $records->whereBetween('date_of_issue', [$date_start, $date_end]);
             } else {
@@ -753,6 +869,26 @@ class SaleNoteController extends Controller
             ->get();
 
         return compact('payments');
+    }
+
+    public function getLastPayment($id)
+    {
+        $payment = Payment::where('sale_note_id', $id)
+            ->where('paid', 0)
+            ->orderBy('date_payment', 'asc')
+            ->first();
+        $amount_paid = $payment->amount_paid;
+        $amount = $payment->amount;
+        $penalty_amount = $payment->penalty_amount;
+        $date_payment = $payment->date_payment;
+        return [
+            'success' => true,
+            'date_payment' => $date_payment,
+            'to_pay' => $amount - ($amount_paid + $penalty_amount),
+            'amount' => $amount,
+            'amount_paid' => $amount_paid,
+            'penalty_amount' => $penalty_amount,
+        ];
     }
     public function updateCredit(Request $request, $id)
     {
@@ -1292,7 +1428,6 @@ class SaleNoteController extends Controller
                                     'state' => 0,
                                 ]);
                             }
-
                         }
 
                         // $payment = Payment::firstOrNew(['id' => $id]);
@@ -1449,7 +1584,7 @@ class SaleNoteController extends Controller
                     foreach ($request->payments as $payment) {
 
                         $total_payment += $payment['payment'];
-                        
+
                         if ($payment['payment'] > 0) {
                             $record = new SaleNotePayment;
                             $record->fill($payment);
@@ -1460,12 +1595,11 @@ class SaleNoteController extends Controller
                         }
                     }
 
-                
+
                     //si el index payment_method_type_id no existe poner paid a true
                     if (!isset($request->payments[0]['payment_method_type_id'])) {
                         $paid = 1;
                     } else {
-
                     }
                     if (isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "01" || isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "10") {
                         if ($total_payment >= $this->sale_note->total) {
@@ -1474,7 +1608,7 @@ class SaleNoteController extends Controller
                         // $paid = 1;
                     }
                 }
-                
+
 
                 if ($request->generate === null || $request->generate === false) {
                     //advances
@@ -1559,7 +1693,7 @@ class SaleNoteController extends Controller
                     $request->promotion_id
                 );
             }
-            if ( $this->sale_note->creditPayments ) {
+            if ($this->sale_note->creditPayments) {
                 $this->sale_note->calculatePenalties();
             }
 

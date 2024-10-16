@@ -54,7 +54,7 @@ class ReceiptController extends Controller
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();
         $quote = null;
         $interes = 0;
-        
+
         if ($data->sale_note_id) {
             $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
             if ($data_payments != null) {
@@ -62,25 +62,40 @@ class ReceiptController extends Controller
                 $interes = ($data->sale_note->total - $data->sale_note->advances) * (($data_payments->tasa / 100));
             }
             $sale_note = SaleNote::find($data->sale_note_id);
+            $totalPayment = 0;
+            $totalPenalty = 0;
             if ($sale_note->sale_note_credit) {
-                // Paso 1: Seleccionar los registros limitados
-                $limitedPayments = Payment::where('sale_note_id', $data->sale_note_id)
-                    ->orderBy('id') // Asegúrate de tener un criterio de ordenación
-                    ->limit($data->num_cuota)
-                    ->get();
+                if ($data->sale_note_payment_id) {
+                    $sale_note_payment = SaleNotePayment::find($data->sale_note_payment_id);
+                    $payment_id = $sale_note_payment->payment_id;
+                    if ($payment_id) {
+                        $payments_before = Payment::where('sale_note_id', $data->sale_note_id)
+                            ->where('id', '<', $payment_id)
+                            ->orderBy('id', 'desc')
+                            ->get();
 
-                // Paso 2: Sumar los valores de los registros seleccionados
-                $totalPayment = $limitedPayments->sum('amount_paid');
-                $totalPenalty = $limitedPayments->sum('penalty_amount');
+                        $totalPayment = $payments_before->sum('amount_paid');
+                        $totalPenalty = $payments_before->sum('penalty_amount');
+                    }
+                }
+                if ($totalPayment == 0 && $totalPenalty == 0) {
+                    $limitedPayments = Payment::where('sale_note_id', $data->sale_note_id)
+                        ->orderBy('id')
+                        ->limit($data->num_cuota)
+                        ->get();
 
-                // Crear un objeto para mantener la estructura original
+                    $totalPayment = $limitedPayments->sum('amount_paid');
+                    $totalPenalty = $limitedPayments->sum('penalty_amount');
+                }
+
                 $payments = (object) [
                     'total_payment' => $totalPayment,
                     'total_penalty' => $totalPenalty,
                 ];
                 $sum_payments = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
+                $sum_payments_paid = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount_paid');
                 $give = Payment::where('sale_note_id', $data->sale_note_id)->sum('amount');
-                $deuda = $sum_payments - ($payments->total_payment - $payments->total_penalty);
+                $deuda = $sum_payments -  $sum_payments_paid;
             } else {
                 $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
                 $give = $data->sale_note->total - $data->sale_note->advances;

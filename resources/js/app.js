@@ -386,6 +386,8 @@ const app = new Vue({
         "tenant-tasks-lists": () => import("./views/tasks/lists.vue"),
         "tenant-tasks-form": () => import("./views/tasks/form.vue"),
 
+        "tenant-sale-notes-consolidated": () =>
+            import("./views/sale_notes/consolidated.vue"),
         "tenant-sale-notes-credit-penalty": () =>
             import("./views/sale_notes/credit_penalty.vue"),
         "tenant-sale-notes-index": () => import("./views/sale_notes/index.vue"),

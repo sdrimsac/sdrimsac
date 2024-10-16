@@ -41,7 +41,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group" :class="{ 'has-danger': errors.reference_number }">
-              <label class="control-label">Seleccionar Turno de Apertura aaa</label>
+              <label class="control-label">Seleccionar Turno de Apertura</label>
               <el-select v-model="form.turn_id">
                 <el-option
                   v-for="option in turnsTable"

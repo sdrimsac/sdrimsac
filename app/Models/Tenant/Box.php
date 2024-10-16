@@ -89,7 +89,35 @@ class Box extends ModelTenant
 
         );
     }
-
+    public static function  createExpense(
+        $amount = 0,
+        $payment_method_description,
+        $description_register,
+        $cash_id,
+        $sale_note_id = null,
+        $document_id = null,
+        $sale_note_payment_id = null
+    ) {
+        $boxes = new Box;
+        $company = Company::first();
+        $boxes->group_id = 2;
+        $boxes->category_id = 2;
+        $boxes->subcategory_id = 1;
+        $boxes->amount = $amount;
+        $boxes->date = date('Y-m-d');
+        $boxes->expenses = 1;
+        $boxes->type = 2;
+        $boxes->state = '1';
+        $boxes->method = $payment_method_description;
+        $boxes->user_id = auth()->user()->id;
+        $boxes->sale_note_id = $sale_note_id;
+        $boxes->document_id = $document_id;
+        $boxes->description =  $description_register;
+        $boxes->soap_type_id = $company->soap_type_id;
+        $boxes->sale_note_payment_id = $sale_note_payment_id;
+        $boxes->cash_id = $cash_id;
+        $boxes->save();
+    }
     public function groups()
     {
         return $this->belongsTo(Group::class, 'group_id', 'id');
@@ -146,9 +174,8 @@ class Box extends ModelTenant
     {
         return $this->belongsTo(DocumentPayment::class, 'document_payment_id');
     }
-    public function item ()
+    public function item()
     {
         return $this->belongsTo(Item::class, 'id');
     }
-
 }

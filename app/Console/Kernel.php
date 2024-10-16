@@ -27,12 +27,10 @@ class Kernel extends ConsoleKernel
         //$schedule->command('tenancy:run tenant:run')->everyMinute();
          $schedule->command('tenancy:run delete:register-movements')->dailyAt('04:00');
          $schedule->command('tenancy:run sale-note:register-penalty')->dailyAt('03:00');
-        //one time per day
         // $schedule->command('delete:register-movements')->daily();
-        $schedule->command('tenancy:run tenant:run')->everyMinute();
+         $schedule->command('tenancy:run tenant:run')->everyMinute();
 
         //delete:register-movements
-        //correr cada media noche
         // $schedule->command('delete:register-movements')->dailyAt('00:00');
     }
 

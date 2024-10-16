@@ -97,50 +97,7 @@
                         </div>
                     </template>
 
-                    <!-- <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="w-100 control-label"
-                                >Establecimiento</label
-                            >
-                            <el-select
-                                class="w-100"
-                                v-model="form.establishment_id"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in establishments"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div> -->
-                    <!-- <div
-                        class="col-md-3"
-                        v-show="
-                            resource == 'reports/sales' ||
-                                resource == 'reports/purchases'
-                        "
-                    >
-                        <div class="form-group">
-                            <label class="w-100 control-label"
-                                >Tipo de documento</label
-                            >
-                            <el-select
-                                class="w-100"
-                                v-model="form.document_type_id"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in document_types"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div> -->
+                
 
                     <div class="col-lg-4 col-md-4">
                         <div class="form-group">

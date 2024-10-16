@@ -12,6 +12,7 @@ class SaleNotePayment extends ModelTenant
     public $timestamps = false;
 
     protected $fillable = [
+        'payment_id', 
         'sale_note_id',
         'date_of_payment',
         'payment_method_type_id',
@@ -28,7 +29,10 @@ class SaleNotePayment extends ModelTenant
     ];
 
   
-
+    public function payment_register()
+    {
+        return $this->belongsTo(Payment::class, 'payment_id');
+    }
     public function payment_method_type()
     {
         return $this->belongsTo(PaymentMethodType::class);

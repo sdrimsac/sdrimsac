@@ -5,7 +5,7 @@
         v-loading="loading"
         @open="open"
         @close="close"
-        title="Lista de créditos aaa"
+        title="Lista de créditos"
         width="85%"
     >
         <div class="row mt-2">

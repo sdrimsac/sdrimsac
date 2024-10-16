@@ -25,13 +25,7 @@ class ReportSaleNoteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        /*$documentTypes = DocumentType::query()
-            ->where('active', 1)
-            ->get();
-
-        $establishments = Establishment::all();*/
-        
-        return view('tenant.reports.sale_notes.index') ; //, compact('documentTypes','establishments'));
+        return view('tenant.reports.sale_notes.index') ; 
     }
     
     /**

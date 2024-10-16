@@ -204,8 +204,14 @@ if ($hostname) {
                 Route::get('items/tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
                 Route::get('documents/record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'record']);
                 Route::get('documents/get_record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'getRecord']);
+                Route::get('sale-notes/consolidated', [App\Http\Controllers\Tenant\SaleNoteController::class, 'index_consolidated'])->name('tenant.sale_notes.consolidated');
+                Route::get('sale-notes/consolidated/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records_consolidated']);
+                Route::get('sale-notes/consolidated/export', [App\Http\Controllers\Tenant\SaleNoteController::class, 'export_consolidated']);
                 Route::post('sale-notes/simulate', [App\Http\Controllers\Tenant\SaleNoteController::class, 'simulate']);
                 Route::get('sale-notes/record/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'record']);
+                Route::get('sale-notes/get-last-payment/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getLastPayment']);
+                Route::post('sale-notes/pay-last-payment/{salenote}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'payLastPayment']);
+                Route::get('sale-notes/return-payment/{salenotePaymentId}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'returnPayment']);
                 Route::post('sale-notes/update-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'updateCredit']);
                 Route::get('sale-notes/payments-init/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'paymentsInit']);
                 Route::get('sale-notes/record-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'recordCredit']);
@@ -1032,6 +1038,7 @@ if ($hostname) {
                 return redirect()->route('system.dashboard');
             });
             Route::get('dashboard', 'System\HomeController@index')->name('system.dashboard');
+            Route::get('restart-whatsapp', 'System\HomeController@restartWhatsapp');
             Route::post('logos', 'System\UserController@setLogo');
             Route::post('monitor', 'System\MonitorController@index')->name('system.monitor.index');
             //Clients

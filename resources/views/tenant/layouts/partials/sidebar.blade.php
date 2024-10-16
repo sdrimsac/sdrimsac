@@ -657,13 +657,23 @@
                         @endif
                         @if ($user->type == 'superadmin' || $config->house)
                             <li>
-                                <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
-                                    href="{{ route('reports.credits.credit_index') }}">
+                                <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'consolidated' ? 'active' : '' }}"
+                                    href="{{ route('tenant.sale_notes.consolidated') }}">
                                     <i class="icofont-money-bag"></i>
-                                    Ganancias Hogar / Efectivo
+                                    Consolidado de créditos
                                 </a>
                             </li>
                         @endif
+                        @if ($user->type == 'superadmin' || $config->house)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
+                                href="{{ route('reports.credits.credit_index') }}">
+                                <i class="icofont-money-bag"></i>
+                                Ganancias Hogar / Efectivo
+                            
+                            </a>
+                        </li>
+                    @endif
                     @endif
                     @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm)
                         @if ($user->type == 'superadmin' || $config->reporte_ganancias)

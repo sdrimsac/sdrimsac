@@ -15,17 +15,54 @@ class HomeController extends Controller
         $clients = Client::get();
         $delete_permission = config('tenant.admin_delete_client');
 
-       
+
         $storage_size = exec("df -h / | awk '{print $5}' | tail -n 1");
-        
-        $storage_size = $storage_size != "" ? substr($storage_size, 0 ) : 0;
+
+        $storage_size = $storage_size != "" ? substr($storage_size, 0) : 0;
 
 
-         return view('system.dashboard')->with('clients', count($clients))
-                ->with('delete_permission', $delete_permission)
-                ->with('disc_used',$storage_size)
-                ->with('i_used', 0)
-                ->with('storage_size',0)
-                ->with('version', 0);
+        return view('system.dashboard')->with('clients', count($clients))
+            ->with('delete_permission', $delete_permission)
+            ->with('disc_used', $storage_size)
+            ->with('i_used', 0)
+            ->with('storage_size', 0)
+            ->with('version', 0);
+    }
+
+    public function restartWhatsapp()
+    {
+        try {
+            $pm2Process = new Process(['pm2', 'restart', 'whatsapp', '--cron', '0 */1 * * *']);
+            $pm2Process->run();
+
+            if (!$pm2Process->isSuccessful()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error al reiniciar PM2: ' . $pm2Process->getErrorOutput(),
+                ], 500);
+            }
+
+            sleep(30);
+
+            $shProcess = new Process(['/home/crons/checkStatus.sh']);
+            $shProcess->run();
+
+            if (!$shProcess->isSuccessful()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error al ejecutar el script: ' . $shProcess->getErrorOutput(),
+                ], 500);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Se reinició el servicio de WhatsApp correctamente.',
+            ], 200);
+        } catch (ProcessFailedException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error en el proceso: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

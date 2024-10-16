@@ -473,8 +473,22 @@
                                         </td>
                                         <td class="celda_sm">
                                             @if ($data[$idx]['paid'])
-                                            <strong
-                                            style="font-size: 25px !important;">X</strong>
+                                                @php
+                                                    $date_payment = null;
+                                                    $sale_note_payment = \App\Models\Tenant\SaleNotePayment::where(
+                                                        'payment_id',
+                                                        $data[$idx]['id'],
+                                                    )->first();
+                                                    if ($sale_note_payment) {
+                                                        $date_payment = $sale_note_payment->date_of_payment;
+                                                    }
+                                                @endphp
+                                                <strong style="font-size: 10px !important;">X</strong>
+                                                @if ($date_payment)
+                                                    <br>
+                                                    <strong
+                                                        style="font-size: 10px !important;">{{ \Carbon\Carbon::parse($date_payment)->format('d/m/y') }}</strong>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
@@ -541,16 +555,16 @@
                         <div class="border-rounded">
                             @php
                                 $serie = null;
-                                if($item){
+                                if ($item) {
                                     $lots = $item->item->lots;
-                                if (count($lots) > 0) {
-                                    foreach ($lots as $lot) {
-                                        if ($lot->selected == true) {
-                                            $serie .= $lot->series . '-';
+                                    if (count($lots) > 0) {
+                                        foreach ($lots as $lot) {
+                                            if ($lot->selected == true) {
+                                                $serie .= $lot->series . '-';
+                                            }
                                         }
+                                        $serie = substr($serie, 0, -1);
                                     }
-                                    $serie = substr($serie, 0, -1);
-                                }
                                 }
                             @endphp
                             @if ($serie)
