@@ -3376,6 +3376,8 @@ export default {
                 item.total = item.originalTotal || item.total;
                 item.total_value = item.originalTotalValue || item.total_value;
             }
+            this.form.total_discount = 0;
+            this.form.discounts = [];
         },
         deleteDiscountGlobal2() {
             let discount = _.find(this.form.discounts, {
