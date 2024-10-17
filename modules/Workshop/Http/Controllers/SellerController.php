@@ -6,10 +6,10 @@ use Modules\workshop\Http\Resources\WorkshopSellerCollection;
 use Modules\workshop\Http\Resources\WorkshopSellerResource;
 use Modules\workshop\Http\Requests\WorkshopSellerRequest;
 use App\Http\Controllers\Controller;
-use App\Models\Tenant\WorkshopSeller;
+use Modules\workshop\Models\WorkshopSeller;
 use Exception;
 
-class PlanesController extends Controller
+class SellerController extends Controller
 {
     public function index()
     {

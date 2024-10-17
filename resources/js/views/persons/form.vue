@@ -70,9 +70,7 @@
               </label>
               <div v-if="api_service_token != false">
                 <x-input-service
-                  :identity_document_type_id="
-                                        form.identity_document_type_id
-                                    "
+                  :identity_document_type_id=" form.identity_document_type_id"
                   v-model="form.number"
                   @search="searchNumber"
                 ></x-input-service>
@@ -80,13 +78,8 @@
               <div v-else>
                 <el-input ref="number" v-model="form.number" :maxlength="maxLength" dusk="number">
                   <template
-                    v-if="
-                                            form.identity_document_type_id ===
-                                                '6' ||
-                                                form.identity_document_type_id ===
-                                                    '1'
-                                        "
-                  >
+                    v-if=" form.identity_document_type_id === '6' || 
+                    form.identity_document_type_id === '1'">
                     <el-button
                       type="primary"
                       slot="append"

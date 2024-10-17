@@ -4401,21 +4401,6 @@ export default {
 
         async filterSeries() {
             this.filterCustomers();
-            // let check = this.checkCustomers();
-            // if (!check && !this.started) {
-            //     let dcto = "DNI";
-            //     if (this.form.document_type_id == "01") {
-            //         dcto = "RUC";
-            //         this.form.document_type_id = "03";
-            //     } else {
-            //         this.form.document_type_id = "01";
-            //     }
-            //     this.$toast.warning(`Digite el número de ${dcto}`);
-
-            //     this.setSeries();
-            //     return;
-            // }
-            // this.started = false;
 
             if (this.form.document_type_id == "01") {
                 this.currentDocumentsType = [
@@ -4427,81 +4412,12 @@ export default {
             }
 
             this.setSeries();
-            //aqui
-            //factura solo ruc
-            //boletas solo dni
-            //note de venta todo
             let currentClient = null;
             if (this.value != null) {
                 currentClient = this.all_customers.find(
                     c => c.id == this.value
                 );
-
-                // if (currentClient.identity_document_type_id == "1") {
-                //     this.form.document_type_id = "03";
-                // }
             }
-
-            // if (
-            //     this.form.document_type_id == "01" &&
-            //     currentClient &&
-            //     currentClient.identity_document_type_id !== "6"
-            // ) {
-            //     this.customers = this.all_customers.filter(
-            //         f => f.identity_document_type_id == "6"
-            //     );
-            //     if (this.customers.length == 0) {
-            //         this.$toast.warning("Digite el número de RUC");
-            //         this.form.document_type_id = "03";
-
-            //         // this.customers = this.all_customers;
-            //     } else {
-            //         if (
-            //             currentClient &&
-            //             this.customers.some(c => c.id == currentClient.id)
-            //         ) {
-            //             this.form.customer_telephone = currentClient.phone;
-            //             return;
-            //         }
-
-            //         this.value = this.customers[0].id;
-            //         this.form.customer_telephone = this.customers[0].phone;
-            //     }
-            // }
-            // else if (
-            //     this.form.document_type_id == "03" ||
-            //     this.form.document_type_id == "80"
-            // ) {
-            //     this.customers = this.all_customers.filter(
-            //         f => f.identity_document_type_id != "6"
-            //     );
-            //     if (this.form.total > 300) {
-            //         this.customers = this.customers.filter(
-            //             c => c.identity_document_type_id == "1"
-            //         );
-            //     }
-
-            //     if (
-            //         currentClient &&
-            //         this.customers.some(c => c.id == currentClient.id)
-            //     ) {
-            //         this.form.customer_telephone = currentClient.phone;
-            //         return;
-            //     }
-            //     let client = this.customers.find(c => {
-            //         return c.name.toLowerCase().includes("varios");
-            //     });
-            //     if (client) {
-            //         this.value = client.id;
-            //         this.form.customer_telephone = client.phone;
-            //     } else {
-            //         this.value = this.customers[0].id;
-            //         this.form.customer_telephone = this.customers[0].phone;
-            //     }
-            // }
-            // else {
-            //     this.customers = this.all_customers;
-            // }
 
             this.customers = this.customers.filter(n => n.number != "88888888");
             this.customers = [
@@ -4512,8 +4428,7 @@ export default {
             }
 
             if (this.form.hotel_customer_number) {
-                await this.searchClientOne(this.form.hotel_customer_number);
-                //                    this.changeCustomer();
+                await this.searchClientOne(this.form.hotel_customer_number);                  
             }
             if(this.form.quotation_customer_number){
                 await this.searchClientOne(this.form.quotation_customer_number);

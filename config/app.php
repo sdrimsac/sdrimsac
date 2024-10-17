@@ -18,6 +18,8 @@ return [
   'whatsapp_token' => env('API_SERVICE_TOKEN'),
   'api_peru_service_url' => env('API_PERU_SERVICE_URL'),
   'api_peru_service_token' => env('API_PERU_SERVICE_TOKEN'),
+  'api_factiliza_service_url' => env('API_FACTILIZA_SERVICE_URL'),
+  'api_factiliza_service_token' => env('API_FACTILIZA_SERVICE_TOKEN'),
   'name' => env('APP_NAME', 'Laravel'),
   'prefix_database' => env('PREFIX_DATABASE', 'tenancy'),
   /*

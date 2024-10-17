@@ -25,7 +25,7 @@ class Worshop extends Migration
     public function down()
     {
         Schema::table('configurations', function (Blueprint $table) {
-            $table->dropColumn('worshop');
+            $table->dropColumn('workshop');
         });   
     } 
 }

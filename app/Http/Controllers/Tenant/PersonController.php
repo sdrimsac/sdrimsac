@@ -180,6 +180,7 @@ class PersonController extends Controller
         $configuration = Configuration::first();
         $locations = $this->getLocationCascade();
         $api_service_token = config('configuration.api_service_token');
+        $api_factiliza_token = config('configuration.api_factiliza_token');
         return compact(
             'item_unit_types',
             'configuration',

@@ -29,19 +29,34 @@ class ServiceData
         }
         return 1;
     }
+    public static function carros($plateNumber)
+    {
+        $url_api_factiliza = config('app.api_factiliza_service_url');
+        $token_api_factiliza = config('app.api_factiliza_service_token');
+
+        $full_url_api_factiliza = "{$url_api_factiliza}/placa/{$plateNumber}?api_token={$token_api_factiliza}";
+
+        $client2 = new Client(['verify' => false]);
+
+        try {
+            $res2 = $client2->request('GET', $full_url_api_factiliza);
+
+            $response2 = json_decode($res2->getBody()->getContents(), true);
+
+            return $response2;
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => 'Error al conectar con el servicio: ' . $e->getMessage(),
+            ];
+        }
+    }
     public static function service($type, $number)
     {
-        // $url_api_peru = config('app.api_peru_service_url');
-        // $token_api_peru = config('app.api_peru_service_token');
-        // if($type=="ruc"){;
 
-        //dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765
         $url_api_peru = config('app.api_peru_service_url');
         $token_api_peru = config('app.api_peru_service_token');
-        
 
-        // $url_api_peru = "https://apiperu.dev/api";
-        // $token_api_peru = "dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765";
         $full_url_api_peru = $url_api_peru . "/" . $type . "/" . $number . "?api_token=" . $token_api_peru;
         $client2 = new Client(['base_uri' => $full_url_api_peru, 'verify' => false]);
         $res2 = $client2->request('GET', $full_url_api_peru);
@@ -53,18 +68,6 @@ class ServiceData
             $response2['data']['direccion'] = $response2['data']['direccion_completa'];
         }
         return $response2;
-        // $client = new Client(['base_uri' => $api_url, 'verify' => false]);
-        // $parameters = [
-        //     'http_errors' => false,
-        //     'connect_timeout' => 5,
-        //     'headers' => [
-        //         'Authorization' => 'Bearer ' . $token,
-        //         'Accept' => 'application/json',
-        //     ],
-        // ];
-        // $res = $client->request('GET', $api_url . '/api/' . $type . '/' . $number, $parameters);
-        // $response = json_decode($res->getBody()->getContents(), true);
-        // return $response;
     }
     public function validar_cpe($file)
     {

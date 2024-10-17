@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Models\Tenant;
+namespace Modules\Workshop\Models;
 
+use App\Models\Tenant\ModelTenant;
 
-
+use App\Models\Tenant\Establishment;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Document;
+use App\Models\Tenant\Quotation;
+use App\Models\Tenant\SaleNote;
 class WorkshopSeller extends ModelTenant
 {
     protected $table = 'sellers';

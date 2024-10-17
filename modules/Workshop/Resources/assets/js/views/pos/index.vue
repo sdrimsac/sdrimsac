@@ -1335,7 +1335,7 @@
       @sendOrdens="sendOrdens"
       :showTables.sync="showTables"
     ></tables>
-    <!-- <documents-print
+    <documents-print
       :sender="personalWhatsapp ? sender : 'sdrimsac'"
       :company="company"
       :showDialog.sync="showDocumentsPrint"
@@ -1346,7 +1346,7 @@
       :establishment.sync="establishments"
       :area_id="area_id"
       :printer.sync="printer"
-    ></documents-print> -->
+    ></documents-print>
     <PromotionCanje
       :showDialog.sync="showdialogPromocion"
       :config.sync="config"
@@ -1433,6 +1433,7 @@
       <br />
     </el-dialog>
     <detraction-payment :showDialog.sync="showDialogDetraction"></detraction-payment>
+    <mechanic :showDialog.sync="showDialogMechanic"></mechanic>
   </div>
 </template>
 
@@ -1471,7 +1472,6 @@ import queryString from "query-string";
 // cotizaciones de modal
 const QuotationListModal = () => import("./partials/quotation_list_modal.vue");
 const DispatchModal = () => import("./partials/dispatch_modal.vue");
-
 const PaymentForm = () => import("./partials/payment.vue");
 const ItemForm = () =>
   import("../../../../../../../resources/js/views/items/form.vue");
@@ -1505,6 +1505,7 @@ const CategoryDrag = () => import("./partials/category_drag.vue");
 const ProductsDue = () => import("./partials/products_due.vue");
 const ItemSet = () =>
   import("../../../../../../../resources/js/views/item_sets/form.vue");
+const Mechanic = () => import("./partials/mechanic.vue")
 const ConsolidatedListModal = () =>
   import("./partials/consolidated_list_modal.vue");
 const options = {
@@ -1528,6 +1529,7 @@ export default {
     "areaId"
   ],
   components: {
+    Mechanic,
     QuotationListModal,
     ConsolidatedListModal,
     DetractionPayment,
@@ -1558,6 +1560,7 @@ export default {
 
   data() {
     return {
+      showDialogMechanic: false,
       showQuotationListDialog: false,
       customersSearch: [],
       loading_search: false,
@@ -1921,8 +1924,23 @@ export default {
         return;
       }
     },
+    sendItems(items, clientNumber, notes, dscto_global) {
+      this.clientSaleNoteNumber = clientNumber;
+      this.clientSaleNoteDiscount = dscto_global;
+      this.form.sale_notes_relateds = notes;
+      for (let index = 0; index < items.length; index++) {
+        let element = items[index];
+        this.insertOrden(element, element.id, null);
+      }
+    },
     setMenuOptions() {
       this.optionsMenu = [
+        {
+          id: 250,
+          title: ["Mecanica"],
+          icon: "fas fa-cogs",
+          visible: true && !this.isSeller
+        },
         {
           id: 63,
           title: ["Cot.", "Consolidaciones"],
@@ -2492,6 +2510,9 @@ export default {
     },
     trigerFunction(id) {
       switch (id) {
+        case 250:
+          this.showDialogMechanic = true;
+          break;
         case 214:
           this.showQuotationListDialog = true;
           break;
@@ -2515,7 +2536,7 @@ export default {
           break;
         case 1:
           this.showDocumentsPrint = true;
-          //this.rePrint();
+          this.rePrint();
           break;
         case 5:
           this.openTables();

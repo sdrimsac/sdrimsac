@@ -1096,6 +1096,7 @@ if ($hostname) {
 
             Route::get('services/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
+            Route::get('carros/{number}', 'System\ServiceController@carros');
             Route::get('certificates/record', 'System\CertificateController@record');
             Route::post('certificates/uploads', 'System\CertificateController@uploadFile');
             Route::post('certificates/saveSoapUser', 'System\CertificateController@saveSoapUser');

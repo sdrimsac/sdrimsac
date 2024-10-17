@@ -1,30 +1,47 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Workshop\Http\Controllers\CashController;
 use Modules\Workshop\Http\Controllers\ObservationController;
 use Modules\Workshop\Http\Controllers\WorkshopController;
+use Modules\Workshop\Http\Controllers\TipoController;
 use Modules\Workshop\Http\Controllers\SellerController;
+use Modules\Workshop\Http\Controllers\VehiculoController;
+use Modules\Workshop\Http\Controllers\OrdenController;
 
 Route::prefix('workshop')->group(function() {
     Route::get('/', 'WorkshopController@index');
     Route::get('observations', [ObservationController::class, 'index'])->name('workshop.observations');
-            Route::get('observations/columns', [ObservationController::class, 'columns']);
-            Route::get('observations/records', [ObservationController::class, 'records']);
-            Route::post('observations', [ObservationController::class, 'store']);
-            Route::get('observations/record/{id}', [ObservationController::class, 'record']);
-            Route::get('observations/{id}', [ObservationController::class, 'active']);
+    Route::get('observations/columns', [ObservationController::class, 'columns']);
+    Route::get('observations/records', [ObservationController::class, 'records']);
+    Route::post('observations', [ObservationController::class, 'store']);
+    Route::get('observations/record/{id}', [ObservationController::class, 'record']);
+    Route::get('observations/{id}', [ObservationController::class, 'active']);
 
-            /* Route::get('/mecanico', [SellerController::class, 'index'])->name('tenant.workshop.mecanico');
-            Route::get('/mecanico/columns', [SellerController::class, 'columns']);
-            Route::get('/mecanico/records', [SellerController::class, 'records']);
-            Route::post('/mecanico', [SellerController::class, 'store']);
-            Route::get('/mecanico/record/{id}', [SellerController::class, 'record']);
-            Route::get('/mecanico/{id}', [SellerController::class, 'mecanico']); */
+    Route::get('/mecanico', [SellerController::class, 'index'])->name('tenant.workshop.mecanico');
+    /* Route::get('/mecanico/columns', [SellerController::class, 'columns']); */
+    Route::get('mecanico/records', [SellerController::class, 'records']);
+    Route::post('mecanico', [SellerController::class, 'store']);
+    Route::get('mecanico/record/{id}', [SellerController::class, 'record']);
+    Route::delete('mecanico/{mecanico}', [TipoController::class, 'destroy']);
+
+    Route::get('/tipo', [TipoController::class, 'index'])->name('tenant.workshop.tipo');
+    Route::get('tipo/records', [TipoController::class, 'records']);
+    Route::post('tipo', [TipoController::class, 'store']);
+    Route::get('tipo/record/{id}', [TipoController::class, 'record']);
+    Route::delete('tipo/{tipo}', [TipoController::class, 'destroy']);
+
+    Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('tenant.workshop.vehiculo');
+    Route::get('vehiculo/records', [VehiculoController::class, 'records']);
+    Route::post('vehiculo', [VehiculoController::class, 'store']);
+    Route::get('vehiculo/record/{id}', [VehiculoController::class, 'record']);
+    Route::delete('vehiculo/{tipo}', [VehiculoController::class, 'destroy']);
            
 
     Route::prefix('worker')->group(function () {
         Route::get('/dashboard-pos', [WorkshopController::class, 'pos']);
+        Route::get('print_last_document', [OrdenController::class, 'print_last_document']);
         Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);
         Route::get('expenses', [WorkshopController::class, 'expenses'])->name('workshop.expenses.index')->middleware('just.worker');;
             Route::get('expenses/records', [WorkshopController::class, 'records']);
@@ -38,6 +55,7 @@ Route::prefix('workshop')->group(function() {
             Route::get('pos/listtables', [WorkshopController::class, 'listtables']);
             Route::get('pos/selecttabled/{idOrden}', [WorkshopController::class, 'electtabled']);
             Route::get('pos/foods', [WorkshopController::class, 'foods']);
+            
 
             Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');;
             Route::get('cash/get-final-balance/{cash_id}', [CashController::class, 'getFinalBalance']);
@@ -64,6 +82,8 @@ Route::prefix('workshop')->group(function() {
             Route::get('cash/search/customers', [CashController::class, 'searchCustomers']);
             Route::get('cash/search/customer/{id}', [CashController::class, 'searchCustomerById']);
             Route::get('cash/report/products/{cash}', [CashController::class, 'report_products']);
+
+            Route::get('search_customers', [RestaurantController::class, 'search_customer']);
 
             
     });

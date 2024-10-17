@@ -218,6 +218,8 @@ Vue.component(
 
 Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-service", require("./components/InputService.vue"));
+Vue.component("x-input-carro", require("./components/InputCarro.vue"));
+Vue.component("x-input-carro", require("./components/InputCarro.vue"));
 Vue.component("x-graph", require("./components/graph/src/Graph.vue"));
 Vue.component("x-graph-line", require("./components/graph/src/GraphLine.vue"));
 Vue.component(
@@ -692,6 +694,12 @@ const app = new Vue({
             import(
                 "../../modules/Internet/Resources/assets/js/view/planes/index.vue"
             ),
+        "tenant-workshop-mecanico": () =>
+            import("../../modules/Workshop/Resources/assets/js/views/mecanico/index.vue"),
+        "tenant-workshop-tipo": () => 
+            import("../../modules/Workshop/Resources/assets/js/views/tipo/index.vue"),
+        "tenant-workshop-vehiculo": () =>
+            import("../../modules/Workshop/Resources/assets/js/views/vehiculo/index.vue"),
         "tenant-billar-pos": () => 
             import("../../modules/Billar/Resources/assets/js/views/pos/index.vue"   
             ),

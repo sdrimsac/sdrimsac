@@ -32,151 +32,151 @@
                         <span class="label"></span>
                     </a>
                 </li>
-                <li>
-                    <a href="#restaurantComponents" data-bs-toggle="collapse" data-role="button"
-                        aria-expanded="{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'category' ? true : false }}{{ $path[0] === 'item-sets' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers' ? true : false }}  {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? true : false }}"
-                        class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }} {{ $path[0] === 'brands' ? 'active' : '' }}{{ $path[0] === 'category' ? 'active' : '' }}{{ $path[0] === 'item-sets' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }} {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
-                        data-clicked="{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'category' ? true : false }}{{ $path[0] === 'item-sets' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? true : false }}">
-                        <i class="icofont-fix-tools icon-parent"></i>
-                        <span class="label"> Mantenimiento</span>
-                    </a>
-                    <ul id="restaurantComponents" class="collapse ">
-                        @if ($config->sale_note_credit_penalty)
-                            <li>
-                                <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
-                                    href="{{ route('tenant.sale_note_credit_penalty.index') }}">
-                                    <i class="icofont-users-alt-1"></i> Penalidades - Notas de venta crédito
-                                </a>
-                            </li>
-                        @endif
-                        @if ($config->users_views)
-                            <li>
-                                <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
-                                    href="{{ route('restaurant.workers') }}">
-                                    <i class="icofont-users-alt-1"></i> Usuarios
-                                </a>
-                            </li>
-                        @endif
-                        @if ($config->commercial_treatments || $config->commercial_treatment_items)
-                            <li>
-                                <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.commercial_treatment.index') }}">
-                                    <i class="fas fa-layer-group"></i>
-                                    Tratamiento comercial
-                                </a>
-                            </li>
-                        @endif
-                        @if ($config->health_network)
-                            <li>
-                                <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
-                                    href="{{ route('tenant.principal_categories.index') }}">
-                                    <i class="fas fa-layer-group"></i>
-                                    Categorias principales
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->cuentas_bancarias)
-                            <li>
-                                <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.bank_accounts.index') }}">
-                                    <i class="icofont-bank"></i>
-                                    Ctas bancarias
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->bancos)
-                            <li>
-                                <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.banks.index') }}">
-                                    <i class="icofont-bank-alt"></i> Bancos
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->vendedores)
-                            <li>
-                                <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.sellers.index') }}">
-                                    <i class="icofont-id-card"></i> Vendedores
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->registro_actividad)
-                            <li>
-                                <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
-                                    href="{{ route('tenant.registers.index') }}">
-                                    <i class="fas fa-history"></i> Registro de actividades
-                                </a>
-                            </li>
-                        @endif
-                        @if ( $config->college)
-                            <li>
-                                <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.items.index') }}">
-                                    <i class="icofont-soft-drinks"></i> Productos
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->categorias)
-                            <li>
-                                <a class="{{ $path[0] === 'category' ? 'active' : '' }}"
-                                    href="{{ route('tenant.categories.index') }}">
-                                    <i class="icofont-chart-flow"></i> Categorias
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->marca)
-                            <li>
-                                <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
-                                    href="{{ route('tenant.brands.index') }}">
-                                    <i class="icofont-xing"></i> Marcas
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->clientes)
-                            <li>
-                                <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
-                                    href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
-                                    <i class="icofont-business-man"></i> Clientes
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->provedores)
-                            <li>
-                                <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
-                                    href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
-                                    <i class="icofont-business-man"></i> Proveedores
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->atributos)
-                            <li>
-                                <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.attribute_types.index') }}">
-                                    <i class="fa fa-newspaper"></i> Atributos
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->unidad_medida)
-                            <li>
-                                <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
-                                    href="{{ route('tenant.unit_types.index') }}">
-                                    <i class="fa fa-solid fa-ruler"></i> Unidad de medida
-                                </a>
-                            </li>
-                        @endif
-                        @if ($config->personal_phone)
-                            <li>
-                                <a class="{{ $path[0] === 'whatsapp' ? 'active' : '' }}"
-                                    href="{{ route('whatsapp') }}">
-                                    <i class="icofont-brand-whatsapp" aria-hidden="true"></i> Whatsapp
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin')
-                        @endif
-                    </ul>
-                </li>
             @endif
+            <li>
+                <a href="#restaurantComponents" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'category' ? true : false }}{{ $path[0] === 'item-sets' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers' ? true : false }}  {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? true : false }}"
+                    class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }} {{ $path[0] === 'brands' ? 'active' : '' }}{{ $path[0] === 'category' ? 'active' : '' }}{{ $path[0] === 'item-sets' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }} {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'category' ? true : false }}{{ $path[0] === 'item-sets' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? true : false }}">
+                    <i class="icofont-fix-tools icon-parent"></i>
+                    <span class="label"> Mantenimiento</span>
+                </a>
+                <ul id="restaurantComponents" class="collapse ">
+                    @if ($config->sale_note_credit_penalty && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
+                                href="{{ route('tenant.sale_note_credit_penalty.index') }}">
+                                <i class="icofont-users-alt-1"></i> Penalidades - Notas de venta crédito
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->users_views && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
+                                href="{{ route('restaurant.workers') }}">
+                                <i class="icofont-users-alt-1"></i> Usuarios
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->commercial_treatments || ($config->commercial_treatment_items && !$roleService->isLogistic()))
+                        <li>
+                            <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.commercial_treatment.index') }}">
+                                <i class="fas fa-layer-group"></i>
+                                Tratamiento comercial
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->health_network && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
+                                href="{{ route('tenant.principal_categories.index') }}">
+                                <i class="fas fa-layer-group"></i>
+                                Categorias principales
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || ($config->cuentas_bancarias && !$roleService->isLogistic()))
+                        <li>
+                            <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.bank_accounts.index') }}">
+                                <i class="icofont-bank"></i>
+                                Ctas bancarias
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || ($config->bancos && !$roleService->isLogistic()))
+                        <li>
+                            <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.banks.index') }}">
+                                <i class="icofont-bank-alt"></i> Bancos
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || ($config->vendedores && !$roleService->isLogistic()))
+                        <li>
+                            <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.sellers.index') }}">
+                                <i class="icofont-id-card"></i> Vendedores
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || ($config->registro_actividad && !$roleService->isLogistic()))
+                        <li>
+                            <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
+                                href="{{ route('tenant.registers.index') }}">
+                                <i class="fas fa-history"></i> Registro de actividades
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->college && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.items.index') }}">
+                                <i class="icofont-soft-drinks"></i> Productos
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || $config->categorias)
+                        <li>
+                            <a class="{{ $path[0] === 'category' ? 'active' : '' }}"
+                                href="{{ route('tenant.categories.index') }}">
+                                <i class="icofont-chart-flow"></i> Categorias
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || $config->marca)
+                        <li>
+                            <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
+                                href="{{ route('tenant.brands.index') }}">
+                                <i class="icofont-xing"></i> Marcas
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || ($config->clientes && !$roleService->isLogistic()))
+                        <li>
+                            <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
+                                href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
+                                <i class="icofont-business-man"></i> Clientes
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || $config->provedores)
+                        <li>
+                            <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
+                                href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
+                                <i class="icofont-business-man"></i> Proveedores
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || $config->atributos)
+                        <li>
+                            <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.attribute_types.index') }}">
+                                <i class="fa fa-newspaper"></i> Atributos
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || $config->unidad_medida)
+                        <li>
+                            <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.unit_types.index') }}">
+                                <i class="fa fa-solid fa-ruler"></i> Unidad de medida
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->personal_phone && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'whatsapp' ? 'active' : '' }}" href="{{ route('whatsapp') }}">
+                                <i class="icofont-brand-whatsapp" aria-hidden="true"></i> Whatsapp
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin')
+                    @endif
+                </ul>
+            </li>
+            {{-- @endif --}}
 
             {{-- @if ($roleService->isArca() && $config->hotels)
                 <li>
@@ -212,7 +212,9 @@
         </ul>
         </li> --}}
             {{-- @if (!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) --}}
-            @if ($user->type == 'superadmin' || (!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) && $config->lista_compras)
+            @if (
+                $user->type == 'superadmin' ||
+                    ((!$roleService->isArca() || ($user->is_arca && $config->lista_compras)) && $config->lista_compras))
                 <li>
                     <a href="#compras" data-bs-toggle="collapse" data-role="button"
                         aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
@@ -289,7 +291,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($user->type == 'superadmin' || $has_series && $config->series_enabled)
+                        @if ($user->type == 'superadmin' || ($has_series && $config->series_enabled))
                             <li>
                                 <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('itemlots') }}">
@@ -314,7 +316,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ( $config->promocion_oferta)
+                        @if ($config->promocion_oferta)
                             <li>
                                 <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.item_sets.index') }}">
@@ -322,7 +324,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ( $config->color_size_enabled)
+                        @if ($config->color_size_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'item-color-size' ? 'active' : '' }}"
                                     href="{{ route('tenant.item_color_size.index') }}">
@@ -339,12 +341,12 @@
                             </li>
                         @endif
                         @if ($config->pricing_policy_venta)
-                        <li>
-                            <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
-                                href="{{ route('tenant.productos.index') }}">
-                                <i class="icofont-box"></i> Listado de Politica de Precios
-                            </a>
-                        </li>
+                            <li>
+                                <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
+                                    href="{{ route('tenant.productos.index') }}">
+                                    <i class="icofont-box"></i> Listado de Politica de Precios
+                                </a>
+                            </li>
                         @endif
                         @if ($config->tipo_transacciones_inventario)
                             <li>
@@ -599,7 +601,7 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
-                    @if ($user->type == 'superadmin' || $config->reporte_metodos_pago)
+                    @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago ))
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                                 href="{{ route('reports.methods.index') }}">
@@ -617,7 +619,7 @@
                         </li>
                     @endif
 
-                    @if ($config->health_network)
+                    @if ($config->health_network && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'health-global' ? 'active' : '' }}"
                                 href="{{ route('tenant.health_global.index') }}">
@@ -627,7 +629,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ( $config->consignment)
+                    @if ($config->consignment && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
                                 href="{{ route('reports.consignment.index') }}">
@@ -637,7 +639,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type == 'superadmin' || $config->credits)
+                    @if ($user->type == 'superadmin' || ($config->credits && !$roleService->isLogistic()))
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
                                 href="{{ route('reports.credits.index') }}">
@@ -646,7 +648,7 @@
                                 Créditos
                             </a>
                         </li>
-                        @if ($user->type == 'superadmin' || $config->diary)
+                        @if ($user->type == 'superadmin' || ($config->diary && !$roleService->isLogistic()))
                             <li>
                                 <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'daily_credit' ? 'active' : '' }}"
                                     href="{{ route('reports.credits.daily_index') }}">
@@ -655,7 +657,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($user->type == 'superadmin' || $config->house)
+                        @if ($user->type == 'superadmin' || ($config->house && !$roleService->isLogistic()))
                             <li>
                                 <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'consolidated' ? 'active' : '' }}"
                                     href="{{ route('tenant.sale_notes.consolidated') }}">
@@ -675,7 +677,7 @@
                         </li>
                     @endif
                     @endif
-                    @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm)
+                    @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm && !$roleService->isLogistic())
                         @if ($user->type == 'superadmin' || $config->reporte_ganancias)
                             <li>
                                 <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
@@ -685,24 +687,25 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($user->type == 'superadmin' || $config->reporte_productos)
-                            <li>
-                                <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
-                                    href="{{ route('reports.products-clients.index') }}">
-                                    <i class="fas fa-window-restore"></i>
-                                    R. productos
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->type == 'superadmin' || $config->stock_valorizado)
-                            <li>
-                                <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
-                                    href="{{ route('reports.valued.index') }}">
 
-                                    <i class="icofont-dollar"></i> Stock valorizado
-                                </a>
-                            </li>
-                        @endif
+                    @endif
+                    @if ($config->stock_valorizado)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
+                                href="{{ route('reports.valued.index') }}">
+
+                                <i class="icofont-dollar"></i> Stock valorizado
+                            </a>
+                        </li>
+                    @endif
+                    @if ($user->type == 'superadmin' || $config->reporte_productos)
+                        <li>
+                            <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
+                                href="{{ route('reports.products-clients.index') }}">
+                                <i class="fas fa-window-restore"></i>
+                                R. productos
+                            </a>
+                        </li>
                     @endif
                     @if ($user->type == 'superadmin' || $config->stock_minino)
                         <li>
@@ -712,7 +715,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type == 'superadmin' || $config->stock_producto)
+                    @if ($config->stock_producto)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                                 href="{{ route('reports.inventory.index') }}">
@@ -760,8 +763,8 @@
                             </a>
                         </li>
                     @endif
-                    
-                    @if ($config->maderera)
+
+                    @if ($config->maderera && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'madera' ? 'active' : '' }}"
                                 href="{{ route('tenant.madera.index') }}">
@@ -924,9 +927,9 @@
         @if ($config->restaurant && !$roleService->isLogistic())
             <li>
                 <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
-                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
-                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-restaurant icon-parent"></i>
                     <span class="label ">Restaurante</span>
                 </a>
@@ -972,9 +975,9 @@
         @if ($config->hotels && !$roleService->isLogistic())
             <li>
                 <a href="#hotelUl" data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
-                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
-                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-hotel icon-parent"></i>
                     <span class="label">Hotel</span>
                 </a>
@@ -993,9 +996,9 @@
         @if ($config->modo_billar && !$roleService->isLogistic())
             <li>
                 <a href="#billarUl" data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
-                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
-                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-billiard-ball icon-parent"></i>
                     <span class="label">Casino</span>
                 </a>
@@ -1013,24 +1016,31 @@
         @if ($config->workshop && !$roleService->isLogistic())
             <li>
                 <a href="#workshopUl" data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
-                class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
-                data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     {{-- <i class="icofont-billiard-ball icon-parent"></i> --}}
                     <i class="icofont-ui-settings icon-parent"></i>
                     <span class="label">Mecanica</span>
                 </a>
                 <ul id="workshop" class="collapse">
                     <li>
-                        <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
-                            href="{{ route('billar.billar') }}">
-                            <i class="fas fa-biliard"></i>
+                        <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
+                            href="{{ route('tenant.workshop.mecanico') }}">
+                            <i class=""></i>
                             Personal Mecanica
                         </a>
                     </li>
                     <li>
-                        <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
-                            href="{{ route('billar.billar') }}">
+                        <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
+                            href="{{ route('tenant.workshop.vehiculo') }}">
+                            <i class=""></i>
+                            Vehiculos
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
+                            href="{{ route('tenant.workshop.tipo') }}">
                             <i class="fas fa-biliard"></i>
                             Tipos Vehiculos
                         </a>
