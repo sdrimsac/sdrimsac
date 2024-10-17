@@ -7,7 +7,7 @@ use App\Models\Tenant\Person;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use App\Traits\RegisterMovementTrait;
-  use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\ModelTenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Restaurant\Models\Table;
@@ -29,7 +29,7 @@ class Orden extends ModelTenant
         'to_carry',
         'sale_note_id',
         'document_id',
-        'ref'
+        'ref',
     ];
 
     protected $casts = [

@@ -39,90 +39,6 @@
                 </el-select>
               </div>
             </div>
-            <!-- <div class="col-md-4">
-              <label for>Placa</label>
-              <el-input placeholder>
-                <div v-if="api_factiliza_token != false">
-                  <x-input-carros
-                    v-model="form.number"
-                    @search="searchNumber"
-                  ></x-input-carros>
-                </div>
-                <el-button type="primary" slot="append" icon="el-icon-search"
-                ></el-button>
-              </el-input>
-            </div>-->
-            <!-- <div class="col-md-4">
-              <div class="form-group">
-                <label class="control-label">
-                  Número de Placa
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="Este campo es obligatorio...!!!"
-                    placement="top"
-                  >
-                    <i class="fas fa-info-circle text-danger"></i>
-                  </el-tooltip>
-                </label>
-                <div v-if="api_factiliza_token != false">
-                  <x-input-carros v-model="form.number" @search="searchNumber"></x-input-carros>
-                </div>
-                <div v-else>
-                  <el-input ref="number" v-model="form.number" :maxlength="maxLength" dusk="number">
-                    <template>
-                      <el-button
-                        type="primary"
-                        slot="append"
-                        :loading="loading_search"
-                        icon="el-icon-search"
-                        @click.prevent="searchCustomer"
-                      ></el-button>
-                    </template>
-                    <i slot="prefix" class="el-icon-edit-outline"></i>
-                  </el-input>
-                </div>
-              </div>
-            </div>-->
-            <!-- <div class="col-md-4">
-              <div class="form-group">
-                <label class="control-label">
-                  Número de Placa
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="Este campo es obligatorio...!!!"
-                    placement="top"
-                  >
-                    <i class="fas fa-info-circle text-danger"></i>
-                  </el-tooltip>
-                </label>
-                <div v-if="api_factiliza_token != false">
-                  <x-input-carro v-model="form.number" @search="searchNumber"></x-input-carro>
-                </div>
-                <div v-else>
-                  <el-input
-                    ref="number"
-                    v-model="form.number"
-                    :maxlength="maxLength"
-                    dusk="number"
-                    placeholder="Ingresa el número de placa"
-                  >
-                    <template v-slot:append>
-                      <el-button
-                        type="primary"
-                        :loading="loading_search"
-                        icon="el-icon-search"
-                        @click.prevent="searchPlaca"
-                      >Buscar</el-button>
-                    </template>
-                    <template v-slot:prefix>
-                      <i class="el-icon-edit-outline"></i>
-                    </template>
-                  </el-input>
-                </div>
-              </div>
-            </div>-->
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label">
@@ -137,7 +53,10 @@
                   </el-tooltip>
                 </label>
                 <div v-if="api_factiliza_token != false">
-                  <x-input-carro v-model="form.number" @search="searchNumber"></x-input-carro>
+                  <x-input-carro 
+                  v-model="form.number" 
+                  @search="handleSearchResult">
+                  </x-input-carro>
                 </div>
                 <div v-else>
                   <el-input
@@ -145,7 +64,6 @@
                     v-model="form.number"
                     :maxlength="6"
                     dusk="number"
-                    placeholder="Ingresa el número de placa"
                   >
                     <template v-slot:append>
                       <el-button
@@ -264,6 +182,10 @@ export default {
     }
   },
   methods: {
+    handleSearchResult(data){
+      /* this.customers = data.customers; */
+      console.log('Resultado de la Busqueda de la placa', this.form.number);
+    },
     initForm() {
       this.errors = {};
       this.form = {
@@ -283,7 +205,13 @@ export default {
       }
     },
     searchPlaca (){
-      this.searchPlaca();
+      this.$http(`/carros/${this.form.number}`).then(
+        response => {
+          console.log(response);
+        }
+      )
+      console.log('Busqueda manual de la placa', this.form.number)
+
     },
     getTipoVehiculo() {
       this.$http

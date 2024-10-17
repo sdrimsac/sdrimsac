@@ -29,28 +29,7 @@ class ServiceData
         }
         return 1;
     }
-    public static function carros($plateNumber)
-    {
-        $url_api_factiliza = config('app.api_factiliza_service_url');
-        $token_api_factiliza = config('app.api_factiliza_service_token');
 
-        $full_url_api_factiliza = "{$url_api_factiliza}/placa/{$plateNumber}?api_token={$token_api_factiliza}";
-
-        $client2 = new Client(['verify' => false]);
-
-        try {
-            $res2 = $client2->request('GET', $full_url_api_factiliza);
-
-            $response2 = json_decode($res2->getBody()->getContents(), true);
-
-            return $response2;
-        } catch (\Exception $e) {
-            return [
-                'error' => true,
-                'message' => 'Error al conectar con el servicio: ' . $e->getMessage(),
-            ];
-        }
-    }
     public static function service($type, $number)
     {
 

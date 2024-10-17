@@ -219,7 +219,6 @@ Vue.component(
 Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-carro", require("./components/InputCarro.vue"));
-Vue.component("x-input-carro", require("./components/InputCarro.vue"));
 Vue.component("x-graph", require("./components/graph/src/Graph.vue"));
 Vue.component("x-graph-line", require("./components/graph/src/GraphLine.vue"));
 Vue.component(

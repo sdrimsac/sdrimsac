@@ -70,9 +70,18 @@ use App\Models\Tenant\Purchase;
 use App\Http\Resources\Tenant\ItemUltima_ventaCollection;
 use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
 use App\Models\Tenant\BonusUnitType;
+use App\Http\Resources\Tenant\RegisterMovementCollection;
+use App\Models\Tenant\RegisterMovement;
 
 class ItemController extends Controller
 {
+    protected $all_models = [];
+    public function __construct() {
+        $this->all_models = [
+            
+            "Item" => "App\Models\Item",
+        ];
+    }
     public function importStockFormat(Request $request)
     {
         $warehouse_id = $request->warehouse_id;
@@ -744,6 +753,39 @@ class ItemController extends Controller
             ->orderBy('purchases.date_of_issue', 'desc');
 
         return $records;
+    }
+    public function recordsActivity(Request $request){
+
+        $records = RegisterMovement::query();
+        $column = $request->column;
+        $value = $request->value;
+
+        if($column && $value){
+            switch ($column) {
+                case 'user_id':
+                    $records = $records->where('user_id', $value);
+                    break;
+                case 'date_of_issue':
+                    $records = $records->whereDate('created_at', $value);
+                    break;
+                case 'description':
+                    $records = $records->where('description', 'like', "%{$value}%");
+                    break;
+                case 'event_description':
+                    $records = $records->where('event', $value);
+                    break;
+                case 'model':
+                    $model = $this->get_model($value);
+                    if($model){
+                        $records = $records->where('model', $model);
+                    }
+                    break;
+            }
+        }
+
+        $records = $records->orderBy('id', 'desc');
+        return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
+
     }
 
     public function create()

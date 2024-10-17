@@ -7,6 +7,7 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use App\Models\Tenant\Catalogs\UnitType;
+/* use GuzzleHttp\Psr7\Request; */
 use Illuminate\Database\Eloquent\Model;
 use Modules\Format\Models\Account;
 use Modules\Item\Models\CategoryItem;
@@ -14,9 +15,15 @@ use Modules\Item\Models\Brand;
 use Modules\Item\Models\ItemLot;
 use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Food;
+use App\Traits\RegisterMovementTrait;
+use Illuminate\Http\Request;
+
+
+/* use Illuminate\Http\Request; */
 
 class Item extends ModelTenant
 {
+    use RegisterMovementTrait;
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group'];
     protected $fillable = [
         'has_color_size',
@@ -644,5 +651,49 @@ class Item extends ModelTenant
     public function scopeWhereHasInternalId($query)
     {
         return $query->where('internal_id', '!=', null);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        //created
+        item::created(function ($model) {
+             $request = Request::capture();
+             $description = "producto creado Por ";
+             $data = $model->toArray();
+             RegisterMovementTrait::registerCreate(
+                 $model,
+                 $request,
+                 $description,
+                 $data
+             );
+         });
+        item::updated(function ($model) {
+            $request = Request::capture();
+            $description = null;
+            $original_model = Item::find($model->id);
+            $description = "Producto actualizado";
+            $data = $original_model->toArray();
+            RegisterMovementTrait::registerUpdate(
+                $model,
+                $request,
+                $description,
+                $data
+            );
+        });
+
+        item::deleted(
+            function ($model) {
+                $request = Request::capture();
+                $description = "Producto Elimindo";
+                $data = $model->toArray();
+                RegisterMovementTrait::registerDelete(
+                    $model,
+                    $request,
+                    $description,
+                    $data
+                );
+            }
+
+        );
     }
 }

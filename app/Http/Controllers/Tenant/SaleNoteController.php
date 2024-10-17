@@ -1587,6 +1587,9 @@ class SaleNoteController extends Controller
 
                         if ($payment['payment'] > 0) {
                             $record = new SaleNotePayment;
+                            if (!isset($payment['payment_method_type_id'])){
+                                $payment['payment_method_type_id'] = "01";
+                            }
                             $record->fill($payment);
                             $payment["payment_destination_id"] = "cash";
                             $record->sale_note_id = $this->sale_note->id;

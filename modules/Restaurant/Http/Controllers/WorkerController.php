@@ -154,7 +154,8 @@ class WorkerController extends Controller
 
         return new UserCollection($records->paginate(150),);
     }
-    public function recordsActivity(Request $request){
+    public function recordsActivity(Request $request)
+    {
 
         $records = RegisterMovement::query();
         $column = $request->column;
@@ -185,7 +186,6 @@ class WorkerController extends Controller
 
         $records = $records->orderBy('id', 'desc');
         return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
-
     }
     public function record($id) //8
     {

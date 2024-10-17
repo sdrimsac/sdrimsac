@@ -410,6 +410,7 @@ if ($hostname) {
 
                 Route::get('items/ultima-venta/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_Venta']);
                 Route::get('items/ultima-compra/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_compra']);
+                Route::get('items/recordsActivity', [App\Http\Controllers\Tenant\ItemController::class, 'recordsActivity']);
                 /* Route::get('items/ultima-venta', [ItemController::class, 'getUltimaVenta']); */
 
                 Route::get('items/import_stock_format', [App\Http\Controllers\Tenant\ItemController::class, 'importStockFormat']);
@@ -442,6 +443,7 @@ if ($hostname) {
                 Route::get('items/export/barcode/print', [App\Http\Controllers\Tenant\ItemController::class, 'printBarCode'])->name('tenant.items.export.barcode.print')->middleware('just.admin');
                 Route::get('items/export/barcode/last', [App\Http\Controllers\Tenant\ItemController::class, 'itemLast'])->name('tenant.items.last')->middleware('just.admin');
                 Route::get('items/check_all_stock', [App\Http\Controllers\Tenant\ItemController::class, 'check_all_stock'])->name('tenant.items.check_stock')->middleware('just.admin');
+                
                 //ClientZone
                 Route::get('client_zones/records', [ClientZoneController::class, 'records']);
                 Route::post('client_zones', [ClientZoneController::class, 'store']);
@@ -601,6 +603,7 @@ if ($hostname) {
                 Route::get('retentions/table/{table}', [App\Http\Controllers\Tenant\RetentionController::class, 'table']);
                 Route::post('get_igv', [App\Http\Controllers\Tenant\StoreController::class, 'getIgv']);
                 //Dispatches
+                Route::get('carros/{number}', [App\Http\Controllers\Tenant\StoreController::class, 'carros']);
 
                 Route::prefix("dispatches")->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\DispatchController::class, 'index'])->name('tenant.dispatches.index')->middleware('just.admin');
@@ -1096,7 +1099,7 @@ if ($hostname) {
 
             Route::get('services/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-            Route::get('carros/{number}', 'System\ServiceController@carros');
+            
             Route::get('certificates/record', 'System\CertificateController@record');
             Route::post('certificates/uploads', 'System\CertificateController@uploadFile');
             Route::post('certificates/saveSoapUser', 'System\CertificateController@saveSoapUser');

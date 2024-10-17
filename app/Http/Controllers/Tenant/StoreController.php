@@ -10,6 +10,8 @@ use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Series;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Modules\Document\Http\Resources\ItemLotCollection;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use Modules\Item\Models\ItemLot;
@@ -132,6 +134,32 @@ class StoreController extends Controller
             }
         }
         return 18;
+    }
+    public function carros($plateNumber)
+    {
+        $url_api_factiliza = config('app.api_factiliza_service_url');
+        $token_api_factiliza = config('app.api_factiliza_service_token');
+
+        $full_url_api_factiliza = "{$url_api_factiliza}/{$plateNumber}";
+         
+        // Realizar la solicitud GET con el token en el header
+        $response = Http::withoutVerifying()->withHeaders([
+            'Authorization' => "Bearer {$token_api_factiliza}",  // Enviar el token en el header
+        ])->get($full_url_api_factiliza);
+        Log::info('Respuesta de Factiliza:', ['response' => $response->body()]);
+        // Verificar si la solicitud fue exitosa
+        if ($response->successful()) {
+            
+            return $response->json();  // Devolver los datos de la respuesta como JSON
+        } else {
+            
+            // Manejar el error de la solicitud
+            return [
+                'error' => true,
+                'message' => 'Error al obtener datos de Factiliza',
+                'status' => $response->status()
+            ];
+        }
     }
 
 

@@ -3743,9 +3743,15 @@ export default {
             }
         },
         async clickPayment(form) {
+            let amount1 = Number(this.form.enter_amount)
+            let amount2 = Number(this.form.total)
+            console.log("saaa ", amount1, "sadsfsd ", amount2)
             if (
                 this.configuration.sale_note_credit_cash &&
-                this.enter_amount != this.form.total &&
+                /* this.enter_amount < this.form.total && */
+                amount1 < amount2
+                && 
+
                 this.form.document_type_id == "80"
             ) {
                 try {
@@ -3759,7 +3765,7 @@ export default {
                         }
                     );
                 } catch (e) {
-                    return;
+                    /* return; */
                 }
             }
 
@@ -3869,7 +3875,7 @@ export default {
             }
             form.advances = 0.0;
             form.total_advances = 0.0;
-            form.total_payment = form.total;
+            form.total_payment = form.total - (amount2-amount1);
 
             // {
             //     payment_method_type_id: "01",
