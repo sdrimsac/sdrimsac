@@ -119,13 +119,13 @@ class ItemCollection extends ResourceCollection
         });
     }
     function get_last_document($row){
-        //aqui le estas diciendo que busque en user_id con el id del item
-        $last_register_movement = RegisterMovement::where('user_id', auth()->user()->id)
-            ->where('model', Item::class)
+        $last_register_movement = RegisterMovement::where('model', Item::class)
+            /* ->where('model', Item::class) */
             ->where('model_id', $row->id)
+            ->whereHas('user', function ($query) {
+                $query->whereNull('area_id');
+            })
             ->orderBy('id', 'desc')->first();
-            // dump("user_id ".$user_d)
-            // dump($last_register_movement);
         $data = [
             'user'=>'',
             'date_time' => '',
@@ -142,37 +142,6 @@ class ItemCollection extends ResourceCollection
         }
         return $data;
     }
-
-    /* function get_last_document($item_id){
-
-        // Buscamos el último movimiento relacionado con el modelo Item (App\Models\Tenant\Item) y el item específico
-        $last_movement = DB::table('registers_movement_users')
-                            ->where('modelo', 'App\Models\Tenant\Item') // Filtramos por el modelo
-                            ->where('modelo_id', $item_id) // Filtramos por el ID del ítem modificado
-                            ->orderBy('id', 'desc') // Ordenamos por el registro más reciente
-                            ->first();
-    
-        // Inicializamos un arreglo con valores vacíos
-        $data = [
-            'user' => '',
-            'date_time' => '',
-            'description' => '',
-        ];
-    
-        // Si encontramos un registro, llenamos el arreglo con los detalles del movimiento
-        if($last_movement){
-            $date_time = $last_movement->created_at;
-            $user = User::find($last_movement->user_id); // Recuperamos el usuario basado en el user_id
-    
-            $data = [
-                'user' => $user->name,
-                'description' => $last_movement->description, // Descripción del movimiento
-                'date_time' => $this->get_date_difference($date_time), // Calculamos la diferencia de fecha
-            ];
-        }
-    
-        return $data;
-    } */
     function get_date_difference($created_at){
         $currentDay = Carbon::now();
         $created_at = Carbon::parse($created_at);
