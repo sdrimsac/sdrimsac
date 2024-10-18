@@ -1248,12 +1248,12 @@
 
                             <div class="row align-items-end">
                               <div
-                                :class="
-                                `${
-                                  isSellerConsolidated
-                                  ? 'col-6'
-                                  : 'col-4 col-md-5 col-lg-4 col-xl-4'
-                                  }`
+                                class="
+                                
+                                  
+                                   col-6
+                                   col-4 col-md-5 col-lg-4 col-xl-4
+                                  
                                   "
                               >
                                 <span class="fw-bold">
@@ -1393,7 +1393,7 @@
                                <!-- vendedor  -->
                               <template
                               >
-                                <div class="col-4 col-md-5 col-lg-5 col-xl-4">
+                                <div class="col-6 col-md-5 col-lg-5 col-xl-4">
                                   <span class="time font-weight-light">
                                     <span class="fw-bold">
                                       Precio

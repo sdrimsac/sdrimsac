@@ -129,8 +129,6 @@ class EtiquetasController extends Controller
             ))->render();
 
             $pdf->WriteHTML($html);
-            // $pdf->output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'I');
-            //stream
             $pdf->Output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
         } catch (Exception $e) {
             return response($e, 500);
