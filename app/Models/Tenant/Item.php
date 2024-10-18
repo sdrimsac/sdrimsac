@@ -658,7 +658,7 @@ class Item extends ModelTenant
         //created
         item::created(function ($model) {
              $request = Request::capture();
-             $description = "producto creado Por ";
+             $description = "Nuevo Producto Creado";
              $data = $model->toArray();
              RegisterMovementTrait::registerCreate(
                  $model,
