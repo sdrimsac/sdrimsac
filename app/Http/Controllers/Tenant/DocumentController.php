@@ -78,6 +78,7 @@ use Modules\Item\Http\Requests\CategoryRequest;
 use  Modules\Inventory\Models\InventoryConfiguration;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\Exports\CreditByClientExport;
 use App\Exports\DocumentExport;
 use App\Exports\DocumentVenta;
 use App\Http\Resources\Tenant\DocumentDetractionCollection;
@@ -890,6 +891,7 @@ class DocumentController extends Controller
             'stock' => $stock,
         ];
     }
+
     public function getRecord($id)
     {
         $record = Document::find($id);

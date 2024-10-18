@@ -324,6 +324,14 @@
                         ><i class="fa fa-file-excel"></i> Exportar Excel
                         aceptados</el-button
                     >
+                    <el-button
+                        class="submit"
+                        v-if="form.person_id"
+                        type="success"
+                        @click.prevent="clickReportByPerson"
+                    >
+                        Créditos de cliente
+                    </el-button>
                 </template>
             </div>
         </div>
@@ -513,7 +521,7 @@
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         row.status != 'O' &&
-                                                        row.can_edit && 
+                                                        row.can_edit &&
                                                         (user.can_accept_credit_sale_note
                                                             ? true
                                                             : isAnalist
@@ -533,11 +541,12 @@
                                                     Editar
                                                 </span>
                                             </el-dropdown-item>
-                                                <el-dropdown-item
+                                            <el-dropdown-item
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         row.can_edit &&
-                                                        user.can_accept_credit_sale_note && row.status != 'O'
+                                                        user.can_accept_credit_sale_note &&
+                                                        row.status != 'O'
                                                 "
                                             >
                                                 <span
@@ -630,11 +639,10 @@
                                             </template>
 
                                             <el-dropdown-item
-                                                
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         row.status != 'O' &&
-                                                        row.can_edit && 
+                                                        row.can_edit &&
                                                         (user.can_accept_credit_sale_note
                                                             ? true
                                                             : isAnalist
@@ -789,9 +797,11 @@
                 <el-button
                     type="primary"
                     @click="
-                        isPauseSaleNote ? clickPauseSaleNote() : clickVoidSaleNote()
+                        isPauseSaleNote
+                            ? clickPauseSaleNote()
+                            : clickVoidSaleNote()
                     "
-                    >{{isPauseSaleNote ? 'Terminar' : 'Anular'}}</el-button
+                    >{{ isPauseSaleNote ? "Terminar" : "Anular" }}</el-button
                 >
             </span>
         </el-dialog>
@@ -914,6 +924,13 @@ export default {
         this.getTables();
     },
     methods: {
+        clickReportByPerson() {
+            console.log(this.form.person_id);
+            window.open(
+                `/sale-notes/all-credit-client/${this.form.person_id}`,
+                "_blank"
+            );
+        },
         pauseCredit(record) {
             this.recordId = record.id;
             this.titleVoided = "Término de crédito-" + record.number;

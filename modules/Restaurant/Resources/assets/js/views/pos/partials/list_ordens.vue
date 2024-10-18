@@ -427,7 +427,6 @@
               <br />Cancelar
             </button>
             <div
-              v-if="localOrden.length != 0"
               class="dropdown-as-select d-inline-block mt-2"
               data-childselector="span"
             >
@@ -526,7 +525,10 @@
                   style="max-height: 45px ; max-width: 80px;"
                 >
                   <i class="fas fa-money-bill-wave" style="color: var(--primary) !important"></i>
-                  <br />Credito
+                  <br />
+                  {{
+                    localOrden.length != 0 ? 'Crédito' : 'Simular'
+                  }}
                 </button>
               </template>
             </div>

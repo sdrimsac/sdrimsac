@@ -66,6 +66,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\Exports\CreditByClientExport;
 use App\Exports\NotaVentaExport;
 use App\Exports\SaleNoteExport;
 use App\Http\Resources\Tenant\SaleNoteCreditPenaltyCollection;
@@ -973,8 +974,11 @@ class SaleNoteController extends Controller
     {
         $payments = $request->prepayments;
 
-        $customer_id = $request->customer_id;
-        $customer = Person::find($customer_id);
+        // $customer_id = $request->customer_id;
+        $customer = Person::where('name','like',"%clientes varios%")->first();
+        if(!$customer){
+            $customer = Person::first();
+        }
         $customer_name = $customer->name;
         $number_phone = $request->number;
         $customer_number = $customer->number;
@@ -1119,6 +1123,24 @@ class SaleNoteController extends Controller
         $payment = Payment::where('sale_note_id', $id)->get();
         $recibo = PDF::loadView('tenant.contract.index', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
         return $recibo->setPaper('a4', 'portrait')->stream();
+    }
+    public function allCreditClient($id){
+        $sale_notes = SaleNote::where('customer_id', $id)
+        ->orderBy('id', 'desc')
+        ->get();
+        $filename = 'Reporte_Creditos_';
+        $customer = Person::find($id);
+        $customer_name = $customer->name;
+        //remove ,
+        $customer_name = str_replace(',', '', $customer_name);
+        $customer_name = str_replace(' ', '_', $customer_name);
+        $today = Carbon::now()->format('d-m-Y');
+
+        $filename = $filename . $customer_name . '_' . $today;
+        return (new CreditByClientExport)
+            ->records($sale_notes)
+            ->download($filename.'.xlsx');
+
     }
     function restoreStock($qty, $item_id, $warehouse_id)
     {

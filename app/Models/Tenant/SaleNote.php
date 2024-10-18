@@ -163,6 +163,18 @@ class SaleNote extends ModelTenant
             $payment->save();
         }
     }
+    public function returnStatus(){
+        
+        switch ($this->status) {
+            case 'A':
+                return 'Aprobado';
+            case 'P':
+                return 'Pendiente';
+            default:
+                return 'Rechazado';
+        }
+
+    }
     public function getPenalties()
     {
 

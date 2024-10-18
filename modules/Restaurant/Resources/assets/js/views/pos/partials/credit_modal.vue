@@ -19,6 +19,7 @@
                         >
                     </label>
                     <el-select
+                        :disabled="isSimulate"
                         v-model="form.customer_id"
                         filterable
                         remote
@@ -164,9 +165,21 @@
                         format="dd-MM-yyyy"
                     ></el-date-picker>
                 </div>
+                <div class="col-md-2"
+                v-if="isSimulate"
+
+                >
+                <label for="total">Monto base</label>
+                <el-input
+                    v-model="simulateTotal"
+                    @input="calculate"
+                    ></el-input>
+                    
+
+                </div>
             </div>
         </div>
-        <div class="row" v-if="configuration.sale_note_credit_confirm">
+        <div class="row" v-if="configuration.sale_note_credit_confirm && !isSimulate">
             <div
                 class="col-md-3 col-lg-3 col-12"
                 v-if="user.can_accept_credit_sale_note"
@@ -249,14 +262,14 @@
                 </div>
             </div>
 
-            <template v-if="configuration.sale_note_credit_confirm">
-                <el-button
+            <template v-if="configuration.sale_note_credit_confirm && isSimulate">
+                <!-- <el-button
                     class="left-button"
                     @click="simulate"
                     type="success"
                     style="margin-right: 15px;"
                     >Simulación</el-button
-                >
+                > -->
 
                 <el-checkbox class="left-button" v-model="simulateForm.print"
                     >Impresión</el-checkbox
@@ -276,7 +289,8 @@
                 ></el-input>
             </template>
             <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Enviar</el-button>
+            <el-button type="primary" @click="simulate" v-if="isSimulate">Simular</el-button>
+            <el-button type="primary" @click="submit" v-else>Enviar</el-button>
         </div>
         <person-form
             :showDialog.sync="showDialogNewPerson"
@@ -316,6 +330,7 @@ export default {
                 pdf: false,
                 number: null
             },
+            simulateTotal:0,
             isService: false,
             isProduct: false,
             users: [],
@@ -331,7 +346,8 @@ export default {
             loading_search: false,
             percentage_igv: 18,
             loading: false,
-            hasProblems: false
+            hasProblems: false,
+            isSimulate: false
         };
     },
     created() {
@@ -344,7 +360,9 @@ export default {
             this.customers = newCustomer.filter(n => n.number != "88888888");
         }
     },
-    computed: {},
+    computed: {
+    
+    },
     methods: {
         createPayment(date_of_issue, num_cuota, type_payment) {
             let date = moment(date_of_issue);
@@ -481,7 +499,7 @@ export default {
                 flag = false;
             }
 
-            if (this.form.customer_id == null) {
+            if (this.form.customer_id == null && !this.isSimulate) {
                 this.$toast.error("Debe seleccionar un cliente");
                 flag = false;
             }
@@ -511,7 +529,9 @@ export default {
             }
         },
         calculate(advance = 0) {
-
+            if(this.isSimulate){
+                this.form.total = this.simulateTotal;
+            }
             let tasa_interes = 0;
             if (this.form.total  > 0 && this.credit.month > 0) {
                 switch (this.credit.type_payment) {
@@ -809,6 +829,7 @@ export default {
             this.credit.is_product = !hasService;
         },
         open() {
+            this.isSimulate = this.items.length == 0;
             this.simulateForm = {
                 whatsapp: false,
                 print: true,
@@ -896,6 +917,8 @@ export default {
             this.calculate();
         },
         close() {
+            this.isSimulate = false;
+            this.simulateTotal = 0;
             this.$emit("update:showDialog", false);
         }
     }

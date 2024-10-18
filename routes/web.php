@@ -204,6 +204,7 @@ if ($hostname) {
                 Route::get('items/tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
                 Route::get('documents/record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'record']);
                 Route::get('documents/get_record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'getRecord']);
+                Route::get('sale-notes/all-credit-client/{clientById}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'allCreditClient']);
                 Route::get('sale-notes/consolidated', [App\Http\Controllers\Tenant\SaleNoteController::class, 'index_consolidated'])->name('tenant.sale_notes.consolidated');
                 Route::get('sale-notes/consolidated/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records_consolidated']);
                 Route::get('sale-notes/consolidated/export', [App\Http\Controllers\Tenant\SaleNoteController::class, 'export_consolidated']);
