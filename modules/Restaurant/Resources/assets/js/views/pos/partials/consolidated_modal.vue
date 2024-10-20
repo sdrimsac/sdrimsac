@@ -101,9 +101,7 @@
                                 @change="handleCheckAll"
                             ></el-checkbox>
                         </th>
-                        <th>
-                            Zona
-                        </th>
+
                         <th>
                             Cotización
                         </th>
@@ -119,6 +117,9 @@
                         </th>
                         <th>
                             Total
+                        </th>
+                        <th>
+                            Zona
                         </th>
                     </tr>
                 </thead>
@@ -143,6 +144,7 @@
                             </small>
                         </td>
                         <td>{{ record.total }}</td>
+                        <td>{{ record.zone }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -184,15 +186,23 @@ export default {
         }
     },
     methods: {
-        filterRecords(){
+        filterRecords() {
             this.records = this.all_records.filter(record => {
-                let {seller_id, zone_id, customer_id, date_of_issue} = this.form;
+                let {
+                    seller_id,
+                    zone_id,
+                    customer_id,
+                    date_of_issue
+                } = this.form;
                 let seller = seller_id ? record.user_id === seller_id : true;
                 let zone_filter = zone_id ? record.zone_id === zone_id : true;
-                let customer = customer_id ? record.customer_id === customer_id : true;
-                let date = date_of_issue ? record.date_of_issue === date_of_issue : true;
+                let customer = customer_id
+                    ? record.customer_id === customer_id
+                    : true;
+                let date = date_of_issue
+                    ? record.date_of_issue === date_of_issue
+                    : true;
                 return seller && zone_filter && customer && date;
-               
             });
         },
         getTables() {

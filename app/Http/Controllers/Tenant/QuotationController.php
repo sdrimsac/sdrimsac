@@ -491,13 +491,18 @@ class QuotationController extends Controller
         return new ConsolidateQuotationCollection($records->paginate(config('tenant.items_per_page')));
         // return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
     }
-    public function consolidatedTables(Request $request){
-        $sellers = User::where('type', 'seller')->get()->transform(function ($row) {
-            return [
-                'id' => $row->id,
-                'name' => $row->name,
-            ];
-        });
+    public function consolidatedTables(Request $request)
+    {
+        $sellers = User::where('type', 'seller')
+            ->whereHas('worker_type', function ($query) {
+                $query->where('description', 'like', '%Vendedor%');
+            })
+            ->get()->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                ];
+            });
         $zones = ClientZone::all();
 
         return [
