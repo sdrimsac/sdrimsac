@@ -131,7 +131,7 @@
                                 @change="handleCheck(record)"
                             ></el-checkbox>
                         </td>
-                        <td>{{ record.zone }}</td>
+                        
                         <td>{{ record.identifier }}</td>
                         <td>{{ record.user_name }}</td>
                         <td>{{ record.date_of_issue }}</td>
@@ -289,10 +289,11 @@ export default {
                         };
                     })
                     .sort((a, b) => {
-                        if (a.zone < b.zone) return -1;
-                        if (a.zone > b.zone) return 1;
                         if (a.id > b.id) return -1;
                         if (a.id < b.id) return 1;
+                        if (a.zone < b.zone) return -1;
+                        if (a.zone > b.zone) return 1;
+                    
                         return 0;
                     });
                 this.records = this.all_records;

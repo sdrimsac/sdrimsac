@@ -54,37 +54,38 @@
             </div>
             <div class="col-md-3"></div>
         </div>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Cotizacion</th>
-                        <th>Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(record, index) in records" :key="index">
-                        <td>{{ record.date_of_issue }}</td>
-                        <td>{{ record.customer_name }}</td>
-                        <td>{{ record.identifier }}</td>
-                        <td>{{ record.total }}</td>
-
-                        <td>
-                            <el-button
-                                type="primary"
-                                icon="el-icon-printer"
-                                @click="directPrint(record.external_id)"
-                            >
-                                Imprimir
-                            </el-button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table id="ttable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Cotizacion</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(record, index) in records" :key="index">
+                                <td>{{ record.date_of_issue }}</td>
+                                <td>{{ record.customer_name }}</td>
+                                <td>{{ record.identifier }}</td>
+                                <td>{{ record.total }}</td>
+                                <td>
+                                    <el-button
+                                        type="primary"
+                                        icon="el-icon-printer"
+                                        @click="directPrint(record.external_id)"
+                                    >
+                                        Imprimir
+                                    </el-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <el-pagination
                     @current-change="getRecords"
                     layout="total, prev, pager, next"
@@ -101,7 +102,13 @@
         </div>
     </el-dialog>
 </template>
-
+<style>
+@media (max-width: 500px) {
+    #ttable {
+        width: 150%;
+    }
+}
+</style>
 <script>
 export default {
     props: ["showDialog"],
