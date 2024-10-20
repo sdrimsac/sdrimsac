@@ -40,13 +40,17 @@ use Exception;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\QuotationEmail;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\PaymentMethodType;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Consolidated;
+use App\Models\Tenant\Document;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
+use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Events\PrintEvent;
@@ -229,18 +233,113 @@ class QuotationController extends Controller
         $resourceId = $id;
         return view('tenant.quotations.form_edit', compact('resourceId'));
     }
+    function getSeriesId($document_type_id)
+    {
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $series = Series::where('establishment_id', $establishment->id)
+            ->where('document_type_id', $document_type_id)
+            ->first();
+        return $series->id;
+    }
+    function getDocumentArray($quotation_id)
+    {
+        $q = Quotation::find($quotation_id);
+        $document = [];
+        $person = Person::find($q->customer_id);
+        $document_type_id = $person->document_type_id;
+        if ($document_type_id == null) {
+            $identity_document_type_id = $person->identity_document_type_id;
+            $document_type_id = ($identity_document_type_id == '6') ? '01' : '03';
+        }
+        $document['document_type_id'] = $document_type_id;
+        $document['series_id'] = $this->getSeriesId($document_type_id);
+        $document['number'] = '#';
+        $document['establishment_id'] = $q->establishment_id;
+        $document['date_of_issue'] = Carbon::now()->format('Y-m-d');
+        $document['time_of_issue'] = date("H:i:s");
+        $document['customer_id'] = $q->customer_id;
+        $document['currency_type_id'] = $q->currency_type_id;
+        $document['purchase_order'] = null;
+        $document['exchange_rate_sale'] = $q->exchange_rate_sale;
+        $document['total_prepayment'] = $q->total_prepayment;
+        $document['total_charge'] = $q->total_charge;
+        $document['total_discount'] = $q->total_discount;
+        $document['total_exportation'] = $q->total_exportation;
+        $document['total_free'] = $q->total_free;
+        $document['total_taxed'] = $q->total_taxed;
+        $document['total_unaffected'] = $q->total_unaffected;
+        $document['total_exonerated'] = $q->total_exonerated;
+        $document['total_igv'] = $q->total_igv;
+        $document['total_base_isc'] = $q->total_base_isc;
+        $document['total_isc'] = $q->total_isc;
+        $document['total_base_other_taxes'] = $q->total_base_other_taxes;
+        $document['total_other_taxes'] = $q->total_other_taxes;
+        $document['total_taxes'] = $q->total_taxes;
+        $document['total_value'] = $q->total_value;
+        $document['payments'] = [];
+        $document['total'] = $q->total;
+        $document['prefix'] = "NV";
+        $document['seller_id'] = $q->seller_id;
+        $document['operation_type_id'] = "0101";
+        $document['date_of_due'] = Carbon::now()->format('Y-m-d');
+        $document['items'] = $q->items;
+        $document['charges'] = $q->charges;
+        $document['discounts'] = $q->discounts;
+        $document['attributes'] = [];
+        $document['guides'] = $q->guides;
+        $document['additional_information'] = null;
+        $document['actions'] = [
+            'format_pdf' => "a4"
+        ];
+        $document['quotation_id'] = $q->id;
 
+        return $document;
+    }
+    function hasDocumentOrSaleNote($id)
+    {
+        $document = DB::connection('tenant')->table('documents')->where('quotation_id', $id)->exists();
+        $sale_note = DB::connection('tenant')->table('sale_notes')->where('quotation_id', $id)->exists();
+
+        return $document || $sale_note;
+    }
     public function consolidatedsPrint($id)
     {
         $consolidated = Consolidated::find($id);
         $quotation_ids = $consolidated->quotations->pluck('id');
+        if (count($quotation_ids) === 0) {
+            return [
+                'success' => false,
+                'message' => 'No se encontraron cotizaciones'
+            ];
+        }
+
+
+        $documents = [];
+        $to_print = [];
+        $has_print = $this->hasDocumentOrSaleNote($quotation_ids->first());
+
         foreach ($quotation_ids as $quotation_id) {
-            event(new PrintEvent($quotation_id, "COT", true));
-            sleep(2);
+            if ($has_print) {
+                $document = Document::where('quotation_id', $quotation_id)->first();
+                if ($document == null) {
+                    $document = SaleNote::where('quotation_id', $quotation_id)->first();
+                }
+                if ($document) {
+                    $documen_type_id = isset($document->document_type_id) ? $document->document_type_id : "80";
+                    event(new PrintEvent($document->id, $documen_type_id, true, 0, [], true));
+                    sleep(1);
+                }
+            } else {
+                $document = $this->getDocumentArray($quotation_id);
+                $documents[] = $document;
+            }
         }
         return [
             'success' => true,
-            'message' => 'Impresión enviada a la cola de impresión'
+            'message' => $has_print ? 'Documentos impresos' : 'Documentos listos para imprimir',
+            'documents' => $documents,
+            'to_print' => $to_print,
+            'has_print' => $has_print
         ];
     }
     public function consolidatedsExportDelivery($id)
@@ -392,6 +491,20 @@ class QuotationController extends Controller
         return new ConsolidateQuotationCollection($records->paginate(config('tenant.items_per_page')));
         // return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
     }
+    public function consolidatedTables(Request $request){
+        $sellers = User::where('type', 'seller')->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->name,
+            ];
+        });
+        $zones = ClientZone::all();
+
+        return [
+            'sellers' => $sellers,
+            'zones' => $zones
+        ];
+    }
     public function consolidated(Request $request)
     {
 
@@ -417,7 +530,7 @@ class QuotationController extends Controller
     public function toConsolidated()
     {
         $records = Quotation::where('consolidated', false)
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->get();
 
 
@@ -443,8 +556,19 @@ class QuotationController extends Controller
 
     public function recordsCurrentUser(Request $request)
     {
-        $records = Quotation::where('user_id', auth()->id())->latest()
+        $customer_id = $request->customer_id;
+        $date_of_issue = $request->date_of_issue;
+        $records = Quotation::where('user_id', auth()->id());
+        if ($customer_id) {
+            $records->where('customer_id', $customer_id);
+        }
+        if ($date_of_issue) {
+            $records->where('date_of_issue', $date_of_issue);
+        }
+        $records = $records->latest()
             ->orderBy('date_of_issue', 'desc');
+        // $records = Quotation::where('user_id', auth()->id())->latest()
+        // ->orderBy('date_of_issue', 'desc');
 
         return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
     }

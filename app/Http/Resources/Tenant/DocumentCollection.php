@@ -98,7 +98,7 @@ class DocumentCollection extends ResourceCollection
             // }
             $boxes = Box::where('document_id', $row->id);
             $is_credit = $row->payment_condition_id == "02";
-            $paid = true;
+            $paid = false;
             $remain = 0;
             if($is_credit){
                 $sum = $boxes->sum('amount');
@@ -107,6 +107,11 @@ class DocumentCollection extends ResourceCollection
                     $paid = false;
                 }else{
                     $row->canceled();
+                }
+            }else{
+                $payed = $boxes->sum('amount');
+                if($payed >= $row->total){
+                    $paid = true;
                 }
             }
 

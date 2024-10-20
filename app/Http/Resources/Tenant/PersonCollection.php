@@ -16,6 +16,7 @@ class PersonCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             return [
+                'document_type_id' => $row->document_type_id,
                 'alias' => $row->alias,
                 'credit_line' => $row->credit_line,
                 'has_credit_line' => (bool) $row->has_credit_line,

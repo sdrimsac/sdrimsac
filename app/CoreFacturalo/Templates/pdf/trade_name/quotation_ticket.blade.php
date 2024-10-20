@@ -90,7 +90,8 @@
                 <p class="desc">F. Emisión:</p>
             </td>
             <td width="" class="pt-3">
-                <p class="desc">{{ $document->date_of_issue }}</p>
+                <p class="desc">{{ $document->date_of_issue->format('Y-m-d') }}
+                    {{ $document->time_of_issue }}</p>
             </td>
         </tr>
 

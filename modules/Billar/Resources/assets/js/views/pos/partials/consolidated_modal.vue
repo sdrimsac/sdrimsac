@@ -147,7 +147,7 @@ export default {
                 const response = await this.$http(
                     `/${this.resource}/to-consolidated`
                 );
-            
+
                 this.records = response.data.data
                     .map(record => {
                         return {
@@ -158,8 +158,8 @@ export default {
                     .sort((a, b) => {
                         if (a.zone < b.zone) return -1;
                         if (a.zone > b.zone) return 1;
-                        if (a.identifier < b.identifier) return -1;
-                        if (a.identifier > b.identifier) return 1;
+                        if (a.id > b.id) return -1;
+                        if (a.id < b.id) return 1;
                         return 0;
                     });
             } catch (e) {

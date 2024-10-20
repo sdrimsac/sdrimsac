@@ -8,7 +8,7 @@
         v-loading="loading"
     >
         <div class="row m-2">
-            <div class="col-md-12 text-end">
+            <div class="col-12 text-end">
                 <el-button
                     type="primary"
                     @click="consolidate"
@@ -16,6 +16,79 @@
                 >
                     Consolidar
                 </el-button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <label for="zone">Zona</label>
+                <el-select
+                    v-model="form.zone_id"
+                    filterable
+                    clearable
+                    placeholder="Seleccione una zona"
+                    @change="filterRecords"
+                >
+                    <el-option
+                        v-for="option in zones"
+                        :key="option.id"
+                        :value="option.id"
+                        :label="option.description"
+                    ></el-option>
+                </el-select>
+            </div>
+            <div class="col-md-3">
+                <label for="date_of_issue">Fecha</label>
+                <el-date-picker
+                    v-model="form.date_of_issue"
+                    type="date"
+                    placeholder="Fecha"
+                    value-format="yyyy-MM-dd"
+                    format="yyyy-MM-dd"
+                    clearable
+                    @change="filterRecords"
+                ></el-date-picker>
+            </div>
+
+            <div class="col-md-3">
+                <label for="customer_id">Cliente</label>
+                <el-select
+                    ref="cliente"
+                    v-model="form.customer_id"
+                    filterable
+                    clearable
+                    remote
+                    popper-class="el-select-customers"
+                    dusk="customer_id"
+                    placeholder="Escriba el nombre o número de documento del cliente"
+                    :remote-method="searchRemoteCustomers"
+                    @keyup.enter.native="keyupCustomer"
+                    :loading="loading_search"
+                    @change="filterRecords"
+                >
+                    <el-option
+                        v-for="option in customers"
+                        :key="option.id"
+                        :value="option.id"
+                        :label="option.description"
+                    ></el-option>
+                </el-select>
+            </div>
+            <div class="col-md-3">
+                <label for="seller_id">Preventa</label>
+                <el-select
+                    v-model="form.seller_id"
+                    filterable
+                    clearable
+                    placeholder="Seleccione un preventa"
+                    @change="filterRecords"
+                >
+                    <el-option
+                        v-for="option in sellers"
+                        :key="option.id"
+                        :value="option.id"
+                        :label="option.name"
+                    ></el-option>
+                </el-select>
             </div>
         </div>
         <div class="table-responsive">
@@ -84,11 +157,25 @@ export default {
         return {
             resource: "quotations",
             records: [],
+            all_records: [],
             excludes: [],
+            sellers: [],
+            zones: [],
             loading: false,
             checkAll: false,
             pagination: {},
-            loading: false
+            loading: false,
+            form: {
+                zone_id: null,
+                date_of_issue: null,
+                customer_id: null,
+                seller_id: null
+            },
+            customers: [],
+            input_person: {
+                number: null
+            },
+            loading_search: false
         };
     },
     computed: {
@@ -97,6 +184,36 @@ export default {
         }
     },
     methods: {
+        filterRecords(){
+            this.records = this.all_records.filter(record => {
+                let {seller_id, zone_id, customer_id, date_of_issue} = this.form;
+                let seller = seller_id ? record.user_id === seller_id : true;
+                let zone_filter = zone_id ? record.zone_id === zone_id : true;
+                let customer = customer_id ? record.customer_id === customer_id : true;
+                let date = date_of_issue ? record.date_of_issue === date_of_issue : true;
+                return seller && zone_filter && customer && date;
+               
+            });
+        },
+        getTables() {
+            this.$http.get("/quotations/consolidated/tables").then(response => {
+                console.log("🚀 ~ this.$http.get ~ response:", response);
+                this.zones = response.data.zones;
+                this.sellers = response.data.sellers;
+            });
+        },
+        async searchRemoteCustomers(input) {
+            if (input.length > 0) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+                const response = await this.$http.get(
+                    `/documents/search/customers?${parameters}&credit_list=1`
+                );
+                this.customers = response.data.customers;
+                this.loading_search = false;
+                this.input_person.number = null;
+            }
+        },
         handleCheck(record) {
             if (!record.checked) {
                 this.excludes.push(record.id);
@@ -136,9 +253,15 @@ export default {
             }
         },
         open() {
+            this.form = {
+                zone_id: null,
+                date_of_issue: null,
+                customer_id: null,
+                seller_id: null
+            };
             this.checkAll = false;
             this.excludes = [];
-
+            this.getTables();
             this.getRecords();
         },
         async getRecords() {
@@ -147,8 +270,8 @@ export default {
                 const response = await this.$http(
                     `/${this.resource}/to-consolidated`
                 );
-            
-                this.records = response.data.data
+
+                this.all_records = response.data.data
                     .map(record => {
                         return {
                             ...record,
@@ -158,10 +281,11 @@ export default {
                     .sort((a, b) => {
                         if (a.zone < b.zone) return -1;
                         if (a.zone > b.zone) return 1;
-                        if (a.identifier < b.identifier) return -1;
-                        if (a.identifier > b.identifier) return 1;
+                        if (a.id > b.id) return -1;
+                        if (a.id < b.id) return 1;
                         return 0;
                     });
+                this.records = this.all_records;
             } catch (e) {
                 console.error(e);
             } finally {

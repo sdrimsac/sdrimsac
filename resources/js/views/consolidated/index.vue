@@ -12,7 +12,7 @@
                             <th  class="text-center">Precio</th>
                             <th  class="text-center">Importe</th>
                         <tr>
-                        <tr slot-scope="{ index, row }">
+                        <tr slot-scope="{ _, row }">
                              <td  class="text-left">{{row.description}}</td>
                             <td  class="text-center">{{row.quantity}}</td>
                             <td  class="text-center">{{row.unit_price}}</td>

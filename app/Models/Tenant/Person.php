@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Models\Tenant\Catalogs\Country;
 use App\Models\Tenant\Catalogs\Department;
 use App\Models\Tenant\Catalogs\District;
+use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Catalogs\Province;
 use Hyn\Tenancy\Traits\UsesTenantConnection;
@@ -18,6 +19,7 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
     protected $fillable = [
+        'document_type_id',
         'alias',
         'has_credit_line',
         'credit_line',
@@ -128,6 +130,7 @@ class Person extends ModelTenant
 
 
         $data = [
+            'document_type_id' => $this->document_type_id,
             'alias' => $this->alias,
             'credit_line' => $this->credit_line,
             'has_credit_line' => (bool) $this->has_credit_line,
@@ -201,6 +204,9 @@ class Person extends ModelTenant
 
         return $data;
     }
+    public function document_type(){
+        return $this->belongsTo(DocumentType::class);
+    }
     public function getOptionalEmailArray(): array
     {
         $data = unserialize($this->optional_email);
@@ -226,7 +232,7 @@ class Person extends ModelTenant
     {
         return $this->belongsTo(IdentityDocumentType::class, 'identity_document_type_id');
     }
-
+    
     public function documents()
     {
         return $this->hasMany(Document::class, 'customer_id');

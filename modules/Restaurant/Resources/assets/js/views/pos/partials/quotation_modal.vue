@@ -385,7 +385,7 @@ export default {
         open() {
             this.form = {
                 customer_id: null,
-                date_of_issue: new Date(),
+                date_of_issue: moment().format("YYYY-MM-DD"),
                 currency_type_id: "PEN",
                 exchange_rate_sale: 1,
                 establishment_id: 1,

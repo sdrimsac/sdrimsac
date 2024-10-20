@@ -82,7 +82,7 @@
                                 </el-button>
                             </el-tooltip>
                             <el-tooltip
-                                content="Imprimir cotizaciones"
+                                content="Imprimir documentos"
                                 placement="top"
                                 effect="dark"
                             >
@@ -128,7 +128,8 @@ export default {
             checkAll: false,
             pagination: {},
             loading: false,
-            timer: null
+            timer: null,
+            documents: []
         };
     },
     computed: {},
@@ -167,17 +168,79 @@ export default {
             );
         },
         open() {
+            this.documents = [];
             this.checkAll = false;
             this.excludes = [];
             this.pagination = {};
             this.getRecords();
         },
-        clickPrint(record) {
+        assignDocument(q) {
+            let document = {};
+            document.establishment_id = q.establishment_id;
+            document.date_of_issue = q.date_of_issue;
+            document.time_of_issue = moment().format("HH:mm:ss");
+            document.customer_id = q.customer_id;
+            document.currency_type_id = q.currency_type_id;
+            document.purchase_order = null;
+            document.exchange_rate_sale = q.exchange_rate_sale;
+            document.total_prepayment = q.total_prepayment;
+            document.total_charge = q.total_charge;
+            document.total_discount = q.total_discount;
+            document.total_exportation = q.total_exportation;
+            document.total_free = q.total_free;
+            document.total_taxed = q.total_taxed;
+            document.total_unaffected = q.total_unaffected;
+            document.total_exonerated = q.total_exonerated;
+            document.total_igv = q.total_igv;
+            document.total_base_isc = q.total_base_isc;
+            document.total_isc = q.total_isc;
+            document.total_base_other_taxes = q.total_base_other_taxes;
+            document.total_other_taxes = q.total_other_taxes;
+            document.total_taxes = q.total_taxes;
+            document.total_value = q.total_value;
+            document.total = q.total;
+            document.seller_id = q.seller_id;
+            document.operation_type_id = "0101";
+            // this.document.date_of_due = q.date_of_issue
+            document.items = q.items;
+            document.charges = q.charges;
+            document.discounts = q.discounts;
+            document.attributes = [];
+            document.guides = q.guides;
+            document.additional_information = null;
+            document.actions = {
+                format_pdf: "a4"
+            };
+            document.quotation_id = q.id;
+        },
+        async clickEmit(document) {
+            let url =
+                document.document_type_id == "80" ? "sale-notes" : "documents";
+            try {
+                this.loading = true;
+                const response = await this.$http.post(`/${url}`, document);
+                console.log("🚀 ~ clickEmit ~ response:", response);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                this.loading = false;
+            }
+        },
+        async clickPrint(record) {
             this.$http
                 .get(`/${this.resource}/consolidateds/${record.id}/print`)
-                .then(response => {
-                    // window.open(response.data.url);
-                    this.$message.success("Imprimiendo...");
+                .then(async response => {
+                    let { data } = response;
+                    this.documents = data.documents;
+                    let message = data.message;
+                    let has_print = data.has_print;
+                    if (has_print) {
+                        for (const document of this.documents) {
+                            await this.clickEmit(document);
+                        }
+                    }
+
+                    this.$message.success(message);
                 })
                 .catch(error => {
                     console.error(error);
