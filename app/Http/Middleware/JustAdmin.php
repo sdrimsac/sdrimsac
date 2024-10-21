@@ -62,7 +62,7 @@ class JustAdmin
         $paths_logistic = [
             "items", "purchases", "purchases/create",
             "transfers", "transfers/transfer_place", "dispatches", "item-sets",
-            "reports/inventory", "report_product_client", "reports/stockmin", "reports/kardex","documents_ventas", "nota_venta",
+            "reports/inventory", "report_product_client", "reports/stockmin", "reports/kardex","documents_ventas", "nota_venta", "productos"
         ];
 
         if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca) {
