@@ -85,7 +85,7 @@ class SaleNotePaymentController extends Controller
             $total = $sale_note->total_payment - $sale_note->advances;
         }
         
-        if($sale_note->credti_cash){
+        if($sale_note->credit_cash){
             $total = $sale_note->total;
         }
 
