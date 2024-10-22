@@ -82,11 +82,15 @@ class SaleNotePaymentController extends Controller
         if ($sale_note->total_payment == 0) {
             $total = $sale_note->total - $sale_note->advances;
         } else {
-            $total =$sale_note->total - $sale_note->advances -   $sale_note->total_payment;
+            $total = $sale_note->total_payment - $sale_note->advances;
         }
+        
+        if($sale_note->credti_cash){
+            $total = $sale_note->total;
+        }
+
         $total_difference = round($total  - $total_paid, 2);
         $total_difference_document = round($total_difference + $penalties_payed, 2);
-
         // if ($total_difference_document < 0.01) {
         //     $sale_note->paid = true;
         // }else{
