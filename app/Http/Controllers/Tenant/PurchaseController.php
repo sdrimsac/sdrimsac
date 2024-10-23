@@ -357,9 +357,9 @@ class PurchaseController extends Controller
         $data = self::convert($request);
         $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
             try {
+                DB::connection('tenant')->beginTransaction();
                 $series = $data['series'];
                 $number = $data['number'];
-                //verificar si existe el número de serie
                 $purchase = Purchase::where('series', $series)
                     ->where('number', $number)
                     ->where('document_type_id', 'NE76')
@@ -418,7 +418,6 @@ class PurchaseController extends Controller
                     }
                     if (array_key_exists('lots', $row)) {
                         foreach ($row['lots'] as $lot) {
-                            // Verificar si el lote existe en la tabla item_lots
                             $item_lot = ItemLot::where('series', $lot['series'])
                                 ->where('item_id', $row['item_id'])
                                 ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
@@ -427,9 +426,7 @@ class PurchaseController extends Controller
                             if ($item_lot) {
 
                                 $message = "La serie {$lot['series']} ya existe en el sistema";
-                                $has_error = true;
-                                DB::rollBack();
-                                break 2; // Salir de ambos bucles y terminar la transacción
+                                throw new Exception($message);
                             }
 
                             $p_item->lots()->create([
@@ -531,13 +528,16 @@ class PurchaseController extends Controller
                     // El usuario arca - administrador hasta la fecha 07-10-2024 / 09:10:55am contaba con monto de S/5 mil y ha realizado una compra el 07-10-2024 a las 15:54:13 por un monto de S/2590, quedando un saldo a favor de S/2410
 
                 }
+                DB::connection('tenant')->commit();
                 $this->createPdf($doc, "a4", $doc->filename);
 
                 return $doc;
             } catch (Exception $e) {
+                DB::connection('tenant')->rollBack();
                 $has_error = true;
                 $message = $e->getMessage();
-                throw $e; // Lanza la excepción nuevamente para que se maneje externamente.
+                $has_error = true;
+                return null;
             }
         });
 
