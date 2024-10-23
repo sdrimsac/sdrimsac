@@ -808,37 +808,51 @@ class PurchaseController extends Controller
     }
     public function anular($id)
     {
-        $obj =  Purchase::find($id);
-        $obj->state_type_id = 11;
-        $obj->save();
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $obj =  Purchase::find($id);
+            $obj->state_type_id = 11;
+            $obj->save();
 
-        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
-        // $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
-        $type = "App\Models\Tenant\Purchase";
-        //proceso para eliminar los actualizar el stock de proiductos
-        // $quantity = 0;
-        foreach ($obj->items as $item) {
-            $inventoryKardex = InventoryKardex::where('item_id', $item->item_id)
-                ->where('inventory_kardexable_type', $type)->where('inventory_kardexable_id', $id)->first();
-            $item->purchase->inventory_kardex()->create([
-                'date_of_issue' => date('Y-m-d'),
-                'item_id' => $item->item_id,
-                'warehouse_id' => $inventoryKardex->warehouse_id,
-                'quantity' => -$item->quantity,
-            ]);
-            $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $inventoryKardex->warehouse_id]])->first();
-            $wr->stock =  $wr->stock - $item->quantity;
-            $wr->save();
-            $it = Item::find($item->item_id);
-            $it->stock -= $item->quantity;
-            $it->save();
-            // $this->updateStock($item->item_id);
+            $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+            // $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
+            $type = "App\Models\Tenant\Purchase";
+            //proceso para eliminar los actualizar el stock de proiductos
+            // $quantity = 0;
+            foreach ($obj->items as $item) {
+                $inventoryKardex = InventoryKardex::where('item_id', $item->item_id)
+                    ->where('inventory_kardexable_type', $type)->where('inventory_kardexable_id', $id)->first();
+                $item->purchase->inventory_kardex()->create([
+                    'date_of_issue' => date('Y-m-d'),
+                    'item_id' => $item->item_id,
+                    'warehouse_id' => $inventoryKardex->warehouse_id,
+                    'quantity' => -$item->quantity,
+                ]);
+                $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $inventoryKardex->warehouse_id]])->first();
+                if ($wr->stock == 0 || $wr->stock < $item->quantity) {
+                    throw new Exception("El stock del producto {$item->item->description} no es suficiente para anular la compra");
+                }
+                $wr->stock =  $wr->stock - $item->quantity;
+                $wr->save();
+                $it = Item::find($item->item_id);
+                $it->stock -= $item->quantity;
+                $it->save();
+                // $this->updateStock($item->item_id);
+            }
+
+            DB::connection('tenant')->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Compra anulada con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
-
-        return [
-            'success' => true,
-            'message' => 'Compra anulada con éxito'
-        ];
     }
 
     public static function convert($inputs)
