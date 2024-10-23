@@ -93,7 +93,8 @@ class Item extends ModelTenant
     {
         return $this->warehouses()->where('warehouse_id', $warehouse_id);
     }
-    public function getDataToItemModal($warehouse = null,$with_lots_has_sale = false,$extended_description = false,$series = null,$search_item_by_series = false,$aditional_data = true) {
+    public function getDataToItemModal($warehouse = null, $with_lots_has_sale = false, $extended_description = false, $series = null, $search_item_by_series = false, $aditional_data = true)
+    {
         $configuration = Configuration::first();
         if ($warehouse == null) {
             $establishment_id = auth()->user()->establishment_id;
@@ -127,7 +128,7 @@ class Item extends ModelTenant
             $ItemSize = [];
         }
         if ($with_lots_has_sale == true) {
-            $lots = $this->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)  ->transform(function ($row) {
+            $lots = $this->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)->transform(function ($row) {
                 return [
                     'id'           => $row->id,
                     'series'       => $row->series,
@@ -163,10 +164,10 @@ class Item extends ModelTenant
 
         $purchase_unit_price = $this->purchase_unit_price;
         $purchase_unit_value = $this->purchase_unit_price;
-        
+
         if ($this->purchase_affectation_igv_type_id == '10') {
             $purchase_unit_value = round($purchase_unit_price / 1.18, 8);
-        } 
+        }
         // else {
         //     
         // }
@@ -262,17 +263,17 @@ class Item extends ModelTenant
                 ];
             }),
             // 'color_size' =>$this->color_size->where('warehouse_id', $warehouse->id)
-            'color_size' =>ItemColorSize::where('item_id',$this->id)->where('warehouse_id', $warehouse->id)
-            ->get()
-            ->transform(function($row) {
-                return [
-                'id' => $row->id,
-                'color' => $row->color,
-                'size' => $row->size,
-                'stock' => $row->stock,
-                'price' => $row->price,
-                ];
-            }),
+            'color_size' => ItemColorSize::where('item_id', $this->id)->where('warehouse_id', $warehouse->id)
+                ->get()
+                ->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'color' => $row->color,
+                        'size' => $row->size,
+                        'stock' => $row->stock,
+                        'price' => $row->price,
+                    ];
+                }),
             'lots'           => $lots,
             'lots_enabled'   => (bool)$this->lots_enabled,
             'series_enabled' => (bool)$this->series_enabled,
@@ -353,7 +354,8 @@ class Item extends ModelTenant
             'warehouse_description' => $warehouse->description,
         ];
     }
-    public function commercial_treatments(){
+    public function commercial_treatments()
+    {
         return $this->hasMany(CommercialTreatmentItem::class);
     }
     public function warehousePrices()
@@ -369,13 +371,15 @@ class Item extends ModelTenant
         $price = $warehousePrice->price ?? $item->sale_unit_price;
         return number_format($price, 4, ".", "");
     }
-    public function food(){
+    public function food()
+    {
         return $this->hasOne(Food::class);
     }
-    public function hasAffectationIgv(){
+    public function hasAffectationIgv()
+    {
         $affectation_igv_type = $this->sale_affectation_igv_type_id;
         $affectation_to_int = intval($affectation_igv_type);
-        if($affectation_to_int < 20){
+        if ($affectation_to_int < 20) {
             return true;
         }
         return false;
@@ -466,11 +470,14 @@ class Item extends ModelTenant
         return $this->belongsTo(AffectationIgvType::class, 'purchase_affectation_igv_type_id');
     }
 
-    public function checkSeries(){
-        collect($this->warehouses)->transform(function ($warehouse)  {
+    public function checkSeries()
+    {
+        collect($this->warehouses)->transform(function ($warehouse) {
             $warehouses_series = ItemLot::where('item_id', $this->id)->where('warehouse_id', $warehouse->warehouse_id)
-            ->where('has_sale', false)->count();
-            if($warehouse->stock != $warehouses_series){
+                ->where('has_sale', false)
+                ->where('state', 'Activo')
+                ->count();
+            if ($warehouse->stock != $warehouses_series) {
                 $warehouse->stock = $warehouses_series;
                 $warehouse->save();
             }
@@ -494,7 +501,7 @@ class Item extends ModelTenant
         return ($user->type == 'seller') ? $this->scopeWhereWarehouse($query) : null;
     }
 
-  
+
 
     public function scopeWhereNotIsSet($query)
     {
@@ -539,9 +546,10 @@ class Item extends ModelTenant
     {
         return $this->hasMany(ItemUnitType::class);
     }
-    public function categoria_madera(){
+    public function categoria_madera()
+    {
         return $this->hasMany(ItemCategoriaMadera::class);
-    } 
+    }
 
 
     public function sets()
@@ -556,10 +564,11 @@ class Item extends ModelTenant
 
     public function category()
     {
-        return $this->belongsTo(CategoryItem::class , 'category_id');
-    } 
+        return $this->belongsTo(CategoryItem::class, 'category_id');
+    }
 
-    public function color_size(){
+    public function color_size()
+    {
         return $this->hasMany(ItemColorSize::class, 'item_id');
     }
     public function item_lots()
@@ -657,16 +666,16 @@ class Item extends ModelTenant
         parent::boot();
         //created
         item::created(function ($model) {
-             $request = Request::capture();
-             $description = "Nuevo Producto Creado";
-             $data = $model->toArray();
-             RegisterMovementTrait::registerCreate(
-                 $model,
-                 $request,
-                 $description,
-                 $data
-             );
-         });
+            $request = Request::capture();
+            $description = "Nuevo Producto Creado";
+            $data = $model->toArray();
+            RegisterMovementTrait::registerCreate(
+                $model,
+                $request,
+                $description,
+                $data
+            );
+        });
         item::updated(function ($model) {
             $request = Request::capture();
             $description = null;
