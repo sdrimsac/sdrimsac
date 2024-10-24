@@ -209,7 +209,8 @@ class CashController extends Controller
     }
     public function report_cash_export($type, Request $request)
     {
-
+        ini_set('max_execution_time', "3000");
+        ini_set('memory_limit', '2048M');
         $type = $type ?? 'pdf';
         $item_id = $request->item_id;
         $categoria_id = $request->categoria_id;
@@ -629,6 +630,8 @@ class CashController extends Controller
 
     public function report_cash(Request $request)
     {
+        ini_set('max_execution_time', "3000");
+        ini_set('memory_limit', '2048M');
         $categoria_id = $request->categoria_id;
         $item_id = $request->item_id;
         $establishment_id = $request->establishment_id;
