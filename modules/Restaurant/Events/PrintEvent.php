@@ -44,7 +44,10 @@ class PrintEvent implements ShouldBroadcast
                 }
             }
         }
-
+        if ($company->number == '10484420331') {
+        Log::info('zone_id:' . $zone_id);
+        Log::info('area_id:' . $zone_id);
+        }
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $id_by_area = Area::getAreaEstablishment($area_id);
@@ -192,7 +195,6 @@ class PrintEvent implements ShouldBroadcast
         if ($user_area) {
             $user_establishment_id = $user_area->establishment_id;
         }
-        Log::info('Imprimiendo:' . $documentLink);
         $data = array(
             'document_type' => $document_type,
             'printer' => $printer,
@@ -207,7 +209,6 @@ class PrintEvent implements ShouldBroadcast
             'user_establishment_id' => $user_establishment_id,
             'user_establishment_id_printer' => $user_establishment_id_printer,
         );
-        Log::info(json_encode($data));
         $this->data = $data;
 
         // Log::info(json_encode($this->data));
