@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Events;
 
+use App\Models\Tenant\Company;
 use App\Models\Tenant\ConfEstablishment;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Document;
@@ -31,28 +32,33 @@ class PrintEvent implements ShouldBroadcast
     public $data;
     public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null)
     {
+        $company = Company::active();
         $user_establishment_id_printer =  auth()->user()->establishment_id;
         $zone_id = $area_id;
-        if($zone_id){
+        if ($zone_id) {
             $id_by_zone = Area::getZoneEstablishment($zone_id);
-            if($id_by_zone){
+            if ($id_by_zone) {
                 $zone_id = $id_by_zone;
+                if ($company->number == '10484420331') {
+                    $area_id = $id_by_zone;
+                }
             }
         }
 
+
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
-            $id_by_area = Area::getAreaEstablishment($area_id);
-            if($id_by_area){
-                $area_id = $id_by_area;
+        $id_by_area = Area::getAreaEstablishment($area_id);
+        if ($id_by_area) {
+            $area_id = $id_by_area;
+        }
+
+
+        $area_found = Area::find($area_id);
+        if ($area_found) {
+            if ($area_found->establishment_id != null) {
+                $user_establishment_id_printer = $area_found->establishment_id;
             }
-                
-            
-            $area_found = Area::find($area_id);
-                if($area_found ){
-                    if($area_found->establishment_id != null){
-                        $user_establishment_id_printer = $area_found->establishment_id;
-                    }
-                }
+        }
         // }
 
         $format = 'ticket';
@@ -186,7 +192,7 @@ class PrintEvent implements ShouldBroadcast
         if ($user_area) {
             $user_establishment_id = $user_area->establishment_id;
         }
-        Log::info('Imprimiendo:'.$documentLink );
+        Log::info('Imprimiendo:' . $documentLink);
         $data = array(
             'document_type' => $document_type,
             'printer' => $printer,
