@@ -301,11 +301,6 @@ import DataTable from "../../components/DataTable.vue";
 import ItemsImportStockProducto from "./partials/stock_producto.vue";
 import BonusModal from "./partials/bonus_modal.vue";
 import { deletable } from "../../mixins/deletable";
-//const  ItemsForm = () =>  import(/* webpackChunkName:"js/form.vue"*/"./form.vue");
-//const  WarehousesDetail = () =>  import(/* webpackChunkName:"js//partials/warehouses.vue"*/"./partials/warehouses.vue");
-//const  ItemsImport = () =>  import(/* webpackChunkName:"js/import.vue"*/"./import.vue");
-//const  ItemsImportListPrice = () =>  import(/* webpackChunkName:"js/partials/import_list_price.vue"*/"./partials/import_list_price.vue");
-//const  DataTable = () =>  import(/* webpackChunkName:"js/components/DataTable.vue"*/"../../components/DataTable.vue");
 
 export default {
   props: ["typeUser", "user"],

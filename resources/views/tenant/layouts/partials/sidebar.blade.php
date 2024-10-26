@@ -1045,6 +1045,13 @@
                             Tipos Vehiculos
                         </a>
                     </li>
+                    <li>
+                        <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
+                            href="{{ route('tenant.workshop.servicesdetails') }}">
+                            <i class="fas fa-biliard"></i>
+                            Sub Servicios 
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif

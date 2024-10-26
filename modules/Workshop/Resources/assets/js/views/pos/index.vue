@@ -1,8 +1,7 @@
 <template>
- <!-- modulo de mecanica y respuestos -->
+  <!-- modulo de mecanica y respuestos -->
   <div style="position: relative" v-loading.fullscreen="loading" element-loading-text="Espere...">
     <div class="row">
-      
       <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
         <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
           <div class="card-body p-2">
@@ -28,14 +27,17 @@
                   </button>
 
                   <template v-if=" configuration.restaurant && !this.isSeller">
-                    <template v-if=" !configuration.hotels || (configuration.hotels && !isPiscinaArea) ">
-                        <button
-                          class="btn btn-sm btn-primary"
-                          type="button"
-                          @click="buttonSmTables">
-                          <i v-if="isHotelArea" class="fas fa-door-closed"></i>
-                          <i v-else class="icofont-dining-table" style="font-size: 28px; margin-top:-5px; "></i>
-                        </button>
+                    <template
+                      v-if=" !configuration.hotels || (configuration.hotels && !isPiscinaArea) "
+                    >
+                      <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables">
+                        <i v-if="isHotelArea" class="fas fa-door-closed"></i>
+                        <i
+                          v-else
+                          class="icofont-dining-table"
+                          style="font-size: 28px; margin-top:-5px; "
+                        ></i>
+                      </button>
                     </template>
                   </template>
                   <template
@@ -1159,7 +1161,6 @@
           <!-- sidebarmodal fin  -->
           <div class="dropdown-as-select d-inline-block" data-childselector="span">
             <button
-              
               class="btn p-0"
               type="button"
               data-bs-toggle="dropdown"
@@ -1245,8 +1246,7 @@
             @reloadProduct="search_items"
           ></list-orden>
         </div>
-        <template>
-        </template>
+        <template></template>
       </div>
     </div>
     <DrawerOrdens
@@ -1358,7 +1358,6 @@
       :isAnalist="isAnalist"
       :user="user"
     ></credits-list>
-    
 
     <dispatch-modal :configuration="configuration" :showDialog.sync="showDispatch"></dispatch-modal>
     <category-drag :showDialog.sync="showCategoryDrag"></category-drag>
@@ -1433,7 +1432,12 @@
       <br />
     </el-dialog>
     <detraction-payment :showDialog.sync="showDialogDetraction"></detraction-payment>
-    <mechanic :showDialog.sync="showDialogMechanic"></mechanic>
+    <mechanic
+      ref="mechanic"
+      :showDialog.sync="showDialogMechanic"
+      :mechanicItem="allFoods"
+      @payment="handlePayment"
+    ></mechanic>
   </div>
 </template>
 
@@ -1505,7 +1509,7 @@ const CategoryDrag = () => import("./partials/category_drag.vue");
 const ProductsDue = () => import("./partials/products_due.vue");
 const ItemSet = () =>
   import("../../../../../../../resources/js/views/item_sets/form.vue");
-const Mechanic = () => import("./partials/mechanic.vue")
+const Mechanic = () => import("./partials/mechanic.vue");
 const ConsolidatedListModal = () =>
   import("./partials/consolidated_list_modal.vue");
 const options = {
@@ -1560,6 +1564,8 @@ export default {
 
   data() {
     return {
+      selectedVehiculoPlaca: null,
+      selectedVehiculoId: null,
       showDialogMechanic: false,
       showQuotationListDialog: false,
       customersSearch: [],
@@ -1838,9 +1844,22 @@ export default {
     }
   },
   methods: {
-     openQuotationDialog() {
-            this.showQuotationListDialog = true;
-        },
+    handlePayment() {
+    this.is_payment = true;
+  },
+    openPayment() {
+      this.showDialogMechanic = false;
+      this.is_payment = true;
+    },
+    handleCreatingOrden(placa, id) {
+      this.selectedVehiculoPlaca = placa;
+      this.selectedVehiculoId = id;
+      console.log("Vehículo seleccionado:", placa, id);
+      this.agregarOrden(id);
+    },
+    openQuotationDialog() {
+      this.showQuotationListDialog = true;
+    },
 
     changeCustomer() {
       this.localOrden = [];
@@ -2511,6 +2530,7 @@ export default {
     trigerFunction(id) {
       switch (id) {
         case 250:
+          console.log("Datos de allFoods en el padre antes de abrir el modal wqeewqewqeqweq:", this.allFoods);
           this.showDialogMechanic = true;
           break;
         case 214:
@@ -3554,7 +3574,7 @@ export default {
     },
     filterCategorie(id, mod = false) {
       this.category_selected = id;
-      if(this.$refs.list_foods){
+      if (this.$refs.list_foods) {
         console.log("aquiss?");
         this.$refs.list_foods.searchFoodCategories(id);
       }

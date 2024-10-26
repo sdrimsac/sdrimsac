@@ -53,20 +53,20 @@ Route::prefix('billar')->group(function () {
     Route::post('detail_table', [BillarController::class, 'detail_table']);
     Route::get('detail_table', [BillarController::class, 'get_detail_table']);
 
-    Route::get('status-tables', [StatusTableController::class, 'index'])->name('restaurant.status_table')->middleware("just.super");;
+    Route::get('status-tables', [StatusTableController::class, 'index'])->name('billar.status_table')->middleware("just.super");;
     Route::get('status-tables/records', [StatusTableController::class, 'records']);
     Route::get('status-tables/columns', [StatusTableController::class, 'columns']);
     Route::delete('status-tables/{id}', [StatusTableController::class, 'active']);
     Route::get('status-tables/record/{id}', [StatusTableController::class, 'record']);
     Route::post('status-tables', [StatusTableController::class, 'store']);
 
-    Route::get('areas', [AreaController::class, 'index'])->name('restaurant.areas')->middleware("just.super");
+    /* Route::get('areas', [AreaController::class, 'index'])->name('billar.areas')->middleware("just.super");
     Route::get('areas/columns', [AreaController::class, 'columns']);
     Route::get('areas/records', [AreaController::class, 'records']);
     Route::get('areas/actives', [AreaController::class, 'actives']);
     Route::get('areas/record/{id}', [AreaController::class, 'record']);
     Route::delete('areas/{id}', [AreaController::class, 'active']);
-    Route::post('areas', [AreaController::class, 'store']);
+    Route::post('areas', [AreaController::class, 'store']); */
 
     Route::get('status-orden', [StatusOrdenController::class, 'index']);
     Route::get('status-orden/records', [StatusOrdenController::class, 'records']);

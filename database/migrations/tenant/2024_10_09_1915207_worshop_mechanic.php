@@ -36,13 +36,23 @@ class WorshopMechanic extends Migration
             $table->foreign('tipo_vehiculo_id')->references('id')->on('tipo_vehiculo');
             
         });
+        Schema::create('personal', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('number');
+            $table->string('telephone')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('establishment_id')->nullable();
+            $table->boolean('active')->default(true);
+            $table->timestamps();
+        });
         Schema::create('historial', function (Blueprint $table) {
 
             $table->increments('id');
             $table->unsignedInteger('vehiculo_id');
             $table->unsignedInteger('sale_note_id')->nullable();
             $table->unsignedInteger('document_id')->nullable();
-            $table->unsignedInteger('seller_id');
+            $table->unsignedInteger('personal_id');
             $table->unsignedInteger('establishment_id');
             $table->unsignedInteger('item_werehouse_id');
             $table->string('observacion');
@@ -52,7 +62,7 @@ class WorshopMechanic extends Migration
             $table->foreign('document_id')->references('id')->on('documents');
             $table->foreign('establishment_id')->references('id')->on('establishments');
             $table->foreign('item_werehouse_id')->references('id')->on('item_warehouse');
-            $table->foreign('seller_id')->references('id')->on('sellers');
+            $table->foreign('personal_id')->references('id')->on('personal');
 
         });
         Schema::create('historial_item', function (Blueprint $table) {
@@ -64,8 +74,7 @@ class WorshopMechanic extends Migration
             $table->timestamps();
             $table->foreign('item_id')->references('id')->on('items');
 
-        });
-        
+        });  
     }
     /**
      * Reverse the migrations.

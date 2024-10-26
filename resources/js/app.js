@@ -699,6 +699,8 @@ const app = new Vue({
             import("../../modules/Workshop/Resources/assets/js/views/tipo/index.vue"),
         "tenant-workshop-vehiculo": () =>
             import("../../modules/Workshop/Resources/assets/js/views/vehiculo/index.vue"),
+        "tenant-workshop-servicesdetails": () =>
+            import("../../modules/Workshop/Resources/assets/js/views/servicesdetails/index.vue"),
         "tenant-billar-pos": () => 
             import("../../modules/Billar/Resources/assets/js/views/pos/index.vue"   
             ),

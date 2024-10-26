@@ -87,6 +87,7 @@
                 
                 await this.$http.get('/items/import/tables').then(response => {
                     this.warehouses = response.data.warehouses;
+                    console.log("fsdfdsfsdf", this.warehouses);
                     
                 }).finally(() => this.loading_submit = false);
             },
@@ -100,7 +101,7 @@
                 this.titleDialog = 'Importar Stock de Productos Masivamente'
             },
             async submit() {
-                if (! this.form.warehouse_id) {
+                if (!this.form.warehouse_id) {
                     this.$toast.warning('Seleccione un almacén para poder continuar');
                     return;
                 }

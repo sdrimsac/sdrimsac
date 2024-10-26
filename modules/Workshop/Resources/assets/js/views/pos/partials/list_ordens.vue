@@ -119,17 +119,17 @@
         class="bg-primary align-items-center rounded-top"
         style="padding-top: 12px"
       >
-        <div class="row col-12" v-if="clientTableData.table">
-          <div class="col-6" v-if="configuration.restaurant">
+        <div class="row col-12">
+          <div class="col-6" v-if="configuration.workshop">
             <h3 class="text-white">
               <strong style="padding-left: 20px">
                 {{
                 ` ${
                 isCreatingOrden
                 ? "CREANDO ORDEN"
-                : clientTableData.orden_id
+                : clientTableData.vehiculo_id
                 ? `(ORDEN n°
-                ${clientTableData.orden_id})`
+                ${clientTableData.vehiculo_id})`
                 : ""
                 }`
                 }}
@@ -142,14 +142,14 @@
               {{ cotIdentifier }}
             </template>
           </div>
-          <div class="col-6">
+          <!-- <div class="col-6">
             <div class="row">
               <h3 class="text-white" style="text-align: right">
                 Total {{ currency_id == "USD" ? "$" : "S/" }}
                 {{ (total + totalOrdenItems).toFixed(2) }}
               </h3>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div
@@ -433,70 +433,10 @@
               data-childselector="span"
             >
               <template v-if="!configuration.sale_note_credit_confirm">
-                <!-- <button
-                  class="btn p-0"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  style="max-height: 45px ;max-width: 150px;"
-                >
-                  <span
-                    class="btn btn-light dropdown-toggle"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-delay="0"
-                    title
-                    data-bs-original-title="Item Count"
-                    aria-label="Item Count"
-                  >
-                    Mas Opciones..
-                    <i class="fas fa-list" style="color: var(--primary) !important"></i>
-                  </span>
-                </button>-->
                 <div
                   class="dropdown-menu dropdown-menu-start col-md-2 col-1"
                   style="max-width: 154px;"
                 >
-                  <!-- <div class="col-12">
-                    <el-button
-                      v-if="
-                                                isCreatingOrden == false &&
-                                                    clientTableData.table ==
-                                                        undefined &&
-                                                    !configuration.college
-                                            "
-                      @click="openApart"
-                      class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                      style="max-width: 150px;"
-                    >
-                      <div class="text-center" style="margin-bottom: 2px">
-                        <span style="margin: 0 !important; padding: 0 !important">Aparcar</span>
-                        <i class="fas fa-cart-arrow-down" style="color: var(--primary) !important"></i>
-                      </div>
-                      <div></div>
-                    </el-button>
-                    <div></div>
-                  </div>-->
-                  <!-- <div class="col-12">
-                    <el-button
-                      v-if="
-                             configuration.consignment &&
-                             localOrden.length != 0 &&
-                             !isSeller
-                            "
-                      class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                      type="button"
-                      @click="openConsignment"
-                      style="max-height: 45px ;max-width: 150px;"
-                    >
-                      <div class="text-center" style="margin-bottom: 2px">
-                        <span style="margin: 0 !important; padding: 0 !important">Consignar</span>
-                        <i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
-                      </div>
-                      <div></div>
-                    </el-button>
-                  </div>-->
                   <div class="col-12">
                     <el-button
                       v-if="
@@ -608,7 +548,8 @@
                 ></el-option>
               </el-select>
             </template>
-            <template v-if="isSellerConsolidated">
+            <!-- esto es para seleccionar un cliente para dar un producto a cuenta  -->
+            <template >
               <el-select
                 v-model="formQtn.customer_id"
                 filterable

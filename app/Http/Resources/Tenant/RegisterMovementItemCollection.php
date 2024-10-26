@@ -2,18 +2,7 @@
 
 namespace App\Http\Resources\Tenant;
 
-use App\CoreFacturalo\Requests\Inputs\Functions;
-use App\Models\Tenant\Document;
-use App\Models\Tenant\Person;
-use App\Models\Tenant\RegisterMovement;
-use App\Models\Tenant\SaleNote;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Modules\Restaurant\Models\Area;
-use Modules\Restaurant\Models\Food;
-use Modules\Restaurant\Models\Orden;
-use Modules\Restaurant\Models\OrdenItem;
-use Modules\Restaurant\Models\Table;
-use App\Models\Tenant\Box;
 use App\Models\Tenant\Item;
 
 class RegisterMovementItemCollection extends ResourceCollection

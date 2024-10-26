@@ -1,0 +1,24 @@
+<?php
+
+namespace Modules\Workshop\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class WorkshopPersonalResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'number' => $this->number,
+            'telephone' => $this->telephone,
+        ];
+    }
+}

@@ -37,6 +37,10 @@ class ItemsStockImport implements ToCollection
 
             $warehouse_id = request('warehouse_id');
 
+            if (is_null($warehouse_id)) {
+                throw new Exception('el campo almacen no puede estar estar nulo vacio');
+            }
+
             if ($internal_id != null) {
 
                 $item = Item::where('internal_id', $internal_id)->first();

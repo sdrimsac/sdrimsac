@@ -9,6 +9,11 @@ use Modules\Workshop\Http\Controllers\TipoController;
 use Modules\Workshop\Http\Controllers\SellerController;
 use Modules\Workshop\Http\Controllers\VehiculoController;
 use Modules\Workshop\Http\Controllers\OrdenController;
+use Modules\Workshop\Http\Controllers\PersonalController;
+use Modules\Workshop\Http\Controllers\ServicesDetailsController;
+use Modules\Workshop\Http\Controllers\ServicesController;
+use Modules\Workshop\Http\Controllers\HistorialController;
+use Modules\Workshop\Models\ServicesDetails;
 
 Route::prefix('workshop')->group(function() {
     Route::get('/', 'WorkshopController@index');
@@ -19,12 +24,12 @@ Route::prefix('workshop')->group(function() {
     Route::get('observations/record/{id}', [ObservationController::class, 'record']);
     Route::get('observations/{id}', [ObservationController::class, 'active']);
 
-    Route::get('/mecanico', [SellerController::class, 'index'])->name('tenant.workshop.mecanico');
+    Route::get('/mecanico', [PersonalController::class, 'index'])->name('tenant.workshop.mecanico');
     /* Route::get('/mecanico/columns', [SellerController::class, 'columns']); */
-    Route::get('mecanico/records', [SellerController::class, 'records']);
-    Route::post('mecanico', [SellerController::class, 'store']);
-    Route::get('mecanico/record/{id}', [SellerController::class, 'record']);
-    Route::delete('mecanico/{mecanico}', [TipoController::class, 'destroy']);
+    Route::get('mecanico/records', [PersonalController::class, 'records']);
+    Route::post('mecanico', [PersonalController::class, 'store']);
+    Route::get('mecanico/record/{id}', [PersonalController::class, 'record']);
+    Route::delete('mecanico/{mecanico}', [PersonalController::class, 'destroy']);
 
     Route::get('/tipo', [TipoController::class, 'index'])->name('tenant.workshop.tipo');
     Route::get('tipo/records', [TipoController::class, 'records']);
@@ -37,6 +42,31 @@ Route::prefix('workshop')->group(function() {
     Route::post('vehiculo', [VehiculoController::class, 'store']);
     Route::get('vehiculo/record/{id}', [VehiculoController::class, 'record']);
     Route::delete('vehiculo/{tipo}', [VehiculoController::class, 'destroy']);
+
+    Route::post('items', [VehiculoController::class, 'setItems']);
+
+    Route::get('/servicesdetails', [ServicesDetailsController::class, 'index'])->name('tenant.workshop.servicesdetails');
+    Route::get('servicesdetails/records', [ServicesDetailsController::class, 'records']);
+    Route::post('servicesdetails', [ServicesDetailsController::class, 'store']);
+    Route::get('servicesdetails/record/{id}', [ServicesDetailsController::class, 'record']);
+    Route::delete('servicesdetails/{servicesdetails}', [ServicesDetailsController::class, 'destroy']);
+
+    Route::get('/services', [ServicesController::class, 'index'])->name('tenant.workshop.services');
+    Route::get('services/records', [ServicesController::class, 'records']);
+    Route::post('services', [ServicesController::class, 'store']);
+    Route::get('services/record/{id}', [ServicesController::class, 'record']);
+    Route::delete('services/{services}', [ServicesController::class, 'destroy']);
+
+    Route::get('/historial', [HistorialController::class, 'index'])->name('tenant.workshop.historial');
+    Route::get('historial/records', [HistorialController::class, 'records']);
+    Route::post('historial', [HistorialController::class, 'store']);
+    Route::get('historial/record/{id}', [HistorialController::class, 'record']);
+    Route::delete('historial/{services}', [HistorialController::class, 'destroy']);
+
+    
+
+    Route::get('/customers', [WorkshopController::class, 'searchCustomers']);
+    Route::get('/customer/{id}', [WorkshopController::class, 'searchCustomerById']);
            
 
     Route::prefix('worker')->group(function () {

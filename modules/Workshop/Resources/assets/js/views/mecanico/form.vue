@@ -61,7 +61,7 @@ export default {
         return {
             loading_submit: false,
             titleDialog: null,
-            resource: 'workshop/mecanico',
+            resource: 'workshop',
             errors: {},
             form: {},
         }
@@ -82,7 +82,7 @@ export default {
         create() {
             this.titleDialog = (this.recordId) ? 'Editar Personal Mecanico' : 'Nuevo Personal Mecanico'
             if (this.recordId) {
-                this.$http.get(`/workshop/${this.resource}/record/${this.recordId}`)
+                this.$http.get(`/${this.resource}/mecanico/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data
                     })
@@ -90,7 +90,7 @@ export default {
         },
         submit() {
             this.loading_submit = true
-            this.$http.post(`/workshop/${this.resource}`, this.form)
+            this.$http.post(`/${this.resource}/mecanico`, this.form)
                 .then(response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message)

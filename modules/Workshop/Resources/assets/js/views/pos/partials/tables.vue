@@ -102,7 +102,7 @@ export default {
         };
     },
     methods: {
-        async disabledTable(id) {
+        /* async disabledTable(id) {
             try {
                 await this.$confirm(
                     "¿Está seguro de deshabilitar la mesa?",
@@ -124,8 +124,8 @@ export default {
             } catch (e) {
                 console.log(e);
             }
-        },
-        async enabledTable(id) {
+        }, */
+        /* async enabledTable(id) {
             try {
                 await this.$confirm(
                     "¿Está seguro de habilitar la mesa?",
@@ -147,7 +147,7 @@ export default {
             } catch (e) {
                 console.log(e);
             }
-        },
+        }, */
         disablingTable() {
             this.isDisabling = !this.isDisabling;
         },

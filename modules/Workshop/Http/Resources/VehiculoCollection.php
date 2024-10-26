@@ -15,10 +15,18 @@ class VehiculoCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function($row, $key) {
+            $historial_id = null;
+            $historial = $row->historiales()->latest()->first();
+            if($historial){
+                $historial_id = $historial->id;
+            }
             return [
                 'id' => $row->id,
+                'historial_id' => $historial_id,
                 'customer_id' => $row->customer_id,
+                 'customer_name' => $row->customer ? $row->customer->name : null,
                 'tipo_vehiculo_id' => $row->tipo_vehiculo_id,
+                 'tipo_vehiculo_description' => $row->tipo_vehiculo ? $row->tipo_vehiculo->description : null,
                 'marca' => $row->marca,
                 'modelo' => $row->modelo,
                 'anio_fabricacion' => $row->anio_fabricacion,
@@ -28,6 +36,7 @@ class VehiculoCollection extends ResourceCollection
                 'serie' => $row->serie,
                 'color' => $row->color,
                 'motor' => $row->motor,
+                'created_at' => $row->created_at->format('d-m-Y H:i' ),
             ];
         });
     }

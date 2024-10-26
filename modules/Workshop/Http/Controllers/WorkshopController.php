@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Desarrollador;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Person;
 
 use App\Models\Tenant\PaymentMethodType;
 use Illuminate\Routing\Controller;
@@ -503,7 +504,7 @@ class WorkshopController extends Controller
 
         return $balance_inicial + $ingresos - $egresos;
     }
-    public function store (ExpensesRequest $request)
+    public function store(ExpensesRequest $request)
     {
         $configuration = Configuration::first();
         $cash_id = $request->cashid;
@@ -699,7 +700,7 @@ class WorkshopController extends Controller
         }
         // OrdenItem::where('orden_id', $orden_id)->delete();
         $orden_items = OrdenItem::where('orden_id', $orden_id)->get();
-    
+
         foreach ($orden_items as $item) {
             $item->restoreRestaurant();
             $item->delete();
@@ -742,6 +743,55 @@ class WorkshopController extends Controller
             'message' => $message
         ];
     }
+    public function searchCustomers(Request $request)
+    {
+        $customers = Person::where('number', 'like', "%{$request->input}%")
+            ->orWhere('name', 'like', "%{$request->input}%")
+            ->orWhere('alias', 'like', "%{$request->input}%")
+            ->whereType('customers')
+            ->whereIsEnabled()
+            ->orderBy('name');
 
+        if ($request->credit_list) {
+            $customers = $customers->where('has_credit_line', 1);
+        }
 
+        $customers = $customers->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => ($row->alias ? $row->alias . ' - ' : '') . $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'has_credit_line' => (bool) $row->has_credit_line,
+                'credit_line' => $row->credit_line,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'addresses' => $row->addresses,
+                'address' => $row->address,
+                'seller_id' => $row->seller_id
+            ];
+        });
+
+        return compact('customers');
+    }
+    public function searchCustomerById($id)
+    {
+
+        $customers = Person::with('addresses')->whereType('customers')
+            ->where('id', $id)
+            ->get()->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->number . ' - ' . $row->name,
+                    'name' => $row->name,
+                    'number' => $row->number,
+                    'phone' => $row->telephone,
+                    'addresses' => $row->addresses,
+                    'address' =>  $row->address,
+                    'client_zone_id' => $row->client_zone_id,
+                ];
+            });
+
+        return compact('customers');
+    }
 }

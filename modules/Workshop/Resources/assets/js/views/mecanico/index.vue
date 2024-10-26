@@ -143,7 +143,7 @@ export default {
         return {
             title: "",
             showDialog: false,
-            resource: "workshop/mecanico",
+            resource: "workshop",
             recordId: null,
             records: []
         };
@@ -156,7 +156,7 @@ export default {
     },
     methods: {
         getData() {
-            this.$http.get(`/${this.resource}/records`).then(response => {
+            this.$http.get(`/${this.resource}/mecanico/records`).then(response => {
                 this.records = response.data.data;
             });
         },

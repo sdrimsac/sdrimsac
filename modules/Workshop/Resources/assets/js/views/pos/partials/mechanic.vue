@@ -5,77 +5,268 @@
     :close-on-click-modal="false"
     @close="close"
     @open="open"
-    width="80%"
+    width="90%"
     append-to-body
   >
     <form autocomplete="off" action>
       <br />
-      <div class="">
-        <div class="">
+      <div class>
+        <div class>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label>cliente</label>
-              <el-input></el-input>
-            </div>
-            <div class="col-md-4">
-              <label>cliente</label>
-              <el-input></el-input>
-            </div>
-            <div class="col-md-4 text-end">
-              <el-button
-              type="primary"
-              @click="clickRegisterHistory"
+              <el-select
+                v-model="form.customer_id"
+                filterable
+                remote
+                class="border-left rounded-left border-info"
+                popper-class="el-select-customers"
+                dusk="customer_id"
+                placeholder="Escriba el nombre o número de documento del cliente"
+                :remote-method="searchRemoteCustomers"
+                :loading="loading_search"
               >
-                Nuevo Registro
-              </el-button>
+                <el-option
+                  v-for="option in customers"
+                  :key="option.id"
+                  :value="option.id"
+                  :label="option.description"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-md-3">
+              <label>Placa Vehiculo</label>
+              <el-input v-model="form.placa" placeholder="placa" @input="searchVehicles"></el-input>
+            </div>
+            <div class="col-md-6 text-end">
+              <el-button type="primary" @click="clickRegisterHistory">Nuevo Registro</el-button>
             </div>
           </div>
         </div>
       </div>
       <br />
       <div class="card-body">
-        <div class="">
-          <table class="table-responsive col-md-12">
+        <div class>
+          <table class="table table-striped table-responsive col-md-12">
             <thead>
-              <tr>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
+              <tr class="bg-primary">
+                <th class="text-white">Acciones</th>
+                <th class="text-white">N</th>
+                <th class="text-white">Cliente</th>
+                <th class="text-white">Vehiculo</th>
+                <th class="text-white">Placa</th>
+                <th class="text-white">Marca</th>
+                <th class="text-white">Color</th>
+                <th class="text-white">Serie</th>
+                <th class="text-white">Motor</th>
+                <th class="text-white">Año</th>
+                <th class="text-white">Kilometros Corridos</th>
+                <th class="text-white">Fecha Registro</th>
+                <th class="text-white">Historial</th>
+                <th class="text-white">Estado</th>
+                <th class="text-white">Productos</th>
+                <th class="text-white">Comprobante</th>
               </tr>
             </thead>
             <tbody>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
+              <tr v-for="(vehiculo, index) in vehiculos" :key="index">
+                <td>
+                  <div class="dropdown-as-select d-inline-block" data-childselector="span">
+                    <button
+                      class="btn p-0"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span
+                        class="btn btn-primary dropdown-toggle"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-delay="0"
+                        title
+                        data-bs-original-title="Item Count"
+                        aria-label="Item Count"
+                      >
+                        <i class="fas fa-list"></i>
+                      </span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end col-md-2 col-1">
+                      <el-button class="col-md-12 col-12">Editar</el-button>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ index + 1 }}</td>
+                <td>{{ vehiculo.customer_name }}</td>
+                <td>{{ vehiculo.tipo_vehiculo_description }}</td>
+                <td>{{ vehiculo.placa }}</td>
+                <td>{{ vehiculo.marca }}</td>
+                <td>{{ vehiculo.color }}</td>
+                <td>{{ vehiculo.serie }}</td>
+                <td>{{ vehiculo.motor }}</td>
+                <td>{{ vehiculo.anio_fabricacion }}</td>
+                <td>{{ vehiculo.kilometraje }}</td>
+                <td>{{ vehiculo.created_at }}</td>
+                <td>
+                  <el-button type="success" @click="HistorialVehiculo(vehiculo.id)">
+                    <i class="fas fa-list"></i>
+                  </el-button>
+                </td>
+                <td>sdfsd</td>
+                <td>
+                  <el-button
+                    @click="selectItem(vehiculo.id, vehiculo.placa, vehiculo.historial_id)"
+                    type="info"
+                  >Agregar</el-button>
+                </td>
+                <td>
+                  <el-button type="primary" @click="openpayOrden()">Generar CP</el-button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
       <register-history :showDialog.sync="showDialogRegisterHistory"></register-history>
+      <historial :showDialog.sync="showDialogHistorial" :vehiculo_id="selectedVehiculoId"></historial>
+      <modal-item
+        :showDialog.sync="showDialogModalItem"
+        :vehiculoId="selectedVehiculoId"
+        :vehiculoPlaca="selectedVehiculoPlaca"
+        :vehiculoHistorial="selectedHistorial"
+        :nexItem="mechanicItem"
+      ></modal-item>
     </form>
   </el-dialog>
 </template>
 <script>
-import registerHistory from './register_history.vue'
+import registerHistory from "./register_history.vue";
+import historial from "./historial.vue";
+import modalItem from "./modal_item.vue";
 export default {
-  props: ["showDialog"],
+  props: ["showDialog", "mechanicItem", "visible"],
   components: {
-    registerHistory
+    registerHistory,
+    historial,
+    modalItem
   },
   data() {
     return {
       title: "Registro Ingreso Vehiculo",
+      localMechanicItem: this.mechanicItem,
       showDialogRegisterHistory: false,
+      showDialogHistorial: false,
+      showDialogModalItem: false,
+      resource: "workshop",
+      vehiculos: [],
+      loading_search: false,
+      form: {
+        customer_id: null,
+        placa: ""
+      },
+      customers: [],
+      allFoods: [],
+      nexItem: [],
+      selectedVehiculoId: null,
+      selectedVehiculoPlaca: "",
+      selectedHistorial: null
     };
   },
+  mounted() {
+    console.log(
+      "Datos recibidos en mechanicItem en el modal:",
+      this.mechanicItem
+    );
+  },
+  watch: {
+    mechanicItem(newValue) {
+      console.log("Cambio en mechanicItem:", newValue);
+    }
+  },
   methods: {
+    checkIsExistSerie() {
+      let hasError = false;
+      for (let ord of this.localOrden) {
+        let { series_enabled } = ord.food.item;
+
+        if (series_enabled && ord.series.length == 0) {
+          hasError = true;
+          break;
+        }
+      }
+      return hasError;
+    },
+    
+    async openpayOrden() {
+      
+      this.$emit('payment');
+    },
+    selectItem(id, placa, historial_id) {
+      if (historial_id == null) {
+        return;
+      }
+      this.selectedHistorial = historial_id;
+      this.selectedVehiculoId = id;
+      this.selectedVehiculoPlaca = placa;
+      console.log(
+        "Vehiculo ID:",
+        id,
+        "Vehiculo Placa:",
+        placa,
+        "histoprial idd",
+        historial_id
+      );
+      this.localMechanicItem = this.nexItem;
+      this.showDialogModalItem = true;
+    },
+    searchRemoteCustomers(input) {
+      if (input.length > 0) {
+        this.loading_search = true;
+        let parameters = `input=${input}`;
+
+        this.$http
+          .get(`/${this.resource}/customers?${parameters}`)
+          .then(response => {
+            this.customers = response.data.customers;
+            this.loading_search = false;
+            if (this.customers.length == 0) {
+              this.customers = this.all_customers;
+            }
+          });
+      } else {
+        this.customers = this.all_customers;
+      }
+    },
+    reloadDataCustomers(customer_id) {
+      this.$http.get(`/workshop/customer/${customer_id}`).then(response => {
+        this.customers = response.data.customers;
+        this.form.customer_id = customer_id;
+      });
+    },
+    lisVehicle() {
+      this.$http
+        .get(`/${this.resource}/vehiculo/records`)
+        .then(response => {
+          this.vehiculos = response.data.data;
+          /* console.log("Tipos de vehículo:", this.vehiculos); */
+        })
+        .catch(error => {
+          console.error("Error al obtener los tipos de vehículo:", error);
+        });
+    },
+    searchVehicles() {
+      /* this.$http.get(`/${this.resource}/vehiculo/records`, this.form) */
+    },
     clickRegisterHistory() {
       this.showDialogRegisterHistory = true;
     },
+    HistorialVehiculo(id) {
+      this.selectedVehiculoId = id;
+
+      this.showDialogHistorial = true;
+    },
     open() {
-      
+      this.lisVehicle();
     },
     close() {
       this.$emit("update:showDialog", false);

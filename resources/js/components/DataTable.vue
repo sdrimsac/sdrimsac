@@ -266,7 +266,6 @@
                             <slot name="footer"
                             
                             >
-                                
                             </slot>
                         </tfoot>
                     </table>

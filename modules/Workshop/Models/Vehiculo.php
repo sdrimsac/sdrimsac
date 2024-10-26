@@ -4,6 +4,7 @@ namespace Modules\Workshop\Models;
 
 use App\Models\Tenant\ModelTenant;
 use App\Models\Tenant\Customer;
+use App\Models\Tenant\Person;
 
 class Vehiculo extends ModelTenant
 {
@@ -24,10 +25,16 @@ class Vehiculo extends ModelTenant
 
     ];
     public function customer(){
-        return $this->belongsTo(Customer::class,'customer_id');
+        return $this->belongsTo(Person::class,'customer_id');
     }
     public function tipo_vehiculo(){
         return $this->belongsTo(TipoVehiculo::class,'tipo_vehiculo_id');
+    }
+    public function person(){
+        return $this->hasMany(Person::class,'person_id');
+    }
+    public function historiales() {
+        return $this->hasMany(Historial::class,'vehiculo_id');
     }
 
 }
