@@ -45,16 +45,18 @@ class PrintEvent implements ShouldBroadcast
             }
         }
         if ($company->number == '10484420331') {
-        Log::info('zone_id:' . $zone_id);
-        Log::info('area_id:' . $zone_id);
+            Log::info('zone_id:' . $zone_id);
+            Log::info('area_id:' . $area_id);
         }
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $id_by_area = Area::getAreaEstablishment($area_id);
-        if ($id_by_area) {
+        if ($id_by_area && $company->number != '10484420331') {
             $area_id = $id_by_area;
         }
-
+        if ($company->number == '10484420331') {
+            Log::info('area_id_2:' . $area_id);
+        }
 
         $area_found = Area::find($area_id);
         if ($area_found) {
