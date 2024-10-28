@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="form.has_bv_info">
+                        <tr v-if="form.has_ft_info">
                             <td>
                                 Factura
                             </td>
@@ -64,7 +64,7 @@
                                 {{ form.ft_total }}
                             </td>
                         </tr>
-                        <tr v-if="form.has_ft_info">
+                        <tr v-if="form.has_bv_info">
                             <td>Boleta</td>
                             <td>
                                 {{ form.first_bv ? form.first_bv.series : "" }}
