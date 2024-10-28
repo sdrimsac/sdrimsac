@@ -2351,7 +2351,7 @@ export default {
                     id: 74,
                     title: ["Venta del", "mes"],
                     icon: "fas fa-history ",
-                    visible: true 
+                    visible: true  && this.establishments.is_product
                 },
                 {
                     id: 63,
@@ -3031,7 +3031,6 @@ export default {
             switch (id) {
                 case 74:
                     this.showMonthSales = true;
-                    console.log("🚀 ~ trigerFunction ~ this.showMonthSales:", this.showMonthSales)
                     break;
                 case 214:
                     this.showQuotationListDialog = true;
