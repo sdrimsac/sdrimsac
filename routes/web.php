@@ -223,6 +223,7 @@ if ($hostname) {
                 Route::post('sale-notes', [App\Http\Controllers\Tenant\SaleNoteController::class, 'store']);
                 Route::get('sale-notes/credit-cash/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'credit_cash_records']);
                 Route::post('cash/cash_document', [Modules\Restaurant\Http\Controllers\CashController::class, 'cash_document']);
+                Route::post('cash/abjusment', [Modules\Restaurant\Http\Controllers\CashController::class, 'adjusmentIncome']);
                 Route::prefix('cash/main_cash')->group(function () {
                     Route::get('/', [CashController::class, 'index_main']);
                     Route::get('/records', [CashController::class, 'records_principal']);

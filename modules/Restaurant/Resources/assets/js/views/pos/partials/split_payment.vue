@@ -3,220 +3,314 @@
         append-to-body
         @open="open"
         @close="close"
+        v-loading="loading"
         :visible="showSplitPayment"
-        :title="`Dividir pago: S/. ${total}`"
-        width="70%"
+        :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`"
+        width="85%"
     >
-        <div class="d-flex flex-column p-2">
-            <div class="d-flex flex-row align-items-end">
-                <div>
-                    <label for="">Dividir entre:</label><br />
-                    <el-input-number
-                        v-if="splitByAmount == '1'"
-                        :max="10"
-                        @input="updatePayments"
-                        v-model="number"
-                    ></el-input-number>
-                    <el-input-number
-                        v-else
-                        :max="items.length"
-                        @input="updatePayments"
-                        v-model="numberProduct"
-                    ></el-input-number>
-                </div>
-                <div style="margin-left:10px;">
-                    <el-radio-group
-                        v-model="splitByAmount"
-                        @change="updatePayments"
-                    >
-                        <el-radio-button label="1">Por cuotas</el-radio-button>
-                        <el-radio-button label="2"
-                            >Por producto</el-radio-button
+        <div class="row mt-2">
+            <div class="d-flex flex-column col-md-6 col-lg-6 col-12">
+                <div class="row">
+                    <div class="col-md-6 col-12 col-lg-6">
+                        <label for="">Dividir entre:</label><br />
+                        <el-input-number
+                            class="w-100"
+                            :min="2"
+                            @input="updatePayments"
+                            v-model="number"
+                            controls
+                        ></el-input-number>
+                    </div>
+                    <div class="col-md-6 col-12 col-lg-6">
+                        <label for="type">Tipo</label>
+                        <br />
+                        <el-radio-group
+                            v-model="splitByAmount"
+                            @change="updatePayments"
                         >
-                    </el-radio-group>
+                            <el-radio-button label="1"
+                                >Por cuotas</el-radio-button
+                            >
+                            <el-radio-button label="2" :disabled="quantity == 1"
+                                >Por producto</el-radio-button
+                            >
+                        </el-radio-group>
+                    </div>
                 </div>
-            </div>
-
-            <div v-if="splitByAmount == '1'" class="d-flex flex-wrap ">
                 <div
-                    class="col-3"
-                    v-for="(payment, idx) in payments"
+                    class="row mt-1"
+                    v-for="(person, idx) in persons"
                     :key="idx"
                 >
-                    <!--    <div class="form-check m-2">
-                  <input
-                            class="form-check-input"
-                            type="checkbox"
-                            v-model="payment.fixed"
-                            :id="idx"
-                        />
-                        <label class="form-check-label" :for="idx">
-                            Fijar
-                        </label> 
-                    </div>-->
-                    <div style="margin-top:10px; margin-right:5px;">
-                        <h2 class="text-muted text-small">
-                            Cuota {{ idx + 1 }}
-                        </h2>
-                        <!-- <el-input-number
-                            :disabled="payment.fixed"
-                            :precision="2"
-                            :step="0.1"
-                            v-model="payment.amount"
-                        ></el-input-number> -->
-                        <el-input v-model="payment.amount" readonly></el-input>
-                    </div>
-                </div>
-            </div>
-            <div v-else>
-                <div class="d-flex flex-wrap">
-                    <div class="col-2" v-for="(item, idx) in items" :key="idx">
-                        <div
-                            role="button"
-                            @click="addItem(item)"
-                            class="card p-1"
-                            style=" margin-top:10px; margin-right:5px;"
-                        >
-                            <h2 class="text-muted text-small">
-                                {{ item.food.description }}
-                            </h2>
-
-                            <h3 class="text-muted text-small">
-                                S/. {{ item.price }}
-                            </h3>
-                            <h3
-                                :class="
-                                    ` text-small ${
-                                        item.quantity == 0
-                                            ? 'text-danger'
-                                            : 'text-muted'
-                                    }`
-                                "
-                            >
-                                Cantidad: {{ item.quantity }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    style="margin-top:15px;"
-                    class="d-flex flex-wrap justify-content-center"
-                >
                     <div
-                        class="col-3 "
-                        v-for="(payment, idx) in payments"
-                        :key="idx"
-                        style="margin:5px;"
+                        class="row"
+                        :class="{
+                            'mt-2': idx == 0
+                        }"
                     >
-                        <table class="col-12">
-                            <thead>
-                                <tr
-                                    role="button"
-                                    @click="selectAccount(idx)"
-                                    :class="
-                                        `${
-                                            payment.selected
-                                                ? 'bg-primary text-white border rounded-top'
-                                                : 'border rounded-top'
-                                        }`
+                        <div class="col-2">
+                            <el-button
+                                :type="
+                                    `${person.selected ? 'primary' : 'default'}`
+                                "
+                                icon="el-icon-plus"
+                                :disabled="splitByAmount == '1'"
+                                @click="selectAccount(idx)"
+                            ></el-button>
+                        </div>
+                        <div class="col-10">
+                            <el-select
+                                v-model="person.customer_id"
+                                filterable
+                                remote
+                                :class="{
+                                    pperson: person.selected
+                                }"
+                                popper-class="el-select-customers"
+                                placeholder="Escriba el nombre o número de documento del cliente"
+                                :remote-method="searchRemoteCustomers"
+                                :loading="loading_search"
+                                @change="changeCustomer(idx)"
+                            >
+                                <el-option
+                                    v-for="option in customers"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
+
+                        <div class="col-4">
+                            <label for="document_type_id"
+                                >Tipo de documento</label
+                            >
+                            <el-select
+                                v-model="person.document_type_id"
+                                filterable
+                            >
+                                <el-option
+                                    v-for="option in documentTypes"
+                                    :key="option.value"
+                                    :value="option.value"
+                                    :label="option.text"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                        <div class="col-4">
+                            <label for="payment_method_id"
+                                >Método de pago</label
+                            >
+                            <el-select
+                                v-model="person.payment_method"
+                                filterable
+                            >
+                                <el-option
+                                    v-for="option in paymentMethods"
+                                    :key="option.value"
+                                    :value="option.text"
+                                    :label="option.text"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                        <div class="col-4">
+                            <label for="amount">Monto</label>
+                            <el-input
+                                v-model="person.amount"
+                                readonly
+                            ></el-input>
+                        </div>
+                        <div class="col-3"></div>
+                        <div
+                            class="col-12 m-1"
+                            v-if="
+                                splitByAmount == '2' &&
+                                    person.products.length > 0
+                            "
+                        >
+                            <el-collapse>
+                                <el-collapse-item
+                                    :title="
+                                        `Productos ${person.products.length}`
                                     "
                                 >
-                                    <th class="text-center" colspan="3">
-                                        <b> CUENTA {{ idx + 1 }} </b>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody
-                                class="border rounded-top "
-                                v-if="
-                                    payment.products &&
-                                        payment.products.length > 0
-                                "
-                            >
-                                <tr
-                                    v-for="(product, idx) in payment.products"
-                                    :key="idx"
-                                >
-                                    <td>
-                                        <h3 class="text-muted text-small">
-                                            {{ product.quantity }}
-                                        </h3>
-                                    </td>
-                                    <td>
-                                        <h3 class="text-muted text-small">
-                                            {{ product.description }}
-                                        </h3>
-                                    </td>
-                                    <td style="text-align:right">
-                                        <h3 class="text-muted text-small">
-                                            {{
-                                                product.price * product.quantity
-                                            }}
-
-                                            <b
-                                                class="text-danger"
-                                                role="button"
-                                                @click="removeItem(product.id)"
-                                            >
-                                                x
-                                            </b>
-                                        </h3>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        colspan="2"
-                                        class="text-muted text-small"
-                                        style="text-align:right"
+                                    <el-table
+                                        :data="person.products"
+                                        style="width: 100%"
                                     >
-                                        <b>
-                                            Total
-                                        </b>
-                                    </td>
-                                    <td class="text-muted text-small">
-                                        S/.
-                                        {{
-                                            totalItemSelected(payment.products)
-                                        }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tbody v-else class="border">
-                                <tr>
-                                    <td colspan="3" class="text-center">
-                                        <h3 class="text-muted text-small">
-                                            Sin productos seleccionados
-                                        </h3>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        <el-table-column
+                                            prop="quantity"
+                                            label="Cantidad"
+                                            width="150"
+                                        ></el-table-column>
+                                        <el-table-column
+                                            prop="description"
+                                            label="Descripción"
+                                        ></el-table-column>
+                                        <el-table-column
+                                            label="Acciones"
+                                            width="120"
+                                        >
+                                            <template slot-scope="scope">
+                                                <el-button
+                                                    size="mini"
+                                                    type="danger"
+                                                    @click="
+                                                        removeItem(
+                                                            scope.row.id,
+                                                            idx
+                                                        )
+                                                    "
+                                                >
+                                                    Remover
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-collapse-item>
+                            </el-collapse>
+                        </div>
                     </div>
+                    <el-divider></el-divider>
                 </div>
             </div>
-
-            <div class="row d-flex m-2 justify-content-end">
-                <div class="col-3 d-flex justify-content-end">
-                    <el-button type="primary" @click="sendPayments"
-                        >Listo</el-button
-                    >
+            <div class="col-md-6 col-lg-6 col-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>P/U</th>
+                                <th colspan="2">Cant</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, idx) in items" :key="idx">
+                                <td>
+                                    {{ item.food.description }}
+                                </td>
+                                <td>S/. {{ item.price }}</td>
+                                <td class="text-primary font-weight-bold">
+                                    {{ item.originalQuantity }}
+                                </td>
+                                <td>{{ item.quantity }}</td>
+                                <td>
+                                    <el-button
+                                        icon="el-icon-plus"
+                                        :disabled="item.quantity == 0"
+                                        @click="addItem(item)"
+                                    ></el-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+
+        <div class="row d-flex m-2 justify-content-end">
+            <div class="col-3 d-flex justify-content-end">
+                <el-button type="primary" @click="sendPayments"
+                    >Listo</el-button
+                >
             </div>
         </div>
     </el-dialog>
 </template>
+<style>
+.el-divider--horizontal {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
+.pperson .el-input--suffix .el-input__inner {
+    color: #073f68;
+}
+</style>
 <script>
 export default {
-    props: ["showSplitPayment", "total", "orden_items"],
+    props: [
+        "showSplitPayment",
+        "total",
+        "orden_items",
+        "customer_default",
+        "form",
+        "series"
+    ],
     data() {
         return {
+            formOrigin: {},
+            colorArray: [
+                { background: "#CFE2F3", color: "#004080" }, // SoftBlue background with Navy text
+                { background: "#B7E1A1", color: "#2C6B2F" }, // SoftGreen background with ForestGreen text
+                { background: "#F4C2C2", color: "#C2185B" }, // SoftPink background with DarkPink text
+                { background: "#FFE08A", color: "#D2691E" }, // SoftGold background with Chocolate text
+                { background: "#CFF4F9", color: "#008B8B" }, // SoftCyan background with DarkCyan text
+                { background: "#DCDCDC", color: "#505050" }, // SoftGray background with Gray text
+                { background: "#FFF5CC", color: "#FFA500" }, // SoftLemonChiffon background with Orange text
+                { background: "#F5E9A1", color: "#8B8B00" }, // SoftKhaki background with Olive text
+                { background: "#EDE5F5", color: "#6A0DAD" }, // SoftLavender background with Purple text
+                { background: "#F5E7B1", color: "#8B4513" }, // SoftBeige background with SaddleBrown text
+                { background: "#FFD9D6", color: "#D83B1F" }, // SoftMistyRose background with Tomato text
+                { background: "#E5FFE5", color: "#1D8348" }, // SoftHoneydew background with Green text
+                { background: "#EFFAF0", color: "#2E8B57" }, // SoftMintCream background with SeaGreen text
+                { background: "#FFEBEF", color: "#B03060" }, // SoftLavenderBlush background with Crimson text
+                { background: "#F9F3D2", color: "#B8860B" }, // SoftGoldenRodYellow background with GoldenRod text
+                { background: "#FFE9C8", color: "#FF4500" }, // SoftPapayaWhip background with OrangeRed text
+                { background: "#FFF1E8", color: "#8B0000" }, // SoftSeaShell background with DarkRed text
+                { background: "#EAF3FF", color: "#4682B4" }, // SoftAliceBlue background with SteelBlue text
+                { background: "#FBFBFF", color: "#483D8B" }, // SoftGhostWhite background with SlateBlue text
+                { background: "#F7F7F7", color: "#696969" } // SoftWhiteSmoke background with DimGray text
+            ],
             selectedAccount: undefined,
+            customer_default_id: null,
             splitByAmount: "1",
             number: 2,
+            loading: false,
             numberProduct: 2,
             payments: [],
-            items: []
+            items: [],
+            quantity: 0,
+            documentTypes: [
+                { value: "01", text: "FACTURA" },
+
+                { value: "03", text: "BOLETA" },
+                { value: "80", text: "NOTA DE VENTA" }
+            ],
+            paymentMethods: [
+                { value: "01", text: "Efectivo", img: "botonEfectivo.png" },
+                { value: "02", text: "Culqui", img: "CulquiIcon.png" },
+                {
+                    value: "05",
+                    text: "TARJETA: IZYPAY",
+                    img: "botonIzipay.png"
+                },
+                {
+                    value: "06",
+                    text: "TARJETA: NIUBIZ",
+                    img: "botonNiubiz.png"
+                },
+                {
+                    value: "03",
+                    text: "Yape",
+                    img: "yape-logo-3E473EE7E5-seeklogo.com.png"
+                },
+                {
+                    value: "04",
+                    text: "PLIN",
+                    img: "plin-logo-0C4106153C-seeklogo.com.png"
+                },
+                { value: "07", text: "BBVA", img: "bbva-logo.png" },
+                { value: "08", text: "BCP", img: "bcp-logo.png" },
+                { value: "09", text: "Scotiabank", img: "scotiabank-logo.png" },
+                { value: "10", text: "BCO NACION", img: "nacion-logo.png" }
+            ],
+            persons: [],
+            customers: [],
+            loading_search: false,
+            input_person: { number: null },
+            payments: []
         };
     },
     created() {
@@ -239,6 +333,320 @@ export default {
     },
 
     methods: {
+        validate() {
+            let somePersonHasZeroAmount = this.persons.some(
+                p => p.amount == 0
+            );
+                console.log("🚀 ~ validate ~ somePersonHasZeroAmount:", somePersonHasZeroAmount)
+            if (somePersonHasZeroAmount) {
+                this.$showSAlert(
+                    "Error",
+                    "El monto a pagar no puede ser 0",
+                    "error"
+                );
+                return false;
+            }
+            let person = this.persons.find(
+                p =>
+                    p.identity_document_type_id !== "6" &&
+                    p.document_type_id == "01"
+            );
+            if (person) {
+                this.$showSAlert(
+                    "Error",
+                    "Las facturas deben ser emitidas a RUC",
+                    "error"
+                );
+                return false;
+            }
+
+            let total = this.persons.reduce((a, b) => a + Number(b.amount), 0);
+                console.log("🚀 ~ validate ~ this.total:", this.total)
+                console.log("🚀 ~ validate ~ total:", total)
+            if (total != this.total) {
+                this.$showSAlert(
+                    "Error",
+                    "La suma de los montos no coincide con el total",
+                    "error"
+                );
+                return false;
+            }
+            return true;
+        },
+        async sendDocument(form, resource) {
+            this.loading = true;
+            let newForm = this.reCalculateTotal(form);
+            const response = await this.$http.post(`/${resource}`, newForm);
+            this.loading = false;
+        },
+        async sendPayments() {
+            if (!this.validate()) {
+                return;
+            }
+
+            let form = JSON.parse(JSON.stringify(this.form));
+            let { items } = form;
+
+            if (this.splitByAmount == "1") {
+                for (const p of this.persons) {
+                    let fItems = this.formatItems(
+                        items,
+                        null,
+                        this.percentage_igv,
+                        p.amount
+                    );
+                    form.items = fItems;
+                    form.document_type_id = p.document_type_id;
+                    form.prefix = "NV";
+                    form.payments = [];
+                    let serie_id = this.series.find(
+                        s => s.document_type_id == form.document_type_id
+                    ).id;
+                    form.customer_id = p.customer_id;
+                    form.series_id = serie_id;
+                    form.afectar_caja = false;
+                    let resource =
+                        p.document_type_id == "80" ? "sale-notes" : "documents";
+                    this.payments.push({
+                        amount: p.amount,
+                        payment_method: this.paymentMethods.find(
+                            pm => pm.text == p.payment_method
+                        ).value
+                    });
+                    await this.sendDocument(form, resource);
+                }
+            } else {
+                for (let i = 0; i < this.persons.length; i++) {
+                    let items = JSON.parse(JSON.stringify(this.form.items));
+                    let p = this.persons[i];
+
+                    // Filtrar los ítems correspondientes a la persona actual
+                    let personItems = items.filter(i =>
+                        p.products.some(product => {
+                            console.log("Comparando", product, i);
+                            return product.id == i.id;
+                        })
+                    );
+
+                    let currentTotal = personItems.reduce(
+                        (sum, i) => sum + i.sale_unit_price * i.quantity,
+                        0
+                    );
+
+                    let fItems = this.formatItems(
+                        personItems,
+                        null,
+                        this.percentage_igv,
+                        currentTotal
+                    );
+
+                    form.items = fItems;
+
+                    form.document_type_id = p.document_type_id;
+                    form.prefix = "NV";
+                    form.payments = [];
+
+                    // Encontrar la serie correspondiente
+                    let serie_id = this.series.find(
+                        s => s.document_type_id == form.document_type_id
+                    ).id;
+
+                    form.customer_id = p.customer_id;
+                    form.series_id = serie_id;
+                    form.afectar_caja = false;
+
+                    let resource =
+                        p.document_type_id == "80" ? "sale-notes" : "documents";
+
+                    this.payments.push({
+                        amount: p.amount,
+                        payment_method: this.paymentMethods.find(
+                            pm => pm.text == p.payment_method
+                        ).value
+                    });
+                    await this.sendDocument(form, resource);
+                }
+            }
+            this.$emit("setPayments", this.payments);
+            this.close();
+        },
+        formatItems(
+            items = [],
+            affectation = null,
+            percentage_igv = 0.18,
+            generalAmount
+        ) {
+            console.log("🚀 ~ items xxxxx:", items);
+            let currentTotal = items.reduce(
+                (sum, i) => sum + i.sale_unit_price * i.quantity,
+                0
+            );
+
+            let adjustmentFactor = generalAmount / currentTotal;
+
+            items = items.map(i => {
+                let affectation_igv_type_id =
+                    affectation != null && affectation != undefined
+                        ? affectation
+                        : i.sale_affectation_igv_type_id;
+
+                let adjustedQuantity = i.quantity * adjustmentFactor;
+
+                return {
+                    ...i,
+                    warehouse_id: null,
+                    item: i,
+                    item_id: i.id,
+                    unit_value:
+                        affectation_igv_type_id == 10
+                            ? i.sale_unit_price / (1 + percentage_igv / 100)
+                            : i.sale_unit_price,
+                    quantity: adjustedQuantity,
+                    aux_quantity: adjustedQuantity,
+                    total_base_igv:
+                        affectation_igv_type_id == 10
+                            ? (i.sale_unit_price * adjustedQuantity) /
+                              (1 + percentage_igv / 100)
+                            : i.sale_unit_price * adjustedQuantity,
+                    percentage_igv: this.percentage_igv,
+                    total_igv:
+                        affectation_igv_type_id == 10
+                            ? ((i.sale_unit_price * adjustedQuantity) /
+                                  (1 + percentage_igv / 100)) *
+                              (percentage_igv / 100)
+                            : 0,
+                    total_base_isc: 0.0,
+                    percentage_isc: 0.0,
+                    total_isc: 0.0,
+                    total_base_other_taxes: 0.0,
+                    percentage_other_taxes: 0.0,
+                    total_other_taxes: 0.0,
+                    total_taxes:
+                        affectation_igv_type_id == 10
+                            ? ((i.sale_unit_price * adjustedQuantity) /
+                                  (1 + percentage_igv / 100)) *
+                              (percentage_igv / 100)
+                            : 0,
+                    total_value:
+                        affectation_igv_type_id == 10
+                            ? (i.sale_unit_price * adjustedQuantity) /
+                              (1 + percentage_igv / 100)
+                            : adjustedQuantity * i.sale_unit_price,
+                    total_charge: 0.0,
+                    total_discount: 0.0,
+                    total: i.sale_unit_price * adjustedQuantity,
+                    price_type_id: "01",
+                    unit_price: i.sale_unit_price,
+                    unit_price_value: i.sale_unit_price,
+                    has_igv: i.has_igv,
+                    affectation_igv_type_id: affectation_igv_type_id,
+                    presentation: null,
+                    charges: [],
+                    discounts: [],
+                    attributes: [],
+                    affectation_igv_type: affectation_igv_type_id
+                };
+            });
+
+            return items;
+        },
+        reCalculateTotal(form) {
+            let total_discount = 0;
+            let total_charge = 0;
+
+            let total_exportation = 0;
+            let total_taxed = 0;
+            let total_exonerated = 0;
+            let total_unaffected = 0;
+            let total_free = 0;
+            let total_igv = 0;
+            let total_value = 0;
+            let total = 0;
+            let total_plastic_bag_taxes = 0;
+            // form.items = this.formatItems(form.items);
+
+            form.items.forEach(row => {
+                total_discount += parseFloat(row.total_discount);
+                total_charge += parseFloat(row.total_charge);
+
+                if (row.affectation_igv_type_id === "10") {
+                    total_taxed += parseFloat(row.total_value);
+                }
+                if (row.affectation_igv_type_id === "20") {
+                    total_exonerated += parseFloat(row.total_value);
+                }
+                if (row.affectation_igv_type_id === "30") {
+                    total_unaffected += parseFloat(row.total_value);
+                }
+                if (row.affectation_igv_type_id === "40") {
+                    total_exportation += parseFloat(row.total_value);
+                }
+                if (
+                    ["10", "20", "30", "40"].indexOf(
+                        row.affectation_igv_type_id
+                    ) < 0
+                ) {
+                    total_free += parseFloat(row.total_value);
+                }
+                if (
+                    ["10", "20", "30", "40"].indexOf(
+                        row.affectation_igv_type_id
+                    ) > -1
+                ) {
+                    total_igv += parseFloat(row.total_igv);
+                    total += parseFloat(row.total);
+                }
+                total_value += parseFloat(row.total_value);
+                total_plastic_bag_taxes += isNaN(
+                    parseFloat(row.total_plastic_bag_taxes)
+                )
+                    ? 0.0
+                    : parseFloat(row.total_plastic_bag_taxes);
+            });
+
+            form.total_exportation = _.round(total_exportation, 2);
+            form.total_taxed = _.round(total_taxed, 2);
+            form.total_exonerated = _.round(total_exonerated, 2);
+            form.total_unaffected = _.round(total_unaffected, 2);
+            form.total_free = _.round(total_free, 2);
+            form.total_igv = _.round(total_igv, 2);
+            form.total_value = _.round(total_value, 2);
+            form.total_value_without_rounding = total_value;
+            form.total_taxes = _.round(total_igv, 2);
+            form.total_plastic_bag_taxes = _.round(total_plastic_bag_taxes, 2);
+            // this.form.total = _.round(total, 2)
+            form.total = _.round(
+                total_charge + total + this.form.total_plastic_bag_taxes,
+                2
+            );
+
+            return form;
+        },
+        selectAccount(idx) {
+            this.persons = this.persons.map(p => ({ ...p, selected: false }));
+            this.persons[idx].selected = true;
+        },
+        async searchRemoteCustomers(input) {
+            if (input.length > 0) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+                const response = await this.$http.get(
+                    `/documents/search/customers?${parameters}`
+                );
+                this.customers = response.data.customers;
+                //if exist a default customer
+                if (this.customer_default) {
+                    this.customers = [
+                        this.customer_default,
+                        ...this.customers.filter(
+                            c => c.id != this.customer_default.id
+                        )
+                    ];
+                }
+                this.loading_search = false;
+                this.input_person.number = null;
+            }
+        },
         totalItemSelected(products) {
             let total = 0;
             products.forEach(p => {
@@ -247,83 +655,74 @@ export default {
 
             return _.round(total, 2);
         },
-        removeItem(id) {
-            let idx = this.payments.findIndex(p => p.selected);
+        removeItem(id, idx) {
             if (idx > -1) {
-                let indexItem = this.payments[idx].products.findIndex(
+                let indexItem = this.persons[idx].products.findIndex(
                     p => p.id == id
                 );
 
                 if (indexItem > -1) {
-                    let quantity = this.payments[idx].products[indexItem]
+                    let quantity = this.persons[idx].products[indexItem]
                         .quantity;
                     if (quantity == 1) {
-                        this.payments[idx].products = [
-                            ...this.payments[idx].products.filter(
+                        this.persons[idx].products = [
+                            ...this.persons[idx].products.filter(
                                 p => p.id != id
                             )
                         ];
                     } else {
-                        this.payments[idx].products[indexItem].quantity -= 1;
+                        this.persons[idx].products[indexItem].quantity -= 1;
                     }
                     let item = this.items.find(i => i.id == id);
-                    ++item.quantity;
-                    if (item.quantity == 1) {
-                        this.items = [
-                            item,
-                            ...this.items.filter(i => i.id != item.id)
-                        ];
-                    }
+                    item.quantity += 1;
                 }
+                this.persons[idx].amount = this.totalItemSelected(
+                    this.persons[idx].products
+                );
             }
         },
         addItem(item) {
-            //checar la lista
-            //a que cuenta le estas agregando
             if (item.quantity == 0) {
-                this.$toast.warning("No quedan unidades disponibles para dividir el producto");
+                this.$toast.warning(
+                    "No quedan unidades disponibles para dividir el producto"
+                );
                 return;
             }
-            let idx = this.payments.findIndex(p => p.selected);
+            let itemIdx = this.items.findIndex(i => i.id == item.id);
+            let idx = this.persons.findIndex(p => p.selected);
             if (idx > -1) {
-                let indexItem = this.payments[idx].products.findIndex(
+                let indexItem = this.persons[idx].products.findIndex(
                     p => p.id == item.id
                 );
 
                 if (indexItem > -1) {
-                    this.payments[idx].products[indexItem].quantity += 1;
+                    this.persons[idx].products[indexItem].quantity += 1;
                 } else {
-                    this.payments[idx].products.push({
+                    this.persons[idx].products.push({
                         price: item.price,
                         description: item.food.description,
                         id: item.id,
-                        quantity: 1
+                        quantity: 1,
+                        background:
+                            itemIdx > 19
+                                ? "black"
+                                : this.colorArray[itemIdx].background,
+                        color:
+                            itemIdx > 19
+                                ? "white"
+                                : this.colorArray[itemIdx].color
                     });
                 }
 
                 --item.quantity;
-                if (item.quantity == 0) {
-                    this.items = [
-                        ...this.items.filter(i => i.id != item.id),
-                        item
-                    ];
-                }
+                this.persons[idx].amount = this.totalItemSelected(
+                    this.persons[idx].products
+                );
             } else {
                 this.$toast.warning("Seleccione una cuenta");
             }
         },
-        async sendPayments() {
-            if (this.splitByAmount == "1") {
-                this.$emit("receivePayments", this.payments);
-            } else {
-                if (this.items.some(i => i.quantity > 0)) {
-                    this.$toast.error("Aún hay productos por dividir");
-                    return;
-                }
-                this.$emit("receiveProducts", this.payments);
-            }
-            this.close();
-        },
+
         changePayment(idx) {
             let fixed = this.payments.filter(p => p.fixed);
             let numberFixed = fixed.length;
@@ -361,28 +760,40 @@ export default {
                 amount: _.round(p.amount, 2)
             }));
         },
+        roundUpToNearestTenth(value) {
+            return Math.ceil(value * 10) / 10;
+        },
         updatePayments() {
-            if (this.number < 2 || isNaN(this.number)) {
-                this.number = 2;
+            let isAmount = this.splitByAmount == "1";
+            let amount = 0;
+            let remainingAmount = this.total;
+
+            if (isAmount) {
+                amount = this.total / this.number;
+                amount = this.roundUpToNearestTenth(amount);
             }
 
-            if (this.splitByAmount == "1") {
-                this.paymentByAmount();
-            } else {
-                this.paymentByProducts();
+            this.persons = [];
+
+            for (let i = 0; i < this.number; i++) {
+                if (isAmount) {
+                    if (i === this.number - 1) {
+                        let lastAmount = this.roundUpToNearestTenth(
+                            remainingAmount
+                        );
+                        this.addPerson(lastAmount);
+                    } else {
+                        this.addPerson(amount);
+                        remainingAmount -= amount;
+                    }
+                } else {
+                    this.addPerson();
+                }
             }
+
+            this.restoreItems();
         },
 
-        selectAccount(idx) {
-            if (
-                this.selectedAccount != undefined ||
-                this.selectedAccount != null
-            ) {
-                this.payments[this.selectedAccount].selected = false;
-            }
-            this.payments[idx].selected = true;
-            this.selectedAccount = idx;
-        },
         paymentByProducts() {
             this.payments = [];
             this.restoreItems();
@@ -403,20 +814,44 @@ export default {
             ];
         },
         restoreItems() {
-            this.items = JSON.parse(JSON.stringify(this.orden_items.items));
+            this.items = JSON.parse(JSON.stringify(this.orden_items.items)).map(
+                i => ({
+                    ...i,
+                    originalQuantity: i.quantity,
+                    id: i.food.item.id
+                })
+            );
+        },
+        changeCustomer(idx) {
+            let customer = this.customers.find(
+                c => c.id == this.persons[idx].customer_id
+            );
+            this.persons[idx].identity_document_type_id =
+                customer.identity_document_type_id;
+        },
+        addPerson(amount = 0) {
+            this.persons.push({
+                identity_document_type_id: this.customer_default
+                    .identity_document_type_id,
+                customer_id: this.customer_default_id,
+                amount: amount,
+                payment_method: "Efectivo",
+                selected: false,
+                document_type_id: "03",
+                products: []
+            });
         },
         open() {
+            this.formOrigin = JSON.parse(JSON.stringify(this.form));
+            let { items } = this.orden_items;
+            this.quantity = items.reduce((a, b) => a + Number(b.quantity), 0);
             this.payments = [];
             this.restoreItems();
-            //   this.number = 2;
-            //  {
-            //         fixed: false,
-            //         amount: _.round(this.total / 2, 2)
-            //     },
-            //     {
-            //         fixed: false,
-            //         amount: _.round(this.total / 2, 2)
-            //     }
+            if (this.customer_default) {
+                this.customers = [this.customer_default];
+                this.customer_default_id = this.customer_default.id;
+            }
+            this.updatePayments();
         },
         close() {
             this.items = [];

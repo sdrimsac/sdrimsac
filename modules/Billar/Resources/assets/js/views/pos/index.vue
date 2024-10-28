@@ -5512,8 +5512,9 @@ export default {
     Echo.channel("print_orden").listen(
       `.print-order-${this.configuration.socket_channel}`,
       async e => {
+        console.log("🚀 ~ impresion ~ e:", e)
         /* ; */
-
+  
         // let area_id = e.data.area_id;
         let user_establishment_id = e.data.user_establishment_id;
         let user_establishment_id_printer =

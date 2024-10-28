@@ -408,7 +408,7 @@ import queryString from "query-string";
 
 export default {
     mixins: [deletable],
-    props:['configuration'],
+    props: ["configuration"],
     // components: {DocumentsVoided, DocumentOptions, DataTable},
     components: {
         DataTable,
@@ -466,10 +466,12 @@ export default {
     },
     methods: {
         getAvaibleCash() {
-            this.$http("/caja/cash-transfer/available?with_all=1").then(response => {
-                console.log("🚀 ~ this.$http ~ response:", response)
-                this.total = response.data;
-            });
+            this.$http("/caja/cash-transfer/available?with_all=1").then(
+                response => {
+                    console.log("🚀 ~ this.$http ~ response:", response);
+                    this.total = response.data;
+                }
+            );
         },
         calculate(item) {
             let {
@@ -525,9 +527,26 @@ export default {
             this.showDialogOptions = true;
         },
         clickAnulate(id) {
-            this.anular(`/${this.resource}/anular/${id}`).then(() =>
-                this.$eventHub.$emit("reloadData")
-            );
+            this.$confirm("¿Está seguro de anular la compra?", "Anular", {
+                confirmButtonText: "Anular",
+                cancelButtonText: "Cancelar",
+                type: "warning"
+            })
+                .then(() => {
+                    this.$http
+                        .get(`/${this.resource}/anular/${id}`)
+                        .then(response => {
+                            let { success, message } = response.data;
+                            if (!success && message) {
+                                this.$showSAlert("Error",message,"error")
+                                return;
+                            } else {
+                                this.$showSAlert("Anulado","La compra ha sido anulada","success")
+                                this.$eventHub.$emit("reloadData");
+                            }
+                        });
+                })
+                .catch(() => {});
         },
         clickNuevo() {
             location.href = `/${this.resource}/create`;

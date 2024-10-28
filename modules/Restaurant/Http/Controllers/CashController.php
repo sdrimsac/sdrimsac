@@ -70,6 +70,11 @@ use NumberFormatter;
 class CashController extends Controller
 {
     use JobReportTrait;
+    public function adjusmentIncome(Request $request){
+        $cash_id = $request->cash_id;
+        $amount = $request->amount;
+        Box::createIncome("Efectivo", $amount, 'Ajuste por división de pagos',$cash_id);
+    }
     public function cash_avaible($cash_id)
     {
         $total_credits = SaleNote::whereHas('credit_payments')

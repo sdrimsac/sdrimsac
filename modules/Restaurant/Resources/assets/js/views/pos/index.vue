@@ -5581,6 +5581,7 @@ export default {
         console.log("   -- impresion - e", e)
         /* ; */
 
+        console.log("🚀 ~ imprimiendo ~ e:", e)
         // let area_id = e.data.area_id;
         let user_establishment_id = e.data.user_establishment_id;
         let user_establishment_id_printer =

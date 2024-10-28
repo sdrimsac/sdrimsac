@@ -54,7 +54,13 @@
                                                     "
                                                     size="small"
                                                     @change="filterSeries()"
-                                                    :key="isInterno + invoice + receipt + sale_note + clientSaleNoteNumber"
+                                                    :key="
+                                                        isInterno +
+                                                            invoice +
+                                                            receipt +
+                                                            sale_note +
+                                                            clientSaleNoteNumber
+                                                    "
                                                 >
                                                     <template v-if="!isInterno">
                                                         <el-radio-button
@@ -1244,7 +1250,7 @@
                                                         <div
                                                             v-if="
                                                                 form.payment_condition_id ==
-                                                                    '01'
+                                                                    '01' && configuration.split_payments_pos
                                                             "
                                                             class="col-xl-3 col-md-3 col-lg-3 col-6 "
                                                         >
@@ -1570,11 +1576,15 @@
         >
         </person-form>
         <show-split-payment-form
+            :form="form"
+            :series="all_series"
             :orden_items="orden_items"
             @receivePayments="receivePayments"
             @receiveProducts="receiveProducts"
             :total="form.total"
             :showSplitPayment.sync="showSplitPayment"
+            :customer_default="customer_default"
+            @setPayments="setPayments"
         >
         </show-split-payment-form>
         <person-college-form
@@ -1712,7 +1722,7 @@ export default {
                 description: "Consumo",
                 price: 0
             },
-            isRestaurantWarehouse:false,
+            isRestaurantWarehouse: false,
             showDialogDocumentDetraction: false,
             hasDetraction: false,
             methodsValidate: [
@@ -1989,6 +1999,28 @@ export default {
     },
     mounted() {},
     methods: {
+        sendAjustment(amount) {
+            this.$http.post("/cash/adjustment", {
+                amount,
+                cash_id: this.cash_id
+            });
+        },
+        setPayments(payments) {
+            payments.forEach(payment => {
+                this.form.enter_amount = payment.amount;
+                this.method_payments = payment.payment_method;
+                this.addPayment();
+            });
+            this.enterAmount();
+            let diffence = _.round(this.form.difference, 2);
+
+            if (diffence > 0) {
+                this.sendAjustment(diffence);
+            }
+            this.printerOn = 0;
+            this.sendPayment();
+            
+        },
         insertReferenceNumber() {
             console.log("entra a referencia");
             let pass = false;
@@ -2528,7 +2560,11 @@ export default {
             }
             persons = [...persons, ...this.all_customers];
             let newData = [];
-            if (this.clientSaleNoteNumber || this.form.hotel_customer_number || this.form.quotation_customer_number) {
+            if (
+                this.clientSaleNoteNumber ||
+                this.form.hotel_customer_number ||
+                this.form.quotation_customer_number
+            ) {
                 newData = personsFromServer;
             } else {
                 newData = [...this.all_customers, ...persons];
@@ -2651,11 +2687,10 @@ export default {
             }
         },
         async date_of_issue() {
-
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-            
+
             this.form.promotion_document_id =
                 this.promotions_document.length > 0
                     ? this.promotions_document[0].id
@@ -3435,7 +3470,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // 
+            //
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)
@@ -3646,7 +3681,7 @@ export default {
             if (this.formVariation.items.length == 0) {
                 form.variation = false;
             }
-            if(this.variation == true){
+            if (this.variation == true) {
                 form.variation = true;
             }
             await this.clickPayment(form);
@@ -3743,15 +3778,11 @@ export default {
             }
         },
         async clickPayment(form) {
-            let amount1 = Number(this.form.enter_amount)
-            let amount2 = Number(this.form.total)
-            console.log("saaa ", amount1, "sadsfsd ", amount2)
+            let amount1 = Number(this.form.enter_amount);
+            let amount2 = Number(this.form.total);
             if (
                 this.configuration.sale_note_credit_cash &&
-                /* this.enter_amount < this.form.total && */
-                amount1 < amount2
-                && 
-
+                amount1 < amount2 &&
                 this.form.document_type_id == "80"
             ) {
                 try {
@@ -3859,7 +3890,7 @@ export default {
             // form.date_of_issue = moment().format("YYYY-MM-DD");
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
-                
+
                 form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
                 this.resource_payments = "sale_note_payments";
@@ -3875,7 +3906,7 @@ export default {
             }
             form.advances = 0.0;
             form.total_advances = 0.0;
-            form.total_payment = form.total - (amount2-amount1);
+            form.total_payment = form.total - (amount2 - amount1);
 
             // {
             //     payment_method_type_id: "01",
@@ -3990,10 +4021,15 @@ export default {
                     printOrdenHotel = resultado;
                 }
 
-                    console.log("🚀 ~ clickPayment ~ form.variation:", form.variation)
+                console.log(
+                    "🚀 ~ clickPayment ~ form.variation:",
+                    form.variation
+                );
                 if (
                     (ordenId == undefined || ordenId == null) &&
-                    (form.variation == undefined || form.variation == null || form.variation == false) &&
+                    (form.variation == undefined ||
+                        form.variation == null ||
+                        form.variation == false) &&
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table &&
                     printOrdenHotel
@@ -4523,9 +4559,8 @@ export default {
                 await this.searchClientOne(this.form.hotel_customer_number);
                 //                    this.changeCustomer();
             }
-            if(this.form.quotation_customer_number){
+            if (this.form.quotation_customer_number) {
                 await this.searchClientOne(this.form.quotation_customer_number);
-            
             }
 
             this.changeCustomer();

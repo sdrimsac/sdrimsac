@@ -806,6 +806,7 @@ class PurchaseController extends Controller
         DB::connection('tenant')->table('items')->where('id', $id)->update(['stock' => $saldo_stock]);
         DB::connection('tenant')->table('item_warehouse')->where('item_id', $id)->update(['stock' => $saldo_stock]);
     }
+
     public function anular($id)
     {
         try {
@@ -837,7 +838,7 @@ class PurchaseController extends Controller
                 $it = Item::find($item->item_id);
                 $it->stock -= $item->quantity;
                 $it->save();
-                // $this->updateStock($item->item_id);
+                $this->removeDetailItems($item);
             }
 
             DB::connection('tenant')->commit();
@@ -854,7 +855,39 @@ class PurchaseController extends Controller
             ];
         }
     }
-
+    function removeDetailItems($item)
+    {
+        $item->lots()->delete();
+        $r_item = $item->item;
+        $item_id = $item->item_id;
+        $lots_group = $r_item->lots_group;
+        if (isset($lots_group)) {
+            foreach ($lots_group as $lot) {
+                $code  = $lot->code;
+                $quantity = $lot->quantity;
+                $item_lot = ItemLotsGroup::where('code', $code)->where('item_id', $item_id)->where('quantity', $quantity)->first();
+                if ($item_lot) {
+                    $item_lot->delete();
+                } else {
+                    throw new Exception("No se encontro el lote del producto");
+                }
+            }
+        }
+        $color_size = $r_item->color_size;
+        if (isset($color_size)) {
+            foreach ($color_size as $color) {
+                $price = $color->price;
+                $size = $color->size;
+                $color = $color->color;
+                $item_color_size = ItemColorSize::where('color', $color)->where('size', $size)->where('price', $price)->where('item_id', $item_id)->first();
+                if ($item_color_size) {
+                    $item_color_size->delete();
+                } else {
+                    throw new Exception("No se encontro el color y talla del producto");
+                }
+            }
+        }
+    }
     public static function convert($inputs)
     {
         $company = Company::active();
