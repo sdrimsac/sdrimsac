@@ -12,11 +12,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (!document.getElementById('pin')) {
-            console.log("no hay");
-            limpiarcache(false)
-        }else{
-            console.log("si hay");
+            limpiarcache(true)
         }
+    
 
     });
 
