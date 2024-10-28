@@ -23,7 +23,6 @@
             </div>
         </div>
         <div class="row mt-1" v-if="form.establishment">
-        
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -44,13 +43,13 @@
                                 Factura
                             </td>
                             <td>
-                                {{ form.first_ft.series }}
+                                {{ form.first_ft ? form.first_ft.series : "" }}
                             </td>
                             <td class="text-end">
-                                {{ form.first_ft.number }}
+                                {{ form.first_ft ? form.first_ft.number : "" }}
                             </td>
                             <td class="text-end">
-                                {{ form.last_ft.number }}
+                                {{ form.last_ft ? form.last_ft.number : "" }}
                             </td>
                             <td>
                                 {{ form.anulates_voided_ft.join("-") }}
@@ -67,9 +66,15 @@
                         </tr>
                         <tr v-if="form.has_ft_info">
                             <td>Boleta</td>
-                            <td>{{ form.first_bv.series }}</td>
-                            <td class="text-end">{{ form.first_bv.number }}</td>
-                            <td class="text-end">{{ form.last_bv.number }}</td>
+                            <td>
+                                {{ form.first_bv ? form.first_bv.series : "" }}
+                            </td>
+                            <td class="text-end">
+                                {{ form.first_bv ? form.first_bv.number : "" }}
+                            </td>
+                            <td class="text-end">
+                                {{ form.last_bv ? form.last_bv.number : "" }}
+                            </td>
                             <td>{{ form.anulates_voided_bv.join("-") }}</td>
                             <td>{{ form.rejected_bv.join("-") }}</td>
                             <td>{{ form.notes_bv.join("-") }}</td>
@@ -81,7 +86,9 @@
                     <tfoot>
                         <tr>
                             <td colspan="7" class="text-right">Total mes</td>
-                            <td class="text-end font-bold">{{ total.toFixed(2) }}</td>
+                            <td class="text-end font-bold">
+                                {{ total.toFixed(2) }}
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
