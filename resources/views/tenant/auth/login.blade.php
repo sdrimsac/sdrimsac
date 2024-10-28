@@ -11,10 +11,12 @@
 @endsection
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if (!document.getElementById('pin')) {
-            limpiarcache(true)
-        }
-    
+        setTimeout(() => {
+            if (!document.getElementById('pin')) {
+                limpiarcache(true)
+            }
+        }, 800);
+
 
     });
 
