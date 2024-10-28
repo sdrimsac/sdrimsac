@@ -36,25 +36,7 @@
                     </h4>
                 </div>
 
-                <!-- <div class="data-table-visible-columns">
-                    <el-dropdown :hide-on-click="false">
-                        <el-button type="primary">
-                            Mostrar/Ocultar columnas<i
-                                class="el-icon-arrow-down el-icon--right"
-                            ></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                v-for="(column, index) in columns"
-                                :key="index"
-                            >
-                                <el-checkbox v-model="column.visible">{{
-                                    column.title
-                                }}</el-checkbox>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div> -->
+                
                 <div class="card-body">
                     <div class="data-table-visible-columns">
                         <el-button
@@ -156,7 +138,11 @@
                                     v-text="row.supplier_number"
                                 ></small>
                             </td>
-                            <td>{{ row.state_type_payment_description }}</td>
+                            <td
+                            :class="{
+                                'text-danger' : row.state_type_id == '11'
+                            }"
+                            >{{ row.state_type_payment_description }}</td>
                             <template v-if="row.number != '-0'">
                                 <td>
                                     {{ row.number }}<br />
@@ -331,18 +317,18 @@
                                     >
                                         <i class="fa fa-ban"></i> Anular
                                     </a>
-                                    <a
+                                    <!-- <a
                                         v-if="row.state_type_id == '11'"
                                         type="button"
                                         @click.prevent="clickDelete(row.id)"
                                         class="dropdown-item text-danger"
                                         ><i class="fa fa-trash"></i> Eliminar
-                                    </a>
+                                    </a> -->
 
                                     <a
                                         v-if="
                                             row.document_type_description !=
-                                                'FACTURA ELECTRÓNICA'
+                                                'FACTURA ELECTRÓNICA' && row.state_type_id != '11'
                                         "
                                         @click.prevent="clickFacturar(row)"
                                         type="button"

@@ -15,7 +15,8 @@ trait PromotionDocumentTrait
 
     public function savePromotion($document, $promotion_id)
     {
-        if (!$promotion_id) return;
+        try{
+            if (!$promotion_id) return;
         $configuration = Configuration::first();
         if (!$configuration->is_promotion_document) return;
         $document_type_id = $document->document_type_id;
@@ -67,5 +68,10 @@ trait PromotionDocumentTrait
             return;
         }
         $promotion_item->save();
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        
     }
 }

@@ -152,11 +152,15 @@ export default {
         changeItem() {
             this.form.quantity = 1;
         },
+        getRecord(){
+            this.$http.get(`/promotions-document/record/${this.recordId}`)
+                .then(response => {
+                    this.form = response.data
+                })
+
+        },
         validForm() {
-            //que la descripción sea mayor a 3
-            //que las fechas sean correctas y la fecha de inicio sea menor a la fecha de fin
-            //que los items no estén vacíos, y que al menos haya 1 unidad de cada item
-            //que la cantidad de los items sea mayor a 0
+        
             if (this.form.description.length < 3) {
                 this.$toast.error(
                     "La descripción debe tener al menos 3 caracteres"
@@ -259,6 +263,9 @@ export default {
         },
         open() {
             console.log("open");
+            if(this.recordId){
+                this.getRecord()
+            }
         },
         initForm() {
             this.form = {

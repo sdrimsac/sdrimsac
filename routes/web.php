@@ -11,6 +11,7 @@ use App\Http\Controllers\Tenant\ItemColorSizeController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\PrincipalCategoryController;
+use App\Http\Controllers\Tenant\PromotionDocumentController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
@@ -873,7 +874,7 @@ if ($hostname) {
 
                 Route::get('pos/validate_stock/{item}/{quantity}', [App\Http\Controllers\Tenant\PosController::class, 'validate_stock']);
 
-
+                Route::post('/sales-month-establishment', [App\Http\Controllers\Tenant\EstablishmentController::class, 'salesMonthEstablishment']);
 
                 //Tags
                 Route::get('tags', [App\Http\Controllers\Tenant\TagController::class, 'index'])->name('tenant.tags.index')->middleware('just.admin');
@@ -884,13 +885,14 @@ if ($hostname) {
                 Route::delete('tags/{tag}', [App\Http\Controllers\Tenant\TagController::class, 'destroy']);
 
                 Route::prefix('promotions-document')->group(function () {
-                    Route::get('/', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'index'])->name('tenant.promotions_document.index')->middleware('just.admin');
-                    Route::get('/columns', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'columns']);
-                    Route::get('/records', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'records']);
-                    Route::get('/record/{id}', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'record']);
-                    Route::post('/', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'store']);
-                    Route::delete('/{id}', [App\Http\Controllers\Tenant\PromotionDocumentController::class, 'destroy']);
+                    Route::get('/', [PromotionDocumentController::class, 'index'])->name('tenant.promotions_document.index')->middleware('just.admin');
+                    Route::get('/columns', [PromotionDocumentController::class, 'columns']);
+                    Route::get('/records', [PromotionDocumentController::class, 'records']);
+                    Route::get('/record/{id}', [PromotionDocumentController::class, 'record']);
+                    Route::post('/', [PromotionDocumentController::class, 'store']);
+                    Route::delete('/{id}', [PromotionDocumentController::class, 'destroy']);
                 });
+                
 
                 //Promotion
                 Route::get('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');

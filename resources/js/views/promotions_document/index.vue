@@ -40,7 +40,7 @@
                         <th class="text-white">Descripción</th>
                         <th class="text-white">Fecha inicio</th>
                         <th class="text-white">Fecha Final</th>
-                        <th class="text-white">Total a consumit</th>
+                        <th class="text-white">Total a consumir</th>
                         <th class="text-white text-right">Acciones</th>
                     </tr>
 
