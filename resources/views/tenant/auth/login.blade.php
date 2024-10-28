@@ -10,10 +10,13 @@
     </div>
 @endsection
 <script>
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     limpiarcache(false);
+    document.addEventListener('DOMContentLoaded', function() {
+        //get element by id "pin" if not exists run limpiarcache
+        if (!document.getElementById('pin')) {
+            limpiarcache(false)
+        }
 
-    // });
+    });
 
     function limpiarcache(reload = true) {
         const btnrefresh = document.getElementById('btn-refresh');
@@ -29,7 +32,6 @@
         }
 
         navigator.serviceWorker?.getRegistrations().then(function(registrations) {
-            console.log(registrations)
             for (let registration of registrations) {
 
                 registration.unregister();

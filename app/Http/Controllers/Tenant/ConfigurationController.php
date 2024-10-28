@@ -26,6 +26,7 @@ class ConfigurationController extends Controller
 {
     public function create()
     {
+    
         return view('tenant.configurations.form');
     }
     public function app()

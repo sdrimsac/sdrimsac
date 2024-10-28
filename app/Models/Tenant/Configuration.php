@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'split_payments_pos',
         'workshop',
         'button_consolidate',
         'comercial_name',
@@ -264,6 +265,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'split_payments_pos' => 'boolean',
         'workshop' => 'boolean',
         'button_consolidate' => 'boolean',
         'comercial_name' => 'boolean',
@@ -468,6 +470,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'split_payments_pos' => (bool)$this->split_payments_pos,
             'workshop' => (bool)$this->workshop,
             'button_consolidate' => (bool)$this->button_consolidate,
             'comercial_name' => (bool)$this->comercial_name,

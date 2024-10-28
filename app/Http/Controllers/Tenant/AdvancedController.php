@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 class AdvancedController extends Controller
 {
     public function index() {
-        return view('tenant.advanced.index');
+        $canSee = false;
+
+        if (strpos(url()->current(), 'sdrimsac') !== false) {
+            $canSee = true;
+        }
+        
+        return view('tenant.advanced.index',compact('canSee'));
     }
 }

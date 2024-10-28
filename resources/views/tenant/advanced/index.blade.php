@@ -25,6 +25,7 @@
        @inject('roleService', 'App\Services\RoleService')
        <div class="col-lg-12 col-md-12 mb-5">
             <tenant-configurations-form 
+            :can-see="{{json_encode($canSee)}}"
             :is-arca="{{json_encode($roleService->isArca())}}"
             :type-user="{{ json_encode(auth()->user()->type) }}"></tenant-configurations-form>
         </div>

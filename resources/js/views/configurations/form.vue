@@ -250,7 +250,7 @@
                               ></el-switch>
                             </div>
                           </div>
-                          <div class="col-md-3 mb-4">
+                          <div class="col-md-3 mb-4" v-if="canSee">
                             <div class="form-group">
                               <label class="control-label w-100">
                                 <i ref="healthIcon" class="el-icon-baseball tab-icon"></i>
@@ -266,7 +266,7 @@
                               ></el-switch>
                             </div>
                           </div>
-                          <div class="col-md-3 mb-4">
+                          <div class="col-md-3 mb-4" v-if="canSee">
                             <div class="form-group">
                               <label class="control-label w-100">
                                 <i ref="healthIcon" class="el-icon-tree tab-icon"></i>
@@ -282,7 +282,7 @@
                               ></el-switch>
                             </div>
                           </div>
-                          <div class="col-md-3 mb-4">
+                          <div class="col-md-3 mb-4" v-if="canSee">
                             <div class="form-group">
                               <label class="control-label w-100">
                                 <i ref="healthIcon" class="el-icon-tree tab-icon"></i>
@@ -1131,6 +1131,7 @@
                           </div>
                           <div class="section-content">
                             <div class="row">
+                              
                               <div class="col-md-2 mt-4">
                                 <div class="form-group">
                                   <label class="control-label w-100">
@@ -1685,7 +1686,23 @@
                                     inactive-text="No"
                                     :active-color="'#28a745'"
                                     :inactive-color="'#6c757d'"
-                                    @change="submit('Aparcado en Caja', form.aparcado, 'view_daily_cash_pin', 'lockIcon')"
+                                    @change="submit('Aparcado en Caja', form.aparcado, 'aparcado', 'lockIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
+                                <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Dividir pagos
+                                  </label>
+                                  <el-switch
+                                    v-model="form.split_payments_pos"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Dividir pagos', form.split_payments_pos, 'split_payments_pos', 'lockIcon')"
                                   ></el-switch>
                                 </div>
                               </div>
@@ -5375,7 +5392,7 @@
 <script>
 import Swal from "sweetalert2";
 export default {
-  props: ["typeUser", "isArca"],
+  props: ["typeUser", "isArca","canSee"],
   data() {
     return {
       activeSubTab: "tab-1", // Esta es la subpestaña que se activará por defecto
@@ -5491,6 +5508,8 @@ export default {
   },
 
   async created() {
+    console.log("🚀 ~ created ~ this.canSee:", this.canSee)
+
     await this.loadTables();
     await this.initForm();
     console.log(this.isArca);
