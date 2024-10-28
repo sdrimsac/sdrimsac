@@ -11,9 +11,11 @@
 @endsection
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        //get element by id "pin" if not exists run limpiarcache
         if (!document.getElementById('pin')) {
+            console.log("no hay");
             limpiarcache(false)
+        }else{
+            console.log("si hay");
         }
 
     });
