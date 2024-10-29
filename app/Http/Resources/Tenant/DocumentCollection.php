@@ -115,6 +115,11 @@ class DocumentCollection extends ResourceCollection
                 }
             }
 
+            if($configuration->health_network && !$paid && $row->payment_condition_id == "01"){
+                $row->paid = true;
+                $row->save();
+            }
+
             $boxes = $boxes->get();
 
             $sale_note_related = $row->sale_note_related->transform(function ($sale_note){
