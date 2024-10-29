@@ -116,7 +116,8 @@ class DocumentCollection extends ResourceCollection
             }
 
             if($configuration->health_network && !$paid && $row->payment_condition_id == "01"){
-                $row->paid = true;
+                $row->total_canceled = true;
+                $paid = true;
                 $row->save();
             }
 
