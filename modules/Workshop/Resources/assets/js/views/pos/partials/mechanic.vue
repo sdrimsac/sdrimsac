@@ -39,7 +39,7 @@
               <el-input v-model="form.placa" placeholder="placa" @input="searchVehicles"></el-input>
             </div>
             <div class="col-md-6 text-end">
-              <el-button type="primary" @click="clickRegisterHistory">Nuevo Registro</el-button>
+              <el-button type="primary" @click="clickCreate()">Nuevo Registro</el-button>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
                 <th class="text-white">Historial</th>
                 <th class="text-white">Estado</th>
                 <th class="text-white">Productos</th>
-                <th class="text-white">Comprobante</th>
+                <th class="text-white">Formatos</th>
               </tr>
             </thead>
             <tbody>
@@ -92,7 +92,17 @@
                       </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end col-md-2 col-1">
-                      <el-button class="col-md-12 col-12">Editar</el-button>
+                      <el-button
+                        type="primary"
+                        class="col-md-12 col-12"
+                        @click="clickCreate(vehiculo.id)"
+                      >Editar</el-button>
+                      <br />
+                      <el-button
+                        type="success"
+                        class="col-md-12 col-12"
+                        @click="openpayOrden()"
+                      >Generar CP</el-button>
                     </div>
                   </div>
                 </td>
@@ -117,17 +127,26 @@
                   <el-button
                     @click="selectItem(vehiculo.id, vehiculo.placa, vehiculo.historial_id)"
                     type="info"
-                  >Agregar</el-button>
+                  >Productos</el-button>
                 </td>
-                <td>
-                  <el-button type="primary" @click="openpayOrden()">Generar CP</el-button>
+                <td class="text-center">
+                  <button
+                    type="button"
+                    class="btn waves-effect waves-light btn-sm btn-info"
+                    @click.prevent="clickPrint(vehiculo.id)"
+                  >PDF</button>
+                  <button
+                    type="button"
+                    class="btn waves-effect waves-light btn-sm btn-success"
+                    @click.prevent="clickPrintFormat(vehiculo.id)"
+                  >Formato vehicular</button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <register-history :showDialog.sync="showDialogRegisterHistory"></register-history>
+      <register-history :showDialog.sync="showDialogRegisterHistory" :recordId="recordId"></register-history>
       <historial :showDialog.sync="showDialogHistorial" :vehiculo_id="selectedVehiculoId"></historial>
       <modal-item
         :showDialog.sync="showDialogModalItem"
@@ -152,6 +171,7 @@ export default {
   },
   data() {
     return {
+      recordId: null,
       title: "Registro Ingreso Vehiculo",
       localMechanicItem: this.mechanicItem,
       showDialogRegisterHistory: false,
@@ -184,6 +204,64 @@ export default {
     }
   },
   methods: {
+    clickPrintFormat(recordId) {
+      window.open(`/${this.resource}/vehiculo/format_vehicle/${recordId}`, "_blank");
+    },
+    clickPrint(recordId) {
+      window.open(`/${this.resource}/print/${recordId}/a4`, "_blank");
+    },
+    clickCreate(recordId = null) {
+      this.recordId = recordId;
+      this.showDialogRegisterHistory = true;
+    },
+    /* openEditModal(recordId = null) {
+      
+      this.recordId = recordId;
+      
+    }, */
+    resetForm() {
+      this.form = {
+        id: null,
+        customer_id: null,
+        placa: "",
+        tipo_vehiculo_id: null,
+        serie: "",
+        modelo: "",
+        marca: "",
+        color: "",
+        motor: "",
+        anio_fabricacion: "",
+        kilometraje: "",
+        personal_id: null,
+        observacion: "",
+        motive: "",
+        reparacion: false,
+        garantia: false,
+        mantenimiento: false,
+        diagnostico: false
+      };
+      this.errors = {};
+    },
+    fillForm(data) {
+      this.form.id = data.id; // Rellena el campo id
+      this.form.customer_id = data.customer_id;
+      this.form.placa = data.placa;
+      this.form.tipo_vehiculo_id = data.tipo_vehiculo_id;
+      this.form.serie = data.serie;
+      this.form.modelo = data.modelo;
+      this.form.marca = data.marca;
+      this.form.color = data.color;
+      this.form.motor = data.motor;
+      this.form.anio_fabricacion = data.anio_fabricacion;
+      this.form.kilometraje = data.kilometraje;
+      this.form.personal_id = data.personal_id;
+      this.form.observacion = data.observacion;
+      this.form.motive = data.motive;
+      this.form.reparacion = data.reparacion;
+      this.form.garantia = data.garantia;
+      this.form.mantenimiento = data.mantenimiento;
+      this.form.diagnostico = data.diagnostico;
+    },
     checkIsExistSerie() {
       let hasError = false;
       for (let ord of this.localOrden) {
@@ -196,10 +274,9 @@ export default {
       }
       return hasError;
     },
-    
+
     async openpayOrden() {
-      
-      this.$emit('payment');
+      this.$emit("payment");
     },
     selectItem(id, placa, historial_id) {
       if (historial_id == null) {
@@ -255,7 +332,7 @@ export default {
         });
     },
     searchVehicles() {
-      /* this.$http.get(`/${this.resource}/vehiculo/records`, this.form) */
+      /* this.$http.get(`/${this.resource}/vehiculo/records`, this.form)*/
     },
     clickRegisterHistory() {
       this.showDialogRegisterHistory = true;

@@ -16,7 +16,18 @@ class HistorialResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'description' => $this->description,
+            'vehiculo_id' => $this->vehiculo_id,
+            'salenote_id' => $this->salenote_id,
+            'document_id' => $this->document_id,
+            'personal_id' => $this->personal_id,
+            'personal_name' => $this->personal ? $this->personal->name : null,
+            'establishment_id' => $this->stablishment_id,
+            'observacion' => $this->observacion,
+            'motive' => $this->motive,
+            'reparacion' => $this->reparacion,
+            'garantia' => $this->garantia,
+            'mantenimiento' => $this->mantenimiento,
+            'diagnostico' => $this->diagnostico,
         ];
     }
 }

@@ -21,6 +21,10 @@ class Historial extends ModelTenant
         'establishment_id',
         'observacion',
         'motive',
+        'reparacion',
+        'garantia',
+        'mantenimiento',
+        'diagnostico',
     ];
     public function vehiculo(){
         return $this->belongsTo(vehiculo::class,'vehiculo_id');

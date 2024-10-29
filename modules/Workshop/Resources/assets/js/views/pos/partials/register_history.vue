@@ -1,10 +1,10 @@
 <template>
   <el-dialog
-    title="Registro Entrada De Vehiculo"
+    :title="titleDialog"
     :visible="showDialog"
     :close-on-click-modal="false"
     @close="close"
-    @open="open"
+    @open="create"
     width="70%"
     append-to-body
   >
@@ -140,7 +140,9 @@
               ></small>
             </div>
             <div class="col-md-4">
-              <label>Mecamico</label>
+              <label class="fw-bold">Mecamico 
+                <a href="#" @click.prevent="showDialogNewPersonal = true">[+ Nuevo]</a>
+              </label>
               <el-select v-model="form.personal_id" filterable @focus="getPersonalMecanica">
                 <el-option
                   v-for="option in personal"
@@ -149,13 +151,8 @@
                   :label="option.name"
                 ></el-option>
               </el-select>
-              <!-- <el-input v-model="form.kilometraje"></el-input> -->
             </div>
-            <div class="col-md-4">
-              <el-button @click="listChekout"> 
-                Check List
-              </el-button>
-            </div>
+            <div class="col-md-4"></div>
             <div class="col-md-6">
               <label>Motivo de Ingreso</label>
               <el-input
@@ -165,7 +162,6 @@
                 v-model="form.observacion"
               ></el-input>
             </div>
-            
             <div class="col-md-6">
               <label>Trabajo a Realizar o Realizado</label>
               <el-input type="textarea" :rows="2" placeholder="Please input" v-model="form.motive"></el-input>
@@ -178,16 +174,16 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-3">
-              <el-checkbox>Reparacion</el-checkbox>
+              <el-checkbox v-model="form.reparacion">Reparacion</el-checkbox>
             </div>
             <div class="col-md-3">
-              <el-checkbox>Garantia</el-checkbox>
+              <el-checkbox v-model="form.garantia">Garantia</el-checkbox>
             </div>
             <div class="col-md-3">
-              <el-checkbox>Mantenimiento</el-checkbox>
+              <el-checkbox v-model="form.mantenimiento">Mantenimiento</el-checkbox>
             </div>
             <div class="col-md-3">
-              <el-checkbox>Diagnostico</el-checkbox>
+              <el-checkbox v-model="form.diagnostico">Diagnostico</el-checkbox>
             </div>
           </div>
         </div>
@@ -199,7 +195,7 @@
             <el-tab-pane label="Motor" v-if="servicesById[1]">
               <div class="row">
                 <div class="col-md-6" v-for="service in servicesById[1]" :key="service.id">
-                  <el-checkbox  @change="updateServicesIds(service.id)">{{ service.name }}</el-checkbox>
+                  <el-checkbox @change="updateServicesIds(service.id)">{{ service.name }}</el-checkbox>
                 </div>
               </div>
             </el-tab-pane>
@@ -269,60 +265,82 @@
           </el-tabs>
         </div>
       </div>
+      <br />
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <el-tabs v-model="activeTab">
+              <el-tab-pane label="Check-List" name="vehiculo">
+                <span slot="label">
+                  <h6>Check-List</h6>
+                </span>
+                <div v-if="activeTab === 'vehiculo'">
+                  <checklist :vehiculo.sync="vehiculo"></checklist>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="close">
+                <span slot="label">
+                  <h6>Close</h6>
+                </span>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+        </div>
+      </div>
       <div class="form-actions text-right mt-4">
         <el-button @click.prevent="close()">Cancelar</el-button>
         <el-button type="primary" native-type="submit" :loading="loading_submit">Generar</el-button>
       </div>
       <br />
-      <person-form
-        :showDialog.sync="showDialogNewPerson"
-        type="customers"
-        :external="true"
-        :user_id="form.user_id"
-        :document_type_id="form.document_type_id"
-      ></person-form>
-      <checklist :showDialog.sync="showDialogChecklist"></checklist>
     </form>
+    <person-form
+      :showDialog.sync="showDialogNewPerson"
+      type="customers"
+      :external="true"
+      :user_id="form.user_id"
+      :document_type_id="form.document_type_id"
+    ></person-form>
+    <personal-form
+      :showDialog.sync="showDialogNewPersonal"
+      type="personal"
+      :external="true"
+    ></personal-form>
   </el-dialog>
 </template>
 <script>
 import checklist from "./checklist.vue";
 import personForm from "../../../../../../../../resources/js/views/persons/form.vue";
+import personalForm from "../../mecanico/form.vue"
 export default {
   components: {
     personForm,
-    checklist
+    checklist,
+    personalForm
   },
-  props: ["showDialog"],
+  props: ["showDialog", "recordId"],
   data() {
     return {
+      titleDialog: null,
+      errors: {},
+      form: {},
+      activeTab: "",
+      vehiculo: {},
       services_details: [],
       services_detail_ids: [],
-
       activeTab: "Motor",
       services: [],
       loading_submit: false,
       showDialogNewPerson: false,
+      showDialogNewPersonal: false,
       showDialogChecklist: false,
       errors: {},
-      form: {
-        customer_id: null,
-        serie: "",
-        modelo: "",
-        marca: "",
-        color: "",
-        motor: "",
-        anio_fabricacion: "",
-        kilometraje: "",
-        tipo_vehiculo_id: "",
-        placa: "",
-        personal_id: ""
-      },
+      form: {},
       loading_search: false,
       customers: [],
       tipo_vehiculo: [],
       servicesDetails: [],
       personal: [],
+      historial: {},
       tipo_vehiculo_id: null,
       personal_id: null,
       resource: "workshop",
@@ -353,7 +371,32 @@ export default {
     }
   },
   methods: {
-    listChekout(){
+    create() {
+      this.titleDialog = this.recordId
+        ? "Editar Datos de Vehiculo"
+        : "Nuevo Registro de Vehiculo";
+      if (this.recordId) {
+        this.$http
+          .get(`/${this.resource}/vehiculo/record/${this.recordId}`)
+          .then(response => {
+            let data = response.data;
+            this.form = response.data.data;
+            this.vehiculo = this.form.vehiculo || {};
+          });
+      }
+      this.initForm();
+      this.getTipoVehiculo();
+      this.getServicesDetails();
+      this.vehiculo = {};
+    },
+    updateRecord() {
+      console.log("Actualizando registro", this.form);
+      this.close();
+    },
+    /* fillForm(data) {
+      this.form = { ...data };
+    }, */
+    listChekout() {
       this.showDialogChecklist = true;
     },
     updateServicesIds(id) {
@@ -378,7 +421,9 @@ export default {
         anio_fabricacion: null,
         customer_id: null,
         tipo_vehiculo_id: null,
-        personal_id: null
+        personal_id: null,
+        observacion: null,
+        motive: null
       };
     },
     searchPlaca() {
@@ -392,10 +437,13 @@ export default {
           this.form.marca = data.marca || "";
           this.form.color = data.color || "";
           this.form.motor = data.motor || "";
-
         })
         .catch(error => {
-          console.error("error al obtener datos de la placa", error);
+          if (error.response.status === 422) {
+            this.errors = error.response.data.data;
+          } else {
+            console.log(error);
+          }
         })
         .finally(() => {
           this.loading_search = false;
@@ -437,7 +485,6 @@ export default {
           console.error("Servicios Detallados:", error);
         });
     },
-
     reloadDataCustomers(customer_id) {
       this.$http.get(`/workshop/customer/${customer_id}`).then(response => {
         this.customers = response.data.customers;
@@ -462,61 +509,21 @@ export default {
         this.customers = this.all_customers;
       }
     },
-    validateForm() {
-      this.errors = {};
-      let isValid = true;
-
-      if (!this.form.customer_id) {
-        this.errors.customer_id = ["El Cliente es obligatorio"];
-        isValid = false;
+    validateVehiculo(vehiculo) {
+      for (let prop in vehiculo) {
+        if (prop === "gasoline_level") continue;
+        if (vehiculo[prop] !== undefined) {
+          return true;
+        }
       }
-      if (!this.form.placa) {
-        this.errors.placa = ["La Placa es obligatorio"];
-        isValid = false;
-      }
-      if (!this.form.tipo_vehiculo_id) {
-        this.errors.tipo_vehiculo_id = ["El Tipo de Vehículo es obligatorio"];
-        isValid = false;
-      }
-      if (!this.form.serie) {
-        this.errors.serie = ["La Serie es obligatorio"];
-        isValid = false;
-      }
-      if (!this.form.modelo) {
-        this.errors.modelo = ["El Modelo es obligatorio"];
-        isValid = false;
-      }
-      if (!this.form.marca) {
-        this.errors.marca = ["La Marca es obligatorio"];
-        isValid = false;
-      }
-      if (!this.form.color) {
-        this.errors.color = ["El Color es obligatorio"];
-        isValid = false;
-      }
-      if (!this.form.motor) {
-        this.errors.motor = ["El Motor es obligatorio"];
-        isValid = false;
-      }
-      if (!isValid) {
-        this.showValidationMessages();
-      }
-      return isValid;
+      return false;
     },
-    showValidationMessages() {
-      for (const error in this.errors) {
-        this.$message.error(this.errors[error][0]);
-      }
-    },
-
     async submit() {
+      if (this.validateVehiculo(this.vehiculo)) {
+        this.form.vehiculo = this.vehiculo;
+      }
       this.form.services_detail_ids = this.services_detail_ids;
       this.loading_submit = true;
-      if (!this.validateForm()) {
-        this.loading_submit = false;
-        
-        return;
-      }
       try {
         const response = await this.$http.post("/workshop/vehiculo", this.form);
         console.log(response.data);
@@ -529,11 +536,7 @@ export default {
       }
       this.loading_submit = false;
     },
-    open() {
-      this.initForm();
-      this.getTipoVehiculo();
-      this.getServicesDetails();
-    },
+    open() {},
     close() {
       this.$emit("update:showDialog", false);
     }

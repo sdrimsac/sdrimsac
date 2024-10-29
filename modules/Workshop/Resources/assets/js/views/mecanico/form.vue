@@ -4,7 +4,7 @@
             @close="close" 
             @open="create" 
             :close-on-click-modal="false"
-            width="50%"
+            width="60%"
             >
     <br>
     <form autocomplete="off" @submit.prevent="submit">

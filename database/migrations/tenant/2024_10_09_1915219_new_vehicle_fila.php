@@ -1,0 +1,154 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class NewVehicleFila extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('vehiculos', function (Blueprint $table) {
+            $table->string('chasis')->nullable();
+            $table->string('date_soat_due')->nullable();
+            $table->string('quantiy_front_lights')->nullable();
+            $table->string('state_front_lights')->nullable();
+            $table->string('quantity_directional_lights_front')->nullable();
+            $table->string('state_directional_lights_front')->nullable();
+            $table->string('quantity_directional_lights_back')->nullable();
+            $table->string('state_directional_lights_back')->nullable();
+            $table->string('quantity_hazard_lights')->nullable();
+            $table->string('state_hazard_lights')->nullable();
+            $table->string('quantity_wiper_washer_arm')->nullable();
+            $table->string('state_wiper_washer_arm')->nullable();
+            $table->string('quantity_gasoil_cap')->nullable();
+            $table->string('state_gasoil_cap')->nullable();
+            $table->string('quantity_radio_antenna')->nullable();
+            $table->string('state_radio_antenna')->nullable();
+            $table->string('quantity_side_mirrors')->nullable();
+            $table->string('state_side_mirrors')->nullable();
+            $table->string('quantity_test_handles')->nullable();
+            $table->string('state_test_handles')->nullable();
+            $table->string('quantity_alarm')->nullable();
+            $table->string('state_alarm')->nullable();
+            $table->string('quantity_booties')->nullable();
+            $table->string('quantity_spare_tire')->nullable();
+            $table->string('state_spare_tire')->nullable();
+            $table->string('quantity_wheel_nut')->nullable();
+            $table->string('state_wheel_nut')->nullable();
+            $table->string('quantity_wheel_cup')->nullable();
+            $table->string('state_wheel_cup')->nullable();
+            $table->string('quantity_ashtray')->nullable();
+            $table->string('state_ashtray')->nullable();
+            $table->string('quantity_internal_rearview_mirror')->nullable();
+            $table->string('state_internal_rearview_mirror')->nullable();
+            $table->string('quantity_car_radio')->nullable();
+            $table->string('state_car_radio')->nullable();
+            $table->string('quantity_proteccion_mat')->nullable();
+            $table->string('state_proteccion_mat')->nullable();
+            $table->string('quantity_rubber_floors')->nullable();
+            $table->string('state_rubber_floors')->nullable();
+            $table->string('qunatity_cup_holder')->nullable();
+            $table->string('quantity_vehicle_key')->nullable();
+            $table->string('state_vehicle_key')->nullable();
+            $table->string('quantity_extinguisher')->nullable();
+            $table->string('state_extinguisher')->nullable();
+            $table->string('state_jack_lever')->nullable();
+            $table->string('quantity_toolkit')->nullable();
+            $table->string('state_tolkit')->nullable();
+            $table->string('quantity_property_card')->nullable();
+            $table->string('state_property_card')->nullable();
+            $table->string('quantity_logbook')->nullable();
+            $table->string('state_logbook')->nullable();
+            $table->string('quantity_owner_namual')->nullable();
+            $table->string('state_owner_manual')->nullable();
+            $table->string('quantity_document_holder')->nullable();
+            $table->string('state_document_holder')->nullable();
+            $table->string('auth_drive')->nullable();
+            $table->string('move_on')->nullable();
+            $table->string('no_value_things')->nullable();
+            $table->string('cost_for_days')->nullable();
+            $table->string('gasoline_level')->nullable();
+            $table->string('observations')->nullable();
+            $table->string('certificate')->nullable(); 
+        });
+    }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('vehiculos', function (Blueprint $table) {
+            $table->dropColumn('chasis');
+            $table->dropColumn('date_soat_due');
+            $table->dropColumn('quantiy_front_lights');
+            $table->dropColumn('state_front_lights');
+            $table->dropColumn('quantity_directional_lights_front');
+            $table->dropColumn('state_directional_lights_front');
+            $table->dropColumn('quantity_directional_lights_back');
+            $table->dropColumn('state_directional_lights_back');
+            $table->dropColumn('quantity_hazard_lights');
+            $table->dropColumn('state_hazard_lights');
+            $table->dropColumn('quantity_wiper_washer_arm');
+            $table->dropColumn('state_wiper_washer_arm');
+            $table->dropColumn('quantity_gasoil_cap');
+            $table->dropColumn('state_gasoil_cap');
+            $table->dropColumn('quantity_radio_antenna');
+            $table->dropColumn('state_radio_antenna');
+            $table->dropColumn('quantity_side_mirrors');
+            $table->dropColumn('state_side_mirrors');
+            $table->dropColumn('quantity_test_handles');
+            $table->dropColumn('state_test_handles');
+            $table->dropColumn('quantity_alarm');
+            $table->dropColumn('state_alarm');
+            $table->dropColumn('quantity_booties');
+            $table->dropColumn('quantity_spare_tire');
+            $table->dropColumn('state_spare_tire');
+            $table->dropColumn('quantity_wheel_nut');
+            $table->dropColumn('state_wheel_nut');
+            $table->dropColumn('quantity_wheel_cup');
+            $table->dropColumn('state_wheel_cup');
+            $table->dropColumn('historial_id');
+            $table->dropColumn('quantity_ashtray');
+            $table->dropColumn('state_ashtray');
+            $table->dropColumn('quantity_internal_rearview_mirror');
+            $table->dropColumn('state_internal_rearview_mirror');
+            $table->dropColumn('quantity_car_radio');
+            $table->dropColumn('state_car_radio');
+            $table->dropColumn('quantity_proteccion_mat');
+            $table->dropColumn('state_proteccion_mat');
+            $table->dropColumn('quantity_rubber_floors');
+            $table->dropColumn('state_rubber_floors');
+            $table->dropColumn('qunatity_cup_holder');
+            $table->dropColumn('quantity_vehicle_key');
+            $table->dropColumn('state_vehicle_key');
+            $table->dropColumn('quantity_extinguisher');
+            $table->dropColumn('state_extinguisher');
+            $table->dropColumn('state_jack_lever');
+            $table->dropColumn('quantity_toolkit');
+            $table->dropColumn('state_tolkit');
+            $table->dropColumn('quantity_property_card');
+            $table->dropColumn('state_property_card');
+            $table->dropColumn('quantity_logbook');
+            $table->dropColumn('state_logbook');
+            $table->dropColumn('quantity_owner_namual');
+            $table->dropColumn('state_owner_manual');
+            $table->dropColumn('quantity_document_holder');
+            $table->dropColumn('state_document_holder');
+            $table->dropColumn('auth_drive');
+            $table->dropColumn('move_on');
+            $table->dropColumn('no_value_things');
+            $table->dropColumn('cost_for_days');
+            $table->dropColumn('gasoline_level');
+            $table->dropColumn('observations');
+            $table->dropColumn('certificate');
+        });   
+    } 
+}

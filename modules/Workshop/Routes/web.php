@@ -13,6 +13,7 @@ use Modules\Workshop\Http\Controllers\PersonalController;
 use Modules\Workshop\Http\Controllers\ServicesDetailsController;
 use Modules\Workshop\Http\Controllers\ServicesController;
 use Modules\Workshop\Http\Controllers\HistorialController;
+use Modules\Workshop\Http\Controllers\HistorialItemController;
 use Modules\Workshop\Models\ServicesDetails;
 
 Route::prefix('workshop')->group(function() {
@@ -42,6 +43,8 @@ Route::prefix('workshop')->group(function() {
     Route::post('vehiculo', [VehiculoController::class, 'store']);
     Route::get('vehiculo/record/{id}', [VehiculoController::class, 'record']);
     Route::delete('vehiculo/{tipo}', [VehiculoController::class, 'destroy']);
+    //ruta para generar el formato de ingrteso del vehiculo
+    Route::get('vehiculo/format_vehicle/{id}', [VehiculoController::class, 'format_vehicle']);
 
     Route::post('items', [VehiculoController::class, 'setItems']);
 
@@ -62,6 +65,12 @@ Route::prefix('workshop')->group(function() {
     Route::post('historial', [HistorialController::class, 'store']);
     Route::get('historial/record/{id}', [HistorialController::class, 'record']);
     Route::delete('historial/{services}', [HistorialController::class, 'destroy']);
+
+    Route::get('/historialItem', [HistorialItemController::class, 'index'])->name('tenant.workshop.historialItem');
+    Route::get('historialItem/records', [HistorialItemController::class, 'records']);
+    Route::post('historialItem', [HistorialItemController::class, 'store']);
+    Route::get('historialItem/record/{id}', [HistorialItemController::class, 'record']);
+    Route::delete('historialItem/{services}', [HistorialItemController::class, 'destroy']);
 
     
 

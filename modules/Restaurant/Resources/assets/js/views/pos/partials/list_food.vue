@@ -419,13 +419,19 @@
                               </template>
                             </el-tooltip>
                           </div>
-                          <!-- {{ data.location }} -->
                         </div>
                       </div>
-                      <div>{{ data.code }}</div>
+                        <div v-if="data.item.location">
+                          <span>UBC.</span>
+                          <br />
+                          {{ data.item.location }}
+                        </div>
+                      <div>
+                        COD.
+                        <span>{{ data.code }}</span>
+                      </div>
                     </div>
                   </div>
-
                   <div
                     class="d-flex justify-content-between"
                     style="padding-right: 10px; margin-top: 2px"
@@ -691,10 +697,18 @@
                         </div>
                       </div>
                     </div>
-                    <div>{{ data.code }}</div>
+                    <div v-if="data.item.location">
+                      <span>UBC.</span>
+                      <br />
+                      {{ data.item.location }}
+                    </div>
+                    <div>
+                      <span>COD.</span>
+                      <br />
+                      {{ data.code }}
+                    </div>
                   </div>
                 </div>
-
                 <div
                   class="d-flex justify-content-between"
                   style="padding-right: 10px; margin-top: 2px"

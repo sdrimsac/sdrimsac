@@ -88,7 +88,13 @@
 </template>
 <script>
 export default {
-  props: ["showDialog", "vehiculoId", "vehiculoPlaca", "nexItem", "vehiculoHistorial"],
+  props: [
+    "showDialog",
+    "vehiculoId",
+    "vehiculoPlaca",
+    "nexItem",
+    "vehiculoHistorial"
+  ],
   data() {
     return {
       selectedProduct: null,
@@ -101,11 +107,7 @@ export default {
       resource: "workshop"
     };
   },
-  mounted() {
-    console.log("ID del vehículo en historial id :", this.historial_id);
-    console.log("Placa del vehículo en modal-item:", this.vehiculoPlaca);
-    console.log("item para poder agregar productos", this.nexItem);
-  },
+  mounted() {},
   computed: {
     filteredProducts() {
       if (this.searchTerm) {
@@ -121,8 +123,38 @@ export default {
       return this.items.reduce((sum, item) => sum + item.total, 0);
     }
   },
-
   methods: {
+    ProductEdit() {
+      if (this.vehiculoHistorial) {
+        this.$http
+          .get(
+            `/${this.resource}/historialItem/record/${this.vehiculoHistorial}`
+          )
+          .then(response => {
+            console.log("Respuesta completa del servidor:", response);
+
+            if (Array.isArray(response.data) && response.data.length > 0) {
+              this.items = response.data.map(item => {
+                return {
+                  description: item.item.description,
+                  cantidad: item.cantidad,
+                  precioUnitario: item.price
+
+                }
+              }); // Asignar directamente el array de objetos
+              console.log("Ítems cargados:", this.items);
+            } else {
+              console.warn("No hay datos de ítems en la respuesta.");
+              this.items = [];
+            }
+          })
+          .catch(error => {
+            console.error("Error al obtener los datos del historial:", error);
+          });
+      } else {
+        console.warn("No se ha proporcionado un historial_id válido.");
+      }
+    },
     handleProductChange(value) {
       this.cantidad = 1;
       this.precioUnitario = 0;
@@ -189,25 +221,31 @@ export default {
         }, 250);
       }
     },
-    submit(){
-      this.$http.post(`/${this.resource}/items`, {historial_id:this.vehiculoHistorial, items:this.items})
-      .then(response => {
-       this.$emit("update:showDialog", false);
-        this.$message({
-          message: "Producto agregados con éxito",
-          type: 'success'
+    submit() {
+      this.$http
+        .post(`/${this.resource}/items`, {
+          historial_id: this.vehiculoHistorial,
+          items: this.items
         })
-      }).catch(error => {
-        console.log(error);
-        this.$message({
-          message: "Error al agregar producto",
-          type: 'error'
+        .then(response => {
+          this.$emit("update:showDialog", false);
+          this.$message({
+            message: "Producto agregados con éxito",
+            type: "success"
+          });
         })
-      })
+        .catch(error => {
+          console.log(error);
+          this.$message({
+            message: "Error al agregar producto",
+            type: "error"
+          });
+        });
     },
     open() {
       this.resetFormItem();
       this.items = [];
+      this.ProductEdit();
     },
     close() {
       this.$emit("update:showDialog", false);
