@@ -206,15 +206,7 @@
                         </tr>
                     @endforeach
                 @endif
-                <tr>
 
-
-                    @if ($document->detraction)
-                        <td width="120px" height="20px"><b>P. DETRACCIÓN</b></td>
-                        <td width="8px" height="20px">:</td>
-                        <td>{{ $document->detraction->percentage }}%</td>
-                    @endif
-                </tr>
                 @if ($customer->address !== '')
                     <tr>
                         <td class="align-top" height="20px"><b>DIRECCIÓN:</b></td>
@@ -588,14 +580,6 @@
                         @endif
                     @endforeach
                     <br />
-                    @if ($document->detraction)
-                        <p>
-                            <span class="font-bold">
-                                Operación sujeta al Sistema de Pago de Obligaciones Tributarias con el Gobierno Central.
-                            </span>
-                        </p>
-                        <br />
-                    @endif
                     @if ($customer->department_id == 16)
                         <br /><br /><br />
                         <div>
@@ -804,10 +788,12 @@
                     </tr>
                     @foreach ($boxes as $box)
                         <tr>
-                            <td colspan="4" class="text-left font-bold desc">{{ $box->method }}:
-                                {{ $document->currency_type->symbol }}</td>
-                            <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
-                            </td>
+                            <td colspan="4" class="text-left font-bold desc" style="white-space: nowrap;">
+                                {{ $box->method }}:
+                                {{ $document->currency_type->symbol }} 
+                                {{ number_format(abs($box->amount), 2, '.', '') }}</td>
+                            {{-- <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
+                            </td> --}}
                         </tr>
                     @endforeach
                 @endif
@@ -869,11 +855,34 @@
                     <tr>
                         <td width="120px" height="20px">
                             <b>
+                                P. DETRACCIÓN
+                            </b>
+                        </td>
+                        <td width="8px" height="20px">:</td>
+                        <td>{{ $document->detraction->percentage }}%</td>
+                    </tr>
+                    <tr>
+                        <td width="120px" height="20px">
+                            <b>
                                 MONTO DETRACCIÓN
                             </b>
                         </td>
                         <td width="8px" height="20px">:</td>
                         <td>{{ $document->currency_type->symbol }} {{ $document->detraction->amount }}</td>
+                        <p>
+                            <span class="font-bold">
+                                Operación sujeta al Sistema de Pago de Obligaciones Tributarias con el Gobierno Central.
+                            </span>
+                        </p>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p>
+                                <span class="font-bold">
+                                    Operación sujeta al Sistema de Pago de Obligaciones Tributarias con el Gobierno Central.
+                                </span>
+                            </p>
+                        </td>
                     </tr>
                 </table>
             @endif
