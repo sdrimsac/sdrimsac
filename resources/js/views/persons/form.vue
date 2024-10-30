@@ -730,7 +730,7 @@
                     </div>
                 </template>
                 <div class="row" v-if="configuration.consolidated_quotations">
-                    <div class="col-12">
+                    <div class="col-8 col-lg-8 col-xl-8">
                         <label for="document_type">
                             <i class="fas fa-file-invoice"></i> Tipo de
                             documento
@@ -749,6 +749,24 @@
                                 :label="option.description"
                             ></el-option>
                         </el-select>
+                    </div>
+                    <div class="col-4 col-lg-4 col-xl-4">
+                        <label for="varios"
+                            >Clientes varios
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="La boleta o nota se emitirá a nombre de clientes varios."
+                                placement="top"
+                            >
+                                <i class="fas fa-info-circle text-danger"></i>
+                            </el-tooltip>
+                        </label>
+                        <el-checkbox
+                            @change="changeVarios"
+                            v-model="form.varios"
+                            :checked="form.varios"
+                        ></el-checkbox>
                     </div>
                 </div>
                 <div class="row" v-if="configuration.consolidated_quotations">
@@ -918,6 +936,12 @@ export default {
         }
     },
     methods: {
+        changeVarios(){
+            let {document_type_id} = this.form;
+            if(!document_type_id || document_type_id == '01'){
+                this.form.document_type_id = '80';
+            }    
+        },
         removeItemUnitType(idx) {
             this.form.item_unit_types.splice(idx, 1);
             this.item_unit_types = this.item_unit_types_general.filter(
@@ -946,6 +970,7 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
+                varios: false,
                 has_credit_line: false,
                 credit_line: 0.0,
                 id: null,

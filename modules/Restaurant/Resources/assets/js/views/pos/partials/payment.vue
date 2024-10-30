@@ -398,6 +398,23 @@
                                                 ></el-option>
                                             </el-select>
                                         </div>
+                                        <div class="row" v-if="hasPromotionText">
+                                            <div
+                                                class="alert alert-success  col-lg-6 col-md-6 col-sm-12 "
+                                                
+                                            >
+                                                {{ hasPromotionText }}
+                                            </div>
+                                            <div class="col-lg-6  col-md-6 col-sm-12 ">
+                                                <el-checkbox
+                                                    v-model="
+                                                        form.receive_promotion
+                                                    "
+                                                >
+                                                    Aplicar promoción
+                                                </el-checkbox>
+                                            </div>
+                                        </div>
                                     </template>
                                 </div>
                             </div>
@@ -1250,7 +1267,8 @@
                                                         <div
                                                             v-if="
                                                                 form.payment_condition_id ==
-                                                                    '01' && configuration.split_payments_pos
+                                                                    '01' &&
+                                                                    configuration.split_payments_pos
                                                             "
                                                             class="col-xl-3 col-md-3 col-lg-3 col-6 "
                                                         >
@@ -1718,6 +1736,7 @@ export default {
     },
     data() {
         return {
+            hasPromotionText: null,
             paymentVariation: {
                 description: "Consumo",
                 price: 0
@@ -2019,7 +2038,6 @@ export default {
             }
             this.printerOn = 0;
             this.sendPayment();
-            
         },
         insertReferenceNumber() {
             console.log("entra a referencia");
@@ -2582,6 +2600,21 @@ export default {
                 }
             }
         },
+        verifyPromotionCustomer() {
+            this.hasPromotionText = null;
+            this.$http
+                .get(
+                    `/promotions-document/records-customers/${this.form.customer_id}`
+                )
+                .then(response => {
+                    if (response.status == 200) {
+                        let { data } = response;
+                        this.hasPromotionText = data
+                            .map(p => p.message)
+                            .join("\n");
+                    }
+                });
+        },
         changeCustomer() {
             this.form.student_id = null;
             this.students = [];
@@ -2620,6 +2653,7 @@ export default {
                     index === self.findIndex(t => t.id === thing.id)
             );
             this.setSeries();
+            this.verifyPromotionCustomer();
         },
         setLocalStorageIndex(key, obj) {
             localStorage.setItem(key, JSON.stringify(obj));
@@ -2690,11 +2724,6 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-
-            this.form.promotion_document_id =
-                this.promotions_document.length > 0
-                    ? this.promotions_document[0].id
-                    : null;
 
             this.sumCoins = [];
             if (!this.form.is_room) {
@@ -2794,6 +2823,11 @@ export default {
                     }
                 }
             }
+
+            this.form.promotion_id =
+                this.promotions_document.length > 0
+                    ? this.promotions_document[0].id
+                    : null;
         },
         checkDetraction() {
             if (!this.configuration.detraction) return false;

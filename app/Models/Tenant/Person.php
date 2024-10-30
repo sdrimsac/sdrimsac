@@ -19,6 +19,7 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
     protected $fillable = [
+        'varios',
         'document_type_id',
         'alias',
         'has_credit_line',
@@ -49,6 +50,7 @@ class Person extends ModelTenant
     protected $casts = [
         'has_credit_line' => 'boolean',
         'credit_line' => 'float',
+        'varios' => 'boolean',
     ];
     // protected static function boot()
     // {
@@ -130,6 +132,7 @@ class Person extends ModelTenant
 
 
         $data = [
+            'varios' => (bool) $this->varios,
             'document_type_id' => $this->document_type_id,
             'alias' => $this->alias,
             'credit_line' => $this->credit_line,
@@ -204,7 +207,8 @@ class Person extends ModelTenant
 
         return $data;
     }
-    public function document_type(){
+    public function document_type()
+    {
         return $this->belongsTo(DocumentType::class);
     }
     public function getOptionalEmailArray(): array
@@ -216,8 +220,20 @@ class Person extends ModelTenant
 
         return $data;
     }
-    public function item_unit_types(){
+    public function item_unit_types()
+    {
         return $this->hasMany(UnitTypePerson::class, 'customer_id');
+    }
+    public static function getZone($id){
+        $person = Person::find($id);
+        $zone_id = $person->client_zone_id;
+        if($zone_id){
+            $zone = ClientZone::find($zone_id);
+            if($zone){
+                return $zone->description;
+            }
+        }
+        return null;
     }
     public function zone()
     {
@@ -232,7 +248,7 @@ class Person extends ModelTenant
     {
         return $this->belongsTo(IdentityDocumentType::class, 'identity_document_type_id');
     }
-    
+
     public function documents()
     {
         return $this->hasMany(Document::class, 'customer_id');
@@ -251,6 +267,29 @@ class Person extends ModelTenant
     public function province()
     {
         return $this->belongsTo(Province::class);
+    }
+
+    public static function getIdClientesVariosOrCreate()
+    {
+        $clientes_varios = Person::where('number', '99999999')->orWhere('name', 'like', '%CLIENTES VARIOS%')->first();
+        if (!$clientes_varios) {
+            $clientes_varios = new Person();
+            $clientes_varios->type = 'customers';
+            $clientes_varios->identity_document_type_id = 1;
+            $clientes_varios->number = 99999999;
+            $clientes_varios->name = 'CLIENTES VARIOS';
+            $clientes_varios->country_id = 'PE';
+            $clientes_varios->department_id = 12;
+            $clientes_varios->province_id = 1203;
+            $clientes_varios->district_id = 120303;
+            $clientes_varios->perception_agent = 0;
+            $clientes_varios->percentage_perception = 0;
+            $clientes_varios->enabled = 1;
+            $clientes_varios->seller_id = 1;
+            $clientes_varios->status = 1;
+            $clientes_varios->save();
+        }
+        return $clientes_varios->id;
     }
 
     public function district()

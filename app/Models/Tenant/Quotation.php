@@ -11,6 +11,7 @@ class Quotation extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'payments'];
 
     protected $fillable = [
+        'num_orden',
         'reference',
         'id',
         'user_id',
@@ -72,6 +73,20 @@ class Quotation extends ModelTenant
         'delivery_date' => 'date',
     ];
 
+    public function getWeightTotal()
+    {
+        $items = $this->items;
+        $total = 0;
+
+        foreach ($items as $item) {
+
+            if (isset($item->item->weight)) {
+                $total += $item->quantity * $item->item->weight;
+            }
+        }
+
+        return $total;
+    }
     public function getEstablishmentAttribute($value)
     {
         return (is_null($value)) ? null : (object) json_decode($value);
@@ -215,7 +230,11 @@ class Quotation extends ModelTenant
     {
         return $this->hasMany(QuotationItem::class);
     }
-
+    public static function getOrdenNumber(){
+        $user_id = auth()->user()->id;
+        $quotation = Quotation::where('user_id', $user_id)->whereNull('consolidated_id')->count();
+        return $quotation + 1;
+    }
 
     public function documents()
     {

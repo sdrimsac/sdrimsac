@@ -125,6 +125,7 @@ class DocumentInput
         // }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'promotion_id' => Functions::valueKeyInArray($inputs, 'promotion_id'),
             'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),
             'is_list_credit' => Functions::valueKeyInArray($inputs, 'is_list_credit', false),
             'is_advance' => Functions::valueKeyInArray($inputs, 'is_advance', false),
@@ -319,7 +320,7 @@ class DocumentInput
                     'charges' => self::charges($row),
                     'warehouse_id' => Functions::valueKeyInArray($row, 'warehouse_id', $warehouse_id_default),
                     'additional_information' => Functions::valueKeyInArray($row, 'additional_information'),
-                    'name_product_pdf' => Functions::valueKeyInArray($row, 'name_product_pdf')
+                    'name_product_pdf' => Functions::valueKeyInArray($row, 'name_product_pdf'),
                 ];
             }
             return $items;

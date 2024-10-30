@@ -12,6 +12,8 @@ class Consolidated extends ModelTenant
         "user_id",
         "establishment_id",
         "date_of_issue",
+        "weight"
+
     ];
 
     public function user()

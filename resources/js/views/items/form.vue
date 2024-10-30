@@ -596,6 +596,23 @@
                                     ></el-input>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 col-xl-2"
+                            v-if="configuration.consolidated_quotations"
+                            >
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <i
+                                            class="fa fa-box fa-lg"
+                                        ></i>
+                                        Peso
+                                        
+                                    </label>
+                                    <el-input
+                                        
+                                        v-model="form.weight"
+                                    ></el-input>
+                                </div>
+                            </div>
 
                             <div
                                 class="col-12 col-lg-6 col-xl-4"

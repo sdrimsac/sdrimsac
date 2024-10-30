@@ -1,12 +1,29 @@
 <template>
     <el-dialog
         :visible="showDialog"
-        title="Consolidado"
         @open="open"
         @close="close"
         append-to-body
         v-loading="loading"
+        width="90%"
     >
+        <template slot="title">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="text-white h3">
+                        Consolidado
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <span
+                        class="text-white h3 float-end"
+                        style="margin-right: 25px;"
+                    >
+                        {{ weight_total }} KG
+                    </span>
+                </div>
+            </div>
+        </template>
         <div class="row m-2">
             <div class="col-12 text-end">
                 <el-button
@@ -101,7 +118,9 @@
                                 @change="handleCheckAll"
                             ></el-checkbox>
                         </th>
-
+                        <th>
+                            Peso
+                        </th>
                         <th>
                             Cotización
                         </th>
@@ -131,7 +150,8 @@
                                 @change="handleCheck(record)"
                             ></el-checkbox>
                         </td>
-                        
+
+                        <td>{{ record.weight_total }}</td>
                         <td>{{ record.identifier }}</td>
                         <td>{{ record.user_name }}</td>
                         <td>{{ record.date_of_issue }}</td>
@@ -183,6 +203,13 @@ export default {
     computed: {
         hasSelected() {
             return this.records.some(record => record.checked);
+        },
+        weight_total() {
+            return this.records
+                .filter(record => record.checked)
+                .reduce((acc, record) => {
+                    return acc + record.weight_total;
+                }, 0);
         }
     },
     methods: {
@@ -207,7 +234,6 @@ export default {
         },
         getTables() {
             this.$http.get("/quotations/consolidated/tables").then(response => {
-                console.log("🚀 ~ this.$http.get ~ response:", response);
                 this.zones = response.data.zones;
                 this.sellers = response.data.sellers;
             });
@@ -237,7 +263,7 @@ export default {
                 this.loading = true;
                 const response = await this.$http.post(
                     `/${this.resource}/consolidated`,
-                    { excludes }
+                    { excludes, weight: this.weight_total }
                 );
                 if (response.data.success) {
                     this.$message.success(response.data.message);
@@ -293,7 +319,7 @@ export default {
                         if (a.id < b.id) return 1;
                         if (a.zone < b.zone) return -1;
                         if (a.zone > b.zone) return 1;
-                    
+
                         return 0;
                     });
                 this.records = this.all_records;

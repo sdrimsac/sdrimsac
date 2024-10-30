@@ -23,11 +23,12 @@
     $configuration = \App\Models\Tenant\Configuration::select([
         'show_logo_in_documents',
         'show_internal_code_ticket',
+        'consolidated_quotations'
     ])->first();
     if (!function_exists('getUnitTypeId')) {
         function getUnitTypeId($id)
-        {   
-            $item_unit_types = \ App\Models\Tenant\ItemUnitType::find($id);
+        {
+            $item_unit_types = \App\Models\Tenant\ItemUnitType::find($id);
             // $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
             // return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
             return $item_unit_types->unit_type_id;
@@ -109,7 +110,7 @@ contain"
     @endif
     <table class="full-width">
         <tr>
-            @if($configuration->comercial_name)
+            @if ($configuration->comercial_name)
                 <td class="text-center">
                     @if ($is_chifa_china)
                         <h1>{{ $company->trade_name }}</h1>
@@ -299,20 +300,59 @@ contain"
                 </td>
             </tr>
         @endif
-        <tr>
-            <td class="align-top">
-                <p class="desc">Vendedor:</p>
-            </td>
-            <td>
-                <p class="desc">
-                    @if ($seller)
-                        {{ $seller->name }}
-                    @else
-                        {{ $document->user->name }}
-                    @endif
-                </p>
-            </td>
-        </tr>
+        @if ($configuration->consolidated_quotations)
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Vendedor:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        @if (!$document->quotation_id)
+                            {{ $document->user->name }}
+                        @else
+                            {{ $document->quotation->user->name }}
+                        @endif
+                    </p>
+                </td>
+            </tr>
+            @if($document->quotation_id)
+            <tr>
+                <td class="align-top">
+                    <p class="desc">N° atención:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        {{ $document->quotation->num_orden}}
+                    </p>
+                </td>
+            </tr>
+            @endif
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Zona:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        {{\App\Models\Tenant\Person::getZone($document->customer_id)}}
+                    </p>
+                </td>
+            </tr>
+        @else
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Vendedor:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        @if ($seller)
+                            {{ $seller->name }}
+                        @else
+                            {{ $document->user->name }}
+                        @endif
+                    </p>
+                </td>
+            </tr>
+        @endif
         @if ($document->purchase_order)
             <tr>
                 <td>
@@ -443,14 +483,14 @@ contain"
         @endphp
         @foreach ($document->items as $row)
             @php
-            // Aquí calculas los totales en base a los items
+                // Aquí calculas los totales en base a los items
                 if (isset($row->item->categoriaMadera)) {
                     $madera = $row->item->categoriaMadera;
                     $ancho = $madera->selectedAncho;
                     $largo = $madera->selectedLargo;
                     $grosor = $madera->selectedGrosor;
-                $quantity_totals += $row->quantity;
-                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                    $quantity_totals += $row->quantity;
+                    $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
                 }
             @endphp
         @endforeach
@@ -465,16 +505,18 @@ contain"
             </td>
         </tr>
         @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
-        <tr>
-            <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
-                        <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span
+                                    class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                            <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span
+                                    class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         @endif
     </table>
 
@@ -508,10 +550,10 @@ contain"
                     </td>
                     <td class="text-center desc-9 align-top">
                         {{-- from_unit_type_id --}}
-                        @if(isset($row->item->from_unit_type_id))
-                        {{ getUnitTypeId($row->item->from_unit_type_id) }}
+                        @if (isset($row->item->from_unit_type_id))
+                            {{ getUnitTypeId($row->item->from_unit_type_id) }}
                         @else
-                        {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
+                            {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                         @endif
                     </td>
                     <td class="text-left desc-9 align-top">

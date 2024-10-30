@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         :visible="showDialog"
-        title="Consolidados"
+        title="Consolidadoss"
         @open="open"
         @close="close"
         append-to-body
@@ -61,13 +61,32 @@
                             {{ record.user_name }}
                         </td>
                         <td>
-                            <el-button
-                                type="primary"
-                                size="mini"
-                                @click="clickExport(record)"
+                            <el-tooltip
+                                content="Reporte documentos de pago por vendedor"
+                                placement="top"
+                                effect="dark"
                             >
-                                <i class="el-icon-download"></i>
-                            </el-button>
+                                <el-button
+                                    type="primary"
+                                    size="mini"
+                                    @click="clickExportDocuments(record)"
+                                >
+                                    <i class="el-icon-document"></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                content="Exportar"
+                                placement="top"
+                                effect="dark"
+                            >
+                                <el-button
+                                    type="primary"
+                                    size="mini"
+                                    @click="clickExport(record)"
+                                >
+                                    <i class="el-icon-download"></i>
+                                </el-button>
+                            </el-tooltip>
                             <el-tooltip
                                 content="Exportar formato de entrega"
                                 placement="top"
@@ -134,6 +153,11 @@ export default {
     },
     computed: {},
     methods: {
+        clickExportDocuments(record) {
+            window.open(
+                `/${this.resource}/consolidateds/${record.id}/export-documents`
+            );
+        },
         clickReport() {
             window.open(`/${this.resource}/consolidateds/${record.id}/report`);
         },
@@ -227,26 +251,34 @@ export default {
             }
         },
         async clickPrint(record) {
-            this.$http
-                .get(`/${this.resource}/consolidateds/${record.id}/print`)
-                .then(async response => {
-                    let { data } = response;
-                    this.documents = data.documents;
-                    let message = data.message;
-                    let has_print = data.has_print;
-                    if (!has_print) {
-                        for (const document of this.documents) {
-                            await this.clickEmit(document);
-                        }
-                    }
+            this.$confirm("¿Desea imprimir los documentos?", "Imprimir", {
+                confirmButtonText: "Sí",
+                cancelButtonText: "No",
+                type: "warning"
+            })
+                .then(() => {
+                    this.$http
+                        .get(
+                            `/${this.resource}/consolidateds/${record.id}/print`
+                        )
+                        .then(async response => {
+                            let { data } = response;
+                            this.documents = data.documents;
+                            let message = data.message;
+                            let has_print = data.has_print;
+                            if (!has_print) {
+                                for (const document of this.documents) {
+                                    await this.clickEmit(document);
+                                }
+                            }
 
-                    this.$message.success(message);
+                            this.$message.success(message);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 })
-                .catch(error => {
-                    console.error(error);
-                });
-
-            // window.open(`/${this.resource}/consolidateds/${record.id}/print`);
+                .catch(() => {});
         },
         async getRecords() {
             try {

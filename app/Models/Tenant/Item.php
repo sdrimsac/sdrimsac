@@ -26,6 +26,7 @@ class Item extends ModelTenant
     use RegisterMovementTrait;
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group'];
     protected $fillable = [
+        'weight',
         'has_color_size',
         'max_quantity_description',
         'is_manufactured',
@@ -173,6 +174,7 @@ class Item extends ModelTenant
         // }
 
         $data = [
+            'weight' => $this->weight,
             'has_color_size' => (bool)$this->has_color_size,
             'id'                               => $this->id,
             'is_manufactured'                 => (bool)$this->is_manufactured,

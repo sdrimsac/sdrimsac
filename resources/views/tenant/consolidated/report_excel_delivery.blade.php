@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>Consolidado aaa</strong></h3>
+        <h3 align="center" class="title"><strong>Consolidado reparto</strong></h3>
     </div>
     <br>
     <div style="margin-top:20px; margin-bottom:15px;">
@@ -89,16 +89,22 @@
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             CANTIDAD</th>
+                            
+                        <th class="encabezado"
+                        style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                        PESO</th>
                     </tr>
                     <tbody>
                         @php
                             $total = 0;
                             $total_quantity = 0;
+                            $total_weight = 0;
                         @endphp
                         @foreach ($records as $idx => $value)
                             @php
                                 $total += $value->total;
                                 $total_quantity += $value->total_quantity;
+                                $total_weight += $value->total_weight;
                             @endphp
 
                             <tr>
@@ -117,6 +123,10 @@
 
                                 </td>
 
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    {{ $value->total_weight }}
+                                </td>
+
 
 
                             </tr>
@@ -130,6 +140,9 @@
                             </td>
                             <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                 <strong>{{ $total_quantity }}</strong>
+                            </td>
+                            <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                <strong>{{ $total_weight }} KG</strong>
                             </td>
                         </tr>
                     </tfoot>

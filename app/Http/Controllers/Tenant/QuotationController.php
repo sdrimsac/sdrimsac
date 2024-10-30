@@ -31,6 +31,7 @@ use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\CoreFacturalo\Template;
 use App\Exports\ConsolidatedExport;
+use App\Exports\ConsolidatedExportDocument;
 use App\Http\Resources\Tenant\ConsolidateQuotationCollection;
 use Mpdf\Mpdf;
 use Mpdf\HTMLParserMode;
@@ -50,6 +51,7 @@ use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
+use App\Models\Tenant\UnitTypePerson;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Modules\Restaurant\Events\OrdenEvent;
@@ -251,13 +253,18 @@ class QuotationController extends Controller
             $identity_document_type_id = $person->identity_document_type_id;
             $document_type_id = ($identity_document_type_id == '6') ? '01' : '03';
         }
+        $person = Person::where('id', $q->customer_id)->first();
+        $customer_id = $person->id;
+        if ($person->varios) {
+            $customer_id = Person::getIdClientesVariosOrCreate();
+        }
         $document['document_type_id'] = $document_type_id;
         $document['series_id'] = $this->getSeriesId($document_type_id);
         $document['number'] = '#';
         $document['establishment_id'] = $q->establishment_id;
         $document['date_of_issue'] = Carbon::now()->format('Y-m-d');
         $document['time_of_issue'] = date("H:i:s");
-        $document['customer_id'] = $q->customer_id;
+        $document['customer_id'] = $customer_id;
         $document['currency_type_id'] = $q->currency_type_id;
         $document['purchase_order'] = null;
         $document['exchange_rate_sale'] = $q->exchange_rate_sale;
@@ -342,6 +349,61 @@ class QuotationController extends Controller
             'has_print' => $has_print
         ];
     }
+    public function consolidatedsExportDocuments($id)
+    {
+        $consolidated = Consolidated::find($id);
+        $quotations = $consolidated->quotations;
+        $groupedQuotations = $quotations->groupBy(function ($quotation) {
+            return $quotation->user_id;
+        })->map(function ($group) {
+            return $group->groupBy(function ($quotation) {
+                $customer = Person::find($quotation->customer_id);
+                return $customer ? $customer->client_zone_id : null;
+            });
+        });
+        $registers = [];
+    
+        foreach ($groupedQuotations as $userId => $groupedQuotation) {
+            $user = User::find($userId);
+            $user_name = $user->name;
+            $registers[$user_name] = [];
+            
+            foreach ($groupedQuotation as $zoneId => $quotations) {
+                $zone_name = "-";
+                if ($zoneId) {
+                    $zone = ClientZone::find($zoneId);
+                    $zone_name = $zone ? $zone->description : "-";
+                }
+                $registers[$user_name][$zone_name] = [];
+                //ordenar $quotations por num_orden
+                $quotations = $quotations->sortBy('num_orden');
+                foreach ($quotations as $quotation) {
+                    $document = Document::where('quotation_id', $quotation->id)->first();
+                    if (!$document) {
+                        $document = SaleNote::where('quotation_id', $quotation->id)->first();
+                    }
+                    if ($document) {
+                        $unit_type = UnitTypePerson::where('customer_id', $document->quotation->customer_id)->first();
+                        $register = [
+                            'customer_name' => $document->customer->name,
+                            'unit_type' => $unit_type ? $unit_type->description : '',
+                            'document_id' => $document->id,
+                            'number_full' => $document->number_full,
+                            'total' => $document->total,
+                            'zone' => $zone_name,
+                            'num_orden' => $quotation->num_orden,
+                        ];
+                        $registers[$user_name][$zone_name][] = $register;
+                    }
+                }
+            }
+        }
+    
+        return (new ConsolidatedExportDocument())
+        ->records($registers)
+        ->company(Company::active())
+        ->download("Reparto_documentos_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
+    }
     public function consolidatedsExportDelivery($id)
     {
         $consolidated = Consolidated::with('quotations.items')->find($id);
@@ -367,6 +429,8 @@ class QuotationController extends Controller
             $itemData = $firstItem->item;
             $total = $items->sum('total');
             $totalQuantity = $items->sum('quantity');
+            $totalWeight = $totalQuantity * isset($itemData->weight) ? $itemData->weight : 0;
+
             $itemDescription = $itemData->description;
             $itemInternalId = $itemData->internal_id;
             $unitTypeDescription = null;
@@ -412,6 +476,8 @@ class QuotationController extends Controller
                 'unit_type_description' => $unitTypeDescription,
                 'item_internal_id' => $itemInternalId,
                 'total' => $total,
+                'total_weight' => $totalWeight,
+
             ];
         });
         return (new ConsolidatedExport())
@@ -446,8 +512,11 @@ class QuotationController extends Controller
         });
 
         $transformedItems = $groupedItems->map(function ($items, $key) {
+
+
             $firstItem = $items->first();
             $total = $items->sum('total');
+            $unitPrice = $firstItem->unit_price;
             $itemData = $firstItem->item;
             $totalQuantity = $items->sum('quantity');
             $itemDescription = $itemData->description;
@@ -466,6 +535,7 @@ class QuotationController extends Controller
                 'unit_type_description' => $unitTypeDescription,
                 'item_internal_id' => $itemInternalId,
                 'total' => $total,
+                'unit_price' => $unitPrice
             ];
         });
         return (new ConsolidatedExport())
@@ -513,12 +583,13 @@ class QuotationController extends Controller
     public function consolidated(Request $request)
     {
 
-
+        $weight = $request->weight;
         $excludes = $request->excludes;
         $consolidated = new Consolidated();
         $consolidated->user_id = auth()->id();
         $consolidated->establishment_id = auth()->user()->establishment_id;
         $consolidated->date_of_issue = date('Y-m-d');
+        $consolidated->weight = $weight;
         $consolidated->save();
         Quotation::where('consolidated', false)
             ->whereNotIn('id', $excludes)
@@ -530,6 +601,15 @@ class QuotationController extends Controller
         return [
             'success' => true,
             'message' => 'Cotizaciones consolidadas'
+        ];
+    }
+    public function getLastNumOrden()
+    {
+        $data = Quotation::getOrdenNumber();
+
+        return [
+            'success' => true,
+            'data' => $data
         ];
     }
     public function toConsolidated()
@@ -715,6 +795,10 @@ class QuotationController extends Controller
             $data['terms_condition'] = $this->getTermsCondition();
             $establishment_id = auth()->user()->establishment_id;
             $data['establishment_id'] = $establishment_id;
+            $configuration = Configuration::firstOrFail();
+            if ($configuration->consolidated_quotations) {
+                $data['num_orden'] = Quotation::getOrdenNumber();
+            }
             $this->quotation =  Quotation::create($data);
 
             foreach ($data['items'] as $row) {

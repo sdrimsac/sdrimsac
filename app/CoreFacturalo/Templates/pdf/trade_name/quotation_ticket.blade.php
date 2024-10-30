@@ -122,7 +122,9 @@
                 <p class="desc">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}</p>
+                <p class="desc">
+                    {{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}
+                </p>
             </td>
         </tr>
         <tr>
@@ -148,6 +150,16 @@
                 </td>
             </tr>
         @endif
+        @isset($customer->telephone)
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Telefono:</p>
+                </td>
+                <td>
+                    <p class="desc">{{ $customer->telephone }}</p>
+                </td>
+            </tr>
+            @endisset
         <tr>
             <td class="align-top">
                 <p class="desc">Vendedor:</p>
@@ -159,6 +171,28 @@
                     @else
                         {{ $document->user->name }}
                     @endif
+                </p>
+            </td>
+        </tr>
+        @if ($document->num_orden)
+            <tr>
+                <td class="align-top">
+                    <p class="desc">N° atención:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        {{ $document->num_orden }}
+                    </p>
+                </td>
+            </tr>
+        @endif
+        <tr>
+            <td class="align-top">
+                <p class="desc">Zona:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    {{ \App\Models\Tenant\Person::getZone($document->customer_id) }}
                 </p>
             </td>
         </tr>
@@ -261,28 +295,30 @@
         @endphp
         @foreach ($document->items as $row)
             @php
-            // Aquí calculas los totales en base a los items
+                // Aquí calculas los totales en base a los items
                 if (isset($row->item->categoriaMadera)) {
                     $madera = $row->item->categoriaMadera;
                     $ancho = $madera->selectedAncho;
                     $largo = $madera->selectedLargo;
                     $grosor = $madera->selectedGrosor;
-                $quantity_totals += $row->quantity;
-                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                    $quantity_totals += $row->quantity;
+                    $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
                 }
             @endphp
         @endforeach
-        @if($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
-        <tr>
-            <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
-                        <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+        @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+            <tr>
+                <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span
+                                    class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                            <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span
+                                    class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         @endif
     </table>
 
@@ -346,13 +382,13 @@
                                 $grosor = $madera->selectedGrosor;
                                 $quantity_totals += $row->quantity;
                                 //if (isset($madera->sumTotals) && $madera->sumTotals == true) {
-                                  //  $quantity_totals += $row->quantity;
+                                //  $quantity_totals += $row->quantity;
                                 $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
                                 //}
                                 $m_description = "${grosor}x${ancho}x${largo}";
                             @endphp
-                            {{ $m_description }} <br/>
-                                ({{ number_format($fot_totals, 2) }} PIES)
+                            {{ $m_description }} <br />
+                            ({{ number_format($fot_totals, 2) }} PIES)
                         @endif
                         @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
                             - {!! $row->item->from_unit_type_id_desc !!}
@@ -501,10 +537,10 @@
                 {{ number_format($document->total - $payment, 2) }}</td>
         </tr> --}}
         @if ($footer_text)
-        <tr>
-            <td class="text-center desc pt-5 font-bold">{{ $footer_text }}</td>
-        </tr>
-    @endif
+            <tr>
+                <td class="text-center desc pt-5 font-bold">{{ $footer_text }}</td>
+            </tr>
+        @endif
         @if ($document->terms_condition)
             <tr>
                 <td class="text-center desc pt-5 font-bold">{{ $document->terms_condition }}</td>

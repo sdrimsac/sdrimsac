@@ -55,10 +55,22 @@
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             PRODUCTO</th>
-                    
+
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             CANTIDAD</th>
+
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            PRECIO</th>
+
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            TOTAL</th>
+
+                        <th class="encabezado"
+                            style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
+                            POLITICA</th>
                         <th class="encabezado"
                             style="text-align: left; padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">
                             CLIENTE</th>
@@ -106,12 +118,20 @@
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->item->description }}
                                     </td>
-                                
+
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         {{ $item->quantity }}
                                     </td>
-                                    <td valign="middle" 
-                                        style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                        {{ $item->unit_price }}
+                                    </td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                        {{ $item->total }}
+                                    </td>
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                        {{ $item->unit_type_description }}
+                                    </td>
+                                    <td valign="middle" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         @php
                                             $name = $value2->customer->name;
                                             if (isset($value2->person->alias)) {

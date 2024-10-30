@@ -71,6 +71,7 @@ class ItemResource extends JsonResource
             'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,
             'id' => $this->id,
+            'weight' => $this->weight,
             'max_quantity' => $this->max_quantity,
             'delivery_cost' => $this->delivery_cost,
             'description' => $this->description,

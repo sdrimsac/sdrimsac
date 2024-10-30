@@ -18,8 +18,9 @@ class QuotationCollection extends ResourceCollection
 
             $btn_generate = (count($row->documents) > 0 || count($row->sale_notes) > 0) ? false : true;
             // $btn_generate_cnt = $row->contract ?false:true;
-
+            
             return [
+                'weight_total' => $row->getWeightTotal(),
                 'reference' => $row->reference,
                 'id' => $row->id,
                 'soap_type_id' => $row->soap_type_id,

@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\PromotionDocument;
+use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionDocumentItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -96,6 +97,29 @@ class PromotionDocumentController extends Controller
         }
     }
 
+    public function byCustomer($id)
+    {
+        $records = PromotionDocumentCustomer::where('customer_id', $id)->pluck('promotion_document_id')->values()->unique('promotion_document_id');
+        $promotions = [];
+
+        foreach ($records as $row) {
+            $promotion = PromotionDocument::findOrFail($row);
+            $description = $promotion->description;
+            $counts = PromotionDocumentCustomer::where('promotion_document_id', $row)->where('customer_id', $id)
+                ->where('acc_total', $promotion->total)
+                ->where('active', 1)
+                ->count();
+            $message =  "Tiene " . $counts . " de la promoción " . $description . " por canjear";
+            if ($counts > 0)
+                $promotions[] = [
+                    'id' => $row,
+                    'description' => $description,
+                    'message' => $message
+                ];
+        }
+
+        return $promotions;
+    }
     public function destroy($id)
     {
         //return 'sd';

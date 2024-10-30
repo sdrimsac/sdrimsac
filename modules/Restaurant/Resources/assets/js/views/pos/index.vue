@@ -4401,6 +4401,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
+                receive_promotion:false,
                 promotion_id: null,
                 reference_number: null,
                 detraction: {

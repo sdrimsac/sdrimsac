@@ -370,6 +370,45 @@
                 </td>
             </tr>
         @endif
+
+        @if ($configuration->consolidated_quotations)
+        <tr>
+            <td class="align-top">
+                <p class="desc">Vendedor:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    @if (!$document->quotation_id)
+                        {{ $document->user->name }}
+                    @else
+                        {{ $document->quotation->user->name }}
+                    @endif
+                </p>
+            </td>
+        </tr>
+        @if($document->quotation_id)
+        <tr>
+            <td class="align-top">
+                <p class="desc">N° atención:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    {{ $document->quotation->num_orden}}
+                </p>
+            </td>
+        </tr>
+        @endif
+        <tr>
+            <td class="align-top">
+                <p class="desc">Zona:</p>
+            </td>
+            <td>
+                <p class="desc">
+                    {{\App\Models\Tenant\Person::getZone($document->customer_id)}}
+                </p>
+            </td>
+        </tr>
+    @else
         <tr>
             <td class="align-top">
                 <p class="desc">Vendedor:</p>
@@ -384,6 +423,7 @@
                 </p>
             </td>
         </tr>
+        @endif
         @if ($hotel_rent)
             @php
                 $hotel_rent_items = $hotel_rent->items;

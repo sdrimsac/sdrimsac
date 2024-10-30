@@ -122,7 +122,9 @@ class FoodCollection extends ResourceCollection
                     $price = $categoria_madera->precio;
                 }
             }
+            $weight = $item->weight;
             return [
+                'weight' => $weight,
                 'categoria_madera_item' => $categoria_madera_item,
                 'id'                => $row->id,
                 'description'  => $row->description,
