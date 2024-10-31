@@ -26,7 +26,6 @@ class HistorialItemController extends Controller
 
     /* public function record($historialId)
     {
-        dump($$historialId->all());
         $record = HistorialItem::where('historial_id', $historialId)->get();
         $record->load('items');
 

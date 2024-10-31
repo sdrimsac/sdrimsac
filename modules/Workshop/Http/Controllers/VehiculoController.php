@@ -68,14 +68,12 @@ class VehiculoController extends Controller
     public function record($id)
     {
         $record = new VehiculoResource(Vehiculo::with('historiales')->findOrFail($id));
-        /* dump($record); */
 
         return $record;
     }
 
     public function store(VehiculoRequest $request)
     {
-        dump($request->all());
         $id = $request->input('id');
         $plate = $request->input('placa');
 

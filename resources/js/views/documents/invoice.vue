@@ -665,73 +665,75 @@
                                     </div>
                                 </div>
                                 <template v-if="form.detraction">
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Método pago - Detracción<span
-                                                class="text-danger"
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >Método pago - Detracción<span
+                                                    class="text-danger"
+                                                >
+                                                    *</span
+                                                ></label
                                             >
-                                                *</span
-                                            ></label
-                                        >
-                                        <el-select
-                                            v-model="
-                                                form.detraction
-                                                    .payment_method_id
-                                            "
-                                            filterable
-                                        >
-                                            <el-option
-                                                v-for="option in cat_payment_method_types"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="`${option.description}`"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Cuenta bancaria<span
-                                                class="text-danger"
+                                            <el-select
+                                                v-model="
+                                                    form.detraction
+                                                        .payment_method_id
+                                                "
+                                                filterable
                                             >
-                                                *</span
-                                            ></label
-                                        >
-                                        <el-input
-                                            v-model="
-                                                form.detraction.bank_account
-                                            "
-                                            readonly
-                                        >
-                                            <i
-                                                slot="prefix"
-                                                class="el-icon-edit-outline"
-                                            ></i
-                                        ></el-input>
+                                                <el-option
+                                                    v-for="option in cat_payment_method_types"
+                                                    :key="option.id"
+                                                    :value="option.id"
+                                                    :label="
+                                                        `${option.description}`
+                                                    "
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-2" >
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >T. Detracción<span
-                                                class="text-danger"
+                                    <div class="col-lg-2">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >Cuenta bancaria<span
+                                                    class="text-danger"
+                                                >
+                                                    *</span
+                                                ></label
                                             >
-                                                *</span
-                                            ></label
-                                        >
-                                        <el-input
-                                            v-model="form.detraction.amount"
-                                            readonly
-                                        >
-                                            <i
-                                                slot="prefix"
-                                                class="el-icon-edit-outline"
-                                            ></i
-                                        ></el-input>
+                                            <el-input
+                                                v-model="
+                                                    form.detraction.bank_account
+                                                "
+                                                readonly
+                                            >
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i
+                                            ></el-input>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-lg-2">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >T. Detracción<span
+                                                    class="text-danger"
+                                                >
+                                                    *</span
+                                                ></label
+                                            >
+                                            <el-input
+                                                v-model="form.detraction.amount"
+                                                readonly
+                                            >
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i
+                                            ></el-input>
+                                        </div>
+                                    </div>
                                 </template>
                             </div>
 
@@ -1463,27 +1465,75 @@
                                                         row.affectation_igv_type
                                                             .description
                                                     }}</small>
-                                                    <template v-if="row.item.lots && row.item.lots.length > 0">
-                                                           
+                                                    <template
+                                                        v-if="
+                                                            row.item.lots &&
+                                                                row.item.lots
+                                                                    .length > 0
+                                                        "
+                                                    >
                                                         <br />
-                                                        <small class="text-primary" v-for="(lot, index) in row.item.lots" :key="index">
-                                                            <b>Serie:</b> {{ lot.series }} 
+                                                        <small
+                                                            class="text-primary"
+                                                            v-for="(lot,
+                                                            index) in row.item
+                                                                .lots"
+                                                            :key="index"
+                                                        >
+                                                            <b>Serie:</b>
+                                                            {{ lot.series }}
                                                         </small>
                                                     </template>
 
-                                                    <template v-if="row.item.lots_group && row.item.lots_group.length > 0">
+                                                    <template
+                                                        v-if="
+                                                            row.item
+                                                                .lots_group &&
+                                                                row.item
+                                                                    .lots_group
+                                                                    .length > 0
+                                                        "
+                                                    >
                                                         <br />
-                                                        <small class="text-primary" v-for="(lot, index) in row.item.lots_group" :key="index">
-                                                            <b>Lote:</b> {{ lot.code }}
+                                                        <small
+                                                            class="text-primary"
+                                                            v-for="(lot,
+                                                            index) in row.item
+                                                                .lots_group"
+                                                            :key="index"
+                                                        >
+                                                            <b>Lote:</b>
+                                                            {{ lot.code }}
                                                         </small>
                                                     </template>
 
-                                                    <template v-if="row.item.color_size &&  row.item.color_size.length > 0">
+                                                    <template
+                                                        v-if="
+                                                            row.item
+                                                                .color_size &&
+                                                                row.item
+                                                                    .color_size
+                                                                    .length > 0
+                                                        "
+                                                    >
                                                         <br />
-                                                        <small class="text-primary" v-for="(color, index) in row.item.color_size.filter(i=>i.selectedQuantity)" :key="index">
-                                                             Talla: {{color.size}}-{{ color.color }} 
-                                                             <b>Cant:</b>
-                                                              {{ color.selectedQuantity }}
+                                                        <small
+                                                            class="text-primary"
+                                                            v-for="(color,
+                                                            index) in row.item.color_size.filter(
+                                                                i =>
+                                                                    i.selectedQuantity
+                                                            )"
+                                                            :key="index"
+                                                        >
+                                                            Talla:
+                                                            {{ color.size }}-{{
+                                                                color.color
+                                                            }}
+                                                            <b>Cant:</b>
+                                                            {{
+                                                                color.selectedQuantity
+                                                            }}
                                                         </small>
                                                     </template>
                                                 </td>
@@ -1630,7 +1680,12 @@
                                             ></el-input>
                                         </td>
                                     </tr>
-                                    <tr v-if="form.detraction && form.detraction.amount > 0">
+                                    <tr
+                                        v-if="
+                                            form.detraction &&
+                                                form.detraction.amount > 0
+                                        "
+                                    >
                                         <td
                                             class="text-right"
                                             style="padding-right: 20px;"
@@ -1752,7 +1807,6 @@
                                         >
                                             IGV
                                         </td>
-                                        <td>:</td>
                                         <td
                                             class="text-end"
                                             style="padding-left: 20px;"
@@ -3184,7 +3238,7 @@ export default {
             this.form.guides.splice(index, 1);
         },
         addRow(row) {
-            console.log("total agregado: ",JSON.stringify(row.total));
+            console.log("total agregado: ", JSON.stringify(row.total));
             if (this.recordItem) {
                 //this.form.items.$set(this.recordItem.indexi, row)
                 this.form.items[this.recordItem.indexi] = row;
@@ -3307,6 +3361,14 @@ export default {
                 this.form.total_payment =
                     Math.round(parseFloat(this.form.total) * 10) / 10;
             }
+
+            if (this.form.boxes.length == 1) {
+                this.form.boxes[0].amount = this.form.total_payment;
+            }
+            console.log(
+                "🚀 ~ calculateTotal ~ this.form.boxes.length:",
+                this.form.boxes
+            );
         },
         setTotalDefaultPayment() {
             if (this.form.payments && this.form.payments.length > 0) {
@@ -3475,7 +3537,6 @@ export default {
                             this.user_default = this.form.user_id;
                             this.$eventHub.$emit("reloadDataItems", null);
                             this.resetForm();
-                            this.clickAddBoxes(true);
                             if (this.show_restriction == 1) {
                                 if (this.form_control.stock_control == false) {
                                     this.form_control.stock_control = true;

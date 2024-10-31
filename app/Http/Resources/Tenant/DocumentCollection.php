@@ -120,9 +120,9 @@ class DocumentCollection extends ResourceCollection
                 $paid = true;
                 $row->save();
             }
-            if($row->total_canceled){
-                $paid = true;
-            }
+            // if($row->total_canceled){
+            //     $paid = true;
+            // }
 
             $boxes = $boxes->get();
 

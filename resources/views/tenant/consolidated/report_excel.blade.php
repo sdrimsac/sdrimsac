@@ -93,7 +93,6 @@
                             }
                         @endphp
                         @foreach ($value as $idx2 => $value2)
-                        @dump($idx2)
                             @php
                             @endphp
                             @foreach ($value2->items as $item)

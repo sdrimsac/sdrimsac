@@ -2830,6 +2830,10 @@ export default {
             ).toFixed(2);
             this.form.total_payment =
                 Math.round(parseFloat(this.form.total) * 10) / 10;
+
+            if(this.form.payments.length == 1){
+                this.form.payments[0].payment = this.form.total;
+            }
         },
         setTotalDefaultPayment() {
             if (this.form.payments.length > 0) {
