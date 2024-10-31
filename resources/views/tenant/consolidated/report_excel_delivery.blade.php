@@ -104,7 +104,7 @@
                             @php
                                 $total += $value->total;
                                 $total_quantity += $value->total_quantity;
-                                $total_weight += $value->total_weight;
+                                $total_weight += $value->total_weight * $value->total_quantity;
                             @endphp
 
                             <tr>
@@ -124,7 +124,7 @@
                                 </td>
 
                                 <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $value->total_weight }}
+                                    {{ $value->total_weight * $value->total_quantity }}
                                 </td>
 
 

@@ -34,7 +34,7 @@ class DocumentSaludProccess implements ShouldQueue
     protected $store_path;
     protected $user_id;
 
-
+    public $timeout = 600;
     public function __construct($website_id, $store_path)
     {
         $this->website_id = $website_id;

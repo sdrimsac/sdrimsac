@@ -93,8 +93,8 @@
                             }
                         @endphp
                         @foreach ($value as $idx2 => $value2)
+                        @dump($idx2)
                             @php
-                                $count_client_items = count($value2->items);
                             @endphp
                             @foreach ($value2->items as $item)
                                 @php
@@ -129,7 +129,7 @@
                                         {{ $item->total }}
                                     </td>
                                     <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                        {{ $item->unit_type_description }}
+                                        {{ $unitTypeDescription }}
                                     </td>
                                     <td valign="middle" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
                                         @php
