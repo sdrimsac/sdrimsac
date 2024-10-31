@@ -95,9 +95,7 @@
                             </div>
                             <div
                                 class="col-12 col-lg-6 col-xl-3"
-                                v-if="
-                                    configuration.origin
-                                "
+                                v-if=" configuration.origin"
                             >
                                 <div
                                     class="form-group"
