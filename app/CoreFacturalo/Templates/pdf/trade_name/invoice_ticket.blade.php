@@ -753,7 +753,7 @@
                                 {!! $row->item->description_internet !!}
                             @else
                              @if(isset($row->item->origin))
-                                {{$row->item->origin}}
+                                {{$row->item->origin}} <br>
                              @endif 
                                 {!! $row->item->description !!}
                             @endif

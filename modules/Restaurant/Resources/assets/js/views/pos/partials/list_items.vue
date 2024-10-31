@@ -12,6 +12,7 @@
                 <thead>
                     <tr>
                         <th>Descripción</th>
+                        <th>Ubicacion</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Total</th>
@@ -21,6 +22,9 @@
                     <tr v-for="(item, index) in items" :key="index">
                         <td>
                             {{ item.description }}
+                        </td>
+                        <td>
+                            {{ item.location}}
                         </td>
                         <td>
                             {{ item.sale_unit_price }}

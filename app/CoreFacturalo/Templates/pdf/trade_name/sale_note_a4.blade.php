@@ -235,7 +235,9 @@
                             @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
-                            {{ $row->item->origin}}
+                              @if (isset($row->item->origin))
+                              {{ $row->item->origin }} -
+                              @endif
                                 {{ $row->item->description}}
                             @endif
                         @endif

@@ -411,7 +411,7 @@
 
                                     @else
                                         @if (isset($row->item->origin))
-                                            {{$row->item->origin}}
+                                            {{$row->item->origin}} -
                                         @endif
                                         {{ $row->item->description }}
                                     @endif

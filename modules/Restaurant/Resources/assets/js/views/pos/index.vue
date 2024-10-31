@@ -247,26 +247,6 @@
                                                 Barcode
                                             </h2>
                                         </el-checkbox>
-                                        <!-- <el-checkbox
-                                            @change="saveInLocalStorageBrand"
-                                        >
-                                            <h2
-                                                class="font-weight-bold custom-text-size"
-                                            >
-                                                Marca
-                                            </h2>
-                                        </el-checkbox> -->
-                                        <el-checkbox
-                                            v-if="configuration.model"
-                                            v-model="model"
-                                            @change="saveInLocalStorageModel"
-                                        >
-                                            <h2
-                                                class="font-weight-bold custom-text-size"
-                                            >
-                                                Modelo
-                                            </h2>
-                                        </el-checkbox>
                                         <el-checkbox
                                             v-if="configuration.quality"
                                             v-model="quality"
@@ -276,6 +256,17 @@
                                                 class="font-weight-bold custom-text-size"
                                             >
                                                 Calidad
+                                            </h2>
+                                        </el-checkbox>
+                                        <el-checkbox
+                                            v-if="configuration.model"
+                                            v-model="model"
+                                            @change="saveInLocalStorageModel"
+                                        >
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
+                                                Modelo
                                             </h2>
                                         </el-checkbox>
                                         <!-- <el-checkbox
@@ -2617,9 +2608,6 @@ export default {
         saveInLocalStorageModel(model) {
             localStorage.setItem("model", model ? "1" : "0");
         },
-        /* saveInLocalStorageBrand(brand) {
-            localStorage.setItem("brand", brand ? "1" : "0");
-        }, */
         saveInLocalStorageQuality(quality) {
             localStorage.setItem("quality", quality ? "1" : "0");
         },
@@ -5318,8 +5306,6 @@ export default {
             });
         },
         async getFoods(query = "") {
-            console.log('Valor de quality:', this.quality);
-            console.log('Valor de model:', this.model);
             try {
                 this.loadingItems = true;
                 const response = await this.$http.get(
@@ -5712,25 +5698,14 @@ export default {
                 if (data == undefined) {
                     let form = {
                         value: inputitem,
-                        category: this.category
-                    };
-                    await this.getFoods(this.getQueryParameters(form));
-                } else {
-                    let form = {
-                        value: data,
-                        category: this.category
-                    };
-                    await this.getFoods(this.getQueryParameters(form));
-                }
-                if (data == undefined){
-                    let form = {
-                        value: inputitem,
+                        category: this.category,
                         brand: this.brand
                     };
                     await this.getFoods(this.getQueryParameters(form));
                 } else {
                     let form = {
                         value: data,
+                        category: this.category,
                         brand: this.brand
                     };
                     await this.getFoods(this.getQueryParameters(form));
