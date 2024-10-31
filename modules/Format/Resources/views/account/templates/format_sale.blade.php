@@ -200,7 +200,7 @@
             if (strpos($document_type_id, '07') !== false) {
                 $total_resta += $total;
             } else {
-                if (strpos($state_type_id, '11') === false && strpos($state_type_id, '13') === false) {
+                if (strpos($state_type_id, '11') === false && strpos($state_type_id, '09') === false) {
                     $total_suma += $total;
                 }
             }

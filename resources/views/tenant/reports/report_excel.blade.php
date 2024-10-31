@@ -108,13 +108,13 @@
 
 
 
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_exonerated}} </td>
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_unaffected}}</td>
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_free}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_exonerated}} </td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_unaffected}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_free}}</td>
 
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_taxed}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_taxed}}</td>
 
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_igv}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_igv}}</td>
                 @php
                 $remain = "";
                 if($value->payment_condition_id == "02"){
@@ -125,7 +125,7 @@
                 @endphp
                 <td class="celda" style=" border: 1px solid black;">{{$remain}}</td>
                 <td class="celda" style=" border: 1px solid black;">{{ $value->payment_condition->name }}</td>
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total}}</td>
                 @php
 
                 $serie_affec = '';
