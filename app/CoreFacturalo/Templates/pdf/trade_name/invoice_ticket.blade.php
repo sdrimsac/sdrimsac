@@ -752,6 +752,7 @@
                             @if (isset($row->item->description_internet))
                                 {!! $row->item->description_internet !!}
                             @else
+                                 {{$row->item->origin}} <br/>
                                 {!! $row->item->description !!}
                             @endif
                             {{-- @if (isset($row->item->categoriaMadera))

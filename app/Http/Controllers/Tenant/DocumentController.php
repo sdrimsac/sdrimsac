@@ -857,6 +857,7 @@ class DocumentController extends Controller
                     }),
                     'lots_enabled' => (bool) $row->lots_enabled,
                     'series_enabled' => (bool) $row->series_enabled,
+                    'origin'=>$row->origin,
 
                 ];
             });

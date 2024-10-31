@@ -112,7 +112,7 @@
               <th class="text-white text-center">Unidad</th>
               <th class="text-white text-center">Nombre</th>
               <th class="text-white">Descripción</th>
-              <!-- <th class="text-white">Cód. SUNAT</th> -->
+              <th class="text-white">Ubicacion</th>
               <th class="text-left text-white">Stock</th>
               <th class="text-end text-white">P.Unitario (Venta)</th>
               <th v-if="typeUser != 'seller'" class="text-end text-white">P.Unitario (Compra)</th>
@@ -196,9 +196,9 @@
               <td>{{ index }}</td>
               <td>{{ row.internal_id }}</td>
               <td>{{ row.unit_type_id }}</td>
-              <td>{{ row.description }}</td>
+              <td class="text-center">{{ row.description }}</td>
               <td>{{ row.second_name }}</td>
-              <!-- <td>{{ row.item_code }}</td> -->
+              <td>{{ row.location }}</td>
               <td>
                 <div v-if="config.product_only_location == true">{{ row.stock }}</div>
                 <div v-else>

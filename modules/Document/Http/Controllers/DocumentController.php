@@ -268,6 +268,7 @@ class DocumentController extends Controller
 
                 return [
                     'id' => $row->id,
+                    'origin'=>$row->origin,
                     'full_description' => $detail['full_description'],
                     'brand' => $detail['brand'],
                     'category' => $detail['category'],

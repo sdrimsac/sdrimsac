@@ -270,9 +270,12 @@ class DocumentInput
                     'toWarehouse' => Functions::valueKeyInArray($row, 'toWarehouse', 0),
                     'item_id' => $item->id,
                     'item' => [
+                        
+                        /* 'origin' =>   Functions::valueKeyInArray($inputs, 'origin', null), */
                         'college' =>   Functions::valueKeyInArray($inputs, 'college', false),
                         'description_internet' => (isset($row['item']['descriptionInternet'])) ? $row['item']['descriptionInternet'] : null,
                         'has_unit_type'  => $type_desc,
+                        'origin' => $item->origin,
                         'description' => $desc == null ? $item->description : $desc,
                         'item_type_id' => $item->item_type_id,
                         'second_name' => $item->second_name,

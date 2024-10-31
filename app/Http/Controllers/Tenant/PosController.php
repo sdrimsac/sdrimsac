@@ -46,6 +46,7 @@ use App\Models\Tenant\CategoriaMadera;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaGrosor;
 use App\Models\Tenant\ItemMedidaAncho;
+use Modules\Item\Models\Brand;
 
 class PosController extends Controller
 {
@@ -251,7 +252,7 @@ class PosController extends Controller
         return compact('date_last');
     }
     public function tables()
-    { 
+    {   $brands = Brand::all();
         $categoria_madera = CategoriaMadera::all();
         $medida_alto = ItemMedidaAlto::all();
         $medida_grosor = ItemMedidaGrosor:: all();
@@ -350,6 +351,7 @@ class PosController extends Controller
         $promotions_document = PromotionDocument::where('active', true)->get();
 
         return compact(
+            'brands',
             'promotions_document',
             'tablesLeave',
             'tablesClean',

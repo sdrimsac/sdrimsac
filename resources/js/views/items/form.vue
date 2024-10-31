@@ -94,6 +94,43 @@
                                 </div>
                             </div>
                             <div
+                                class="col-12 col-lg-6 col-xl-3"
+                                v-if="
+                                    configuration.origin
+                                "
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.origin }"
+                                >
+                                    <label class="control-label">
+                                        Código Origen
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Código Barra de la empresa para el control de sus productos"
+                                            placement="top-start"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        v-model="form.origin"
+                                        dusk="barcode"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i>
+                                    </el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.origin"
+                                        v-text="errors.origin[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div
                                 :class="
                                     `col-12 col-lg-6 ${
                                         configuration.show_second_name_external_code
@@ -663,6 +700,50 @@
                                     </label>
                                     <el-input
                                         v-model="form.delivery_cost"
+                                    ></el-input>
+                                </div>
+                            </div>
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                
+                            >
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <!-- <i class="fa fa-motorcycle fa-lg"></i> -->
+                                        Modelo
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="aqui va el modelo del producto"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        v-model="form.model"
+                                    ></el-input>
+                                </div>
+                            </div>
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                v-if="form.unit_type_id != 'ZZ'"
+                            >
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <!-- <i class="fa fa-motorcycle fa-lg"></i> -->
+                                        Calidad Producto
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="aqui se agrega la calidad de producto"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        v-model="form.quality"
                                     ></el-input>
                                 </div>
                             </div>
@@ -2357,7 +2438,10 @@ export default {
                 lots: [],
                 attributes: [],
                 series_enabled: false,
-                area_id: 2
+                area_id: 2,
+                model: null,
+                quality: null,
+                origin: null
             };
             this.show_has_igv = true;
             this.enabled_percentage_of_profit = false;

@@ -914,6 +914,8 @@ export default {
     "localOrden",
     "type_code",
     "barcode",
+    "model",
+    "quality",
     "searchSeries",
     "medida_ancho",
     "medida_alto",
@@ -1142,6 +1144,12 @@ export default {
         this.addFood(0);
       }
       if (this.searchSeries && this.listFoods.length == 1) {
+        this.addFood(0, null, true);
+      }
+      if (this.model && this.listFoods.length == 1){
+        this.addFood(0, null, true);
+      }
+      if(this.quatity && this.listFoods.length == 1) {
         this.addFood(0, null, true);
       }
     },

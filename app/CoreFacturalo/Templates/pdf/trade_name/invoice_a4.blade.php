@@ -367,19 +367,6 @@
                 </tr>
             @endif
         </table>
-
-        {{-- <table class="full-width mt-3"> --}}
-        {{-- <tr> --}}
-        {{-- <td width="25%">Documento Afectado:</td> --}}
-        {{-- <td width="20%">{{ $document_base->affected_document->series }}-{{ $document_base->affected_document->number }}</td> --}}
-        {{-- <td width="15%">Tipo de nota:</td> --}}
-        {{-- <td width="40%">{{ ($document_base->note_type === 'credit')?$document_base->note_credit_type->description:$document_base->note_debit_type->description}}</td> --}}
-        {{-- </tr> --}}
-        {{-- <tr> --}}
-        {{-- <td class="align-top">Descripción:</td> --}}
-        {{-- <td class="text-left" colspan="3">{{ $document_base->note_description }}</td> --}}
-        {{-- </tr> --}}
-        {{-- </table> --}}
         <div class="">
             <table border="0" class="full-width bordes_datos_clientes">
                 <thead class="">
@@ -390,12 +377,6 @@
                             height="20px">UNIDAD</th>
                         <th class="border-top-bottom text-left py-2 bordes" height="20px" height="20px">DESCRIPCIÓN
                         </th>
-                        <!--
-
-        <th class="border-top-bottom text-center py-2 bordes" width="8%"  height="20px">LOTE</th>
-        <th class="border-top-bottom text-center py-2 bordes" width="8%"  height="20px">SERIE</th>
-         -->
-
                         <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">P.UNIT
                         </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="8%" height="20px">DTO.
@@ -422,14 +403,16 @@
                                 {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                             </td>
                             <td class="text-left align-top bordes" height="20px">
-
-
                                 @if (isset($row->name_product_pdf))
                                     {{ $row->name_product_pdf }}
                                 @else
                                     @if (isset($row->item->description_internet))
                                         {{ $row->item->description_internet }}
+
                                     @else
+                                        @if (isset($row->item->origin))
+                                            {{$row->item->origin}}
+                                        @endif
                                         {{ $row->item->description }}
                                     @endif
                                     @if (isset($row->item->has_unit_type))
@@ -480,12 +463,6 @@
                                             {{ $dtos->description }}</span>
                                     @endforeach
                                 @endif
-
-                                {{-- @if ($row->item->is_set == 1)
-                                    <br>
-                                    @inject('itemSet', 'App\Services\ItemSetService')
-                                    {{ join('-', $itemSet->getItemsSet($row->item_id)) }}
-                                @endif --}}
                             </td>
                             <!--
             <td class="text-center align-top bordes"  height="20px">
@@ -774,11 +751,6 @@
                 </td>
             </tr> --}}
             </table>
-
-
-
-
-
             <table class="full-width">
                 @if ($document->payment_condition_id == '01')
                     <tr>

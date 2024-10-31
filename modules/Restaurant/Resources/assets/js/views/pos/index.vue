@@ -248,6 +248,37 @@
                                             </h2>
                                         </el-checkbox>
                                         <!-- <el-checkbox
+                                            @change="saveInLocalStorageBrand"
+                                        >
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
+                                                Marca
+                                            </h2>
+                                        </el-checkbox> -->
+                                        <el-checkbox
+                                            v-if="configuration.model"
+                                            v-model="model"
+                                            @change="saveInLocalStorageModel"
+                                        >
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
+                                                Modelo
+                                            </h2>
+                                        </el-checkbox>
+                                        <el-checkbox
+                                            v-if="configuration.quality"
+                                            v-model="quality"
+                                            @change="saveInLocalStorageQuality"
+                                        >
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
+                                                Calidad
+                                            </h2>
+                                        </el-checkbox>
+                                        <!-- <el-checkbox
                                             v-model="type_code"
                                             @change="saveInLocalStorage"
                                         >
@@ -257,7 +288,7 @@
                                            
                     </el-checkbox>-->
                                     </div>
-                                    <div class="col-12 col-lg-4 p-2">
+                                    <div class="col-12 col-lg-3 p-2">
                                         <template>
                                             <h2
                                                 class="font-weight-bold custom-text-size"
@@ -280,7 +311,7 @@
                                             </el-select>
                                         </template>
                                     </div>
-                                    <div class="col-12 col-lg-6 p-2">
+                                    <div class="col-12 col-lg-4 p-2">
                                         <h2
                                             class="font-weight-bold custom-text-size"
                                         >
@@ -321,6 +352,29 @@
                                             </el-input>
                                         </template>
                                     </div>
+                                    <div class="col-12 col-lg-3 p-2" v-if="configuration.brand">
+                                        <template>
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
+                                                Marca
+                                            </h2>
+                                            <el-select
+                                                v-model="brand"
+                                                filterable
+                                                clearable
+                                                placeholder="Selecionar aqui...."
+                                                @change="search_items(null)"
+                                            >
+                                                <el-option
+                                                    v-for="item in brands"
+                                                    :key="item.id"
+                                                    :label="item.name"
+                                                    :value="item.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </template>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -338,6 +392,8 @@
                                     :barcode.sync="barcode"
                                     :searchSeries.sync="searchSeries"
                                     :searchSecondName.sync="searchSecondName"
+                                    :model.sync="model"
+                                    :quality.sync="quality"
                                     :type_code.sync="type_code"
                                     :worker="worker"
                                     @insertOrden="insertOrden"
@@ -1871,7 +1927,9 @@ export default {
 
     data() {
         return {
-          showMonthSales: false,
+            quality: false,
+            model: false,
+            showMonthSales: false,
             showQuotationListDialog: false,
             customersSearch: [],
             loading_search: false,
@@ -1947,6 +2005,7 @@ export default {
             blockCart: false,
             pagination: {},
             category: null,
+            brand: null,
             allSelected: false,
             selected: [],
             allFoods: [],
@@ -1964,6 +2023,7 @@ export default {
             OrdenLength: 0,
             selecttables: 0,
             categories: [],
+            brands: [],
             ordenId: null,
             name_product_pdf: null,
             ordens: [],
@@ -2056,6 +2116,9 @@ export default {
         let barcode = localStorage.getItem("barcode");
         let searchSeries = localStorage.getItem("searchSeries");
         let searchSecondName = localStorage.getItem("searchSecondName");
+        let model = localStorage.getItem("model");
+        let quality = localStorage.getItem("quality")
+        /* let brand = localStorage.getItem("brand") */
         if (barcode) {
             this.barcode = barcode == "1" ? true : false;
         }
@@ -2068,6 +2131,15 @@ export default {
         if (searchSecondName) {
             this.searchSecondName = searchSecondName == "1" ? true : false;
         }
+        if (model) {
+            this.model = model == "1" ? true : false;
+        }
+        if (quality) {
+            this.quality = quality == "1" ? true : false;
+        }
+        /* if (brand){
+            this.brand = brand == "1" ? true : false;
+        } */
         // ;
         this.conf = this.establishments.conf ?? {};
         this.cashId = this.cash_id;
@@ -2542,6 +2614,15 @@ export default {
         saveInLocalStorage(type_code) {
             localStorage.setItem("type_code", type_code ? "1" : "0");
         },
+        saveInLocalStorageModel(model) {
+            localStorage.setItem("model", model ? "1" : "0");
+        },
+        /* saveInLocalStorageBrand(brand) {
+            localStorage.setItem("brand", brand ? "1" : "0");
+        }, */
+        saveInLocalStorageQuality(quality) {
+            localStorage.setItem("quality", quality ? "1" : "0");
+        },
         clickCommand(type) {
             let idxFood = this.listFoods.findIndex(
                 food => food.item.id == type.item_id
@@ -2719,6 +2800,9 @@ export default {
         changeCategory(category) {
             //change;
         },
+        /* changeBrand(brand){
+
+        }, */
 
         receiveData(data) {
             this.search_items(data);
@@ -4202,6 +4286,13 @@ export default {
                 this.$refs.list_foods.searchFoodCategories(id);
             }
         },
+        fiterBrands(id, mod = false) {
+            this.brand_selected = id;
+            if (this.$refs.list_foods) {
+                console.log("dfsgsdfdfdhgfhf");
+                this.$refs.list_foods.searchFoodBrands(id);
+            }
+        },
 
         initCurrencyType() {
             this.currency_type = _.find(this.currency_types, {
@@ -5218,12 +5309,17 @@ export default {
                 search_by_series: this.searchSeries,
                 customer_unit_type_id: this.customer_unit_type_id,
                 search_by_second_name: this.searchSecondName,
+                model: this.model,
+                quality: this.quality,
+                /* brand: this.brand, */
                 ...form
 
                 // limit: this.limit
             });
         },
         async getFoods(query = "") {
+            console.log('Valor de quality:', this.quality);
+            console.log('Valor de model:', this.model);
             try {
                 this.loadingItems = true;
                 const response = await this.$http.get(
@@ -5315,6 +5411,7 @@ export default {
                 }));
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
+                this.brands = response.data.brands;
                 this.areas = response.data.areas;
                 this.medida_alto = response.data.medida_alto;
                 this.medida_ancho = response.data.medida_ancho;
@@ -5357,6 +5454,7 @@ export default {
                     ? this.currency_types[0].id
                     : null;
                 this.renderCategories(response.data.categories);
+                this.renderBrands(response.data.brands);
                 // this.currency_type = _.find(this.currency_types, {'id': this.form.currency_type_id})
                 // this.changeCurrencyType();
                 // this.filterItems();
@@ -5391,6 +5489,16 @@ export default {
                     color: contex.getColor(index)
                 };
             });
+        },
+        renderBrands(source) {
+            const contex = this;
+            this.brands = source.map((obj, index) => {
+                return {
+                    id: obj.id,
+                    name: obj.name,
+                    color: contex.getColor(index)
+                }
+            })
         },
         async limpiarForm() {
             if (this.configuration.hotels) {
@@ -5598,7 +5706,8 @@ export default {
                         return f;
                     }
                 });
-            } else {
+            }
+            else {
                 let inputitem = this.input_item.toLowerCase();
                 if (data == undefined) {
                     let form = {
@@ -5610,6 +5719,19 @@ export default {
                     let form = {
                         value: data,
                         category: this.category
+                    };
+                    await this.getFoods(this.getQueryParameters(form));
+                }
+                if (data == undefined){
+                    let form = {
+                        value: inputitem,
+                        brand: this.brand
+                    };
+                    await this.getFoods(this.getQueryParameters(form));
+                } else {
+                    let form = {
+                        value: data,
+                        brand: this.brand
                     };
                     await this.getFoods(this.getQueryParameters(form));
                 }

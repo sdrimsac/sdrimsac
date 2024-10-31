@@ -37,11 +37,13 @@ class ItemsImport implements ToCollection
     {
         //try {
         $total = count($rows);
-
         $registered = 0;
         unset($rows[0]);
         foreach ($rows as $row) {
-
+            $origin = $row[47];
+            $quality = $row[46];
+            $model = $row[45];
+            $location = $row[44];
             $description = $row[0];
             $second_name = $row[1];
             $item_type_id = '01';
@@ -123,7 +125,6 @@ class ItemsImport implements ToCollection
 
                 $item = Item::where('internal_id', $internal_id)->first();
 
-
                 if ($item != null) {
                     $food = Food::where('item_id', $item->id)->first();
                     //dd($food);
@@ -135,6 +136,10 @@ class ItemsImport implements ToCollection
                     //dd($item,"aqui...");
                     $brand = Brand::updateOrCreate(['name' => $brand_name]);
                     $item = Item::create([
+                        'origin' => $origin,
+                        'quality' => $quality,
+                        'model' => $model,
+                        'location' => $location,
                         'max_quantity' => $max_quantity,
                         'max_quantity_description' => $max_quantity_description,
                         'description' => $description,
@@ -209,6 +214,7 @@ class ItemsImport implements ToCollection
                 } else {
 
                     $item->update([
+                        'location' => $location,
                         'max_quantity' => $max_quantity,
                         'max_quantity_description' => $max_quantity_description,
                         'description' => $description,
@@ -317,6 +323,7 @@ class ItemsImport implements ToCollection
                     }
                     CommercialTreatmentItem::where('item_id', $item->id)->delete();
                     foreach ($commercial_treatments as $commercial_treatment) {
+                        dump($commercial_treatment);
                         $this->insertCommercialTreatment($item->id, $commercial_treatment);
                     }
                     $registered += 1;

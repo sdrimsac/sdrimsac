@@ -1690,7 +1690,7 @@
                                   ></el-switch>
                                 </div>
                               </div>
-                                <div class="col-md-2 mt-4">
+                              <div class="col-md-2 mt-4">
                                 <div class="form-group">
                                   <label class="control-label w-100">
                                     <i class="el-icon-s-grid icon-tab"></i>
@@ -1703,6 +1703,54 @@
                                     :active-color="'#28a745'"
                                     :inactive-color="'#6c757d'"
                                     @change="submit('Dividir pagos', form.split_payments_pos, 'split_payments_pos', 'lockIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Buscar por Calidad Producto en caja
+                                  </label>
+                                  <el-switch
+                                    v-model="form.quality"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Calidad Producto', form.quality, 'quality', 'lockIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Buscar por Modelo de producto en caja
+                                  </label>
+                                  <el-switch
+                                    v-model="form.model"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Modelo del producto', form.model, 'model', 'lockIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Buscar por Marca de producto en caja
+                                  </label>
+                                  <el-switch
+                                    v-model="form.brand"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('buscar o filtrar por marca', form.brand, 'brand', 'lockIcon')"
                                   ></el-switch>
                                 </div>
                               </div>
@@ -2305,6 +2353,21 @@
                                     :active-color="'#28a745'"
                                     :inactive-color="'#6c757d'"
                                     @change="submit('Buscar por segundo nombre', form.search_by_second_name, 'search_by_second_name', 'idCardIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="fas fa-id-card fa-lg"></i> Codigo Orginal para Producto
+                                  </label>
+                                  <el-switch
+                                    v-model="form.origin"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Codigo Original', form.origin, 'origin', 'idCardIcon')"
                                   ></el-switch>
                                 </div>
                               </div>
