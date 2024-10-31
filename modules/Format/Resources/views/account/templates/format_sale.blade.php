@@ -195,9 +195,10 @@
 
             foreach ($records as $row) {
                 $document_type_id = $row['document_type_id'];
+                $state_type_id = $row['state_type_id'];
                 $total = $row['total'];
 
-                if (strpos($document_type_id, '07') !== false || strpos($document_type_id, '09') !== false || strpos($document_type_id, '11') !== false) {
+                if (strpos($document_type_id, '07') !== false || strpos($state_type_id, '09') !== false || strpos($state_type_id, '11') !== false) {
                     $total_resta += $total; 
                 } else {
                     $total_suma += $total; 
