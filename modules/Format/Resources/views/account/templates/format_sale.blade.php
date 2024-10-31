@@ -69,7 +69,7 @@
         <td class="border-left font-weight">
             TIPO VENTA
         </td>
-        <td colspan="4" class="border-left font-weight" >
+        <td colspan="4" class="border-left font-weight">
             REFERENCIA DEL COMPROBANTE O<br />
             DOC. ORIGINAL QUE SE MODIFICA
         </td>
@@ -78,16 +78,16 @@
         <td class="border-left"></td>
 
         <td class="border-left font-weight"></td>
-        <td class="border-left font-weight" >TIPO</td>
-        <td class="border-left font-weight" >SERIE</td>
-        <td class="border-left font-weight" >NUMERO</td>
-        <td class="border-left font-weight" >TIPO</td>
-        <td class="border-left font-weight" >R.U.C.</td>
-        <td class="border-left font-weight" >APELLIDOS Y NOMBRES</td>
+        <td class="border-left font-weight">TIPO</td>
+        <td class="border-left font-weight">SERIE</td>
+        <td class="border-left font-weight">NUMERO</td>
+        <td class="border-left font-weight">TIPO</td>
+        <td class="border-left font-weight">R.U.C.</td>
+        <td class="border-left font-weight">APELLIDOS Y NOMBRES</td>
         <td class="border-left font-weight"></td>
         <td class="border-left font-weight"></td>
-        <td class="border-left font-weight" >EXONERADA</td>
-        <td class="border-left font-weight" >INAFECTA</td>
+        <td class="border-left font-weight">EXONERADA</td>
+        <td class="border-left font-weight">INAFECTA</td>
         <td class="border-left font-weight"></td>
         <td class="border-left font-weight"></td>
         <td class="border-left font-weight"></td>
@@ -96,47 +96,46 @@
 
         <td class="border-left"></td>
         <td class="border-left"></td>
-        <td class="border-left" >FECHA</td>
-        <td class="border-left" >TIPO</td>
-        <td class="border-left" >SERIE</td>
-        <td class="border-left" >Nro.COMP.</td>
+        <td class="border-left">FECHA</td>
+        <td class="border-left">TIPO</td>
+        <td class="border-left">SERIE</td>
+        <td class="border-left">Nro.COMP.</td>
     </tr>
     @foreach ($records as $row)
-        
         <tr>
             <td class="border-left">{{ $loop->iteration }}</td>
             <td class="border-left">
                 {{ \Carbon\Carbon::parse($row['date_of_issue'])->format('d/m/Y') }}</td>
 
-            <td class="border-left" >{{ $row['document_type_id'] }}</td>
-            <td class="border-left" >{{ $row['series'] }}</td>
-            <td class="border-left" >{{ $row['number'] }}</td>
-            <td class="border-left" >{{ $row['customer_identity_document_type_id'] }}
+            <td class="border-left">{{ $row['document_type_id'] }}</td>
+            <td class="border-left">{{ $row['series'] }}</td>
+            <td class="border-left">{{ $row['number'] }}</td>
+            <td class="border-left">{{ $row['customer_identity_document_type_id'] }}
             </td>
-            <td class="border-left" >{{ $row['customer_number'] }}</td>
-            <td class="border-left" >{{ $row['customer_name'] }}</td>
+            <td class="border-left">{{ $row['customer_number'] }}</td>
+            <td class="border-left">{{ $row['customer_name'] }}</td>
 
-            <td class="border-left" >
+            <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_exportation'] }}
             </td>
-            <td >
+            <td>
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_taxed'] }}
             </td>
             <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_exonerated'] }}
             </td>
-            <td class="border-left" >
+            <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_unaffected'] }}
             </td>
             <td class="border-left">
                 {{ $row['total_discount'] }}
 
             </td>
-            <td class="border-left" >
+            <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_plastic_bag_taxes'] }}
             </td>
             <td class="border-left"></td>
-            <td class="border-left" >
+            <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_igv'] }}
             </td>
 
@@ -190,33 +189,38 @@
         </tr>
     @endforeach
     @php
-            $total_suma = 0;
-            $total_resta = 0;
+        $total_suma = 0;
+        $total_resta = 0;
 
-            foreach ($records as $row) {
-                $document_type_id = $row['document_type_id'];
-                $state_type_id = $row['state_type_id'];
-                $total = $row['total'];
+        foreach ($records as $row) {
+            $document_type_id = $row['document_type_id'];
+            $state_type_id = $row['state_type_id'];
+            $total = $row['total'];
 
-                if (strpos($document_type_id, '07') !== false || strpos($state_type_id, '09') !== false || strpos($state_type_id, '11') !== false) {
-                    $total_resta += $total; 
-                } else {
-                    $total_suma += $total; 
+            if (strpos($document_type_id, '07') !== false) {
+                $total_resta += $total;
+            } else {
+                if (strpos($state_type_id, '11') === false && strpos($state_type_id, '13') === false) {
+                    $total_suma += $total;
                 }
             }
+        }
 
-            $total_final = $total_suma - $total_resta;
+        $total_final = $total_suma - $total_resta;
     @endphp
     <tr>
-        <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total Documentos Emitidos:</td>
+        <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total
+            Documentos Emitidos:</td>
         <td class="border-left" style="border: 2px solid black;">{{ number_format($total_suma, 2) }}</td>
     </tr>
     <tr>
-        <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total Documentos Nota De Credito:</td>
+        <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total
+            Documentos Nota De Credito:</td>
         <td class="border-left" style="border: 2px solid black;">{{ number_format($total_resta, 2) }}</td>
     </tr>
     <tr>
-        <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total a Declarar:</td>
+        <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total a
+            Declarar:</td>
         <td class="border-left" style="border: 2px solid black;">{{ number_format($total_final, 2) }}</td>
     </tr>
 </table>
