@@ -100,22 +100,22 @@ class DocumentCollection extends ResourceCollection
             $is_credit = $row->payment_condition_id == "02";
             $paid = false;
             $remain = 0;
-            if($is_credit){
+            if ($is_credit) {
                 $sum = $boxes->sum('amount');
-                if($sum < $row->total){
+                if ($sum < $row->total) {
                     $remain = $row->total - $sum;
                     $paid = false;
-                }else{
+                } else {
                     $row->canceled();
                 }
-            }else{
+            } else {
                 $payed = $boxes->sum('amount');
-                if($payed >= $row->total){
+                if ($payed >= $row->total) {
                     $paid = true;
                 }
             }
 
-            if($configuration->health_network && !$paid && $row->payment_condition_id == "01"){
+            if ($configuration->health_network && !$paid && $row->payment_condition_id == "01") {
                 $row->total_canceled = true;
                 $paid = true;
                 $row->save();
@@ -123,8 +123,8 @@ class DocumentCollection extends ResourceCollection
 
             $boxes = $boxes->get();
 
-            $sale_note_related = $row->sale_note_related->transform(function ($sale_note){
-                return[
+            $sale_note_related = $row->sale_note_related->transform(function ($sale_note) {
+                return [
                     "number" => $sale_note->getNumberFullAttribute(),
                 ];
             });
@@ -132,7 +132,11 @@ class DocumentCollection extends ResourceCollection
             $orden = Orden::where('document_id', $row->id)->first();
             $ordens_ref = $orden ? $orden->ref : null;
 
-            
+            if ($sale_note_related->count() > 0 && !$paid) {
+                $paid = true;
+                $row->total_canceled = true;
+                $row->save();
+            }
 
             $table_number = null;
             $orden = $row->orden;
