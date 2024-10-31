@@ -108,13 +108,13 @@
 
 
 
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_exonerated}} </td>
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_unaffected}}</td>
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_free}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' || $state == '09'))) ? "-" : ""  }}{{$value->total_exonerated}} </td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' || $state == '09'))) ? "-" : ""  }}{{$value->total_unaffected}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' || $state == '09'))) ? "-" : ""  }}{{$value->total_free}}</td>
 
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_taxed}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' || $state == '09'))) ? "-" : ""  }}{{$value->total_taxed}}</td>
 
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total_igv}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' || $state == '09'))) ? "-" : ""  }}{{$value->total_igv}}</td>
                 @php
                 $remain = "";
                 if($value->payment_condition_id == "02"){
@@ -125,7 +125,7 @@
                 @endphp
                 <td class="celda" style=" border: 1px solid black;">{{$remain}}</td>
                 <td class="celda" style=" border: 1px solid black;">{{ $value->payment_condition->name }}</td>
-                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' && $state == '09'))) ? "-" : ""  }}{{$value->total}}</td>
+                <td class="celda" style=" border: 1px solid black;">{{($signal == '07' || ($signal!='07' && ($state=='11' || $state == '09'))) ? "-" : ""  }}{{$value->total}}</td>
                 @php
 
                 $serie_affec = '';
@@ -144,7 +144,7 @@
             $acum_total_free += $signal != '07' ? $value->total_free : -$value->total_free ;*/
 
 
-            if(($signal == '07' && $state !== '11')){
+            if(($signal == '07' && ($state !== '11' && $state !== '09'))){
 
             $acum_total += -$value->total;
             $acum_total_taxed += -$value->total_taxed;
@@ -156,7 +156,7 @@
             $acum_total_free += -$value->total_free;
 
 
-            }elseif($signal != '07' && $state == '11'){
+            }elseif($signal != '07' && ($state == '11' || $state == '09')){
 
             $acum_total += 0;
             $acum_total_taxed += 0;
@@ -180,7 +180,7 @@
 
             }else if($value->currency_type_id == 'USD'){
 
-            if(($signal == '07' && $state !== '11')){
+            if(($signal == '07' && ($state !== '11' && $state !== '09'))){
 
             $acum_total_usd += -$value->total;
             $acum_total_taxed_usd += -$value->total_taxed;
@@ -188,7 +188,7 @@
 
 
 
-            }elseif($signal != '07' && $state == '11'){
+            }elseif($signal != '07' && ($state == '11' || $state == '09')){
 
             $acum_total_usd += 0;
             $acum_total_taxed_usd += 0;
