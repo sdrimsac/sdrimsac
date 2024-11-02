@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>REPORTE POR PRODUCTO</strong></h3>
+        <h3 align="center" class="title"><strong>REPORTE POR PRODUCTO PARA SUBIR</strong></h3>
     </div>
     <br>
     <div style="margin-top:20px; margin-bottom:15px;">
@@ -89,6 +89,21 @@
                             <th> Contenedor</th>
                             <th> Código de lote</th>
                             <th> Fecha de Vencimiento d/m/a</th>
+                            <th> Tratamiento_1</th>
+                            <th> precio</th>
+                            <th> Tratamiento_2</th>
+                            <th> precio</th>
+                            <th> Tratamineto_3</th>
+                            <th> precio</th>
+                            <th> Tratamiento_4</th>
+                            <th> precio</th>
+                            <th> Tratamineto_5</th>
+                            <th> precio</th>
+                            <th> ubicacion</th>
+                            <th> modelo</th>
+                            <th> calidad</th>
+                            <th> codigo origen</th>
+
 
 
                         </tr>
@@ -214,6 +229,20 @@
                                     @endphp
                                     {{ $value->date_of_due }}
                                 </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         @endforeach
 

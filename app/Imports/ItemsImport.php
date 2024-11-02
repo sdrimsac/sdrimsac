@@ -40,10 +40,10 @@ class ItemsImport implements ToCollection
         $registered = 0;
         unset($rows[0]);
         foreach ($rows as $row) {
-            $origin = $row[47];
-            $quality = $row[46];
-            $model = $row[45];
-            $location = $row[44];
+            $origin = ($row[47] ?: null);
+            $quality = ($row[46] ?: null);
+            $model = ($row[45] ?: null);
+            $location = ($row[44] ?: null);
             $description = $row[0];
             $second_name = $row[1];
             $item_type_id = '01';
@@ -214,6 +214,9 @@ class ItemsImport implements ToCollection
                 } else {
 
                     $item->update([
+                        'origin' => $origin,
+                        'quality' => $quality,
+                        'model' => $model,
                         'location' => $location,
                         'max_quantity' => $max_quantity,
                         'max_quantity_description' => $max_quantity_description,

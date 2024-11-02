@@ -135,13 +135,17 @@ export default {
 
             if (Array.isArray(response.data) && response.data.length > 0) {
               this.items = response.data.map(item => {
+                const total = item.cantidad * item.price;
                 return {
+                  id: item.id,
                   description: item.item.description,
                   cantidad: item.cantidad,
-                  precioUnitario: item.price
+                  precioUnitario: item.price,
+                  total: total
 
                 }
-              }); // Asignar directamente el array de objetos
+              });
+               /* this.calculateTotalSum(); */
               console.log("Ítems cargados:", this.items);
             } else {
               console.warn("No hay datos de ítems en la respuesta.");
@@ -155,6 +159,10 @@ export default {
         console.warn("No se ha proporcionado un historial_id válido.");
       }
     },
+    /* calculateTotalSum() {
+      // Recalcular el total sumando los totales de todos los ítems
+      this.totalSum = this.items.reduce((sum, item) => sum + item.total, 0);
+    }, */
     handleProductChange(value) {
       this.cantidad = 1;
       this.precioUnitario = 0;
@@ -171,7 +179,7 @@ export default {
     updateTotal() {
       this.importeTotal = this.precioUnitario * this.cantidad;
     },
-    addItem() {
+    /* addItem() {
       if (this.selectedProduct && this.cantidad > 0) {
         const selected = this.itemsdb.find(
           item => item.id === this.selectedProduct
@@ -185,15 +193,46 @@ export default {
         };
         this.items.push(newItem);
 
+        this.calculateTotalSum();
+
         this.resetFormItem();
 
         console.log("Producto agregado:", newItem);
       } else {
         console.warn("Selecciona un producto y establece una cantidad válida.");
       }
+    }, */
+    addItem() {
+      if (this.selectedProduct && this.cantidad > 0) {
+        const existingItemIndex = this.items.findIndex(item => item.id === this.selectedProduct);
+
+        if (existingItemIndex >= 0) {
+          // Si el producto ya existe, actualiza sus valores
+          this.items[existingItemIndex].cantidad = this.cantidad;
+          this.items[existingItemIndex].precioUnitario = this.precioUnitario;
+          this.items[existingItemIndex].total = this.importeTotal;
+        } else {
+          // Si es un producto nuevo, agrega a la lista con su ID
+          const selected = this.itemsdb.find(item => item.id === this.selectedProduct);
+          const newItem = {
+            id: this.selectedProduct,
+            description: selected ? selected.description : "",
+            cantidad: this.cantidad,
+            precioUnitario: this.precioUnitario,
+            total: this.importeTotal
+          };
+          this.items.push(newItem);
+        }
+
+        /* this.calculateTotalSum(); */
+        this.resetFormItem();
+      } else {
+        console.warn("Selecciona un producto y establece una cantidad válida.");
+      }
     },
     removeItem(index) {
       this.items.splice(index, 1);
+      /* this.calculateTotalSum(); */
     },
     resetFormItem() {
       this.selectedProduct = null;

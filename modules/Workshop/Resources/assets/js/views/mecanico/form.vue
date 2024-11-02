@@ -52,13 +52,18 @@
     border-radius: 10px;
     overflow: hidden;
 }
+/* .el-dialog__wrapper {
+    z-index: 2500 !important;
+} */
+
 </style>
 
 <script>
 export default {
-    props: ['showDialog', 'recordId'],
+    props: ['showDialog', 'recordId', "external"],
     data() {
         return {
+            titleDialog: null,
             loading_submit: false,
             titleDialog: null,
             resource: 'workshop',
@@ -115,6 +120,11 @@ export default {
             this.$emit('update:showDialog', false)
             this.initForm()
         },
+        /* close() {
+            this.showDialogInternal = false;
+            if (!this.external) this.$emit('update:showDialog', false);
+            this.initForm();
+        }, */
     }
 }
 </script>

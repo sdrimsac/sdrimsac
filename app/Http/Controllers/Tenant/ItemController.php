@@ -916,19 +916,6 @@ class ItemController extends Controller
             $food->image = 'imagen-no-disponible.jpg';
         }
         $item->save();
-
-        /* ItemCategoriaMadera::where('item_id', $item->id)->delete();
-        $categoria_madera = $request->input('categoria_madera');
-        
-        if ($categoria_madera) {
-            foreach ($categoria_madera as $categoria_madera) {
-                $newCategoriaMadera = new ItemCategoriaMadera;
-                $newCategoriaMadera->precio = $categoria_madera['precio'];
-                $newCategoriaMadera->categoria_madera_id = $categoria_madera['id'];
-                $newCategoriaMadera->item_id = $item->id;
-                $newCategoriaMadera->save();
-            }
-        } */
         ItemCategoriaMadera::where('item_id', $item->id)->delete();
         $categoria_madera = $request->input('categoria_madera');
         /*  */
