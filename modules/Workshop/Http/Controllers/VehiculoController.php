@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Workshop\Models\Historial;
-use Modules\Workshop\Models\vehiculo;
+use Modules\Workshop\Models\Vehiculo;
 use Modules\Workshop\Models\HistorialItem;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -50,7 +50,7 @@ class VehiculoController extends Controller
         return $records;
     }
 
-    public function setItems(Request $request)
+    /* public function setItems(Request $request)
     {
 
         $historial_id = $request->historial_id;
@@ -64,6 +64,41 @@ class VehiculoController extends Controller
             $historial_item->save();
         }
         return ["sucess" => true];
+    } */
+
+    public function setItems(Request $request)
+    {
+        $historial_id = $request->historial_id;
+        $items = $request->items;
+        // Obtener todos los ítems actuales para el historial_id dado, para poder compararlos
+        $existingItems = HistorialItem::where('historial_id', $historial_id)->get()->keyBy('item_id');
+        // Recorrer los ítems que vienen en la solicitud
+        foreach ($items as $item) {
+            if ($existingItems->has($item['id'])) {
+                // Si el ítem ya existe, actualizar su cantidad y precio
+                $historial_item = $existingItems->get($item['id']);
+                $historial_item->cantidad = $item['cantidad'];
+                $historial_item->price = $item['precioUnitario'];
+                $historial_item->save();
+
+                // Eliminarlo de la colección de ítems existentes ya que ya fue procesado
+                $existingItems->forget($item['id']);
+            } else {
+                // Si el ítem no existe, crear un nuevo registro
+                $historial_item = new HistorialItem;
+                $historial_item->cantidad = $item['cantidad'];
+                $historial_item->price = $item['precioUnitario'];
+                $historial_item->item_id = $item['id'];
+                $historial_item->historial_id = $historial_id;
+                $historial_item->save();
+            }
+        }
+        // Cualquier ítem que quede en existingItems no estaba en la solicitud, por lo tanto se elimina
+        foreach ($existingItems as $itemToDelete) {
+            $itemToDelete->delete();
+        }
+
+        return response()->json(["success" => true]);
     }
     public function record($id)
     {
@@ -79,7 +114,7 @@ class VehiculoController extends Controller
 
         $data = array_merge($request->except('vehiculo'), $request->input('vehiculo', []));
 
-        $existengVehicle = vehiculo::where('placa', $plate)
+        $existengVehicle = Vehiculo::where('placa', $plate)
             ->when($id, function ($query) use ($id) {
                 return $query->where('id', '!=', $id);
             })
@@ -132,29 +167,6 @@ class VehiculoController extends Controller
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Vehiculo esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Vehiculo'];
         }
     }
-    /* public function mergeData($inputs)
-    {
-
-        $this->company = Company::active();
-
-        $values = [
-            'user_id' => auth()->id(),
-            'customer' => PersonInput::set($inputs['customer_id']),
-            'soap_type_id' => $this->company->soap_type_id,
-        ];
-
-        $inputs->merge($values);
-
-        return $inputs->all();
-    } */
-
-    /* private function setFilename()
-    {
-
-        $name = ['TS', $this->vehiculo->id, date('Ymd')];
-        $this->vehiculo->filename = join('-', $name);
-        $this->vehiculo->save();
-    } */
     function get_vehiculo($label, $property)
     {
         $quantity = "quantity_" . $property;
@@ -171,7 +183,7 @@ class VehiculoController extends Controller
         /* a */
         /* $this->vehiculo = $vehiculo; */
         /* $vehiculo = vehiculo::find($id); */
-        $vehiculo = vehiculo::where('id', $id)->first();
+        $vehiculo = Vehiculo::where('id', $id)->first();
         $this->vehiculo = $vehiculo;
         $list1 = [
             $this->get_vehiculo("Faros Delanteros", "front_lights"),
