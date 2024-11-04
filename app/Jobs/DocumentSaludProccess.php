@@ -200,11 +200,13 @@ class DocumentSaludProccess implements ShouldQueue
     public function handle()
     {
 
+        $ids_to_summarie = [];
         ini_set('memory_limit', '3048M');
         $date = date('Y-m-d');
         $website = $this->findWebsite($this->website_id);
         $tenancy = app(Environment::class);
         $tenancy->tenant($website);
+        $date_of_issue = null;
         $store_path = $this->store_path;
         $files = scandir(storage_path($store_path));
         $files = array_diff($files, array('.', '..'));
@@ -226,6 +228,7 @@ class DocumentSaludProccess implements ShouldQueue
                     $identifier = $document['idTransaccion'];
                     $document_salud = new DocumentSalud;
                     $document_salud->date_of_issue = $document['fechaEmision'];
+                    
                     $document_salud->date_of_charge = $date;
                     $document_salud->file_name = $file;
                     $document_salud->identifier = $identifier;
@@ -252,6 +255,9 @@ class DocumentSaludProccess implements ShouldQueue
                         $result = (new DocumentController)->storeTransform($document_input);
                         if (isset($result['success']) && $result['success'] === true) {
                             $document_salud->status = 'Aceptado';
+                            $ids_to_summarie[] = [
+                                'document_id' => $result['data']['document_id'],
+                            ];
                         } else {
                             $document_salud->status = 'Fallido';
                             $this->sendMessage($establishment_id,$full_number,$this->user_id);
@@ -273,6 +279,10 @@ class DocumentSaludProccess implements ShouldQueue
                 }
             }
         }
+
+        if(count($ids_to_summarie) > 0){
+            $this->summarize($ids_to_summarie);
+        }
         return [
             'success' => true,
         ];
@@ -292,6 +302,9 @@ class DocumentSaludProccess implements ShouldQueue
         Log::error($exception->getMessage());
     }
 
+    function summarize($documents){
+
+    }
 
     function sendMessage($establishment_id,$serie,$user_id)
     {
