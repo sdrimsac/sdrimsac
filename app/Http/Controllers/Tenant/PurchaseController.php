@@ -483,6 +483,13 @@ class PurchaseController extends Controller
                     $last_box = Box::where('cash_id', $cash->id)->latest()->first();
                     $time_box = $last_box ? $last_box->created_at->format('H:i:s') : date('H:i:s');
                     $date_box = $last_box ? $last_box->date : date('Y-m-d');
+                }else{
+                    
+                }
+                if(count($data['payments'])>0 && !$cash){
+                    $has_error = true;
+                    $message = "No se puede realizar la compra, no tiene caja aperturada";
+                    throw new Exception($message);
                 }
                 foreach ($data['payments'] as $payment) {
                     $record_payment = $doc->purchase_payments()->create($payment);
