@@ -221,6 +221,6 @@
     <tr>
         <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total a
             Declarar:</td>
-        <td class="border-left" style="border: 2px solid black;">{{ number_format($total_final, 2) }}</td>
+        <td class="border-left" style="border: 2px solid black;">{{ number_format($total_suma, 2) }}</td>
     </tr>
 </table>
