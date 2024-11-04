@@ -24,6 +24,7 @@ trait SummaryTrait
         return [
             'success' => true,
             'message' => "El resumen {$document->identifier} fue creado correctamente",
+            'document_id' => $document->id,
         ];
     }
     

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Tenant;
 
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
@@ -25,20 +26,23 @@ use Exception;
 class SummaryController extends Controller
 {
     use StorageDocument, SummaryTrait;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->middleware('input.request:summary,web', ['only' => ['store']]);
     }
-    
-    public function index() {
+
+    public function index()
+    {
         return view('tenant.summaries.index');
     }
-    
-    public function records(Request $request) {
-        
-        $records = Summary::where([ ['summary_status_type_id','1'], [ $request->column, 'like', "%{$request->value}%" ]])
+
+    public function records(Request $request)
+    {
+
+        $records = Summary::where([['summary_status_type_id', '1'], [$request->column, 'like', "%{$request->value}%"]])
             ->latest();
-         
+
         return new SummaryCollection($records->paginate(config('tenant.items_per_page')));
     }
 
@@ -48,43 +52,49 @@ class SummaryController extends Controller
             'date_of_issue' => 'Fecha de emisión'
         ];
     }
-    
-    public function documents(SummaryDocumentsRequest $request) {
-        ini_set('max_execution_time', 6000);
-        ini_set('memory_limit', '-1');
-        $company = Company::active();
-        $date_of_reference = $request->input('date_of_reference');
-        
-        $documents = Document::query()
-            ->where('date_of_issue', $request->input('date_of_reference'))
-            ->where('soap_type_id', $company->soap_type_id)
-            ->where('group_id', '02')
-            ->where('state_type_id', '01')
-            ->take(500)
-            ->get();
-            
-        if (count($documents) === 0) throw new Exception("No se encontraron documentos con la fecha {$date_of_reference}");
-        
-        return new DocumentCollection($documents);
+
+    public function documents(SummaryDocumentsRequest $request)
+    {
+        try {
+            ini_set('max_execution_time', 6000);
+            ini_set('memory_limit', '-1');
+            $company = Company::active();
+            $date_of_reference = $request->input('date_of_reference');
+
+            $documents = Document::query()
+                ->where('date_of_issue', $request->input('date_of_reference'))
+                ->where('soap_type_id', $company->soap_type_id)
+                ->where('group_id', '02')
+                ->where('state_type_id', '01')
+                ->take(50)
+                ->get();
+
+            if (count($documents) === 0) throw new Exception("No se encontraron documentos con la fecha {$date_of_reference}");
+
+            return new DocumentCollection($documents);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
-    
-    public function store(SummaryRequest $request) {
+
+    public function store(SummaryRequest $request)
+    {
         ini_set('max_execution_time', 6000);
         ini_set('memory_limit', '-1');
         return $this->save($request);
     }
-    
-    public function status($summary_id) {
+
+    public function status($summary_id)
+    {
         return $this->query($summary_id);
     }
 
     public function destroy($voided_id)
     {
         $summary = Summary::find($voided_id);
-        foreach ($summary->documents as $doc)
-        {
+        foreach ($summary->documents as $doc) {
             $doc->document->update([
-                'state_type_id' => ($summary->summary_status_type_id === '1')?'01':'05'
+                'state_type_id' => ($summary->summary_status_type_id === '1') ? '01' : '05'
             ]);
         }
         $summary->delete();

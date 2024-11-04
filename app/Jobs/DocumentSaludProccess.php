@@ -7,8 +7,11 @@ use App\CoreFacturalo\Requests\Api\Transform\Common\PersonTransform;
 use App\CoreFacturalo\Requests\Api\Validation\DocumentValidation;
 use App\CoreFacturalo\Requests\Inputs\DocumentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\CoreFacturalo\Requests\Inputs\SummaryInput;
 use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Tenant\SummaryController;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Http\Requests\Tenant\SummaryRequest;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentSalud;
 use App\Models\Tenant\Establishment;
@@ -23,8 +26,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class DocumentSaludProccess implements ShouldQueue
 {
@@ -39,7 +44,6 @@ class DocumentSaludProccess implements ShouldQueue
     {
         $this->website_id = $website_id;
         $this->store_path = $store_path;
-
     }
 
     function items($inputs)
@@ -103,11 +107,12 @@ class DocumentSaludProccess implements ShouldQueue
         }
         return null;
     }
-    function getUserId($serie){
+    function getUserId($serie)
+    {
 
-        $series = Series::where('number','like','%'.$serie.'%')->first();
+        $series = Series::where('number', 'like', '%' . $serie . '%')->first();
         $establishment_id = $series->establishment_id;
-        $user = User::where('establishment_id',$establishment_id)->first();
+        $user = User::where('establishment_id', $establishment_id)->first();
         $this->user_id = $user->id;
         // return $user->id;
     }
@@ -124,7 +129,7 @@ class DocumentSaludProccess implements ShouldQueue
         $this->getUserId($series);
         $inputs_transform = [
             'series' => $series,
-            'user_id' =>$this->user_id,
+            'user_id' => $this->user_id,
             'afectar_caja' => false,
             'method_pay' => 'Efectivo',
             'printerOn' => false,
@@ -228,7 +233,7 @@ class DocumentSaludProccess implements ShouldQueue
                     $identifier = $document['idTransaccion'];
                     $document_salud = new DocumentSalud;
                     $document_salud->date_of_issue = $document['fechaEmision'];
-                    
+
                     $document_salud->date_of_charge = $date;
                     $document_salud->file_name = $file;
                     $document_salud->identifier = $identifier;
@@ -255,19 +260,17 @@ class DocumentSaludProccess implements ShouldQueue
                         $result = (new DocumentController)->storeTransform($document_input);
                         if (isset($result['success']) && $result['success'] === true) {
                             $document_salud->status = 'Aceptado';
-                            $ids_to_summarie[] = [
-                                'document_id' => $result['data']['document_id'],
-                            ];
+                            $ids_to_summarie[$document_salud->date_of_issue][] =
+                                $result['data']['document_id'];
                         } else {
                             $document_salud->status = 'Fallido';
-                            $this->sendMessage($establishment_id,$full_number,$this->user_id);
+                            $this->sendMessage($establishment_id, $full_number, $this->user_id);
                         }
                     } catch (Exception $e) {
                         Log::info($e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
-                        $this->sendMessage($establishment_id,$full_number,$this->user_id);
+                        $this->sendMessage($establishment_id, $full_number, $this->user_id);
                         $document_salud->status = 'Fallido';
                         $message = $e->getMessage();
-                        //limitar a 255 caracteres
                         $message = substr($message, 0, 190);
                         $document_salud->error = $message;
                         Log::info('error: file: ' . $file . " " . $e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
@@ -280,7 +283,7 @@ class DocumentSaludProccess implements ShouldQueue
             }
         }
 
-        if(count($ids_to_summarie) > 0){
+        if (count($ids_to_summarie) > 0) {
             $this->summarize($ids_to_summarie);
         }
         return [
@@ -290,23 +293,43 @@ class DocumentSaludProccess implements ShouldQueue
 
 
 
-    /**
-     * The job failed to process.
-     *
-     * @param Exception $exception
-     *
-     * @return void
-     */
-    public function failed(Exception $exception)
+
+    public function failed(Throwable $exception)
     {
         Log::error($exception->getMessage());
     }
+    function summarize($documents)
+    {
 
-    function summarize($documents){
+        $summary_status_type_id = '1';
+        foreach ($documents as $date_of_issue => $document) {
+            $summary_documents = array_map(function ($id) {
+                return ['document_id' => $id];
+            }, $document);
 
+            $inputs = [
+                'date_of_reference' => $date_of_issue,
+                'summary_status_type_id' => $summary_status_type_id,
+                'documents' => $summary_documents,
+                'type' => 'summary'
+            ];
+
+            try {
+                $summary_input = SummaryInput::set($inputs);
+                $summary_input = SummaryInput::set($inputs);
+                $request = new SummaryRequest($summary_input);
+                $response =     (new SummaryController)->store($request);
+
+                if (isset($response['document_id'])) {
+                    $status = (new SummaryController)->status($response['document_id']);
+                }
+            } catch (Exception $e) {
+                Log::info($e->getMessage());
+            }
+        }
     }
 
-    function sendMessage($establishment_id,$serie,$user_id)
+    function sendMessage($establishment_id, $serie, $user_id)
     {
         $establishment = Establishment::find($establishment_id);
         $user = User::find($user_id);

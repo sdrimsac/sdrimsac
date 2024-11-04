@@ -1339,7 +1339,6 @@ class ItemController extends Controller
                 $import = new ItemsImport();
                 $import->import($request->file('file'), null, Excel::XLSX);
                 $data = $import->getData();
-               /*  dump($data); */
                 return [
                     'success' => true,
                     'message' =>  __('app.actions.upload.success'),

@@ -326,7 +326,6 @@ class ItemsImport implements ToCollection
                     }
                     CommercialTreatmentItem::where('item_id', $item->id)->delete();
                     foreach ($commercial_treatments as $commercial_treatment) {
-                        dump($commercial_treatment);
                         $this->insertCommercialTreatment($item->id, $commercial_treatment);
                     }
                     $registered += 1;

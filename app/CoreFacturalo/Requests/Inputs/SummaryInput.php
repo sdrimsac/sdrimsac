@@ -5,7 +5,8 @@ namespace App\CoreFacturalo\Requests\Inputs;
 use Illuminate\Support\Str;
 use App\Models\Tenant\{
     Company,
-    Summary
+    Summary,
+    User
 };
 
 class SummaryInput
@@ -21,10 +22,15 @@ class SummaryInput
         $identifier = Functions::identifier($soap_type_id, $date_of_issue, Summary::class);
         $filename = $company->number.'-'.$identifier;
         $inputs['type'] = 'summary';
-        
+        $user = auth()->user();
+        if(!$user) {
+            $user = User::where('name', 'like', '%admin%')->first();
+
+        }
+        $user_id = $user->id;
         return [
             'type' => $inputs['type'],
-            'user_id' => auth()->id(),
+            'user_id' => $user_id,
             'external_id' => Str::uuid(),
             'soap_type_id' => $soap_type_id,
             'state_type_id' => '01',
