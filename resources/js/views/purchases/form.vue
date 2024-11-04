@@ -1040,7 +1040,8 @@ export default {
             this.changeDocumentType();
             this.changeCurrencyType();
         });
-        this.ifIsArca();
+        this.form.has_payment = true;
+        this.clickAddPayment();
         this.$eventHub.$on("reloadDataPersons", supplier_id => {
             this.reloadDataSuppliers(supplier_id);
         });
@@ -1059,12 +1060,11 @@ export default {
         };
         const response = await this.$http.post("/get_igv", form_data);
         this.percentage_igv = response.data;
+    
     },
     methods: {
         ifIsArca() {
             if (this.is_arca) {
-                this.form.has_payment = true;
-                this.clickAddPayment();
             }
         },
         // inputTotal(idx,updateTotal = false) {

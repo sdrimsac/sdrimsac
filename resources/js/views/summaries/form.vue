@@ -36,7 +36,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(row, index) in form.documents">
+                                <tr v-for="(row, index) in form.documents" :key="index">
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ row.number }}<br/>
                                         <small v-text="row.document_type_description"></small><br/>
