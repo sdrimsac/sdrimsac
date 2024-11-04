@@ -211,7 +211,7 @@
     <tr>
         <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total
             Documentos Emitidos:</td>
-        <td class="border-left" style="border: 2px solid black;">{{ number_format($total_suma, 2) }}</td>
+        <td class="border-left" style="border: 2px solid black;">{{ number_format($total_suma + $total_resta,  2) }}</td>
     </tr>
     <tr>
         <td colspan="{{ $col_span - 7 }}" class="text-right font-weight" style="border: 2px solid black;">Total
