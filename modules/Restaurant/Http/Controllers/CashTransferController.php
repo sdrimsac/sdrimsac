@@ -235,6 +235,7 @@ class CashTransferController extends Controller
         $cash_principal = Cash::where('principal', 1)->where('user_id', auth()->id())
             ->where('state', 1)
             ->first();
+        if(!$cash_principal) return 0;
         $all_cash = $cash_principal->beginning_balance ?? 0;
         $all_incomes = Box::where('cash_id', $cash_principal->id)->where('incomes', 1)->sum('amount');
         $all_expenses = Box::where('cash_id', $cash_principal->id)->where('expenses', 1)->sum('amount');
