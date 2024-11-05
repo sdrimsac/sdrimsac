@@ -896,7 +896,7 @@ if ($hostname) {
                     Route::get('records-customers/{customer_id}', [PromotionDocumentController::class, 'byCustomer']);
                 });
                 
-
+                Route::get('/search-ce/{ce}', [App\Http\Controllers\Tenant\PersonController::class, 'serviceCe']);
                 //Promotion
                 Route::get('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');
                 Route::get('promotions/columns', [App\Http\Controllers\Tenant\PromotionController::class, 'columns']);

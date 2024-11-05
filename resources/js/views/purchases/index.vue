@@ -36,7 +36,6 @@
                     </h4>
                 </div>
 
-                
                 <div class="card-body">
                     <div class="data-table-visible-columns">
                         <el-button
@@ -67,6 +66,7 @@
                         <tr slot="heading" class="bg-primary">
                             <th class="text-white text-center">#</th>
                             <th class="text-center text-white">F. Emisión</th>
+                            <th class="text-center text-white">Usuario</th>
                             <th
                                 class="text-center text-white"
                                 v-if="columns.date_of_due.visible"
@@ -126,7 +126,17 @@
                         <tr></tr>
                         <tr class="text-center" slot-scope="{ index, row }">
                             <td>{{ index }}</td>
-                            <td class="text-center">{{ row.date_of_issue }}</td>
+                            <td class="text-center">
+                                {{ row.date_of_issue }}
+                                <div>
+                                    <small>
+                                        {{ row.time_of_issue }}
+                                    </small>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                {{ row.user_name }}
+                            </td>
                             <td
                                 v-if="columns.date_of_due.visible"
                                 class="text-center"
@@ -139,10 +149,12 @@
                                 ></small>
                             </td>
                             <td
-                            :class="{
-                                'text-danger' : row.state_type_id == '11'
-                            }"
-                            >{{ row.state_type_payment_description }}</td>
+                                :class="{
+                                    'text-danger': row.state_type_id == '11'
+                                }"
+                            >
+                                {{ row.state_type_payment_description }}
+                            </td>
                             <template v-if="row.number != '-0'">
                                 <td>
                                     {{ row.number }}<br />
@@ -328,7 +340,8 @@
                                     <a
                                         v-if="
                                             row.document_type_description !=
-                                                'FACTURA ELECTRÓNICA' && row.state_type_id != '11'
+                                                'FACTURA ELECTRÓNICA' &&
+                                                row.state_type_id != '11'
                                         "
                                         @click.prevent="clickFacturar(row)"
                                         type="button"
@@ -524,10 +537,14 @@ export default {
                         .then(response => {
                             let { success, message } = response.data;
                             if (!success && message) {
-                                this.$showSAlert("Error",message,"error")
+                                this.$showSAlert("Error", message, "error");
                                 return;
                             } else {
-                                this.$showSAlert("Anulado","La compra ha sido anulada","success")
+                                this.$showSAlert(
+                                    "Anulado",
+                                    "La compra ha sido anulada",
+                                    "success"
+                                );
                                 this.$eventHub.$emit("reloadData");
                             }
                         });

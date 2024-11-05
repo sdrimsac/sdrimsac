@@ -881,7 +881,68 @@
                                     :key="index"
                                 >
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ setDescriptionOfItem(row) }}</td>
+                                    <td>{{ setDescriptionOfItem(row) }}
+
+
+                                                <template
+                                                    v-if="
+                                                        row.lots &&
+                                                            row.lots.length > 0
+                                                    "
+                                                >
+                                                    <br />
+                                                    <small
+                                                        class="text-primary"
+                                                        v-for="(lot,
+                                                        index) in row.lots"
+                                                        :key="index"
+                                                    >
+                                                        <b>Serie:</b>
+                                                        {{ lot.series }}
+                                                    </small>
+                                                </template>
+
+                                                <template
+                                                    v-if="
+                                                        row.lots_group &&
+                                                            row.lots_group
+                                                                .length > 0
+                                                    "
+                                                >
+                                                    <br />
+                                                    <small
+                                                        class="text-primary"
+                                                        v-for="(lot,
+                                                        index) in row.lots_group"
+                                                        :key="index"
+                                                    >
+                                                        <b>Lote:</b>
+                                                        {{ lot.code }}
+                                                    </small>
+                                                </template>
+
+                                                <template
+                                                    v-if="
+                                                        row.color_size &&
+                                                            row.color_size
+                                                                .length > 0
+                                                    "
+                                                >
+                                                    <br />
+                                                    <small
+                                                        class="text-primary"
+                                                        v-for="(color,
+                                                        index) in row.color_size"
+                                                        :key="index"
+                                                    >
+                                                        <b>Color:</b>
+                                                        {{ color.color }}
+                                                        <b>Talla:</b>
+                                                        {{ color.size }}
+                                                    </small>
+                                                </template>
+
+                                    </td>
                                     <template v-if="!filterIndex(index)">
                                         <td class="text-right">
                                             {{ row.quantity }}

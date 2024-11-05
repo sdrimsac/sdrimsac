@@ -49,6 +49,7 @@
                         }"
                     >
                         <div class="col-2">
+                            <br />
                             <el-button
                                 :type="
                                     `${person.selected ? 'primary' : 'default'}`
@@ -59,6 +60,11 @@
                             ></el-button>
                         </div>
                         <div class="col-10">
+                            <label for="new_customer_id">
+                                <a href="#" @click.prevent="openDialogNewPerson(idx)"
+                                    >[+ Nuevo]</a
+                                >
+                            </label>
                             <el-select
                                 v-model="person.customer_id"
                                 filterable
@@ -71,6 +77,7 @@
                                 :remote-method="searchRemoteCustomers"
                                 :loading="loading_search"
                                 @change="changeCustomer(idx)"
+                                :ref="`customer_${idx}`"
                             >
                                 <el-option
                                     v-for="option in customers"
@@ -208,7 +215,14 @@
                 </div>
             </div>
         </div>
-
+        <person-form
+            :showDialog.sync="showDialogNewPerson"
+            type="customers"
+            :user_id="form.user_id"
+            :external="true"
+            document_type_id="03"
+            @reloadDataPersons="reloadDataCustomers"
+        ></person-form>
         <div class="row d-flex m-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
                 <el-button type="primary" @click="sendPayments"
@@ -229,7 +243,11 @@
 }
 </style>
 <script>
+import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 export default {
+    components: {
+        PersonForm
+    },
     props: [
         "showSplitPayment",
         "total",
@@ -238,8 +256,12 @@ export default {
         "form",
         "series"
     ],
+    created() {
+    
+    },
     data() {
         return {
+            showDialogNewPerson: false,
             formOrigin: {},
             colorArray: [
                 { background: "#CFE2F3", color: "#004080" }, // SoftBlue background with Navy text
@@ -265,6 +287,7 @@ export default {
             ],
             selectedAccount: undefined,
             customer_default_id: null,
+            current_index_person: null,
             splitByAmount: "1",
             number: 2,
             loading: false,
@@ -333,11 +356,36 @@ export default {
     },
 
     methods: {
+        reloadDataCustomers(customer_id) {
+            this.loading    = true;
+            this.$http
+                .get(`/documents/search/customer/${customer_id}`)
+                .then(response => {
+                    this.customers = response.data.customers;
+                    this.persons[
+                        this.current_index_person
+                    ].customer_id = customer_id;
+                }).catch(error => {
+                    console.log(error);
+                }).finally(() => {
+                    this.loading = false;
+                });
+        },
+        openDialogNewPerson(idx) {
+            this.current_index_person = idx;
+            let ref = `customer_${idx}`;
+            console.log("🚀 ~ openDialogNewPerson ~ ref:", ref)
+            console.log(this.$refs[ref]);
+            let vv = this.$refs[ref][0].$el.getElementsByTagName("input")[0].value;
+            this.showDialogNewPerson = true;
+            console.log("🚀 ~ openDialogNewPerson ~ vv:", vv);
+        },
         validate() {
-            let somePersonHasZeroAmount = this.persons.some(
-                p => p.amount == 0
+            let somePersonHasZeroAmount = this.persons.some(p => p.amount == 0);
+            console.log(
+                "🚀 ~ validate ~ somePersonHasZeroAmount:",
+                somePersonHasZeroAmount
             );
-                console.log("🚀 ~ validate ~ somePersonHasZeroAmount:", somePersonHasZeroAmount)
             if (somePersonHasZeroAmount) {
                 this.$showSAlert(
                     "Error",
@@ -361,8 +409,8 @@ export default {
             }
 
             let total = this.persons.reduce((a, b) => a + Number(b.amount), 0);
-                console.log("🚀 ~ validate ~ this.total:", this.total)
-                console.log("🚀 ~ validate ~ total:", total)
+            console.log("🚀 ~ validate ~ this.total:", this.total);
+            console.log("🚀 ~ validate ~ total:", total);
             if (total != this.total) {
                 this.$showSAlert(
                     "Error",

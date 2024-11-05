@@ -75,7 +75,7 @@
                                     ></i>
                                 </el-tooltip>
                             </label>
-                            <div v-if="api_service_token != false">
+                            <div v-if="api_service_token != false && form.identity_document_type_id !== '4'">
                                 <x-input-service
                                     :identity_document_type_id="
                                         form.identity_document_type_id
@@ -96,11 +96,11 @@
                                             form.identity_document_type_id ===
                                                 '6' ||
                                                 form.identity_document_type_id ===
-                                                    '1'
+                                                    '1' || form.identity_document_type_id === '4'
                                         "
                                     >
                                         <el-button
-                                            type="primary"
+                                            
                                             slot="append"
                                             :loading="loading_search"
                                             icon="el-icon-search"
@@ -666,36 +666,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="row">
-                    <div class="col-md-4">
-                        <label class="control-label">Llegó de</label>
-                        <el-select clearable v-model="form.social_media_id">
-                            <el-option
-                                v-for="(dta, idx) in social_medias"
-                                :key="idx"
-                                :label="dta.description"
-                                :value="dta.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="control-label">Cat Vip</label>
-                        <el-select clearable v-model="form.social_media_id">
-                            <el-option
-                                v-for="(dta, idx) in social_medias"
-                                :key="idx"
-                                :label="dta.description"
-                                :value="dta.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="control-label">Mensualidad</label>
-                        <el-input clearable v-model="form.vip_amount" />
-                    </div>
-        </div>-->
+            
                 <template
                     v-if="
                         type == 'customers' &&
@@ -976,7 +947,7 @@ export default {
                 id: null,
                 type: this.type,
                 identity_document_type_id: "6",
-                number: null,
+                number: '',
                 name: null,
                 alias: null,
                 trade_name: null,
@@ -1135,6 +1106,7 @@ export default {
                                 "reloadDataPersons",
                                 response.data.id
                             );
+                            this.$emit("reloadDataPersons", response.data.id);
                         } else {
                             this.$eventHub.$emit("reloadData");
                         }

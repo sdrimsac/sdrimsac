@@ -26,6 +26,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\UnitTypePerson;
 use App\Services\RoleService;
+use GuzzleHttp\Client;
 use Modules\Vip\Models\SocialMedias;
 
 class PersonController extends Controller
@@ -67,6 +68,21 @@ class PersonController extends Controller
             return new PersonResource($customer);
         }
         return null;
+    }
+    public function serviceCe($cee){
+        $url = config('app.api_factiliza_service_url');
+        $token = config('app.api_factiliza_service_token');
+        $client = new Client(['base_uri' => $url]);
+        $api= "/cee/info/".$cee; 
+        $path ="/pe/v1";
+        $response = $client->request('GET',$path. $api, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+            ],
+        ]);
+        $data = json_decode($response->getBody()->getContents());
+        return $data;
     }
     public function clientsForGenerateCPE()
     {

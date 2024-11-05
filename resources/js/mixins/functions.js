@@ -119,11 +119,11 @@ export const functions = {
                 })
                 .then(response => {
                     let data = response.data;
-                   if(data){
-                    data = data.toString();
-                    data = data.replace(",", ".");
-                    this.percentage_igv = Number(data);
-                   }
+                    if (data) {
+                        data = data.toString();
+                        data = data.replace(",", ".");
+                        this.percentage_igv = Number(data);
+                    }
                 });
         },
         async getPercentageIgvWithParams(establishment_id, date_of_issue) {
@@ -237,26 +237,48 @@ export const serviceNumber = {
             if (this.form.identity_document_type_id === "1") {
                 identity_document_type_name = "dni";
             }
+            if (this.form.identity_document_type_id === "4") {
+                identity_document_type_name = "ce";
+            }
             this.loading_search = true;
-            let response = await this.$http.get(
-                `/service/${identity_document_type_name}/${this.form.number}`
-            );
-            // console.log(response.data.data)
-            if (response.data.success) {
-                let data = response.data.data;
-
-                this.form.name = data.name;
-                this.form.trade_name = data.trade_name;
-                this.form.address = data.address;
-                this.form.department_id = data.department_id;
-                this.form.province_id = data.province_id;
-                this.form.district_id = data.district_id;
-                this.form.phone = data.phone;
-
-                this.filterProvinces();
-                this.filterDistricts();
-            } else {
-                this.$message.error(response.data.notification);
+            let response = null;
+            try{
+                if (this.form.identity_document_type_id === "4") {
+                    response = await this.$http.get(
+                        `/search-ce/${this.form.number}`
+                    );
+                    console.log("🚀 ~ searchServiceNumberByType ~ response:", response)
+                } else {
+                    response = await this.$http.get(
+                        `/service/${identity_document_type_name}/${this.form.number}`
+                    );
+                }
+                // console.log(response.data.data)
+                if (response.data.success) {
+                    let data = response.data.data;
+                    if (this.form.identity_document_type_id === "4") {
+                        let name = data.nombres;
+                        let last_name =
+                        data.apellido_paterno + " " + data.apellido_materno;
+                        this.form.name = last_name + ", " + name;
+                    } else {
+                        this.form.name = data.name;
+                        this.form.trade_name = data.trade_name;
+                        this.form.address = data.address;
+                        this.form.department_id = data.department_id;
+                        this.form.province_id = data.province_id;
+                        this.form.district_id = data.district_id;
+                        this.form.phone = data.phone;
+                        this.filterProvinces();
+                        this.filterDistricts();
+                    }
+    
+                
+                } else {
+                    this.$message.error(response.data.notification);
+                }
+            }catch(e){
+                this.$toast.error("Ocurrió un error");
             }
             this.loading_search = false;
         },
