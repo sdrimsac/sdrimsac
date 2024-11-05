@@ -546,9 +546,9 @@ class Dispatch extends ModelTenant
         if ($this->state_type_id === '03' && !is_null($this->ticket)) {
             $btn_status_ticket = true;
         }
+        $btn_options = true;
         if ($this->state_type_id === '05') {
             //$btn_pdf = true;
-            $btn_options = true;
             $btn_generate_document = true;
         }
 

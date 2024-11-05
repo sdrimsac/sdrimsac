@@ -825,6 +825,18 @@
                                                         {{ color.size }}
                                                     </small>
                                                 </template>
+                                                <template
+                                                    v-if="
+                                                        row.categoriaMadera 
+                                                    "
+                                                >
+                                                    
+                                                    <span
+                                                        
+                                                    > - 
+                                                        {{`${row.categoriaMadera.selectedGrosor} X ${row.categoriaMadera.selectedAncho} X ${row.categoriaMadera.selectedLargo}  `}}
+                                                    </span>
+                                                </template>
                                         </td>
                                         <!-- <td>{{ row.presentation }}</td> -->
 

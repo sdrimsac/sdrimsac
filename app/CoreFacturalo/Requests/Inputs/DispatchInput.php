@@ -318,13 +318,17 @@ class DispatchInput
                     'item' => [
                         'description' => $item->description,
                         'model' => $item->model,
+
                         'item_type_id' => $item->item_type_id,
                         'internal_id' => $item->internal_id,
                         'item_code' => $item->item_code,
                         'item_code_gs1' => $item->item_code_gs1,
                         'unit_type_id' => $row['unit_type_id'],
                         'IdLoteSelected' => $row['IdLoteSelected'] ?? null,
-                        'lot_group' => $row['lot_group'] ?? null,
+                        'lot_group' => $row['lots_group'] ?? null,
+                        'categoriaMadera' => $row['categoriaMadera'] ?? null,
+                        'lots' => $row['lots'] ?? null,
+                        'color_size' => $row['color_size'] ?? null,
                         'presentation' => isset($row['presentation']) ? $row['presentation'] : null,
                     ],
                     'quantity' => $row['quantity'],

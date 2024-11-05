@@ -65,7 +65,7 @@ class DispatchController extends Controller
         $correlative = Dispatch::where('series', $serie)->max('number');
         if ($correlative == null) {
             $serie_configuration = SeriesConfiguration::where('series', $serie)->first();
-            if($serie_configuration) {
+            if ($serie_configuration) {
                 return $serie_configuration->number;
             }
             return 1;
@@ -225,9 +225,13 @@ class DispatchController extends Controller
             $items[] = [
                 'item_id' => $item->item_id,
                 'item' => $item,
+                'lots' => isset($item->item->lots) ? $item->item->lots : [],
+                'lots_group' => isset($item->item->lotes) ? $item->item->lotes : [],
+                'color_size' => isset($item->item->color_size) ? $item->item->color_size : [],
+                'categoriaMadera' => isset($item->item->categoriaMadera) ? $item->item->categoriaMadera : null,
                 'quantity' => $item->quantity,
                 'description' => $item->item->description,
-                'unit_type_id' => $item->item->unit_type_id,
+                'unit_type_id' =>isset($item->item->categoriaMadera) ? 'NIU' : $item->item->unit_type_id , 
                 'name_product_pdf' => $name_product_pdf
             ];
         }
@@ -609,7 +613,7 @@ class DispatchController extends Controller
         $transports = (new TransportController())->getOptions();
         $dispatchers = (new DispatcherController())->getOptions();
         $related_document_types = RelatedDocumentType::get();
-        $series_dispatches = Series::whereIn('document_type_id', ['09','31'])->get();
+        $series_dispatches = Series::whereIn('document_type_id', ['09', '31'])->get();
         $last_numbers = [];
         foreach ($series_dispatches as $series_dispatch) {
             $last_numbers[$series_dispatch->number] = $this->getCorrelative($series_dispatch->number);
@@ -637,7 +641,7 @@ class DispatchController extends Controller
             'itemsFromSummary'
         );
     }
-  
+
     public function downloadExternal($type, $external_id)
     {
         $retention = Dispatch::where('external_id', $external_id)->first();

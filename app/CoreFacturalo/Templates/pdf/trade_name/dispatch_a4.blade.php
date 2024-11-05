@@ -197,8 +197,21 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
-
-                        {{-- @if (!empty($row->item->presentation))
+                        @isset($row->item->categoriaMadera)
+                        -
+                        @php
+                            $madera = $row->item->categoriaMadera;
+                            $ancho = $madera->selectedAncho;
+                            $largo = $madera->selectedLargo;
+                            $grosor = $madera->selectedGrosor;
+                            $fot_totals = $row->quantity * (($ancho * $largo * $grosor) / 12);
+                            $m_description = "${grosor}x${ancho}x${largo}";
+                        @endphp
+                        {{ $m_description }}
+                        <br />
+                        ({{ number_format($fot_totals, 2) }} PIES)
+                        @endif
+                        {{-- @if (!e    mpty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif --}}
 
@@ -219,12 +232,26 @@
                             @foreach ($itemSet->getItemsSet($row->item_id) as $item)
                                 {{ $item }}<br>
                             @endforeach
-                        @endif
-
-                        @if ($document->has_prepayment)
-                            <br>
-                            *** Pago Anticipado ***
-                        @endif
+                        @endif  
+                        @if (isset($row->item->lots))
+                        
+                        @foreach ($row->item->lots as $lot)
+                        <br><strong>Serie:</strong> {{ $lot->series }}
+                        @endforeach
+                    @endif
+                    @if (isset($row->item->lot_group))
+                    @foreach ($row->item->lot_group as $lot_group)
+                        <br />{!! '<strong>Lote: </strong>' . $lot_group->code !!} {!! ' <strong>Fecha V.:</strong> ' . $lot_group->date_of_due !!}
+                        
+                    @endforeach
+                @endif
+                    @if (isset($row->item->color_size))
+                    @foreach ($row->item->color_size as $color_size)
+                        <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>-
+                            Cant:</strong> {{ $color_size->quantity }}
+                    @endforeach
+                @endif
+                    
                     </td>
                     <td class="text-left">{{ $row->item->presentation }}</td>
                     <td class="text-left">{{ $row->item->model ?? '' }}</td>

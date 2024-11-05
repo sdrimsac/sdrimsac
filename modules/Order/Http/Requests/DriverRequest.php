@@ -31,9 +31,7 @@ class DriverRequest extends FormRequest
             'license' => [
                 'required'
             ], 
-            'telephone' => [
-                'required',
-            ],
+    
             
         ];
     }
