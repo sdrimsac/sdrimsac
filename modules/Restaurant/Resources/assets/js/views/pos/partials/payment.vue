@@ -398,14 +398,18 @@
                                                 ></el-option>
                                             </el-select>
                                         </div>
-                                        <div class="row" v-if="hasPromotionText">
+                                        <div
+                                            class="row"
+                                            v-if="hasPromotionText"
+                                        >
                                             <div
                                                 class="alert alert-success  col-lg-6 col-md-6 col-sm-12 "
-                                                
                                             >
                                                 {{ hasPromotionText }}
                                             </div>
-                                            <div class="col-lg-6  col-md-6 col-sm-12 ">
+                                            <div
+                                                class="col-lg-6  col-md-6 col-sm-12 "
+                                            >
                                                 <el-checkbox
                                                     v-model="
                                                         form.receive_promotion
@@ -2207,7 +2211,8 @@ export default {
                     if (
                         customer.number == "99999999" ||
                         (customer.identity_document_type_id != "6" &&
-                            customer.identity_document_type_id != "1")
+                            customer.identity_document_type_id != "1" &&
+                            customer.identity_document_type_id != "4")
                     ) {
                         return true;
                     }
