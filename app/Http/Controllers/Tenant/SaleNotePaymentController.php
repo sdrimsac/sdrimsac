@@ -95,12 +95,7 @@ class SaleNotePaymentController extends Controller
         $total_difference = round($total  - $total_paid, 2);
         $total_difference_document = round($total_difference + $penalties_payed, 2);
 
-        dump([
-            'total' => $total,
-            'total_paid' => $total_paid,
-            'total_difference' => $total_difference,
-            'total_difference_document' => $total_difference_document,
-        ]);
+    
         // if ($total_difference_document < 0.01) {
         //     $sale_note->paid = true;
         // }else{

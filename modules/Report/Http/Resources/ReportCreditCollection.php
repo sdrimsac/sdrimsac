@@ -77,12 +77,7 @@ class ReportCreditCollection extends ResourceCollection
                 if($total_number_payments >0 ){
                     $total_py = Payment::where('sale_note_id', $row->id)->sum('amount');
                     $to_due =  floatval($total_py - (floatval($payments_records - $penalties_payed)) );
-                    dump([
-                        'total_py' => $total_py,
-                        'payments_records' => $payments_records,
-                        'penalties_payed' => $penalties_payed,
-                        'to_due' => $to_due
-                    ]);
+                
                 }else{
                     $to_due =  floatval($row->total + $row->total_discount - $advances + $int)  - (floatval($payments_records - $penalties_payed));
 
