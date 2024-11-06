@@ -738,19 +738,22 @@
                                 <thead>
                                     <tr slot="heading" class="bg-primary">
                                         <th class="text-white">#</th>
+                                        <th
+                                            class="text-white text-right font-weight-bold"
+                                        >
+                                            Cantidad
+                                        </th>
                                         <th class="text-white font-weight-bold">
                                             Unidad
                                         </th>
                                         <th class="text-white font-weight-bold">
                                             Descripción
                                         </th>
-                                        <!-- <th class="text-white font-weight-bold">
-                                            Presentación
-                                        </th> -->
                                         <th
-                                            class="text-white text-right font-weight-bold"
+                                            v-if="configuration.maderera"
+                                            class="text-white font-weight-bold"
                                         >
-                                            Cantidad
+                                            Pies
                                         </th>
                                         <th></th>
                                     </tr>
@@ -761,90 +764,96 @@
                                         :key="index"
                                     >
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ row.unit_type_id }}</td>
-                                            <!-- v-html="setDescriptionOfItem(row)" -->
-                                        <td
-                                            class="text-dark"
-                                        >
-                                        {{row.description}}
-
-                                        <template
-                                                    v-if="
-                                                        row.lots &&
-                                                            row.lots.length > 0
-                                                    "
-                                                >
-                                                    <br />
-                                                    <small
-                                                        class="text-primary"
-                                                        v-for="(lot,
-                                                        index) in row.lots"
-                                                        :key="index"
-                                                    >
-                                                        <b>Serie:</b>
-                                                        {{ lot.series }}
-                                                    </small>
-                                                </template>
-
-                                                <template
-                                                    v-if="
-                                                        row.lots_group &&
-                                                            row.lots_group
-                                                                .length > 0
-                                                    "
-                                                >
-                                                    <br />
-                                                    <small
-                                                        class="text-primary"
-                                                        v-for="(lot,
-                                                        index) in row.lots_group"
-                                                        :key="index"
-                                                    >
-                                                        <b>Lote:</b>
-                                                        {{ lot.code }}
-                                                    </small>
-                                                </template>
-
-                                                <template
-                                                    v-if="
-                                                        row.color_size &&
-                                                            row.color_size
-                                                                .length > 0
-                                                    "
-                                                >
-                                                    <br />
-                                                    <small
-                                                        class="text-primary"
-                                                        v-for="(color,
-                                                        index) in row.color_size"
-                                                        :key="index"
-                                                    >
-                                                        <b>Color:</b>
-                                                        {{ color.color }}
-                                                        <b>Talla:</b>
-                                                        {{ color.size }}
-                                                    </small>
-                                                </template>
-                                                <template
-                                                    v-if="
-                                                        row.categoriaMadera 
-                                                    "
-                                                >
-                                                    
-                                                    <span
-                                                        
-                                                    > - 
-                                                        {{`${row.categoriaMadera.selectedGrosor} X ${row.categoriaMadera.selectedAncho} X ${row.categoriaMadera.selectedLargo}  `}}
-                                                    </span>
-                                                </template>
-                                        </td>
-                                        <!-- <td>{{ row.presentation }}</td> -->
-
                                         <td class="text-right">
                                             {{
                                                 getFormatQuantity(row.quantity)
                                             }}
                                         </td>
+                                        <td>{{ row.unit_type_id }}</td>
+                                        <!-- v-html="setDescriptionOfItem(row)" -->
+                                        <td class="text-dark">
+                                            {{ row.description }}
+
+                                            <template
+                                                v-if="
+                                                    row.lots &&
+                                                        row.lots.length > 0
+                                                "
+                                            >
+                                                <br />
+                                                <small
+                                                    class="text-primary"
+                                                    v-for="(lot,
+                                                    index) in row.lots"
+                                                    :key="index"
+                                                >
+                                                    <b>Serie:</b>
+                                                    {{ lot.series }}
+                                                </small>
+                                            </template>
+
+                                            <template
+                                                v-if="
+                                                    row.lots_group &&
+                                                        row.lots_group.length >
+                                                            0
+                                                "
+                                            >
+                                                <br />
+                                                <small
+                                                    class="text-primary"
+                                                    v-for="(lot,
+                                                    index) in row.lots_group"
+                                                    :key="index"
+                                                >
+                                                    <b>Lote:</b>
+                                                    {{ lot.code }}
+                                                </small>
+                                            </template>
+
+                                            <template
+                                                v-if="
+                                                    row.color_size &&
+                                                        row.color_size.length >
+                                                            0
+                                                "
+                                            >
+                                                <br />
+                                                <small
+                                                    class="text-primary"
+                                                    v-for="(color,
+                                                    index) in row.color_size"
+                                                    :key="index"
+                                                >
+                                                    <b>Color:</b>
+                                                    {{ color.color }}
+                                                    <b>Talla:</b>
+                                                    {{ color.size }}
+                                                </small>
+                                            </template>
+                                            <template
+                                                v-if="row.categoriaMadera"
+                                            >
+                                                <span>
+                                                    -
+                                                    {{
+                                                        `${row.categoriaMadera.selectedGrosor} X ${row.categoriaMadera.selectedAncho} X ${row.categoriaMadera.selectedLargo}  `
+                                                    }}
+                                                </span>
+                                            </template>
+                                        </td>
+                                        <td v-if="configuration.maderera" class="text-right">
+                                            <template
+                                                v-if="row.categoriaMadera"
+                                            >
+                                                {{
+                                                    row.categoriaMadera.fot.toFixed(
+                                                        2
+                                                    )
+                                                }}
+                                            </template>
+                                        </td>
+
                                         <!-- <td class="text-right">{{ row.quantity }}</td> -->
                                         <td class="text-right">
                                             <button
@@ -860,162 +869,20 @@
                                     </tr>
                                 </tbody>
                                 <tfoot>
-                                    <!-- <tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="text-right font-weight-bold">
+                                            {{ totalQuantity }}
+                                        </td>
+                                        <td colspan="2"></td>
                                         <td
-                                            class="text-right hidden-sm-down"
-                                            colspan="2"
+                                            v-if="configuration.maderera"
+                                            class="text-right font-weight-bold"
                                         >
-                                            <label class="control-label">
-                                                Producto
-                                                <a
-                                                    v-if="can_add_new_product"
-                                                    href="#"
-                                                    @click.prevent="
-                                                        showDialogNewItem = true
-                                                    "
-                                                    >[+ Nuevo]</a
-                                                >
-                                            </label>
+                                            {{ totalPies }}
                                         </td>
-                                        <td class="hidden-sm-down" colspan="2">
-                                            <div class="row">
-                                                <div class="col-8">
-                                                    <div
-                                                        :class="{
-                                                            'has-danger':
-                                                                errors.items
-                                                        }"
-                                                        class="form-group"
-                                                        id="custom-select"
-                                                    >
-                                                        <el-input
-                                                            id="custom-input"
-                                                        >
-                                                            <el-select
-                                                                v-model="
-                                                                    current_item
-                                                                "
-                                                                id="select-width"
-                                                                :loading="
-                                                                    loading_search
-                                                                "
-                                                                :remote-method="
-                                                                    searchRemoteItems
-                                                                "
-                                                                popper-class="el-select-items"
-                                                                filterable
-                                                                remote
-                                                                ref="selectItem"
-                                                                slot="prepend"
-                                                                @change="
-                                                                    onChangeItem
-                                                                "
-                                                            >
-                                                                <el-option
-                                                                    v-for="(option,
-                                                                    idx) in items"
-                                                                    :key="idx"
-                                                                    :label="
-                                                                        option.full_description
-                                                                    "
-                                                                    :value="
-                                                                        option.id
-                                                                    "
-                                                                ></el-option>
-                                                            </el-select>
-
-                                                            <el-tooltip
-                                                                slot="append"
-                                                                class="item"
-                                                                content="Ver Stock del Producto"
-                                                                effect="dark"
-                                                                placement="bottom"
-                                                            >
-                                                                <el-button
-                                                                    @click.prevent="
-                                                                        clickWarehouseDetail()
-                                                                    "
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-search"
-                                                                    ></i>
-                                                                </el-button>
-                                                            </el-tooltip>
-                                                        </el-input>
-
-                                                        <small
-                                                            v-if="errors.items"
-                                                            class="form-control-feedback"
-                                                            v-text="
-                                                                errors.items[0]
-                                                            "
-                                                        ></small>
-                                                    </div>
-                                                    <template v-if="item">
-                                                        <div
-                                                            v-if="
-                                                                item.lots_enabled &&
-                                                                    item
-                                                                        .lots_group
-                                                                        .length >
-                                                                        0
-                                                            "
-                                                            class="col-12 mt-2"
-                                                        >
-                                                            <a
-                                                                class="text-center font-weight-bold text-info"
-                                                                href="#"
-                                                                @click.prevent="
-                                                                    clickLotGroup
-                                                                "
-                                                            >
-                                                                [&#10004;
-                                                                Seleccionar
-                                                                lote]
-                                                            </a>
-                                                        </div>
-                                                    </template>
-                                                </div>
-                                                <div class="col-4">
-                                                    <div
-                                                        :class="{
-                                                            'has-danger':
-                                                                errors.quantity
-                                                        }"
-                                                        class="form-group"
-                                                    >
-                                                  
-                                                        <el-input-number
-                                                            v-model="quantity"
-                                                            :max="99999999"
-                                                            :min="min_qty"
-                                                            :precision="4"
-                                                            :step="1"
-                                                            placeholder="Cantidad"
-                                                        ></el-input-number>
-                                                        <small
-                                                            v-if="
-                                                                errors.quantity
-                                                            "
-                                                            class="form-control-feedback"
-                                                            v-text="
-                                                                errors
-                                                                    .quantity[0]
-                                                            "
-                                                        ></small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-right hidden-sm-down">
-                                            <el-button
-                                                style="width:100%"
-                                                type="primary"
-                                                @click="addAItemInRow"
-                                                >Agregar
-                                            </el-button>
-                                        </td>
-                                    </tr> -->
+                                        <td></td>
+                                    </tr>
                                     <tr>
                                         <td
                                             class="text-end hidden-md-up"
@@ -1170,7 +1037,28 @@ export default {
     },
     mixins: [setDefaultSeriesByMultipleDocumentTypes],
     computed: {
-        ...mapState(["config", "item", "items", "all_items"])
+        ...mapState(["config", "item", "items", "all_items"]),
+        totalQuantity() {
+            return this.form.items.reduce(
+                (sum, item) => sum + Number(item.quantity),
+                0
+            );
+        },
+        totalPies() {
+            if (this.configuration.maderera) {
+                return this.form.items
+                    .reduce((sum, item) => {
+                        return (
+                            sum +
+                            (item.categoriaMadera
+                                ? item.categoriaMadera.fot
+                                : 0)
+                        );
+                    }, 0)
+                    .toFixed(2);
+            }
+            return 0;
+        }
     },
     data() {
         return {
@@ -1372,7 +1260,6 @@ export default {
             };
         },
         setDescriptionOfItem(item) {
-        
             if (this.config.show_pdf_name) {
                 if (
                     item.item != undefined &&

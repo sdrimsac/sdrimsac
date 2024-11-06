@@ -178,12 +178,16 @@
         <thead class="">
             <tr>
                 <th class="border-top-bottom text-center">Item</th>
+                <th class="border-top-bottom text-right">Cantidad</th>
+                <th class="border-top-bottom text-center">Unidad</th>
                 <th class="border-top-bottom text-center">Código</th>
                 <th class="border-top-bottom text-left">Descripción</th>
                 <th class="border-top-bottom text-left">Presentación</th>
                 <th class="border-top-bottom text-left">Modelo</th>
-                <th class="border-top-bottom text-center">Unidad</th>
-                <th class="border-top-bottom text-right">Cantidad</th>
+                @if ($configuration->maderera)
+                    <th class="border-top-bottom text-right">Pies</th>
+                @endif
+                
             </tr>
         </thead>
         @php
@@ -193,8 +197,19 @@
 @endphp
         <tbody>
             @foreach ($document->items as $row)
+            @php
+                    $quantity += floatval($row->quantity);
+            @endphp
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
+                    <td class="text-right">
+                        @if ((int) $row->quantity != $row->quantity)
+                            {{ $row->quantity }}
+                        @else
+                            {{ number_format($row->quantity, 0) }}
+                        @endif
+                    </td>
+                    <td class="text-center">{{ $row->item->unit_type_id }}</td>
                     <td class="text-center">{{ $row->item->internal_id }}</td>
                     <td class="text-left">
                         @if ($row->name_product_pdf)
@@ -211,12 +226,11 @@
                             $grosor = $madera->selectedGrosor;
                             $fot_totals = $row->quantity * (($ancho * $largo * $grosor) / 12);
                             $fots += $fot_totals;
-                            $quantity += $row->quantity;
+                        
                             $m_description = "${grosor}x${ancho}x${largo}";
                         @endphp
                         {{ $m_description }}
-                        <br />
-                        ({{ number_format($fot_totals, 2) }} PIES)
+                    
                         @endif
                         {{-- @if (!e    mpty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
@@ -262,27 +276,41 @@
                     </td>
                     <td class="text-left">{{ $row->item->presentation }}</td>
                     <td class="text-left">{{ $row->item->model ?? '' }}</td>
-                    <td class="text-center">{{ $row->item->unit_type_id }}</td>
-                    <td class="text-right">
-                        @if ((int) $row->quantity != $row->quantity)
-                            {{ $row->quantity }}
-                        @else
-                            {{ number_format($row->quantity, 0) }}
-                        @endif
-                    </td>
+                    @if ($configuration->maderera)
+                        <td class="text-right">
+                            @isset($row->item->categoriaMadera)
+                                {{ number_format($fot_totals, 2) }}
+                            @endisset
+                        </td>
+                    @endif
+
+                    
                 </tr>
             @endforeach
         </tbody>
         @if ($configuration->maderera)
             <tfoot>
-                <tr>
-                    <td colspan="6" class="text-right font-bold">Total Pies:</td>
-                    <td class="text-right font-bold">{{ number_format($fots, 2) }}</td>
-                </tr>
-                <tr>
-                    <td colspan="6" class="text-right font-bold">Total Cantidad:</td>
-                    <td class="text-right font-bold">{{ number_format($quantity, 0) }}</td>
-                </tr>
+            <tr>
+                <td class="border-top">
+                    <strong>
+                        TOTALES
+                    </strong>
+                </td>
+                <td class="text-right border-top">
+                {{ number_format($quantity, 2) }}
+                </td>
+                <td class="border-top"></td>
+                <td class="border-top"></td>
+                <td class="border-top"></td>
+                <td class="border-top"></td>
+                <td class="border-top"></td>
+                @if ($configuration->maderera)
+                <td class="text-right border-top">
+                {{ number_format($fots, 2) }}
+                </td>
+                @endif
+            </tr>
+
             </tfoot>
             
         @endif
