@@ -2222,11 +2222,12 @@ class CashController extends Controller
                 $cash_id = $cash->id;
                 // $amount = 
                 $credit_cash_out = SaleNote::where('cash_id', $cash_id)->where('is_cash', 1)->where('total', '>', 0)->sum('total');
-
+                $t_amount = $all_cash - $credit_cash_out - $expenses;
                 CashIncomePrincipal::create([
                     'cash_principal_id' => $cash_principal_id,
                     'cash_id' => $cash_id,
-                    'amount' => $all_cash - $credit_cash_out - $expenses,
+                    'amount' => $t_amount,
+                    'status' => $t_amount > 0 ? 1 : 3,
                 ]);
                 $user = User::find($cash->user_id);
                 $name = $user->name;
