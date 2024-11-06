@@ -546,6 +546,8 @@
                             @endphp
                             @if ($model)
                                 {{ $model }}
+                            @else
+                                <br>
                             @endif
 
                         </div>
