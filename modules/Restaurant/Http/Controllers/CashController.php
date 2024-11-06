@@ -2066,8 +2066,7 @@ class CashController extends Controller
             try {
 
                 if (fmod($amount_difference, 1) != 0 && substr($amount_difference, -1) > 0) {
-                    Log::info('fmod ' . fmod($amount_difference, 1));
-                    Log::info('substr ' . substr($amount_difference, -1));
+                
                     $second_decimal = substr($amount_difference, -1);
                     $second_decimal = intval($second_decimal);
                     Log::info($second_decimal);
@@ -2103,6 +2102,9 @@ class CashController extends Controller
             ->where('cash_id', $id)->where('method', 'Efectivo')
             ->where('expenses', 0)
             ->get();
+        $expenses = Box::where('cash_id', $id)->where('expenses', 1)
+        ->where('method', 'Efectivo')
+        ->sum('amount');
 
 
         $all_cash = $all_cash->map(function ($item) {
@@ -2224,7 +2226,7 @@ class CashController extends Controller
                 CashIncomePrincipal::create([
                     'cash_principal_id' => $cash_principal_id,
                     'cash_id' => $cash_id,
-                    'amount' => $all_cash - $credit_cash_out,
+                    'amount' => $all_cash - $credit_cash_out - $expenses,
                 ]);
                 $user = User::find($cash->user_id);
                 $name = $user->name;
