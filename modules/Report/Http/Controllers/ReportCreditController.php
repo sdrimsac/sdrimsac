@@ -529,6 +529,7 @@ class ReportCreditController extends Controller
         $user_id = $request->user_id;
         $type = $request->type;
         $type_payment = $request->type_payment;
+        $is_analist = auth()->user()->isWorkerType('ANALISTA');
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],
@@ -540,6 +541,9 @@ class ReportCreditController extends Controller
         }
         if ($isFromAdmin) {
             $records = $records->where('state_type_id', '!=', '11');
+        }
+        if($is_analist){
+            $records = $records->where('user_id', auth()->user()->id);
         }
         if ($params->date_start && $params->date_end) {
             $records =
