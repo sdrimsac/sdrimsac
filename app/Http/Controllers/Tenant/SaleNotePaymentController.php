@@ -407,6 +407,7 @@ class SaleNotePaymentController extends Controller
             $boxes->date = Carbon::parse($request->input('date_of_payment'))->format('Y-m-d');
             $boxes->type = '1';
             $boxes->state = '1';
+            $boxes->incomes = 1;
             $boxes->method = $payment->description;
             $boxes->user_id = auth()->user()->id;
             $type_document = "NOTA DE VENTA";
