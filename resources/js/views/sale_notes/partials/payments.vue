@@ -538,6 +538,7 @@
                                         >
                                             <button
                                                 v-if="
+                                                row.can_extorned &&
                                                     row.canCancel &&
                                                         !row.extorned
                                                 "

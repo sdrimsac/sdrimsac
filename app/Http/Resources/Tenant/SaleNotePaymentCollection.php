@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Tenant;
 
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Receipt;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -20,8 +21,12 @@ class SaleNotePaymentCollection extends ResourceCollection
             $receipt = Receipt::where('sale_note_payment_id', $row->id)->first();
 
             $external_id = ($receipt == null) ? "" : url('') . "/receipt/print/{$receipt->external_id}";
+            $user_app = auth()->user();
+            $configuration = Configuration::first();
+            $can_extorned = $user_app->can_accept_credit_sale_note || $configuration->extorned_analist;
             return [
                 'id' => $row->id,
+                'can_extorned' => $can_extorned,
                 'extorned' => (bool) $row->extorned,
                 'date_of_payment' => $row->date_of_payment->format('d/m/Y'),
                 'payment_method_type_description' => $row->payment_method_type->description,

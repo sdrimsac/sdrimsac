@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'extorned_analist',
         'origin',
         'brand',
         'model',
@@ -269,6 +270,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'extorned_analist' => 'boolean',
         'origin' => 'boolean',
         'brand' => 'boolean',
         'model' => 'boolean',
@@ -478,6 +480,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'extorned_analist' => (bool)$this->extorned_analist,
             'origin' => (bool)$this->origin,
             'brand' => (bool)$this->brand,
             'model' => (bool)$this->model,

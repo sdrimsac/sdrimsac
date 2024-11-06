@@ -5008,6 +5008,22 @@
                             ></el-switch>
                           </div>
                         </div>
+                                <div class="col-md-2 mt-4">
+                          <div class="form-group">
+                            <label class="control-label w-100">
+                              <i class="fas fa-user-edit tab-icon"></i> Analistas pueden extornar
+                            
+                            </label>
+                            <el-switch
+                              v-model="form.extorned_analist"
+                              active-text="Si"
+                              inactive-text="No"
+                              :active-color="'#28a745'"
+                              :inactive-color="'#6c757d'"
+                              @change="submit('Analistas pueden extornar', form.extorned_analist, 'extorned_analist', 'userEditIcon')"
+                            ></el-switch>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </el-tab-pane>
