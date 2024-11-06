@@ -438,19 +438,62 @@
                                         </td>
                                     </template>
                                     <template v-else>
-                                        <td>PAGO-{{ row.id }}</td>
-                                        <td>{{ row.date_of_payment }}</td>
-                                        <td>{{ row.quote_date }}</td>
-                                        <td>
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                        >
+                                            <template v-if="row.extorned">
+                                                Extornado por: <br>
+                                                {{ row.user_name }}
+                                            </template>
+                                            <template v-else>
+                                                PAGO-{{ row.id }}
+                                            </template>
+                                        </td>
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                        >
+                                            {{ row.date_of_payment }}
+                                        </td>
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                        >
+                                            {{ row.quote_date }}
+                                        </td>
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                        >
                                             {{
                                                 row.payment_method_type_description
                                             }}
                                         </td>
-                                        <td>
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                        >
                                             {{ row.destination_description }}
                                         </td>
-                                        <td>{{ row.reference }}</td>
-                                        <td class="text-center">
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                        >
+                                            {{ row.reference }}
+                                        </td>
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                            class="text-center"
+                                        >
                                             <template v-if="row.filename">
                                                 <button
                                                     v-if="isImage(row.filename)"
@@ -482,23 +525,22 @@
                                                 </button>
                                             </template>
                                         </td>
-                                        <td class="text-end">
+                                        <td
+                                            :class="{
+                                                'text-danger': row.extorned
+                                            }"
+                                            class="text-end"
+                                        >
                                             {{ row.payment }}
                                         </td>
                                         <td
                                             class="series-table-actions text-end"
                                         >
-                                            <!-- <button
-                                                type="button"
-                                                class="btn waves-effect waves-light btn-sm btn-danger"
-                                                @click.prevent="
-                                                    clickDelete(row.id)
-                                                "
-                                            >
-                                                Eliminar
-                                            </button> -->
                                             <button
-                                                v-if="row.canCancel"
+                                                v-if="
+                                                    row.canCancel &&
+                                                        !row.extorned
+                                                "
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-danger"
                                                 @click.prevent="
@@ -507,6 +549,7 @@
                                             >
                                                 Extornar
                                             </button>
+
                                             <button
                                                 v-if="
                                                     row.receipt_link &&
@@ -520,7 +563,6 @@
                                             >
                                                 Imprimir
                                             </button>
-                                            <!--<el-button type="danger" icon="el-icon-delete" plain @click.prevent="clickDelete(row.id)"></el-button>-->
                                         </td>
                                     </template>
                                 </tr>

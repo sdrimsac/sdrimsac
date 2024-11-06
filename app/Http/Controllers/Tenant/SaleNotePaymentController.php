@@ -38,7 +38,7 @@ class SaleNotePaymentController extends Controller
     public function records($sale_note_id)
     {
         $records = SaleNotePayment::where('sale_note_id', $sale_note_id)->where('payment', '>', 0)
-        ->where('extorned', 0)
+        
         ->get();
 
         return new SaleNotePaymentCollection($records);
@@ -252,6 +252,7 @@ class SaleNotePaymentController extends Controller
             DB::connection('tenant')->beginTransaction();
             $sale_note_payment = SaleNotePayment::find($id);
             $sale_note_payment->extorned = true;
+            $sale_note_payment->user_id = auth()->user()->id;
             $sale_note_payment->save();
             $sale_note = SaleNote::find($sale_note_payment->sale_note_id);
             $amount = $sale_note_payment->payment;

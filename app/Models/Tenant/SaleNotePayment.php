@@ -22,6 +22,7 @@ class SaleNotePayment extends ModelTenant
         'reference',
         'change',
         'payment',
+        'user_id',
     ];
     
     //,'receipt'
@@ -40,6 +41,9 @@ class SaleNotePayment extends ModelTenant
         return $this->belongsTo(PaymentMethodType::class);
     }
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
     public function card_brand()
     {
         return $this->belongsTo(CardBrand::class);
