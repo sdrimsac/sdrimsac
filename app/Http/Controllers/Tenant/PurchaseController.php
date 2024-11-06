@@ -527,8 +527,8 @@ class PurchaseController extends Controller
                         $date = date('Y-m-d');
                         $time_box = $time_box;
                         $time_now = date('H:i:s');
-                        $total_without_purshase = $total - $doc->total;
-                        $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total_without_purshase}";
+                        $total_with_purchase = $total + $doc->total;
+                        $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total_with_purchase} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total}";
                         $website = $this->getTenantWebsite();
                         WhatsappSendMessageProccess::dispatch($website->id, $message, null);
                     }

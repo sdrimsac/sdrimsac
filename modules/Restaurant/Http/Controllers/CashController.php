@@ -118,6 +118,8 @@ class CashController extends Controller
         $establishment = Establishment::findOrFail($establishment_id);
         $establishment_description = $establishment->description;
         $principal_cash_id = $cash_income_principal->cash_principal_id;
+        $cash_principal = Cash::findOrFail($principal_cash_id);
+        $user_name_principal = $cash_principal->user->name;
         $description_cash = $cash->reference_number;
         $description = "Ingreso de la caja $description_cash del usuario $user_name del establecimiento $establishment_description";
         $soap_type_id = Company::first()->soap_type_id;
@@ -138,6 +140,16 @@ class CashController extends Controller
         ]);
         $cash_income_principal->status = 3;
         $cash_income_principal->save();
+        $total = (new CashTransferController)->available();
+        $total_withouth_income = $total - $amount;
+        $income = $amount; 
+        // $message ? 
+        // El usuario Arca Administrador hasta la fecha 06-11-2021 / 11:34am contaba con monto de s/ xxxxx y ha aceptado ingreso de cierre de caja de usuario analista xxxx S/xxx, actualizando un saldo de S/xxxx
+        $message = "El usuario $user_name_principal hasta la fecha " . date('d-m-Y') . " / " . date('h:i A') . " contaba con monto de S/ $total_withouth_income y ha aceptado ingreso de cierre de caja de usuario $user_name S/ $income, actualizando un saldo de S/ $total";
+        $website = $this->getTenantWebsite();
+        WhatsappSendMessageProccess::dispatch($website->id, $message, null);
+        
+
         return [
             'success' => true,
             'message' => 'Ingreso aceptado con éxito'

@@ -296,7 +296,8 @@
 <body>
     @php
         $count = ($page - 1) * 32;
-
+        $customer_id = $sale->customer_id;
+        $zone = \App\Models\Tenant\Person::getZone($customer_id);
     @endphp
     {{-- @if ($sale->status !== 'A' && $sale->status !== null)
         <div class="company_logo_box"
@@ -331,9 +332,14 @@
     </table>
     <table class="full-width border-rounded">
         <tr>
-            <td colspan="2">
+            <td>
                 <strong>CLIENTE:</strong>
                 {{ $sale->customer->name }}
+            </td>
+
+            <td>
+                <strong>ANALISTA:</strong>
+                {{ $sale->user->name }}
             </td>
 
         </tr>
@@ -341,7 +347,7 @@
             <td colspan="2">
                 <strong>DIRECCION:</strong>
                 @if ($sale->customer->address)
-                    {{ $sale->customer->address }}
+                    {{ $sale->customer->address }} {{$zone}}
                 @else
                     _________________________________________________________________
                 @endif
@@ -529,24 +535,13 @@
                         <strong>MODELO</strong>
                         <div class="border-rounded">
                             @php
-                                $model = null;
-                                if ($item) {
-                                    $attributes = $item->item->attributes;
-                                    if (count($attributes) > 0) {
-                                        //search in array attributes the element with key 'description' 'Modelo'
-                                        foreach ($attributes as $attribute) {
-                                            if ($attribute->description == 'Modelo') {
-                                                $model = $attribute;
-                                            }
-                                        }
-                                    }
-                                }
+                                $item_db = \App\Models\Tenant\Item::find($item->item_id);
+                                $model = $item_db->model;
                             @endphp
                             @if ($model)
-                                {{ $model->value }}
-                            @else
-                                <br>
+                                {{ $model }}
                             @endif
+
                         </div>
                     </td>
                     <td></td>
