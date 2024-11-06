@@ -2,7 +2,7 @@
     $establishment = $document->establishment;
     $customer = $document->customer;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
-
+    $configuration  = App\Models\Tenant\Configuration::first();
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     // $document_type_driver = App\Models\Tenant\Catalogs\IdentityDocumentType::findOrFail($document->driver->identity_document_type_id);
 @endphp
@@ -186,6 +186,11 @@
                 <th class="border-top-bottom text-right">Cantidad</th>
             </tr>
         </thead>
+        @php
+        $quantity = 0;
+        $fots = 0;
+
+@endphp
         <tbody>
             @foreach ($document->items as $row)
                 <tr>
@@ -205,6 +210,8 @@
                             $largo = $madera->selectedLargo;
                             $grosor = $madera->selectedGrosor;
                             $fot_totals = $row->quantity * (($ancho * $largo * $grosor) / 12);
+                            $fots += $fot_totals;
+                            $quantity += $row->quantity;
                             $m_description = "${grosor}x${ancho}x${largo}";
                         @endphp
                         {{ $m_description }}
@@ -266,6 +273,19 @@
                 </tr>
             @endforeach
         </tbody>
+        @if ($configuration->maderera)
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-right font-bold">Total Pies:</td>
+                    <td class="text-right font-bold">{{ number_format($fots, 2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="text-right font-bold">Total Cantidad:</td>
+                    <td class="text-right font-bold">{{ number_format($quantity, 0) }}</td>
+                </tr>
+            </tfoot>
+            
+        @endif
     </table>
 
     @if ($document->observations)
