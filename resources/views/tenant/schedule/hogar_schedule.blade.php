@@ -344,12 +344,18 @@
 
         </tr>
         <tr>
-            <td colspan="2">
+            <td>
                 <strong>DIRECCION:</strong>
                 @if ($sale->customer->address)
-                    {{ $sale->customer->address }} {{$zone}}
+                    {{ $sale->customer->address }} 
                 @else
                     _________________________________________________________________
+                @endif
+            </td>
+            <td>
+                <strong>ZONA:</strong>
+                @if ($zone)
+                    {{ $zone }}
                 @endif
             </td>
         </tr>
