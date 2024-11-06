@@ -37,7 +37,9 @@ class SaleNotePaymentController extends Controller
 
     public function records($sale_note_id)
     {
-        $records = SaleNotePayment::where('sale_note_id', $sale_note_id)->where('payment', '>', 0)->get();
+        $records = SaleNotePayment::where('sale_note_id', $sale_note_id)->where('payment', '>', 0)
+        ->where('extorned', 0)
+        ->get();
 
         return new SaleNotePaymentCollection($records);
     }
@@ -249,6 +251,8 @@ class SaleNotePaymentController extends Controller
         try {
             DB::connection('tenant')->beginTransaction();
             $sale_note_payment = SaleNotePayment::find($id);
+            $sale_note_payment->extorned = true;
+            $sale_note_payment->save();
             $sale_note = SaleNote::find($sale_note_payment->sale_note_id);
             $amount = $sale_note_payment->payment;
             $payment = Payment::find($sale_note_payment->payment_id);
@@ -265,16 +269,12 @@ class SaleNotePaymentController extends Controller
             $payment->save();
             $receipt = Receipt::where('sale_note_payment_id', $id)->first();
             $cash_id = $receipt->cash_id;
-            $receipt->delete();
             $description_register = "EXTORNO DE PAGO DE NOTA DE VENTA" . " N° " . $sale_note->series . " - " . $sale_note->number;
             
-            if ($cash_id) {
                 /** @var  User $user */
                 $user = auth()->user();
-                $user_cash_id = $user->get_cash_id();
 
-                if (!$user_cash_id != $cash_id) {
-                
+                    $cash_id = $user->get_cash_id();
                     Box::createExpense(
                         $amount,
                         $payment_method_description,
@@ -284,14 +284,11 @@ class SaleNotePaymentController extends Controller
                         null,
                         $sale_note_payment->id
                     );
-                }
-            }
 
-            $box = Box::where('sale_note_payment_id', $id)->first();
-            Box::where('sale_note_payment_id', $id)
-            ->where('amount', $amount)
-            ->update(['sale_note_payment_id' => null]);
-            $sale_note_payment->delete();
+            // Box::where('sale_note_payment_id', $id)
+            // ->where('amount', $amount)
+            // ->update(['sale_note_payment_id' => null]);
+            // $sale_note_payment->delete();
             DB::connection('tenant')->commit();
             return [
                 'success' => true,

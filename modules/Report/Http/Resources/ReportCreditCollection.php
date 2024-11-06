@@ -51,7 +51,9 @@ class ReportCreditCollection extends ResourceCollection
 
             $customer = $row->customer;
             $amount_due = 0;
-            $payments_records = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
+            $payments_records = SaleNotePayment::where('sale_note_id', $row->id)
+            ->where('extorned', 0)
+            ->sum('payment');
             if ($last_payment == null) {
                 $last_paid =  Payment::where('sale_note_id', $row->id)
                     ->where('paid', 1)
@@ -74,7 +76,7 @@ class ReportCreditCollection extends ResourceCollection
             if ($row->paid == true) {
                 $to_due = 0;
             } else {
-                if($total_number_payments >0 ){
+                if($total_number_payments > 0 ){
                     $total_py = Payment::where('sale_note_id', $row->id)->sum('amount');
                     $to_due =  floatval($total_py - (floatval($payments_records - $penalties_payed)) );
                 

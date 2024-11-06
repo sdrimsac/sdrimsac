@@ -12,6 +12,7 @@ class SaleNotePayment extends ModelTenant
     public $timestamps = false;
 
     protected $fillable = [
+        'extorned',
         'payment_id', 
         'sale_note_id',
         'date_of_payment',
@@ -26,6 +27,7 @@ class SaleNotePayment extends ModelTenant
     //,'receipt'
     protected $casts = [
         'date_of_payment' => 'date',
+        'extorned' => 'boolean',
     ];
 
   
