@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Tenant;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UnitTypeCollection extends ResourceCollection
@@ -20,6 +21,8 @@ class UnitTypeCollection extends ResourceCollection
                 'active' => ($row->active)?'Si':'No',
                 'symbol' => $row->symbol,
                 'description' => $row->description,
+                'created_at' => Carbon::parse($row->created_at)->format('Y-m-d H:i'),
+                'updated_at' => $row->updated_at,
             ];
         });
     }

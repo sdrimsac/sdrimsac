@@ -4,11 +4,12 @@
     @close="close"
     append-to-body
     :visible="showDialog"
-    title="Historial De Registro De Vehiculo"
+    title="Nuevo Historial De Registro De Vehiculo"
     close-on-click-modal
-    width="60%"
+    width="80%"
   >
     <form action>
+      <br />
       <div class="form-body">
         <div class="row">
           <div class="col-md-4">
@@ -19,6 +20,9 @@
             <label for="vehiculo">Documento</label>
             <el-input></el-input>
           </div>
+          <div class="col-md-4 text-end">
+            <el-button type="primary" @click="CarVehicle">Crear Nuevo Historia</el-button>
+          </div>
         </div>
         <br />
       </div>
@@ -27,7 +31,7 @@
           <table class="table table-striped table-responsive col-md-12">
             <thead>
               <tr class="bg-primary">
-                <th class="text-white">%%</th>
+                <th class="text-white">#</th>
                 <th class="text-white">Fecha</th>
                 <th class="text-white">Vehiculo</th>
                 <th class="text-white">Personal</th>
@@ -35,6 +39,7 @@
                 <th class="text-white">Trabajos Realizados</th>
                 <th class="text-white">Establecimiento</th>
                 <th class="text-white">Productos Cuenta</th>
+                <th class="text-white">Estado</th>
               </tr>
             </thead>
             <tbody>
@@ -66,24 +71,59 @@
                     </el-button>
                   </el-popover>
                 </td>
+                <td>{{ item.estado }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </form>
+    <car-vehicle :showDialog.sync="showDialogCarVehicle" :vehiculoId="selectedVehiculoId"></car-vehicle>
   </el-dialog>
 </template>
 <script>
+import CarVehicle from "./car_vehicle.vue";
 export default {
-  props: ["showDialog", "vehiculo_id"],
+  props: ["showDialog", "vehiculoId"],
+  components: {
+    CarVehicle
+  },
   data() {
     return {
+      selectedVehiculoId: null,
+      showDialogCarVehicle: false,
       resource: "workshop",
-      historial: []
+      historial: [],
+      vehiculo: null
     };
   },
+  watch: {
+    vehiculoId(newVal) {
+      console.log("vehiculoId cambiado:", newVal);
+      if (newVal) {
+        this.selectedVehiculoId = newVal;
+      }
+    }
+  },
+  /* mounted() {
+    console.log("VER EL ID DEL VEHICULO PARA LA HISTORIA", this.vehiculoId);
+  }, */
   methods: {
+    selectVehiculo(item) {
+      this.selectedVehiculoId = item.vehiculo_id;
+      this.showDialogCarVehicle = true;
+    },
+    CarVehicle() {
+      console.log("Valor de vehiculo:", this.vehiculo);
+
+      if (this.selectedVehiculoId) {
+        this.showDialogCarVehicle = true;
+      } else {
+        console.error(
+          "No se pudo abrir el diálogo, vehiculo no está definido correctamente"
+        );
+      }
+    },
     getData() {
       this.$http
 
@@ -99,7 +139,11 @@ export default {
           console.error("Servicios Detallados:", error);
         });
     },
+    /* open() {
+      this.getData();
+    }, */
     open() {
+      console.log("Abriendo diálogo con vehiculoId:", this.vehiculoId);
       this.getData();
     },
     close() {

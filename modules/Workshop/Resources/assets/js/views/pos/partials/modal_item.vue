@@ -30,7 +30,10 @@
               ></el-option>
             </el-select>
           </div>
-          <div class="col-md-4 col-sm-4"></div>
+          <div class="col-md-4 col-sm-4">
+            <label>stock</label>
+            <span>{{ stock }}</span>
+          </div>
           <div class="col-md-4 col-sm-4">
             <div class="form-group">
               <label>Cantidad</label>
@@ -104,7 +107,8 @@ export default {
       loading_submit: false,
       items: [],
       itemsdb: [],
-      resource: "workshop"
+      resource: "workshop",
+      stock: 0
     };
   },
   mounted() {},
@@ -159,10 +163,6 @@ export default {
         console.warn("No se ha proporcionado un historial_id válido.");
       }
     },
-    /* calculateTotalSum() {
-      // Recalcular el total sumando los totales de todos los ítems
-      this.totalSum = this.items.reduce((sum, item) => sum + item.total, 0);
-    }, */
     handleProductChange(value) {
       this.cantidad = 1;
       this.precioUnitario = 0;
@@ -172,6 +172,7 @@ export default {
       if (selected) {
         console.log("fdsdfsdf", selected);
         this.precioUnitario = Number(selected.sale_unit_price);
+        this.stock = Number(selected.stock);
         this.updateTotal();
       }
       console.log("Producto seleccionado:", value);
@@ -179,29 +180,6 @@ export default {
     updateTotal() {
       this.importeTotal = this.precioUnitario * this.cantidad;
     },
-    /* addItem() {
-      if (this.selectedProduct && this.cantidad > 0) {
-        const selected = this.itemsdb.find(
-          item => item.id === this.selectedProduct
-        );
-        const newItem = {
-          id: this.selectedProduct,
-          description: selected ? selected.description : "",
-          cantidad: this.cantidad,
-          precioUnitario: this.precioUnitario,
-          total: this.importeTotal
-        };
-        this.items.push(newItem);
-
-        this.calculateTotalSum();
-
-        this.resetFormItem();
-
-        console.log("Producto agregado:", newItem);
-      } else {
-        console.warn("Selecciona un producto y establece una cantidad válida.");
-      }
-    }, */
     addItem() {
       if (this.selectedProduct && this.cantidad > 0) {
         const existingItemIndex = this.items.findIndex(item => item.id === this.selectedProduct);
@@ -253,6 +231,7 @@ export default {
             );
 
             this.itemsdb = response.data;
+            console.log("Datos de productos:", response.data);
           } catch (e) {
             console.log(e);
           } finally {
@@ -261,9 +240,14 @@ export default {
       }
     },
     submit() {
+      const itemsTOSubmit = this.items.map(item => ({
+        id: item.id,
+        cantidad: item.cantidad
+      }))
       this.$http
         .post(`/${this.resource}/items`, {
           historial_id: this.vehiculoHistorial,
+          items: itemsTOSubmit,
           items: this.items
         })
         .then(response => {

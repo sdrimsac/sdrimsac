@@ -24,9 +24,10 @@ class CategoryCollection extends ResourceCollection
                 'identifier' => $row->identifier,
                 // $directory = 'public'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'category'.DIRECTORY_SEPARATOR;
                 'icono' => ($row->icono !== 'imagen-no-disponible.jpg') ? asset('storage/uploads/category/'.$row->icono) : asset("/logo/{$row->icono}"),
-                'created_at' => Carbon::parse($row->created_at)->format('Y-m-d'),
+                'created_at' => Carbon::parse($row->created_at)->format('Y-m-d H:i'),
                 'updated_at' => $row->updated_at,
                 'user_name' => $row->user ? $row->user->name : '',
+                'active' => $row->active
             ];
         });
 

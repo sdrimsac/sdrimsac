@@ -7,25 +7,32 @@
         append-to-body
         title="Zonas de cliente"
         v-loading="loading"
-        width="35%"
+        width="50%"
     >
         <div class="data-table-visible-columns">
+            
                 <el-button type="primary" 
                             class="" 
                             href="javascript:void(0)" 
-                            @click.prevent="clickCreate()">
+                            @click.prevent="clickCreate()"
+                            :style="{ marginRight: '20px' }">
                             <i class="icofont-plus-circle"></i>
                         Nuevo
                 </el-button>
+                <el-button type="" 
+                @click="close" 
+                :style="{ backgroundColor: 'transparent', border: 'none', color: '#000' }"
+                ></el-button>
         </div> 
-       
+
+        <br/>
         <div class="row" v-if="zones.length != 0">
             <table class="table table-responsive table-striped">
                 <thead>
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
                         <th class="text-white">Descripción</th>
-                        <th class="text-white">Estado</th>
+                        <th class="text-white text-center">Estado</th>
                         <th class="text-white text-end">Acciones</th>
                     </tr>
                 </thead>
@@ -89,7 +96,7 @@
             </div>
         </div>
         <el-dialog
-            width="550px"
+            width="600px"
             :visible.sync="showCreateForm"
             append-to-body
             @close="showCreateForm = false"

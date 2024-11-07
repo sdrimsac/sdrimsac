@@ -25,8 +25,11 @@ use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\UnitTypePerson;
+use App\Models\Tenant\Warehouse;
 use App\Services\RoleService;
 use GuzzleHttp\Client;
+use Modules\Report\Exports\ExportPersonsImport;
+use Carbon\Carbon;
 use Modules\Vip\Models\SocialMedias;
 
 class PersonController extends Controller
@@ -117,10 +120,10 @@ class PersonController extends Controller
     {
         return [
             'name' => 'Nombre',
-            'number' => 'Número',
+            'number' => 'Número de DNI o RUC',
             'district_id' => 'Distritos',
             'alias' => 'Alias',
-            /* 'zone_description' => 'Zona' */
+            'description' => 'Zona'
 
         ];
     }
@@ -144,17 +147,34 @@ class PersonController extends Controller
     }
     public function records($type, Request $request)
     {
-        $has_credit_line = $request->credit == 'true' ? true : false;
-        //  return 'sd';
-        $records = Person::where($request->column, 'like', "%{$request->value}%")
-            ->where('type', $type);
+        $records = $this->getRecords($type, $request);
+
+        return new PersonCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    public function getRecords($type, Request $request)
+    {
+        $has_credit_line = $request->credit === 'true';
+
+        $records = Person::where('type', $type);
+
+        if ($request->filled('column') && $request->column === 'description') {
+            
+            $records = $records->whereHas('zone', function ($query) use ($request) {
+                $query->where('description', 'like', "%{$request->value}%");
+            })
+                ->join('client_zones', 'persons.client_zone_id', '=', 'client_zones.id')
+                ->orderBy('client_zones.description');
+        } elseif ($request->filled('column') && !empty($request->column)) {
+
+            $records = $records->where($request->column, 'like', "%{$request->value}%")
+                ->orderBy($request->column);
+        }
 
         if ($has_credit_line) {
             $records = $records->where('has_credit_line', $has_credit_line);
         }
-        $records  =  $records->orderBy($request->column);
-
-        return new PersonCollection($records->paginate(config('tenant.items_per_page')));
+        return $records;
     }
 
     public function printer(Request $request)
@@ -332,7 +352,6 @@ class PersonController extends Controller
         return $locations;
     }
 
-
     public function enabled($type, $id)
     {
 
@@ -346,5 +365,21 @@ class PersonController extends Controller
             'success' => true,
             'message' => "Cliente {$type_message} con éxito"
         ];
+    }
+
+    public function exportClients()
+    {
+        $records = Person::where('type', 'customers')->get();
+
+        if ($records->isEmpty()) {
+            return response()->json(['message' => 'No hay datos para exportar.'], 204);
+        }
+
+        $company = Company::first();
+
+        return (new ExportPersonsImport)
+            ->records($records)
+            ->company($company)
+            ->download('Clientes' . '_' . Carbon::now()->format('Y-m-d') . '.xlsx');
     }
 }

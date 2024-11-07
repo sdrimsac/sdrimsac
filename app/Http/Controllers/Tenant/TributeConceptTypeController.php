@@ -17,10 +17,19 @@ class TributeConceptTypeController extends Controller
         return view('tenant.attribute_types.index');
     }
 
-    public function records()
+    public function records(Request $request)
     {
-        /* $records = TributeConceptType ::paginate(config('tenant.attribute_types_per_page')); */
-        $records = AttributeType::paginate(config('tenant.attribute_types_per_page'));
+        $query = AttributeType::query();
+
+        if ($request->has('value') && !empty($request->value)) {
+            // Busca por descripción o id
+            $query->where(function ($q) use ($request) {
+                $q->where('description', 'like', '%' . $request->value . '%')
+                  ->orWhere('id', $request->value);
+            });
+        }
+
+        $records = $query->paginate(100);
 
         return new TributeConceptTypeCollection($records);
     }
@@ -30,6 +39,7 @@ class TributeConceptTypeController extends Controller
         return [
             
             'description' => 'descripcion',
+            'id' => 'identificador',
         ];
     }
 

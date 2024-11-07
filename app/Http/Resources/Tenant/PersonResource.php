@@ -17,6 +17,7 @@ class PersonResource extends JsonResource
         return [
             'varios' => (bool) $this->varios,
             'alias' => $this->alias,
+            'adderss_secondary' => $this->adderss_secondary,
             'credit_line' => $this->credit_line,
             'has_credit_line' => (bool) $this->has_credit_line,
             'id' => $this->id,

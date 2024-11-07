@@ -23,7 +23,7 @@ class Seller extends ModelTenant
     }
     
     public function user() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function documents()
@@ -35,7 +35,7 @@ class Seller extends ModelTenant
     {
         return $this->hasMany(Quotation::class, 'seller_id');
     }
-    public function salenote() 
+    public function saleNotes() 
     {
         return $this->hasMany(SaleNote::class, 'seller_id');
     }

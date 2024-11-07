@@ -138,6 +138,7 @@ class CategoryController extends Controller
     {
         return [
             'name' => 'Nombre',
+            'identifier' => 'identificador',
         ];
     }
 
@@ -267,5 +268,19 @@ class CategoryController extends Controller
 
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => "La categoría esta siendo usada por otros registros, no puede eliminar"] : ['success' => false, 'message' => "Error inesperado, no se pudo eliminar la categoría"];
         }
+    }
+    public function enabledCategories($type, $id)
+    {
+
+        $person = CategoryItem::findOrFail($id);
+        $person->active = $type;
+        $person->save();
+
+        $type_message = ($type) ? 'habilitado' : 'inhabilitado';
+
+        return [
+            'success' => true,
+            'message' => "Categoria {$type_message} con éxito"
+        ];
     }
 }

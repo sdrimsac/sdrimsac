@@ -404,9 +404,6 @@ class SaleNote extends ModelTenant
     {
         return $this->morphMany(InventoryKardex::class, 'inventory_kardexable');
     }
-
-
-
     public function documents()
     {
         return $this->hasMany(Document::class);

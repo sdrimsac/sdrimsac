@@ -9,10 +9,13 @@ use App\Http\Resources\Tenant\SellerResource;
 use App\Http\Resources\Tenant\SeriesCollection;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Series;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Modules\Report\Exports\ExportSeller;
 
 class SellerController extends Controller
 {
@@ -20,12 +23,57 @@ class SellerController extends Controller
     {
         return view('tenant.sellers.index');
     }
-
-    public function records()
+    public function records(Request $request)
     {
-        $records = Seller::query()
-            ->orderBy('id', 'desc');
+        $records = $this->getRecords($request);
+
         return new SellerCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function getRecords(Request $request)
+    {
+        $date_of_issue = $request->input('date_of_issue');
+        $month_start = $request->input('month_start');
+        $active = $request->input('active', 1);
+
+        $query = Seller::query()
+            ->withSum(['documents as documents_total' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+
+                    $query->whereDate('date_of_issue', $date_of_issue);
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                }
+            }], 'total')
+            ->withSum(['saleNotes as sale_notes_total' => function ($query) use ($date_of_issue, $month_start) {
+
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+
+                    $query->whereDate('date_of_issue', $date_of_issue);
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                }
+            }], 'total');
+        if ($request->has('active')) {
+            $active = $request->input('active');
+            $query->where('active', $active);
+        } else {
+            $query->where('active', 1);
+        }
+        /* $query->where('active', $active); */
+
+        if ($request->has('column') && $request->has('value') && !empty($request->value)) {
+            $column = $request->input('column');
+            if (in_array($column, ['name', 'document'])) {
+                $query->where($column, 'like', '%' . $request->value . '%');
+            }
+        }
+        return $query->orderBy('id', 'desc');
     }
     public function check(Request $request)
     {
@@ -46,6 +94,14 @@ class SellerController extends Controller
         }
 
         return ["success" => !$exist, "message" => $exist ? "Las series ya existen" : "Series válidas"];
+    }
+    public function columns()
+    {
+        return [
+            'name' => 'Nombre',
+            'document' => 'Número de DNI o RUC',
+            /* 'active' => 'Estado' */
+        ];
     }
 
     public function tables()
@@ -68,6 +124,8 @@ class SellerController extends Controller
         $id = $request->input('id');
         $seller = Seller::firstOrNew(['id' => $id]);
         $seller->fill($request->all());
+        $user_id = auth()->id();
+        $seller->user_id = $user_id;
         $seller->save();
         return [
             'success' => true,
@@ -77,19 +135,6 @@ class SellerController extends Controller
     }
 
     /* public function destroy($id)
-    {
-        $seller = Seller::findOrFail($id);
-        $seller->delete();
-
-        return [
-
-            'success' => true,
-            'message' => 'Vendedor eliminada con éxito'
-
-        ];
-    } */
-
-    public function destroy($id)
     {
         try {
             $seller = Seller::findOrFail($id);
@@ -105,19 +150,37 @@ class SellerController extends Controller
                 'message' => 'Error al eliminar el vendedor: ' . $e->getMessage(),
             ];
         }
-    }
-
-
-
-
-    /* public function delete($id)
+    } */
+    public function enabledSellers($type, $id)
     {
-        $seller = Seller::findOrFail($id);
-        $seller->delete();
+
+        $person = Seller::findOrFail($id);
+        $person->active = $type;
+        $person->save();
+
+        $type_message = ($type) ? 'habilitado' : 'inhabilitado';
 
         return [
             'success' => true,
-            'message' => 'Vendedor Eliminado con Exito'
+            'message' => "Vendedor {$type_message} con éxito"
         ];
-    } */
+    }
+    public function exportSellers(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+        dump($request->all());
+        $records = $this->getRecords($request)->get();
+        /* dump($records); */
+        if ($records->isEmpty()) {
+            return response()->json(['message' => 'No hay datos para exportar.'], 204);
+        }
+
+        $company = Company::first();
+        /* $establishment = Establishment::first(); */
+        return (new ExportSeller)
+            ->records($records)
+            ->company($company)
+            /* ->establishment($establishment) */
+            ->download('Ventas Vendedores' . '_' . Carbon::now()->format('Y-m-d') . '.xlsx');
+    }
 }

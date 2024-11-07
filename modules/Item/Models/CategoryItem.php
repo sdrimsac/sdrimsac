@@ -18,7 +18,8 @@ class CategoryItem extends ModelTenant
         'identifier',
         'icono',
         'pos_drag',
-        'user_id'
+        'user_id',
+        'active'
 
     ];
 

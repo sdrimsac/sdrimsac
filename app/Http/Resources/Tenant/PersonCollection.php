@@ -18,6 +18,7 @@ class PersonCollection extends ResourceCollection
             return [
                 'document_type_id' => $row->document_type_id,
                 'alias' => $row->alias,
+                'adderss_secondary' => $row->adderss_secondary,
                 'credit_line' => $row->credit_line,
                 'has_credit_line' => (bool) $row->has_credit_line,
                 'id' => $row->id,

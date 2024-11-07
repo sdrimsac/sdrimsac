@@ -15,7 +15,7 @@ class VehiculoRequest extends FormRequest
     {
         $id = $this->input('id');
         return [
-            'placa' => [
+            'observacion' => [
                 'required',
             ],
         ];

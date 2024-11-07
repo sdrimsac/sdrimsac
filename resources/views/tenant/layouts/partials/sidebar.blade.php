@@ -101,14 +101,14 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type == 'superadmin' || ($config->registro_actividad && !$roleService->isLogistic()))
+                    {{-- @if ($user->type == 'superadmin' || ($config->registro_actividad && !$roleService->isLogistic()))
                         <li>
                             <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
                                 href="{{ route('tenant.registers.index') }}">
                                 <i class="fas fa-history"></i> Registro de actividades
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
                     @if ($config->college && !$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"

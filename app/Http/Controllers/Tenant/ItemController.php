@@ -836,8 +836,8 @@ class ItemController extends Controller
         $warehouses = Warehouse::all();
         $accounts = Account::all();
         $payment_method_types = PaymentMethodType::all();
-        $categories = CategoryItem::all();
-
+        /* $categories = CategoryItem::all(); */
+        $categories = CategoryItem::where('active', 1)->get();
         $brands = Brand::all();
         $configuration = Configuration::first();
         return compact(

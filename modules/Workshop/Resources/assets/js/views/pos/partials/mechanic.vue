@@ -103,6 +103,12 @@
                         class="col-md-12 col-12"
                         @click="openpayOrden()"
                       >Generar CP</el-button>
+                      <br />
+                      <el-button
+                        type="info"
+                        class="col-md-12 col-12"
+                        @click="clickCreate(vehiculo.id)"
+                      >Crear Nuevo Historial</el-button>
                     </div>
                   </div>
                 </td>
@@ -122,7 +128,7 @@
                     <i class="fas fa-list"></i>
                   </el-button>
                 </td>
-                <td>sdfsd</td>
+                <td>{{ vehiculo.estado }}</td>
                 <td>
                   <el-button
                     @click="selectItem(vehiculo.id, vehiculo.placa, vehiculo.historial_id)"
@@ -147,7 +153,7 @@
         </div>
       </div>
       <register-history :showDialog.sync="showDialogRegisterHistory" :recordId="recordId"></register-history>
-      <historial :showDialog.sync="showDialogHistorial" :vehiculo_id="selectedVehiculoId"></historial>
+      <historial :showDialog.sync="showDialogHistorial" :vehiculoId="selectedVehiculoId"></historial>
       <modal-item
         :showDialog.sync="showDialogModalItem"
         :vehiculoId="selectedVehiculoId"
@@ -205,7 +211,10 @@ export default {
   },
   methods: {
     clickPrintFormat(recordId) {
-      window.open(`/${this.resource}/vehiculo/format_vehicle/${recordId}`, "_blank");
+      window.open(
+        `/${this.resource}/vehiculo/format_vehicle/${recordId}`,
+        "_blank"
+      );
     },
     clickPrint(recordId) {
       window.open(`/${this.resource}/print/${recordId}/a4`, "_blank");
@@ -337,9 +346,19 @@ export default {
     clickRegisterHistory() {
       this.showDialogRegisterHistory = true;
     },
+    /* HistorialVehiculo(id) {
+      
+      this.selectedVehiculoId = id;
+      console.log(
+        "Vehiculo ID para historial:",
+        id,
+      );
+
+      
+    }, */
     HistorialVehiculo(id) {
       this.selectedVehiculoId = id;
-
+      console.log("Vehiculo ID Para la historia del car:", id);
       this.showDialogHistorial = true;
     },
     open() {

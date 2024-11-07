@@ -28,7 +28,7 @@ class VehiculoResource extends JsonResource
             'motor' => $this->motor,
             'anio_fabricacion' => $this->anio_fabricacion,
             'kilometraje' => $this->kilometraje,
-            'chasis' => $this->chasis,
+            /* 'chasis' => $this->chasis,
             'date_soat_due' => $this->date_soat_due,
             'quantity_front_lights' => $this->quantity_front_lights,
             'state_front_lights' => $this->state_front_lights,
@@ -88,7 +88,7 @@ class VehiculoResource extends JsonResource
             'no_value_things' => $this->no_value_things,
             'cost_for_days' => $this->cost_for_days,
             'gasoline_level' => $this->gasoline_level,
-            'certificate' => $this->certificate,
+            'certificate' => $this->certificate, */
             'historiales' => HistorialResource::collection($this->historiales),
 
         ];

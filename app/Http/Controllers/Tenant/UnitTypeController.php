@@ -18,22 +18,18 @@ class UnitTypeController extends Controller
         return view('tenant.unit_types.index');
     }
 
-    public function records()
+    public function records(Request $request)
     {
-        $records = UnitType::paginate(100);
+        $query = UnitType::query();
+        if ($request->has('value') && !empty($request->value)) {
+            $query->where(function ($q) use ($request) {
+                $q->where('description', 'like', '%' . $request->value . '%');
+            });
+        }
+        $records = $query->paginate(100);
 
         return new UnitTypeCollection($records);
     }
-
-    
-
-    /* public function records(Request $request)
-    {
-        $records = UnitType::where($request->column, 'like', "%{$request->value}%")
-                            ->latest();
-
-        return new UnitTypeCollection($records->paginate(config('tenant.unit_types_per_page')));
-    } */
 
 
     public function columns()

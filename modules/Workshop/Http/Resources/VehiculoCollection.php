@@ -37,7 +37,7 @@ class VehiculoCollection extends ResourceCollection
                 'color' => $row->color,
                 'motor' => $row->motor,
                 'created_at' => $row->created_at->format('d-m-Y H:i'),
-                'chasis' => $row->chasis,
+                /* 'chasis' => $row->chasis,
                 'date_soat_due' => $row->date_soat_due,
                 'date_check_due' => $row->date_check_due,
                 'quantity_front_lights' => $row->quantity_front_lights,
@@ -100,7 +100,7 @@ class VehiculoCollection extends ResourceCollection
                 'cost_for_days' => $row->cost_for_days,
                 'gasoline_level' => $row->gasoline_level,
                 'observations' => $row->observations,
-                'certificate' => $row->certificate,
+                'certificate' => $row->certificate, */
 
             ];
         });

@@ -389,6 +389,31 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-12">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.adderss_secondary }"
+                        >
+                            <label class="control-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <i class="fas fa-globe"></i>
+                                Dirección Real del cliente
+                            </label>
+                            <el-input v-model="form.adderss_secondary" dusk="adderss_secondary">
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.adderss_secondary"
+                                v-text="errors.adderss_secondary[0]"
+                            ></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-12 col-lg-6 col-xl-6">
                         <!-- create a select with options of zones -->
                         <div
@@ -950,6 +975,7 @@ export default {
                 number: '',
                 name: null,
                 alias: null,
+                adderss_secondary: null,
                 trade_name: null,
                 country_id: "PE",
                 department_id: null,

@@ -139,10 +139,14 @@ if ($hostname) {
                     //
                     Route::get('/', [SellerController::class, 'index'])->name('tenant.sellers.index');
                     Route::get('/records', [SellerController::class, 'records']);
+                    Route::get('/columns', [SellerController::class, 'columns']);
+                    Route::get('/record/{id}', [SellerController::class, 'record']);
                     Route::get('/record/{id}', [SellerController::class, 'record']);
                     Route::get('/tables', [SellerController::class, 'tables']);
                     Route::post('/', [SellerController::class, 'store']);
                     Route::delete('/delete/{id}', [App\Http\Controllers\Tenant\SellerController::class, 'destroy']);
+                    Route::get('ventas-seller', [SellerController::class, 'exportSellers']);
+                    Route::get('/enabled/{type}/{id}', [SellerController::class, 'enabledSellers']);
                 });
                 Route::prefix('/registers')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\RegisterController::class, 'index'])->name('tenant.registers.index');
@@ -466,6 +470,8 @@ if ($hostname) {
                 //  Route::post('persons', [App\Http\Controllers\Tenant\PersonController::class, 'store']);
                 Route::delete('persons/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'destroy']);
                 Route::post('persons/import', [App\Http\Controllers\Tenant\PersonController::class, 'import']);
+                // para exportar todo los clientes del sistema
+                Route::get('persons/customers/exportclients', [App\Http\Controllers\Tenant\PersonController::class, 'exportClients']);
                 Route::get('persons/enabled/{type}/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'enabled']);
 
                 //Consolidado

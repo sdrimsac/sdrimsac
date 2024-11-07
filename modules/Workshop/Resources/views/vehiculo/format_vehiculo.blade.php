@@ -737,7 +737,7 @@
                     </p>
                     <p>
                         <strong>Placa:</strong>
-                        {{ $vehiculo->plate_number }}
+                        {{ $vehiculo->placa }}
                     </p>
                     {{-- <p>
                         <strong>
@@ -760,7 +760,7 @@
                         <strong>
                             Año:
                         </strong>
-                        {{ $vehiculo->year }}
+                        {{ $vehiculo->anio_fabricacion }}
                     </p>
                     <p>
                         <strong>Chasis / VIN:</strong>
@@ -786,11 +786,11 @@
                         <strong>
                             Marca:
                         </strong>
-                        {{ $vehiculo->brand ?? "-"}}
+                        {{ $vehiculo->marca ?? "-"}}
                         <strong>
                             Model:
                         </strong>
-                        {{ $vehiculo->model ?? "-" }}
+                        {{ $vehiculo->modelo ?? "-" }}
                     </p>
                     {{-- <p>
                         <strong>

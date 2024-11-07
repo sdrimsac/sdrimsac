@@ -299,7 +299,8 @@ class PosController extends Controller
         $categories = CategoryItem::query()
             ->whereHas('items', function ($query) use ($user) {
                 $query->whereHas('warehouses', function ($query) use ($user) {
-                    $query->where('warehouse_id', $user->establishment_id);
+                    $query->where('warehouse_id', $user->establishment_id)
+                    ->where('active', 1);
                 });
             })
             ->where('name', '<>', 'INSUMOS')

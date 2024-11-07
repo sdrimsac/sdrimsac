@@ -2263,6 +2263,7 @@ class DocumentController extends Controller
             ->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
+                    'stock' => $row->stock,
                     'max_quantity' => $row->max_quantity,
                     'max_quantity_description' => $row->max_quantity_description,
                     'unit_type_description' => $row->unit_type->description,

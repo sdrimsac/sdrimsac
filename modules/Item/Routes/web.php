@@ -42,6 +42,9 @@ Route::middleware(['auth', 'locked.tenant'])->group(function () {
     Route::get('items/categories/export', 'CategoryController@export');
     Route::post('items/categories', 'CategoryController@store');
     Route::delete('items/categories/{category}', 'CategoryController@destroy');
+    /* Route::delete('items/categories/enabled/{type}/{categories}', 'CategoryController@enabledCategories'); */
+    /* Route::get('items/categories/enabled/{type}/{id}', ['CategoryController@enabledCategories']); */
+    Route::get('items/categories/enabled/{type}/{id}', 'CategoryController@enabledCategories');
 
     Route::get('brands', 'BrandController@index')->name('tenant.brands.index')->middleware('redirect.level');
     Route::get('brands/records', 'BrandController@records');

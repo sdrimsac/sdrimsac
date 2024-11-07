@@ -22,7 +22,7 @@ class Vehiculo extends ModelTenant
         'anio_fabricacion',
         'kilometraje',
         'active',
-        'chasis',
+        /* 'chasis',
         'date_soat_due',
         'date_check_due ',
         'quantity_front_lights',
@@ -85,7 +85,7 @@ class Vehiculo extends ModelTenant
         'cost_for_days',
         'gasoline_level',
         'observations',
-        'certificate',
+        'certificate', */
     ];
     public function customer(){
         return $this->belongsTo(Person::class,'customer_id');
