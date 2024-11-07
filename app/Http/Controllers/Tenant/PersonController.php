@@ -369,6 +369,7 @@ class PersonController extends Controller
 
     public function exportClients()
     {
+        ini_set('memory_limit', '2048M');
         $records = Person::where('type', 'customers')->get();
 
         if ($records->isEmpty()) {

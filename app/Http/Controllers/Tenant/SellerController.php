@@ -168,9 +168,7 @@ class SellerController extends Controller
     public function exportSellers(Request $request)
     {
         ini_set('memory_limit', '2048M');
-        dump($request->all());
         $records = $this->getRecords($request)->get();
-        /* dump($records); */
         if ($records->isEmpty()) {
             return response()->json(['message' => 'No hay datos para exportar.'], 204);
         }
