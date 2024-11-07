@@ -415,7 +415,8 @@
               <td
                 class="text-end"
                 v-if="columns.paid.visible && row.total > 0"
-              >{{ row.paid ? "Pagado" : "Pendiente" }}</td>
+              >{{ row.paid ? "Pagado" : "Pendiente" }}
+              </td>
             </tr>
           </data-table>
         </div>

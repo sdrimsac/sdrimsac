@@ -64,7 +64,7 @@
           >
             <el-checkbox v-model="search.credit" @change="getRecords">A cuenta</el-checkbox>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2" v-if="typeUser === 'superadmin'">
             <el-button
               class="submit"
               type="success"
@@ -178,11 +178,6 @@ export default {
       );
     },
     getRecords() {
-      //   this.$http.get(`/filtrar_distritos/records`)
-      // .then(response => {
-      //     this.array_district = response.data.district
-
-      // })
       return this.$http
         .get(`/${this.resource}/records?${this.getQueryParameters()}`)
         .then(response => {
