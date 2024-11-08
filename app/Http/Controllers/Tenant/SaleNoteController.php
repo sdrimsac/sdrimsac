@@ -390,9 +390,13 @@ class SaleNoteController extends Controller
     public function credit_cash_records(Request $request)
     {
         $value = $request->value;
-        $records = SaleNote::where('credit_cash', true)
-            ->where('total', '>', DB::raw('total_payment'))
-            ->where('paid', false);
+        $records =  SaleNote::where('credit_cash', true)
+        ->where('state_type_id','<>', '11')
+        ->whereDoesntHave('credit_payments')
+        ->where('paid', 0)
+        ->join('boxes as b', 'sale_notes.id', '=', 'b.sale_note_id')
+        ->whereRaw('sale_notes.total > (SELECT COALESCE(SUM(b2.amount), 0) FROM boxes as b2 WHERE b2.sale_note_id = sale_notes.id)')
+        ->select('sale_notes.*');
         if ($value) {
             $records = $records->whereHas('customer', function ($query) use ($value) {
                 $query->where('name', 'like', "%{$value}%")
@@ -401,7 +405,6 @@ class SaleNoteController extends Controller
             });
         }
         $records->latest();
-
         return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function getItemsFromNotes(Request $request)
@@ -1711,6 +1714,9 @@ class SaleNoteController extends Controller
                 $is_discount = $total_variation < $total_original;
                 $message = "Se ha generado un documento con variación para la habitación " . $room . " por S/" . $total_variation . " Total Original: S/" . $total_original . "" . ($is_discount ? " (Descuento)" : " (Recargo)");
                 (new WhatsappController)->sendMessageAll($message);
+            }
+            if ($request->receive_promotion) {
+                $this->desactivePromotion($this->sale_note);
             }
             if ($request->promotion_id) {
                 $this->savePromotion(
