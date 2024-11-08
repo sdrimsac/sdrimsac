@@ -1323,6 +1323,10 @@ class DocumentController extends Controller
             $quotation->save();
         }
         $establishment = Establishment::where('id', $document->establishment_id)->first();
+
+        if ($request->receive_promotion) {
+            $this->desactivePromotion($document);
+        }
         if ($request->promotion_id) {
             $this->savePromotion(
                 $document,

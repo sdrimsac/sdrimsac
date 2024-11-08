@@ -25,7 +25,7 @@ use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\MaderaController;
 
 $hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home']);
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 if ($hostname) {
     Route::domain($hostname->fqdn)->group(
         function () {
@@ -592,7 +592,7 @@ if ($hostname) {
                 Route::get('voided/columns', [App\Http\Controllers\Tenant\VoidedController::class, 'columns']);
                 Route::get('voided/records', [App\Http\Controllers\Tenant\VoidedController::class, 'records']);
                 Route::post('voided', [App\Http\Controllers\Tenant\VoidedController::class, 'store']);
-                //            Route::get('voided/download/{type}/{voided}', [App\Http\Controllers\Tenant\VoidedController::class, 'download'])->name('tenant.voided.download']);
+                //            Route::get('voided/download/{type}/{voided}', [App\Http\Controllers\Tenant\VoidedController::class, 'download'])->name('tenant.voided.download');
                 Route::get('voided/status/{voided}', [App\Http\Controllers\Tenant\VoidedController::class, 'status']);
                 Route::get('voided/status_masive', [App\Http\Controllers\Tenant\VoidedController::class, 'status_masive']);
 
@@ -899,8 +899,10 @@ if ($hostname) {
                     Route::get('/record/{id}', [PromotionDocumentController::class, 'record']);
                     Route::post('/', [PromotionDocumentController::class, 'store']);
                     Route::delete('/{id}', [PromotionDocumentController::class, 'destroy']);
+                    Route::get("/get-items/{person_id}", [PromotionDocumentController::class, 'getItemsByPerson']);
                     Route::get('records-customers/{customer_id}', [PromotionDocumentController::class, 'byCustomer']);
                 });
+                Route::get('promotion-document/items-by-person/{id}', [PromotionDocumentController::class, 'getItemsByPerson']);
                 
                 Route::get('/search-ce/{ce}', [App\Http\Controllers\Tenant\PersonController::class, 'serviceCe']);
                 //Promotion

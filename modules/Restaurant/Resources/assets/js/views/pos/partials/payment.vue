@@ -411,6 +411,7 @@
                                                 class="col-lg-6  col-md-6 col-sm-12 "
                                             >
                                                 <el-checkbox
+                                                    @change="receivePromotion"
                                                     v-model="
                                                         form.receive_promotion
                                                     "
@@ -1740,6 +1741,7 @@ export default {
     },
     data() {
         return {
+            promotionItems: [],
             hasPromotionText: null,
             paymentVariation: {
                 description: "Consumo",
@@ -1830,7 +1832,6 @@ export default {
             conf: {},
             started: true,
             refCustomer: null,
-            currentDocumentsType: [],
             time: null,
             splitPayments: [],
             splitProducts: [],
@@ -2019,9 +2020,14 @@ export default {
                 this.enterAmount();
             }
         }
+        // this.fetchPromotionItems();
     },
     mounted() {},
     methods: {
+        receivePromotion() {
+            // console.log(this.form.items);
+            this.fetchPromotionItems();
+        },
         sendAjustment(amount) {
             this.$http.post("/cash/adjustment", {
                 amount,
@@ -2044,7 +2050,6 @@ export default {
             this.sendPayment();
         },
         insertReferenceNumber() {
-            console.log("entra a referencia");
             let pass = false;
             if (this.form.reference_number && this.form.bank_account_id) {
                 let bank = this.bank_accounts.find(
@@ -2061,10 +2066,7 @@ export default {
                 }
                 pass = true;
             }
-            console.log(
-                "🚀 ~ insertReferenceNumber ~ this.form.observatio:",
-                this.form.observatio
-            );
+    
             return pass;
         },
         focusObservation() {
@@ -2245,6 +2247,73 @@ export default {
                 this.bank = null;
                 this.hasExceedBank = false;
             }
+        },
+        getFreeAfectation(affectation_igv_type_id) {
+            if (affectation_igv_type_id == 10) {
+                return 15;
+            }
+            if (affectation_igv_type_id == 20) {
+                return 21;
+            }
+            return affectation_igv_type_id;
+        },
+        addFreeItem(i) {
+
+            let affectation_igv_type_id = this.getFreeAfectation(
+                i.sale_affectation_igv_type_id
+            );
+            //  i.sale_affectation_igv_type_id ==
+            let item = {
+                ...i,
+                warehouse_id: null,
+                item: i,
+                item_id: i.id,
+                unit_value:
+                    affectation_igv_type_id == 10
+                        ? i.sale_unit_price / (1 + this.percentage_igv / 100)
+                        : i.sale_unit_price,
+                quantity: i.quantity,
+                aux_quantity: i.quantity,
+                total_base_igv:
+                    affectation_igv_type_id == 10
+                        ? (i.sale_unit_price * i.quantity) /
+                          (1 + this.percentage_igv / 100)
+                        : i.sale_unit_price * i.quantity,
+                percentage_igv: this.percentage_igv,
+                total_igv:
+                    affectation_igv_type_id == 10
+                        ? ((i.sale_unit_price * i.quantity) /
+                              (1 + this.percentage_igv / 100)) *
+                          (this.percentage_igv / 100)
+                        : 0,
+                total_base_isc: 0.0,
+                percentage_isc: 0.0,
+                total_isc: 0.0,
+                total_base_other_taxes: 0.0,
+                percentage_other_taxes: 0.0,
+                total_other_taxes: 0.0,
+                total_taxes:
+                     0,
+                total_value:
+                    i.quantity * i.sale_unit_price,
+                total_charge: 0.0,
+                total_discount: 0.0,
+                total: i.sale_unit_price * i.quantity,
+                price_type_id: "01",
+                unit_price: i.sale_unit_price,
+                unit_price_value: i.sale_unit_price,
+                has_igv: i.has_igv,
+                affectation_igv_type_id: affectation_igv_type_id,
+                unit_price: i.sale_unit_price,
+                presentation: null,
+                charges: [],
+                discounts: [],
+                attributes: [],
+                affectation_igv_type: affectation_igv_type_id
+            };
+
+            this.form.items.push(item);
+            this.reCalculateTotal();
         },
         formatItems(items = [], affectation = null) {
             items = items.map(i => {
@@ -3817,11 +3886,12 @@ export default {
             }
         },
         async clickPayment(form) {
+            let boxes = this.currentPayments.reduce((a, b) => a + Number(b.amount), 0);
             let amount1 = Number(this.form.enter_amount);
             let amount2 = Number(this.form.total);
             if (
                 this.configuration.sale_note_credit_cash &&
-                amount1 < amount2 &&
+                (boxes + amount1) < amount2 &&
                 this.form.document_type_id == "80"
             ) {
                 try {
@@ -3835,7 +3905,7 @@ export default {
                         }
                     );
                 } catch (e) {
-                    /* return; */
+                    return;
                 }
             }
 
@@ -3898,7 +3968,6 @@ export default {
             let customer = this.customers.find(c => c.id == form.customer_id);
 
             if (customer == undefined) {
-                console.log("entrando...");
                 await this.reloadDataCustomers(form.customer_id);
                 customer = this.customers.find(c => c.id == form.customer_id);
             }
@@ -4060,10 +4129,7 @@ export default {
                     printOrdenHotel = resultado;
                 }
 
-                console.log(
-                    "🚀 ~ clickPayment ~ form.variation:",
-                    form.variation
-                );
+        
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined ||
@@ -4606,6 +4672,36 @@ export default {
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;
                 this.inputDiscountAmount();
+            }
+        },
+        async fetchPromotionItems() {
+            if (!this.form.customer_id) {
+                this.$toast.error("El cliente es requerido");
+                return;
+            }
+
+            const loading = this.$loading({
+                lock: true,
+                text: "Cargando..."
+            });
+            try {
+                const response = await this.$http.get(
+                    `/promotion-document/items-by-person/${this.form.customer_id}`
+                );
+                if (response.data) {
+                    let items = response.data;
+                    items = items.reduce((a, b) => a.concat(b), []);
+                    this.promotionItems = items;
+                    this.promotionItems.forEach(item => {
+                        this.addFreeItem(item);
+                    });
+                } else {
+                    this.$toast.error("No se encontraron items de promoción");
+                }
+            } catch (error) {
+                this.$toast.error("Ocurrió un error");
+            }finally {
+                loading.close();
             }
         }
     }

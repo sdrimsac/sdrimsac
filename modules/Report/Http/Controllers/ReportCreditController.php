@@ -529,7 +529,9 @@ class ReportCreditController extends Controller
         $user_id = $request->user_id;
         $type = $request->type;
         $type_payment = $request->type_payment;
-        $is_analist = auth()->user()->isWorkerType('ANALISTA');
+        /** @var User $user */
+        $user = auth()->user();
+        $is_analist = $user->isWorkerType('ANALISTA');
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],

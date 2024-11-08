@@ -54,12 +54,15 @@ class SaleNotePaymentController extends Controller
 
     public function document($sale_note_id)
     {
+        $configuration = Configuration::first();
         $sale_note = SaleNote::find($sale_note_id);
         $penalty = $sale_note->credit_cash == 0 ? $sale_note->getPenalties() : 0;
         if ($sale_note->creditPayments->count() > 0) {
             $total_paid = $sale_note->creditPayments->sum('amount_paid');
         } else {
-            $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
+
+            // $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
+            $total_paid = round(collect($sale_note->boxes)->sum('amount'), 2);
         }
         // $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
         $penalties_payed = Payment::where('sale_note_id', $sale_note_id)

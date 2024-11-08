@@ -308,11 +308,15 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($user->type == 'superadmin' || $config->is_promotion_document)
+                        @if ($user->type == 'superadmin' || $config->is_promotion_document || $config->promotions_by_points)
                             <li>
                                 <a href="{{ route('tenant.promotions_document.index') }}">
                                     <i class="icofont-price"></i>
-                                    Promocion documento
+                                    @if ($config->is_promotion_document)
+                                        Promocion documento
+                                    @else
+                                        Promocion por puntos
+                                    @endif
                                 </a>
                             </li>
                         @endif
@@ -601,7 +605,7 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
-                    @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago ))
+                    @if ($user->type == 'superadmin' || $config->reporte_metodos_pago)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                                 href="{{ route('reports.methods.index') }}">
@@ -667,15 +671,15 @@
                             </li>
                         @endif
                         @if ($user->type == 'superadmin' || $config->house)
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
-                                href="{{ route('reports.credits.credit_index') }}">
-                                <i class="icofont-money-bag"></i>
-                                Ganancias Hogar / Efectivo
-                            
-                            </a>
-                        </li>
-                    @endif
+                            <li>
+                                <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
+                                    href="{{ route('reports.credits.credit_index') }}">
+                                    <i class="icofont-money-bag"></i>
+                                    Ganancias Hogar / Efectivo
+
+                                </a>
+                            </li>
+                        @endif
                     @endif
                     @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm && !$roleService->isLogistic())
                         @if ($user->type == 'superadmin' || $config->reporte_ganancias)
@@ -1049,7 +1053,7 @@
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.servicesdetails') }}">
                             <i class="fas fa-biliard"></i>
-                            Sub Servicios 
+                            Sub Servicios
                         </a>
                     </li>
                 </ul>

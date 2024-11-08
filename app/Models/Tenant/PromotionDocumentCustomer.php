@@ -12,6 +12,7 @@ class PromotionDocumentCustomer extends ModelTenant
         'promotion_document_id',
         'customer_id',
         'acc_total',
+        'points',
         'active',
     ];
 

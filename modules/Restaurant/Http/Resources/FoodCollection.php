@@ -99,13 +99,7 @@ class FoodCollection extends ResourceCollection
                         $price =  $price * ($igv / 100 + 1);
                     }
                 }
-                // else {
-                //     //si no es afectado se le reduce, si es afectado el precio se queda igual
-                //     $igv = (new StoreController)->getIgvByUser();
-                //     if (!$hasAffectationIgv) {
-                //         $price =  $price / ($igv / 100 + 1);
-                //     }
-                // }
+            
             }
             $categoria_madera_item = $item->categoria_madera;
             if ($configuracion->consolidated_quotations && !is_array($item_unit_types)) {

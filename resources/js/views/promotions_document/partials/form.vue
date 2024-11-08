@@ -21,7 +21,14 @@
             </div>
             <div class="col-md-2">
                 <label for="total">
-                    <strong>Total</strong>
+                    <strong>
+                        <template v-if="promotionByPoints">
+                            Monto x Punto
+                        </template>
+                        <template v-else>
+                            Total
+                        </template>
+                    </strong>
                 </label>
                 <el-input
                     v-model="form.total"
@@ -58,70 +65,75 @@
                 ></el-date-picker>
             </div>
         </div>
-        <div class="row m-1">
-            <div class="col-md-6">
-                <label for="item">Producto</label>
-                <el-select
-                    v-model="form.item_id"
-                    :loading="loading_search"
-                    :remote-method="searchRemoteItems"
-                    filterable
-                    placeholder="Buscar"
-                    remote
-                    @change="changeItem"
-                >
-                    <el-option
-                        v-for="option in items"
-                        :key="option.id"
-                        :value="option.id"
-                        :label="option.full_description"
-                    ></el-option>
-                </el-select>
+        <template v-if="!promotionByPoints">
+            <div class="row m-1">
+                <div class="col-md-6">
+                    <label for="item">Producto</label>
+                    <el-select
+                        v-model="form.item_id"
+                        :loading="loading_search"
+                        :remote-method="searchRemoteItems"
+                        filterable
+                        placeholder="Buscar"
+                        remote
+                        @change="changeItem"
+                    >
+                        <el-option
+                            v-for="option in items"
+                            :key="option.id"
+                            :value="option.id"
+                            :label="option.full_description"
+                        ></el-option>
+                    </el-select>
+                </div>
+                <div class="col-md-4">
+                    <label for="quantity">
+                        <strong>Cantidad</strong>
+                    </label>
+                    <el-input
+                        v-model="form.quantity"
+                        placeholder="Cantidad"
+                        clearable
+                    ></el-input>
+                </div>
+                <div class="col-md-2">
+                    <br />
+                    <el-button type="primary" @click="addItem">
+                        Agregar
+                    </el-button>
+                </div>
             </div>
-            <div class="col-md-4">
-                <label for="quantity">
-                    <strong>Cantidad</strong>
-                </label>
-                <el-input
-                    v-model="form.quantity"
-                    placeholder="Cantidad"
-                    clearable
-                ></el-input>
+            <div class="row m-1">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(item, index) in form.items"
+                                :key="index"
+                            >
+                                <td>{{ item.full_description }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>
+                                    <el-button
+                                        type="danger"
+                                        @click="deleteItem(index)"
+                                    >
+                                        Eliminar
+                                    </el-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-md-2">
-                <br />
-                <el-button type="primary" @click="addItem">
-                    Agregar
-                </el-button>
-            </div>
-        </div>
-        <div class="row m-1">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item, index) in form.items" :key="index">
-                            <td>{{ item.full_description }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>
-                                <el-button
-                                    type="danger"
-                                    @click="deleteItem(index)"
-                                >
-                                    Eliminar
-                                </el-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </template>
         <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="save">Guardar</el-button>
@@ -131,7 +143,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "recordId"],
+    props: ["showDialog", "recordId", "promotionByPoints"],
     data() {
         return {
             form: {
@@ -152,15 +164,14 @@ export default {
         changeItem() {
             this.form.quantity = 1;
         },
-        getRecord(){
-            this.$http.get(`/promotions-document/record/${this.recordId}`)
+        getRecord() {
+            this.$http
+                .get(`/promotions-document/record/${this.recordId}`)
                 .then(response => {
-                    this.form = response.data
-                })
-
+                    this.form = response.data;
+                });
         },
         validForm() {
-        
             if (this.form.description.length < 3) {
                 this.$toast.error(
                     "La descripción debe tener al menos 3 caracteres"
@@ -223,6 +234,7 @@ export default {
                 );
                 if (response.status == 200) {
                     this.$toast.success("Promoción creada correctamente");
+                    this.$emit("reload");
                     this.close();
                 }
             } catch (error) {
@@ -262,9 +274,9 @@ export default {
             }
         },
         open() {
-            console.log("open");
-            if(this.recordId){
-                this.getRecord()
+            console.log("open " + this.promotionByPoints);
+            if (this.recordId) {
+                this.getRecord();
             }
         },
         initForm() {

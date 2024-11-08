@@ -587,6 +587,29 @@
                               ></el-switch>
                             </div>
                           </div>
+                            <div class="col-md-3 mb-4">
+                            <div class="form-group">
+                              <label class="control-label w-100">
+                                <i ref="promotionsIcon" class="fas fa-tags tab-icon"></i> Habilitar Promociones por puntos
+                                <el-tooltip
+                                  class="item"
+                                  effect="dark"
+                                  content="Por cada cierto total de compra el cliente adquiere un producto gratis"
+                                  placement="top-start"
+                                >
+                                  <i class="fa fa-info-circle"></i>
+                                </el-tooltip>
+                              </label>
+                              <el-switch
+                                v-model="form.promotions_by_points"
+                                active-text="HABILITADO"
+                                inactive-text="DESHABILITADO"
+                                :active-color="'#28a745'"
+                                :inactive-color="'#6c757d'"
+                                @change="() => submit('Habilitar Promociones por puntos', form.promotions_by_points, 'promotionsIcon')"
+                              ></el-switch>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5637,6 +5660,14 @@ export default {
   },
 
   methods: {
+    promotionsSetUp(optionName){
+        console.log("🚀 ~ promotionsSetUp ~ optionName:", optionName)
+        if (optionName === 'Habilitar Promociones Documento' && this.form.is_promotion_document) {
+          this.form.promotions_by_points = false;
+        } else if (optionName === 'Habilitar Promociones por puntos' &&  this.form.promotions_by_points) {
+          this.form.is_promotion_document = false;
+        }
+    },
     highlight(text, query) {
       if (!query) return text;
       const regex = new RegExp(`(${query})`, "gi");
@@ -5644,6 +5675,7 @@ export default {
     },
 
     async submit(optionName, isActive, iconOrImgSrc, iconRef, isImage = false) {
+      this.promotionsSetUp(optionName);
       const action = isActive ? "ACTIVADO" : "DESACTIVADO";
       const backgroundColor = "#f8f9fa"; // Fondo blanco o gris claro
       const actionColor = isActive ? "#28a745" : "#dc3545"; // Verde para activado, rojo para desactivado
@@ -5658,6 +5690,7 @@ export default {
       /* console.log('Enviando datos a la API:', this.form, `/${this.resource}`); */
 
       this.loading_submit = true;
+
       try {
         const response = await this.$http.post(`/${this.resource}`, this.form);
 

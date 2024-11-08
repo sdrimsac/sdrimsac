@@ -14,6 +14,27 @@ use Illuminate\Support\Facades\Log;
  */
 trait PromotionDocumentTrait
 {
+
+    public function desactivePromotion($document)
+    {
+        try {
+            $customer_id = $document->customer_id;
+            $promotionCustomers = PromotionDocumentCustomer::where('customer_id', $customer_id)
+                ->whereHas('promotion_document', function ($query) {
+                    $query->whereColumn('promotion_document_customers.acc_total', 'promotion_documents.total');
+                })
+                ->get();
+
+            foreach ($promotionCustomers as $promotionCustomer) {
+                $promotionCustomer->active = 0;
+                $promotionCustomer->save();
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $e->getMessage();
+        }
+    }
+
     public function savePromotion($document, $promotion_id)
     {
         try {

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Tenant\PromotionDocumentCollection;
 use App\Http\Resources\Tenant\PromotionDocumentResource;
+use App\Models\Tenant\Configuration;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Tenant\Item;
@@ -20,7 +21,8 @@ class PromotionDocumentController extends Controller
 {
     public function index()
     {
-        return view('tenant.promotion_document.index');
+        $configuration = Configuration::select('is_promotion_document', 'promotions_by_points')->first();
+        return view('tenant.promotion_document.index', compact('configuration'));
     }
 
 
@@ -42,7 +44,23 @@ class PromotionDocumentController extends Controller
 
     public function records(Request $request)
     {
-        $records = PromotionDocument::orderBy('description');
+
+        $configuration = Configuration::select('promotions_by_points')->first();
+        $records = PromotionDocument::query();
+
+        $column = $request->input('column');
+        $value = $request->input('value');
+
+        if ($column) {
+            $records = $records->where($column, 'like', "%{$value}%");
+        }
+
+        if ($configuration->promotions_by_points) {
+            $records = $records->where('is_points', 1);
+        } else {
+            $records = $records->where('is_points', 0);
+        }
+
 
         return new PromotionDocumentCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -120,6 +138,22 @@ class PromotionDocumentController extends Controller
 
         return $promotions;
     }
+
+    public function getItemsByPerson($id)
+    {
+        $promotionDocumentCustomers = PromotionDocumentCustomer::where('customer_id', $id)->get();
+        $items = [];
+
+        foreach ($promotionDocumentCustomers as $promotionDocumentCustomer) {
+            $promotionDocument = PromotionDocument::find($promotionDocumentCustomer->promotion_document_id);
+            if ($promotionDocument && $promotionDocumentCustomer->acc_total == $promotionDocument->total) {
+                $items[] = $promotionDocument->getFormattedItems();
+            }
+        }
+
+        return $items;
+    }
+
     public function destroy($id)
     {
         //return 'sd';

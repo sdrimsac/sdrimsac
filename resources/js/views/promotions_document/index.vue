@@ -40,7 +40,7 @@
                         <th class="text-white">Descripción</th>
                         <th class="text-white">Fecha inicio</th>
                         <th class="text-white">Fecha Final</th>
-                        <th class="text-white">Total a consumir</th>
+                        <th class="text-white">{{accDescription}}</th>
                         <th class="text-white text-right">Acciones</th>
                     </tr>
 
@@ -90,6 +90,8 @@
             <promotion-form
                 :showDialog.sync="showDialog"
                 :record-id="recordId"
+                :promotionByPoints="promotionByPoints"
+                @reload="() => $refs.datatable.getRecords()"
             ></promotion-form>
         
         </div>
@@ -100,7 +102,7 @@ import DataTable from "../../../../resources/js/components/DataTable.vue";
 import { deletable } from "../../../../resources/js/mixins/deletable";
 import PromotionForm from "./partials/form.vue";
 export default {
-    props: ["typeUser"],
+    props: ["typeUser","configuration"],
     mixins: [deletable],
     components: {
         DataTable,
@@ -117,6 +119,14 @@ export default {
             warehousesDetail: []
         };
     },
+    computed: {
+        accDescription(){
+            return this.configuration.is_promotion_documents ? 'Total a consumir' : 'Monto por punto';
+        },
+        promotionByPoints () {
+            return this.configuration.promotions_by_points;
+        },
+    },
     created() {
      
     },
@@ -129,6 +139,7 @@ export default {
             this.showWarehousesDetail = true;
         },
         clickCreate(recordId = null) {
+            console.log("🚀 ~ clickCreate ~ this.promotionByPoints:", this.promotionByPoints)
             this.recordId = recordId;
             this.showDialog = true;
         },
