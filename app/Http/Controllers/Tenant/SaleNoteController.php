@@ -396,7 +396,8 @@ class SaleNoteController extends Controller
         ->where('paid', 0)
         ->join('boxes as b', 'sale_notes.id', '=', 'b.sale_note_id')
         ->whereRaw('sale_notes.total > (SELECT COALESCE(SUM(b2.amount), 0) FROM boxes as b2 WHERE b2.sale_note_id = sale_notes.id)')
-        ->select('sale_notes.*');
+        ->select('sale_notes.*')
+        ->distinct();
         if ($value) {
             $records = $records->whereHas('customer', function ($query) use ($value) {
                 $query->where('name', 'like', "%{$value}%")
