@@ -878,8 +878,6 @@ export default {
                     this.purchase_code
                 }&description=${encodeURIComponent(
                     this.product.descripcion
-                )}&price=${encodeURIComponent(
-                    this.product.price
                 )}&paper=${this.paperType}&format=${
                     this.QSticker
                 }&barcode=${encodeURIComponent(

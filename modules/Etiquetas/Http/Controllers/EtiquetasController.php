@@ -31,7 +31,6 @@ class EtiquetasController extends Controller
 
     public function generate(Request $request)
     {
-        dump($request->all());
         ini_set("pcre.backtrack_limit", "500000");
 
         try {
@@ -48,7 +47,6 @@ class EtiquetasController extends Controller
             $paper = $request->paper;
             $location = $request->location;
             $barcode = $request->barcode;
-            $price = $request->price;
             $template = $format == '1' ? 'template' : ($format == '2' ? 'template2' : 'template4');
             if ($format == '1' && $paper == '2') {
                 $template = 'template3';

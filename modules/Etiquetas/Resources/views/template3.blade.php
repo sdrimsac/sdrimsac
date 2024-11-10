@@ -1,5 +1,6 @@
+
 <html>
-    @php
+@php
     $configuration = \App\Models\Tenant\Configuration::first();
 @endphp
 
@@ -65,7 +66,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="98%" style="margin:0;padding:0;" >
+        <div width="98%" style="margin:0;padding:0;">
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -76,9 +77,7 @@
                         $jj++;
                     @endphp
                     <div style="width: 50%; float: left;">
-                        <div style="width:90%; text-align: center; height: 20px;" 
-                        
-                        >
+                        <div style="width:90%; text-align: center; height: 20px;">
 
                             @php
                                 if ($jj - 1 < $stock) {
@@ -106,6 +105,7 @@
                                 S/ {{ $formattedCode }}
                             </div>
                         @endif
+
                         <div class="text-center" style="width:90%">
                             @php
                                 if ($jj - 1 != $stock) {
@@ -125,16 +125,12 @@
 
                         </div>
 
-                        <div class="text-center font-xs"
-                        style="height: 5px;"
-                        >
+                        <div class="text-center font-xs" style="height: 5px;">
                             {{ $barcode }}
 
                         </div>
-                        
 
                     </div>
-                
                 @endfor
             @endfor
         </div>
