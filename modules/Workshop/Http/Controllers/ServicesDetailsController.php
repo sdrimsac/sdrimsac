@@ -6,7 +6,7 @@ use Modules\Workshop\Http\Resources\ServicesDetailsCollection;
 use Modules\Workshop\Http\Resources\ServicesDetailsResource;
 use Modules\Workshop\Http\Requests\ServicesDetailsRequest;
 use App\Http\Controllers\Controller;
-use Modules\workshop\Models\ServicesDetails;
+use Modules\Workshop\Models\ServicesDetails;
 use Exception;
 
 

@@ -1,4 +1,4 @@
-
+{{-- etiqueta de una sola fila --}}
 <html >
 
     <head>
@@ -53,6 +53,9 @@
                                 <div style={{$jj-1<$stock ? 'color:black;':'color:white;'}}>
                                   <span>{{$description}}</span>
                                 </div>
+                                {{-- <div style={{$jj-1<$stock ? 'color:black;':'color:white;'}}>
+                                  <span>{{$price}}</span>
+                                </div> --}}
                                 <div style={{$jj-1<$stock ? 'color:black;':'color:white;'}}>
   
                                 </div>

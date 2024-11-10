@@ -1284,6 +1284,7 @@
         v-if="is_payment == true"
         :percentage_igv="percentage_igv"
         :is_payment.sync="is_payment"
+        :vehiculo_id="vehiculo_id"
         :form="form"
         :orden_items="orden_items"
         :establishments="establishments"
@@ -1564,6 +1565,7 @@ export default {
 
   data() {
     return {
+      vehiculo_id: null,
       selectedVehiculoPlaca: null,
       selectedVehiculoId: null,
       showDialogMechanic: false,
@@ -1844,8 +1846,10 @@ export default {
     }
   },
   methods: {
-    handlePayment() {
-    this.is_payment = true;
+    handlePayment(id) {
+      console.log("handlePayment", id);
+      this.vehiculo_id = id;
+     this.is_payment = true;
   },
     openPayment() {
       this.showDialogMechanic = false;

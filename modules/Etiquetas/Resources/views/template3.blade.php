@@ -1,5 +1,8 @@
 <html>
-<html>
+{{-- etiqueta 2 filas por papel --}}
+@php
+    $configuration = \App\Models\Tenant\Configuration::first();
+@endphp<html>
 @php
     $configuration = \App\Models\Tenant\Configuration::first();
 @endphp
@@ -104,6 +107,18 @@
                                 @endphp
                                 S/ {{ $formattedCode }}
                             </div>
+                        @endif                        @if ($configuration->correo_red_salud_ticket)
+                            <div class="text-right font-xs" style="width:90%;height:10px;">
+                                @php
+                                    $numericCode = preg_replace('/\D/', '', $sale_code);
+                                    if (strlen($numericCode) >= 4) {
+                                        $formattedCode = substr($numericCode, 0, -2) . '.' . substr($numericCode, -2);
+                                    } else {
+                                        $formattedCode = $numericCode;
+                                    }
+                                @endphp
+                                S/ {{ $formattedCode }}
+                            </div>
                         @endif
 
                         <div class="text-center" style="width:90%">
@@ -124,11 +139,15 @@
                             @endphp
 
                         </div>
-
                         <div class="text-center font-xs" style="height: 5px;">
                             {{ $barcode }}
 
                         </div>
+
+
+
+
+
 
                     </div>
                 @endfor

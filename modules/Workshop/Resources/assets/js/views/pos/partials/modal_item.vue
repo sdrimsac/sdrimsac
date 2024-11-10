@@ -141,7 +141,7 @@ export default {
               this.items = response.data.map(item => {
                 const total = item.cantidad * item.price;
                 return {
-                  id: item.id,
+                  id: item.item_id,
                   description: item.item.description,
                   cantidad: item.cantidad,
                   precioUnitario: item.price,

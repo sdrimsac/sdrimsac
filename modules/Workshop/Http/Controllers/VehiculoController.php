@@ -9,7 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Vehicle;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -62,12 +64,19 @@ class VehiculoController extends Controller
     }
     public function setItems(Request $request)
     {
+        
         $historial_id = $request->historial_id;
         $items = $request->items;
-        $existingItems = HistorialItem::where('historial_id', $historial_id)->get()->keyBy('item_id');
+        $existingItems = HistorialItem::where('historial_id', $historial_id)->get();
+        foreach ($existingItems as $itemToDelete) {
+            $this->updateStock($itemToDelete->item_id, -$itemToDelete->cantidad);
+            
+        }
+        HistorialItem::where('historial_id', $historial_id)->delete();
         foreach ($items as $item) {
-            if ($existingItems->has($item['id'])) {
+            /* if ($existingItems->has($item['id'])) {
                 $historial_item = $existingItems->get($item['id']);
+                $historial_item->item_id = $item['id'];
                 $historial_item->cantidad = $item['cantidad'];
                 $historial_item->price = $item['precioUnitario'];
                 $historial_item->save();
@@ -75,7 +84,7 @@ class VehiculoController extends Controller
                 $this->updateStock($item['id'], $item['cantidad']);
 
                 $existingItems->forget($item['id']);
-            } else {
+            } else { */
                 $historial_item = new HistorialItem;
                 $historial_item->cantidad = $item['cantidad'];
                 $historial_item->price = $item['precioUnitario'];
@@ -84,17 +93,21 @@ class VehiculoController extends Controller
                 $historial_item->save();
 
                 $this->updateStock($item['id'], $item['cantidad']);
-            }
+            /* } */
         }
-        foreach ($existingItems as $itemToDelete) {
+        /* foreach ($existingItems as $itemToDelete) {
             $itemToDelete->delete();
-        }
+        } */
 
         return response()->json(["success" => true]);
     }
     private function updateStock($itemId, $cantidad)
     {
-        $product = Item::find($itemId);
+        $establishment = auth()->user()->establishment;
+        $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
+        $product = ItemWarehouse::where('item_id', $itemId)
+            ->where('warehouse_id', $warehouse->id)
+            ->first();
         if ($product) {
 
             $product->stock -= $cantidad;
@@ -114,13 +127,26 @@ class VehiculoController extends Controller
 
         return $record;
     }
+    public function record_payment($id)
+    {
+        $record = Vehiculo::find($id);
+        $customer_id = $record->customer_id;
+        $historial = Historial::where('vehiculo_id', $id)->first();
+        $items = $historial->historialItem->transform( function($row) {
+            $item = $row->item;
+            $row->item->quantity = $row->cantidad;
+            $row->item->sale_unit_price = $row->price;
+            return $row->item;
+        });
+
+        return [ 'customer_id' => $customer_id, 'items' => $items];
+    }
 
     /* public function store(VehiculoRequest $request)
     {
         $id = $request->input('id');
         $plate = $request->input('placa');
         $establishment_id = auth()->user()->establishment_id;
-        dump($request->all());
 
         $vehicle = Vehiculo::where('id', $id)
             ->orWhere('placa', $plate)

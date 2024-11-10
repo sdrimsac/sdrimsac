@@ -125,7 +125,7 @@
                                                     format="dd-MM-yyyy"
                                                     :readonly="
                                                         this.configuration
-                                                            .restrict_receipt_date
+                                                            .restrict_receipt_date == 1
                                                     "
                                                     @change="changeDateOfIssue"
                                                 >
@@ -1696,7 +1696,8 @@ export default {
         "all_series",
         "all_customers",
         "personalWhatsapp",
-        "sellers"
+        "sellers",
+        "vehiculo_id"
     ],
     watch: {
         all_customers(newCustomer, _) {
@@ -1872,7 +1873,8 @@ export default {
             students: [],
             bank: null,
             hasExceedBank: false,
-            bank_accounts: []
+            bank_accounts: [],
+            vehicle : null,
             // percentage_igv: 18
         };
     },
@@ -1989,6 +1991,17 @@ export default {
     },
     mounted() {},
     methods: {
+        async getvehicle() {
+            
+            const response = await this.$http.get(`/workshop/vehiculo/payment/${this.vehiculo_id}`);
+            if (response.status == 200) {
+                this.vehiculo = response.data;
+                this.form.items = this.formatItems(this.vehiculo.items);
+                this.reCalculateTotal();
+                console.log("🚀 ~ file: form.vue ~ line 566 ~ response", response);
+                this.reloadDataCustomers(this.vehiculo.customer_id);
+            }
+        },
         insertReferenceNumber() {
             console.log("entra a referencia");
             let pass = false;
@@ -2655,7 +2668,7 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-            
+            console.log("ver pasar el id del vehiculo", this.vehiculo_id);
             this.form.promotion_document_id =
                 this.promotions_document.length > 0
                     ? this.promotions_document[0].id
@@ -2759,6 +2772,7 @@ export default {
                     }
                 }
             }
+            this.getvehicle();
         },
         checkDetraction() {
             if (!this.configuration.detraction) return false;

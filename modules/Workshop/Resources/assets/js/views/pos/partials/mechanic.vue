@@ -100,7 +100,7 @@
                       <el-button
                         type="success"
                         class="col-md-12 col-12"
-                        @click="openpayOrden()"
+                        @click="openpayOrden(vehiculo.id)"
                       >Generar CP</el-button>
                       <br />
                     </div>
@@ -332,8 +332,9 @@ export default {
       return hasError;
     },
 
-    async openpayOrden() {
-      this.$emit("payment");
+    async openpayOrden(id) {
+      
+      this.$emit("payment", id);
     },
     selectItem(id, placa, historial_id) {
       if (historial_id == null) {

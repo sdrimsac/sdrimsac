@@ -81,7 +81,7 @@
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.bank_accounts.index') }}">
                                 <i class="icofont-bank"></i>
-                                Ctas bancarias
+                                Cuentas bancarias
                             </a>
                         </li>
                     @endif

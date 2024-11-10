@@ -83,6 +83,7 @@
                                     {{ $sale_code }}
                                 </div>
                                 <div>{{ $description }}</div>
+                                <div>{{ $price }}</div>
                                 <p>
                                     @php
                                         if ($jj - 1 != $stock) {
