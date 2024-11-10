@@ -9,7 +9,7 @@
               <el-select
                 v-model="search.column"
                 placeholder="Select"
-                @change="changeClearInput"
+                @change="changeClearInput('column')"
                 clearable
               >
                 <el-option v-for="(label, key) in columns" :key="key" :value="key" :label="label"></el-option>
@@ -57,6 +57,7 @@
                   style="width: 100%;"
                   prefix-icon="el-icon-search"
                   @input="getRecords"
+                  clearable
                 ></el-input>
               </template>
             </div>
@@ -71,7 +72,7 @@
                 style="width: 100%;"
                 placeholder="Buscar por mes"
                 value-format="yyyy-MM"
-                @change="changeClearInput"
+                @change="changeClearInput('date_of_issue')"
               ></el-date-picker>
             </div>
           </div>
@@ -85,7 +86,7 @@
                 style="width: 100%;"
                 placeholder="Buscar por dia"
                 value-format="yyyy-MM-dd"
-                @change="changeClearInput"
+                @change="changeClearInput('date_of_issue')"
               ></el-date-picker>
             </div>
           </div>
@@ -209,15 +210,6 @@ export default {
     await this.getRecords();
   },
   methods: {
-    changeEndDate() {
-      this.search.date_of_issue = null;
-    },
-    changeDisabledDates() {
-      this.search.date_of_issue = null;
-      if (this.search.d_end < this.search.d_start) {
-        this.search.d_end = this.search.d_start;
-      }
-    },
     /* clickDownload() {
       window.open(`/${this.resource}/ventas-seller`, "_blank");
     }, */
@@ -250,8 +242,11 @@ export default {
         ...this.search
       });
     },
-    changeClearInput() {
-      this.search.value = "";
+    changeClearInput(field) {
+      if(field === 'column'){
+       this.search.value = "";
+      }
+      
       this.getRecords();
     }
   }

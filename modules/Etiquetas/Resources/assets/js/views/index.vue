@@ -878,6 +878,8 @@ export default {
                     this.purchase_code
                 }&description=${encodeURIComponent(
                     this.product.descripcion
+                )}&price=${encodeURIComponent(
+                    this.product.price
                 )}&paper=${this.paperType}&format=${
                     this.QSticker
                 }&barcode=${encodeURIComponent(
@@ -1055,7 +1057,7 @@ export default {
                 .map(i => i[0])
                 .join("");
 
-            return `${iniciales}0${Number(price) || 0}${iniciales}`;
+            return `${iniciales}${Number(price) || 0}${iniciales}`;
         },
         async getTables() {
             try {

@@ -677,6 +677,7 @@
 <body>
     @php
         $customer = $vehiculo->customer;
+        /* $customer = $vehicleFeatures->customer; */
         $states = ['Bueno', 'Regular', 'Malo'];
     @endphp
     <div class="text-center">
@@ -725,10 +726,10 @@
         <tbody>
             <tr>
                 <td valign="top" width="50%" class="border-box">
-                    {{-- <p>
+                    <p>
                         <strong>Raz. Social:</strong>
                         {{ $customer->name }}
-                    </p> --}}
+                    </p>
                     <p>
                         <strong>
                             Dirección:
@@ -745,12 +746,12 @@
                         </strong>
                         {{ $vehiculo->user->name }}
                     </p> --}}
-                    {{-- <p>
+                    <p>
                         <strong>
                             N° Flota / Kilometraje:
                         </strong>
-                        {{ $vehiculo_car->km }}
-                    </p> --}}
+                        {{ $vehiculo->kilometraje }}
+                    </p>
                 </td>
                 <td valign="top">
                     <p>
@@ -764,23 +765,23 @@
                     </p>
                     <p>
                         <strong>Chasis / VIN:</strong>
-                        {{ $vehiculo->chasis }}
+                        {{ $combinedData['chasis'] }}
                     </p>
                     <p>
                         <strong>Venc. SOAT:</strong>
-                        {{ $vehiculo->date_soat_due }}
+                        {{ $combinedData['date_soat_due'] }}
                     </p>
                     <p>
                         <strong>
                             Venc. Rev. Tec.:
                         </strong>
-                        {{ $vehiculo->date_check_due }}
+                        {{ $combinedData['date_check_due'] }}
                     </p>
                     <p>
                         <strong>
                             Cert. Anual:
                         </strong>
-                        {{ $vehiculo->certificate }}
+                        {{ $combinedData['certificate'] }}
                     </p>
                     <p>
                         <strong>
@@ -885,7 +886,7 @@
                                 Autorizo conducir mi vehículo para pruebas en exteriores del Taller
                             </td>
                             <td class="border-box text-center">
-                                {{ $vehiculo->auth_drive ? 'X' : '' }}
+                                {{ isset($combinedData['auth_drive']) && $combinedData['auth_drive'] ? 'X' : '' }}
                             </td>
                         </tr>
 
@@ -894,7 +895,7 @@
                                 Autorizo enviar mi vehículo para trabajos de terceros en Talleres de su elección
                             </td>
                             <td class="border-box text-center">
-                                {{ $vehiculo->move_on ? 'X' : '' }}
+                                {{ isset($combinedData['move_on']) && $combinedData['move_on'] ? 'X' : '' }}
                             </td>
                         </tr>
                         <tr>
@@ -902,7 +903,7 @@
                                 Declaro que no existen elementos de valor dentro del vehiculo
                             </td>
                             <td class="border-box text-center">
-                                {{ $vehiculo->no_value_things ? 'X' : '' }}
+                                {{ isset($combinedData['no_value_things']) && $combinedData['no_value_things'] ? 'X' : '' }}
                             </td>
                         </tr>
                         <tr>
@@ -911,7 +912,7 @@
                                 contrario asumiré un costo de 5/7.00 diarios por cochera (interna y/o externa)
                             </td>
                             <td class="border-box text-center">
-                                {{ $vehiculo->cost_for_days ? 'X' : '' }}
+                                {{ isset($combinedData['cost_for_days']) && $combinedData['cost_for_days'] ? 'X' : '' }}
                             </td>
                         </tr>
                     </tbody>
@@ -925,7 +926,7 @@
                     <tbody>
                         <tr>
                             <td class="border-box">
-                                {{ $vehiculo->observations }}
+                                {{ $combinedData['observations'] }}
                             </td>
                         </tr>
                     </tbody>
@@ -1049,7 +1050,7 @@
                         style="position: relative;height:30px; ">
                         <div
                             style="position: absolute;
-                        width: {{ $vehiculo->gasoline_level }}%;
+                        width: {{ $combinedData['gasoline_level'] }}%;
                         background-color: #82a1b1;
                         height: 30px;
                         z-index: -1;
@@ -1057,7 +1058,7 @@
                         </div>
                         <span style="margin-top: 10px;position: absolute; z-index: 1; width: 100%;">
                             <strong>
-                                Gasolina en el tanque: {{ $vehiculo->gasoline_level }}%
+                                Gasolina en el tanque: {{ $combinedData['gasoline_level'] }}%
                             </strong>
                         </span>
 

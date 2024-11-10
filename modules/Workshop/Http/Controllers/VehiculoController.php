@@ -17,6 +17,7 @@ use Modules\Workshop\Models\Historial;
 use Modules\Workshop\Models\Vehiculo;
 use Modules\Workshop\Models\HistorialItem;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Modules\Workshop\Models\VehicleFeature;
 
 class VehiculoController extends Controller
@@ -30,45 +31,35 @@ class VehiculoController extends Controller
     }
     public function records(Request $request)
     {
-        /* $records = Vehiculo::all(); */
-        $records = $this->getRecords($request);
+        /* $records = $this->getRecords($request); */
+        $records = $this->getRecords($request)->paginate(config('tenant.items_per_page'));
 
         return new VehiculoCollection($records);
     }
+    /* public function getRecords(Request $request)
+    {
+        $placa = $request->input('placa');
+
+        $query = Vehiculo::query()
+            ->when($placa, function ($query, $placa) {
+                return $query->where('placa', 'like', '%' . $placa . '%');
+            })
+            ->get();
+
+        return $query;
+    } */
     public function getRecords(Request $request)
     {
-
-        $customer_id = $request->get('customer_id');
-
-        $placa = $request->get('placa');
-
-        $query = Vehiculo::query();
-        if ($customer_id) {
-            $query->where('customer_id', $customer_id);
-        }
-        if ($placa) {
-            $query->where('placa', 'like', '%' . $placa . '%');
-        }
-        $records = $query->get();
-        return $records;
+        $placa = $request->input('placa');
+    
+        // Devuelve la consulta sin ejecutar con get()
+        $query = Vehiculo::query()
+            ->when($placa, function ($query, $placa) {
+                return $query->where('placa', 'like', '%' . $placa . '%');
+            });
+    
+        return $query;  // Devuelve el query builder en lugar de una Collection
     }
-
-    /* public function setItems(Request $request)
-    {
-
-        $historial_id = $request->historial_id;
-        $items = $request->items;
-        foreach ($items as $item) {
-            $historial_item = new HistorialItem;
-            $historial_item->cantidad = $item['cantidad'];
-            $historial_item->price = $item['precioUnitario'];
-            $historial_item->item_id = $item['id'];
-            $historial_item->historial_id = $historial_id;
-            $historial_item->save();
-        }
-        return ["sucess" => true];
-    } */
-
     public function setItems(Request $request)
     {
         $historial_id = $request->historial_id;
@@ -215,7 +206,6 @@ class VehiculoController extends Controller
         $id = $request->input('id');
         $plate = $request->input('placa');
         $establishment_id = auth()->user()->establishment_id;
-        /* dump($request->all()); */
 
         $vehicle = Vehiculo::where('id', $id)
             ->orWhere('placa', $plate)
@@ -296,6 +286,105 @@ class VehiculoController extends Controller
             'message' => ($id) ? 'Vehículo editado con éxito' : 'Vehículo registrado con éxito'
         ];
     }
+    /* public function storeHistory(Request $request)
+    {
+        dump($request->all());
+        $id = $request->input('id');
+        $establishment_id = auth()->user()->establishment_id;
+
+       try {
+        $historial = new Historial;
+        $historial->fill($id);
+        $historialData = $request->only($request);
+        $historial->fill($historialData);
+        $historial->vehiculo_id = $request->input('vehiculo_id');
+        $historial->establishment_id = $establishment_id;
+        $historial->save();
+
+        $vehicleFeatureData = $request->input('vehiculo', []);
+        $vehicleFeatureData['vehiculo_id'] = $historial->vehiculo_id;
+        $vehicleFeature = new VehicleFeature;
+        $vehicleFeature->fill($vehicleFeatureData);
+        $vehicleFeature->save();
+        $services_detail_ids = $request->services_detail_ids;
+        $dataToInsert = array_map(function ($service_detail_id) use ($historial) {
+            return [
+                'services_detail_id' => $service_detail_id,
+                'historial_id' => $historial->id
+            ];
+        }, $services_detail_ids);
+
+        DB::connection('tenant')->table('historial_service_details')->insert($dataToInsert);
+
+        return [
+            'success' => true,
+            'message' => ($id) ? 'Historia editado con éxito' : 'Historia registrado con éxito'
+        ];
+
+       } catch (\Exception $e) {
+        return [
+            'success' => false,
+            'message' => 'Ocurrió un error al registrar el historial: ' . $e->getMessage(),
+        ];
+       }  
+    } */
+
+    public function storeHistory(Request $request)
+    {
+        $vehiculo_id = $request->input('vehiculo_id');
+        $establishment_id = auth()->user()->establishment_id;
+
+        $historialData = $request->only([
+            'vehiuclo_id',
+            'sale_note_id',
+            'document_id',
+            'personal_id',
+            'establishment_id',
+            'observacion',
+            'motive',
+            'reparacion',
+            'garantia',
+            'mantenimiento',
+            'diagnostico',
+            'estado',
+            'date_start',
+            'date_end',
+        ]);
+
+        try {
+            $historial = new Historial();
+            $historial->fill($historialData);
+            $historial->vehiculo_id = $vehiculo_id;
+            $historial->establishment_id = $establishment_id;
+            $historial->save();
+
+            $vehicleFeatureData = $request->input('vehiculo', []);
+            $vehicleFeatureData['vehiculo_id'] = $vehiculo_id;
+            $vehicleFeature = new VehicleFeature();
+            $vehicleFeature->fill($vehicleFeatureData);
+            $vehicleFeature->save();
+
+            $services_detail_ids = $request->input('services_detail_ids', []);
+            $dataToInsert = array_map(function ($service_detail_id) use ($historial) {
+                return [
+                    'services_detail_id' => $service_detail_id,
+                    'historial_id' => $historial->id
+                ];
+            }, $services_detail_ids);
+
+            DB::connection('tenant')->table('historial_service_details')->insert($dataToInsert);
+
+            return [
+                'success' => true,
+                'message' => 'Historia registrada con éxito'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Ocurrió un error al registrar el historial: ' . $e->getMessage(),
+            ];
+        }
+    }
 
     public function destroy($id)
     {
@@ -313,27 +402,13 @@ class VehiculoController extends Controller
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Vehiculo esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Vehiculo'];
         }
     }
-    /* function get_vehiculo($label, $property)
+    function get_vehiculo($combinedData, $label, $property)
     {
-        $quantity = "quantity_" . $property;
-        $state = "state_" . $property;
-        return [
-            "label" => $label,
-            "quantity" => $this->vehiculo->{$quantity},
-            "state" => $this->vehiculo->{$state}
-        ];
-    } */
-    function get_vehiculo($label, $property)
-    {
-        // Definir las claves de cantidad y estado para Vehiculo
         $quantityVehiculo = "quantity_" . $property;
         $stateVehiculo = "state_" . $property;
 
-        $quantityFeature = "quantity_" . $property;
-        $stateFeature = "state_" . $property;
-
-        $quantity = $this->vehiculo->{$quantityVehiculo} ?? null;
-        $state = $this->vehiculo->{$stateVehiculo} ?? null;
+        $quantity = $combinedData[$quantityVehiculo] ?? null;
+        $state = $combinedData[$stateVehiculo] ?? null;
 
         return [
             "label" => $label,
@@ -341,53 +416,55 @@ class VehiculoController extends Controller
             "state" => $state
         ];
     }
-    public function format_vehicle($id)
+    public function format_vehicle($id, $version = null)
     {
         $vehiculo = Vehiculo::where('id', $id)->first();
 
         $vehicleFeatures = VehicleFeature::where('vehiculo_id', $id)->first();
 
-        $this->vehiculo = $vehiculo;
-        /* $this->vehicleFeatures = $vehicleFeatures; */
+        $combinedData = array_merge(
+            $vehiculo->toArray(),
+            $vehicleFeatures ? $vehicleFeatures->toArray() : []
+        );
 
         $list1 = [
-            $this->get_vehiculo("Faros Delanteros", "front_lights"),
-            $this->get_vehiculo("Luces Direccionales Delanteros", "directional_lights_front"),
-            $this->get_vehiculo("Luces Direccionales Posteriores", "directional_lights_back"),
-            $this->get_vehiculo("Luces de Peligro", "hazard_lights"),
-            $this->get_vehiculo("Brazo y Plumilla Limpia Parabrizas", "wiper_washer_arm"),
-            $this->get_vehiculo("Tapa Gasolina", "gasoil_cap"),
-            $this->get_vehiculo("Antena Radio", "radio_antenna"),
-            $this->get_vehiculo("Espejos Laterales", "side_mirrors"),
-            $this->get_vehiculo("Manijas de Prueba ", "test_handles"),
-            $this->get_vehiculo("Alarma", "alarm"),
-            $this->get_vehiculo("Escarpines", "booties"),
-            $this->get_vehiculo("Llanta y Aro de Respuesto", "spare_tire"),
-            $this->get_vehiculo("Dado Segruo de Rueda", "wheel_nut"),
-            $this->get_vehiculo("Copa de Aro", "wheel_cup"),
+            $this->get_vehiculo($combinedData, "Faros Delanteros", "front_lights"),
+            $this->get_vehiculo($combinedData, "Luces Direccionales Delanteros", "directional_lights_front"),
+            $this->get_vehiculo($combinedData, "Luces Direccionales Posteriores", "directional_lights_back"),
+            $this->get_vehiculo($combinedData, "Luces de Peligro", "hazard_lights"),
+            $this->get_vehiculo($combinedData, "Brazo y Plumilla Limpia Parabrizas", "wiper_washer_arm"),
+            $this->get_vehiculo($combinedData, "Tapa Gasolina", "gasoil_cap"),
+            $this->get_vehiculo($combinedData, "Antena Radio", "radio_antenna"),
+            $this->get_vehiculo($combinedData, "Espejos Laterales", "side_mirrors"),
+            $this->get_vehiculo($combinedData, "Manijas de Prueba ", "test_handles"),
+            $this->get_vehiculo($combinedData, "Alarma", "alarm"),
+            $this->get_vehiculo($combinedData, "Escarpines", "booties"),
+            $this->get_vehiculo($combinedData, "Llanta y Aro de Respuesto", "spare_tire"),
+            $this->get_vehiculo($combinedData, "Dado Segruo de Rueda", "wheel_nut"),
+            $this->get_vehiculo($combinedData, "Copa de Aro", "wheel_cup"),
         ];
         $list2 = [
-            $this->get_vehiculo("Cenicero", "ashtray"),
-            $this->get_vehiculo("Espejo Retrovisor Interno", "internal_rearview_mirror"),
-            $this->get_vehiculo("Auto Radio", "car_radio"),
-            $this->get_vehiculo("Alfombra de protección", "protection_mat"),
-            $this->get_vehiculo("Pisos de jebe", "rubber_floors"),
-            $this->get_vehiculo("Posa Vasos", "cup_holder"),
-            $this->get_vehiculo("Llave de Vehículo", "vehicle_key"),
+            $this->get_vehiculo($combinedData, "Cenicero", "ashtray"),
+            $this->get_vehiculo($combinedData, "Espejo Retrovisor Interno", "internal_rearview_mirror"),
+            $this->get_vehiculo($combinedData, "Auto Radio", "car_radio"),
+            $this->get_vehiculo($combinedData, "Alfombra de protección", "protection_mat"),
+            $this->get_vehiculo($combinedData, "Pisos de jebe", "rubber_floors"),
+            $this->get_vehiculo($combinedData, "Posa Vasos", "cup_holder"),
+            $this->get_vehiculo($combinedData, "Llave de Vehículo", "vehicle_key"),
 
 
         ];
         $list3 = [
-            $this->get_vehiculo("Extintor", "extinguisher"),
-            $this->get_vehiculo("Gata y palanca", "jack_lever"),
-            $this->get_vehiculo("Estuche de Herramientas", "toolkit"),
+            $this->get_vehiculo($combinedData, "Extintor", "extinguisher"),
+            $this->get_vehiculo($combinedData, "Gata y palanca", "jack_lever"),
+            $this->get_vehiculo($combinedData, "Estuche de Herramientas", "toolkit"),
         ];
 
         $list4 = [
-            $this->get_vehiculo("Tarjeta de Propiedad", "property_card"),
-            $this->get_vehiculo("Cuaderno de bitácora", "logbook"),
-            $this->get_vehiculo("Manual del Propietario", "owner_manual"),
-            $this->get_vehiculo("Porta Documentos", "document_holder"),
+            $this->get_vehiculo($combinedData, "Tarjeta de Propiedad", "property_card"),
+            $this->get_vehiculo($combinedData, "Cuaderno de bitácora", "logbook"),
+            $this->get_vehiculo($combinedData, "Manual del Propietario", "owner_manual"),
+            $this->get_vehiculo($combinedData, "Porta Documentos", "document_holder"),
         ];
         $company = Company::active();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
@@ -399,8 +476,41 @@ class VehiculoController extends Controller
             "list3",
             "list4",
             "vehiculo",
+            "combinedData"
 
         ));
-        return $pdf->stream('FORMATO.pdf');
+        /* $timestamp = now()->format('Ymd_His'); */
+        $timestamp = now()->format('Y_m_d');
+        $pdfPath = storage_path("app/public/format_vehiculo_{$id}_{$timestamp}.pdf");
+        $pdf->save($pdfPath);
+
+        /* return $pdf->stream('FORMATO.pdf'); */
+        return $pdf->stream("formato_vehiculo_{$id}_{$timestamp}.pdf");
     }
+    public function check_pdf($id, $date)
+    {
+        /* dump($id, $date); */
+        /* $formattedDate = Carbon::parse($date)->format('Ymd'); */
+        $formattedDate = Carbon::parse($date)->format('Y_m_d'); 
+
+        $pdfPath = storage_path("app/public/format_vehiculo_{$id}_{$formattedDate}.pdf");
+
+        if (file_exists($pdfPath)) {
+            return response()->json(['exists' => true]);
+        } else {
+            return response()->json(['exists' => false]);
+        }
+    }
+    public function view_pdf($id, $timestamp)
+    {
+        /* dump($id, $timestamp); */
+        $pdfPath = storage_path("app/public/format_vehiculo_{$id}_{$timestamp}.pdf");
+
+        if (file_exists($pdfPath)) {
+            return response()->file($pdfPath);
+        } else {
+            return $this->format_vehicle($id);
+        }
+    }
+    
 }

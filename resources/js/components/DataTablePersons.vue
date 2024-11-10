@@ -64,7 +64,7 @@
           >
             <el-checkbox v-model="search.credit" @change="getRecords">A cuenta</el-checkbox>
           </div>
-          <div class="col-md-2" v-if="typeUser === 'superadmin'">
+          <div v-if="typeUser == 'superadmin'" class="col-md-2">
             <el-button
               class="submit"
               type="success"
@@ -110,23 +110,23 @@
     </div>
   </div>
 </template>
-
 <script>
 import moment from "moment";
 import queryString from "query-string";
 
 export default {
   props: {
+    typeUser: {
+      type: String,
+      default: "admin"
+    },
     resource: String,
     applyFilter: {
       type: Boolean,
       default: true,
       required: false
     },
-    typeUser: {
-      type: String,
-      default: "admin"
-    },
+
     sellers: {
       type: Array,
       default: () => []
@@ -155,7 +155,14 @@ export default {
       this.getRecords();
     });
   },
+  /* watch: {
+    typeUser(newValue) {
+      console.log("Nuevo valor de typeUser:", newValue);
+    }
+  }, */
   async mounted() {
+    /* this.typeUser = "superadmin"; */
+    console.log("El tipo de usuario es:", this.typeUser);
     let column_resource = _.split(this.resource, "/");
     // console.log(column_resource)
     await this.$http

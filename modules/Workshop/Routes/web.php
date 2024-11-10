@@ -41,8 +41,13 @@ Route::prefix('workshop')->group(function() {
     Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('tenant.workshop.vehiculo');
     Route::get('vehiculo/records', [VehiculoController::class, 'records']);
     Route::post('vehiculo', [VehiculoController::class, 'store']);
+    Route::post('new-history', [VehiculoController::class, 'storeHistory']);
     Route::get('vehiculo/record/{id}', [VehiculoController::class, 'record']);
     Route::delete('vehiculo/{tipo}', [VehiculoController::class, 'destroy']);
+    Route::get('vehiculo/check_pdf/{id}_{date}', [VehiculoController::class, 'check_pdf']);
+    /* Route::get('vehiculo/view_pdf/{id}', [VehiculoController::class, 'view_pdf']); */
+    Route::get('/vehiculo/view_pdf/{id}_{timestamp}', [VehiculoController::class, 'view_pdf']);
+
     //ruta para generar el formato de ingrteso del vehiculo
     Route::get('vehiculo/format_vehicle/{id}', [VehiculoController::class, 'format_vehicle']);
 

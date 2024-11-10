@@ -4,7 +4,7 @@
     @close="close"
     append-to-body
     :visible="showDialog"
-    title="Nuevo Historial De Registro De Vehiculo"
+    title="Historial De Registro De Vehiculo"
     close-on-click-modal
     width="80%"
   >
@@ -71,7 +71,7 @@
                     </el-button>
                   </el-popover>
                 </td>
-                <td>{{ item.estado }}</td>
+                <td>{{ item.estado == 0 ? 'Activo' : 'Inactivo' }}</td>
               </tr>
             </tbody>
           </table>
@@ -115,6 +115,12 @@ export default {
     },
     CarVehicle() {
       console.log("Valor de vehiculo:", this.vehiculo);
+      const historialActivo = this.historial.find(item => item.estado === 0);
+
+      if (historialActivo){
+        this.$showSAlert("error", "No puede Abrir una nueva historia mientras uno este activo", "error");
+        return
+      }
 
       if (this.selectedVehiculoId) {
         this.showDialogCarVehicle = true;
@@ -129,7 +135,7 @@ export default {
 
         .get(
           `/${this.resource}/historial/records?vehiculo_id=${
-            this.vehiculo_id ? this.vehiculo_id : ""
+            this.vehiculoId ? this.vehiculoId : ""
           }`
         )
         .then(response => {

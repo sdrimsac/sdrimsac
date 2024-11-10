@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="titleDialog"
+    title="Nuevo Historial"
     :visible="showDialog"
     :close-on-click-modal="false"
     @close="close"
@@ -13,7 +13,7 @@
       <div class="card">
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-6 pb-2">
+            <!-- <div class="col-lg-6 pb-2">
               <div class="form-group" :class="{ 'has-danger': errors.customer_id }">
                 <label>
                   Cliente
@@ -38,7 +38,7 @@
                   ></el-option>
                 </el-select>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-4">
               <label class="fw-bold">
                 Mecamico
@@ -53,8 +53,7 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label>Motivo de Ingreso</label>
               <el-input
                 type="textarea"
@@ -63,7 +62,7 @@
                 v-model="form.observacion"
               ></el-input>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label>Trabajo a Realizar o Realizado</label>
               <el-input type="textarea" :rows="2" placeholder="Please input" v-model="form.motive"></el-input>
             </div>
@@ -214,7 +213,7 @@ export default {
     checklist,
     personalForm
   },
-  props: ["showDialog", "recordId", "vehiculoId"],
+  props: ["showDialog", "recordId", "vehiculoId", "historial_id"],
   data() {
     return {
       customers: [],
@@ -325,7 +324,6 @@ export default {
     initForm() {
       this.errors = {};
       this.form = {
-        customer_id: null,
         vehiculo_id: this.vehiculoId,
         personal_id: null,
         observacion: null,
@@ -371,7 +369,7 @@ export default {
       this.form.services_detail_ids = this.services_detail_ids;
       this.loading_submit = true;
       try {
-        const response = await this.$http.post("/workshop/vehiculo", this.form);
+        const response = await this.$http.post("/workshop/new-history", this.form);
         console.log(response.data);
         this.$message({
           message: "El Vehiculo ha sido registrado correctamente"

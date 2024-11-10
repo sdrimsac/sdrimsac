@@ -51,7 +51,7 @@
             <thead>
               <tr class="bg-primary">
                 <th class="text-white">Acciones</th>
-                <th class="text-white">N</th>
+                <th class="text-white">#</th>
                 <th class="text-white">Cliente</th>
                 <th class="text-white">Vehiculo</th>
                 <th class="text-white">Placa</th>
@@ -63,13 +63,12 @@
                 <th class="text-white">Kilometros Corridos</th>
                 <th class="text-white">Fecha Registro</th>
                 <th class="text-white">Historial</th>
-                <th class="text-white">Estado</th>
                 <th class="text-white">Productos</th>
                 <th class="text-white">Formatos</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(vehiculo, index) in vehiculos" :key="index">
+              <tr v-for="(vehiculo, index) in vehiculos" :key="index" :index="customIndex(index)">
                 <td>
                   <div class="dropdown-as-select d-inline-block" data-childselector="span">
                     <button
@@ -104,11 +103,6 @@
                         @click="openpayOrden()"
                       >Generar CP</el-button>
                       <br />
-                      <el-button
-                        type="info"
-                        class="col-md-12 col-12"
-                        @click="clickCreate(vehiculo.id)"
-                      >Crear Nuevo Historial</el-button>
                     </div>
                   </div>
                 </td>
@@ -128,14 +122,13 @@
                     <i class="fas fa-list"></i>
                   </el-button>
                 </td>
-                <td>{{ vehiculo.estado }}</td>
                 <td>
                   <el-button
                     @click="selectItem(vehiculo.id, vehiculo.placa, vehiculo.historial_id)"
                     type="info"
                   >Productos</el-button>
                 </td>
-                <td class="text-center">
+                <!-- <td class="text-center">
                   <button
                     type="button"
                     class="btn waves-effect waves-light btn-sm btn-info"
@@ -146,10 +139,52 @@
                     class="btn waves-effect waves-light btn-sm btn-success"
                     @click.prevent="clickPrintFormat(vehiculo.id)"
                   >Formato vehicular</button>
+                  <button
+                    type="button"
+                    class="btn waves-effect waves-light btn-sm btn-primary"
+                    @click.prevent="format_vehicle(vehiculo.id)"
+                  >Ver</button>
+                </td> -->
+                <td class="text-end">
+                  <div class="btn-toolbar mb-2" role="toolbar">
+                    <div class="btn-group mb-1">
+                      <button
+                        class="btn btn-secondary btn-sm dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-sm">
+                        <a class="dropdown-item">
+                          <i class="fas fa-money-bill-alt"></i>
+                          <el-button @click.prevent="clickPrint(vehiculo.id)">PDF</el-button>
+                        </a>
+                        <a class="dropdown-item" @click.prevent="clickPrintFormat(vehiculo.id)">
+                          <i class="far fa-file-alt"></i>
+                          Formato Vehicular
+                        </a>
+                        <a class="dropdown-item" @click.prevent="format_vehicle(vehiculo.id)">
+                          <i class="fas fa-trash"></i>
+                          Ver PDF
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div>
+          <el-pagination
+            layout="total, prev, pager, next"
+            :total="pagination.total"
+            :current-page.sync="pagination.current_page"
+            :page-size="pagination.per_page"
+          ></el-pagination>
         </div>
       </div>
       <register-history :showDialog.sync="showDialogRegisterHistory" :recordId="recordId"></register-history>
@@ -161,6 +196,7 @@
         :vehiculoHistorial="selectedHistorial"
         :nexItem="mechanicItem"
       ></modal-item>
+      <format-pdf :showDialog.sync="showDialogFormatPdf" :vehiculoId="selectedVehiculoId"></format-pdf>
     </form>
   </el-dialog>
 </template>
@@ -168,15 +204,19 @@
 import registerHistory from "./register_history.vue";
 import historial from "./historial.vue";
 import modalItem from "./modal_item.vue";
+import FormatPdf from "./format_pdf.vue";
 export default {
   props: ["showDialog", "mechanicItem", "visible"],
   components: {
     registerHistory,
     historial,
-    modalItem
+    modalItem,
+    FormatPdf
   },
   data() {
     return {
+      pagination: {},
+      showDialogFormatPdf: false,
       recordId: null,
       title: "Registro Ingreso Vehiculo",
       localMechanicItem: this.mechanicItem,
@@ -194,6 +234,7 @@ export default {
       allFoods: [],
       nexItem: [],
       selectedVehiculoId: null,
+      formatVehiculoId: null,
       selectedVehiculoPlaca: "",
       selectedHistorial: null
     };
@@ -210,6 +251,18 @@ export default {
     }
   },
   methods: {
+    customIndex(index) {
+      return (
+        this.pagination.per_page * (this.pagination.current_page - 1) +
+        index +
+        1
+      );
+    },
+    format_vehicle(id) {
+      this.selectedVehiculoId = id;
+      console.log("ver si esta pasando el id", id);
+      this.showDialogFormatPdf = true;
+    },
     clickPrintFormat(recordId) {
       window.open(
         `/${this.resource}/vehiculo/format_vehicle/${recordId}`,
@@ -223,11 +276,6 @@ export default {
       this.recordId = recordId;
       this.showDialogRegisterHistory = true;
     },
-    /* openEditModal(recordId = null) {
-      
-      this.recordId = recordId;
-      
-    }, */
     resetForm() {
       this.form = {
         id: null,
@@ -334,11 +382,20 @@ export default {
         .get(`/${this.resource}/vehiculo/records`)
         .then(response => {
           this.vehiculos = response.data.data;
+          this.pagination = response.data.meta;
+          this.pagination.per_page = parseInt(response.data.meta.per_page);
           /* console.log("Tipos de vehículo:", this.vehiculos); */
         })
         .catch(error => {
           console.error("Error al obtener los tipos de vehículo:", error);
         });
+    },
+    getQueryParameters() {
+      return queryString.stringify({
+        page: this.pagination.current_page,
+        limit: this.limit,
+        ...this.search
+      });
     },
     searchVehicles() {
       /* this.$http.get(`/${this.resource}/vehiculo/records`, this.form)*/
@@ -346,16 +403,6 @@ export default {
     clickRegisterHistory() {
       this.showDialogRegisterHistory = true;
     },
-    /* HistorialVehiculo(id) {
-      
-      this.selectedVehiculoId = id;
-      console.log(
-        "Vehiculo ID para historial:",
-        id,
-      );
-
-      
-    }, */
     HistorialVehiculo(id) {
       this.selectedVehiculoId = id;
       console.log("Vehiculo ID Para la historia del car:", id);

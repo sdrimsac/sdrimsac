@@ -88,7 +88,7 @@ class Vehiculo extends ModelTenant
         'certificate', */
     ];
     public function customer(){
-        return $this->belongsTo(Person::class,'customer_id');
+        return $this->belongsTo(Person::class,'customer_id' , 'id');
     }
     public function tipo_vehiculo(){
         return $this->belongsTo(TipoVehiculo::class,'tipo_vehiculo_id');

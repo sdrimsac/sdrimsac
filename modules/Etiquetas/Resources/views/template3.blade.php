@@ -1,4 +1,8 @@
 <html>
+<html>
+@php
+    $configuration = \App\Models\Tenant\Configuration::first();
+@endphp
 
 <head>
     <style>
@@ -62,7 +66,7 @@
 
 <body>
     @if (!empty($image))
-        <div width="98%" style="margin:0;padding:0;" >
+        <div width="98%" style="margin:0;padding:0;">
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -73,9 +77,7 @@
                         $jj++;
                     @endphp
                     <div style="width: 50%; float: left;">
-                        <div style="width:90%; text-align: center; height: 20px;" 
-                        
-                        >
+                        <div style="width:90%; text-align: center; height: 20px;">
 
                             @php
                                 if ($jj - 1 < $stock) {
@@ -90,6 +92,19 @@
                             {{ $description }}
 
                         </div>
+                        @if ($configuration->correo_red_salud_ticket)
+                            <div class="text-right font-xs" style="width:90%;height:10px;">
+                                @php
+                                    $numericCode = preg_replace('/\D/', '', $sale_code);
+                                    if (strlen($numericCode) >= 4) {
+                                        $formattedCode = substr($numericCode, 0, -2) . '.' . substr($numericCode, -2);
+                                    } else {
+                                        $formattedCode = $numericCode;
+                                    }
+                                @endphp
+                                S/ {{ $formattedCode }}
+                            </div>
+                        @endif
 
                         <div class="text-center" style="width:90%">
                             @php
@@ -110,15 +125,12 @@
 
                         </div>
 
-                        <div class="text-center font-xs"
-                        style="height: 5px;"
-                        >
+                        <div class="text-center font-xs" style="height: 5px;">
                             {{ $barcode }}
 
                         </div>
 
                     </div>
-                
                 @endfor
             @endfor
         </div>

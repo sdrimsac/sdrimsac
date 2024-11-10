@@ -48,7 +48,7 @@
                               @endphp
                                 </div>
                                 <div style={{$jj-1<$stock ? 'color:black;':'color:white;'}}>
-  <span>{{$sale_code}}</span>
+                                  <span>{{$sale_code}}</span>
                                 </div>
                                 <div style={{$jj-1<$stock ? 'color:black;':'color:white;'}}>
                                   <span>{{$description}}</span>
