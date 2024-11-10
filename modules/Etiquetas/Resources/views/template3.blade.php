@@ -1,4 +1,3 @@
-
 <html>
 @php
     $configuration = \App\Models\Tenant\Configuration::first();
@@ -93,7 +92,7 @@
 
                         </div>
                         @if ($configuration->correo_red_salud_ticket)
-                            <div class="text-right font-xs" style="width:90%;height:10px;">
+                            <div class="text-center font-xs" style="width:90%; height:10px;">
                                 @php
                                     $numericCode = preg_replace('/\D/', '', $sale_code);
                                     if (strlen($numericCode) >= 4) {
@@ -102,7 +101,9 @@
                                         $formattedCode = $numericCode;
                                     }
                                 @endphp
-                                S/ {{ $formattedCode }}
+                                @if (!empty($formattedCode))
+                                    S/ {{ $formattedCode }}
+                                @endif
                             </div>
                         @endif
 
