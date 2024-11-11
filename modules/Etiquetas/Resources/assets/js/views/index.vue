@@ -1,3 +1,4 @@
+<!-- Modulo Etiquetas -->
 <template>
     <div class="container-fluid p-l-0 p-r-0">
         <div class="page-header">
@@ -611,12 +612,16 @@
                         </div>
                     </div>
                 </template>
-                <div class="d-flex justify-content-center">
-                    <div v-if="product_id" class="col-4 text-center">
-                        <el-button type="success" @click="generate">
-                            Generar
-                        </el-button>
-                    </div>
+                <div
+                    v-if="product_id"
+                    class="d-flex justify-content-center mt-2"
+                >
+                    <el-button type="success" @click="generate">
+                        Imprimir
+                    </el-button>
+                    <el-button type="danger" @click="generatePdf">
+                        Exportar
+                    </el-button>
                 </div>
             </div>
         </div>
@@ -747,7 +752,7 @@ export default {
                 );
                 if (config) {
                     this.config = config;
-                }else{
+                } else {
                     this.initConfig();
                 }
             }
@@ -846,6 +851,76 @@ export default {
                 }
             }
         },
+        async generatePdf() {
+            if (this.quantity == 0 || this.quantity.length == 0) {
+                this.$toast.error("La cantidad es obligatoria.");
+                return;
+            }
+
+            if (this.quantity > 100) {
+                try {
+                    await this.$confirm(
+                        `Está apunto de imprimir ${this.quantity} stickers, si desea puede cambiar la cantidad de manera
+                        manual. En caso contrario de click en 'Continuar'.`,
+                        "Mensaje de Advertencia",
+                        {
+                            confirmButtonText: "Continuar",
+                            cancelButtonText: "Cambiar cantidad",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+            try {
+                this.loading = true;
+                this.quantity = this.quantityToPaper(this.quantity);
+                const config = { responseType: "blob" };
+                let endPoint = `${this.resource}/generate?stock=${
+                    this.quantity
+                }&salecode=${this.sale_code}&purchasecode=${
+                    this.purchase_code
+                }&description=${encodeURIComponent(
+                    this.product.descripcion
+                )}&paper=${this.paperType}&format=${
+                    this.QSticker
+                }&barcode=${encodeURIComponent(
+                    this.product.barras
+                )}&type_barcode=${encodeURIComponent(
+                    this.typeBarcode
+                )}&location=${this.product.location || ""}
+                &type=${this.modelType || ""}
+                `;
+                console.log(endPoint);
+
+                const response = await axios.get(endPoint, config);
+                console.log(response);
+                console.log(this.configuration);
+                const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+                const link = document.createElement("a");
+                link.href = url;
+                console.log(url);
+                link.setAttribute("download", "file.pdf");
+                document.body.appendChild(link);
+                link.click();
+
+                this.loading = false;
+            } catch (e) {
+                console.log(e);
+                const {
+                    data: { message }
+                } = e.response;
+                this.$toast.error(message);
+                this.loading = false;
+            }
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
+            }
+        },
         async generate() {
             if (this.quantity == 0 || this.quantity.length == 0) {
                 this.$toast.error("La cantidad es obligatoria.");
@@ -887,27 +962,20 @@ export default {
                 )}&location=${this.product.location || ""}
                 &type=${this.modelType || ""}
                 `;
-                let { print_direct } = this.configuration;
+                console.log(endPoint);
                 let { etiquetadora } = this.establishment;
                 this.saveConfig();
-                if (print_direct && etiquetadora) {
+                if (etiquetadora) {
                     this.Printer(etiquetadora, endPoint);
                 } else {
-                    const response = await axios.get(endPoint, config);
-                    console.log(response);
-                    console.log(this.configuration);
-                    const url = window.URL.createObjectURL(
-                        new Blob([response.data])
+                    this.$toast.error(
+                        "No se ha configurado la impresora de etiquetas."
                     );
-                    const link = document.createElement("a");
-                    link.href = url;
-                    link.setAttribute("download", "file.pdf");
-                    document.body.appendChild(link);
-                    link.click();
                 }
 
                 this.loading = false;
             } catch (e) {
+                console.log(e);
                 const {
                     data: { message }
                 } = e.response;
@@ -999,7 +1067,8 @@ export default {
         formatValueCode() {
             if (this.type == "Precio venta") {
                 if (this.sale_type == 2) {
-                    this.sale_code = this.normalType(this.product.price);
+                    // this.sale_code = this.normalType(this.product.price);
+                    this.sale_code = Number(this.product.price).toFixed(2);
                 }
                 if (this.sale_type == 1 && this.sale_murc) {
                     this.sale_code = this.murciType(
@@ -1087,8 +1156,10 @@ export default {
             this.typeBarcode = this.product.tipo_barras ?? "CODE-128";
             this.purchase_type = 2;
             this.sale_type = 2;
-            this.sale_code = this.normalType(this.product.price);
-            this.purchase_code = this.normalType(this.product.purchase);
+            this.sale_code = Number(this.product.price).toFixed(2);
+            // this.sale_code = this.normalType(this.product.price);
+            //this.purchase_code = this.normalType(this.product.purchase);
+            this.purchase_code = Number(this.product.purchase).toFixed(2);
             this.formatValueCode();
             if (
                 this.product.barras.length > 8 &&

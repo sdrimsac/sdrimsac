@@ -87,23 +87,16 @@
 
                         </div>
 
-                        <div class="text-center font-xs" style="width:90%;height:25px;">
-                            {{ $description }}
-
+                        <div class="text-center font-xs" style="width:90%;height:18px;">
+                         {{substr($description, 0, 65)}}
                         </div>
+                        
                         @if ($configuration->correo_red_salud_ticket)
                             <div class="text-center font-xs" style="width:90%; height:10px;">
                                 @php
-                                    $numericCode = preg_replace('/\D/', '', $sale_code);
-                                    if (strlen($numericCode) >= 4) {
-                                        $formattedCode = substr($numericCode, 0, -2) . '.' . substr($numericCode, -2);
-                                    } else {
-                                        $formattedCode = $numericCode;
-                                    }
+                                
                                 @endphp
-                                @if (!empty($formattedCode))
-                                    S/ {{ $formattedCode }}
-                                @endif
+                                    S/ {{ $sale_code }}
                             </div>
                         @endif
 

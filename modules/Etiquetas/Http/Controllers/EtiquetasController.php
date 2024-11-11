@@ -49,7 +49,8 @@ class EtiquetasController extends Controller
             $barcode = $request->barcode;
             $template = $format == '1' ? 'template' : ($format == '2' ? 'template2' : 'template4');
             if ($format == '1' && $paper == '2') {
-                $template = 'template3';
+                // $template = 'template3';
+                $template = 'template_format_1_template_2';
             }
             // if ($format == '1' && $paper == '1') {
             //     $template = 'template6';
@@ -86,6 +87,10 @@ class EtiquetasController extends Controller
             }
             $width = $paper == 1 ? 50 : 65;
             $height = $paper == 1 ? 25 : 23;
+            if($template === "template_format_1_template_2" ){
+                $height = 20;
+                $width =65;
+            }
             // if($company->number == '10465702449'){
             //     $format = 1;
             //     $width = 70;
@@ -110,7 +115,7 @@ class EtiquetasController extends Controller
             ]);
 
 
-            $pdf->shrink_tables_to_fit = 0;
+            // $pdf->shrink_tables_to_fit = 0;
             $html = view('etiquetas::' . $template, compact(
                 // $html = view('etiquetas::templatetest', compact(
                 'type',

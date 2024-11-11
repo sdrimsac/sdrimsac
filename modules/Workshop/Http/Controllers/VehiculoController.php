@@ -515,7 +515,6 @@ class VehiculoController extends Controller
     }
     public function check_pdf($id, $date)
     {
-        /* dump($id, $date); */
         /* $formattedDate = Carbon::parse($date)->format('Ymd'); */
         $formattedDate = Carbon::parse($date)->format('Y_m_d'); 
 
@@ -529,7 +528,7 @@ class VehiculoController extends Controller
     }
     public function view_pdf($id, $timestamp)
     {
-        /* dump($id, $timestamp); */
+        
         $pdfPath = storage_path("app/public/format_vehiculo_{$id}_{$timestamp}.pdf");
 
         if (file_exists($pdfPath)) {
