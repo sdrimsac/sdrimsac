@@ -140,7 +140,7 @@ class PosController extends Controller
 
     public function foods(Request $request)
     {
-        
+
         $configuration = Configuration::first();
         $customer_unit_type_id = $request->customer_unit_type_id;
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
@@ -156,14 +156,33 @@ class PosController extends Controller
         $brand_id = $request->brands;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
-      
-        $value = str_replace("'", "-", $value);
+
+        /* $value = str_replace("'", "-", $value); */
         $value = strtoupper($value);
-        if (preg_match('/^[a-zA-Z]{2}-\d+$/', $value)) {
+
+        $quote_count = substr_count($value, "'");
+
+        if ($quote_count === 1) {
+            
+            $value = str_replace("'", "-", $value);
+        } elseif ($quote_count > 1) {
+            
+        } else {
+            
+        }
+        if (!preg_match('/^[a-zA-Z]{3}\d{3}$/', $value)) {
+            $value = preg_replace('/([a-zA-Z]+)(\d+)/', '$1-$2', $value);
+        }
+
+        $value = trim($value);  // Asegurarse de que no haya espacios adicionales
+        /* if (strpos($value, "'") !== false) {
+            $value = str_replace("'", "-", $value);
+        } */
+        /* if (preg_match('/^[a-zA-Z]{2}-\d+$/', $value)) {
             $value = $value;
         } else {
             $value = preg_replace('/([a-zA-Z]+)(\d+)/', '$1-$2', $value);
-        }
+        } */
         /* $value = trim($value); */
 
         /* agregado para buscar codido interno con comillas */
