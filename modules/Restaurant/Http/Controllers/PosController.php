@@ -137,9 +137,10 @@ class PosController extends Controller
 
         return $pdf->stream('pdf_file.pdf');
     }
-    
+
     public function foods(Request $request)
     {
+        
         $configuration = Configuration::first();
         $customer_unit_type_id = $request->customer_unit_type_id;
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
@@ -155,8 +156,20 @@ class PosController extends Controller
         $brand_id = $request->brands;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
+      
+        $value = str_replace("'", "-", $value);
+        $value = strtoupper($value);
+        if (preg_match('/^[a-zA-Z]{2}-\d+$/', $value)) {
+            $value = $value;
+        } else {
+            $value = preg_replace('/([a-zA-Z]+)(\d+)/', '$1-$2', $value);
+        }
+        /* $value = trim($value); */
+
         /* agregado para buscar codido interno con comillas */
-        $value = addslashes($value);
+        /* $value = addslashes($value); */
+        /* $value = trim($request->value);
+        $value = str_replace("'", "\'", $value); */
         $establishment_id = auth()->user()->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
@@ -178,11 +191,11 @@ class PosController extends Controller
                     ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
                     });
-                    if ($brand_id) {
-                        $query->whereHas('brand', function ($query) use ($brand_id) {
-                            $query->where('id', $brand_id);
-                        });
-                    }
+                if ($brand_id) {
+                    $query->whereHas('brand', function ($query) use ($brand_id) {
+                        $query->where('id', $brand_id);
+                    });
+                }
                 if ($search_by_series == true) {
                     $query->where('series_enabled', 1)
                         ->whereHas('item_lots', function ($query) use ($warehouse_id, $value) {
@@ -205,7 +218,7 @@ class PosController extends Controller
                         $query->where('unit_type_id', '<>', 'ZZ');
                     }
                 }
-                
+
                 /* if ($model) {
                     $query->where('model', 'LIKE', '%' . $value . '%');
                 }
@@ -226,17 +239,17 @@ class PosController extends Controller
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere(function ($query) use ($value, $quality, $model) {
                                 $query->where('internal_id', 'LIKE', '%' . $value . '%')
-                                ->orWhere('barcode', 'LIKE', '%' . $value . '%');
+                                    ->orWhere('barcode', 'LIKE', '%' . $value . '%');
                                 if ($quality) {
                                     $query->orWhere('quality', 'LIKE', '%' . $value . '%');
                                 }
                                 if ($model) {
                                     $query->orWhere('model', 'LIKE', '%' . $value . '%');
-                                }    
+                                }
                             });
                     });
                 } else {
-                    
+
                     $foods = $foods->where(function ($query) use ($value, $search_by_second_name) {
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere('code', 'LIKE', '%' . $value . '%');
