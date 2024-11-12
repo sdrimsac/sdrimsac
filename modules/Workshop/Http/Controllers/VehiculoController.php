@@ -74,17 +74,6 @@ class VehiculoController extends Controller
         }
         HistorialItem::where('historial_id', $historial_id)->delete();
         foreach ($items as $item) {
-            /* if ($existingItems->has($item['id'])) {
-                $historial_item = $existingItems->get($item['id']);
-                $historial_item->item_id = $item['id'];
-                $historial_item->cantidad = $item['cantidad'];
-                $historial_item->price = $item['precioUnitario'];
-                $historial_item->save();
-
-                $this->updateStock($item['id'], $item['cantidad']);
-
-                $existingItems->forget($item['id']);
-            } else { */
                 $historial_item = new HistorialItem;
                 $historial_item->cantidad = $item['cantidad'];
                 $historial_item->price = $item['precioUnitario'];
@@ -93,11 +82,7 @@ class VehiculoController extends Controller
                 $historial_item->save();
 
                 $this->updateStock($item['id'], $item['cantidad']);
-            /* } */
         }
-        /* foreach ($existingItems as $itemToDelete) {
-            $itemToDelete->delete();
-        } */
 
         return response()->json(["success" => true]);
     }
@@ -141,92 +126,6 @@ class VehiculoController extends Controller
 
         return [ 'customer_id' => $customer_id, 'items' => $items];
     }
-
-    /* public function store(VehiculoRequest $request)
-    {
-        $id = $request->input('id');
-        $plate = $request->input('placa');
-        $establishment_id = auth()->user()->establishment_id;
-
-        $vehicle = Vehiculo::where('id', $id)
-            ->orWhere('placa', $plate)
-            ->first();
-
-        if ($vehicle) {
-            $historial = new Historial;
-            $historial->fill($request->except('vehiculo'));
-            $historial->vehiculo_id = $vehicle->id;
-            $historial->establishment_id = $establishment_id;
-            $historial->save();
-
-            $vehicleFeatureData = $request->input('vehiculo', []);
-            $vehicleFeatureData['vehiculo_id'] = $vehicle->id;
-            $vehicleFeature = new VehicleFeature;
-            $vehicleFeature->fill($vehicleFeatureData);
-            $vehicleFeature->save();
-
-            // Asociar los servicios seleccionados al historial
-            $services_detail_ids = $request->input('services_detail_ids', []);
-            $dataToInsert = array_map(function ($service_detail_id) use ($historial) {
-                return [
-                    'services_detail_id' => $service_detail_id,
-                    'historial_id' => $historial->id
-                ];
-            }, $services_detail_ids);
-            DB::connection('tenant')->table('historial_service_details')->insert($dataToInsert);
-
-            return [
-                'success' => true,
-                'message' => 'Historial creado para el vehículo existente con éxito'
-            ];
-        }
-
-        $data = $request->except('vehiculo');
-
-        $existengVehicle = Vehiculo::where('placa', $plate)
-            ->when($id, function ($query) use ($id) {
-                return $query->where('id', '!=', $id);
-            })
-            ->first();
-        if ($existengVehicle) {
-            return response()->json(['message' => false, 'El vehiculo ya existe'], 422);
-        }
-        
-
-        $vehicle = Vehiculo::firstOrNew(['id' => $id]);
-
-        $vehicle->fill($data);
-        $vehicle->save();
-        $establishment_id = auth()->user()->establishment_id;
-
-        $historial = new Historial;
-        $historial->fill($data);
-        $historial->vehiculo_id = $vehicle->id;
-        $historial->establishment_id = $establishment_id;
-        $historial->save();
-
-        $vehicleFeatureData = $request->input('vehiculo', []);
-        $vehicleFeatureData['vehiculo_id'] = $vehicle->id;
-        $vehicleFeature = new VehicleFeature;
-        $vehicleFeature->fill($vehicleFeatureData);
-        $vehicleFeature->save();
-
-        $services_detail_ids = $request->services_detail_ids;
-        $dataToInsert = array_map(function ($service_detail_id) use ($historial) {
-            return [
-                'services_detail_id' => $service_detail_id,
-                'historial_id' => $historial->id
-            ];
-        }, $services_detail_ids);
-
-        DB::connection('tenant')->table('historial_service_details')->insert($dataToInsert);
-
-        return [
-            'success' => true,
-            'message' => ($id) ? 'Vehiculo editado con éxito' : 'Vehiculo registrado con éxito'
-        ];
-    } */
-
     public function store(VehiculoRequest $request)
     {
         $id = $request->input('id');
@@ -314,7 +213,6 @@ class VehiculoController extends Controller
     }
     /* public function storeHistory(Request $request)
     {
-        dump($request->all());
         $id = $request->input('id');
         $establishment_id = auth()->user()->establishment_id;
 

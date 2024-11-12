@@ -1311,10 +1311,10 @@
         @reloadItems="getFoods"
       ></payment-form>
     </template>
-    <template v-if="configuration.college">
+    <!-- <template v-if="configuration.college">
       <college-parents :showDialog.sync="showDialogNewPerson"></college-parents>
-    </template>
-    <template v-else>
+    </template> -->
+    <template>
       <person-form :external="false" :showDialog.sync="showDialogNewPerson"></person-form>
     </template>
     <cash-history
@@ -1324,7 +1324,7 @@
       :sender="personalWhatsapp ? sender : 'sdrimsac'"
     ></cash-history>
     <item-form :showDialog.sync="showDialogNewItem" :external="true" :worker="worker"></item-form>
-    <college :showDialog.sync="showDialogCollege" :configuration="configuration"></college>
+    <!-- <college :showDialog.sync="showDialogCollege" :configuration="configuration"></college> -->
     <warehouses-detail
       :showDialog.sync="showWarehousesDetail"
       :warehouses="warehousesDetail"
@@ -1498,13 +1498,13 @@ const PromotionCanje = () =>
   );
 const EditProduct = () => import("./partials/edit_product.vue");
 const ListOrden = () => import("./partials/list_ordens.vue");
-const College = () => import("./partials/college.vue");
+/* const College = () => import("./partials/college.vue"); */
 const CreditsList = () => import("./partials/credits_list.vue");
 const ConsignmentList = () => import("./partials/consignment_list_modal.vue");
-const CollegeParents = () =>
+/* const CollegeParents = () =>
   import(
     "../../../../../../College/Resources/assets/js/views/persons/form.vue"
-  );
+  ); */
 const SaleNoteCreditCash = () => import("./partials/sale_note_credit_cash.vue");
 const CategoryDrag = () => import("./partials/category_drag.vue");
 const ProductsDue = () => import("./partials/products_due.vue");
@@ -1545,8 +1545,8 @@ export default {
     CategoryDrag,
     CreditsList,
     DispatchModal,
-    CollegeParents,
-    College,
+    /* CollegeParents,
+    College, */
     CashHistory,
     DocumentsPrint,
     NumberPad,
@@ -1621,7 +1621,7 @@ export default {
       showDispatch: false,
       areas: [],
       conf: {},
-      showDialogCollege: false,
+      /* showDialogCollege: false, */
       barcode: false,
       sender: null,
       socket: null,
@@ -2588,9 +2588,9 @@ export default {
         case 8:
           this.openviewsItemsMobil();
           break;
-        case 9:
+        /* case 9:
           this.openCollege();
-          break;
+          break; */
         case 10:
           this.openPromocion();
           break;

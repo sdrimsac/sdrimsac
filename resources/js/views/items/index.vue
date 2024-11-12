@@ -115,6 +115,7 @@
               <th class="text-white">Ubicacion</th>
               <th class="text-left text-white">Stock</th>
               <th class="text-end text-white">P.Unitario (Venta)</th>
+              <!-- <th class="text-end text-white">P.Unitario (Venta) establecimiento</th> -->
               <th v-if="typeUser != 'seller'" class="text-end text-white">P.Unitario (Compra)</th>
               <th class="text-center text-white">Tiene Igv</th>
               <th class="text-white text-center">Estado</th>
@@ -237,7 +238,29 @@
 
                 <!-- <br/>Mín:{{ row.stock_min }} -->
               </td>
-              <td class="text-end">{{ row.sale_unit_price }}</td>
+              <!-- <td v-if="row.warehouse_prices.length > 0">
+                <table>
+                  <tbody>
+                    <tr v-for="price in row.warehouse_prices" :key="price.id">
+                      <td>{{ price.price }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td v-else>{{ row.sale_unit_price }}</td>-->
+              <td v-if="row.warehouse_prices.length > 0">
+                <table>
+                  <tbody>
+                    <tr v-for="price in row.warehouse_prices" :key="price.id">
+                      <td v-if="price.warehouse_id">{{ price.price }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td v-else>
+                {{ row.sale_unit_price }}
+              </td>
+
               <td v-if="typeUser != 'seller'" class="text-end">{{ row.purchase_unit_price }}</td>
               <td class="text-center">{{ row.has_igv_description }}</td>
               <td class="text-center">

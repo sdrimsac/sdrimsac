@@ -30,6 +30,16 @@ class SellerCollection extends ResourceCollection
                 'created_at' => Carbon::parse($row->created_at)->format('Y-m-d H:i'),
                 'updated_at' => $row->updated_at,
                 'user_name' => $row->user ? $row->user->name : '',
+                'sold_items' => $row->soldItems->map(function ($item) {
+                    return [
+                        'item_id' => $item->item_id,
+                        'item' => $item->item,
+                        'item' => $item->item->description,
+                        'quantity' => $item->quantity,         
+                        'unit_price' => $item->unit_price,     
+                        'total_price' => $item->quantity * $item->unit_price, 
+                    ];
+                }),
             ];
         });
     }

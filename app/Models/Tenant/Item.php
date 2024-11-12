@@ -364,10 +364,10 @@ class Item extends ModelTenant
     {
         return $this->hasMany(CommercialTreatmentItem::class);
     }
-    public function warehousePrices()
+    /* public function warehousePrices()
     {
         return $this->hasMany(ItemWarehousePrice::class, 'item_id')->select('id', 'item_id', 'price', 'warehouse_id');
-    }
+    } */
     public static function getSaleUnitPriceByWarehouse(Item $item, int $warehouseId): string
     {
         $warehousePrice = $item->warehousePrices->where('item_id', $item->id)
@@ -454,7 +454,7 @@ class Item extends ModelTenant
     }
     public function item_warehouse_prices()
     {
-        return $this->hasMany(ItemWarehousePrice::class);
+        return $this->hasMany(ItemWarehousePrice::class, 'item_id');
     }
     public function inventory_kardex()
     {

@@ -7,7 +7,7 @@ namespace App\Models\Tenant;
 class Seller extends ModelTenant
 {
     protected $table = 'sellers';
-    
+
     protected $fillable = [
         'document_type_id',
         'establishment_id',
@@ -17,12 +17,14 @@ class Seller extends ModelTenant
         'telephone',
         'active',
     ];
-    
-    public function establishment() {
+
+    public function establishment()
+    {
         return $this->belongsTo(Establishment::class);
     }
-    
-    public function user() {
+
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
@@ -35,9 +37,19 @@ class Seller extends ModelTenant
     {
         return $this->hasMany(Quotation::class, 'seller_id');
     }
-    public function saleNotes() 
+    public function saleNotes()
     {
         return $this->hasMany(SaleNote::class, 'seller_id');
     }
-
+    public function soldItems()
+    {
+        return $this->hasManyThrough(
+            DocumentItem::class,  // Modelo final al que queremos acceder
+            Document::class,      // Modelo intermedio
+            'seller_id',          // Clave foránea en `documents` (de `Seller` a `Document`)
+            'document_id',        // Clave foránea en `document_items` (de `Document` a `DocumentItem`)
+            'id',                 // Llave primaria local en `sellers`
+            'id'                  // Llave primaria local en `documents`
+        );
+    }
 }

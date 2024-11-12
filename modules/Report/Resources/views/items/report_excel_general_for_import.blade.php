@@ -50,7 +50,7 @@
         <div class="">
             <div class=" ">
                 @php
-                    
+
                 @endphp
                 <table class="">
                     <thead>
@@ -134,8 +134,20 @@
                                 <td>
                                     {{ $value->currency_type_id }}
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ $value->sale_unit_price }}
+                                    
+                                </td> --}}
+                                <td>
+                                    @php
+                                        // Buscamos el precio para el almacén específico usando la relación 'item_warehouse_prices'
+                                        $warehousePrice = $value->item_warehouse_prices
+                                            ? $value->item_warehouse_prices->firstWhere('warehouse_id', $warehouse_id)
+                                            : null;
+                                    @endphp
+                                
+                                    {{-- Mostrar el precio del almacén si existe, de lo contrario usar 'sale_unit_price' como precio por defecto --}}
+                                    {{ $warehousePrice ? number_format($warehousePrice->price, 2, '.', '') : number_format($value->sale_unit_price, 2, '.', '') }}
                                 </td>
                                 <td>
                                     {{ $value->sale_affectation_igv_type_id }}
@@ -185,7 +197,8 @@
                                         $unit_types[] = [
                                             "p{$idx}_desc" => $item_unit_type->description,
                                             "p{$idx}_cant" => $item_unit_type->quantity_unit,
-                                            "p{$idx}_precio" => $item_unit_type->price2 * $item_unit_type->quantity_unit,
+                                            "p{$idx}_precio" =>
+                                                $item_unit_type->price2 * $item_unit_type->quantity_unit,
                                         ];
                                     }
                                     $count = 4 - count($unit_types);

@@ -1099,11 +1099,19 @@ export default {
                 this.$toast.error("Debe seleccionar un asesor");
                 return;
             }
-            if (
+            /* if (
                 this.form.identity_document_type_id == "6" &&
                 this.form.number.length != 11
             ) {
                 this.$toast.error("La longitud del RUC debe ser de 11");
+                return;
+            } */
+
+           if (this.form.identity_document_type_id == "6") {
+              if (this.form.number.length != 11) {
+                  this.$toast.error("La longitud del RUC debe ser de 11");
+                    return;
+                }
                 return;
             }
             if (

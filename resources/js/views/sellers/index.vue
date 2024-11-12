@@ -48,6 +48,7 @@
               <th class="text-white">Total Ventas B. & F.</th>
               <th class="text-white">Total Ventas Nota V.</th>
               <th class="text-white">Total ventas</th>
+              <th class="text-white">Productos Vendidos</th>
               <th class="text-white text-end">Acciones</th>
             </tr>
 
@@ -56,12 +57,15 @@
               <td>{{ index + 1 }}</td>
               <td>{{ row.name }}</td>
               <td>{{ row.document }}</td>
-              <td>{{ row.user_name }} </td>
+              <td>{{ row.user_name }}</td>
               <td>{{ row.created_at }}</td>
               <td>{{ row.establishment_description }}</td>
               <td>{{ row.documents_total }}</td>
               <td>{{ row.sale_notes_total }}</td>
               <td>{{ row.total_sales }}</td>
+              <td>
+                <el-button type="info" @click="getProd(row.id)">ver</el-button>
+              </td>
 
               <td class="text-end">
                 <button
@@ -96,7 +100,7 @@
                                             clickDelete(row.id)"
                   >
                     <i class="fa fa-trash"></i> Eliminar
-                  </a> -->
+                  </a>-->
                   <a
                     type="button"
                     class="dropdown-item text-warning"
@@ -121,6 +125,12 @@
           :document_types="document_types"
           :recordId="recordId"
         ></sellers-form>
+        <list-prod
+          :showDialog.sync="showDialogProd"
+          :sellerId="ListProdId"
+          :sold_items="ListSoldItems"
+          :sellers="sellers"
+        ></list-prod>
       </div>
     </div>
   </div>
@@ -128,6 +138,7 @@
 
 <script>
 import SellersForm from "./form.vue";
+import ListProd from "./list_prod.vue";
 import DataTable from "../../components/DataTableSeller.vue";
 import { deletable } from "../../mixins/deletable";
 
@@ -136,17 +147,22 @@ export default {
   mixins: [deletable],
   components: {
     SellersForm,
-    DataTable
+    DataTable,
+    ListProd
   },
   data() {
     return {
       showDialog: false,
+      showDialogProd: false,
       resource: "sellers",
+      ListProdId: null,
       recordId: null,
       records: [],
+      sellers: [],
       title: null,
       establishments: [],
-      document_types: []
+      document_types: [],
+      ListSoldItems: []
     };
   },
   created() {
@@ -157,6 +173,31 @@ export default {
     this.getTables();
   },
   methods: {
+    getProd(id) {
+      this.ListProdId = id;
+      console.log("Ver el id del vendedor:", id);
+
+      if (Array.isArray(this.sellers)) {
+        console.log("Estructura de this.sellers:", this.sellers);
+
+        const soldItems = this.sellers.find(s => s.id === id)?.sold_items || [];
+
+        if (soldItems.length > 0) {
+          this.ListSoldItems = soldItems;
+          this.showDialogProd = true;
+        } else {
+          console.error(
+            `No se encontraron productos vendidos para el vendedor con id ${id}`
+          );
+          this.ListSoldItems = [];
+          this.showDialogProd = true;
+        }
+      } else {
+        console.error("this.sellers no es un array o es undefined");
+        this.ListSoldItems = [];
+        this.showDialogProd = true;
+      }
+    }, 
     async getTables() {
       const response = await this.$http(`${this.resource}/tables`);
       console.log(response);
@@ -167,7 +208,9 @@ export default {
     },
     getData() {
       this.$http.get(`/${this.resource}/records`).then(response => {
+        console.log("Datos de vendedores:", response.data.data);
         this.records = response.data.data;
+        this.sellers = response.data.data;
       });
     },
     clickCreate(recordId = null) {

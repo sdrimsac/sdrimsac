@@ -76,9 +76,10 @@ use App\Models\Tenant\RegisterMovement;
 class ItemController extends Controller
 {
     protected $all_models = [];
-    public function __construct() {
+    public function __construct()
+    {
         $this->all_models = [
-            
+
             "Item" => "App\Models\Item",
         ];
     }
@@ -687,6 +688,12 @@ class ItemController extends Controller
                 $query->where('area_id', $area_id);
             });
         }
+        if ($warehouse_id) {
+            // Cargar los precios por almacén para cada producto
+            $records = $records->with(['item_warehouse_prices' => function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);  // Filtrar precios por el almacén
+            }]);
+        }
 
         return $records->orderBy('description', 'ASC');
     }
@@ -754,13 +761,14 @@ class ItemController extends Controller
 
         return $records;
     }
-    public function recordsActivity(Request $request){
+    public function recordsActivity(Request $request)
+    {
 
         $records = RegisterMovement::query();
         $column = $request->column;
         $value = $request->value;
 
-        if($column && $value){
+        if ($column && $value) {
             switch ($column) {
                 case 'user_id':
                     $records = $records->where('user_id', $value);
@@ -776,7 +784,7 @@ class ItemController extends Controller
                     break;
                 case 'model':
                     $model = $this->get_model($value);
-                    if($model){
+                    if ($model) {
                         $records = $records->where('model', $model);
                     }
                     break;
@@ -785,7 +793,6 @@ class ItemController extends Controller
 
         $records = $records->orderBy('id', 'desc');
         return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
-
     }
 
     public function create()
@@ -1279,11 +1286,9 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
-    public function excelForImport(Request $request)
+    /* public function excelForImport(Request $request)
     {
-        $records = $this->getRecords($request, true)
-
-            ->get();
+        $records = $this->getRecords($request, true)->get();
         $company = Company::first();
         $warehouse_id = $request->warehouse_id;
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
@@ -1300,6 +1305,49 @@ class ItemController extends Controller
         $description_warehouse = ($warehouse) ? $warehouse->description : 'Todos';
         $description_warehouse = str_replace('-', '', $description_warehouse);
         $description_warehouse = str_replace(' ', '_', $description_warehouse);
+        return (new ItemExportGeneralForImport)
+            ->records($records)
+            ->company($company)
+            ->warehouse_id($warehouse_id)
+            ->establishment($establishment)
+            ->download('Productos_de_' . $description_warehouse . '_' . Carbon::now() . '.xlsx');
+    } */
+
+    public function excelForImport(Request $request)
+    {
+        $records = $this->getRecords($request, true)->get();
+        $company = Company::first();
+        $warehouse_id = $request->warehouse_id;
+        $establishment = $request->establishment_id
+            ? Establishment::findOrFail($request->establishment_id)
+            : auth()->user()->establishment;
+
+        foreach ($records as $key => $row) {
+            // Verificar stock en base al almacén
+            if ($warehouse_id) {
+                $item_warehouse = ItemWarehouse::where([['item_id', $row->id], ['warehouse_id', $warehouse_id]])->first();
+                $row->stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+                // Obtener el precio para el almacén específico usando la relación warehousePrices
+                $warehouse_price = $row->warehousePrices
+                    ? $row->warehousePrices->firstWhere('warehouse_id', $warehouse_id)
+                    : null;
+
+                // Usar el precio del almacén si existe, sino el sale_unit_price
+                $row->price = $warehouse_price
+                    ? number_format($warehouse_price->price, 2, ".", "")
+                    : number_format($row->sale_unit_price, 2, ".", "");
+            } else {
+                // Sumar el stock de todos los almacenes si no se seleccionó uno específico
+                $row->stock = ItemWarehouse::where('item_id', $row->id)->sum('stock');
+                $row->price = number_format($row->sale_unit_price, 2, ".", "");
+            }
+        }
+
+        $warehouse = Warehouse::find($warehouse_id);
+        $description_warehouse = $warehouse ? $warehouse->description : 'Todos';
+        $description_warehouse = str_replace(['-', ' '], ['_', '_'], $description_warehouse);
+
         return (new ItemExportGeneralForImport)
             ->records($records)
             ->company($company)

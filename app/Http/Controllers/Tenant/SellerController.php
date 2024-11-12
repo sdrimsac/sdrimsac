@@ -29,7 +29,7 @@ class SellerController extends Controller
 
         return new SellerCollection($records->paginate(config('tenant.items_per_page')));
     }
-    public function getRecords(Request $request)
+    /* public function getRecords(Request $request)
     {
         $date_of_issue = $request->input('date_of_issue');
         $month_start = $request->input('month_start');
@@ -65,7 +65,6 @@ class SellerController extends Controller
         } else {
             $query->where('active', 1);
         }
-        /* $query->where('active', $active); */
 
         if ($request->has('column') && $request->has('value') && !empty($request->value)) {
             $column = $request->input('column');
@@ -74,7 +73,122 @@ class SellerController extends Controller
             }
         }
         return $query->orderBy('id', 'desc');
+    } */
+    public function getRecords(Request $request)
+    {
+        $date_of_issue = $request->input('date_of_issue');
+        $month_start = $request->input('month_start');
+        $active = $request->input('active', 1);
+
+        $query = Seller::query()
+            ->withSum(['documents as documents_total' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereDate('date_of_issue', $date_of_issue);
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                }
+            }], 'total')
+            ->withSum(['saleNotes as sale_notes_total' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereDate('date_of_issue', $date_of_issue);
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                }
+            }], 'total')
+            ->with(['soldItems' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereHas('document', function ($q) use ($date_of_issue) {
+                        $q->whereDate('date_of_issue', $date_of_issue);
+                    });
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereHas('document', function ($q) use ($month_start_date, $month_end_date) {
+                        $q->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                    });
+                }
+            }]);
+
+        if ($request->has('active')) {
+            $active = $request->input('active');
+            $query->where('active', $active);
+        } else {
+            $query->where('active', 1);
+        }
+
+        if ($request->has('column') && $request->has('value') && !empty($request->value)) {
+            $column = $request->input('column');
+            if (in_array($column, ['name', 'document'])) {
+                $query->where($column, 'like', '%' . $request->value . '%');
+            }
+        }
+
+        return $query->orderBy('id', 'desc');
     }
+
+    /* public function getRecordsProduct(Request $request)
+    {
+
+        // Obtener los datos de entrada desde la solicitud
+        $date_of_issue = $request->input('date_of_issue');
+        $month_start = $request->input('month_start');
+        $sellerId = $request->input('sellerId');  // Obtener el sellerId de la solicitud
+
+        // Crear la consulta base
+        $query = Seller::query()
+            ->withSum(['documents as documents_total' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereDate('date_of_issue', $date_of_issue);
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                }
+            }], 'total')
+            ->withSum(['saleNotes as sale_notes_total' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereDate('date_of_issue', $date_of_issue);
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                }
+            }], 'total')
+            ->with(['soldItems' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereHas('document', function ($q) use ($date_of_issue) {
+                        $q->whereDate('date_of_issue', $date_of_issue);
+                    });
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereHas('document', function ($q) use ($month_start_date, $month_end_date) {
+                        $q->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                    });
+                }
+            }]);
+
+        // Si se proporciona sellerId, filtramos por el ID del vendedor
+        if (!empty($sellerId)) {
+            $query->where('id', $sellerId);  // Filtramos por el sellerId
+        }
+
+        // Si hay un filtro por columna, lo aplicamos
+        if ($request->has('column') && $request->has('value') && !empty($request->value)) {
+            $column = $request->input('column');
+            if (in_array($column, ['name', 'document'])) {
+                $query->where($column, 'like', '%' . $request->value . '%');
+            }
+        }
+
+        // Ordenar por ID de forma descendente
+        return $query->orderBy('id', 'desc');
+    } */
+
     public function check(Request $request)
     {
         $f = $request->f;

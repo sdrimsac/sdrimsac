@@ -23,6 +23,7 @@ class SellerResource extends JsonResource
             'document_type_id' => $this->document_type_id,
             // 'establishment_description' => optional($this->establishment)->description ?? '-',
             'active' => (bool) $this->active,
+            
         ];
     }
 }
