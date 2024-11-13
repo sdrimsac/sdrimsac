@@ -1662,7 +1662,17 @@
                                                                         >
                                                                             Precio
                                                                             <br />
-                                                                            <el-input
+                                                                            <template v-if="order_pend.prices">
+                                                                                <el-select v-model="order_pend.price" placeholder="Seleccione un precio"
+                                                                                @change="update_price(indexx, order_pend.price)"
+                                                                                >
+                                                                                    <el-option v-for="(price, index) in order_pend.prices" :key="index" :value="price" :label="price">
+
+                                                                                    </el-option>
+                                                                                </el-select>
+                                                                            </template>
+                                                                            <template v-else>
+                                                                                <el-input
                                                                                 class="custom_input"
                                                                                 :disabled="
                                                                                     isSellerConsolidated ||
@@ -1690,19 +1700,9 @@
                                                                                             : "S/"
                                                                                     }}
                                                                                 </template>
-                                                                                <!-- <template
-                                                                                slot="prepend"
-                                                                                v-if="
-                                                                                    order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .currency_type_id ==
-                                                                                        'USD'
-                                                                                "
-                                                                            >
-                                                                                $
-                                        </template>-->
+                                                                    
                                                                             </el-input>
+                                                                            </template>
                                                                         </span>
                                                                     </span>
                                                                 </div>

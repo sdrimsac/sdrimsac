@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+//2024_10_09_1915237_add_price_item_unit_type
+
+class AddPriceItemUnitType extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('configurations', function (Blueprint $table) {
+            $table->boolean('price_item_unit_type')->default(false);
+        });
+    }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('configurations', function (Blueprint $table) {
+            $table->dropColumn('price_item_unit_type');
+        });
+    }
+}

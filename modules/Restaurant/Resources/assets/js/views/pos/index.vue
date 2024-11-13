@@ -3644,6 +3644,21 @@ export default {
                 //     currency_type_id
                 // );
                 orden.original_price = orden.price;
+                if(this.configuration.price_item_unit_type && type && type.id){
+                    let {food:{item:{item_unit_types}}}=orden;
+                    let unit_type = item_unit_types.find(iut=>iut.id == type.id);
+                    if(unit_type){
+                        let prices = [unit_type.price1, unit_type.price2, unit_type.price3];
+                        let default_price = unit_type.price_default - 1;
+                        
+                        let newPrices = [
+                            prices[default_price],
+                            ...prices.filter((_, index) => index !== default_price)
+                        ];
+
+                        orden.prices = newPrices;
+                    }
+                }
                 if (this.configuration.order_desc_items == true) {
                     this.localOrden.push(orden);
                 } else {

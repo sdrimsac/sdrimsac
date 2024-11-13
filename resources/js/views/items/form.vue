@@ -1,7 +1,7 @@
 <!-- Modal de Creación de Productos -->
 <template>
     <el-dialog
-        width="70%"
+        width="90%"
         :title="titleDialog"
         :visible="showDialog"
         :close-on-click-modal="false"
@@ -95,7 +95,7 @@
                             </div>
                             <div
                                 class="col-12 col-lg-6 col-xl-3"
-                                v-if=" configuration.origin"
+                                v-if="configuration.origin"
                             >
                                 <div
                                     class="form-group"
@@ -631,21 +631,16 @@
                                     ></el-input>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 col-xl-2"
-                            v-if="configuration.consolidated_quotations"
+                            <div
+                                class="col-12 col-lg-6 col-xl-2"
+                                v-if="configuration.consolidated_quotations"
                             >
                                 <div class="form-group">
                                     <label class="control-label">
-                                        <i
-                                            class="fa fa-box fa-lg"
-                                        ></i>
+                                        <i class="fa fa-box fa-lg"></i>
                                         Peso
-                                        
                                     </label>
-                                    <el-input
-                                        
-                                        v-model="form.weight"
-                                    ></el-input>
+                                    <el-input v-model="form.weight"></el-input>
                                 </div>
                             </div>
 
@@ -701,10 +696,7 @@
                                     ></el-input>
                                 </div>
                             </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                
-                            >
+                            <div class="col-12 col-lg-6 col-xl-2">
                                 <div class="form-group">
                                     <label class="control-label">
                                         <!-- <i class="fa fa-motorcycle fa-lg"></i> -->
@@ -718,9 +710,7 @@
                                             <i class="fa fa-info-circle"></i>
                                         </el-tooltip>
                                     </label>
-                                    <el-input
-                                        v-model="form.model"
-                                    ></el-input>
+                                    <el-input v-model="form.model"></el-input>
                                 </div>
                             </div>
                             <div
@@ -740,9 +730,7 @@
                                             <i class="fa fa-info-circle"></i>
                                         </el-tooltip>
                                     </label>
-                                    <el-input
-                                        v-model="form.quality"
-                                    ></el-input>
+                                    <el-input v-model="form.quality"></el-input>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-12 col-xl-12">
@@ -1390,26 +1378,61 @@
                                                     </el-tooltip>
                                                 </th>
                                                 <th
-                                                    width="13%"
+                                                    width="8%"
                                                     class="text-white text-center"
                                                 >
                                                     Precio
                                                     <br />unitario
                                                 </th>
+                                                <template
+                                                    v-if="
+                                                        configuration.price_item_unit_type
+                                                    "
+                                                >
+                                                    <th
+                                                        width="8%"
+                                                        class="text-white text-center"
+                                                    >
+                                                        Precio
+                                                        <br />unitario 2
+                                                    </th>
+                                                    <th
+                                                        width="8%"
+                                                        class="text-white text-center"
+                                                    >
+                                                        Precio
+                                                        <br />unitario 3
+                                                    </th>
+                                                </template>
                                                 <th
-                                                    width="10%"
+                                                    width="8%"
                                                     class="text-white text-center"
+                                                    v-if="
+                                                        !configuration.price_item_unit_type
+                                                    "
                                                 >
                                                     Total
                                                 </th>
+                                                <template
+                                                    v-if="
+                                                        configuration.price_item_unit_type
+                                                    "
+                                                >
+                                                    <th
+                                                        width="8%"
+                                                        class="text-white text-center"
+                                                    >
+                                                        Precio x defecto
+                                                    </th>
+                                                </template>
                                                 <th
                                                     class="text-white text-center"
                                                 >
                                                     Almacén
                                                 </th>
                                                 <!-- <th class="text-center">
-                                                            P. Defecto
-                        </th>-->
+                                                            Poli. x defecto
+                        </th> -->
                                                 <th class="text-white">
                                                     MAX
                                                     <el-tooltip
@@ -1442,25 +1465,61 @@
                                                     <td class="text-center">
                                                         {{ row.quantity_unit }}
                                                     </td>
-                                                    <td class="text-center">
-                                                        <el-input
-                                                            v-model="row.price2"
-                                                            @input="
-                                                                undToTotal(
-                                                                    index,
-                                                                    row.price2,
-                                                                    row.quantity_unit
-                                                                )
-                                                            "
-                                                        >
-                                                            <i
-                                                                slot="prefix"
-                                                                class="el-icon-edit-outline"
-                                                            ></i>
-                                                        </el-input>
-                                                    </td>
+                                                    <template
+                                                        v-if="
+                                                            configuration.price_item_unit_type
+                                                        "
+                                                    >
+                                                        <td class="text-center">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.price1
+                                                                "
+                                                            ></el-input>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.price2
+                                                                "
+                                                            ></el-input>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.price3
+                                                                "
+                                                            ></el-input>
+                                                        </td>
+                                                    </template>
+                                                    <template v-else>
+                                                        <td class="text-center">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.price2
+                                                                "
+                                                                @input="
+                                                                    undToTotal(
+                                                                        index,
+                                                                        row.price2,
+                                                                        row.quantity_unit
+                                                                    )
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i>
+                                                            </el-input>
+                                                        </td>
+                                                    </template>
 
-                                                    <td class="text-center">
+                                                    <td
+                                                        class="text-center"
+                                                        v-if="
+                                                            !configuration.price_item_unit_type
+                                                        "
+                                                    >
                                                         <el-input
                                                             v-model="row.total"
                                                             @input="
@@ -1480,6 +1539,35 @@
                                                             ></i>
                                                         </el-input>
                                                     </td>
+                                                    <template
+                                                        v-if="
+                                                            configuration.price_item_unit_type
+                                                        "
+                                                    >
+                                                        <td>
+                                                            <el-select
+                                                                v-model="
+                                                                    row.price_default
+                                                                "
+                                                            >
+                                                                <el-option
+                                                                    value="1"
+                                                                    >Precio
+                                                                    1</el-option
+                                                                >
+                                                                <el-option
+                                                                    value="2"
+                                                                    >Precio
+                                                                    2</el-option
+                                                                >
+                                                                <el-option
+                                                                    value="3"
+                                                                    >Precio
+                                                                    3</el-option
+                                                                >
+                                                            </el-select>
+                                                        </td>
+                                                    </template>
                                                     <td>
                                                         <el-select
                                                             clearable
@@ -1566,49 +1654,132 @@
                                                             </el-input>
                                                         </div>
                                                     </td>
+
+                                                    <template
+                                                        v-if="
+                                                            configuration.price_item_unit_type
+                                                        "
+                                                    >
                                                     <td>
-                                                        <div class="form-group">
-                                                            <el-input
-                                                                @input="
-                                                                    undToTotal(
-                                                                        index,
-                                                                        row.price2,
-                                                                        row.quantity_unit
-                                                                    )
-                                                                "
-                                                                v-model="
-                                                                    row.quantity_unit
-                                                                "
+                                                            <div
+                                                                class="form-group"
                                                             >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <el-input
-                                                                v-model="
-                                                                    row.price2
-                                                                "
-                                                                @input="
-                                                                    undToTotal(
-                                                                        index,
-                                                                        row.price2,
+                                                                <el-input
+                                                                    
+                                                                    v-model="
                                                                         row.quantity_unit
-                                                                    )
-                                                                "
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        slot="prefix"
+                                                                        class="el-icon-edit-outline"
+                                                                    ></i>
+                                                                </el-input>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="form-group"
                                                             >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
-                                                        </div>
-                                                    </td>
-                                                    <td>
+                                                                <el-input
+                                                                    v-model="
+                                                                        row.price1
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        slot="prefix"
+                                                                        class="el-icon-edit-outline"
+                                                                    ></i>
+                                                                </el-input>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <el-input
+                                                                    v-model="
+                                                                        row.price2
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        slot="prefix"
+                                                                        class="el-icon-edit-outline"
+                                                                    ></i>
+                                                                </el-input>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <el-input
+                                                                    v-model="
+                                                                        row.price3
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        slot="prefix"
+                                                                        class="el-icon-edit-outline"
+                                                                    ></i>
+                                                                </el-input>
+                                                            </div>
+                                                        </td>
+                                                    </template>
+                                                    <template v-else>
+                                                        <td>
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <el-input
+                                                                    @input="
+                                                                        undToTotal(
+                                                                            index,
+                                                                            row.price2,
+                                                                            row.quantity_unit
+                                                                        )
+                                                                    "
+                                                                    v-model="
+                                                                        row.quantity_unit
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        slot="prefix"
+                                                                        class="el-icon-edit-outline"
+                                                                    ></i>
+                                                                </el-input>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <el-input
+                                                                    @input="
+                                                                        undToTotal(
+                                                                            index,
+                                                                            row.price2,
+                                                                            row.quantity_unit
+                                                                        )
+                                                                    "
+                                                                    v-model="
+                                                                        row.price2
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        slot="prefix"
+                                                                        class="el-icon-edit-outline"
+                                                                    ></i>
+                                                                </el-input>
+                                                            </div>
+                                                        </td>
+                                                    </template>
+
+                                                    <td
+                                                        v-if="
+                                                            !configuration.price_item_unit_type
+                                                        "
+                                                    >
                                                         <div class="form-group">
                                                             <el-input
                                                                 v-model="
@@ -1629,6 +1800,35 @@
                                                             </el-input>
                                                         </div>
                                                     </td>
+                                                    <template
+                                                        v-if="
+                                                            configuration.price_item_unit_type
+                                                        "
+                                                    >
+                                                        <td>
+                                                            <el-select
+                                                                v-model="
+                                                                    row.price_default
+                                                                "
+                                                            >
+                                                                <el-option
+                                                                    value="1"
+                                                                    >Precio
+                                                                    1</el-option
+                                                                >
+                                                                <el-option
+                                                                    value="2"
+                                                                    >Precio
+                                                                    2</el-option
+                                                                >
+                                                                <el-option
+                                                                    value="3"
+                                                                    >Precio
+                                                                    3</el-option
+                                                                >
+                                                            </el-select>
+                                                        </td>
+                                                    </template>
                                                     <td>
                                                         <el-select
                                                             clearable
@@ -1646,7 +1846,7 @@
                                                             ></el-option>
                                                         </el-select>
                                                     </td>
-                                                    <td>
+                                                    <td class="text-center">
                                                         <el-checkbox
                                                             v-model="
                                                                 row.selected
@@ -1690,9 +1890,7 @@
                                 form.item_unit_types.length > 0
                         "
                     >
-                        <el-tab-pane label="Bonificaciones"
-                        name="bonus"
-                        >
+                        <el-tab-pane label="Bonificaciones" name="bonus">
                             <div class="row">
                                 <div
                                     v-if="form.unit_type_id != 'ZZ'"
@@ -1757,9 +1955,17 @@
                                                         </el-tooltip>
                                                     </th>
 
-                                                    <th class="text-white text-center">Cant. Min.</th>
+                                                    <th
+                                                        class="text-white text-center"
+                                                    >
+                                                        Cant. Min.
+                                                    </th>
                                                     <!-- <th class="text-white text-center">Cant. Max.</th> -->
-                                                    <th class="text-white text-center">Cant Bon.</th>
+                                                    <th
+                                                        class="text-white text-center"
+                                                    >
+                                                        Cant Bon.
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1789,7 +1995,6 @@
                                                                 v-model="
                                                                     row.qty_min
                                                                 "
-                                                                
                                                             >
                                                                 <i
                                                                     slot="prefix"
@@ -1803,7 +2008,6 @@
                                                                 v-model="
                                                                     row.qty_free
                                                                 "
-                                                                
                                                                 type="number"
                                                                 step="1"
                                                                 pattern="^\d*(\.\d{0,2})?$"
@@ -1836,7 +2040,6 @@
                                                                 ></i>
                                                             </el-input>
                                                         </td> -->
-                                                
                                                     </template>
                                                 </tr>
                                             </tbody>

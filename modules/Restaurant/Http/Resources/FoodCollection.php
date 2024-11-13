@@ -107,6 +107,9 @@ class FoodCollection extends ResourceCollection
                 $unit_type = $item_unit_types->first();
                 if ($unit_type) {
                     $price = $unit_type->total;
+                    if($price == null || $price == 0){
+                        $price = $row->price;
+                    }
                 }
             }
             if ($categoria_madera_item) {

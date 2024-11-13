@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'price_item_unit_type',
         'promotions_by_points',
         'extorned_analist',
         'origin',
@@ -271,6 +272,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'price_item_unit_type' => 'boolean',
         'promotions_by_points' => 'boolean',
         'extorned_analist' => 'boolean',
         'origin' => 'boolean',
@@ -482,6 +484,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'price_item_unit_type' => (bool)$this->price_item_unit_type,
             'promotions_by_points' => (bool)$this->promotions_by_points,
             'extorned_analist' => (bool)$this->extorned_analist,
             'origin' => (bool)$this->origin,

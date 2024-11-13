@@ -1777,6 +1777,22 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Mostrar precios por política de precio
+                                  </label>
+                                  <el-switch
+                                    v-model="form.price_item_unit_type"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('mostrar precios por política de precio', form.price_item_unit_type, 'price_item_unit_type', 'lockIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
                               <!-- <div class="col-md-2 mt-4">
                                                             <div class="form-group">
                                                                 <label class="control-label w-100">
