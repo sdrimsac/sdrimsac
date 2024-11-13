@@ -63,14 +63,14 @@ export default {
       resource: "sellers"
     };
   },
-  watch: {
+  /* watch: {
     sold_items: {
       handler() {
         this.groupItems();
       },
       immediate: true
     }
-  },
+  }, */
   computed: {
     title() {
       console.log(this.sellers);
@@ -86,7 +86,9 @@ export default {
           params: { sellerId: this.sellerId }
         })
         .then(response => {
+          console.log("Datos recibidos:", response.data);
           this.records = response.data.data;
+
         })
         .catch(error => {
           console.error(error);
@@ -101,7 +103,7 @@ export default {
       });
     }, */
 
-    groupItems() {
+    /* groupItems() {
       const grouped = {};
 
       this.sold_items.forEach(item => {
@@ -109,24 +111,23 @@ export default {
           grouped[item.item_id].total_quantity += item.quantity;
           grouped[item.item_id].total_price += item.total_price;
         } else {
-          // Si el item no existe en el grupo, lo agregamos
+          
           grouped[item.item_id] = {
             item: item.item,
             item_id: item.item_id,
             quantity: item.quantity,
             total_price: item.total_price,
             unit_price: item.unit_price,
-            total_quantity: item.quantity // Inicializamos total_quantity con la cantidad del primer producto
+            total_quantity: item.quantity
           };
         }
       });
 
-      // Convertimos el objeto agrupado a un arreglo para poder iterar en el template
       this.groupedItems = Object.values(grouped);
-    },
+    }, */
     open() {
       this.productSeller();
-      this.groupItems();
+      /* this.groupItems(); */
       console.log("ver passar el id del vendedor", this.sellerId);
       console.log("ver los item vendidos", this.sold_items);
     },

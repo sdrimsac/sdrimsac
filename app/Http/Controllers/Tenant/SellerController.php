@@ -29,6 +29,12 @@ class SellerController extends Controller
 
         return new SellerCollection($records->paginate(config('tenant.items_per_page')));
     }
+    public function recordsProduct(Request $request)
+    {
+        $records = $this->getRecordsProduct($request);
+
+        return new SellerCollection($records->paginate(config('tenant.items_per_page')));
+    }
     /* public function getRecords(Request $request)
     {
         $date_of_issue = $request->input('date_of_issue');
@@ -130,7 +136,7 @@ class SellerController extends Controller
         return $query->orderBy('id', 'desc');
     }
 
-    /* public function getRecordsProduct(Request $request)
+    public function getRecordsProduct(Request $request)
     {
 
         // Obtener los datos de entrada desde la solicitud
@@ -187,7 +193,7 @@ class SellerController extends Controller
 
         // Ordenar por ID de forma descendente
         return $query->orderBy('id', 'desc');
-    } */
+    }
 
     public function check(Request $request)
     {
