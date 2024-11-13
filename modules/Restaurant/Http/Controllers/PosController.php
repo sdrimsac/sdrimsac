@@ -160,16 +160,16 @@ class PosController extends Controller
         /* $value = str_replace("'", "-", $value); */
         $value = strtoupper($value);
 
-        $quote_count = substr_count($value, "'");
-        if ($quote_count === 1) {
-            $value = str_replace("'", "-", $value);
-        } elseif ($quote_count > 1) {
-        }
-        if (!preg_match('/\d{3,}/', $value) || strpos($value, "'") !== false) {
-            $value = trim($value); 
-        } else {
-            $value = trim($value);
-        }
+        // $quote_count = substr_count($value, "'");
+        // if ($quote_count === 1) {
+        //     $value = str_replace("'", "-", $value);
+        // } elseif ($quote_count > 1) {
+        // }
+        // if (!preg_match('/\d{3,}/', $value) || strpos($value, "'") !== false) {
+        //     $value = trim($value); 
+        // } else {
+            // }
+        $value = trim($value);
         // Asegurarse de que no haya espacios adicionales
         /* if (strpos($value, "'") !== false) {
             $value = str_replace("'", "-", $value);
