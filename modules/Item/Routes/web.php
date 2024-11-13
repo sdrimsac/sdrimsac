@@ -21,7 +21,8 @@ Route::middleware(['auth', 'locked.tenant'])->group(function () {
         Route::post('', 'ItemManufacturedController@store');
         
     });
-
+    Route::get('items/import/points-value', 'ItemController@importPointsValue');
+    Route::post('items/import/points-value', 'ItemController@importPointsValueFile');
     Route::get('lotes', [ItemLotsGroupController::class, 'index'])->name("lotes");
     Route::get('lotes/records', [ItemLotsGroupController::class, 'records']);
     Route::get('lotes/tables', [ItemLotsGroupController::class, 'tables']);

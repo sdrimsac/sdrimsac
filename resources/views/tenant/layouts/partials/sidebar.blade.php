@@ -643,6 +643,15 @@
                             </a>
                         </li>
                     @endif
+                    @if($config->is_promotion_document || $config->promotions_by_points)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'promotions' ? 'active' : '' }}"
+                                href="{{ route('reports.promotions.index') }}">
+                                <i class="icofont-file-excel"></i>
+                                Reporte Promociones
+                            </a>
+                        </li>
+                    @endif
                     @if ($user->type == 'superadmin' || ($config->credits && !$roleService->isLogistic()))
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"

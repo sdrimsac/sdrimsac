@@ -26,6 +26,7 @@ class Item extends ModelTenant
     use RegisterMovementTrait;
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
+        'points_value',
         'weight',
         'origin',
         'model',
@@ -177,8 +178,9 @@ class Item extends ModelTenant
         // }
 
         $data = [
+            'points_value' => $this->points_value,
             'weight' => $this->weight,
-            'origin' =>$this->origin,
+            'origin' => $this->origin,
             'has_color_size' => (bool)$this->has_color_size,
             'id'                               => $this->id,
             'is_manufactured'                 => (bool)$this->is_manufactured,
@@ -370,12 +372,18 @@ class Item extends ModelTenant
     } */
     public static function getSaleUnitPriceByWarehouse(Item $item, int $warehouseId): string
     {
-        $warehousePrice = $item->warehousePrices->where('item_id', $item->id)
-            ->where('warehouse_id', $warehouseId)
-            ->first();
+        if (
+            $item->warehousePrices &&
+            $item->warehousePrices->count() > 0
+        ) {
+            $warehousePrice = $item->warehousePrices->where('item_id', $item->id)
+                ->where('warehouse_id', $warehouseId)
+                ->first();
 
-        $price = $warehousePrice->price ?? $item->sale_unit_price;
-        return number_format($price, 4, ".", "");
+            $price = $warehousePrice->price ?? $item->sale_unit_price;
+            return number_format($price, 4, ".", "");
+        }
+        return number_format($item->sale_unit_price, 4, ".", "");
     }
     public function food()
     {

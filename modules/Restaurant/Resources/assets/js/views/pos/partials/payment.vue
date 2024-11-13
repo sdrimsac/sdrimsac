@@ -374,9 +374,11 @@
                                             </el-checkbox>
                                         </div>
                                     </template>
-                                    <template
+                                    <div
+                                        class="row"
                                         v-if="
-                                            configuration.is_promotion_document
+                                            configuration.is_promotion_document ||
+                                                configuration.promotions_by_points
                                         "
                                     >
                                         <div class="col-md-4 form-group">
@@ -399,8 +401,43 @@
                                             </el-select>
                                         </div>
                                         <div
+                                            class="col-md-4 form-group"
+                                            v-if="
+                                                promotionByPoints &&
+                                                    hasPromotionText &&
+                                                    listPromotionItems.length > 0
+                                            "
+                                        >
+                                            <label for="promotion">
+                                                Puntos para canjear
+                                                <strong>{{
+                                                    hasPromotionText
+                                                }}</strong>
+                                            </label>
+                                            <el-select
+                                                v-model="form.item_promotion_id"
+                                                filterable
+                                                clearable
+                                                placeholder="Promoción"
+                                                @change="promotionPointsItem"
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in listPromotionItems"
+                                                    :key="idx"
+                                                    :label="
+                                                        option.full_description
+                                                    "
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
+                                        <div
                                             class="row"
-                                            v-if="hasPromotionText"
+                                            v-if="
+                                                hasPromotionText &&
+                                                    promotionDocument
+                                            "
                                         >
                                             <div
                                                 class="alert alert-success  col-lg-6 col-md-6 col-sm-12 "
@@ -408,6 +445,7 @@
                                                 {{ hasPromotionText }}
                                             </div>
                                             <div
+                                                v-if="promotionDocument"
                                                 class="col-lg-6  col-md-6 col-sm-12 "
                                             >
                                                 <el-checkbox
@@ -420,7 +458,7 @@
                                                 </el-checkbox>
                                             </div>
                                         </div>
-                                    </template>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1741,6 +1779,7 @@ export default {
     },
     data() {
         return {
+            listPromotionItems: [],
             promotionItems: [],
             hasPromotionText: null,
             paymentVariation: {
@@ -1911,6 +1950,12 @@ export default {
         };
     },
     computed: {
+        promotionByPoints() {
+            return this.configuration.promotions_by_points;
+        },
+        promotionDocument() {
+            return this.configuration.is_promotion_document;
+        },
         formatSumCoins() {
             //regresa un string en formato (cantidad) moneda | (cantidad) moneda
             let sumCoins = this.sumCoins;
@@ -2066,7 +2111,7 @@ export default {
                 }
                 pass = true;
             }
-    
+
             return pass;
         },
         focusObservation() {
@@ -2258,7 +2303,6 @@ export default {
             return affectation_igv_type_id;
         },
         addFreeItem(i) {
-
             let affectation_igv_type_id = this.getFreeAfectation(
                 i.sale_affectation_igv_type_id
             );
@@ -2292,10 +2336,8 @@ export default {
                 total_base_other_taxes: 0.0,
                 percentage_other_taxes: 0.0,
                 total_other_taxes: 0.0,
-                total_taxes:
-                     0,
-                total_value:
-                    i.quantity * i.sale_unit_price,
+                total_taxes: 0,
+                total_value: i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
                 total_discount: 0.0,
                 total: i.sale_unit_price * i.quantity,
@@ -2674,6 +2716,22 @@ export default {
                 }
             }
         },
+
+        verifyPromotionPointsCustomer() {
+            this.$http
+                .get(
+                    `/promotions-document/points-customers/${this.form.customer_id}`
+                )
+                .then(response => {
+                    if (response.status == 200) {
+                        let { data } = response;
+                        if (data.success) {
+                            this.hasPromotionText = data.message;
+                            this.listPromotionItems = data.items;
+                        }
+                    }
+                });
+        },
         verifyPromotionCustomer() {
             this.hasPromotionText = null;
             this.$http
@@ -2727,7 +2785,11 @@ export default {
                     index === self.findIndex(t => t.id === thing.id)
             );
             this.setSeries();
-            this.verifyPromotionCustomer();
+            if (this.configuration.is_promotion_document) {
+                this.verifyPromotionCustomer();
+            } else if (this.promotionByPoints) {
+                this.verifyPromotionPointsCustomer();
+            }
         },
         setLocalStorageIndex(key, obj) {
             localStorage.setItem(key, JSON.stringify(obj));
@@ -2798,7 +2860,7 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-
+            console.log("la confituracion", this.configuration);
             this.sumCoins = [];
             if (!this.form.is_room) {
                 this.value = null;
@@ -3886,12 +3948,15 @@ export default {
             }
         },
         async clickPayment(form) {
-            let boxes = this.currentPayments.reduce((a, b) => a + Number(b.amount), 0);
+            let boxes = this.currentPayments.reduce(
+                (a, b) => a + Number(b.amount),
+                0
+            );
             let amount1 = Number(this.form.enter_amount);
             let amount2 = Number(this.form.total);
             if (
                 this.configuration.sale_note_credit_cash &&
-                (boxes + amount1) < amount2 &&
+                boxes + amount1 < amount2 &&
                 this.form.document_type_id == "80"
             ) {
                 try {
@@ -4129,7 +4194,6 @@ export default {
                     printOrdenHotel = resultado;
                 }
 
-        
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined ||
@@ -4674,6 +4738,24 @@ export default {
                 this.inputDiscountAmount();
             }
         },
+        clearPromotionPointsItem() {
+            this.form.items = this.form.items.filter(i => !i.is_promotion);
+            this.reCalculateTotal();
+        },
+        async promotionPointsItem() {
+            if (!this.form.item_promotion_id) {
+                this.clearPromotionPointsItem();
+                this.form.receive_promotion = false;
+                return;
+            }
+            let item = this.listPromotionItems.find(
+                i => i.id == this.form.item_promotion_id
+            );
+            if (item) {
+                this.addFreeItem(item.item);
+                this.form.receive_promotion = true;
+            }
+        },
         async fetchPromotionItems() {
             if (!this.form.customer_id) {
                 this.$toast.error("El cliente es requerido");
@@ -4700,7 +4782,7 @@ export default {
                 }
             } catch (error) {
                 this.$toast.error("Ocurrió un error");
-            }finally {
+            } finally {
                 loading.close();
             }
         }

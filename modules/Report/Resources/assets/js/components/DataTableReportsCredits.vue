@@ -224,6 +224,7 @@
                                 Excel</el-button
                             >
                             <el-button
+                                v-if="resource !== 'reports/promotions'"
                                 class="submit"
                                 @click.prevent="clickOpenWhatsapp"
                                 ><i class="fa fa-whatsapp"></i> Enviar

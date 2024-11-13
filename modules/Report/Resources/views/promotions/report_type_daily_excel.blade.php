@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="application/pdf; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Créditos por cobrar</title>
+
+</head>
+@php
+
+    $configuration = App\Models\Tenant\Configuration::first();
+
+@endphp
+
+<body>
+    <div style="margin-top:20px; margin-bottom:20px;">
+        <table>
+            <tr>
+                <td colspan="11" style="text-align: center;">
+                    <strong>REPORTE DIARIO DE CRÉDITOS</strong>
+    
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <p><strong>Empresa: </strong>{{ $company->name }}</p>
+                </td>
+                <td colspan="3">
+                    <p><strong>Fecha: </strong>{{ date('Y-m-d') }}</p>
+                </td>
+                <td colspan="3">
+                    <strong>Ruc: </strong>{{ $company->number }}
+                </td>
+            </tr>
+        </table>
+    </div>
+    @if (!empty($records))
+
+        <div class="">
+            <div class=" ">
+                @php
+                    $acum_total = 0;
+                    $acum_total_penalties = 0;
+                    $acum_total_gain = 0;
+                    $acum_gain = 0;
+                    $acum_total_payment=0;
+                @endphp
+                <table style="border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;" >#</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">TIPO CREDITO</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">USUARIO</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">TIPO</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">CLIENTE</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">DNI</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">N° CUOTA</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">DIAS DE ATRASO</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">COBRO POR MORA</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-center">TOTAL MORA</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">COBRO POR CUOTA</th>
+                            <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">TOTAL A COBRAR</th>
+                            {{-- <th  style="background: #afd095; text-align:center;color:#006100;border:1px solid black;"  class="text-end">TOTAL A COBRAR POR CRÉDITO</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($records as $key => $record)
+                            @php
+                                $payments = $record['payments']->toArray();
+
+                                $acum_total += array_sum(array_column($payments, 'total'));
+                                $total_penalties = array_sum(array_column($payments, 'total_penalty'));
+                                $total_payment = array_sum(array_column($payments, 'payment'));
+                                $total_total = array_sum(array_column($payments, 'total'));
+
+                                // $acum_total_payment += $record['penalty'] + $record['quote_payment'];
+                            @endphp
+                            <tr>
+                                <td style="border:1px solid black;" >{{ $loop->iteration }}</td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $record['is_cash'] ? 'EFECTIVO':'HOGAR' }}</td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $record['user_name'] }}</td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $record['type_payment'] }}</td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $record['customer']["name"] }}</td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $record['customer']["number"] }}</td>
+                                <td style="border:1px solid black;"  class="text-center"></td>
+                                <td style="border:1px solid black;"  class="text-center"></td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $total_penalties }}</td>
+                                <td style="border:1px solid black;"  class="text-end">{{ $total_payment}}</td>
+                                <td style="border:1px solid black;"  class="text-end">{{ $total_total}}</td>
+                                {{-- <td style="border:1px solid black;"  class="text-center">{{ $record['differenc_days'] }}</td> --}}
+                                
+                                {{-- <td style="border:1px solid black;"  class="text-center">{{ $record['penalty'] }}</td>
+                                <td style="border:1px solid black;"  class="text-center">{{ $record['quote_payment'] }}</td>
+                                @php    
+                                    $_total_payment = ($record['penalty'] * $record['differenc_days']) + $record['quote_payment'];
+                                    $acum_total_payment += $_total_payment;
+                                @endphp
+                                <td style="border:1px solid black;"  class="text-end">{{ $_total_payment }}</td>
+                                <td style="border:1px solid black;"  class="text-end">{{ $record['amount_due'] }}</td> --}}
+                            </tr>
+                            @foreach ($payments as $payment)
+                                <tr>
+                                    <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"></td>
+                                    <td style="border:1px solid black;"  class="text-center">{{ $payment['installment_number'] }}</td>
+                                    <td style="border:1px solid black;"  class="text-center">{{ $payment['diffence_days'] }}</td>
+                                    <td style="border:1px solid black;"  class="text-center">{{ $record['penalty_amount_by_day'] }}</td>
+                                    <td style="border:1px solid black;"  class="text-center">{{ $payment['total_penalty'] }}</td>
+                                    <td style="border:1px solid black;"  class="text-end">{{ $payment['payment'] }}</td>
+                                    <td style="border:1px solid black;"  class="text-end">{{ $payment['total']}}</td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td style="" colspan="2"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="" class="text-center"></td>
+                            <td style="background: #afd095;" class="text-end">TOTALES</td>
+                            {{-- <td style="background: #afd095;" class="text-end">{{ $acum_total_payment }}</td> --}}
+                            <td style="background: #afd095;" class="text-end">{{ $acum_total }}</td>
+                        </tr>
+                </table>
+            </div>
+        </div>
+    @else
+        <div class="callout callout-info">
+            <p>No se encontraron registros.</p>
+        </div>
+    @endif
+</body>
+
+</html>

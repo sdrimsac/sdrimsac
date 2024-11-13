@@ -1230,9 +1230,6 @@ class DocumentController extends Controller
             $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
             foreach ($hotel_rent_items as $item) {
                 $item->payment_status = "Pagado";
-                // $item->document = $document->id;
-                // $item->checkout_date = date('Y-m-d');
-                // $item->checkout_time = date('H:i:s');
                 if ($vacate) {
                     $table = Table::where('id', $item->table_id)->first();
                     $table->status_table_id = 5;
@@ -1325,10 +1322,10 @@ class DocumentController extends Controller
         $establishment = Establishment::where('id', $document->establishment_id)->first();
 
         if ($request->receive_promotion) {
-            $this->desactivePromotion($document);
+            $this->updatePromotion($document);
         }
         if ($request->promotion_id) {
-            $this->savePromotion(
+            $this->savePromotiion(
                 $document,
                 $request->promotion_id
             );

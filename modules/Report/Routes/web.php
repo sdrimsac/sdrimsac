@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Report\Http\Controllers\ReportConsignmentController;
 use Modules\Report\Http\Controllers\ReportCreditController;
 use Modules\Report\Http\Controllers\ReportMethodController;
+use Modules\Report\Http\Controllers\ReportPromotionController;
 
 Route::get('reports/credits/pdf', [ReportCreditController::class, 'pdf'])->name('tenant.reports.credits.pdf');
 Route::get('reports/consignment/pdf', [ReportConsignmentController::class, 'pdf']);
@@ -18,7 +19,14 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
             Route::get('filter',[ReportMethodController::class,'filter']);
             Route::get('excel',[ReportMethodController::class,'excel']);
         });
-
+        Route::prefix('promotions')->group(function (){
+            Route::get('',[ReportPromotionController::class,'index'])->name('reports.promotions.index');
+            Route::get('filter',[ReportPromotionController::class,'filter']);
+            Route::get('records',[ReportPromotionController::class,'records']);
+            Route::get('detail/{id}',[ReportPromotionController::class,'detail']);
+            Route::get('excel',[ReportPromotionController::class,'excel']);
+            Route::get('pdf',[ReportPromotionController::class,'pdf']);
+        });
         Route::get('credits', [ReportCreditController::class, 'index'])->name('reports.credits.index');
         Route::get('credits/cash_credit', [ReportCreditController::class, 'index_cash'])->name('reports.credits.credit_index');
         Route::get('credits/cash_credit/filter', [ReportCreditController::class, 'index_cash_filter']);

@@ -5403,7 +5403,12 @@ export default {
                 this.medida_ancho = response.data.medida_ancho;
                 this.medida_grosor = response.data.medida_grosor;
                 this.categoria_madera = response.data.categoria_madera;
-                this.promotions_document = response.data.promotions_document;
+                this.promotions_document = response.data.promotions_document.filter(p => {
+                    if(this.configuration.promotions_by_points){
+                        return p.is_points
+                    }
+                    return !p.is_points
+                });
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
                 this.documentsType = response.data.documents_type;

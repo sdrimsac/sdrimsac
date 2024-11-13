@@ -1718,7 +1718,7 @@ class SaleNoteController extends Controller
                 (new WhatsappController)->sendMessageAll($message);
             }
             if ($request->receive_promotion) {
-                $this->desactivePromotion($this->sale_note);
+                $this->updatePromotion($this->sale_note);
             }
             if ($request->promotion_id) {
                 $this->savePromotion(

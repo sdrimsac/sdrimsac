@@ -9,7 +9,7 @@
         v-loading="loading"
     >
         <div class="row m-1">
-            <div class="col-md-6">
+            <div :class="promotionByPoints ? 'col-md-4' : 'col-md-6'">
                 <label for="description">
                     <strong>Descripción</strong>
                 </label>
@@ -33,6 +33,16 @@
                 <el-input
                     v-model="form.total"
                     placeholder="Total a consumir"
+                    clearable
+                ></el-input>
+            </div>
+            <div class="col-md-2" v-if="promotionByPoints">
+                <label for="points_value">
+                    Puntos equivalentes
+                </label>
+                <el-input
+                    v-model="form.points_value"
+                    placeholder="Puntos"
                     clearable
                 ></el-input>
             </div>
@@ -65,7 +75,7 @@
                 ></el-date-picker>
             </div>
         </div>
-        <template v-if="!promotionByPoints">
+        <template>
             <div class="row m-1">
                 <div class="col-md-6">
                     <label for="item">Producto</label>
@@ -86,14 +96,24 @@
                         ></el-option>
                     </el-select>
                 </div>
-                <div class="col-md-4">
+                <div :class="promotionByPoints ? 'col-md-2' : 'col-md-4'">
                     <label for="quantity">
                         <strong>Cantidad</strong>
                     </label>
                     <el-input
-                        v-model="form.quantity"
+                        type="number"
+                        v-model="formItem.quantity"
                         placeholder="Cantidad"
-                        clearable
+                    ></el-input>
+                </div>
+                <div class="col-md-2">
+                    <label for="points">
+                        <strong>Puntos</strong>
+                    </label>
+                    <el-input
+                        type="number"
+                        v-model="formItem.points_value"
+                        placeholder="Puntos"
                     ></el-input>
                 </div>
                 <div class="col-md-2">
@@ -103,6 +123,7 @@
                     </el-button>
                 </div>
             </div>
+
             <div class="row m-1">
                 <div class="table-responsive">
                     <table class="table">
@@ -110,6 +131,7 @@
                             <tr>
                                 <th>Producto</th>
                                 <th>Cantidad</th>
+                                <th>Puntos</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -120,6 +142,7 @@
                             >
                                 <td>{{ item.full_description }}</td>
                                 <td>{{ item.quantity }}</td>
+                                <td>{{ item.points_value }}</td>
                                 <td>
                                     <el-button
                                         type="danger"
@@ -152,7 +175,12 @@ export default {
                 date_end: null,
                 items: [],
                 quantity: 1,
-                total: 0
+                total: 0,
+                points_value: 0
+            },
+            formItem:{
+                points_value: 0,
+                quantity: 1
             },
             items: [],
             loading_search: false,
@@ -162,13 +190,15 @@ export default {
     },
     methods: {
         changeItem() {
-            this.form.quantity = 1;
+            this.formItem.quantity = 1;
+            this.formItem.points_value = 0;
         },
         getRecord() {
             this.$http
                 .get(`/promotions-document/record/${this.recordId}`)
                 .then(response => {
-                    this.form = response.data;
+                    this.form = response.data.data;
+                
                 });
         },
         validForm() {
@@ -203,6 +233,12 @@ export default {
                     return false;
                 }
             }
+            if (this.promotionByPoints) {
+                if (this.form.points_value <= 0) {
+                    this.$toast.error("Los puntos deben ser mayor a 0");
+                    return false;
+                }
+            }
             if (this.form.total <= 0) {
                 this.$toast.error("El total debe ser mayor a 0");
                 return false;
@@ -223,7 +259,8 @@ export default {
                 date_start: this.form.date_start,
                 date_end: this.form.date_end,
                 items: this.form.items,
-                total: this.form.total
+                total: this.form.total,
+                points_value: this.form.points_value
             };
 
             try {
@@ -264,27 +301,44 @@ export default {
         },
         addItem() {
             let item = this.items.find(item => item.id === this.form.item_id);
-
+            let { quantity, points_value } = this.formItem;
+            if (quantity <= 0) {
+                this.$toast.error("La cantidad debe ser mayor a 0");
+                return;
+            }
+            if (points_value <= 0 && this.promotionByPoints) {
+                this.$toast.error("Los puntos deben ser mayor a 0");
+                return;
+            }
             if (item) {
                 this.form.items.push({
                     id: item.id,
                     full_description: item.full_description,
-                    quantity: this.form.quantity
+                    quantity,
+                    points_value
                 });
             }
         },
         open() {
+            this.initForm();
             console.log("open " + this.promotionByPoints);
             if (this.recordId) {
                 this.getRecord();
             }
         },
         initForm() {
+            this.formItem = {
+                points_value: 0,
+                quantity: 1
+            };
             this.form = {
                 description: null,
                 date_start: null,
                 date_end: null,
-                items: []
+                items: [],
+                quantity: 1,
+                total: 0,
+                points_value: 0
             };
         },
         close() {

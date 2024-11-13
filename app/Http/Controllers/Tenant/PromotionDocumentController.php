@@ -84,17 +84,21 @@ class PromotionDocumentController extends Controller
         try {
             DB::connection('tenant')->beginTransaction();
             $id = $request->input('id');
-
+            $configuration = Configuration::select('is_promotion_document', 'promotions_by_points')->first();
             $promotion_document = PromotionDocument::firstOrNew(['id' => $id]);
             $promotion_document->fill($request->all());
             $promotion_document->items()->delete();
             $items = $request->input('items');
+            if ($configuration->promotions_by_points) {
+                $promotion_document->is_points = 1;
+            }
             $promotion_document->save();
             foreach ($items as $row) {
                 $promotion_document_item = new PromotionDocumentItem();
                 $promotion_document_item->item_id = $row['id'];
                 $promotion_document_item->promotion_document_id = $promotion_document->id;
                 $promotion_document_item->quantity = $row['quantity'];
+                $promotion_document_item->points_value = $row['points_value'];
                 $promotion_document_item->save();
             }
 
@@ -115,6 +119,37 @@ class PromotionDocumentController extends Controller
         }
     }
 
+    public function pointsByCustomer($id)
+    {
+        $record = PromotionDocumentCustomer::where('customer_id', $id)
+            ->where('active', 1)
+            ->first();
+
+        if (!$record) return [
+            'success' => false,
+        ];
+        $points = $record->points;
+        $promotion_document_id = $record->promotion_document_id;
+        $items = PromotionDocumentItem::where('promotion_document_id', $promotion_document_id)
+            ->where('points_value', '<=', $points)
+            ->get()->transform(function ($item) {
+                $item_data = $item->item;
+                $item_data->quantity = $item->quantity;
+                $item_data->is_promotion = true;
+                return [
+                    'id' => $item->id,
+                    'full_description' => "(" . $item->points_value . " pts) " . $item_data->description,
+                    'points_value' => $item->points_value,
+                    'item'   => $item_data
+
+                ];
+            });
+        return [
+            'success' => true,
+            'message' => $points,
+            'items' => $items
+        ];
+    }
     public function byCustomer($id)
     {
         $records = PromotionDocumentCustomer::where('customer_id', $id)->pluck('promotion_document_id')->values()->unique('promotion_document_id');

@@ -13,6 +13,7 @@ class PromotionDocument extends ModelTenant
         'total',
         'active',
         'is_points',
+        'points_value'
     ];
     protected $casts = [
         'is_points' => 'boolean',
@@ -23,6 +24,7 @@ class PromotionDocument extends ModelTenant
 
             $return_item = $item->item;
             $return_item->quantity = $item->quantity;
+            $return_item->is_promotion = true;
             return $return_item;
         });
 

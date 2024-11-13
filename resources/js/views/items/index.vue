@@ -92,6 +92,14 @@
               <i class="fa fa-upload"></i> Importar stock de
               producto
             </a>
+            <!-- <a
+              class="dropdown-item"
+              href="javascript:void(0)"
+              @click.prevent="clickImportPointsValue()"
+              style="color:orange"
+            >
+              <i class="fa fa-upload"></i> Valor de puntos
+            </a> -->
           </div>
         </div>
         <div class="data-table-visible-columns"></div>
@@ -289,7 +297,7 @@
         <items-form :showDialog.sync="showDialog" :recordId.sync="recordId"></items-form>
 
         <items-import :showDialog.sync="showImportDialog"></items-import>
-
+        <items-import-points-value :showDialog.sync="showImportPointsValueDialog"></items-import-points-value>
         <warehouses-detail
           :showDialog.sync="showWarehousesDetail"
           :unit_type.sync="unit_type"
@@ -319,6 +327,7 @@
 import ItemsForm from "./form.vue";
 import WarehousesDetail from "./partials/warehouses.vue";
 import ItemsImport from "./import.vue";
+import ItemsImportPointsValue from "./partials/import_points_value.vue";
 import ItemsImportListPrice from "./partials/import_list_price.vue";
 import DataTable from "../../components/DataTable.vue";
 import ItemsImportStockProducto from "./partials/stock_producto.vue";
@@ -329,6 +338,7 @@ export default {
   props: ["typeUser", "user"],
   mixins: [deletable],
   components: {
+    ItemsImportPointsValue,
     ItemsForm,
     ItemsImport,
     DataTable,
@@ -354,7 +364,8 @@ export default {
       itemId: null,
       config: {},
       records: [],
-      showBonusDialog: false
+      showBonusDialog: false,
+      showImportPointsValueDialog: false
     };
   },
   created() {
@@ -363,6 +374,9 @@ export default {
     });
   },
   methods: {
+    clickImportPointsValue(){
+      this.showImportPointsValueDialog = true;
+    },
     formatDateTime(date) {
       let days = date.days;
       let hours = date.hours;

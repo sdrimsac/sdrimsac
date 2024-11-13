@@ -223,6 +223,7 @@ class DocumentInput
             'payment_condition_id' => key_exists('payment_condition_id', $inputs) ? $inputs['payment_condition_id'] : '01',
             'fee' => Functions::valueKeyInArray($inputs, 'fee', []),
             'payment' => Functions::valueKeyInArray($inputs, 'difference', null),
+            
         ];
     }
 
@@ -281,6 +282,7 @@ class DocumentInput
                         'item_type_id' => $item->item_type_id,
                         'second_name' => $item->second_name,
                         'barcode' => $item->barcode,
+                        'is_promotion' => isset($row['item']['is_promotion']) ? $row['item']['is_promotion'] : false,
                         'internal_id' => $item->internal_id,
                         'item_code' => trim($item->item_code),
                         'item_code_gs1' => $item->item_code_gs1,

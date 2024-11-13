@@ -482,7 +482,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
-            'promotions_by_points' => $company->promotions_by_points,
+            'promotions_by_points' => (bool)$this->promotions_by_points,
             'extorned_analist' => (bool)$this->extorned_analist,
             'origin' => (bool)$this->origin,
             'brand' => (bool)$this->brand,

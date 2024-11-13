@@ -8,6 +8,7 @@ class PromotionDocumentItem extends ModelTenant
    protected $table = 'promotion_document_items';
   
     protected $fillable = [
+        'points_value',
         'promotion_document_id',
         'item_id',
         'quantity',

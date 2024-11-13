@@ -20,6 +20,16 @@ class PromotionDocumentResource extends JsonResource
             'date_start' => $this->date_start,
             'date_end' => $this->date_end,
             'total' => $this->total,
+            'points_value' => $this->points_value,
+            'items' => $this->items->transform(function ($item) {
+                
+                return [
+                    'id' => $item->item_id,
+                    'full_description' => $item->item->internal_id . ' - ' . $item->item->description,
+                    'quantity' => $item->quantity,
+                    'points_value' => $item->points_value
+                ];
+            })
         ];
     }
 }
