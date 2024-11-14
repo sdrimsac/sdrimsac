@@ -147,6 +147,7 @@
                                 {{ row.supplier_name }}<br /><small
                                     v-text="row.supplier_number"
                                 ></small>
+                                
                             </td>
                             <td
                                 :class="{

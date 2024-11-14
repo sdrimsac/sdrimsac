@@ -6,6 +6,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\PromotionDocumentCustomerDetail;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\College\Models\CollegeClassroom;
@@ -35,7 +36,7 @@ class Template
 
         view()->addLocation(__DIR__ . '/Templates');
         //check if $document is a object
-
+        $configuration = Configuration::first();
         if (is_object($document)) {
             $text = null;
             $student_name = null;
@@ -99,6 +100,25 @@ class Template
                 $is_principal = $stablishment->id == 1;
             }
             $footer_text = $config->footer_text;
+            $detail_points =[];
+            if($configuration->promotions_by_points || $configuration->is_promotion_document){
+                if ($configuration->promotions_by_points) {
+                    $promotion_document_customer_detail = PromotionDocumentCustomerDetail::where($document_type, $document->id)
+                        ->get()
+                        ->sum(function ($row) {
+                            $promotion_customer = $row->promotion_customer;
+                            $promotion_document = $promotion_customer->promotion_document;
+                            $points_value = $promotion_document->points_value;
+                            $by_total = $promotion_document->total;
+                            $total = $row->total;
+                            
+                            return ($total / $by_total) * $points_value;
+                        });
+                    
+                    $detail_points['total_points'] = $promotion_document_customer_detail;
+                }
+            }
+            dump($detail_points);
             return view($view, compact('company', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name','students','footer_text'))->render();
         }
 

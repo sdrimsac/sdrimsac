@@ -2583,8 +2583,8 @@ export default {
                 price1: 0,
                 price2: 0,
                 price3: 0,
-                price_default: 2,
-                warehouse_id: null
+                price_default: 1,
+                warehouse_id: 1
             });
         },
         clickCancel(index) {

@@ -95,7 +95,13 @@ class ReportPromotionController extends Controller
 
     private function getRecords($request)
     {   
-         $records = PromotionDocumentCustomer::query();
+        $configuration = Configuration::first();
+        $records = PromotionDocumentCustomer::query();
+        if ($configuration->promotions_by_points) {
+            $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
+                $query->where('is_points', $configuration->promotions_by_points);
+            });
+        }
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
         if ($period['d_start'] && $period['d_end']) {

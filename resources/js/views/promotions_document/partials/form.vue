@@ -106,7 +106,7 @@
                         placeholder="Cantidad"
                     ></el-input>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2"  v-if="promotionByPoints">
                     <label for="points">
                         <strong>Puntos</strong>
                     </label>
@@ -131,7 +131,9 @@
                             <tr>
                                 <th>Producto</th>
                                 <th>Cantidad</th>
-                                <th>Puntos</th>
+                                <template v-if="promotionByPoints">
+                                    <th>Puntos</th>
+                                </template>
                                 <th></th>
                             </tr>
                         </thead>
@@ -142,7 +144,10 @@
                             >
                                 <td>{{ item.full_description }}</td>
                                 <td>{{ item.quantity }}</td>
-                                <td>{{ item.points_value }}</td>
+                                <template v-if="promotionByPoints">
+                                    <td>{{ item.points_value }}</td>
+
+                                </template>
                                 <td>
                                     <el-button
                                         type="danger"
