@@ -12750,7 +12750,20 @@ html[data-show='true'] .settings-button {
 }
 .el-dialog{
   background: #afb1a0 !important;
+  font-weight: bolder !important;
+  color: #000 !important;
 
+}
+.el-dialog div{
+  color: #000 !important;
+}
+.el-dialog label{
+  color: #000 !important; 
+}
+.el-dialog h4,
+.el-dialog h5,
+.el-dialog h6{
+  color: #000 !important;
 }
 .form-group{
     padding-bottom: 10px;
