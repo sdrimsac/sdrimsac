@@ -14,8 +14,10 @@ class FilaMigrateHistoria extends Migration
     public function up()
     {
         Schema::table('vehicle_feature', function (Blueprint $table) {
-            $table->unsignedInteger('historial_id')->nullable();
-            $table->foreign('historial_id')->references('id')->on('historial'); 
+            if (!Schema::hasColumn('vehicle_feature', 'historial_id')) {
+                $table->unsignedInteger('historial_id')->nullable();
+                $table->foreign('historial_id')->references('id')->on('historial');
+            }
         });
     }
     /**
@@ -26,7 +28,18 @@ class FilaMigrateHistoria extends Migration
     public function down()
     {
         Schema::table('vehicle_feature', function (Blueprint $table) {
-            $table->dropColumn('historial_id');
+            if (Schema::hasColumn('vehicle_feature', 'historial_id')) {
+                // Primero eliminamos la llave foránea si existe
+                $foreignKeys = Schema::getConnection()->getDoctrineSchemaManager()->listTableForeignKeys('vehicle_feature');
+                foreach ($foreignKeys as $foreignKey) {
+                    if ($foreignKey->getLocalColumns() === ['historial_id']) {
+                        $table->dropForeign(['historial_id']);
+                        break;
+                    }
+                }
+                // Luego eliminamos la columna
+                $table->dropColumn('historial_id');
+            }
         });   
     } 
 }
