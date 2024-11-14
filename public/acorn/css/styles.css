@@ -12748,6 +12748,10 @@ html[data-show='true'] .settings-button {
 .el-dialog__body {
     padding: 0px 20px !important;
 }
+.el-dialog{
+  background: #afb1a0 !important;
+
+}
 .form-group{
     padding-bottom: 10px;
 }
