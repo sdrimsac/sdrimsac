@@ -31,6 +31,7 @@ class EtiquetasController extends Controller
 
     public function generate(Request $request)
     {
+        /* dump($request->all()); */
         ini_set("pcre.backtrack_limit", "500000");
 
         try {
@@ -52,18 +53,20 @@ class EtiquetasController extends Controller
                 // $template = 'template3';
                 $template = 'template_format_1_template_2';
             }
-            // if ($format == '1' && $paper == '1') {
-            //     $template = 'template6';
-            // }
-
-
+            if ($type == '3' && $format == '1' && $paper == '2') {
+                // $template = 'template3';
+                $template = 'template8';
+            }
+            if ($type == '3' && $format == '1' && $paper == '1'){
+                $template = 'template9';
+            }
+            if ($type == '4' && $format == '1' && $paper == '2'){
+                $template = 'template10';
+            }
             $record = Item::where('description', $description)->first();
-
             $company = Company::first();
-
             $price = $record->sale_unit_price;
             $price = number_format($price, 0, ".", "");
-
             $margin_top = 0;
             $margin_left = 0;
             $margin_right = 0;
@@ -87,9 +90,9 @@ class EtiquetasController extends Controller
             }
             $width = $paper == 1 ? 50 : 65;
             $height = $paper == 1 ? 25 : 23;
-            if($template === "template_format_1_template_2" ){
+            if ($template === "template_format_1_template_2") {
                 $height = 20;
-                $width =65;
+                $width = 65;
             }
             // if($company->number == '10465702449'){
             //     $format = 1;

@@ -88,7 +88,7 @@
                         </div>
 
                         <div class="text-center font-xs" style="width:90%;height:18px;">
-                         {{substr($description, 0, 65)}}
+                          {{substr($description, 0, 65)}}
                         </div>
                         
                         @if ($configuration->correo_red_salud_ticket)

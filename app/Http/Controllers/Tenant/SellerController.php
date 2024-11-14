@@ -139,10 +139,9 @@ class SellerController extends Controller
     public function getRecordsProduct(Request $request)
     {
 
-        // Obtener los datos de entrada desde la solicitud
         $date_of_issue = $request->input('date_of_issue');
         $month_start = $request->input('month_start');
-        $sellerId = $request->input('sellerId');  // Obtener el sellerId de la solicitud
+        $sellerId = $request->input('sellerId');
 
         // Crear la consulta base
         $query = Seller::query()

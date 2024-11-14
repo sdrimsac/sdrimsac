@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    width="70%"
     v-if="sellerId"
     :visible="showDialog"
     @open="open"
@@ -13,9 +14,38 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
+          <div class="col-md-4">
+            <label class="w-100">Por Dia</label>
+            <el-date-picker
+              v-model="search.date_of_issue"
+              type="date"
+              style="width: 100%;"
+              placeholder="Buscar por dia"
+              value-format="yyyy-MM-dd"
+              @change="changeClearInput('date_of_issue')"
+            ></el-date-picker>
+          </div>
+          <div class="col-md-4">
+            <label class="w-100">Por Mes</label>
+            <el-date-picker
+              v-model="search.month_start"
+              type="month"
+              style="width: 100%;"
+              placeholder="Buscar por mes"
+              value-format="yyyy-MM"
+              @change="changeClearInput('date_of_issue')"
+            ></el-date-picker>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
           <table class="table table-striped">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Nombre Producto</th>
                 <th>Cantidad</th>
                 <th>Precio</th>
@@ -23,11 +53,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in groupedItems" :key="index">
+              <tr v-for="(item, index) in sold_items" :key="index">
+                <td>{{ index + 1 }}</td>
                 <td>{{ item.item }}</td>
-                <td>{{ Number(item.quantity)}}</td>
-                <td>{{ Number(item.unit_price)}}</td>
-                <td>{{ Number(item.total_price)}}</td>
+                <td>{{ Number(item.quantity) }}</td>
+                <td>{{ Number(item.unit_price) }}</td>
+                <td>{{ Number(item.total_price) }}</td>
               </tr>
             </tbody>
           </table>
@@ -63,14 +94,6 @@ export default {
       resource: "sellers"
     };
   },
-  /* watch: {
-    sold_items: {
-      handler() {
-        this.groupItems();
-      },
-      immediate: true
-    }
-  }, */
   computed: {
     title() {
       console.log(this.sellers);
@@ -86,45 +109,13 @@ export default {
           params: { sellerId: this.sellerId }
         })
         .then(response => {
-          console.log("Datos recibidos:", response.data);
-          this.records = response.data.data;
-
+          console.log("Datos recibidos:", response.data.data);
+          this.groupedItems = response.data.data;
         })
         .catch(error => {
           console.error(error);
         });
     },
-
-    /* getData() {
-      this.$http.get(`/${this.resource}/records`).then(response => {
-        console.log("Datos de vendedores:", response.data.data);
-        this.records = response.data.data;
-        this.sellers = response.data.data;
-      });
-    }, */
-
-    /* groupItems() {
-      const grouped = {};
-
-      this.sold_items.forEach(item => {
-        if (grouped[item.item_id]) {
-          grouped[item.item_id].total_quantity += item.quantity;
-          grouped[item.item_id].total_price += item.total_price;
-        } else {
-          
-          grouped[item.item_id] = {
-            item: item.item,
-            item_id: item.item_id,
-            quantity: item.quantity,
-            total_price: item.total_price,
-            unit_price: item.unit_price,
-            total_quantity: item.quantity
-          };
-        }
-      });
-
-      this.groupedItems = Object.values(grouped);
-    }, */
     open() {
       this.productSeller();
       /* this.groupItems(); */
