@@ -27,6 +27,9 @@ class PurchaseCollection extends ResourceCollection
                 $includes = false;
             }
             $paid = $row->purchase_payments->sum('payment') == $row->total;
+            if($paid == false){
+                $paid = $row->total_canceled;
+            }
             return [
                 'id' => $row->id,
                 'document_type_description' => $row->document_type->description,
