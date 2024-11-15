@@ -2389,7 +2389,8 @@ class DocumentController extends Controller
                     }
                     Box::where('document_id', $document_id)->delete();
                     $desc = "App\Models\Tenant\Document";
-                    InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
+                    // InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
+                    
                     $record->save();
                     if ($orden_id) {
                         $orden = Orden::find($orden_id);
