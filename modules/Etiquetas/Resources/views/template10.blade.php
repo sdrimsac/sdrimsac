@@ -78,7 +78,16 @@
                         $jj++;
                     @endphp
                     <div style="width: 50%; float: left;">
-                        <div style="width:90%; text-align: center; height: 20px;">
+                        <div style="width:90%; text-align: center; height: 20px; padding-top: 1px; display: flex; justify-content: space-between; align-items: center;">
+                            @php
+                                if ($jj - 1 < $stock) {
+                                    echo '<img style="height: 25px;" src="' . $image . '">';
+                                }
+                            @endphp
+                        
+                            <span style="margin-left: auto; font-size: 6px;">S/ {{ $sale_code }}</span>
+                        </div>
+                        {{-- <div style="width:90%; text-align: center; height: 20px; padding-top: 1px;">
 
                             @php
                                 if ($jj - 1 < $stock) {
@@ -88,13 +97,19 @@
 
 
                         </div>
-                        <div class="text-center" style="width:90%; padding-top: 10px;">
+                        <div class="text-center font-xs" style="width:90%; height:10px;">
+                            @php
+
+                            @endphp
+                            S/ {{ $sale_code }}
+                        </div> --}}
+                        <div class="text-center" style="width:90%; padding-top: 3px;">
                             @php
                                 if ($jj - 1 != $stock) {
                                     $colour = [0, 0, 0];
                                     $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                    echo '<img   style="width:100px;height: 15px; float: right;"  src="data:image/png;base64,' .
+                                    echo '<img   style="width:100px;height: 15px; float: left; margin-left: 20px;"  src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
                                                 $barcode,
@@ -106,21 +121,12 @@
                             @endphp
 
                         </div>
-
                         <div class="text-center font-xs" style="height: 5px;">
                             {{ $barcode }}
 
                         </div>
-                        {{-- @if ($configuration->correo_red_salud_ticket) --}}
-                        <div class="text-center font-xs" style="width:90%; height:10px;">
-                            @php
-
-                            @endphp
-                            S/ {{ $sale_code }}
-                        </div>
-                        {{-- @endif --}}
-                        <div class="text-center font-xs" style="width:90%;height:18px;">
-                            {{ substr($description, 0, 65) }}
+                        <div class="text-center font-xs" style="width:90%;height:18px; margin-left: 10px">
+                            {{ substr($description, 0, 50) }}
                         </div>
 
                     </div>

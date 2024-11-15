@@ -85,7 +85,7 @@
                                     $colour = [0, 0, 0];
                                     $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                    echo '<img   style="width:100px;height: 15px;"  src="data:image/png;base64,' .
+                                    echo '<img   style="width:100px;height: 15px; float: left; margin-left: 10px;"  src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
                                                 $barcode,
