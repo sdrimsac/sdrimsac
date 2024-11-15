@@ -353,6 +353,31 @@ contain"
                 </td>
             </tr>
         @endif
+        @if(count($detail_points) > 0)
+        <tr>
+            <td>
+                <p class="desc">Puntos adquiridos:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $detail_points['total_document_points'] }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p class="desc">Puntos acumulados:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $detail_points['acc_points'] }}</p>
+            </td>
+        </tr>
+        @endif
+        @if (isset($detail_message['message']))
+            <tr>
+                <td colspan="2">
+                    <p class="desc">{{ $detail_message['message'] }}</p>
+                </td>
+            </tr>
+        @endif
         @if ($document->purchase_order)
             <tr>
                 <td>
@@ -624,6 +649,10 @@ contain"
                             @foreach ($row->discounts as $dtos)
                                 <br /><small>{{ $dtos->factor * 100 }}% {{ $dtos->description }}</small>
                             @endforeach
+                        @endif
+                        @if(isset($row->item->is_promotion) && $row->item->is_promotion)
+                            <br />
+                            <small>**Promoción**</small>
                         @endif
                     </td>
                     <td class="text-right desc-9 align-top">

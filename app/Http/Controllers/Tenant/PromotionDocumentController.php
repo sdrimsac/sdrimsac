@@ -152,7 +152,11 @@ class PromotionDocumentController extends Controller
     }
     public function byCustomer($id)
     {
-        $records = PromotionDocumentCustomer::where('customer_id', $id)->pluck('promotion_document_id')->values()->unique('promotion_document_id');
+        $records = PromotionDocumentCustomer::where('customer_id', $id)
+            ->whereHas('promotion_document', function ($query) {
+                $query->where('is_points', 0);
+            })
+            ->pluck('promotion_document_id')->values()->unique('promotion_document_id');
         $promotions = [];
 
         foreach ($records as $row) {

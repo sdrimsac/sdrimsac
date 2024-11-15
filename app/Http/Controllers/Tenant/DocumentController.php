@@ -1325,7 +1325,7 @@ class DocumentController extends Controller
             $this->updatePromotion($document);
         }
         if ($request->promotion_id) {
-            $this->savePromotiion(
+            $this->savePromotion(
                 $document,
                 $request->promotion_id
             );

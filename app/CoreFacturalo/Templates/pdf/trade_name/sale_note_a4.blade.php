@@ -150,6 +150,21 @@
                 <td colspan="3">PENDIENTE DE PAGO</td>
             </tr>
         @endif
+        @if (count($detail_points) > 0)
+            <tr>
+                <td><b>PUNTOS ADQUIRIDOS:</b></td>
+                <td>{{ $detail_points['total_document_points'] }}</td>
+                <td><b>PUNTOS ACUMULADOS:</b></td>
+                <td>{{ $detail_points['acc_points'] }}</td>
+            </tr>
+        @endif
+        @if (count($detail_message) > 0)
+            <tr>
+                <td colspan="4" class="">
+                    <b>{{ $detail_message['message'] }}</b>
+                </td>
+            </tr>
+        @endif
         <tr>
             <td height="18px"><b>OBSERVACION:</b></td>
             <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>
@@ -235,10 +250,10 @@
                             @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
-                              @if (isset($row->item->origin))
-                              {{ $row->item->origin }} -
-                              @endif
-                                {{ $row->item->description}}
+                                @if (isset($row->item->origin))
+                                    {{ $row->item->origin }} -
+                                @endif
+                                {{ $row->item->description }}
                             @endif
                         @endif
 
@@ -284,7 +299,10 @@
                             @endforeach
                         @endif
 
-
+                        @if (isset($row->item->is_promotion) && $row->item->is_promotion)
+                            <br />
+                            <small>**Promoción**</small>
+                        @endif
 
 
                     </td>

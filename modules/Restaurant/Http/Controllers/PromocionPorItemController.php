@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\Configuration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -23,41 +24,44 @@ class PromocionPorItemController extends Controller
         $dataClean = [];
         $date = Carbon::now();
 
-        foreach ($itemspromo as $key => $value) {
+        $configuration = Configuration::first();
+        if(!$configuration->is_promotion_document && !$configuration->promotions_by_points){
+            foreach ($itemspromo as $key => $value) {
 
-            if ($value['is_promotion'] == 1) {
-                $dataClean[] = array_only($value, ['id', 'is_promotion', 'promotion_count', 'quantity']);
-                $cantidadComprada  = $value['quantity'];
-                $catidadHabilitarPromocion = $value['promotion_count'];
-                //consultar de la base de datos cuantos elementeos tiene ya acumulados 
-                $DBconsulta = DB::connection('tenant')->select('select * from promociones where prom_clie_id = ? and prom_items_id = ? ', [$how_is['id'], $value['id']]);
-                $DBconsulta = json_decode(json_encode($DBconsulta), true);
-
-                if (count($DBconsulta) == 0) {
-
-                    $productId = $value['id'];
-                    $items_purchased = $value['quantity']; // Número de artículos comprados
-                    if ($items_purchased >= $catidadHabilitarPromocion && $items_purchased != 0 && $catidadHabilitarPromocion != 0) {
-
-                        $gifts_earned = floor($items_purchased / $catidadHabilitarPromocion); // Número de artículos de regalo obtenidos
-                    } else {
-                        $gifts_earned = 0;
+                if ($value['is_promotion'] == 1) {
+                    $dataClean[] = array_only($value, ['id', 'is_promotion', 'promotion_count', 'quantity']);
+                    $cantidadComprada  = $value['quantity'];
+                    $catidadHabilitarPromocion = $value['promotion_count'];
+                    //consultar de la base de datos cuantos elementeos tiene ya acumulados 
+                    $DBconsulta = DB::connection('tenant')->select('select * from promociones where prom_clie_id = ? and prom_items_id = ? ', [$how_is['id'], $value['id']]);
+                    $DBconsulta = json_decode(json_encode($DBconsulta), true);
+    
+                    if (count($DBconsulta) == 0) {
+    
+                        $productId = $value['id'];
+                        $items_purchased = $value['quantity']; // Número de artículos comprados
+                        if ($items_purchased >= $catidadHabilitarPromocion && $items_purchased != 0 && $catidadHabilitarPromocion != 0) {
+    
+                            $gifts_earned = floor($items_purchased / $catidadHabilitarPromocion); // Número de artículos de regalo obtenidos
+                        } else {
+                            $gifts_earned = 0;
+                        }
+                        $items_left = 0; // Número de artículos restantes
+                        if($items_purchased != 0 && $catidadHabilitarPromocion != 0){
+                            $items_left = $items_purchased % $catidadHabilitarPromocion; // Número de artículos restantes
+                        }
+                        DB::connection('tenant')->select('insert into promociones (prom_clie_id,  prom_items_id,  prom_cumulative_purchase,  prom_to_redeem, prom_redeemed, created_at  , updated_at   ) values (?,?,?,?,0,?,?)', [$how_is['id'], $productId, $items_left, $gifts_earned, $date, $date]);
+                    } else if (count($DBconsulta) == 1) { // por iteracion solo  se permite la actualizacion de un item unico de resto el sistema debera arrojar un error
+                        $totalComprado = $DBconsulta[0]['prom_cumulative_purchase']  + $cantidadComprada;
+                        $porReclamar = $DBconsulta[0]['prom_to_redeem'];
+                        $promocionId = $DBconsulta[0]['id'];
+    
+                        $gifts_earned = floor($totalComprado / $catidadHabilitarPromocion);
+                        $gifts_earned += $porReclamar; // Número de artículos de regalo obtenidos
+                        $items_left = $totalComprado % $catidadHabilitarPromocion; //articulos restantes 
+    
+                        DB::connection('tenant')->select('update promociones  set   prom_cumulative_purchase = ? ,  prom_to_redeem = ? , updated_at = ?   where id = ? ', [$items_left, $gifts_earned, $date, $promocionId]);
                     }
-                    $items_left = 0; // Número de artículos restantes
-                    if($items_purchased != 0 && $catidadHabilitarPromocion != 0){
-                        $items_left = $items_purchased % $catidadHabilitarPromocion; // Número de artículos restantes
-                    }
-                    DB::connection('tenant')->select('insert into promociones (prom_clie_id,  prom_items_id,  prom_cumulative_purchase,  prom_to_redeem, prom_redeemed, created_at  , updated_at   ) values (?,?,?,?,0,?,?)', [$how_is['id'], $productId, $items_left, $gifts_earned, $date, $date]);
-                } else if (count($DBconsulta) == 1) { // por iteracion solo  se permite la actualizacion de un item unico de resto el sistema debera arrojar un error
-                    $totalComprado = $DBconsulta[0]['prom_cumulative_purchase']  + $cantidadComprada;
-                    $porReclamar = $DBconsulta[0]['prom_to_redeem'];
-                    $promocionId = $DBconsulta[0]['id'];
-
-                    $gifts_earned = floor($totalComprado / $catidadHabilitarPromocion);
-                    $gifts_earned += $porReclamar; // Número de artículos de regalo obtenidos
-                    $items_left = $totalComprado % $catidadHabilitarPromocion; //articulos restantes 
-
-                    DB::connection('tenant')->select('update promociones  set   prom_cumulative_purchase = ? ,  prom_to_redeem = ? , updated_at = ?   where id = ? ', [$items_left, $gifts_earned, $date, $promocionId]);
                 }
             }
         }

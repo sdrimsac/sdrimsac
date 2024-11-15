@@ -245,6 +245,23 @@
                         </tr>
                     @endif
                 @endif
+                @if(count($detail_points) > 0)
+                    <tr>
+                        <td><b>PUNTOS ADQUIRIDOS</b></td>
+                        <td>:</td>
+                        <td>{{ $detail_points['total_document_points'] }}</td>
+                        <td><b>PUNTOS ACUMULADOS</b></td>
+                        <td>:</td>
+                        <td>{{ $detail_points['acc_points'] }}</td>
+                    </tr>
+                @endif
+                @if (count($detail_message) > 0)
+                <tr>
+                    <td colspan="6" class="">
+                        <b>{{ $detail_message['message'] }}</b>
+                    </td>
+                </tr>
+                @endif
             </table>
         </div>
 
@@ -310,6 +327,8 @@
                 @endforeach
             </table>
         @endif
+    
+
         <div class="mt-2">
             <strong>Observación:</strong>
             @foreach ($document->additional_information as $information)
@@ -408,10 +427,9 @@
                                 @else
                                     @if (isset($row->item->description_internet))
                                         {{ $row->item->description_internet }}
-
                                     @else
                                         @if (isset($row->item->origin))
-                                            {{$row->item->origin}} -
+                                            {{ $row->item->origin }} -
                                         @endif
                                         {{ $row->item->description }}
                                     @endif
@@ -436,6 +454,10 @@
                                     @if (isset($row->unit_desc))
                                         {!! $row->unit_desc !!}
                                     @endif
+                                @endif
+                                @if(isset($row->item->is_promotion) && $row->item->is_promotion)
+                                    <br />
+                                    <small>**Promoción**</small>
                                 @endif
                                 @if (isset($row->item->categoriaMadera))
                                     -
@@ -762,7 +784,7 @@
                         <tr>
                             <td colspan="4" class="text-left font-bold desc" style="white-space: nowrap;">
                                 {{ $box->method }}:
-                                {{ $document->currency_type->symbol }} 
+                                {{ $document->currency_type->symbol }}
                                 {{ number_format(abs($box->amount), 2, '.', '') }}</td>
                             {{-- <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
                             </td> --}}

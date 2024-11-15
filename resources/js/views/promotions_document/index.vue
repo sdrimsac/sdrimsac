@@ -139,7 +139,7 @@ export default {
     },
     computed: {
         accDescription() {
-            return this.configuration.is_promotion_documents
+            return this.configuration.is_promotion_document
                 ? "Total a consumir"
                 : "Monto por punto";
         },

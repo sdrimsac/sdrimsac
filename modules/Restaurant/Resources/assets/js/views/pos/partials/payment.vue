@@ -405,7 +405,8 @@
                                             v-if="
                                                 promotionByPoints &&
                                                     hasPromotionText &&
-                                                    listPromotionItems.length > 0
+                                                    listPromotionItems.length >
+                                                        0
                                             "
                                         >
                                             <label for="promotion">
@@ -433,6 +434,22 @@
                                             </el-select>
                                         </div>
                                         <div
+                                            class="col-md-4 form-group"
+                                            v-if="
+                                                promotionDocument &&
+                                                    hasPromotionText
+                                            "
+                                        >
+                                        <br>
+                                            <el-checkbox
+                                                @change="receivePromotion"
+                                                v-model="form.receive_promotion"
+                                            >
+                                                Aplicar promoción |
+                                                {{ hasPromotionText }}
+                                            </el-checkbox>
+                                        </div>
+                                        <!-- <div
                                             class="row"
                                             v-if="
                                                 hasPromotionText &&
@@ -442,7 +459,7 @@
                                             <div
                                                 class="alert alert-success  col-lg-6 col-md-6 col-sm-12 "
                                             >
-                                                {{ hasPromotionText }}
+                                                {{  }}
                                             </div>
                                             <div
                                                 v-if="promotionDocument"
@@ -454,10 +471,10 @@
                                                         form.receive_promotion
                                                     "
                                                 >
-                                                    Aplicar promoción
+                                                    Aplicar promoción | {{hasPromotionText}}
                                                 </el-checkbox>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

@@ -6,6 +6,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\PromotionDocumentCustomerDetail;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\College\Models\CollegeClassroom;
@@ -35,7 +36,7 @@ class Template
 
         view()->addLocation(__DIR__ . '/Templates');
         //check if $document is a object
-
+        $configuration = Configuration::first();
         if (is_object($document)) {
             $text = null;
             $student_name = null;
@@ -83,7 +84,7 @@ class Template
                                 $row->unit_desc = " X " . number_format($unds, 2);
                                 $row->unit_qty = number_format($row->quantity / $unds, 2);
                                 $row->price_unit = number_format($unit_type->total, 2);
-                                if($config->consolidated_quotations){
+                                if ($config->consolidated_quotations) {
                                     $row->unit_desc = "({$row->unit_desc})";
                                 }
                             }
@@ -99,7 +100,76 @@ class Template
                 $is_principal = $stablishment->id == 1;
             }
             $footer_text = $config->footer_text;
-            return view($view, compact('company', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name','students','footer_text'))->render();
+            $detail_points = [];
+            $detail_message = [];
+            if ($configuration->promotions_by_points || $configuration->is_promotion_document) {
+                if ($configuration->promotions_by_points) {
+                    $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
+                        ->select('total', 'promotion_customer_id');
+
+                    // Calcular puntos del documento actual
+                    $currentDocumentPoints = (clone $baseQuery)
+                        ->where($document_type, $document->id)
+                        ->get()
+                        ->sum(function ($row) {
+                            $promotion_document = $row->promotion_customer->promotion_document;
+                            return ($row->total / $promotion_document->total) * $promotion_document->points_value;
+                        });
+
+                    $detail_points['total_document_points'] = $currentDocumentPoints;
+
+                    // Calcular puntos acumulados
+                    $accumulatedPoints = $baseQuery
+                        ->whereHas('promotion_customer', function ($query) use ($document) {
+                            $query->where('customer_id', $document->customer_id);
+                        })
+                        ->get()
+                        ->sum(function ($row) {
+                            $promotion_document = $row->promotion_customer->promotion_document;
+                            return ($row->total / $promotion_document->total) * $promotion_document->points_value;
+                        });
+
+                    $detail_points['acc_points'] = $accumulatedPoints;
+                    $detail_points['is_points'] = true;
+                } else {
+                    $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
+                        ->select('total', 'promotion_customer_id');
+
+                    $currentPromotionDetail = (clone $baseQuery)
+                        ->from('promotion_document_customer_detail')
+                        ->join('promotion_document_customers', 'promotion_document_customer_detail.promotion_customer_id', '=', 'promotion_document_customers.id')
+                        ->where($document_type, $document->id)
+                        ->where('promotion_document_customers.active', 1)
+                        ->first();
+
+                    if ($currentPromotionDetail) {
+                        $promotion_document = $currentPromotionDetail->promotion_customer->promotion_document;
+                        $promotion_document_total = $promotion_document->total;
+                        $promotion_document_description = $promotion_document->description;
+                        $promotion_document_id = $promotion_document->id;
+                        // Calcular puntos acumulados
+                        $accumulatedPoints = $baseQuery
+
+                            ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id) {
+                                $query->where('customer_id', $document->customer_id)
+                                    ->where('active', 1)
+                                    ->where('promotion_document_id', $promotion_document_id);
+                            })
+                            ->get()
+                            ->sum('total');
+                        if ($accumulatedPoints > 0) {
+                            $to_change = intval($accumulatedPoints / $promotion_document_total);
+                            if ($to_change > 0) {
+                                $detail_message['message'] = "Puede canjear " . $to_change . " de la promoción " . $promotion_document_description;
+                            }
+                        }
+                    } else {
+                        $promotion_document_total = 0;
+                        $promotion_document_description = '';
+                    }
+                }
+            }
+            return view($view, compact('company', 'detail_points', 'detail_message', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name', 'students', 'footer_text'))->render();
         }
 
 
