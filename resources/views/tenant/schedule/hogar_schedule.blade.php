@@ -541,8 +541,11 @@
                         <strong>MODELO</strong>
                         <div class="border-rounded">
                             @php
-                                $item_db = \App\Models\Tenant\Item::find($item->item_id);
-                                $model = $item_db->model;
+                                $model = null;
+                                if ($item) {
+                                    $item_db = \App\Models\Tenant\Item::find($item->item_id);
+                                    $model = $item_db->model;
+                                }
                             @endphp
                             @if ($model)
                                 {{ $model }}
