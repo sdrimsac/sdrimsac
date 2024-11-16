@@ -62,7 +62,7 @@
               <td>{{ row.establishment_description }}</td>
               <td>{{ row.documents_total }}</td>
               <td>{{ row.sale_notes_total }}</td>
-              <td>{{ row.total_sales }}</td>
+              <td>{{ Number(row.total_sales).toFixed(2)  }}</td>
               <td>
                 <el-button type="info" @click="getProd(row.id)">ver</el-button>
               </td>
@@ -128,7 +128,6 @@
         <list-prod
           :showDialog.sync="showDialogProd"
           :sellerId="ListProdId"
-          :sold_items="ListSoldItems"
           :sellers="sellers"
         ></list-prod>
       </div>
@@ -176,28 +175,8 @@ export default {
     getProd(id) {
       this.ListProdId = id;
       console.log("Ver el id del vendedor:", id);
-
-      if (Array.isArray(this.sellers)) {
-        console.log("Estructura de this.sellers:", this.sellers);
-
-        const soldItems = this.sellers.find(s => s.id === id)?.sold_items || [];
-
-        if (soldItems.length > 0) {
-          this.ListSoldItems = soldItems;
-          this.showDialogProd = true;
-        } else {
-          console.error(
-            `No se encontraron productos vendidos para el vendedor con id ${id}`
-          );
-          this.ListSoldItems = [];
-          this.showDialogProd = true;
-        }
-      } else {
-        console.error("this.sellers no es un array o es undefined");
-        this.ListSoldItems = [];
-        this.showDialogProd = true;
-      }
-    }, 
+      this.showDialogProd = true;
+    },
     async getTables() {
       const response = await this.$http(`${this.resource}/tables`);
       console.log(response);

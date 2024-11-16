@@ -52,44 +52,44 @@ class DocumentItem extends ModelTenant
     //];
     public function getItemAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setItemAttribute($value)
     {
-        $this->attributes['item'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['item'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getAttributesAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setAttributesAttribute($value)
     {
-        $this->attributes['attributes'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['attributes'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getChargesAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setChargesAttribute($value)
     {
-        $this->attributes['charges'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['charges'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getDiscountsAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setDiscountsAttribute($value)
     {
-        $this->attributes['discounts'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['discounts'] = (is_null($value)) ? null : json_encode($value);
     }
-  
+
     public function affectation_igv_type()
     {
         return $this->belongsTo(AffectationIgvType::class, 'affectation_igv_type_id');
@@ -107,24 +107,24 @@ class DocumentItem extends ModelTenant
 
     public function m_item()
     {
-        return $this->belongsTo(Item::class,'item_id');
+        return $this->belongsTo(Item::class, 'item_id');
     }
-    
+
     public function document()
     {
         return $this->belongsTo(Document::class);
     }
-    
+
     public function relation_item()
     {
         return $this->belongsTo(Item::class, 'item_id');
     }
-    
+
     public function getAdditionalInformationAttribute($value)
     {
         // if($value){
-            $arr = explode('|', $value);
-            return $arr;
+        $arr = explode('|', $value);
+        return $arr;
         // }
 
         // return null;
@@ -139,29 +139,26 @@ class DocumentItem extends ModelTenant
                             document_items.item as item, document_items.quantity as quantity,  
                             documents.date_of_issue as date_of_issue");
 
-        if($params['person_id']){
+        if ($params['person_id']) {
 
-            return $query->whereHas('document', function($q) use($params){
-                            $q->whereBetween($params['date_range_type_id'], [$params['date_start'], $params['date_end']])
-                                ->where('customer_id', $params['person_id'])
-                                ->whereTypeUser();
-                        })
-                        ->join('documents', 'document_items.document_id', '=', 'documents.id')
-                        ->select($db_raw)
-                        ->latest('id');
-                        
-        }
-
-        
-        return $query->whereHas('document', function($q) use($params){
-                    $q->whereBetween($params['date_range_type_id'], [$params['date_start'], $params['date_end']])
-                        ->where('user_id', $params['seller_id'])
-                        ->whereTypeUser();
-                })
+            return $query->whereHas('document', function ($q) use ($params) {
+                $q->whereBetween($params['date_range_type_id'], [$params['date_start'], $params['date_end']])
+                    ->where('customer_id', $params['person_id'])
+                    ->whereTypeUser();
+            })
                 ->join('documents', 'document_items.document_id', '=', 'documents.id')
                 ->select($db_raw)
                 ->latest('id');
+        }
 
+
+        return $query->whereHas('document', function ($q) use ($params) {
+            $q->whereBetween($params['date_range_type_id'], [$params['date_start'], $params['date_end']])
+                ->where('user_id', $params['seller_id'])
+                ->whereTypeUser();
+        })
+            ->join('documents', 'document_items.document_id', '=', 'documents.id')
+            ->select($db_raw)
+            ->latest('id');
     }
-
 }

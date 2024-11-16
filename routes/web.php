@@ -147,6 +147,7 @@ if ($hostname) {
                     Route::delete('/delete/{id}', [App\Http\Controllers\Tenant\SellerController::class, 'destroy']);
                     Route::get('ventas-seller', [SellerController::class, 'exportSellers']);
                     Route::get('product_seller', [SellerController::class, 'recordsProduct']);
+                    Route::get('list-product', [SellerController::class, 'exportProduct']);
                     Route::get('/enabled/{type}/{id}', [SellerController::class, 'enabledSellers']);
                 });
                 Route::prefix('/registers')->group(function () {
