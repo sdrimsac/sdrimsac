@@ -61,12 +61,16 @@
         .font-lg {
             font-size: 14px;
         }
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
+
 <body>
-    
+
     @if (!empty($image))
-        <div width="98%" style="margin:0;padding:0;">
+        <div width="100%" style="margin:0;padding:0;">
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -77,8 +81,16 @@
                         $jj++;
                     @endphp
                     <div style="width: 50%; float: left;">
-                        <span></span>
-                
+                        <div style="width:90%; text-align: center; height: 0px;">
+
+                            {{-- @php
+                                if ($jj - 1 < $stock) {
+                                    echo '<img style="height: 25px; " src=' . $image . '>';
+                                }
+                            @endphp --}}
+
+
+                        </div>
                         <div class="text-center" style="width:90%; padding-top: 10px;">
                             @php
                                 if ($jj - 1 != $stock) {
@@ -97,29 +109,25 @@
                             @endphp
 
                         </div>
-
-                        <div class="text-center font-xs" style="height: 5px;">
+                        <div class="text-center font-xs" style="height: 10px;">
                             {{ $barcode }}
 
                         </div>
-                        {{-- @if ($configuration->correo_red_salud_ticket) --}}
-                            <div class="text-center font-xs" style="width:90%; height:10px;">
-                                @php
+                        <div class="text-center font-xs" style="width:90%; height:15px; font-size: 8px">
+                            @php
 
-                                @endphp
-                                S/ {{ $sale_code }}
-                            </div>
-                        {{-- @endif --}}
+                            @endphp
+                            S/ {{ $sale_code }}
+                        </div>
                         <div class="text-center font-xs" style="width:90%;height:18px;">
                             {{ substr($description, 0, 65) }}
                         </div>
-
                     </div>
                 @endfor
             @endfor
         </div>
     @else
-        <table width="100%" style="">
+        {{-- <table width="100%" style="">
             @php
                 $jj = 0;
                 $per_page = $paper;
@@ -178,7 +186,7 @@
                     @endfor
                 </tr>
             @endfor
-        </table>
+        </table> --}}
 
     @endif
 </body>
