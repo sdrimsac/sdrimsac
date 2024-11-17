@@ -124,7 +124,7 @@ class VehiculoController extends Controller
             return $row->item;
         });
 
-        return [ 'customer_id' => $customer_id, 'items' => $items];
+        return [ 'customer_id' => $customer_id, 'establishment_id' => $historial->establishment_id, 'items' => $items];
     }
     public function store(VehiculoRequest $request)
     {
