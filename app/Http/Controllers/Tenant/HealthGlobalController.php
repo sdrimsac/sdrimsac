@@ -203,6 +203,7 @@ class HealthGlobalController
                     $anulates_voided_bv[] = $document_full_number;
                 }
             }
+            //
             $bv_total = Document::where('establishment_id', $establishment->id)
                 ->whereIn('state_type_id', ['05', '03'])
                 ->whereMonth('date_of_issue', $month)
