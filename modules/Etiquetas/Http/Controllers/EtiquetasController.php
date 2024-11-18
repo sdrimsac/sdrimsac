@@ -31,7 +31,6 @@ class EtiquetasController extends Controller
 
     public function generate(Request $request)
     {
-        /* dump($request->all()); */
         ini_set("pcre.backtrack_limit", "500000");
 
         try {

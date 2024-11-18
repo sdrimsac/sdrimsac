@@ -549,7 +549,7 @@
               </el-select>
             </template>
             <!-- esto es para seleccionar un cliente para dar un producto a cuenta  -->
-            <template >
+            <!-- <template >
               <el-select
                 v-model="formQtn.customer_id"
                 filterable
@@ -570,7 +570,7 @@
                   :label="option.description"
                 ></el-option>
               </el-select>
-            </template>
+            </template> -->
             <template>
               <el-input
                 v-if="

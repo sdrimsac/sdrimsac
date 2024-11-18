@@ -65,7 +65,6 @@
           <div class="col-lg-2 col-md-2 pb-2">
             <div class="form-group">
               <label class="control-label w-100">Por Mes</label>
-
               <el-date-picker
                 v-model="search.month_start"
                 type="month"

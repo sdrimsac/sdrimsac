@@ -16,6 +16,7 @@ use App\Models\Tenant\Series;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Report\Exports\ExportSeller;
+use Modules\Report\Exports\ExportProduct;
 
 class SellerController extends Controller
 {
@@ -33,7 +34,7 @@ class SellerController extends Controller
     {
         $records = $this->getRecordsProduct($request);
 
-        return new SellerCollection($records->paginate(config('tenant.items_per_page')));
+        return new SellerCollection($records->paginate(10));
     }
     /* public function getRecords(Request $request)
     {
@@ -138,7 +139,6 @@ class SellerController extends Controller
 
     public function getRecordsProduct(Request $request)
     {
-
         $date_of_issue = $request->input('date_of_issue');
         $month_start = $request->input('month_start');
         $sellerId = $request->input('sellerId');
@@ -175,25 +175,33 @@ class SellerController extends Controller
                         $q->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
                     });
                 }
+            }])
+            ->with(['salesItems' => function ($query) use ($date_of_issue, $month_start) {
+                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
+                    $query->whereHas('sale_note', function ($q) use ($date_of_issue) {
+                        $q->whereDate('date_of_issue', $date_of_issue);
+                    });
+                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
+                    $month_start_date = "{$month_start}-01";
+                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
+                    $query->whereHas('sale_note', function ($q) use ($month_start_date, $month_end_date) {
+                        $q->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
+                    });
+                }
             }]);
 
-        // Si se proporciona sellerId, filtramos por el ID del vendedor
         if (!empty($sellerId)) {
-            $query->where('id', $sellerId);  // Filtramos por el sellerId
+            $query->where('id', $sellerId);
         }
 
-        // Si hay un filtro por columna, lo aplicamos
         if ($request->has('column') && $request->has('value') && !empty($request->value)) {
             $column = $request->input('column');
             if (in_array($column, ['name', 'document'])) {
                 $query->where($column, 'like', '%' . $request->value . '%');
             }
         }
-
-        // Ordenar por ID de forma descendente
         return $query->orderBy('id', 'desc');
     }
-
     public function check(Request $request)
     {
         $f = $request->f;
@@ -293,11 +301,74 @@ class SellerController extends Controller
         }
 
         $company = Company::first();
-        /* $establishment = Establishment::first(); */
         return (new ExportSeller)
             ->records($records)
             ->company($company)
-            /* ->establishment($establishment) */
             ->download('Ventas Vendedores' . '_' . Carbon::now()->format('Y-m-d') . '.xlsx');
+    }
+    public function exportProduct(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+        $records = $this->getRecordsProduct($request)->get();
+        if ($records->isEmpty()) {
+            return response()->json(['message' => 'No hay datos para exportar.'], 204);
+        }
+        /* $processedRecords = $records->map(function ($seller) {
+            return [
+                'seller_id' => $seller->id,
+                'name' => $seller->name,
+                'sold_items' => $seller->soldItems->map(function ($item) {
+                    return [
+                        'item_id' => $item->item_id,
+                        'description' => $item->item->description,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'total_price' => $item->quantity * $item->unit_price,
+                    ];
+                }),
+                'salesItems' => $seller->salesItems->map(function ($item) {
+                    return [
+                        'item_id' => $item->item_id,
+                        'description' => $item->item->description,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'total_price' => $item->quantity * $item->unit_price,
+                    ];
+                })
+            ];
+        }); */
+        $processedRecords = $records->map(function ($seller) {
+            // Merge sold_items and salesItems into one collection
+            $combinedItems = $seller->soldItems->map(function ($item) {
+                return [
+                    'item_id' => $item->item_id,
+                    'description' => $item->item->description,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
+                    'total_price' => $item->quantity * $item->unit_price,
+                ];
+            })->merge($seller->salesItems->map(function ($item) {
+                return [
+                    'item_id' => $item->item_id,
+                    'description' => $item->item->description,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
+                    'total_price' => $item->quantity * $item->unit_price,
+                ];
+            }));
+    
+            // Return the processed data for each seller
+            return [
+                'seller_id' => $seller->id,
+                'name' => $seller->name,
+                'combined_items' => $combinedItems
+            ];
+        });
+
+        $company = Company::first();
+        return (new ExportProduct)
+            ->records($processedRecords)
+            ->company($company)
+            ->download('Venta Vendedor unico' . '_' . Carbon::now()->format('Y-m-d') . '.xlsx');
     }
 }

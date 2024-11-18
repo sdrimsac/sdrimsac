@@ -90,19 +90,16 @@
                         <i class="fas fa-list"></i>
                       </span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end col-md-2 col-1">
-                      <el-button
-                        type="primary"
-                        class="col-md-12 col-12"
-                        @click="clickCreate(vehiculo.id)"
-                      >Editar</el-button>
-                      <br />
-                      <el-button
-                        type="success"
-                        class="col-md-12 col-12"
-                        @click="openpayOrden(vehiculo.id)"
-                      >Generar CP</el-button>
-                      <br />
+                    <div class="dropdown-menu dropdown-menu-end">
+                      <a class="dropdown-item">
+                        <el-button type="primary" @click="clickCreate(vehiculo.id)" class="w-100">Editar</el-button>
+                      </a>
+                      <a class="dropdown-item">
+                        <el-button
+                          type="success"
+                          @click="openpayOrden(vehiculo.id)"
+                        class="w-100" >Generar CP</el-button>
+                      </a>
                     </div>
                   </div>
                 </td>
@@ -128,23 +125,6 @@
                     type="info"
                   >Productos</el-button>
                 </td>
-                <!-- <td class="text-center">
-                  <button
-                    type="button"
-                    class="btn waves-effect waves-light btn-sm btn-info"
-                    @click.prevent="clickPrint(vehiculo.id)"
-                  >PDF</button>
-                  <button
-                    type="button"
-                    class="btn waves-effect waves-light btn-sm btn-success"
-                    @click.prevent="clickPrintFormat(vehiculo.id)"
-                  >Formato vehicular</button>
-                  <button
-                    type="button"
-                    class="btn waves-effect waves-light btn-sm btn-primary"
-                    @click.prevent="format_vehicle(vehiculo.id)"
-                  >Ver</button>
-                </td> -->
                 <td class="text-end">
                   <div class="btn-toolbar mb-2" role="toolbar">
                     <div class="btn-group mb-1">
@@ -159,16 +139,34 @@
                       </button>
                       <div class="dropdown-menu dropdown-menu-sm">
                         <a class="dropdown-item">
-                          <i class="fas fa-money-bill-alt"></i>
-                          <el-button @click.prevent="clickPrint(vehiculo.id)">PDF</el-button>
+                          <el-button
+                            @click.prevent="clickPrint(vehiculo.id)"
+                            class="w-100"
+                            type="danger"
+                          >
+                            <i class="far fa-file-alt"></i>
+                            PDF
+                          </el-button>
                         </a>
-                        <a class="dropdown-item" @click.prevent="clickPrintFormat(vehiculo.id)">
-                          <i class="far fa-file-alt"></i>
-                          Formato Vehicular
+                        <a class="dropdown-item">
+                          <el-button
+                            @click.prevent="clickPrintFormat(vehiculo.id)"
+                            class="w-100"
+                            type="success"
+                          >
+                            <i class="far fa-file-alt"></i>
+                            Format Vehiculo
+                          </el-button>
                         </a>
-                        <a class="dropdown-item" @click.prevent="format_vehicle(vehiculo.id)">
-                          <i class="fas fa-trash"></i>
-                          Ver PDF
+                        <a class="dropdown-item">
+                          <el-button
+                            @click.prevent="format_vehicle(vehiculo.id)"
+                            class="w-100"
+                            type="info"
+                          >
+                            <i class="far fa-file-alt"></i>
+                            Ver PDF
+                          </el-button>
                         </a>
                       </div>
                     </div>
@@ -333,7 +331,6 @@ export default {
     },
 
     async openpayOrden(id) {
-      
       this.$emit("payment", id);
     },
     selectItem(id, placa, historial_id) {
@@ -379,8 +376,9 @@ export default {
       });
     },
     lisVehicle() {
+    this.getQueryParameters();
       this.$http
-        .get(`/${this.resource}/vehiculo/records`)
+        .get(`/${this.resource}/vehiculo/records${getQueryParameters}`)
         .then(response => {
           this.vehiculos = response.data.data;
           this.pagination = response.data.meta;

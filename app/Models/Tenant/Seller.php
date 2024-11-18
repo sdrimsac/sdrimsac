@@ -52,4 +52,15 @@ class Seller extends ModelTenant
             'id'                  // Llave primaria local en `documents`
         );
     }
+    public function salesItems ()
+    {
+        return $this->hasManyThrough(
+            SaleNoteItem::class,
+            SaleNote::class,
+            'seller_id',
+            'sale_note_id',
+            'id',
+            'id'
+        );
+    }
 }
