@@ -204,7 +204,7 @@ class HealthGlobalController
                 }
             }
             $bv_total = Document::where('establishment_id', $establishment->id)
-                ->where('state_type_id', '05')
+                ->whereIn('state_type_id', ['05', '03'])
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '03')
