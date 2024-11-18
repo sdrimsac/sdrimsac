@@ -21,6 +21,7 @@ class PromotionDocumentResource extends JsonResource
             'date_end' => $this->date_end,
             'total' => $this->total,
             'points_value' => $this->points_value,
+            'limit_changes' => $this->limit_changes,
             'items' => $this->items->transform(function ($item) {
                 
                 return [

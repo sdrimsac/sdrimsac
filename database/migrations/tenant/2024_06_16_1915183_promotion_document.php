@@ -32,4 +32,6 @@ class PromotionDocument extends Migration
     {
         Schema::dropIfExists('promotion_documents');
     }
+
+    
 }

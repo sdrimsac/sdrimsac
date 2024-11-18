@@ -97,6 +97,7 @@ class ItemColorSizeImport implements ToCollection
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                         'is_import_excel' => true,
+                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                     ]);
                     $detail = "Color: $color, Talla: $size";
                     InventoryKardexDetail::create([

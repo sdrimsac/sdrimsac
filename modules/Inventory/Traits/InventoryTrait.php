@@ -282,6 +282,7 @@ trait InventoryTrait
             'item_id' => $item_id,
             'warehouse_id' => $warehouse_id,
             'quantity' => $quantity,
+            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
 
         return $inventory_kardex;
@@ -381,6 +382,7 @@ trait InventoryTrait
             'item_id' => $item_id,
             'warehouse_id' => $warehouse_id,
             'quantity' => $quantity,
+            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
 
         $sale_note_item = $this->findSaleNoteItem($sale_note_item_id);

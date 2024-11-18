@@ -21,7 +21,7 @@
             $new_part = number_format($new_part, 2, '.', '');
             $text .= ' ' . $new_part . ' ' . $unit_type_description;
         }
-    
+
         return $text;
     };
 @endphp
@@ -121,6 +121,7 @@
                             @if (!$item_id)
                                 <th>Producto</th>
                             @endif
+                            <th>Usuario</th>
                             <th>Fecha y hora transacción</th>
                             <th>Tipo transacción</th>
                             <th>Número</th>
@@ -137,13 +138,16 @@
                         @foreach ($reports as $key => $value)
                             @php
                                 $quantity = $value->quantity;
-                                
+                                if ($value->user_id) {
+                                    $value->user_name = $value->user->name;
+                                }
                             @endphp
                             <tr>
                                 <td class="celda">{{ $loop->iteration }}</td>
                                 @if (!$item_id)
                                     <td class="celda">{{ $value->item->description }}</td>
                                 @endif
+                                <td class="celda">{{ $value->user_name }}</td>
                                 <td class="celda">{{ $value->created_at }}</td>
                                 <td class="celda">
 
@@ -245,7 +249,9 @@
                                 @php
                                     if ($value->inventory_kardexable_type == $models[3]) {
                                         if (!$value->inventory_kardexable->type) {
-                                            $transaction = Modules\Inventory\Models\InventoryTransaction::findOrFail($value->inventory_kardexable->inventory_transaction_id);
+                                            $transaction = Modules\Inventory\Models\InventoryTransaction::findOrFail(
+                                                $value->inventory_kardexable->inventory_transaction_id,
+                                            );
                                         }
                                     }
                                 @endphp
@@ -282,9 +288,11 @@
                                         @case($models[0])
                                             {{ $quantity < 0 ? (isset($value->inventory_kardexable->sale_note_id) ? '-' : $formatQuantity($quantity)) : '-' }}
 
-                                            @php($quantity < 0) ? (isset($value->inventory_kardexable->sale_note_id) ?
-                                            $quantity == 0 : $formatQuantity($quantity)):"-";
-                                            @endphp
+                                            {{-- {{ $quantity < 0
+                                                ? (isset($value->inventory_kardexable->sale_note_id)
+                                                    ? $quantity == 0
+                                                    : $formatQuantity($quantity))
+                                                : '-' }} --}}
                                         @break
 
                                         @case($models[1])

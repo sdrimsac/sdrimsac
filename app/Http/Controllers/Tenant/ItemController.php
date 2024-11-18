@@ -982,6 +982,7 @@ class ItemController extends Controller
                         'quantity' => $stock,
                         'created_at' => date('Y-m-d H:i:s '),
                         'updated_at' => date('Y-m-d H:i:s '),
+                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
 
                     ]);
                 }

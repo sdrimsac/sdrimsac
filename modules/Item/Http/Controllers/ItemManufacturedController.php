@@ -110,7 +110,8 @@ class ItemManufacturedController extends Controller
                         'warehouse_id' => $warehouse_id,
                         'quantity' => $quantity * -1,
                         'inventory_kardexable_id' => $item_manufactured->id,
-                        'inventory_kardexable_type' => 'Modules\Item\Models\ItemManufactured'
+                        'inventory_kardexable_type' => 'Modules\Item\Models\ItemManufactured',
+                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                     ]);
                 }
             }
@@ -122,7 +123,8 @@ class ItemManufacturedController extends Controller
                 'warehouse_id' => $warehouse_id,
                 'quantity' => $quantity_general,
                 'inventory_kardexable_id' => $item_manufactured->id,
-                'inventory_kardexable_type' => 'Modules\Item\Models\ItemManufactured'
+                'inventory_kardexable_type' => 'Modules\Item\Models\ItemManufactured',
+                'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
             ]);
             DB::commit();
             return [

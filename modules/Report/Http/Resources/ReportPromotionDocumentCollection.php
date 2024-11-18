@@ -26,6 +26,7 @@ class ReportPromotionDocumentCollection extends ResourceCollection
                 'promotion_name' => $row->promotion_document->description,
                 'points' => $row->points,
                 'acc_total' => $row->acc_total,
+                'limit_changes' => $row->promotion_document->limit_changes
             ];
         });
     }

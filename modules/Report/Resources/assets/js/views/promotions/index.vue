@@ -33,7 +33,9 @@
                 </data-table>
             </div>
         </div>
-        <detail :current-row="currentRow" :show-dialog.sync="showDetailDialog"></detail>
+        <detail
+        :isPromotionPoints="isPromotionPoints"
+        :current-row="currentRow" :show-dialog.sync="showDetailDialog"></detail>
     </div>
 </template>
 

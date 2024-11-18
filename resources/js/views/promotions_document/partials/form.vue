@@ -9,7 +9,7 @@
         v-loading="loading"
     >
         <div class="row m-1">
-            <div :class="promotionByPoints ? 'col-md-4' : 'col-md-6'">
+            <div :class="promotionByPoints ? 'col-md-2' : 'col-md-4'">
                 <label for="description">
                     <strong>Descripción</strong>
                 </label>
@@ -17,6 +17,16 @@
                     v-model="form.description"
                     placeholder="Descripción"
                     clearable
+                ></el-input>
+            </div>
+            <div class="col-md-2">
+                <label for="limit_changes">
+                    Limite de canje
+                </label>
+                <el-input
+                    type="number"
+                    v-model="form.limit_changes"
+                    placeholder="Limite de canje"
                 ></el-input>
             </div>
             <div class="col-md-2">
@@ -96,6 +106,7 @@
                         ></el-option>
                     </el-select>
                 </div>
+
                 <div :class="promotionByPoints ? 'col-md-2' : 'col-md-4'">
                     <label for="quantity">
                         <strong>Cantidad</strong>
@@ -106,7 +117,7 @@
                         placeholder="Cantidad"
                     ></el-input>
                 </div>
-                <div class="col-md-2"  v-if="promotionByPoints">
+                <div class="col-md-2" v-if="promotionByPoints">
                     <label for="points">
                         <strong>Puntos</strong>
                     </label>
@@ -146,7 +157,6 @@
                                 <td>{{ item.quantity }}</td>
                                 <template v-if="promotionByPoints">
                                     <td>{{ item.points_value }}</td>
-
                                 </template>
                                 <td>
                                     <el-button
@@ -181,9 +191,10 @@ export default {
                 items: [],
                 quantity: 1,
                 total: 0,
-                points_value: 0
+                points_value: 0,
+                limit_changes: 0
             },
-            formItem:{
+            formItem: {
                 points_value: 0,
                 quantity: 1
             },
@@ -203,7 +214,6 @@ export default {
                 .get(`/promotions-document/record/${this.recordId}`)
                 .then(response => {
                     this.form = response.data.data;
-                
                 });
         },
         validForm() {
@@ -265,7 +275,8 @@ export default {
                 date_end: this.form.date_end,
                 items: this.form.items,
                 total: this.form.total,
-                points_value: this.form.points_value
+                points_value: this.form.points_value,
+                limit_changes: this.form.limit_changes
             };
 
             try {
@@ -343,7 +354,8 @@ export default {
                 items: [],
                 quantity: 1,
                 total: 0,
-                points_value: 0
+                points_value: 0,
+                limit_changes: 0
             };
         },
         close() {

@@ -110,7 +110,8 @@ class SaleNoteController extends Controller
 
 
 
-    public function export_consolidated(Request $request){
+    public function export_consolidated(Request $request)
+    {
         $data = $this->getRecordsConsolidated($request);
         $period = $request->period;
         //obtener la fecha inicial y final
@@ -143,9 +144,9 @@ class SaleNoteController extends Controller
             ->company($company)
             ->establishment($establishment)
             ->download('Reporte_Crédito_Consolidado_' . Carbon::now() . '.xlsx');
-
     }
-    public function records_consolidated(Request $request){
+    public function records_consolidated(Request $request)
+    {
         $data = $this->getRecordsConsolidated($request);
 
         return response()->json($data);
@@ -197,7 +198,7 @@ class SaleNoteController extends Controller
 
         $user_ids = $sale_notes->select('user_id')->distinct()->get()->pluck('user_id')->values();
         $user_names = User::whereIn('id', $user_ids)->pluck('name', 'id');
-        
+
         $sum_total_by_user_with_names = $sum_total_by_user->mapWithKeys(function ($sum_total, $user_id) use ($user_names) {
             return [$user_names[$user_id] => $sum_total];
         });
@@ -207,7 +208,7 @@ class SaleNoteController extends Controller
             ->value('sum_total');
         $purchases = $purchases->selectRaw('SUM(amount) as sum_total')
             ->value('sum_total');
-        $gain = $payments- $sum_total_general ;
+        $gain = $payments - $sum_total_general;
         return [
             'success' => true,
             'data' => $sum_total_by_user_with_names,
@@ -391,14 +392,14 @@ class SaleNoteController extends Controller
     {
         $value = $request->value;
         $records =  SaleNote::where('credit_cash', true)
-        ->where('state_type_id','<>', '11')
-        ->whereDoesntHave('credit_payments')
-        ->where('paid', 0)
-        ->leftJoin('boxes as b', 'sale_notes.id', '=', 'b.sale_note_id')
-        ->whereRaw('sale_notes.total > (SELECT COALESCE(SUM(b2.amount), 0) FROM boxes as b2 WHERE b2.sale_note_id = sale_notes.id)')
-        
-        ->select('sale_notes.*')
-        ->distinct();
+            ->where('state_type_id', '<>', '11')
+            ->whereDoesntHave('credit_payments')
+            ->where('paid', 0)
+            ->leftJoin('boxes as b', 'sale_notes.id', '=', 'b.sale_note_id')
+            ->whereRaw('sale_notes.total > (SELECT COALESCE(SUM(b2.amount), 0) FROM boxes as b2 WHERE b2.sale_note_id = sale_notes.id)')
+
+            ->select('sale_notes.*')
+            ->distinct();
         if ($value) {
             $records = $records->whereHas('customer', function ($query) use ($value) {
                 $query->where('name', 'like', "%{$value}%")
@@ -980,8 +981,8 @@ class SaleNoteController extends Controller
         $payments = $request->prepayments;
 
         // $customer_id = $request->customer_id;
-        $customer = Person::where('name','like',"%clientes varios%")->first();
-        if(!$customer){
+        $customer = Person::where('name', 'like', "%clientes varios%")->first();
+        if (!$customer) {
             $customer = Person::first();
         }
         $customer_name = $customer->name;
@@ -1129,10 +1130,11 @@ class SaleNoteController extends Controller
         $recibo = PDF::loadView('tenant.contract.index', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
         return $recibo->setPaper('a4', 'portrait')->stream();
     }
-    public function allCreditClient($id){
+    public function allCreditClient($id)
+    {
         $sale_notes = SaleNote::where('customer_id', $id)
-        ->orderBy('id', 'desc')
-        ->get();
+            ->orderBy('id', 'desc')
+            ->get();
         $filename = 'Reporte_Creditos_';
         $customer = Person::find($id);
         $customer_name = $customer->name;
@@ -1144,8 +1146,7 @@ class SaleNoteController extends Controller
         $filename = $filename . $customer_name . '_' . $today;
         return (new CreditByClientExport)
             ->records($sale_notes)
-            ->download($filename.'.xlsx');
-
+            ->download($filename . '.xlsx');
     }
     function restoreStock($qty, $item_id, $warehouse_id)
     {
@@ -1576,24 +1577,26 @@ class SaleNoteController extends Controller
                             }
                         }
                     } else {
-                        $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
-                        $cajas->group_id = 1;
-                        $cajas->category_id = 1;
-                        $cajas->subcategory_id = 1;
-                        $cajas->operation_number = $request->operation_number;
-                        $cajas->amount = $request->input('total');
-                        $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                        $cajas->type = '1';
-                        $cajas->state = '1';
-                        $cajas->method =  $request->method_pay;
-                        $cajas->sale_note_id = $this->sale_note->id;
-                        $cajas->orden_id =  $request->orden_id;
-                        $cajas->cash_id = $original_cash_id ? $original_cash_id : $request->cash_id;
-                        $cajas->user_id = auth()->user()->id;
-                        $cajas->description = "VENTAS " . $document;
-                        $cajas->soap_type_id = $company->soap_type_id;
-                        $cajas->establishment_id = auth()->user()->establishment_id;
-                        $cajas->save();
+                        if (!$configuration->sale_note_credit_cash) {
+                            $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
+                            $cajas->group_id = 1;
+                            $cajas->category_id = 1;
+                            $cajas->subcategory_id = 1;
+                            $cajas->operation_number = $request->operation_number;
+                            $cajas->amount = $request->input('total');
+                            $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                            $cajas->type = '1';
+                            $cajas->state = '1';
+                            $cajas->method =  $request->method_pay;
+                            $cajas->sale_note_id = $this->sale_note->id;
+                            $cajas->orden_id =  $request->orden_id;
+                            $cajas->cash_id = $original_cash_id ? $original_cash_id : $request->cash_id;
+                            $cajas->user_id = auth()->user()->id;
+                            $cajas->description = "VENTAS " . $document;
+                            $cajas->soap_type_id = $company->soap_type_id;
+                            $cajas->establishment_id = auth()->user()->establishment_id;
+                            $cajas->save();
+                        }
                     }
                 }
                 $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
@@ -1614,7 +1617,7 @@ class SaleNoteController extends Controller
 
                         if ($payment['payment'] > 0) {
                             $record = new SaleNotePayment;
-                            if (!isset($payment['payment_method_type_id'])){
+                            if (!isset($payment['payment_method_type_id'])) {
                                 $payment['payment_method_type_id'] = "01";
                             }
                             $record->fill($payment);
@@ -2526,6 +2529,7 @@ class SaleNoteController extends Controller
                     'item_id' => $item->item_id,
                     'warehouse_id' => $warehouse->id,
                     'quantity' => $quantity,
+                    'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                 ]);
                 if ($it) {
                     $it->stock =  $it->stock + $quantity;

@@ -17,6 +17,7 @@ trait InventoryKardexTrait
             'item_id' => $item_id,
             'warehouse_id' => ($warehouse_id) ? $warehouse_id : $this->getWarehouseId($establishment_id),
             'quantity' => $quantity,
+            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
 
         return $inventory_kardex;

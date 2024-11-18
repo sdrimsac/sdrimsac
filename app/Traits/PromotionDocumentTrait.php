@@ -36,22 +36,32 @@ trait PromotionDocumentTrait
         foreach ($items as $item) {
             if ($item->item->is_promotion) {
                 $item_promotion = PromotionDocumentItem::where('item_id', $item->item_id)
-                    ->where('promotion_document_id', $promotion_document_id)
+                    ->whereHas('promotion_document', function ($query) use ($promotion_document_id) {
+                        $query->where('is_points', true);
+                    })
                     ->first();
                 $points_to_subtract += $item_promotion->points_value;
-                $this->savePromotionReceived($promotion_customer, $item->item_id, $item->quantity);
+                $this->savePromotionReceived($promotion_customer, $item->item_id, $item->quantity, $document);
             }
         }
         $promotion_customer->points -= $points_to_subtract;
         $promotion_customer->save();
     }
 
-    function savePromotionReceived($promotion_customer, $item_id, $quantity)
+    function savePromotionReceived($promotion_customer, $item_id, $quantity, $document)
     {
         $promotion_received = new PromotionReceived();
         $promotion_received->promotion_document_customer_id = $promotion_customer->id;
         $promotion_received->item_id = $item_id;
         $promotion_received->quantity = $quantity;
+        $document_type_id = $document->document_type_id;
+        if ($document_type_id == '80') {
+            $promotion_received->sale_note_id = $document->id;
+        } else {
+            $promotion_received->document_id = $document->id;
+        }
+        $user = auth()->user();
+        $promotion_received->user_id = $user->id;
         $promotion_received->save();
     }
     function desactivePromotion($document)
@@ -60,7 +70,8 @@ trait PromotionDocumentTrait
             $customer_id = $document->customer_id;
             $promotionCustomers = PromotionDocumentCustomer::where('customer_id', $customer_id)
                 ->whereHas('promotion_document', function ($query) {
-                    $query->whereColumn('promotion_document_customers.acc_total', 'promotion_documents.total');
+                    $query->whereColumn('promotion_document_customers.acc_total', 'promotion_documents.total')
+                        ->where('promotion_documents.is_points', false);
                 })
                 ->get();
 
@@ -70,7 +81,7 @@ trait PromotionDocumentTrait
                 $promotionDocument = PromotionDocument::find($promotionCustomer->promotion_document_id);
                 $items = PromotionDocumentItem::where('promotion_document_id', $promotionDocument->id)->get();
                 foreach ($items as $item) {
-                    $this->savePromotionReceived($promotionCustomer, $item->item_id, $item->quantity);
+                    $this->savePromotionReceived($promotionCustomer, $item->item_id, $item->quantity, $document);
                 }
             }
         } catch (Exception $e) {
@@ -84,9 +95,29 @@ trait PromotionDocumentTrait
         $promotion = PromotionDocumentCustomer::where('customer_id', $customer_id)->orderBy('id', 'desc')->first();
         return $promotion->points;
     }
-
+    public    function checkLimit($promotion_id, $customer_id)
+    {
+        $configuration = Configuration::first();
+        if (!$configuration->promotions_by_points) return true;
+        $promotion_document = PromotionDocument::find($promotion_id);
+        $limit_changes = $promotion_document->limit_changes;
+        $changes = PromotionReceived::whereHas('promotion_document_customer', function ($query) use ($promotion_id, $customer_id) {
+            $query->where('promotion_document_id', $promotion_id)
+                ->where('customer_id', $customer_id);
+        });
+        if ($configuration->promotions_by_points) {
+            $changes = $changes->count();
+        } else {
+            $changes = $changes->distinct('promotion_document_customer_id')
+                ->count('promotion_document_customer_id');
+        }
+        return $changes < $limit_changes;
+    }
     public function savePromotion($document, $promotion_id)
     {
+        if (!$this->checkLimit($promotion_id, $document->customer_id)) {
+            return;
+        }
         $configuration = Configuration::first();
         if ($configuration->is_promotion_document) {
             $this->savePromotionWithoutPoins($document, $promotion_id);

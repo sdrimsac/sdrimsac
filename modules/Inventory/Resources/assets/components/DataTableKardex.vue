@@ -323,7 +323,7 @@ export default {
         const { status, data } = response;
         if (status == 200) {
           let data = response.data.data;
-          let records_data = _.filter(data, { view: true });
+          let records_data = data;
           this.original_records = records_data;
           this.parsedMaxQuantity();
           //********************************************

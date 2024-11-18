@@ -87,6 +87,7 @@ class LotGroupItemsImport implements ToCollection
                                 'type' => 'input',
                                 'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
                                 'inventory_kardexable_id' => $inventory->id,
+                                'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                             ]);
                             InventoryKardexDetail::create([
                                 'inventory_kardex_id' => $inventory_kardex->id,

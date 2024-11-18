@@ -24,6 +24,7 @@ class ReportKardexCollection extends ResourceCollection
     public function toArray($request)
     {
 
+
         self::$re = $request;
         $this->calcularRestante(self::$re);
 
@@ -52,6 +53,7 @@ class ReportKardexCollection extends ResourceCollection
 
             case $models[0]: //venta
                 return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'unit_type_id' => $row->item->unit_type_id,
@@ -81,6 +83,7 @@ class ReportKardexCollection extends ResourceCollection
 
                 if ($purchase_find !== null) {
                     return [
+                        'user_name' => isset($row->user_id) ? $row->user->name : '',
                         'id' => $row->id,
                         'item_name' => $row->item->description,
                         'internal_id' => $row->item->internal_id,
@@ -109,6 +112,7 @@ class ReportKardexCollection extends ResourceCollection
             case $models[2]:
                 // Nota de venta
                 return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'internal_id' => $row->item->internal_id,
@@ -160,6 +164,7 @@ class ReportKardexCollection extends ResourceCollection
                     }
                     $user = auth()->user();
                     $return = [
+                        'user_name' => isset($row->user_id) ? $row->user->name : '',
                         'detail' => $detail,
                         'id' => $row->id,
                         'item_name' => $row->item->description,
@@ -197,6 +202,7 @@ class ReportKardexCollection extends ResourceCollection
 
             case $models[4]:
                 return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'unit_type_id' => $row->item->unit_type_id,
@@ -215,6 +221,7 @@ class ReportKardexCollection extends ResourceCollection
 
             case $models[5]: // Devolution
                 return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'internal_id' => $row->item->internal_id,
@@ -233,6 +240,7 @@ class ReportKardexCollection extends ResourceCollection
                 ];
             case $models[6]:
                 return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'internal_id' => $row->item->internal_id,
@@ -259,6 +267,7 @@ class ReportKardexCollection extends ResourceCollection
 
                     }
                     return [
+                        'user_name' => isset($row->user_id) ? $row->user->name : '',
                         'id' => $row->id,
                         'item_name' => $row->item->description,
                         'internal_id' => $row->item->internal_id,
@@ -280,6 +289,7 @@ class ReportKardexCollection extends ResourceCollection
                         $id = optional($row->inventory_kardexable)->id;
                       
                         return [
+                            'user_name' => isset($row->user_id) ? $row->user->name : '',
                             'id' => $row->id,
                             'item_name' => $row->item->description,
                             'internal_id' => $row->item->internal_id,
@@ -306,6 +316,7 @@ class ReportKardexCollection extends ResourceCollection
                             $type_transaction = ($row->quantity < 0) ? "Usado para fabricación" : "Ingreso por fabricación";
                            }
                             return [
+                                'user_name' => isset($row->user_id) ? $row->user->name : '',
                                 'id' => $row->id,
                                 'item_name' => $row->item->description,
                                 'internal_id' => $row->item->internal_id,

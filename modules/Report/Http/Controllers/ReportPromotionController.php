@@ -11,6 +11,7 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Payment;
+use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionReceived;
 use App\Models\Tenant\SaleNote;
@@ -65,11 +66,18 @@ class ReportPromotionController extends Controller
     public function detail($document_customer_id)
     {
         $document_customer = PromotionDocumentCustomer::findOrFail($document_customer_id);
-        $receiveds = PromotionReceived::where('promotion_document_customer_id', $document_customer_id)->get()->transform(function ($row) {
+        $document_promotion = PromotionDocument::find($document_customer->promotion_document_id);
+        $receiveds = PromotionReceived::where('promotion_document_customer_id', $document_customer_id)->get()->transform(function ($row) use ($document_promotion) {
+            $item = $document_promotion->items->where('item_id', $row->item_id)->first();
+            $points = $item->points_value;
             return [
                 'id' => $row->id,
                 'product' => $row->item->description,
-                'quantity' => $row->quantity
+                'quantity' => $row->quantity,
+                'date' => $row->created_at->format('d/m/Y'),
+                'time' => $row->created_at->format('H:i:s'),
+                'seller' => isset($row->user) ? $row->user->name : '-',
+                'points' => $points
             ];
         });
 

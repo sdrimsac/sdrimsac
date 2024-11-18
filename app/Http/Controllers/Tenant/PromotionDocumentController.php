@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Events\MessageEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -14,11 +15,16 @@ use App\Models\Tenant\Item;
 use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionDocumentItem;
+use App\Models\Tenant\PromotionReceived;
+use App\Traits\PromotionDocumentTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PromotionDocumentController extends Controller
 {
+
+    use PromotionDocumentTrait;
+
     public function index()
     {
         $configuration = Configuration::select('is_promotion_document', 'promotions_by_points')->first();
@@ -118,10 +124,23 @@ class PromotionDocumentController extends Controller
             ];
         }
     }
-
-    public function pointsByCustomer($id)
+    // public function checkLimit($promotion_document_id,$customer_id){
+    //     $promotion_document = PromotionDocument::find($promotion_document_id);
+    //     $limit_changes = $promotion_document->limit_changes;
+    //     if(!$limit_changes) return true;
+    //     $changes = PromotionReceived::where('customer_id', $customer_id)->where('promotion_document_id', $promotion_document_id)->count();
+    //     return $changes < $limit_changes;
+    // }
+    public function pointsByCustomer($id, $promotion_document_id)
     {
+        if (!$this->checkLimit($promotion_document_id, $id)) {
+            return [
+                'success' => false,
+                'message' => 'No tienes mas cambios disponibles'
+            ];
+        }
         $record = PromotionDocumentCustomer::where('customer_id', $id)
+            ->where('promotion_document_id', $promotion_document_id)
             ->where('active', 1)
             ->first();
 
@@ -150,9 +169,16 @@ class PromotionDocumentController extends Controller
             'items' => $items
         ];
     }
-    public function byCustomer($id)
+    public function byCustomer($id, $promotion_document_id)
     {
+        if (!$this->checkLimit($promotion_document_id, $id)) {
+            return [
+                'success' => false,
+                'message' => 'No tienes mas cambios disponibles'
+            ];
+        }
         $records = PromotionDocumentCustomer::where('customer_id', $id)
+            ->where('promotion_document_id', $promotion_document_id)
             ->whereHas('promotion_document', function ($query) {
                 $query->where('is_points', 0);
             })
@@ -175,7 +201,10 @@ class PromotionDocumentController extends Controller
                 ];
         }
 
-        return $promotions;
+        return [
+            'success' => true,
+            'promotions' => $promotions
+        ];
     }
 
     public function getItemsByPerson($id)

@@ -201,6 +201,7 @@ class CreditListController extends Controller
             'warehouse_id' => $warehouse_id,
             'quantity' => $quantity,
             'type' => 'output',
+            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
         ]);
     }
     function update_stock($credit_list)

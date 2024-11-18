@@ -390,6 +390,7 @@
                                                 filterable
                                                 clearable
                                                 placeholder="Promoción"
+                                                @change="changePromotion"
                                             >
                                                 <el-option
                                                     v-for="(option,
@@ -440,7 +441,7 @@
                                                     hasPromotionText
                                             "
                                         >
-                                        <br>
+                                            <br />
                                             <el-checkbox
                                                 @change="receivePromotion"
                                                 v-model="form.receive_promotion"
@@ -2086,6 +2087,14 @@ export default {
     },
     mounted() {},
     methods: {
+        changePromotion() {
+            if (!this.form.promotion_id) return;
+            if (this.configuration.is_promotion_document) {
+                this.verifyPromotionCustomer();
+            } else if (this.promotionByPoints) {
+                this.verifyPromotionPointsCustomer();
+            }
+        },
         receivePromotion() {
             // console.log(this.form.items);
             this.fetchPromotionItems();
@@ -2737,7 +2746,7 @@ export default {
         verifyPromotionPointsCustomer() {
             this.$http
                 .get(
-                    `/promotions-document/points-customers/${this.form.customer_id}`
+                    `/promotions-document/points-customers/${this.form.customer_id}/${this.form.promotion_id}`
                 )
                 .then(response => {
                     if (response.status == 200) {
@@ -2753,14 +2762,18 @@ export default {
             this.hasPromotionText = null;
             this.$http
                 .get(
-                    `/promotions-document/records-customers/${this.form.customer_id}`
+                    `/promotions-document/records-customers/${this.form.customer_id}/${this.form.promotion_id}`
                 )
                 .then(response => {
                     if (response.status == 200) {
-                        let { data } = response;
-                        this.hasPromotionText = data
-                            .map(p => p.message)
-                            .join("\n");
+                        let { promotions, success } = response.data;
+                        if (success) {
+                            this.hasPromotionText = promotions
+                                .map(p => p.message)
+                                .join("\n");
+                        } else {
+                            this.$toast.error(data.message);
+                        }
                     }
                 });
         },
@@ -2802,11 +2815,6 @@ export default {
                     index === self.findIndex(t => t.id === thing.id)
             );
             this.setSeries();
-            if (this.configuration.is_promotion_document) {
-                this.verifyPromotionCustomer();
-            } else if (this.promotionByPoints) {
-                this.verifyPromotionPointsCustomer();
-            }
         },
         setLocalStorageIndex(key, obj) {
             localStorage.setItem(key, JSON.stringify(obj));
@@ -2981,6 +2989,9 @@ export default {
                 this.promotions_document.length > 0
                     ? this.promotions_document[0].id
                     : null;
+            if (this.form.promotion_id) {
+                this.changePromotion();
+            }
         },
         checkDetraction() {
             if (!this.configuration.detraction) return false;

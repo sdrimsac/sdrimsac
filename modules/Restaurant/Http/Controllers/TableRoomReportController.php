@@ -1036,6 +1036,7 @@ class TableRoomReportController extends Controller
                         'description' => 'Salida por habitación',
                         'inventory_kardexable_id' => $hotel_rent_item->id,
                         'inventory_kardexable_type' => 'App\Models\Tenant\HotelRentItem',
+                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                     ]);
                 }
                 if ($hotel_rent_item->is_reserve == false) {

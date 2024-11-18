@@ -5,6 +5,7 @@ namespace Modules\Inventory\Models;
 use App\Models\Tenant\Item;
 
 use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\User;
 
 class InventoryKardex extends ModelTenant
 {
@@ -17,6 +18,7 @@ class InventoryKardex extends ModelTenant
         'inventory_kardexable_type',
         'warehouse_id',
         'quantity', 
+        'user_id',
     ];
 
     public function inventory_kardexable()
@@ -32,5 +34,10 @@ class InventoryKardex extends ModelTenant
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

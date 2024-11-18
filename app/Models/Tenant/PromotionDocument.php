@@ -13,7 +13,8 @@ class PromotionDocument extends ModelTenant
         'total',
         'active',
         'is_points',
-        'points_value'
+        'points_value',
+        'limit_changes'
     ];
     protected $casts = [
         'is_points' => 'boolean',

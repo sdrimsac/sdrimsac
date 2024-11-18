@@ -9,6 +9,7 @@
                         <tr slot="heading">
                             <th>#</th>
                             <th v-if="!item_id">Producto</th>
+                            <th>Usuario</th>
                             <th>Fecha y hora transacción</th>
                             <th>Tipo transacción</th>
                             <th>Comentario</th>
@@ -23,6 +24,7 @@
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td v-if="!item_id">{{row.item_name}}</td>
+                            <td>{{row.user_name}}</td>
                             <td>{{row.date_time}}</td>
                             <td>{{row.type_transaction}}</td>
                               <td>{{row.detail}}</td>

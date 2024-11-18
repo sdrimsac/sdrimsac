@@ -134,13 +134,13 @@ class ReportKardexController extends Controller
 
             if ($note == false) {
 
-                $data = InventoryKardex::with(['inventory_kardexable'])
+                $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
                     ->orderBy('item_id')->orderBy('created_at');
             } else {
-                $data = InventoryKardex::with(['inventory_kardexable'])
+                $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
                     ->orderBy('item_id')->orderBy('created_at');;
@@ -148,13 +148,13 @@ class ReportKardexController extends Controller
         } else {
             if ($note == false) {
 
-                $data = InventoryKardex::with(['inventory_kardexable'])
+                $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
                     ->orderBy('item_id')->orderBy('created_at');
             } else {
 
-                $data = InventoryKardex::with(['inventory_kardexable'])
+                $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->orderBy('item_id')->orderBy('created_at');
             }
@@ -209,7 +209,6 @@ class ReportKardexController extends Controller
         // $records = $this->data($item_id, $date_start, $date_end, false, $establishment);
         $reports = new ReportKardexCollection($records->get());
         //$reports=$this->records($request);
-
         $pdf = PDF::loadView('inventory::reports.kardex.report_pdf', compact("reports", "company", "establishment", "balance", "models", 'a', 'd', "item_id", "max_quantity"))->setPaper('a4', 'landscape');
         $filename = 'Reporte_Kardex' . date('YmdHis');
 

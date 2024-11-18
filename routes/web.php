@@ -902,8 +902,8 @@ if ($hostname) {
                     Route::post('/', [PromotionDocumentController::class, 'store']);
                     Route::delete('/{id}', [PromotionDocumentController::class, 'destroy']);
                     Route::get("/get-items/{person_id}", [PromotionDocumentController::class, 'getItemsByPerson']);
-                    Route::get('records-customers/{customer_id}', [PromotionDocumentController::class, 'byCustomer']);
-                    Route::get('points-customers/{customer_id}', [PromotionDocumentController::class, 'pointsByCustomer']);
+                    Route::get('records-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'byCustomer']);
+                    Route::get('points-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'pointsByCustomer']);
                 });
                 Route::get('promotion-document/items-by-person/{id}', [PromotionDocumentController::class, 'getItemsByPerson']);
                 

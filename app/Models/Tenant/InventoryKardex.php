@@ -16,6 +16,7 @@ class InventoryKardex extends ModelTenant
         'warehouse_id',
         'quantity', 
         'is_import_excel',
+        'user_id',
     ];
  
 
@@ -33,5 +34,10 @@ class InventoryKardex extends ModelTenant
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

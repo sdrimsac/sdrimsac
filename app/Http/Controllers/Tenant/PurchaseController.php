@@ -693,6 +693,7 @@ class PurchaseController extends Controller
                     'item_id' => $item->item_id,
                     'warehouse_id' => $item->warehouse_id,
                     'quantity' => -$item->quantity,
+                    'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                 ]);
                 $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $item->warehouse_id]])->first();
                 $wr->stock =  $wr->stock - $item->quantity;
@@ -835,6 +836,7 @@ class PurchaseController extends Controller
                     'item_id' => $item->item_id,
                     'warehouse_id' => $inventoryKardex->warehouse_id,
                     'quantity' => -$item->quantity,
+                    'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                 ]);
                 $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $inventoryKardex->warehouse_id]])->first();
                 if ($wr->stock == 0 || $wr->stock < $item->quantity) {

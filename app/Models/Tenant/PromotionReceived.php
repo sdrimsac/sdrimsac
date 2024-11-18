@@ -14,6 +14,7 @@ class PromotionReceived extends ModelTenant
         'quantity',
         'document_id',
         'sale_note_id',
+        'user_id',
     ];
 
     public function promotion_document_customer()
@@ -34,5 +35,10 @@ class PromotionReceived extends ModelTenant
     public function sale_note()
     {
         return $this->belongsTo(SaleNote::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
