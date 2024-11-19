@@ -29,7 +29,12 @@ trait PromotionDocumentTrait
     function subtractPromotionPoints($document)
     {
         $customer_id = $document->customer_id;
-        $promotion_customer = PromotionDocumentCustomer::where('customer_id', $customer_id)->orderBy('id', 'desc')->first();
+        $promotion_customer = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->whereHas('promotion_document', function ($query) {
+                $query->where('is_points', true);
+            })
+            ->orderBy('id', 'desc')->first();
         $promotion_document_id = $promotion_customer->promotion_document_id;
         $points_to_subtract = 0;
         $items = $document->items;
