@@ -100,7 +100,7 @@ trait PromotionDocumentTrait
         $promotion = PromotionDocumentCustomer::where('customer_id', $customer_id)->orderBy('id', 'desc')->first();
         return $promotion->points;
     }
-    public    function checkLimit($promotion_id, $customer_id)
+    public function checkLimit($promotion_id, $customer_id)
     {
         $configuration = Configuration::first();
         if (!$configuration->promotions_by_points) return true;
@@ -118,9 +118,18 @@ trait PromotionDocumentTrait
         }
         return $changes < $limit_changes;
     }
+    private function desactivePromotionCustomer($customer_id, $promotion_id)
+    {
+        $promotion_customer = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('promotion_document_id', $promotion_id)
+            ->orderBy('id', 'desc')->first();
+        $promotion_customer->active = 0;
+        $promotion_customer->save();
+    }
     public function savePromotion($document, $promotion_id)
     {
         if (!$this->checkLimit($promotion_id, $document->customer_id)) {
+            $this->desactivePromotionCustomer($document->customer_id, $promotion_id);
             return;
         }
         $configuration = Configuration::first();
@@ -144,6 +153,7 @@ trait PromotionDocumentTrait
             $document_total = $document->total;
 
             $promotion = PromotionDocumentCustomer::where('promotion_document_id', $promotion_id)
+                ->where('active', 1)
                 ->where('customer_id', $customer_id)
                 ->orderBy('id', 'desc')
                 ->first();
@@ -183,6 +193,7 @@ trait PromotionDocumentTrait
 
             // Busca el último registro de promoción del cliente
             $promotion = PromotionDocumentCustomer::where('promotion_document_id', $promotion_id)
+                ->where('active', 1)
                 ->where('customer_id', $customer_id)
                 ->orderBy('id', 'desc')
                 ->first();
