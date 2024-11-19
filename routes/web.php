@@ -904,6 +904,8 @@ if ($hostname) {
                     Route::get("/get-items/{person_id}", [PromotionDocumentController::class, 'getItemsByPerson']);
                     Route::get('records-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'byCustomer']);
                     Route::get('points-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'pointsByCustomer']);
+                    Route::post('reset-points/{id}', [PromotionDocumentController::class, 'resetPoints']);
+                    Route::post('deactivate/{id}', [PromotionDocumentController::class, 'deactivatePromotion']);
                 });
                 Route::get('promotion-document/items-by-person/{id}', [PromotionDocumentController::class, 'getItemsByPerson']);
                 

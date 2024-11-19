@@ -42,8 +42,12 @@
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
                         <th class="text-white">Descripción</th>
-                        <th class="text-white">Fecha inicio</th>
-                        <th class="text-white">Fecha Final</th>
+                        <th class="text-white">
+                            Fecha inicio
+                        </th>
+                        <th class="text-white">
+                            Fecha Final
+                        </th>
                         <th class="text-white">{{ accDescription }}</th>
                         <th class="text-white" v-if="promotionByPoints">
                             Puntos
@@ -58,8 +62,22 @@
                     <tr slot-scope="{ index, row }">
                         <td>{{ index }}</td>
                         <td>{{ row.description }}</td>
-                        <td>{{ row.date_start }}</td>
-                        <td>{{ row.date_end }}</td>
+                        <td
+                            :class="{
+                                'text-danger': row.status === 'danger',
+                                'text-warning': row.status === 'warning'
+                            }"
+                        >
+                            {{ row.date_start }}
+                        </td>
+                        <td
+                            :class="{
+                                'text-danger': row.status === 'danger',
+                                'text-warning': row.status === 'warning'
+                            }"
+                        >
+                            {{ row.date_end }}
+                        </td>
                         <td>{{ row.total }}</td>
                         <td v-if="promotionByPoints">{{ row.points_value }}</td>
                         <td>{{ row.limit_changes }}</td>
@@ -87,6 +105,24 @@
                                 class="dropdown-menu dropdown-menu-end"
                                 style=""
                             >
+                                <a
+                                    type="button"
+                                    class="dropdown-item text-warning"
+                                    @click.prevent="clickResetPoints(row.id)"
+                                >
+                                    <i class="fa fa-refresh"></i>
+                                    Resetear Puntos
+                                </a>
+                                <a
+                                    type="button"
+                                    class="dropdown-item text-info"
+                                    @click.prevent="
+                                        clickDeactivatePromotion(row.id)
+                                    "
+                                >
+                                    <i class="fa fa-power-off"></i>
+                                    Desactivar Promoción
+                                </a>
                                 <a
                                     type="button"
                                     class="dropdown-item text-secondary"
@@ -153,6 +189,40 @@ export default {
     },
     created() {},
     methods: {
+        clickResetPoints(id) {
+            let type = this.promotionByPoints ? "puntos" : "montos";
+            let message = `¿Estás seguro de querer resetear los ${type} de la promoción?`;
+            this.$confirm(message, "Confirmación", {
+                confirmButtonText: "Resetear",
+                cancelButtonText: "Cancelar",
+                type: "warning"
+            }).then(() => {
+                this.$http
+                    .post(`/${this.resource}/reset-points/${id}`)
+                    .then(() => {
+                        this.$eventHub.$emit("reloadData");
+                        this.$toast.success("Puntos reseteados");
+                    });
+            });
+        },
+        clickDeactivatePromotion(id) {
+            this.$confirm(
+                "¿Estás seguro de querer desactivar la promoción?",
+                "Confirmación",
+                {
+                    confirmButtonText: "Desactivar",
+                    cancelButtonText: "Cancelar",
+                    type: "warning"
+                }
+            ).then(() => {
+                this.$http
+                    .post(`/${this.resource}/deactivate/${id}`)
+                    .then(() => {
+                        this.$eventHub.$emit("reloadData");
+                        this.$toast.success("Promoción desactivada");
+                    });
+            });
+        },
         clickImportSetIndividual() {
             this.showImportSetIndividualDialog = true;
         },

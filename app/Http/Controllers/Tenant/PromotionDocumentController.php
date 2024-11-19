@@ -131,6 +131,7 @@ class PromotionDocumentController extends Controller
     //     $changes = PromotionReceived::where('customer_id', $customer_id)->where('promotion_document_id', $promotion_document_id)->count();
     //     return $changes < $limit_changes;
     // }
+
     public function pointsByCustomer($id, $promotion_document_id)
     {
         if (!$this->checkLimit($promotion_document_id, $id)) {
@@ -271,5 +272,49 @@ class PromotionDocumentController extends Controller
                 'temp_image' => 'data:' . $mime . ';base64,' . base64_encode($data)
             ]
         ];
+    }
+
+    public function resetPoints($id)
+    {
+        try {
+            // $promotion = PromotionDocument::findOrFail($id);
+
+            PromotionDocumentCustomer::where('promotion_document_id', $id)
+                ->update([
+                    'active' => false
+                ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Puntos reseteados correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deactivatePromotion($id)
+    {
+        try {
+            $promotion = PromotionDocument::findOrFail($id);
+            $promotion->update([
+                'active' => false
+            ]);
+            PromotionDocumentCustomer::where('promotion_document_id', $id)
+                ->update([
+                    'active' => false
+                ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Promoción desactivada correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
