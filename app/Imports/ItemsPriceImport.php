@@ -47,8 +47,8 @@ class ItemsPriceImport implements ToCollection
                 $warehouse_id = request('warehouse_id');
             }
             $item = Item::where('internal_id', $internal_id)->first();
-            $item_id = $item->id;
-            if ($internal_id != null) {
+            if ($internal_id != null && $item != null) {
+                $item_id = $item->id;
                 $existing_unit_type = ItemUnitType::where([
                     'description' => $description,
                     'unit_type_id' => $unit_type_id,
