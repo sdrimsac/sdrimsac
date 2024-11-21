@@ -49,7 +49,7 @@ class ItemsPriceImport implements ToCollection
 
             if ($internal_id != null) {
                 $existing_unit_type = ItemUnitType::where([
-                    'internal_id' => $internal_id,
+                    'description' => $description,
                     'unit_type_id' => $unit_type_id,
                     'warehouse_id' => $warehouse_id
                 ])->first();
