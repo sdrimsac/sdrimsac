@@ -41,13 +41,22 @@ class ItemsPriceImport implements ToCollection
             $quantity_unit = $row[3];
             $total = $row[4];
             $price1 = $row[5];
-            $price2 = $row[6];
-            $price3 = $row[7];
+            $price2 = $row[6] ?? 0;
+            $price3 = $row[7] ?? 0;
             if ($warehouse_id == null) {
                 $warehouse_id = request('warehouse_id');
             }
 
             if ($internal_id != null) {
+                $existing_unit_type = ItemUnitType::where([
+                    'internal_id' => $internal_id,
+                    'unit_type_id' => $unit_type_id,
+                    'warehouse_id' => $warehouse_id
+                ])->first();
+
+                if ($existing_unit_type) {
+                    continue;
+                }
 
                 $item = Item::where('internal_id', $internal_id)->first();
 
@@ -66,8 +75,6 @@ class ItemsPriceImport implements ToCollection
 
                         ]);
                     } else {
-
-
                         $price2 = floatval($total) / floatval($quantity_unit);
                         $item = ItemUnitType::create([
                             'description' => $description,

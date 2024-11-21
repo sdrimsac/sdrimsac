@@ -76,9 +76,10 @@ class FoodCollection extends ResourceCollection
                 // $item_unit_types = $item->item_unit_types->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
                 $item_unit_types = ItemUnitType::where('item_id', $item->id)->where(function ($q) use ($user) {
                     $q->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
-                });
+                })->where('quantity_unit', '>', 0);
                 if(count($item_types_descp) > 0){
-                    $item_unit_types = $item_unit_types->whereIn('description', $item_types_descp);
+                    $item_unit_types = $item_unit_types->whereIn('description', $item_types_descp)
+                    ;
                 }
                 $item_unit_types = $item_unit_types->get();
             }
