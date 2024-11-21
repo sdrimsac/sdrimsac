@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         :visible="showDialog"
-        title="Consolidadoss"
+        title="Consolidados"
         @open="open"
         @close="close"
         append-to-body
@@ -101,7 +101,11 @@
                                 </el-button>
                             </el-tooltip>
                             <el-tooltip
-                                content="Imprimir documentos"
+                                :content="
+                                    record.hasPrint
+                                        ? 'Imprimir documentos'
+                                        : 'Emitir documentos'
+                                "
                                 placement="top"
                                 effect="dark"
                             >
@@ -110,7 +114,23 @@
                                     size="mini"
                                     @click="clickPrint(record)"
                                 >
-                                    <i class="el-icon-printer"></i>
+                                    <i
+                                        class="el-icon-printer"
+                                        v-if="record.hasPrint"
+                                    ></i>
+                                    <i class="el-icon-document" v-else></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                v-if="record.hasPrint"
+                                content="Liquidar"
+                                placement="top"
+                                effect="dark"
+                            >
+                                <el-button type="success" size="mini"
+                                    @click="clickLiquidate(record)"
+                                >
+                                    <i class="el-icon-money"></i>
                                 </el-button>
                             </el-tooltip>
                         </td>
@@ -128,15 +148,26 @@
             >
             </el-pagination>
         </div>
+        <ConsolidatedPayment
+        :showDialog.sync="showDialogPayment"
+        :record="recordPayment"
+    ></ConsolidatedPayment>
     </el-dialog>
+    
 </template>
 
 <script>
+import ConsolidatedPayment from "./consolidated_payment.vue";
 import querystring from "querystring";
 export default {
+    components: {
+        ConsolidatedPayment
+    },
     props: ["showDialog"],
     data() {
         return {
+            showDialogPayment: false,
+            recordPayment: null,
             form: {
                 date: ""
             },
@@ -153,6 +184,10 @@ export default {
     },
     computed: {},
     methods: {
+        clickLiquidate(record) {
+            this.showDialogPayment = true;
+            this.recordPayment = record;
+        },
         clickExportDocuments(record) {
             window.open(
                 `/${this.resource}/consolidateds/${record.id}/export-documents`
@@ -243,7 +278,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.post(`/${url}`, document);
-                console.log("🚀 ~ clickEmit ~ response:", response);
+            
             } catch (e) {
                 console.error(e);
             } finally {
@@ -251,7 +286,9 @@ export default {
             }
         },
         async clickPrint(record) {
-            this.$confirm("¿Desea imprimir los documentos?", "Imprimir", {
+            let has_print = record.hasPrint;
+            let message = has_print ? "¿Desea imprimir los documentos?" : "¿Desea emitir los documentos?";
+            this.$confirm(message, "Imprimir", {
                 confirmButtonText: "Sí",
                 cancelButtonText: "No",
                 type: "warning"
@@ -270,6 +307,7 @@ export default {
                                 for (const document of this.documents) {
                                     await this.clickEmit(document);
                                 }
+                                this.getRecords();
                             }
 
                             this.$message.success(message);

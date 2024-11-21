@@ -343,7 +343,10 @@
                                             </el-input>
                                         </template>
                                     </div>
-                                    <div class="col-12 col-lg-3 p-2" v-if="configuration.brand">
+                                    <div
+                                        class="col-12 col-lg-3 p-2"
+                                        v-if="configuration.brand"
+                                    >
                                         <template>
                                             <h2
                                                 class="font-weight-bold custom-text-size"
@@ -2108,7 +2111,7 @@ export default {
         let searchSeries = localStorage.getItem("searchSeries");
         let searchSecondName = localStorage.getItem("searchSecondName");
         let model = localStorage.getItem("model");
-        let quality = localStorage.getItem("quality")
+        let quality = localStorage.getItem("quality");
         /* let brand = localStorage.getItem("brand") */
         if (barcode) {
             this.barcode = barcode == "1" ? true : false;
@@ -2414,7 +2417,7 @@ export default {
                     id: 74,
                     title: ["Venta del", "mes"],
                     icon: "fas fa-history ",
-                    visible: true  && this.establishments.is_product
+                    visible: true && this.establishments.is_product
                 },
                 {
                     id: 63,
@@ -3098,7 +3101,7 @@ export default {
             }
         },
         trigerFunction(id) {
-            console.log("🚀 ~ trigerFunction ~ id:", id)
+            console.log("🚀 ~ trigerFunction ~ id:", id);
 
             switch (id) {
                 case 74:
@@ -3644,17 +3647,33 @@ export default {
                 //     currency_type_id
                 // );
                 orden.original_price = orden.price;
-                if(this.configuration.price_item_unit_type && type && type.id){
-                    let {food:{item:{item_unit_types}}}=orden;
-                    let unit_type = item_unit_types.find(iut=>iut.id == type.id);
-                    if(unit_type){
-                        let prices = [unit_type.price1, unit_type.price2, unit_type.price3];
+                if (
+                    this.configuration.price_item_unit_type &&
+                    type &&
+                    type.id
+                ) {
+                    let {
+                        food: {
+                            item: { item_unit_types }
+                        }
+                    } = orden;
+                    let unit_type = item_unit_types.find(
+                        iut => iut.id == type.id
+                    );
+                    if (unit_type) {
+                        let prices = [
+                            unit_type.price1,
+                            unit_type.price2,
+                            unit_type.price3
+                        ];
                         let default_price = unit_type.price_default - 1;
-                        
+
                         let newPrices = [
                             prices[default_price],
-                            ...prices.filter((_, index) => index !== default_price)
-                        ];
+                            ...prices.filter(
+                                (_, index) => index !== default_price
+                            )
+                        ].filter(p => p > 0);
 
                         orden.prices = newPrices;
                     }
@@ -4495,7 +4514,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
-                receive_promotion:false,
+                receive_promotion: false,
                 promotion_id: null,
                 reference_number: null,
                 detraction: {
@@ -5418,12 +5437,14 @@ export default {
                 this.medida_ancho = response.data.medida_ancho;
                 this.medida_grosor = response.data.medida_grosor;
                 this.categoria_madera = response.data.categoria_madera;
-                this.promotions_document = response.data.promotions_document.filter(p => {
-                    if(this.configuration.promotions_by_points){
-                        return p.is_points
+                this.promotions_document = response.data.promotions_document.filter(
+                    p => {
+                        if (this.configuration.promotions_by_points) {
+                            return p.is_points;
+                        }
+                        return !p.is_points;
                     }
-                    return !p.is_points
-                });
+                );
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
                 this.documentsType = response.data.documents_type;
@@ -5503,8 +5524,8 @@ export default {
                     id: obj.id,
                     name: obj.name,
                     color: contex.getColor(index)
-                }
-            })
+                };
+            });
         },
         async limpiarForm() {
             if (this.configuration.hotels) {
@@ -5712,8 +5733,7 @@ export default {
                         return f;
                     }
                 });
-            }
-            else {
+            } else {
                 let inputitem = this.input_item.toLowerCase();
                 if (data == undefined) {
                     let form = {

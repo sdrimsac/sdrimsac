@@ -309,6 +309,39 @@ class QuotationController extends Controller
 
         return $document || $sale_note;
     }
+    public function consolidatedsLiquidate($id){
+        $consolidated = Consolidated::find($id);
+        $quotations = $consolidated->quotations;
+        $documents = [];
+        foreach ($quotations as $quotation) {
+            $document_id = null;
+            $sale_note_id = null;
+            $document = Document::where('quotation_id', $quotation->id)->first();
+            if (!$document) {
+                $document = SaleNote::where('quotation_id', $quotation->id)->first();
+                $sale_note_id = $document->id;
+            }else{
+                $document_id = $document->id;
+            }
+
+            $documents[] = [
+                'quotation_full_number' => $quotation->number_full,
+                'quotation_id' => $quotation->id,
+                'document_id' => $document_id,
+                'sale_note_id' => $sale_note_id,
+                'full_number' => $document->number_full,
+                'total' => $document->total,
+                'date_of_issue' => $document->date_of_issue,
+                'time_of_issue' => $document->time_of_issue,
+                'customer_id' => $document->customer_id,
+                'customer_name' => $document->customer->name
+            ];
+        }
+        return [
+            'success' => true,
+            'documents' => $documents
+        ];
+    }
     public function consolidatedsPrint($id)
     {
         $consolidated = Consolidated::find($id);
