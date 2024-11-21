@@ -1265,6 +1265,9 @@ class ItemController extends Controller
 
     public function import_prices(Request $request)
     {
+
+        ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', 30000);
         if ($request->hasFile('file')) {
             try {
                 $import = new ItemsPriceImport();
