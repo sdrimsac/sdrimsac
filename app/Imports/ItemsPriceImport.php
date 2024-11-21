@@ -46,19 +46,36 @@ class ItemsPriceImport implements ToCollection
             if ($warehouse_id == null) {
                 $warehouse_id = request('warehouse_id');
             }
-
+            $item = Item::where('internal_id', $internal_id)->first();
+            $item_id = $item->id;
             if ($internal_id != null) {
                 $existing_unit_type = ItemUnitType::where([
                     'description' => $description,
                     'unit_type_id' => $unit_type_id,
-                    'warehouse_id' => $warehouse_id
+                    'warehouse_id' => $warehouse_id,
+                    'item_id' => $item_id
                 ])->first();
 
                 if ($existing_unit_type) {
+                    if ($configuration->price_item_unit_type == 1) {
+                        $existing_unit_type->update([
+                            'quantity_unit' => $quantity_unit,
+                            'price1' => $price1,
+                            'price2' => $price2,
+                            'price3' => $price3,
+                        ]);
+                    } else {
+                        $price2 = floatval($total) / floatval($quantity_unit);
+                        $existing_unit_type->update([
+                            'quantity_unit' => $quantity_unit,
+                            'price1' => 0.0,
+                            'price2' => $price2,
+                            'price3' => 0,
+                        ]);
+                    }
+                    $registered += 1;
                     continue;
                 }
-
-                $item = Item::where('internal_id', $internal_id)->first();
 
                 if ($item != null) {
                     if ($configuration->price_item_unit_type == 1) {
