@@ -199,6 +199,12 @@ class PromotionDocumentController extends Controller
                 ->where('active', 0)
                 ->count();
             $counts = $counts - $count_desactive;
+            $to_log = [
+                'counts' => $counts,
+                'limit_changes' => $limit_changes,
+                'count_desactive' => $count_desactive
+            ];
+            Log::info(json_encode($to_log));
             if ($counts > $limit_changes) {
                 $counts = $limit_changes;
             }
