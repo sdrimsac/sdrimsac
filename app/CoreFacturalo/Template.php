@@ -172,10 +172,10 @@ class Template
                             'count_desactive' => $counts_desactive
                         ];
                         Log::info(json_encode($to_log));
-                        $counts = $counts - $counts_desactive;
                         if ($counts > $limit_changes) {
                             $counts = $limit_changes;
                         }
+                        $counts = $counts - $counts_desactive;
                         if ($counts > 0) {
                             $detail_message['message'] = "Puede canjear " . $counts . " de la promoción " . $promotion_document_description;
                         }
