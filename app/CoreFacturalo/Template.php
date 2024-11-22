@@ -149,7 +149,7 @@ class Template
                         $promotion_document_description = $promotion_document->description;
                         $promotion_document_id = $promotion_document->id;
                         // Calcular puntos acumulados
-                        $counts = $baseQuery
+                        $counts = (clone $baseQuery)
 
                             ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
                                 $query->where('customer_id', $document->customer_id)
@@ -158,7 +158,7 @@ class Template
                                     ->where('promotion_document_id', $promotion_document_id);
                             })
                             ->count();
-                        $counts_desactive = $baseQuery
+                        $counts_desactive = (clone $baseQuery)
                             ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
                                 $query->where('customer_id', $document->customer_id)
                                     ->where('acc_total', $promotion_document_total)
