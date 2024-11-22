@@ -32,8 +32,9 @@ class HomeController extends Controller
     public function restartWhatsapp()
     {
         try {
-            $pm2Process = new Process(['/root/.nvm/versions/node/v18.20.4/bin/node', '/root/.nvm/versions/node/v18.20.4/bin/pm2', 'restart', 'whatsapp', '--cron', '0,30 21-23 * * *', '--cron', '0,30 0-3 * * *', '--cron', '0 */2 4-20 * * *']);
+            $pm2Process = new Process(['sudo', '/root/.nvm/versions/node/v18.20.4/bin/node', '/root/.nvm/versions/node/v18.20.4/bin/pm2', 'restart', 'whatsapp', '--cron', '0,30 21-23 * * *', '--cron', '0,30 0-3 * * *', '--cron', '0 */2 4-20 * * *']);
             $pm2Process->run();
+            
             
             
 
