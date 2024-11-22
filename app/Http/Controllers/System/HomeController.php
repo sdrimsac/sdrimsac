@@ -32,31 +32,7 @@ class HomeController extends Controller
     public function restartWhatsapp()
     {
         try {
-            $whichProcess = new Process(['which', 'pm2']);
-            $whichProcess->run();
-        
-            if (!$whichProcess->isSuccessful()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Error al obtener la ubicación de PM2: ' . $whichProcess->getErrorOutput(),
-                ], 500);
-            }
-        
-            // Ubicación de pm2
-            $pm2Path = trim($whichProcess->getOutput());
-        
-            // Usa la ubicación en el proceso para reiniciar PM2
-            $pm2Process = new Process([
-                $pm2Path,
-                'restart',
-                'whatsapp',
-                '--cron',
-                '0,30 21-23 * * *',
-                '--cron',
-                '0,30 0-3 * * *',
-                '--cron',
-                '0 */2 4-20 * * *'
-            ]);
+            $pm2Process = new Process(['sudo', '/root/.nvm/versions/node/v18.20.4/bin/pm2', 'restart', 'whatsapp', '--cron', '0,30 21-23 * * *', '--cron', '0,30 0-3 * * *', '--cron', '0 */2 4-20 * * *']);
             $pm2Process->run();
 
             if (!$pm2Process->isSuccessful()) {
