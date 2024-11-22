@@ -194,6 +194,11 @@ class PromotionDocumentController extends Controller
                 ->where('acc_total', $promotion->total)
                 ->where('active', 1)
                 ->count();
+            $count_desactive = PromotionDocumentCustomer::where('promotion_document_id', $row)->where('customer_id', $id)
+                ->where('acc_total', $promotion->total)
+                ->where('active', 0)
+                ->count();
+            $counts = $counts - $count_desactive;
             if ($counts > $limit_changes) {
                 $counts = $limit_changes;
             }
