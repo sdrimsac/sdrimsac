@@ -1760,6 +1760,7 @@
         ></sale-note-credit-cash>
         <consolidated-list-modal
             :showDialog.sync="showConsolidatedList"
+            @insertOrdenQuotation="insertOrdenQuotation"
         ></consolidated-list-modal>
         <quotation-list-modal
             :showDialog.sync="showQuotationListDialog"
@@ -3209,6 +3210,8 @@ export default {
             this.clientTableData = {};
             this.isCreatingOrden = false;
             this.idOrden = undefined;
+            this.quotationId = null;
+            this.cotIdentifier = null;
 
             if (
                 !this.configuration.all_items_pos &&

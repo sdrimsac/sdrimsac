@@ -5,7 +5,8 @@
         @close="close"
         @open="create"
         class="dialog-import"
-        :close-on-click-modal="false" 
+        :close-on-click-modal="false"
+        v-loading="loading"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -66,6 +67,7 @@ export default {
     props: ["showDialog"],
     data() {
         return {
+            loading: false,
             loading_submit: false,
             headers: headers_token,
             titleDialog: null,
@@ -88,15 +90,18 @@ export default {
             this.titleDialog = "Importar listado de precios";
         },
         async submit() {
+            this.loading = true;
             this.loading_submit = true;
             await this.$refs.upload.submit();
             this.loading_submit = false;
+            this.loading = false;
         },
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
         },
         successUpload(response, file, fileList) {
+            this.loading = false;
             if (response.success) {
                 this.$toast.success(response.message);
                 this.$eventHub.$emit("reloadData");
@@ -108,6 +113,7 @@ export default {
             }
         },
         errorUpload(response) {
+            this.loading = false;
             console.log(response);
         }
     }

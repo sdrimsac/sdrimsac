@@ -127,7 +127,9 @@
                                 placement="top"
                                 effect="dark"
                             >
-                                <el-button type="success" size="mini"
+                                <el-button
+                                    type="success"
+                                    size="mini"
                                     @click="clickLiquidate(record)"
                                 >
                                     <i class="el-icon-money"></i>
@@ -149,11 +151,11 @@
             </el-pagination>
         </div>
         <ConsolidatedPayment
-        :showDialog.sync="showDialogPayment"
-        :record="recordPayment"
-    ></ConsolidatedPayment>
+            :showDialog.sync="showDialogPayment"
+            :record="recordPayment"
+            @insertOrdenQuotation="insertOrdenQuotation"
+        ></ConsolidatedPayment>
     </el-dialog>
-    
 </template>
 
 <script>
@@ -184,6 +186,20 @@ export default {
     },
     computed: {},
     methods: {
+        insertOrdenQuotation(quotation_id, identifier, item, customer_number) {
+            console.log(
+                "🚀 ~ insertOrdenQuotation ~ item*****************:",
+                item
+            );
+            this.$emit(
+                "insertOrdenQuotation",
+                quotation_id,
+                identifier,
+                item,
+                customer_number
+            );
+            this.close();
+        },
         clickLiquidate(record) {
             this.showDialogPayment = true;
             this.recordPayment = record;
@@ -278,7 +294,6 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.post(`/${url}`, document);
-            
             } catch (e) {
                 console.error(e);
             } finally {
@@ -287,7 +302,9 @@ export default {
         },
         async clickPrint(record) {
             let has_print = record.hasPrint;
-            let message = has_print ? "¿Desea imprimir los documentos?" : "¿Desea emitir los documentos?";
+            let message = has_print
+                ? "¿Desea imprimir los documentos?"
+                : "¿Desea emitir los documentos?";
             this.$confirm(message, "Imprimir", {
                 confirmButtonText: "Sí",
                 cancelButtonText: "No",

@@ -435,7 +435,7 @@
                                             </el-select>
                                         </div>
                                         <div
-                                            class="col-md-4 form-group"
+                                            class="col-md-8 form-group"
                                             v-if="
                                                 promotionDocument &&
                                                     hasPromotionText
@@ -446,9 +446,10 @@
                                                 @change="receivePromotion"
                                                 v-model="form.receive_promotion"
                                             >
-                                                Aplicar promoción |
-                                                {{ hasPromotionText }}
+                                        
                                             </el-checkbox>
+                                            Aplicar promoción |
+                                            {{ hasPromotionText }}
                                         </div>
                                         <!-- <div
                                             class="row"
@@ -2097,7 +2098,11 @@ export default {
         },
         receivePromotion() {
             // console.log(this.form.items);
-            this.fetchPromotionItems();
+            if (this.form.receive_promotion) {
+                this.fetchPromotionItems();
+            }else{
+                this.clearPromotionPointsItem();
+            }
         },
         sendAjustment(amount) {
             this.$http.post("/cash/adjustment", {
@@ -4805,6 +4810,7 @@ export default {
                     this.promotionItems.forEach(item => {
                         this.addFreeItem(item);
                     });
+                    console.log(this.form.items);
                 } else {
                     this.$toast.error("No se encontraron items de promoción");
                 }

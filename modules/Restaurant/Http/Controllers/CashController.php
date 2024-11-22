@@ -788,7 +788,6 @@ class CashController extends Controller
 
                             $items[$d_it->item_id] = [
                                 "description" => $d_it->item->description,
-
                                 "count" => $quantity,
                                 "purchase_unit_price" => $purchase_unit_price,
                                 "total" => $d_it->total,
@@ -864,7 +863,6 @@ class CashController extends Controller
                             } else {
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
-
                                     "count" => $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
                                     "total" => $d_it->total,

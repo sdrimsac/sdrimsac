@@ -54,6 +54,7 @@ use App\Models\Tenant\StateType;
 use App\Models\Tenant\UnitTypePerson;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
+use LDAP\Result;
 use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\Orden;
@@ -309,21 +310,106 @@ class QuotationController extends Controller
 
         return $document || $sale_note;
     }
-    public function consolidatedsLiquidate($id){
+    public function consolidatedsEditDocument(Request $request)
+    {
+        if (!$request->has('quotation_id')) {
+            return [
+                'success' => false,
+                'message' => 'Se requiere la cotización'
+            ];
+        }
+
+
+
+        try {
+            DB::beginTransaction();
+
+            $quotation = Quotation::find($request->quotation_id);
+            $sale_note_id = null;
+            $document_id = null;
+            $document = Document::where('quotation_id', $quotation->id)->first();
+            if (!$document) {
+                $document = SaleNote::where('quotation_id', $quotation->id)->first();
+                $sale_note_id = $document->id;
+            } else {
+                $document_id = $document->id;
+            }
+
+            if (!$quotation) {
+                return [
+                    'success' => false,
+                    'message' => 'Documento no encontrado'
+                ];
+            }
+
+            $items = $quotation->items;
+            $items_restore = [];
+
+            foreach ($items as $it) {
+                $item_restore = [];
+                $item = Item::find($it->item_id)
+                    ->load('food');
+                $item = $item->toArray();
+
+                $item_restore['id'] = $item["food"]["id"];
+                $item_restore['food'] = $item["food"];
+                $item_restore['observation'] = null;
+                $item_restore['price'] = $it->unit_price;
+                $item_restore['quantity'] = $it->quantity;
+
+                if (isset($it->item->from_unit_type_id)) {
+                    $unit_type_id = $it->item->from_unit_type_id;
+                    $unit_type = ItemUnitType::find($unit_type_id);
+                    $item_restore['type_quotation'] = $unit_type;
+                }
+
+
+
+                $items_restore[] = $item_restore;
+            }
+
+            DB::commit();
+
+            return [
+                'success' => true,
+                'items' => $items_restore,
+                'identifier' => $quotation->number_full,
+                'quotation_id' => $quotation->id,
+                'customer_number' => $quotation->customer->number,
+                'sale_note_id' => $sale_note_id,
+                'document_id' => $document_id,
+
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+    public function consolidatedsLiquidate($id)
+    {
         $consolidated = Consolidated::find($id);
         $quotations = $consolidated->quotations;
         $documents = [];
         foreach ($quotations as $quotation) {
             $document_id = null;
             $sale_note_id = null;
-            $document = Document::where('quotation_id', $quotation->id)->first();
+            $document = Document::where('quotation_id', $quotation->id)
+                ->where('state_type_id', '!=', '11')
+                ->first();
             if (!$document) {
-                $document = SaleNote::where('quotation_id', $quotation->id)->first();
+                $document = SaleNote::where('quotation_id', $quotation->id)
+                    ->where('state_type_id', '!=', '11')
+                    ->first();
                 $sale_note_id = $document->id;
-            }else{
+            } else {
                 $document_id = $document->id;
             }
-
+            $paid = $document->boxes()->sum('amount');
+            $total = $document->total;
+            $balance = $total - $paid;
             $documents[] = [
                 'quotation_full_number' => $quotation->number_full,
                 'quotation_id' => $quotation->id,
@@ -334,7 +420,8 @@ class QuotationController extends Controller
                 'date_of_issue' => $document->date_of_issue,
                 'time_of_issue' => $document->time_of_issue,
                 'customer_id' => $document->customer_id,
-                'customer_name' => $document->customer->name
+                'customer_name' => $document->customer->name,
+                'paid' => $balance > 0 ? false : true
             ];
         }
         return [
@@ -395,12 +482,12 @@ class QuotationController extends Controller
             });
         });
         $registers = [];
-    
+
         foreach ($groupedQuotations as $userId => $groupedQuotation) {
             $user = User::find($userId);
             $user_name = $user->name;
             $registers[$user_name] = [];
-            
+
             foreach ($groupedQuotation as $zoneId => $quotations) {
                 $zone_name = "-";
                 if ($zoneId) {
@@ -431,11 +518,11 @@ class QuotationController extends Controller
                 }
             }
         }
-    
+
         return (new ConsolidatedExportDocument())
-        ->records($registers)
-        ->company(Company::active())
-        ->download("Reparto_documentos_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
+            ->records($registers)
+            ->company(Company::active())
+            ->download("Reparto_documentos_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
     }
     public function consolidatedsExportDelivery($id)
     {

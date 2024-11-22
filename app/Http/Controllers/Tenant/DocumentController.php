@@ -1035,6 +1035,36 @@ class DocumentController extends Controller
 
         try {
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
+                $consolidated_quotations = Configuration::first()->consolidated_quotations;
+                $quotation_id = isset($request->quotation_id) ? $request->quotation_id : null;
+                if ($consolidated_quotations && $quotation_id) {
+                    $document = Document::where('quotation_id', $quotation_id)->first();
+                    if($document){
+                        $state_type_id = $document->state_type_id;
+                    if($state_type_id == '05'){
+                        $new_request = new Request();
+                        $new_request->merge([
+                            'summary_status_type_id' => 3,
+                            'date_of_reference' => $document->date_of_issue,
+                            'documents' => [
+                                [
+                                    'document_id' => $document->id,
+                                    'description' => 'Anulación de la operación',
+                                ]
+                            ]
+                            // 'quotation_id' => $quotation_id,
+                        ]);
+                        (new VoidedController)->store($new_request);
+                    }else if($state_type_id == '01'){
+                        $response = (new DocumentController)->destroyDocument($document->id);
+                    }
+                    }
+                    if(!$document){
+                        $document = SaleNote::where('quotation_id', $quotation_id)->first();
+                        $new_request = new Request();
+                        (new SaleNoteController)->anulate($new_request,$document->id);
+                    }
+                }
                 $facturalo = new Facturalo();
                 $facturalo->save($request->all());
 

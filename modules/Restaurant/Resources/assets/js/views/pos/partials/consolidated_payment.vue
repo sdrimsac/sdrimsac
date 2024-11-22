@@ -52,11 +52,7 @@
                             <td>{{ item.full_number }}</td>
                             <td>{{ item.customer_name }}</td>
                             <td>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    v-model="item.total"
-                                />
+                                {{ item.total }}
                             </td>
                             <td>
                                 <el-select
@@ -78,25 +74,43 @@
                                     type="primary"
                                     size="mini"
                                     @click="payDocument(item)"
+                                    v-if="!item.paid"
                                 >
                                     Pagar
+                                </el-button>
+                                <el-button
+                                    type="secondary"
+                                    size="mini"
+                                    @click="editDocument(item)"
+                                >
+                                    Editar
                                 </el-button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <consolidated-document-edit
+                :showDialog.sync="showDialogEdit"
+                :document="document"
+            ></consolidated-document-edit>
         </div>
     </el-dialog>
 </template>
 
 <script>
+import ConsolidatedDocumentEdit from "./consolidated_document_edit.vue";
 export default {
     props: ["showDialog", "record"],
+    components: {
+        ConsolidatedDocumentEdit
+    },
     data() {
         return {
             selectAll: false,
             loading: false,
+            showDialogEdit: false,
+            document: null,
             documents: [],
             title: "Liquidar consolidado",
             paymentsValue: [
@@ -125,6 +139,36 @@ export default {
         }
     },
     methods: {
+        editDocument(item) {
+            this.loading = true;
+            let { quotation_id } = item;
+            this.$http
+                .post(`/quotations/consolidateds/edit-document`, {
+                    quotation_id
+                })
+                .then(response => {
+                    let data = response.data;
+                    let items = data.items;
+                    console.log("🚀 ~ editDocument ~ items:", items);
+                    let quotation_id = data.quotation_id;
+                    let customer_number = data.customer_number;
+                    let identifier = data.identifier;
+
+                    items.forEach(item => {
+                        this.$emit(
+                            "insertOrdenQuotation",
+                            quotation_id,
+                            identifier,
+                            item,
+                            customer_number
+                        );
+                    });
+                    this.close();
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
         checkAll() {
             this.documents.forEach(item => {
                 item.selected = this.selectAll;
