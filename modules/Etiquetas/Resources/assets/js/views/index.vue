@@ -979,6 +979,9 @@ export default {
           this.sale_code = Number(this.product.price).toFixed(2);
         }
         if (this.sale_type == 1 && this.sale_murc) {
+          if (!this.sale_murc_val || this.sale_murc_val == 0 || this.sale_murc_val == "") {
+            this.sale_murc_val = Number(this.product.price).toFixed(2);
+          }
           this.sale_code = this.murciType(this.sale_murc, this.sale_murc_val);
         }
         if (this.sale_type == 3) {
@@ -989,6 +992,9 @@ export default {
           this.purchase_code = this.normalType(this.product.purchase);
         }
         if (this.purchase_type == 1 && this.purchase_murc) {
+          if (!this.purchase_murc_val || this.purchase_murc_val == 0 || this.purchase_murc_val == "") {
+            this.purchase_murc_val = Number(this.product.purchase).toFixed(2);
+          }
           this.purchase_code = this.murciType(
             this.purchase_murc,
             this.purchase_murc_val
@@ -1011,6 +1017,10 @@ export default {
         let result = "";
         for (let i = 0; i < nums.length; i++) {
           let num = nums[i];
+          if (num === ".") {
+            result += ".";
+            continue;
+          }
           let v = 9;
           if (num != "0") {
             v = (Number(num) || 1) - 1;

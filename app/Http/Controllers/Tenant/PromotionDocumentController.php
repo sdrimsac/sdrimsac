@@ -188,11 +188,16 @@ class PromotionDocumentController extends Controller
 
         foreach ($records as $row) {
             $promotion = PromotionDocument::findOrFail($row);
+            $limit_changes = $promotion->limit_changes;
             $description = $promotion->description;
             $counts = PromotionDocumentCustomer::where('promotion_document_id', $row)->where('customer_id', $id)
                 ->where('acc_total', $promotion->total)
                 ->where('active', 1)
                 ->count();
+            if ($counts > $limit_changes) {
+                $counts = $limit_changes;
+            }
+                
             $message =  "Tiene " . $counts . " de la promoción " . $description . " por canjear";
             if ($counts > 0)
                 $promotions[] = [
