@@ -73,14 +73,14 @@ trait PromotionDocumentTrait
     {
         try {
             $customer_id = $document->customer_id;
-            $promotionCustomers = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            $promotionCustomer = PromotionDocumentCustomer::where('customer_id', $customer_id)
                 ->whereHas('promotion_document', function ($query) {
                     $query->whereColumn('promotion_document_customers.acc_total', 'promotion_documents.total')
                         ->where('promotion_documents.is_points', false);
                 })
-                ->get();
+                ->first();
 
-            foreach ($promotionCustomers as $promotionCustomer) {
+            if ($promotionCustomer) {
                 $promotionCustomer->active = 0;
                 $promotionCustomer->save();
                 $promotionDocument = PromotionDocument::find($promotionCustomer->promotion_document_id);

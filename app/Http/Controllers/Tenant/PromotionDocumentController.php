@@ -210,15 +210,17 @@ class PromotionDocumentController extends Controller
 
     public function getItemsByPerson($id)
     {
-        $promotionDocumentCustomers = PromotionDocumentCustomer::where('customer_id', $id)->get();
+        $promotionDocumentCustomers = PromotionDocumentCustomer::where('customer_id', $id)
+        ->join('promotion_documents','promotion_documents.id','=','promotion_document_customers.promotion_document_id')
+        ->where('acc_total','=',DB::raw('promotion_documents.total'))
+        ->first();
         $items = [];
 
-        foreach ($promotionDocumentCustomers as $promotionDocumentCustomer) {
-            $promotionDocument = PromotionDocument::find($promotionDocumentCustomer->promotion_document_id);
-            if ($promotionDocument && $promotionDocumentCustomer->acc_total == $promotionDocument->total) {
-                $items[] = $promotionDocument->getFormattedItems();
-            }
+        if($promotionDocumentCustomers){
+            $promotion_document = PromotionDocument::find($promotionDocumentCustomers->promotion_document_id);
+            $items = $promotion_document->getFormattedItems();
         }
+
 
         return $items;
     }
