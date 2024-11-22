@@ -78,6 +78,7 @@ trait PromotionDocumentTrait
                     $query->whereColumn('promotion_document_customers.acc_total', 'promotion_documents.total')
                         ->where('promotion_documents.is_points', false);
                 })
+                ->where('active', 1)
                 ->first();
 
             if ($promotionCustomer) {
