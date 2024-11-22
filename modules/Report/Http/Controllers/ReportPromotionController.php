@@ -113,7 +113,9 @@ class ReportPromotionController extends Controller
         Log::info(json_encode($period));
         $person_id = $request->person_id;
         if ($period['d_start'] && $period['d_end']) {
-            $records = $records->whereBetween('created_at', [$period['d_start'], $period['d_end']]);
+            $d_start = Carbon::parse($period['d_start'])->startOfDay();
+            $d_end = Carbon::parse($period['d_end'])->endOfDay();
+            $records = $records->whereBetween('created_at', [$d_start, $d_end]);
         }
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
