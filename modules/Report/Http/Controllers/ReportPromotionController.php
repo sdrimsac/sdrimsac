@@ -17,6 +17,7 @@ use App\Models\Tenant\PromotionReceived;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\SaleNoteItem;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Modules\Report\Exports\ReportCreditDailyExport;
 use Modules\Report\Exports\ReportCreditExport;
 use Modules\Report\Exports\ReportCreditTypeCashExport;
@@ -102,15 +103,14 @@ class ReportPromotionController extends Controller
     }
 
     private function getRecords($request)
-    {   
+    {
         $configuration = Configuration::first();
         $records = PromotionDocumentCustomer::query();
-        if ($configuration->promotions_by_points) {
-            $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
-                $query->where('is_points', $configuration->promotions_by_points);
-            });
-        }
+        $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
+            $query->where('is_points', $configuration->promotions_by_points);
+        });
         $period = $this->getDatesOfPeriod($request);
+        Log::info(json_encode($period));
         $person_id = $request->person_id;
         if ($period['d_start'] && $period['d_end']) {
             $records = $records->whereBetween('created_at', [$period['d_start'], $period['d_end']]);
