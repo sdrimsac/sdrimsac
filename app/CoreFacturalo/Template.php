@@ -141,7 +141,7 @@ class Template
                         ->where($document_type, $document->id)
                         ->where('promotion_document_customers.active', 1)
                         ->first();
-                    
+
                     if ($currentPromotionDetail) {
                         $promotion_document = $currentPromotionDetail->promotion_customer->promotion_document;
                         $limit_changes = $promotion_document->limit_changes;
@@ -166,6 +166,12 @@ class Template
                                     ->where('promotion_document_id', $promotion_document_id);
                             })
                             ->count();
+                        $to_log = [
+                            'counts' => $counts,
+                            'limit_changes' => $limit_changes,
+                            'count_desactive' => $counts_desactive
+                        ];
+                        Log::info(json_encode($to_log));
                         $counts = $counts - $counts_desactive;
                         if ($counts > $limit_changes) {
                             $counts = $limit_changes;
