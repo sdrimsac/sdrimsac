@@ -396,7 +396,7 @@ class SaleNoteController extends Controller
         $records =  SaleNote::where('credit_cash', true)
             ->where('state_type_id', '<>', '11')
             ->whereDoesntHave('credit_payments')
-            ->where('paid', 0)
+
             ->leftJoin('boxes as b', 'sale_notes.id', '=', 'b.sale_note_id')
             ->whereRaw('sale_notes.total > (SELECT COALESCE(SUM(b2.amount), 0) FROM boxes as b2 WHERE b2.sale_note_id = sale_notes.id)')
 
@@ -1174,6 +1174,7 @@ class SaleNoteController extends Controller
                 $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
                 $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
                 $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
+                $quotation_id = Functions::valueKeyInArray($request->all(), "quotation_id", null);
                 $request["advances"] = Functions::valueKeyInArray($request->all(), "advances", 0.0);
                 $request["total_advances"] = Functions::valueKeyInArray($request->all(), "total_advances", 0.0);
                 $request["total_rounded"] = Functions::valueKeyInArray($request->all(), "total", 0.0);
@@ -1181,6 +1182,38 @@ class SaleNoteController extends Controller
                 $request["sumCoins"]  = Functions::valueKeyInArray($request->all(), "sumCoins", null);
                 $request["type_payment"]  = Functions::valueKeyInArray($request->all(), "type_payment", "Diario");
                 $request["document_type_id"] = "80";
+                $consolidated_quotations = Configuration::first()->consolidated_quotations;
+                dump($consolidated_quotations." ".$quotation_id);
+                if ($consolidated_quotations && $quotation_id) {
+                    $document = Document::where('quotation_id', $quotation_id)->first();
+                    if($document){
+                        $state_type_id = $document->state_type_id;
+                    if($state_type_id == '05'){
+                        $new_request = new Request();
+                        $new_request->merge([
+                            'summary_status_type_id' => 3,
+                            'date_of_reference' => $document->date_of_issue,
+                            'documents' => [
+                                [
+                                    'document_id' => $document->id,
+                                    'description' => 'Anulación de la operación',
+                                ]
+                            ]
+                            // 'quotation_id' => $quotation_id,
+                        ]);
+                        (new VoidedController)->store($new_request);
+                    }else if($state_type_id == '01'){
+                        dump('entra');
+                        $response = (new DocumentController)->destroyDocument($document->id);
+                        dump($response);
+                    }
+                    }
+                    if(!$document){
+                        $document = SaleNote::where('quotation_id', $quotation_id)->first();
+                        $new_request = new Request();
+                        (new SaleNoteController)->anulate($new_request,$document->id);
+                    }
+                }
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
                 $user = User::find($request['user_id']);
                 $data = $this->mergeData($request);
