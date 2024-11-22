@@ -42,6 +42,15 @@
                             type="primary"
                             class=""
                             href="javascript:void(0)"
+                            @click.prevent="clickRestaurar()"
+                        >
+                            Restaurar Compra
+                        </el-button>
+                        
+                        <el-button
+                            type="primary"
+                            class=""
+                            href="javascript:void(0)"
                             @click.prevent="clickNuevo()"
                         >
                             <i class="fas fa-cart-plus fa-lg"></i>

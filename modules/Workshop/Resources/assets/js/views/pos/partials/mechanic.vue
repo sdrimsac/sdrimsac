@@ -36,7 +36,7 @@
             </div>
             <div class="col-md-3">
               <label>Placa Vehiculo</label>
-              <el-input v-model="form.placa" placeholder="placa" @input="searchVehicles"></el-input>
+              <el-input v-model="form.placa" placeholder="placa" @input="lisVehicle()"></el-input>
             </div>
             <div class="col-md-6 text-end">
               <el-button type="primary" @click="clickCreate()">Nuevo Registro</el-button>
@@ -62,9 +62,8 @@
                 <th class="text-white">Año</th>
                 <th class="text-white">Kilometros Corridos</th>
                 <th class="text-white">Fecha Registro</th>
-                <th class="text-white">Historial</th>
                 <th class="text-white">Productos</th>
-                <th class="text-white">Formatos</th>
+                <th class="text-white">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -92,13 +91,12 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                       <a class="dropdown-item">
-                        <el-button type="primary" @click="clickCreate(vehiculo.id)" class="w-100">Editar</el-button>
-                      </a>
-                      <a class="dropdown-item">
                         <el-button
+                          v-if="vehiculo.historial_id"
                           type="success"
                           @click="openpayOrden(vehiculo.id)"
-                        class="w-100" >Generar CP</el-button>
+                          class="w-100"
+                        >Cobrar</el-button>
                       </a>
                     </div>
                   </div>
@@ -114,13 +112,15 @@
                 <td>{{ vehiculo.anio_fabricacion }}</td>
                 <td>{{ vehiculo.kilometraje }}</td>
                 <td>{{ vehiculo.created_at }}</td>
-                <td>
-                  <el-button type="success" @click="HistorialVehiculo(vehiculo.id)">
-                    <i class="fas fa-list"></i>
+                <!-- <td>
+                  <el-button type="success" 
+                  >
+                    
                   </el-button>
-                </td>
+                </td>-->
                 <td>
                   <el-button
+                    v-if="vehiculo.historial_id"
                     @click="selectItem(vehiculo.id, vehiculo.placa, vehiculo.historial_id)"
                     type="info"
                   >Productos</el-button>
@@ -139,14 +139,17 @@
                       </button>
                       <div class="dropdown-menu dropdown-menu-sm">
                         <a class="dropdown-item">
-                          <el-button
-                            @click.prevent="clickPrint(vehiculo.id)"
-                            class="w-100"
-                            type="danger"
-                          >
-                            <i class="far fa-file-alt"></i>
-                            PDF
+                          <el-button class="w-100" @click="HistorialVehiculo(vehiculo.id)">
+                            <i class="fas fa-list"></i>
+                            Historial
                           </el-button>
+                        </a>
+                        <a class="dropdown-item">
+                          <el-button
+                            type="primary"
+                            @click="clickCreate(vehiculo.id)"
+                            class="w-100"
+                          >Editar</el-button>
                         </a>
                         <a class="dropdown-item">
                           <el-button
@@ -160,6 +163,16 @@
                         </a>
                         <a class="dropdown-item">
                           <el-button
+                            @click.prevent="clickPrint(vehiculo.id)"
+                            class="w-100"
+                            type="danger"
+                          >
+                            <i class="far fa-file-alt"></i>
+                            PDF
+                          </el-button>
+                        </a>
+                        <!-- <a class="dropdown-item">
+                          <el-button
                             @click.prevent="format_vehicle(vehiculo.id)"
                             class="w-100"
                             type="info"
@@ -167,7 +180,7 @@
                             <i class="far fa-file-alt"></i>
                             Ver PDF
                           </el-button>
-                        </a>
+                        </a> -->
                       </div>
                     </div>
                   </div>
@@ -203,6 +216,7 @@ import registerHistory from "./register_history.vue";
 import historial from "./historial.vue";
 import modalItem from "./modal_item.vue";
 import FormatPdf from "./format_pdf.vue";
+import queryString from "query-string";
 export default {
   props: ["showDialog", "mechanicItem", "visible"],
   components: {
@@ -376,9 +390,8 @@ export default {
       });
     },
     lisVehicle() {
-    this.getQueryParameters();
       this.$http
-        .get(`/${this.resource}/vehiculo/records${getQueryParameters}`)
+        .get(`/${this.resource}/vehiculo/records?${this.getQueryParameters()}`)
         .then(response => {
           this.vehiculos = response.data.data;
           this.pagination = response.data.meta;
@@ -390,6 +403,9 @@ export default {
         });
     },
     getQueryParameters() {
+      this.search = {
+        placa: this.form.placa
+      };
       return queryString.stringify({
         page: this.pagination.current_page,
         limit: this.limit,

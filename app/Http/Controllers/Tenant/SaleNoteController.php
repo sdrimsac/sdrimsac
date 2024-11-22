@@ -94,6 +94,8 @@ use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
+use Modules\Workshop\Models\Historial;
+use Modules\Workshop\Http\Controllers\VehiculoController;
 use Mpdf\Mpdf;
 
 class SaleNoteController extends Controller
@@ -1163,7 +1165,11 @@ class SaleNoteController extends Controller
             $configuration = Configuration::first();
             DB::connection('tenant')->transaction(function () use ($request, $configuration) {
 
+                $vehiculo_id = Functions::valueKeyInArray($request->all(), "vehiculo_id", null);
 
+                if ($vehiculo_id){
+                    (new VehiculoController)->restoreItems($vehiculo_id);
+                }
                 $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
                 $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
                 $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
@@ -1183,6 +1189,17 @@ class SaleNoteController extends Controller
                     ['id' => $request->input('id')],
                     $data
                 );
+                if ($vehiculo_id) {
+                    $historial = Historial::where('estado', false)
+                    ->where('vehiculo_id', $vehiculo_id)
+                    ->first();
+                    if ($historial) {
+                        $historial->sale_note_id = $this->sale_note->id;
+                        $historial->estado = 1;
+                        $historial->save();
+                    }
+
+                }
                 if ($request->input('id') != null) {
                     SaleNoteItem::where('sale_note_id', $request->input('id'))->delete();
                 }

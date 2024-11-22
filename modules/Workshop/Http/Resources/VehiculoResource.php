@@ -3,6 +3,8 @@
 namespace Modules\Workshop\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Workshop\Models\Historial;
+use Modules\Workshop\Models\ServicesDetails;
 
 class VehiculoResource extends JsonResource
 {
@@ -13,7 +15,14 @@ class VehiculoResource extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
+    {   $historial = Historial::where('estado', 0)
+        ->where('vehiculo_id', $this->id)
+        ->first();
+        /* if ($historial){
+            Histoprial_Services_Details::class;
+        } */
+        
+
         return [
             'id' => $this->id,
             'customer_id' => $this->customer_id,

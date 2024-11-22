@@ -13,12 +13,12 @@
       <div class="form-body">
         <div class="row">
           <div class="col-md-4">
-            <label for="vehiculo">Vehiculo</label>
-            <el-input></el-input>
+            <!-- <label for="vehiculo">Vehiculo</label>
+            <el-input></el-input>-->
           </div>
           <div class="col-md-4">
-            <label for="vehiculo">Documento</label>
-            <el-input></el-input>
+            <!-- <label for="vehiculo">Documento</label>
+            <el-input></el-input>-->
           </div>
           <div class="col-md-4 text-end">
             <el-button type="primary" @click="CarVehicle">Crear Nuevo Historia</el-button>
@@ -40,6 +40,7 @@
                 <th class="text-white">Establecimiento</th>
                 <th class="text-white">Productos Cuenta</th>
                 <th class="text-white">Estado</th>
+                <th class="text-white">formato</th>
               </tr>
             </thead>
             <tbody>
@@ -72,6 +73,16 @@
                   </el-popover>
                 </td>
                 <td>{{ item.estado == 0 ? 'Activo' : 'Inactivo' }}</td>
+                <td>
+                  <el-button
+                    @click.prevent="clickPrintFormat(historial_id)"
+                    class="w-100"
+                    type="success"
+                  >
+                    <i class="far fa-file-alt"></i>
+                    Format Vehiculo
+                  </el-button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -109,6 +120,12 @@ export default {
     console.log("VER EL ID DEL VEHICULO PARA LA HISTORIA", this.vehiculoId);
   }, */
   methods: {
+    clickPrintFormat(historial_id) {
+      window.open(
+        `/${this.resource}/vehiculo/format_vehicle/${historial_id}`,
+        "_blank"
+      );
+    },
     selectVehiculo(item) {
       this.selectedVehiculoId = item.vehiculo_id;
       this.showDialogCarVehicle = true;
@@ -117,9 +134,13 @@ export default {
       console.log("Valor de vehiculo:", this.vehiculo);
       const historialActivo = this.historial.find(item => item.estado === 0);
 
-      if (historialActivo){
-        this.$showSAlert("error", "No puede Abrir una nueva historia mientras uno este activo", "error");
-        return
+      if (historialActivo) {
+        this.$showSAlert(
+          "error",
+          "No puede Abrir una nueva historia mientras uno este activo",
+          "error"
+        );
+        return;
       }
 
       if (this.selectedVehiculoId) {

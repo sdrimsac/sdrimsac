@@ -125,6 +125,7 @@ class DocumentInput
         // }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'vehiculo_id' => Functions::valueKeyInArray($inputs, 'vehiculo_id'),
             'promotion_id' => Functions::valueKeyInArray($inputs, 'promotion_id'),
             'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),
             'is_list_credit' => Functions::valueKeyInArray($inputs, 'is_list_credit', false),

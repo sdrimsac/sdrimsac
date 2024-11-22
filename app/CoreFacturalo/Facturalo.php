@@ -43,6 +43,7 @@ use Modules\College\Models\CollegePayment;
 use Modules\College\Models\CollegeRegister;
 use Modules\College\Models\CollegeStudent;
 use Modules\Restaurant\Models\OrdenItem;
+use Modules\Workshop\Http\Controllers\VehiculoController;
 
 class Facturalo
 {
@@ -170,6 +171,9 @@ class Facturalo
                 break;
             case 'invoice':
                 try {
+                    if ($inputs ['vehiculo_id']){
+                        (new VehiculoController)->restoreItems($inputs['vehiculo_id']);
+                    }
                     $document = Document::create($inputs);
                     // if (key_exists('payments', $inputs['payments']) == false) {
                     //     $payments = DocumentPayment::where('document_id', $inputs['id'])->delete();

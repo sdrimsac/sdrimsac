@@ -205,7 +205,7 @@
                     <!-- Vendedor -->
                     <div class="col-lg-4 col-xl-4" v-if="configuration.seller_caja">
                       <label for="seller">Vendedor</label>
-                      <el-select v-model="form.seller_id">
+                      <el-select v-model="form.seller_id" clearable>
                         <el-option
                           v-for="(option, idx) in sellers"
                           :key="idx"
@@ -1464,6 +1464,8 @@ export default {
       if (response.status == 200) {
         this.vehiculo = response.data;
         this.form.items = this.formatItems(this.vehiculo.items);
+        this.form.establishment_id = this.vehiculo.establishment_id;
+        this.form.vehiculo_id = this.vehiculo_id;
         this.reCalculateTotal();
         console.log("🚀 ~ file: form.vue ~ line 566 ~ response", response);
         this.reloadDataCustomers(this.vehiculo.customer_id);

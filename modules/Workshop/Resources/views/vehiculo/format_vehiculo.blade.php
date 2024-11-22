@@ -771,12 +771,12 @@
                         <strong>Venc. SOAT:</strong>
                         {{ $combinedData['date_soat_due'] }}
                     </p>
-                    <p>
+                    {{-- <p>
                         <strong>
                             Venc. Rev. Tec.:
                         </strong>
                         {{ $combinedData['date_check_due'] }}
-                    </p>
+                    </p> --}}   
                     <p>
                         <strong>
                             Cert. Anual:

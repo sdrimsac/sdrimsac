@@ -11,6 +11,7 @@ class VehicleFeature extends ModelTenant
     protected $table = 'vehicle_feature';
 
     protected $fillable = [
+        'historial_id',
         'vehiculo_id',
         'chasis',
         'date_soat_due',
@@ -76,10 +77,19 @@ class VehicleFeature extends ModelTenant
         'gasoline_level',
         'observations',
         'certificate',
-        'quantity_protection_mat'
+        'quantity_protection_mat',
+        'quantity_cup_holder',
+        'state_cup_holder',
+        'quantiy_front_lights',
+        'state_toolkit',
+        'quantity_owner_manual'
     ];
     public function vehiculo()
     {
         return $this->belongsTo(Vehiculo::class, 'vehiculo_id');
+    }
+    public function historial()
+    {
+        return $this->belongsTo(Historial::class, 'historial_id');
     }
 }

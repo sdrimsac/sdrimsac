@@ -95,10 +95,10 @@
                     </div>
                 </div>
                 <!-- Logo End -->
-
+            
                 <!-- User Menu Start -->
                 <div class="user-container d-flex" style="max-width: 250px ;max-height: 120px;">
-                    <div class="name " style="color: var(--light-text);                    line-height: 1;">
+                    <div class="name " style="color: var(--light-text); line-height: 1;">
                         {{ $vc_user->name }} <br>
 
                         @if ($vc_company->soap_type_id == '01')

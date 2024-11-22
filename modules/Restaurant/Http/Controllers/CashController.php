@@ -70,10 +70,11 @@ use NumberFormatter;
 class CashController extends Controller
 {
     use JobReportTrait;
-    public function adjusmentIncome(Request $request){
+    public function adjusmentIncome(Request $request)
+    {
         $cash_id = $request->cash_id;
         $amount = $request->amount;
-        Box::createIncome("Efectivo", $amount, 'Ajuste por división de pagos',$cash_id);
+        Box::createIncome("Efectivo", $amount, 'Ajuste por división de pagos', $cash_id);
     }
     public function cash_avaible($cash_id)
     {
@@ -142,13 +143,13 @@ class CashController extends Controller
         $cash_income_principal->save();
         $total = (new CashTransferController)->available();
         $total_withouth_income = $total - $amount;
-        $income = $amount; 
+        $income = $amount;
         // $message ? 
         // El usuario Arca Administrador hasta la fecha 06-11-2021 / 11:34am contaba con monto de s/ xxxxx y ha aceptado ingreso de cierre de caja de usuario analista xxxx S/xxx, actualizando un saldo de S/xxxx
         $message = "El usuario $user_name_principal hasta la fecha " . date('d-m-Y') . " / " . date('h:i A') . " contaba con monto de S/ $total_withouth_income y ha aceptado ingreso de cierre de caja de usuario $user_name S/ $income, actualizando un saldo de S/ $total";
         $website = $this->getTenantWebsite();
         WhatsappSendMessageProccess::dispatch($website->id, $message, null);
-        
+
 
         return [
             'success' => true,
@@ -234,7 +235,6 @@ class CashController extends Controller
         $establishment_id = $request->establishment_id;
         $establishment = null;
         if ($establishment_id) {
-
             $establishment = Establishment::find(1);
         }
         $company = Company::find(1);
@@ -243,7 +243,6 @@ class CashController extends Controller
         $month = 11;
         $items = [];
         $total = 0;
-
         //total venta -> jalar documentos
         $recordsDocument =  Document::where('state_type_id', '<>', 11);
         if ($date_start) {
@@ -272,7 +271,6 @@ class CashController extends Controller
 
                     $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
 
-
                     if (isset($item['categoriaMadera'])) {
                         $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
                         $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
@@ -287,6 +285,9 @@ class CashController extends Controller
                         $unit_type = null;
                         $unit_item =  $d_it->relation_item->unit_type->description;
                         $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                        if ($d_it->affectation_igv_type_id == '10') {
+                            $purchase_unit_price /= 1.18;
+                        }
                         $max_quantity_item = null;
                         if ($d_it->relation_item->max_quantity) {
                             $max_quantity_item = $d_it->relation_item->max_quantity;
@@ -306,17 +307,20 @@ class CashController extends Controller
                                 $quantity *= $factor;
                             }
                         }
-
-
-                        $total += $d_it->total;
-                        $total_items += $d_it->total;
+                        $total += $d_it->total_value;
+                        $total_items += $d_it->total_value;
+                        $price = $d_it->unit_price;
+                        if ($d_it->affectation_igv_type_id == '10') {
+                            $price = number_format($price/1.18,2,'.','');
+                        }
                         if (array_key_exists($d_it->item_id, $items)) {
 
-                            $price = $d_it->unit_price;
-
+    
                             if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                 $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                               
                             } else {
+                               
                                 $items[$d_it->item_id]["prices"][$price] =  [
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
@@ -327,20 +331,22 @@ class CashController extends Controller
                                 ];
                             }
                             $items[$d_it->item_id]["count"] +=   $quantity;
-                            $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                            //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                            $items[$d_it->item_id]["total"] += $d_it->total_value;
                         } else {
+                          
                             $items[$d_it->item_id] = [
                                 "description" => $d_it->item->description,
                                 "count" => $quantity,
                                 "purchase_unit_price" => $purchase_unit_price,
-                                "total" => $d_it->total,
+                                "total" => $d_it->total_value,
                                 "unit_type" => $unit_type,
                                 "factor" => $factor,
                                 "max_quantity_item" => $max_quantity_item,
                                 "unit_type_name" => $unit_type_name,
                                 "unit_item" => $unit_item,
                                 "prices" => [
-                                    $d_it->unit_price => [
+                                    $price => [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
@@ -359,6 +365,9 @@ class CashController extends Controller
                             $unit_type = null;
                             $unit_item =  $d_it->relation_item->unit_type->description;
                             $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $purchase_unit_price /= 1.18;
+                            }
                             $max_quantity_item = null;
                             if ($d_it->relation_item->max_quantity) {
                                 $max_quantity_item = $d_it->relation_item->max_quantity;
@@ -379,16 +388,20 @@ class CashController extends Controller
                                 }
                             }
 
-
-                            $total += $d_it->total;
-                            $total_items += $d_it->total;
+                            $total += $d_it->total_value;
+                            $total_items += $d_it->total_value;
+                            $price = $d_it->unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $price = number_format($price/1.18,2,'.','');
+                            }
                             if (array_key_exists($d_it->item_id, $items)) {
 
-                                $price = $d_it->unit_price;
 
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                                   
                                 } else {
+                                   
                                     $items[$d_it->item_id]["prices"][$price] =  [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
@@ -396,20 +409,22 @@ class CashController extends Controller
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=   $quantity;
-                                $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                $items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
+                               
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" => $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    "total" => $d_it->total,
+                                    "total" => $d_it->total_value,
                                     "unit_type" => $unit_type,
                                     "factor" => $factor,
                                     "max_quantity_item" => $max_quantity_item,
                                     "unit_type_name" => $unit_type_name,
                                     "unit_item" => $unit_item,
                                     "prices" => [
-                                        $d_it->unit_price => [
+                                        $price => [
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
@@ -470,6 +485,9 @@ class CashController extends Controller
                         $max_quantity_item = null;
                         $unit_item =  $d_it->relation_item->unit_type->description;
                         $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                        if ($d_it->affectation_igv_type_id == '10') {
+                            $purchase_unit_price /= 1.18;
+                        }
                         if ($d_it->relation_item->max_quantity) {
                             $purchase_unit_price /= $d_it->relation_item->max_quantity;
                             $max_quantity_item = $d_it->relation_item->max_quantity;
@@ -491,16 +509,22 @@ class CashController extends Controller
                                 }
                             }
                         }
-                        $total += $d_it->total;
-                        $total_items += $d_it->total;
+                        $total += $d_it->total_value;
+                        $total_items += $d_it->total_value;
+                        $price = $d_it->unit_price;
+                        if ($d_it->affectation_igv_type_id == '10') {
+                            $price = number_format($price/1.18,2,'.','');
+                            
+                            
+                        }
                         if (array_key_exists($d_it->item_id, $items)) {
 
-                            $price = $d_it->unit_price;
 
                             if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                 $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                               
                             } else {
-
+                               
                                 $items[$d_it->item_id]["prices"][$price] =  [
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
@@ -511,20 +535,22 @@ class CashController extends Controller
                                 ];
                             }
                             $items[$d_it->item_id]["count"] +=  $quantity;
-                            $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                            //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                            $items[$d_it->item_id]["total"] += $d_it->total_value;
                         } else {
+                           
                             $items[$d_it->item_id] = [
                                 "description" => $d_it->item->description,
                                 "count" =>  $quantity,
                                 "purchase_unit_price" => $purchase_unit_price,
-                                "total" => $d_it->total,
+                                "total" => $d_it->total_value,
                                 "factor" => $factor,
                                 "unit_type" => $unit_type,
                                 "max_quantity_item" => $max_quantity_item,
                                 "unit_type_name" => $unit_type_name,
                                 "unit_item" => $unit_item,
                                 "prices" => [
-                                    $d_it->unit_price => [
+                                    $price => [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
@@ -544,6 +570,9 @@ class CashController extends Controller
                             $max_quantity_item = null;
                             $unit_item =  $d_it->relation_item->unit_type->description;
                             $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $purchase_unit_price /= 1.18;
+                            }
                             if ($d_it->relation_item->max_quantity) {
                                 $purchase_unit_price /= $d_it->relation_item->max_quantity;
                                 $max_quantity_item = $d_it->relation_item->max_quantity;
@@ -567,14 +596,18 @@ class CashController extends Controller
                             }
                             $total += $d_it->total;
                             $total_items += $d_it->total;
+                            $price = $d_it->unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $price = number_format($price/1.18,2,'.','');
+                            }
                             if (array_key_exists($d_it->item_id, $items)) {
 
-                                $price = $d_it->unit_price;
-
+    
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                                  
                                 } else {
-
+                                  
                                     $items[$d_it->item_id]["prices"][$price] =  [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
@@ -582,20 +615,21 @@ class CashController extends Controller
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=  $quantity;
-                                $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                $items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    "total" => $d_it->total,
+                                    "total" => $d_it->total_value,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
                                     "max_quantity_item" => $max_quantity_item,
                                     "unit_type_name" => $unit_type_name,
                                     "unit_item" => $unit_item,
                                     "prices" => [
-                                        $d_it->unit_price => [
+                                        $price => [
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
@@ -641,11 +675,11 @@ class CashController extends Controller
                 ->date_start($date_start)
                 ->date_end($date_end)
                 ->is_service($is_service)
-                ->download('ReporteDoc' . Carbon::now() . '.xlsx');
+                ->download('ReporteGanan.' . Carbon::now() . '.xlsx');
         }
     }
 
-    public function report_cash(Request $request)
+    /* public function report_cash(Request $request)
     {
         ini_set('max_execution_time', "3000");
         ini_set('memory_limit', '2048M');
@@ -1064,6 +1098,444 @@ class CashController extends Controller
             'total',
             'items'
         );
+    } */
+
+    public function report_cash(Request $request)
+    {
+        ini_set('max_execution_time', "3000");
+        ini_set('memory_limit', '2048M');
+        $categoria_id = $request->categoria_id;
+        $item_id = $request->item_id;
+        $establishment_id = $request->establishment_id;
+        $date_start = $request->date_start ? Carbon::parse($request->date_start)->format("y-m-d") : null;
+        $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
+        $month = 11;
+        $items = [];
+        $total = 0;
+
+        //total venta -> jalar documentos
+        $recordsDocument =  Document::whereNotIn('state_type_id', ['09', '11']);
+        if ($date_start) {
+            if ($date_end) {
+                $recordsDocument = $recordsDocument->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $recordsDocument = $recordsDocument->whereDate('date_of_issue', '=', $date_start);
+            }
+        }
+        $config = Configuration::first();
+        $item_id_variation = $config->item_variation_id;
+        if ($establishment_id) {
+            $recordsDocument = $recordsDocument->where('establishment_id', $establishment_id);
+        }
+        // [1,2,3,4,5,6,7,8,9]
+        //[[1,2,3],...]
+
+        $recordsDocument->chunk(50, function ($documents)
+        use (&$items, &$total, &$categoria_id, $item_id_variation, $item_id) {
+
+            foreach ($documents as  $document) {
+                $total_items = 0;
+                $documents_items = $document->items; //nogal
+                // $documents_items = DocumentItem::where('document_id',$document->id)->get();
+                if ($item_id) {
+                    $documents_items = $documents_items->where('item_id', $item_id);
+                }
+                if ($item_id_variation) {
+                    $documents_items = $documents_items->where('item_id', '<>', $item_id_variation);
+                }
+
+                foreach ($documents_items as  $d_it) {
+
+                    $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
+
+
+                    if (isset($item['categoriaMadera'])) {
+                        $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
+                        $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
+                        $selectedGrosor = isset($item['categoriaMadera']->selectedGrosor) ? $item['categoriaMadera']->selectedGrosor : '';
+                    } else {
+                        $selectedAncho = $selectedLargo = $selectedGrosor = null;
+                    }
+
+                    if ($categoria_id == null) {
+                        $item = $d_it->item;
+                        $factor = null;
+                        $unit_type = null;
+                        $unit_item =  $d_it->relation_item->unit_type->description;
+                        $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                        if ($d_it->affectation_igv_type_id == '10') {
+                            $purchase_unit_price /= 1.18;
+                        }
+                        $max_quantity_item = null;
+                        if ($d_it->relation_item->max_quantity) {
+                            $max_quantity_item = $d_it->relation_item->max_quantity;
+                            $purchase_unit_price /= $d_it->m_item->max_quantity;
+                            $uit = ItemUnitType::where('quantity_unit', $d_it->m_item->max_quantity)->where('item_id', $d_it->item_id)->first();
+                            if ($uit) {
+                                $unit_type = $uit->unit_type->description;
+                            }
+                        }
+                        $unit_type_name = null;
+                        $quantity = $d_it->quantity;
+                        if (isset($item->has_unit_type)) {
+                            $uit = ItemUnitType::where('description', $item->has_unit_type)->where('item_id', $d_it->item_id)->first();
+                            if ($uit) {
+                                $unit_type_name = $item->has_unit_type;
+                                $factor = floatval($uit->quantity_unit);
+                                $quantity *= $factor;
+                            }
+                        }
+
+                        $total += $d_it->total_value;
+                        $total_items += $d_it->total_value;
+                        if (array_key_exists($d_it->item_id, $items)) {
+                            //[1,2,3,4,5]
+                            //[0=>1,1=>3]
+
+                            $price = $d_it->unit_price;
+
+                            if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
+                                $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                            } else {
+                                $items[$d_it->item_id]["prices"][$price] =  [
+                                    "count" =>  $d_it->quantity,
+                                    "factor" => $factor,
+                                    "unit_type_name" => $unit_type_name,
+                                    "selectedAncho" => $selectedAncho,
+                                    "selectedLargo" => $selectedLargo,
+                                    "selectedGrosor" => $selectedGrosor,
+                                ];
+                            }
+                            $items[$d_it->item_id]["count"] +=   $quantity;
+                            //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                            $items[$d_it->item_id]["total"] += $d_it->total_value;
+                        } else {
+
+                            $items[$d_it->item_id] = [
+                                "description" => $d_it->item->description,
+
+                                "count" => $quantity,
+                                "purchase_unit_price" => $purchase_unit_price,
+                                "total" => $d_it->total_value,
+                                "unit_type" => $unit_type,
+                                "factor" => $factor,
+                                "max_quantity_item" => $max_quantity_item,
+                                "unit_type_name" => $unit_type_name,
+                                "unit_item" => $unit_item,
+                                "prices" => [
+                                    $d_it->unit_price => [
+                                        "count" =>  $d_it->quantity,
+                                        "factor" => $factor,
+                                        "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
+                                    ]
+                                ],
+                            ];
+                        }
+                    } else {
+                        //'categor8ia no es nulla '
+                        $item = $d_it->item;
+
+                        $itemCattegoria =  Item::findOrFail($d_it->item_id);
+
+                        if ($itemCattegoria->category_id == $categoria_id) {
+                            $factor = null;
+                            $unit_type = null;
+                            $unit_item =  $d_it->relation_item->unit_type->description;
+                            $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $purchase_unit_price /= 1.18;
+                            }
+                            $max_quantity_item = null;
+                            if ($d_it->relation_item->max_quantity) {
+                                $max_quantity_item = $d_it->relation_item->max_quantity;
+                                $purchase_unit_price /= $d_it->m_item->max_quantity;
+                                $uit = ItemUnitType::where('quantity_unit', $d_it->m_item->max_quantity)->where('item_id', $d_it->item_id)->first();
+                                if ($uit) {
+                                    $unit_type = $uit->unit_type->description;
+                                }
+                            }
+                            $unit_type_name = null;
+                            $quantity = $d_it->quantity;
+                            if (isset($item->has_unit_type)) {
+                                $uit = ItemUnitType::where('description', $item->has_unit_type)->where('item_id', $d_it->item_id)->first();
+                                if ($uit) {
+                                    $unit_type_name = $item->has_unit_type;
+                                    $factor = floatval($uit->quantity_unit);
+                                    $quantity *= $factor;
+                                }
+                            }
+
+
+                            $total += $d_it->total;
+                            $total_items += $d_it->total;
+                            if (array_key_exists($d_it->item_id, $items)) {
+
+                                $price = $d_it->unit_price;
+
+                                if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
+                                    $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                                } else {
+                                    $items[$d_it->item_id]["prices"][$price] =  [
+                                        "count" =>  $d_it->quantity,
+                                        "factor" => $factor,
+                                        "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
+                                    ];
+                                }
+                                $items[$d_it->item_id]["count"] +=   $quantity;
+                                /* $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity; */
+                                $items[$d_it->item_id]["total"] += $d_it->total_value;
+                            } else {
+
+                                $items[$d_it->item_id] = [
+                                    "description" => $d_it->item->description,
+
+                                    "count" => $quantity,
+                                    "purchase_unit_price" => $purchase_unit_price,
+                                    "total" => $d_it->total_value,
+                                    "unit_type" => $unit_type,
+                                    "factor" => $factor,
+                                    "max_quantity_item" => $max_quantity_item,
+                                    "unit_type_name" => $unit_type_name,
+                                    "unit_item" => $unit_item,
+                                    "prices" => [
+                                        $d_it->unit_price => [
+                                            "count" =>  $d_it->quantity,
+                                            "factor" => $factor,
+                                            "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
+                                        ]
+                                    ],
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11);
+        if ($date_start) {
+            if ($date_end) {
+                $recordsSaleNote = $recordsSaleNote->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $recordsSaleNote = $recordsSaleNote->whereDate('date_of_issue', '=', $date_start);
+            }
+        }
+
+        if ($establishment_id) {
+            $recordsSaleNote = $recordsSaleNote->where('establishment_id', $establishment_id);
+        }
+
+        $recordsSaleNote->chunk(50, function ($sale_notes)
+
+        use (&$items, &$total, &$categoria_id, $item_id) {
+
+            foreach ($sale_notes as  $sale_note) {
+
+                $total_items = 0;
+                $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id);
+
+                if ($item_id) {
+                    $sale_notes_items = $sale_notes_items->where('item_id', $item_id);
+                }
+                $sale_notes_items = $sale_notes_items->get();
+
+                foreach ($sale_notes_items as  $d_it) {
+
+                    $item = is_string($d_it->item) ? json_decode($d_it->item, true) : (array) $d_it->item;
+
+                    if (isset($item['categoriaMadera'])) {
+                        $selectedAncho = isset($item['categoriaMadera']->selectedAncho) ? $item['categoriaMadera']->selectedAncho : '';
+                        $selectedLargo = isset($item['categoriaMadera']->selectedLargo) ? $item['categoriaMadera']->selectedLargo : '';
+                        $selectedGrosor = isset($item['categoriaMadera']->selectedGrosor) ? $item['categoriaMadera']->selectedGrosor : '';
+                    } else {
+                        // Asignar valores vacíos si 'categoriaMadera' no existe
+                        $selectedAncho = $selectedLargo = $selectedGrosor = null;
+                    }
+
+                    if ($categoria_id == null) {
+                        $item = $d_it->item;
+                        $catI = $d_it->item->category;
+                        if ($catI != null) {
+                            if (gettype($catI) == "string") {
+                                $categ = CategoryItem::where('name', $catI)->first();
+                                $catItem = $categ->id;
+                            } else {
+
+                                $catItem = $d_it->item->category->id;
+                            }
+
+                            $factor = null;
+                            $unit_type = null;
+                            $max_quantity_item = null;
+                            $unit_item =  $d_it->relation_item->unit_type->description;
+                            $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $purchase_unit_price /= 1.18;
+                            }
+                            if ($d_it->relation_item->max_quantity) {
+                                $purchase_unit_price /= $d_it->relation_item->max_quantity;
+                                $max_quantity_item = $d_it->relation_item->max_quantity;
+                                $uit = ItemUnitType::where('quantity_unit', $d_it->relation_item->max_quantity)->where('item_id', $d_it->item_id)->first();
+                                if ($uit) {
+                                    $unit_type = $uit->unit_type->description;
+                                }
+                            }
+                            $unit_type_name = null;
+                            $quantity = $d_it->quantity;
+                            if (isset($item->from_unit_type_id)) {
+                                $uit_id = $item->from_unit_type_id;
+                                foreach ($item->item_unit_types as $iut) {
+                                    if ($uit_id == $iut->id) {
+                                        $factor = floatval($iut->quantity_unit);
+                                        $unit_type_name = $iut->description;
+                                        $quantity *= $factor;
+                                        break;
+                                    }
+                                }
+                            }
+                            $total += $d_it->total_value;
+                            $total_items += $d_it->total_value;
+                            if (array_key_exists($d_it->item_id, $items)) {
+
+                                $price = $d_it->unit_price;
+
+                                if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
+                                    $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                                } else {
+
+                                    $items[$d_it->item_id]["prices"][$price] =  [
+                                        "count" =>  $d_it->quantity,
+                                        "factor" => $factor,
+                                        "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
+                                    ];
+                                }
+                                $items[$d_it->item_id]["count"] +=  $quantity;
+                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                $items[$d_it->item_id]["total"] += $d_it->total_value;
+                            } else {
+                                $items[$d_it->item_id] = [
+                                    "description" => $d_it->item->description,
+                                    "count" =>  $quantity,
+                                    "purchase_unit_price" => $purchase_unit_price,
+                                    "total" => $d_it->total_value,
+                                    "factor" => $factor,
+                                    "unit_type" => $unit_type,
+                                    "max_quantity_item" => $max_quantity_item,
+                                    "unit_type_name" => $unit_type_name,
+                                    "unit_item" => $unit_item,
+                                    "prices" => [
+                                        $d_it->unit_price => [
+                                            "count" =>  $d_it->quantity,
+                                            "factor" => $factor,
+                                            "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
+                                        ]
+                                    ],
+                                ];
+                            }
+                        }
+                    } else {
+
+                        $item = $d_it->item;
+                        $catItem = $d_it->item->category->id;
+
+                        if ($catItem == $categoria_id) {
+                            $factor = null;
+                            $unit_type = null;
+                            $max_quantity_item = null;
+                            $unit_item =  $d_it->relation_item->unit_type->description;
+                            $purchase_unit_price =  $d_it->relation_item->purchase_unit_price;
+                            if ($d_it->affectation_igv_type_id == '10') {
+                                $purchase_unit_price /= 1.18;
+                            }
+                            if ($d_it->relation_item->max_quantity) {
+                                $purchase_unit_price /= $d_it->relation_item->max_quantity;
+                                $max_quantity_item = $d_it->relation_item->max_quantity;
+                                $uit = ItemUnitType::where('quantity_unit', $d_it->relation_item->max_quantity)->where('item_id', $d_it->item_id)->first();
+                                if ($uit) {
+                                    $unit_type = $uit->unit_type->description;
+                                }
+                            }
+                            $unit_type_name = null;
+                            $quantity = $d_it->quantity;
+                            if (isset($item->from_unit_type_id)) {
+                                $uit_id = $item->from_unit_type_id;
+                                foreach ($item->item_unit_types as $iut) {
+                                    if ($uit_id == $iut->id) {
+                                        $factor = floatval($iut->quantity_unit);
+                                        $unit_type_name = $iut->description;
+                                        $quantity *= $factor;
+                                        break;
+                                    }
+                                }
+                            }
+                            $total += $d_it->total;
+                            $total_items += $d_it->total;
+                            if (array_key_exists($d_it->item_id, $items)) {
+
+                                $price = $d_it->unit_price;
+
+                                if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
+                                    $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
+                                } else {
+
+                                    $items[$d_it->item_id]["prices"][$price] =  [
+                                        "count" =>  $d_it->quantity,
+                                        "factor" => $factor,
+                                        "unit_type_name" => $unit_type_name,
+                                        "selectedAncho" => $selectedAncho,
+                                        "selectedLargo" => $selectedLargo,
+                                        "selectedGrosor" => $selectedGrosor,
+                                    ];
+                                }
+                                $items[$d_it->item_id]["count"] +=  $quantity;
+                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                $items[$d_it->item_id]["total"] += $d_it->total_value;
+                            } else {
+                                $items[$d_it->item_id] = [
+                                    "description" => $d_it->item->description,
+                                    "count" =>  $quantity,
+                                    "purchase_unit_price" => $purchase_unit_price,
+                                    "total" => $d_it->total_value,
+                                    "factor" => $factor,
+                                    "unit_type" => $unit_type,
+                                    "max_quantity_item" => $max_quantity_item,
+                                    "unit_type_name" => $unit_type_name,
+                                    "unit_item" => $unit_item,
+                                    "prices" => [
+                                        $d_it->unit_price => [
+                                            "count" =>  $d_it->quantity,
+                                            "factor" => $factor,
+                                            "unit_type_name" => $unit_type_name,
+                                            "selectedAncho" => $selectedAncho,
+                                            "selectedLargo" => $selectedLargo,
+                                            "selectedGrosor" => $selectedGrosor,
+                                        ]
+                                    ],
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return compact(
+            'total',
+            'items'
+        );
     }
 
     public function incomes_expenses(Request $request)
@@ -1324,7 +1796,7 @@ class CashController extends Controller
         ini_set('max_execution_time', '30000');
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id .'_'.$company_number.'.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -1585,10 +2057,11 @@ class CashController extends Controller
                 ->setPaper(array(0, 0, 249.45, 650 + (100 + $counter_length * 15)));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
-        }        $company = Company::first();
+        }
+        $company = Company::first();
         $company_number = $company->number;
-        if($cash->state == 0){
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id.'_'.$company_number.'.pdf'));
+        if ($cash->state == 0) {
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '.pdf'));
         }
         return $pdf->stream('pdf_file.pdf');
     }
@@ -1741,7 +2214,7 @@ class CashController extends Controller
 
         $expense = $row->boxes->where('expenses', 1)->sum('amount');
         $incomes_s = $row->boxes->where('incomes', 1)->sum('amount');
-        
+
         $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
 
         return [
@@ -2066,7 +2539,7 @@ class CashController extends Controller
             try {
 
                 if (fmod($amount_difference, 1) != 0 && substr($amount_difference, -1) > 0) {
-                
+
                     $second_decimal = substr($amount_difference, -1);
                     $second_decimal = intval($second_decimal);
                     Log::info($second_decimal);
@@ -2103,8 +2576,8 @@ class CashController extends Controller
             ->where('expenses', 0)
             ->get();
         $expenses = Box::where('cash_id', $id)->where('expenses', 1)
-        ->where('method', 'Efectivo')
-        ->sum('amount');
+            ->where('method', 'Efectivo')
+            ->sum('amount');
 
 
         $all_cash = $all_cash->map(function ($item) {
@@ -2264,7 +2737,8 @@ class CashController extends Controller
     }
 
 
-    public function generate_reports($cash_id){
+    public function generate_reports($cash_id)
+    {
         $cash = Cash::findOrFail($cash_id);
         $cash->is_loading_report = true;
         $cash->save();
@@ -2274,12 +2748,11 @@ class CashController extends Controller
         CashReportProccess::dispatch($website->id, $cash->id, $fqdn);
         CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
 
-        
+
         return [
             'success' => true,
             'message' => 'Se está generando el reporte de caja, por favor espere unos minutos',
         ];
-
     }
     public function get_stock_file($id)
     {

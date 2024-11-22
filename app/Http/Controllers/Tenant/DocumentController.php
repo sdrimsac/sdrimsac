@@ -113,6 +113,7 @@ use Modules\College\Models\CollegeRegister;
 use Modules\College\Models\CollegeStudent;
 use Modules\Report\Exports\ReportDocumentStatus;
 use Modules\Restaurant\Models\Table;
+use Modules\Workshop\Models\Historial;
 
 class DocumentController extends Controller
 {
@@ -1057,6 +1058,16 @@ class DocumentController extends Controller
             ];
         }
         $document = $fact->getDocument();
+        if ($request->vehiculo_id) {
+            $historial = Historial::where('estado', false)
+            ->where('vehiculo_id', $request->vehiculo_id)
+            ->first();
+            if ($historial) {
+                $historial->document_id = $document->id;
+                $historial->estado = 1;
+                $historial->save();
+            }
+        }
         $this->associateSaleNoteToDocument($request, $document->id);
         Box::where('document_id', $document->id)->delete();
         // $Payments = DocumentPayment::where('document_id', $document->id)->first();

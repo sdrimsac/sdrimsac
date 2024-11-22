@@ -37,11 +37,44 @@ Vue.prototype.$setStorage = function(name, obj) {
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Swal from "sweetalert2";
+import { cleanData } from "jquery";
 const options = {
     timeout: 5000
 };
 
-// Vue.use(Swal);
+window.globalCountdown = 900;
+window.startGlobalInactivityTimer = function() {
+    let timeoutDuration = 900;
+    let lastActivityTime = Date.now();
+
+    function resetTimer() {
+        lastActivityTime = Date.now();
+        window.globalCountdown = timeoutDuration;
+    }
+
+    function clearTimers() {
+        clearInterval(window.globalTimer);
+    }
+
+    window.globalTimer = setInterval(() => {
+        const currentTime = Date.now();
+        const elapsed = Math.floor((currentTime - lastActivityTime) / 1000);
+        window.globalCountdown = timeoutDuration - elapsed;
+
+        if (window.globalCountdown <= 0) {
+            clearTimers();
+            window.location.reload();
+        }
+    }, 1000);
+
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keydown", resetTimer);
+    window.addEventListener("click", resetTimer);
+    window.addEventListener("scroll", resetTimer);
+};
+
+window.startGlobalInactivityTimer();
+
 Vue.prototype.$showSAlert = (title, text, type = "success") => {
     Swal.fire({
         title: title.toUpperCase(), // Título en mayúsculas y centrado
@@ -55,22 +88,20 @@ Vue.prototype.$showSAlert = (title, text, type = "success") => {
             // Clase personalizada
         },
         didOpen: popup => {
-         
             // popup.style.zIndex = "2010"; // Ajusta este valor según necesites
             const swalContainer = Swal.getPopup();
             // let timerInterval;
-        
-            swalContainer.addEventListener('mouseenter', () => {
-              Swal.stopTimer();
+
+            swalContainer.addEventListener("mouseenter", () => {
+                Swal.stopTimer();
             });
-        
-            swalContainer.addEventListener('mouseleave', () => {
-              Swal.resumeTimer();
+
+            swalContainer.addEventListener("mouseleave", () => {
+                Swal.resumeTimer();
             });
         },
         position: "center",
-        icon: type,
-
+        icon: type
     });
 };
 
@@ -232,8 +263,10 @@ const app = new Vue({
 
     components: {
         "report-promotion-index": () =>
-            import("../../modules/Report/Resources/assets/js/views/promotions/index.vue"),
-        
+            import(
+                "../../modules/Report/Resources/assets/js/views/promotions/index.vue"
+            ),
+
         "tenant-promotions-document-index": () =>
             import("@views/promotions_document/index.vue"),
         "tenant-report-methods-index": () =>
@@ -311,10 +344,10 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/pos/index.vue"
             ),
-            "tenant-billar-pos": () =>
-                import(
-                    "../../modules/Billar/Resources/assets/js/views/pos/index.vue"
-                ),
+        "tenant-billar-pos": () =>
+            import(
+                "../../modules/Billar/Resources/assets/js/views/pos/index.vue"
+            ),
         "tenant-dashboard-index": () =>
             import(
                 "../../modules/Dashboard/Resources/assets/js/views/index.vue"
@@ -395,7 +428,8 @@ const app = new Vue({
         "tenant-sale-notes-credit-penalty": () =>
             import("./views/sale_notes/credit_penalty.vue"),
         "tenant-sale-notes-index": () => import("./views/sale_notes/index.vue"),
-        "tenant-notaventa-index": () => import("./views/sale_notes/notaventa/index.vue"),
+        "tenant-notaventa-index": () =>
+            import("./views/sale_notes/notaventa/index.vue"),
         "tenant-sale-notes-form": () => import("./views/sale_notes/form.vue"),
         "tenant-cash-transfer-index": () =>
             import(
@@ -697,18 +731,28 @@ const app = new Vue({
                 "../../modules/Internet/Resources/assets/js/view/planes/index.vue"
             ),
         "tenant-workshop-mecanico": () =>
-            import("../../modules/Workshop/Resources/assets/js/views/mecanico/index.vue"),
-        "tenant-workshop-tipo": () => 
-            import("../../modules/Workshop/Resources/assets/js/views/tipo/index.vue"),
-        "tenant-workshop-vehiculo": () =>
-            import("../../modules/Workshop/Resources/assets/js/views/vehiculo/index.vue"),
-        "tenant-workshop-servicesdetails": () =>
-            import("../../modules/Workshop/Resources/assets/js/views/servicesdetails/index.vue"),
-        "tenant-billar-pos": () => 
-            import("../../modules/Billar/Resources/assets/js/views/pos/index.vue"   
+            import(
+                "../../modules/Workshop/Resources/assets/js/views/mecanico/index.vue"
             ),
-        "tenant-workshop-pos": () => 
-            import("../../modules/Workshop/Resources/assets/js/views/pos/index.vue"
+        "tenant-workshop-tipo": () =>
+            import(
+                "../../modules/Workshop/Resources/assets/js/views/tipo/index.vue"
+            ),
+        "tenant-workshop-vehiculo": () =>
+            import(
+                "../../modules/Workshop/Resources/assets/js/views/vehiculo/index.vue"
+            ),
+        "tenant-workshop-servicesdetails": () =>
+            import(
+                "../../modules/Workshop/Resources/assets/js/views/servicesdetails/index.vue"
+            ),
+        "tenant-billar-pos": () =>
+            import(
+                "../../modules/Billar/Resources/assets/js/views/pos/index.vue"
+            ),
+        "tenant-workshop-pos": () =>
+            import(
+                "../../modules/Workshop/Resources/assets/js/views/pos/index.vue"
             ),
         "items-stock": () => import("./views/items/check_stock.vue"),
 

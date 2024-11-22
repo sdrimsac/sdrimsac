@@ -511,7 +511,7 @@
               <br />
               <template>
                 <small>
-                  <span class="text-muted">{{ data.ordens_ref }}</span>
+                  <span class="">{{ data.ordens_ref }}</span>
                 </small>
               </template>
             </td>

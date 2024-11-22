@@ -28,26 +28,30 @@ class Historial extends ModelTenant
         'estado'
     ];
     public function vehiculo(){
-        return $this->belongsTo(vehiculo::class,'vehiculo_id');
+        return $this->belongsTo(vehiculo::class, 'vehiculo_id');
     }
     public function SaleNote(){
-        return $this->belongsTo(SaleNote::class,'sale_note_id');
+        return $this->belongsTo(SaleNote::class, 'sale_note_id');
     }
     public function document(){
-        return $this->belongsTo(Document::class,'document_id');
+        return $this->belongsTo(Document::class, 'document_id');
     }
     public function peronal(){
-        return $this->belongsTo(WorkshopPersonal::class,'personal_id');
+        return $this->belongsTo(WorkshopPersonal::class, 'personal_id');
     }
     public function establishment(){
-        return $this->belongsTo(Establishment::class,'establishment_id');
+        return $this->belongsTo(Establishment::class, 'establishment_id');
     }
 
     public function personal(){
-        return $this->belongsTo(WorkshopPersonal::class,'personal_id');
+        return $this->belongsTo(WorkshopPersonal::class, 'personal_id');
     }
     public function historialItem(){
-        return $this->hasMany(HistorialItem::class,'historial_id');
+        return $this->hasMany(HistorialItem::class, 'historial_id');
+    }
+    public function vehicleFeatures()
+    {
+        return $this->hasMany(VehicleFeature::class);
     }
     
 

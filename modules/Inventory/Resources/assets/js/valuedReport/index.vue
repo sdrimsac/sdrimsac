@@ -27,7 +27,7 @@
                         <div class="row mt-2">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label">Almacen AAAA</label>
+                                    <label class="control-label">Almacen A</label>
                                     <el-select
                                         v-model="form.establishment_id"
                                         clearable

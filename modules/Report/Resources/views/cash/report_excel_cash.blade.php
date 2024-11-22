@@ -131,7 +131,7 @@ $config = \App\Models\Tenant\Configuration::first();
                                 </td>
                             @endif
                             @if ($config->maderera)
-                                {{-- <td class="celda" style="border: 2px solid black; text-align: center;" v-if="config">
+                                <td class="celda" style="border: 2px solid black; text-align: center;" v-if="config">
                                     @php
                                         $selectedAncho = isset($count['selectedAncho']) ? $count['selectedAncho'] : '';
                                         $selectedLargo = isset($count['selectedLargo']) ? $count['selectedLargo'] : '';
@@ -142,36 +142,15 @@ $config = \App\Models\Tenant\Configuration::first();
                                         if ($selectedAncho && $selectedGrosor && $selectedLargo) {
                                             $fot = ($selectedAncho * $selectedGrosor * $selectedLargo) / 12;
                                         } else {
-                                            $fot = 0;
+                                            $fot = null;
                                         }
                                     @endphp
-                                    <span>
-                                        <!-- Mostrar las dimensiones seleccionadas -->
-                                        <strong>Med.:</strong> {{ $count['selectedAncho'] }} x
-                                        {{ $count['selectedGrosor'] }} x {{ $count['selectedLargo'] }}
-                                    </span>
-                                    <br>
-                                    <span><strong>FOT:</strong> {{ number_format($fot, 2) }}</span>
-                                </td> --}}
 
-                                <td class="celda" style="border: 2px solid black; text-align: center;" v-if="config">
-                                    @php
-                                        $selectedAncho = isset($count['selectedAncho']) ? $count['selectedAncho'] : '';
-                                        $selectedLargo = isset($count['selectedLargo']) ? $count['selectedLargo'] : '';
-                                        $selectedGrosor = isset($count['selectedGrosor']) ? $count['selectedGrosor'] : '';
-                                        
-                                        // Mostrar el contenido solo si los tres valores están presentes
-                                        if ($selectedAncho && $selectedGrosor && $selectedLargo) {
-                                            $fot = ($selectedAncho * $selectedGrosor * $selectedLargo) / 12;
-                                        } else {
-                                            $fot = null; // Si faltan datos, no calcular FOT
-                                        }
-                                    @endphp
-                                
                                     @if ($selectedAncho && $selectedGrosor && $selectedLargo)
                                         <span>
                                             <!-- Mostrar las dimensiones seleccionadas solo si están todos presentes -->
-                                            <strong>Med.:</strong> {{ $selectedAncho }} x {{ $selectedGrosor }} x {{ $selectedLargo }}
+                                            <strong>Med.:</strong> {{ $selectedAncho }} x {{ $selectedGrosor }} x
+                                            {{ $selectedLargo }}
                                         </span>
                                         <br>
                                         <span><strong>FOT:</strong> {{ number_format($fot, 2) }}</span>
@@ -190,7 +169,8 @@ $config = \App\Models\Tenant\Configuration::first();
                                 </td>
                             @endif
                             <td class="celda" style="border: 2px solid black; text-align: center;">
-                                {{ number_format($count['count'] * $price, 2) }}</td>
+                                {{ number_format($count['count'] * $price, 2) }}
+                            </td>
                             @if (!$is_service)
                                 <td class="celda" style="border: 2px solid black; text-align: center;">
                                     @php
@@ -211,12 +191,11 @@ $config = \App\Models\Tenant\Configuration::first();
                         @endphp
                     @endforeach
                 @endforeach
-
                 <tr>
                     @if (!$is_service)
-                        <td class="celda" colspan="4"></td>
+                        <td class="celda" colspan="5"></td>
                     @else
-                        <td class="celda" colspan="3"></td>
+                        <td class="celda" colspan="4"></td>
                     @endif
                     <td class="celda" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">
                         Totales</td>
@@ -226,7 +205,6 @@ $config = \App\Models\Tenant\Configuration::first();
                         <td class="celda" style="border: 2px solid black; text-align: center;">
                             {{ number_format($gain_total, 2) }}</td>
                     @endif
-
                 </tr>
             </tbody>
     </table>

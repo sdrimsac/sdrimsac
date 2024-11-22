@@ -51,6 +51,8 @@ Route::prefix('workshop')->group(function () {
 
     Route::get('vehiculo/format_vehicle/{id}', [VehiculoController::class, 'format_vehicle']);
 
+    Route::get('vehiculo/format-historial/{historial_id}', [VehiculoController::class, 'format_History']);
+
     Route::post('items', [VehiculoController::class, 'setItems']);
 
     Route::get('/servicesdetails', [ServicesDetailsController::class, 'index'])->name('tenant.workshop.servicesdetails');
