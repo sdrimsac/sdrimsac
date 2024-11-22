@@ -141,27 +141,37 @@ class Template
                         ->where($document_type, $document->id)
                         ->where('promotion_document_customers.active', 1)
                         ->first();
-
+                    
                     if ($currentPromotionDetail) {
                         $promotion_document = $currentPromotionDetail->promotion_customer->promotion_document;
+                        $limit_changes = $promotion_document->limit_changes;
                         $promotion_document_total = $promotion_document->total;
                         $promotion_document_description = $promotion_document->description;
                         $promotion_document_id = $promotion_document->id;
                         // Calcular puntos acumulados
-                        $accumulatedPoints = $baseQuery
+                        $counts = $baseQuery
 
-                            ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id) {
+                            ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
                                 $query->where('customer_id', $document->customer_id)
+                                    ->where('acc_total', $promotion_document_total)
                                     ->where('active', 1)
                                     ->where('promotion_document_id', $promotion_document_id);
                             })
-                            ->get()
-                            ->sum('total');
-                        if ($accumulatedPoints > 0) {
-                            $to_change = intval($accumulatedPoints / $promotion_document_total);
-                            if ($to_change > 0) {
-                                $detail_message['message'] = "Puede canjear " . $to_change . " de la promoción " . $promotion_document_description;
-                            }
+                            ->count();
+                        $counts_desactive = $baseQuery
+                            ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
+                                $query->where('customer_id', $document->customer_id)
+                                    ->where('acc_total', $promotion_document_total)
+                                    ->where('active', 0)
+                                    ->where('promotion_document_id', $promotion_document_id);
+                            })
+                            ->count();
+                        $counts = $counts - $counts_desactive;
+                        if ($counts > $limit_changes) {
+                            $counts = $limit_changes;
+                        }
+                        if ($counts > 0) {
+                            $detail_message['message'] = "Puede canjear " . $counts . " de la promoción " . $promotion_document_description;
                         }
                     } else {
                         $promotion_document_total = 0;
