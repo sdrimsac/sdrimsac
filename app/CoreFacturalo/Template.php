@@ -166,21 +166,21 @@ class Template
                                     ->where('promotion_document_id', $promotion_document_id);
                             })
                             ->count();
-                        $to_log = [
-                            'counts' => $counts,
-                            'limit_changes' => $limit_changes,
-                            'count_desactive' => $counts_desactive
-                        ];
-                        Log::info(json_encode($to_log));
+                        // $to_log = [
+                        //     'counts' => $counts,
+                        //     'limit_changes' => $limit_changes,
+                        //     'count_desactive' => $counts_desactive
+                        // ];
+                        // Log::info(json_encode($to_log));
                         if ($counts > $limit_changes) {
                             $counts = $limit_changes;
                         }
                         $counts = $counts - $counts_desactive;
-                        $to_log = [
-                            'counts' => $counts,
-                            'counts_desactive' => $counts_desactive
-                        ];
-                        Log::info(json_encode($to_log));
+                        // $to_log = [
+                        //     'counts' => $counts,
+                        //     'counts_desactive' => $counts_desactive
+                        // ];
+                        // Log::info(json_encode($to_log));
                         if ($counts > 0) {
                             $detail_message['message'] = "Puede canjear " . $counts . " de la promoción " . $promotion_document_description;
                         }

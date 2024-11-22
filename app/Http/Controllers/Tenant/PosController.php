@@ -46,6 +46,7 @@ use App\Models\Tenant\CategoriaMadera;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaGrosor;
 use App\Models\Tenant\ItemMedidaAncho;
+use App\Models\Tenant\PromotionDocumentCustomer;
 use Modules\Item\Models\Brand;
 
 class PosController extends Controller
@@ -475,7 +476,7 @@ class PosController extends Controller
             // }
             $customers = $customers->limit(5)->get();
 
-            $customers = $customers->transform(function ($row) {
+            $customers = $customers->transform(function ($row) use ($configuration) {
                 $students = CollegeStudent::whereHas('member', function ($query) use ($row) {
                     $query->whereHas('parent', function ($query) use ($row) {
                         $query->where('parent_id', $row->id);
@@ -487,8 +488,17 @@ class PosController extends Controller
                         'class' => mb_strtoupper($student->classroom->description),
                     ];
                 });
-
+                $promotion_active_id = null;
+                if($configuration->promotions_by_points || $configuration->is_promotion_document){
+                    $promotion_customer = PromotionDocumentCustomer::where('customer_id', $row->id)
+                    ->where('active', true)
+                    ->first();
+                    if($promotion_customer){
+                        $promotion_active_id = $promotion_customer->promotion_document_id;
+                    }
+                }
                 return [
+                    'promotion_active_id' => $promotion_active_id,
                     'students' => $students,
                     'id' => $row->id,
                     'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,

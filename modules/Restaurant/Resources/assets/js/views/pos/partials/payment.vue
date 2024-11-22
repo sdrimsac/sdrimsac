@@ -446,7 +446,6 @@
                                                 @change="receivePromotion"
                                                 v-model="form.receive_promotion"
                                             >
-                                        
                                             </el-checkbox>
                                             Aplicar promoción |
                                             {{ hasPromotionText }}
@@ -2100,7 +2099,7 @@ export default {
             // console.log(this.form.items);
             if (this.form.receive_promotion) {
                 this.fetchPromotionItems();
-            }else{
+            } else {
                 this.clearPromotionPointsItem();
             }
         },
@@ -2813,6 +2812,14 @@ export default {
                 ) {
                     this.form.document_type_id = "03";
                 }
+                if (this.promotions_document.length > 0) {
+                    if (customer.promotion_active_id) {
+                        this.form.promotion_id = customer.promotion_active_id;
+                    } else {
+                        this.form.promotion_id = this.promotions_document[0].id;
+                    }
+                }
+                this.changePromotion();
             }
             //in this.customers remove duplicate id propertie
             this.customers = this.customers.filter(
@@ -2990,13 +2997,13 @@ export default {
                 }
             }
 
-            this.form.promotion_id =
-                this.promotions_document.length > 0
-                    ? this.promotions_document[0].id
-                    : null;
-            if (this.form.promotion_id) {
-                this.changePromotion();
-            }
+            // this.form.promotion_id =
+            //     this.promotions_document.length > 0
+            //         ? this.promotions_document[0].id
+            //         : null;
+            // if (this.form.promotion_id) {
+            //     this.changePromotion();
+            // }
         },
         checkDetraction() {
             if (!this.configuration.detraction) return false;
@@ -4803,6 +4810,7 @@ export default {
                 const response = await this.$http.get(
                     `/promotion-document/items-by-person/${this.form.customer_id}`
                 );
+                //
                 if (response.data) {
                     let items = response.data;
                     items = items.reduce((a, b) => a.concat(b), []);

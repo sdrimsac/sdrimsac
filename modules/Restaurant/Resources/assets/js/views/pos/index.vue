@@ -5604,6 +5604,7 @@ export default {
             this.variation = false;
             this.form.discounts = [];
             this.form.seller_id = null;
+            this.form.receive_promotion = false;
             this.form.total_discount = 0;
             this.form.is_room = false;
             this.form.original_total = undefined;

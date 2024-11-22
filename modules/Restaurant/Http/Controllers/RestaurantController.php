@@ -10,6 +10,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Person;
+use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
 use Exception;
@@ -96,7 +97,7 @@ class RestaurantController extends Controller
                     ->from('parents');
             });
         }
-        $persons = $persons->take(20)->get()->transform(function ($row) {
+        $persons = $persons->take(20)->get()->transform(function ($row) use ($configuration) {
             $students = CollegeStudent::whereHas('member', function ($query) use ($row) {
                 $query->whereHas('parent', function ($query) use ($row) {
                     $query->where('parent_id', $row->id);
@@ -111,7 +112,17 @@ class RestaurantController extends Controller
                         'class' => mb_strtoupper($student->classroom->description),
                     ];
                 });
+            $promotion_active_id = null;
+            if ($configuration->promotions_by_points || $configuration->is_promotion_document) {
+                $promotion_customer = PromotionDocumentCustomer::where('customer_id', $row->id)
+                    ->where('active', true)
+                    ->first();
+                if ($promotion_customer) {
+                    $promotion_active_id = $promotion_customer->promotion_document_id;
+                }
+            }
             return [
+                'promotion_active_id' => $promotion_active_id,
                 'students' => $students,
                 'id' => $row->id,
                 'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
