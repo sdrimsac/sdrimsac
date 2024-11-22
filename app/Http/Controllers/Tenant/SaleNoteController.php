@@ -1183,7 +1183,6 @@ class SaleNoteController extends Controller
                 $request["type_payment"]  = Functions::valueKeyInArray($request->all(), "type_payment", "Diario");
                 $request["document_type_id"] = "80";
                 $consolidated_quotations = Configuration::first()->consolidated_quotations;
-                dump($consolidated_quotations." ".$quotation_id);
                 if ($consolidated_quotations && $quotation_id) {
                     $document = Document::where('quotation_id', $quotation_id)->first();
                     if($document){
@@ -1203,9 +1202,7 @@ class SaleNoteController extends Controller
                         ]);
                         (new VoidedController)->store($new_request);
                     }else if($state_type_id == '01'){
-                        dump('entra');
                         $response = (new DocumentController)->destroyDocument($document->id);
-                        dump($response);
                     }
                     }
                     if(!$document){
