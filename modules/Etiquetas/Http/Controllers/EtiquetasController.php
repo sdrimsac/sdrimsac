@@ -43,6 +43,8 @@ class EtiquetasController extends Controller
             $type = $request->type;
             $purchase_code = $request->purchasecode;
             $description = $request->description;
+            $murcielagoCode = $request->murcielagoCode;
+            $price1 = $request->price1;
             $format = $request->format;
             $paper = $request->paper;
             $location = $request->location;
@@ -61,6 +63,9 @@ class EtiquetasController extends Controller
             }
             if ($type == '4' && $format == '1' && $paper == '2'){
                 $template = 'template10';
+            }
+            if ($type == '5' && $format == '1' && $paper == '2') {
+                $template = 'template14';
             }
             $record = Item::where('description', $description)->first();
             $company = Company::first();
@@ -92,6 +97,10 @@ class EtiquetasController extends Controller
             if ($template === "template_format_1_template_2") {
                 $height = 20;
                 $width = 65;
+            }
+            if ($template === "template14"){
+                $height = 25;
+                $width = 100;
             }
             // if($company->number == '10465702449'){
             //     $format = 1;
@@ -130,6 +139,8 @@ class EtiquetasController extends Controller
                 'image',
                 'location',
                 'price',
+                'price1',
+                'murcielagoCode',
                 'paper',
                 'barcode',
                 'is_code_128'
@@ -236,6 +247,12 @@ class EtiquetasController extends Controller
                     $row->internal_id = substr($row->internal_id, 0, -1);
                 }
                 $stock = $row->getStockByWarehouse(auth()->user()->establishment_id);
+
+                /* dump($row->item_unit_types); */
+                $price1 = null;
+                if (is_array($row->item_unit_types) && isset($row->item_unit_types[0])) {
+                    $price1 = $row->item_unit_types[0]['price1'] ?? null;
+                }
                 return [
                     "id" => $row->id,
                     "descripcion" => $row->description,
@@ -245,6 +262,10 @@ class EtiquetasController extends Controller
                     "price" => $row->sale_unit_price,
                     "purchase" => $row->purchase_unit_price,
                     "location" => $row->location,
+                    "item_unit_types" => $row->item_unit_types,
+                    "price1" => $price1,
+                    'max_quantity' => $row->max_quantity
+
                 ];
             });
         return [

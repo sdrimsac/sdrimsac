@@ -215,7 +215,16 @@
         <el-divider></el-divider>
         <div></div>
         <div class="row">
-          <div class="col-3 text-center">
+          <div class="col-12 text-center">
+            <el-button-group>
+              <el-button type="success" @click="changeModel(1)" plain>Modelo 1</el-button>
+              <el-button type="success" @click="changeModel(2)" plain>Modelo 2</el-button>
+              <el-button type="success" @click="changeModel(3)" plain>Modelo 3</el-button>
+              <el-button type="success" @click="changeModel(4)" plain>Modelo 4</el-button>
+              <el-button type="success" @click="changeModel(5)" plain>Modelo 5</el-button>
+            </el-button-group>
+          </div>
+          <!-- <div class="col-3 text-center">
             <el-button @click="changeModel(1)">Modelo 1</el-button>
           </div>
           <div class="col-3 text-center">
@@ -227,7 +236,11 @@
           <div class="col-3 text-center">
             <el-button @click="changeModel(4)">Modelo 4</el-button>
           </div>
+          <div class="col-3 text-center">
+            <el-button @click="changeModel(5)">Modelo 5</el-button>
+          </div>-->
         </div>
+        <br />
         <div v-if="modeloSeleccionado === 'Modelo1'" class="d-flex flex-row justify-content-center">
           <div class="border d-flex flex-row align-items-center h150 w300 overflow-hidden">
             <div>
@@ -333,19 +346,19 @@
         <div v-if="modeloSeleccionado === 'Modelo4'" class="d-flex flex-row justify-content-center">
           <div class="border d-flex flex-column align-items-center h150 w300 overflow-hidden">
             <div class="d-flex flex-fill flex-column justify-content-center align-items-center">
-                <div>
-              <div v-if="imageSaved" class="w150 overflow-hidden">
-                <img
-                  style="border:none !important;"
-                  :src="imageSaved"
-                  alt="imagen"
-                  class="img-thumbnail"
-                />
+              <div>
+                <div v-if="imageSaved" class="w150 overflow-hidden">
+                  <img
+                    style="border:none !important;"
+                    :src="imageSaved"
+                    alt="imagen"
+                    class="img-thumbnail"
+                  />
+                </div>
+                <div v-else class="col-12 d-flex justify-content-center align-items-center">
+                  <el-empty :image-size="150"></el-empty>
+                </div>
               </div>
-              <div v-else class="col-12 d-flex justify-content-center align-items-center">
-                <el-empty :image-size="150"></el-empty>
-              </div>
-            </div>
               <img v-show="product_id" id="barcode" alt="barcode" />
               <span></span>
               <span
@@ -392,6 +405,48 @@
                 "DESCRIPCION DEL PRODUCTO"
                 }}
               </span>
+
+              <div class="d-flex col-12 justify-content-between p-1">
+                <span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="modeloSeleccionado === 'Modelo5'" class="d-flex flex-row justify-content-center">
+          <div class="border d-flex flex-column align-items-center h150 w300 overflow-hidden">
+            <div class="d-flex flex-fill flex-column justify-content-center align-items-center">
+              <div>
+                <!-- <div v-if="imageSaved" class="w150 overflow-hidden">
+                  <img
+                    style="border:none !important;"
+                    :src="imageSaved"
+                    alt="imagen"
+                    class="img-thumbnail"
+                  />
+                </div> -->
+                <!-- <div v-else class="col-12 d-flex justify-content-center align-items-center">
+                  <el-empty :image-size="150"></el-empty>
+                </div> -->
+              </div>
+              <span class="text-center">
+                {{
+                product.descripcion ||
+                "DESCRIPCION DEL PRODUCTO"
+                }}
+              </span>
+              <img v-show="product_id" id="barcode" alt="barcode" />
+              <span></span>
+              <span
+                :style="
+                                    `color:${
+                                        type == 'Precio venta'
+                                            ? '#E6A23C'
+                                            : '#000'
+                                    }`
+                                "
+                class="text-center"
+              >{{ sale_code || "N/D" }}</span>
+              
 
               <div class="d-flex col-12 justify-content-between p-1">
                 <span></span>
@@ -592,6 +647,8 @@ export default {
       purchase_murc_val: null,
       purchase_type: null,
       purchase_code: null,
+      price1: null,
+      murcielagoCode: null,
       product: {},
       codes: [],
       words: [],
@@ -615,6 +672,8 @@ export default {
           return "Modelo3";
         case 4:
           return "Modelo4";
+        case 5:
+          return "Modelo5";
         default:
           return null;
       }
@@ -802,7 +861,7 @@ export default {
         const config = { responseType: "blob" };
         let endPoint = `${this.resource}/generate?stock=${
           this.quantity
-        }&salecode=${this.sale_code}&purchasecode=${
+        }&salecode=${this.sale_code}&price1=${this.price1}&purchasecode=${
           this.purchase_code
         }&description=${encodeURIComponent(this.product.descripcion)}&paper=${
           this.paperType
@@ -867,7 +926,7 @@ export default {
         const config = { responseType: "blob" };
         let endPoint = `${this.resource}/generate?stock=${
           this.quantity
-        }&salecode=${this.sale_code}&purchasecode=${
+        }&salecode=${this.sale_code}&price1=${this.price1}&purchasecode=${
           this.purchase_code
         }&description=${encodeURIComponent(this.product.descripcion)}&paper=${
           this.paperType
@@ -979,7 +1038,11 @@ export default {
           this.sale_code = Number(this.product.price).toFixed(2);
         }
         if (this.sale_type == 1 && this.sale_murc) {
-          if (!this.sale_murc_val || this.sale_murc_val == 0 || this.sale_murc_val == "") {
+          if (
+            !this.sale_murc_val ||
+            this.sale_murc_val == 0 ||
+            this.sale_murc_val == ""
+          ) {
             this.sale_murc_val = Number(this.product.price).toFixed(2);
           }
           this.sale_code = this.murciType(this.sale_murc, this.sale_murc_val);
@@ -992,7 +1055,11 @@ export default {
           this.purchase_code = this.normalType(this.product.purchase);
         }
         if (this.purchase_type == 1 && this.purchase_murc) {
-          if (!this.purchase_murc_val || this.purchase_murc_val == 0 || this.purchase_murc_val == "") {
+          if (
+            !this.purchase_murc_val ||
+            this.purchase_murc_val == 0 ||
+            this.purchase_murc_val == ""
+          ) {
             this.purchase_murc_val = Number(this.product.purchase).toFixed(2);
           }
           this.purchase_code = this.murciType(
@@ -1072,8 +1139,15 @@ export default {
       this.purchase_type = 2;
       this.sale_type = 2;
       this.sale_code = Number(this.product.price).toFixed(2);
-      // this.sale_code = this.normalType(this.product.price);
-      //this.purchase_code = this.normalType(this.product.purchase);
+      if (this.product.price1 != null) {
+        this.price1 = Number(this.product.price1).toFixed(2);
+      } else {
+        this.price1 = 0;
+        console.log(
+          this.price1
+        );
+      }
+      this.murcielagoCode = (this.product.murcielagoCode); 
       this.purchase_code = Number(this.product.purchase).toFixed(2);
       this.formatValueCode();
       if (this.product.barras.length > 8 && this.typeBarcode == "CODE-128") {
@@ -1093,14 +1167,70 @@ export default {
           );
           let { items } = response.data;
           this.items = items;
+          console.log("itemsss", items);
 
+          this.items = this.items.map(item => {
+            let price1 = null;
+            let murcielagoCode = null;
+
+            const maxQuantity = item.max_quantity;
+            let matchingUnitType = null;
+
+            if (
+              Array.isArray(item.item_unit_types) &&
+              item.item_unit_types.length > 0
+            ) {
+              matchingUnitType = item.item_unit_types.find(unitType => {
+                const quantityUnit = parseFloat(unitType.quantity_unit);
+                const maxQuantityFloat = parseFloat(maxQuantity);
+                return (
+                  !isNaN(quantityUnit) &&
+                  !isNaN(maxQuantityFloat) &&
+                  quantityUnit === maxQuantityFloat
+                );
+              });
+            }
+            if (matchingUnitType) {
+              price1 = matchingUnitType.price1 ?? 0;
+            }
+
+            console.log(`Resultado para item: price1=${price1}`);
+
+            if (price1 && !isNaN(price1)) {
+              if (this.words && this.words.length > 0) {
+                const firstWord = this.words[0];
+                console.log("Contenido de this.words:", this.words);
+                console.log("firstWord:", firstWord);
+                murcielagoCode = this.murciType(
+                  firstWord.id,
+                  price1
+                );
+              }
+            } else {
+              murcielagoCode = 0;
+            }
+
+            console.log(
+              `Procesando item: max_quantity=${maxQuantity}, matching_unit=${matchingUnitType}, price1=${price1}, murcielagoCode=${murcielagoCode}`
+            );
+
+            return {
+              ...item,
+              price1,
+              murcielagoCode
+            };
+          });
           this.loading_search = false;
         } catch (e) {
-          const {
-            data: { message }
-          } = e.response;
-          this.$toast.error(message);
-          this.loading = false;
+          if (e.response) {
+            const {
+              data: { message }
+            } = e.response;
+            this.$toast.error(message);
+          } else {
+            this.$toast.error("Hubo un problema con la solicitud.");
+          }
+          this.loading_search = false;
         }
       }
     },
