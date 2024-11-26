@@ -187,10 +187,6 @@ export default {
     computed: {},
     methods: {
         insertOrdenQuotation(quotation_id, identifier, item, customer_number) {
-            console.log(
-                "🚀 ~ insertOrdenQuotation ~ item*****************:",
-                item
-            );
             this.$emit(
                 "insertOrdenQuotation",
                 quotation_id,

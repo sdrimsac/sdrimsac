@@ -164,12 +164,12 @@ export default {
                 .then(response => {
                     let data = response.data;
                     let items = data.items;
-                    console.log("🚀 ~ editDocument ~ items:", items);
                     let quotation_id = data.quotation_id;
                     let customer_number = data.customer_number;
                     let identifier = data.identifier;
 
                     items.forEach(item => {
+
                         this.$emit(
                             "insertOrdenQuotation",
                             quotation_id,

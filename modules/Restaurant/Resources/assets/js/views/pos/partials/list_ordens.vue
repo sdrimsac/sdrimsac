@@ -2384,7 +2384,6 @@ export default {
     window.addEventListener("resize", this.handleResize);
     this.foodDefault = this.itemDefault;
     this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
-    console.log("estblia, ", this.establishments);
     this.setOptionMenu();
     let ordens = [];
     let ordensSave = localStorage.ordens;

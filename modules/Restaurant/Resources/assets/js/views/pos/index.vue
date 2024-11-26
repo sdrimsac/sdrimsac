@@ -3102,7 +3102,6 @@ export default {
             }
         },
         trigerFunction(id) {
-            console.log("🚀 ~ trigerFunction ~ id:", id);
 
             switch (id) {
                 case 74:
@@ -3555,7 +3554,6 @@ export default {
             selectSerie = false,
             categoriaMadera = null
         ) {
-            console.log("categoriaMadera: ", categoriaMadera);
             let { food: item } = orden;
             let passDetraction = this.checkDetractionItems(item);
             if (!passDetraction && this.configuration.detraction) {
@@ -3609,7 +3607,7 @@ export default {
 
                 if (type) {
                     // orden.quantity = Number(type.quantity_unit);
-                    orden.quantity = orden.food.item.series_enabled ? 0 : 1;
+                    orden.quantity = orden.food.item.series_enabled ? 0 : (orden.quantity || 1);
                     orden.price = this.getDefaultPrice(type);
                 }
 
@@ -3702,7 +3700,7 @@ export default {
                         // Number(type.quantity_unit);
                     } else {
                         // orden.quantity = Number(type.quantity_unit);
-                        orden.quantity = orden.food.item.series_enabled ? 0 : 1;
+                        orden.quantity = orden.food.item.series_enabled ? 0 : (orden.quantity || 1);
                         orden.price = this.getDefaultPrice(type);
                         orden.type_id = type.id;
                         orden.type_description = type.description;
@@ -4307,14 +4305,12 @@ export default {
         filterCategorie(id, mod = false) {
             this.category_selected = id;
             if (this.$refs.list_foods) {
-                console.log("aquiss?");
                 this.$refs.list_foods.searchFoodCategories(id);
             }
         },
         fiterBrands(id, mod = false) {
             this.brand_selected = id;
             if (this.$refs.list_foods) {
-                console.log("dfsgsdfdfdhgfhf");
                 this.$refs.list_foods.searchFoodBrands(id);
             }
         },
@@ -6146,7 +6142,6 @@ export default {
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {
-                console.log("   -- impresion - e", e);
                 /* ; */
 
                 console.log("🚀 ~ imprimiendo ~ e:", e);
