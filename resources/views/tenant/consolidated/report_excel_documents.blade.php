@@ -44,7 +44,6 @@
     <br>
     @if (!empty($records))
         @foreach ($records as $user_name => $zones)
-        
             <table>
                 <thead>
                     <tr>
@@ -72,25 +71,27 @@
                         @endphp
                         @foreach ($documents as $idx => $document)
                             <tr>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                <td
+                                    style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
                                     {{ $document['num_orden'] }}
-                                </td>         
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $document['number_full'] }}
-                                </td>                       
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $document['total'] }}
                                 </td>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $document['unit_type'] }}
+                                <td
+                                style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
+                                    <span>{{ $document['number_full'] }}</span>
                                 </td>
-                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $document['customer_name'] }}
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
+                                    <span>{{ $document['total'] }}</span>
+                                </td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
+                                    <span>{{ $document['unit_type'] }}</span>
+                                </td>
+                                <td style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
+                                    <span>{{ $document['customer_name'] }}</span>
                                 </td>
                                 @if ($loop->first)
                                     <td valign="middle" rowspan="{{ $count_zone_items }}"
-                                        style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                        {{ $zone_name }}
+                                        style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
+                                        <span>{{ $zone_name }}</span>
                                     </td>
                                 @endif
                             </tr>
@@ -108,7 +109,6 @@
                     </tr>
                 </tfoot>
             </table>
-            
         @endforeach
     @endif
 

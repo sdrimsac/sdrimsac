@@ -1204,3 +1204,6 @@ if ($hostname) {
 // });
 
 // Route::get('search', [App\Http\Controllers\Tenant\SearchController::class, 'index'])->name('search.index');
+
+// Dentro del grupo de rutas existente
+Route::post('quotations/consolidateds/anular-document', [App\Http\Controllers\Tenant\QuotationController::class, 'anularDocument']);

@@ -5,6 +5,7 @@
         @close="close"
         @open="open"
         append-to-body
+        width="70%"
         v-loading="loading"
     >
         <div class="row mt-2">
@@ -45,7 +46,7 @@
                             <td>
                                 {{ index + 1 }}
                                 <el-checkbox
-                                    v-if="!item.paid"
+                                    v-if="!item.paid && item.state_type_id !== '11'"
                                     v-model="item.selected"
                                     @change="refreshTable"
                                 ></el-checkbox>
@@ -58,7 +59,7 @@
                             <td>
                                 <el-select
                                     v-model="item.payment_method"
-                                    :disabled="item.paid"
+                                    :disabled="item.paid || item.state_type_id == '11'"
                                     filterable
                                     @change="changePaymentMethod($event, index)"
                                 >
@@ -76,7 +77,7 @@
                                     type="primary"
                                     size="mini"
                                     @click="payDocument(item)"
-                                    v-if="!item.paid"
+                                    v-if="!item.paid && item.state_type_id != '11'"
                                 >
                                     Pagar
                                 </el-button>
@@ -84,17 +85,32 @@
                                     type="secondary"
                                     size="mini"
                                     @click="editDocument(item)"
-                                    v-if="!item.paid"
+                                    v-if="!item.paid && item.state_type_id != '11'"
                                 >
                                     Editar
+                                </el-button>
+                                <el-button
+                                    type="danger"
+                                    size="mini"
+                                    @click="anularDocument(item)"
+                                    v-if="!item.paid && item.state_type_id != '11'"
+                                >
+                                    Anular
                                 </el-button>
                                 <el-button
                                     disabled
                                     type="success"
                                     size="mini"
-                                    v-if="item.paid"
+                                    v-if="item.paid && item.state_type_id !== '11'"
                                 >
                                     Pagado
+                                </el-button>
+                                <el-button
+                                    type="danger"
+                                    size="mini"
+                                    v-if="item.state_type_id == '11'"
+                                >
+                                    Anulado
                                 </el-button>
                             </td>
                         </tr>
@@ -155,6 +171,7 @@ export default {
             this.$forceUpdate();
         },
         editDocument(item) {
+            this.$emit("cancelOrden");
             this.loading = true;
             let { quotation_id } = item;
             this.$http
@@ -186,7 +203,7 @@ export default {
         },
         checkAll() {
             this.documents.forEach(item => {
-                if (!item.paid) {
+                if (!item.paid && item.state_type_id !== '11') {
                     item.selected = this.selectAll;
                 }
             });
@@ -266,6 +283,26 @@ export default {
                 .finally(() => {
                     this.loading = false;
                 });
+        },
+        anularDocument(item) {
+            this.$confirm('¿Está seguro de anular este documento?', 'Advertencia', {
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No',
+                type: 'warning'
+            }).then(() => {
+                this.loading = true;
+                this.$http.post(`/quotations/consolidateds/anular-document`, item)
+                    .then(response => {
+                        this.$message.success("Documento anulado correctamente");
+                        this.getRecord();
+                    })
+                    .catch(error => {
+                        this.$message.error(error.response.data.message);
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            }).catch(() => {});
         }
     }
 };

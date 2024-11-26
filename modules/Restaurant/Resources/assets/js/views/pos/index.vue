@@ -1759,6 +1759,7 @@
             :showDialog.sync="showSaleNoteCreditCash"
         ></sale-note-credit-cash>
         <consolidated-list-modal
+            @cancelOrden="cancelOrden"
             :showDialog.sync="showConsolidatedList"
             @insertOrdenQuotation="insertOrdenQuotation"
         ></consolidated-list-modal>
@@ -3102,7 +3103,6 @@ export default {
             }
         },
         trigerFunction(id) {
-
             switch (id) {
                 case 74:
                     this.showMonthSales = true;
@@ -3603,11 +3603,12 @@ export default {
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.categoriaMadera = categoriaMadera;
                 }
-                //si es el primer registro del prod en la lista
 
                 if (type) {
                     // orden.quantity = Number(type.quantity_unit);
-                    orden.quantity = orden.food.item.series_enabled ? 0 : (orden.quantity || 1);
+                    orden.quantity = orden.food.item.series_enabled
+                        ? 0
+                        : orden.quantity || 1;
                     orden.price = this.getDefaultPrice(type);
                 }
 
@@ -3625,28 +3626,7 @@ export default {
                     }
                     orden.quantity = 1;
                 }
-                // if (
-                //     currency_type_id != "PEN" &&
-                //     this.currencyIdChoice == "PEN"
-                // ) {
-                //     orden.price = orden.price * this.form.exchange_rate_sale;
-                //     orden.price = Number(orden.price).toFixed(2);
-                // }
-                // if (
-                //     currency_type_id == "PEN" &&
-                //     this.currencyIdChoice != "PEN"
-                // ) {
-                //     orden.price = orden.price / this.form.exchange_rate_sale;
-                //     orden.price = Number(orden.price).toFixed(2);
-                // }
-                // console.log(
-                //     "🚀 ~ insertOrden ~ this.currencyIdChoice:",
-                //     this.currencyIdChoice
-                // );
-                // console.log(
-                //     "🚀 ~ insertOrden ~ currency_type_id:",
-                //     currency_type_id
-                // );
+            
                 orden.original_price = orden.price;
                 if (
                     this.configuration.price_item_unit_type &&
@@ -3699,8 +3679,42 @@ export default {
                             Number(this.localOrden[indexFind].quantity) + 1;
                         // Number(type.quantity_unit);
                     } else {
+                        console.log("type", type);
+                        if (
+                            this.configuration.price_item_unit_type &&
+                            type &&
+                            type.id
+                        ) {
+                            let {
+                                food: {
+                                    item: { item_unit_types }
+                                }
+                            } = orden;
+                            let unit_type = item_unit_types.find(
+                                iut => iut.id == type.id
+                            );
+                            if (unit_type) {
+                                let prices = [
+                                    unit_type.price1,
+                                    unit_type.price2,
+                                    unit_type.price3
+                                ];
+                                let default_price = unit_type.price_default - 1;
+
+                                let newPrices = [
+                                    prices[default_price],
+                                    ...prices.filter(
+                                        (_, index) => index !== default_price
+                                    )
+                                ].filter(p => p > 0);
+
+                                orden.prices = newPrices;
+                            }
+                        }
                         // orden.quantity = Number(type.quantity_unit);
-                        orden.quantity = orden.food.item.series_enabled ? 0 : (orden.quantity || 1);
+                        orden.quantity = orden.food.item.series_enabled
+                            ? 0
+                            : orden.quantity || 1;
                         orden.price = this.getDefaultPrice(type);
                         orden.type_id = type.id;
                         orden.type_description = type.description;

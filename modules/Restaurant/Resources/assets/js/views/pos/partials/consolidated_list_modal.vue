@@ -151,6 +151,7 @@
             </el-pagination>
         </div>
         <ConsolidatedPayment
+            @cancelOrden="cancelOrden"
             :showDialog.sync="showDialogPayment"
             :record="recordPayment"
             @insertOrdenQuotation="insertOrdenQuotation"
@@ -186,6 +187,9 @@ export default {
     },
     computed: {},
     methods: {
+        cancelOrden(id) {
+            this.$emit("cancelOrden");
+        },
         insertOrdenQuotation(quotation_id, identifier, item, customer_number) {
             this.$emit(
                 "insertOrdenQuotation",

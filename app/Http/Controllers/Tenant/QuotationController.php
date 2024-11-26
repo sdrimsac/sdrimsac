@@ -448,28 +448,34 @@ class QuotationController extends Controller
         foreach ($quotations as $quotation) {
             $document_id = null;
             $sale_note_id = null;
+
             $document = Document::where('quotation_id', $quotation->id)
-                ->where('state_type_id', '!=', '11')
-                ->latest()
+                ->latest('created_at')
                 ->first();
-            if (!$document) {
-                $document = SaleNote::where('quotation_id', $quotation->id)
-                    ->where('state_type_id', '!=', '11')
-                    ->latest()
-                    ->first();
-                $sale_note_id = $document->id;
-            } else {
+
+            $saleNote = SaleNote::where('quotation_id', $quotation->id)
+                ->latest('created_at')
+                ->first();
+
+            if ($document && $saleNote) {
+                if ($document->created_at > $saleNote->created_at) {
+                    $document_id = $document->id;
+                } else {
+                    $sale_note_id = $saleNote->id;
+                    $document = $saleNote;
+                }
+            } elseif ($document) {
                 $document_id = $document->id;
+            } elseif ($saleNote) {
+                $sale_note_id = $saleNote->id;
+                $document = $saleNote;
             }
+
             $paid = $document->boxes()->sum('amount');
             $total = $document->total;
             $balance = $total - $paid;
-            $pdf = null;
-            if ($document_id) {
-                $pdf = '/print/document/' . $document->external_id . '/ticket';
-            } else {
-                $pdf = '/sale-note/print/' . $document->external_id . '/ticket';
-            }
+            $pdf = $document_id ? '/print/document/' . $document->external_id . '/ticket' : '/sale-note/print/' . $document->external_id . '/ticket';
+
             $documents[] = [
                 'quotation_full_number' => $quotation->number_full,
                 'quotation_id' => $quotation->id,
@@ -482,7 +488,8 @@ class QuotationController extends Controller
                 'customer_id' => $document->customer_id,
                 'customer_name' => $document->customer->name,
                 'paid' => $balance > 0 ? false : true,
-                'pdf' => $pdf
+                'pdf' => $pdf,
+                'state_type_id' => $document->state_type_id
             ];
         }
         return [
@@ -559,20 +566,38 @@ class QuotationController extends Controller
                 //ordenar $quotations por num_orden
                 $quotations = $quotations->sortBy('num_orden');
                 foreach ($quotations as $quotation) {
-                    $document = Document::where('quotation_id', $quotation->id)->first();
-                    if (!$document) {
-                        $document = SaleNote::where('quotation_id', $quotation->id)->first();
+                    $document = Document::where('quotation_id', $quotation->id)
+                        ->latest()
+                        ->first();
+                    $saleNote = SaleNote::where('quotation_id', $quotation->id)
+                        ->latest()
+                        ->first();
+
+                    if ($document && $saleNote) {
+                        if ($document->created_at > $saleNote->created_at) {
+                            $selectedDocument = $document;
+                        } else {
+                            $selectedDocument = $saleNote;
+                        }
+                    } elseif ($document) {
+                        $selectedDocument = $document;
+                    } elseif ($saleNote) {
+                        $selectedDocument = $saleNote;
+                    } else {
+                        $selectedDocument = null;
                     }
-                    if ($document) {
-                        $unit_type = UnitTypePerson::where('customer_id', $document->quotation->customer_id)->first();
+
+                    if ($selectedDocument) {
+                        $unit_type = UnitTypePerson::where('customer_id', $selectedDocument->quotation->customer_id)->first();
                         $register = [
-                            'customer_name' => $document->customer->name,
+                            'customer_name' => $selectedDocument->customer->name,
                             'unit_type' => $unit_type ? $unit_type->description : '',
-                            'document_id' => $document->id,
-                            'number_full' => $document->number_full,
-                            'total' => $document->total,
+                            'document_id' => $selectedDocument->id,
+                            'number_full' => $selectedDocument->number_full,
+                            'total' => $selectedDocument->total,
                             'zone' => $zone_name,
                             'num_orden' => $quotation->num_orden,
+                            'state_type_id' => $selectedDocument->state_type_id,
                         ];
                         $registers[$user_name][$zone_name][] = $register;
                     }
@@ -1501,5 +1526,54 @@ class QuotationController extends Controller
             'success' => true,
             'message' => 'Estado actualizado correctamente'
         ];
+    }
+
+    public function anularDocument(Request $request)
+    {
+        try {
+            $consolidated_quotations = Configuration::first()->consolidated_quotations;
+            $quotation_id = isset($request->quotation_id) ? $request->quotation_id : null;
+            if ($consolidated_quotations && $quotation_id) {
+                $document = Document::where('quotation_id', $quotation_id)
+                    ->where('state_type_id', '!=', '11')
+                    ->first();
+                if ($document) {
+                    $state_type_id = $document->state_type_id;
+                    if ($state_type_id == '05') {
+                        $new_request = new Request();
+                        $new_request->merge([
+                            'summary_status_type_id' => 3,
+                            'date_of_reference' => $document->date_of_issue,
+                            'documents' => [
+                                [
+                                    'document_id' => $document->id,
+                                    'description' => 'Anulación de la operación',
+                                ]
+                            ]
+                        ]);
+                        (new VoidedController)->store($new_request);
+                    } else if ($state_type_id == '01') {
+                        $response = (new DocumentController)->destroyDocument($document->id);
+                    }
+                }
+                if (!$document) {
+                    $document = SaleNote::where('quotation_id', $quotation_id)->first();
+                    if ($document) {
+                        $new_request = new Request();
+                        (new SaleNoteController)->anulate($new_request, $document->id);
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Documento anulado correctamente'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
