@@ -40,6 +40,7 @@ use Mpdf\Config\FontVariables;
 use Exception;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\QuotationEmail;
+use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\PaymentMethodType;
@@ -310,6 +311,7 @@ class QuotationController extends Controller
 
         return $document || $sale_note;
     }
+
     public function consolidatedsEditDocument(Request $request)
     {
         if (!$request->has('quotation_id')) {
@@ -388,6 +390,56 @@ class QuotationController extends Controller
             ];
         }
     }
+    public function consolidatedsPayDocument(Request $request)
+    {
+
+        try {
+            DB::beginTransaction();
+            $company = Company::first();
+            $document_id = $request->document_id;
+            $sale_note_id = $request->sale_note_id;
+            $document = null;
+            if ($document_id) {
+                $document = Document::find($document_id);
+            } else {
+                $document = SaleNote::find($sale_note_id);
+            }
+            $method = $request->payment_method;
+            $amount = $request->total;
+            $cajas    = new Box();
+            $cajas->group_id = 1;
+            $cajas->category_id = 1;
+            $cajas->subcategory_id = 1;
+            $cajas->amount = $amount;
+            $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+            $cajas->type = '1';
+            $cajas->state = '1';
+            $cajas->method = $method;
+            $type_document = $document->document_type_id == '01' ? "FACTURA" : ($document->document_type_id == '03' ? "BOLETA" : "NOTA DE VENTA");
+            $description = $type_document . " N° " . $document->series . " - " . $document->number;
+            $cajas->sale_note_id = $sale_note_id;
+            $cajas->document_id = $document_id;
+            $cajas->description = "VENTAS " . $description;
+            $cajas->user_id = auth()->user()->id;
+            $cajas->soap_type_id = $company->soap_type_id;
+            $cajas->establishment_id = auth()->user()->establishment_id;
+            $cajas->save();
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message' => 'Documento pagado correctamente'
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+
     public function consolidatedsLiquidate($id)
     {
         $consolidated = Consolidated::find($id);
@@ -398,10 +450,12 @@ class QuotationController extends Controller
             $sale_note_id = null;
             $document = Document::where('quotation_id', $quotation->id)
                 ->where('state_type_id', '!=', '11')
+                ->latest()
                 ->first();
             if (!$document) {
                 $document = SaleNote::where('quotation_id', $quotation->id)
                     ->where('state_type_id', '!=', '11')
+                    ->latest()
                     ->first();
                 $sale_note_id = $document->id;
             } else {
@@ -410,6 +464,12 @@ class QuotationController extends Controller
             $paid = $document->boxes()->sum('amount');
             $total = $document->total;
             $balance = $total - $paid;
+            $pdf = null;
+            if ($document_id) {
+                $pdf = '/print/document/' . $document->external_id . '/ticket';
+            } else {
+                $pdf = '/sale-note/print/' . $document->external_id . '/ticket';
+            }
             $documents[] = [
                 'quotation_full_number' => $quotation->number_full,
                 'quotation_id' => $quotation->id,
@@ -421,7 +481,8 @@ class QuotationController extends Controller
                 'time_of_issue' => $document->time_of_issue,
                 'customer_id' => $document->customer_id,
                 'customer_name' => $document->customer->name,
-                'paid' => $balance > 0 ? false : true
+                'paid' => $balance > 0 ? false : true,
+                'pdf' => $pdf
             ];
         }
         return [

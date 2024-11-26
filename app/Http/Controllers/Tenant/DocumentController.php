@@ -501,7 +501,7 @@ class DocumentController extends Controller
         $customers = $customers->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' => ($row->alias ? $row->alias.' - ':'').  $row->number . ' - ' . $row->name,
+                'description' => ($row->alias ? $row->alias . ' - ' : '') .  $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'has_credit_line' => (bool) $row->has_credit_line,
@@ -858,7 +858,7 @@ class DocumentController extends Controller
                     }),
                     'lots_enabled' => (bool) $row->lots_enabled,
                     'series_enabled' => (bool) $row->series_enabled,
-                    'origin'=>$row->origin,
+                    'origin' => $row->origin,
 
                 ];
             });
@@ -1038,31 +1038,35 @@ class DocumentController extends Controller
                 $consolidated_quotations = Configuration::first()->consolidated_quotations;
                 $quotation_id = isset($request->quotation_id) ? $request->quotation_id : null;
                 if ($consolidated_quotations && $quotation_id) {
-                    $document = Document::where('quotation_id', $quotation_id)->first();
-                    if($document){
+                    $document = Document::where('quotation_id', $quotation_id)
+                        ->where('state_type_id', '!=', '11')
+                        ->first();
+                    if ($document) {
                         $state_type_id = $document->state_type_id;
-                    if($state_type_id == '05'){
-                        $new_request = new Request();
-                        $new_request->merge([
-                            'summary_status_type_id' => 3,
-                            'date_of_reference' => $document->date_of_issue,
-                            'documents' => [
-                                [
-                                    'document_id' => $document->id,
-                                    'description' => 'Anulación de la operación',
+                        if ($state_type_id == '05') {
+                            $new_request = new Request();
+                            $new_request->merge([
+                                'summary_status_type_id' => 3,
+                                'date_of_reference' => $document->date_of_issue,
+                                'documents' => [
+                                    [
+                                        'document_id' => $document->id,
+                                        'description' => 'Anulación de la operación',
+                                    ]
                                 ]
-                            ]
-                            // 'quotation_id' => $quotation_id,
-                        ]);
-                        (new VoidedController)->store($new_request);
-                    }else if($state_type_id == '01'){
-                        $response = (new DocumentController)->destroyDocument($document->id);
+                                // 'quotation_id' => $quotation_id,
+                            ]);
+                            (new VoidedController)->store($new_request);
+                        } else if ($state_type_id == '01') {
+                            $response = (new DocumentController)->destroyDocument($document->id);
+                        }
                     }
-                    }
-                    if(!$document){
+                    if (!$document) {
                         $document = SaleNote::where('quotation_id', $quotation_id)->first();
-                        $new_request = new Request();
-                        (new SaleNoteController)->anulate($new_request,$document->id);
+                        if ($document) {        
+                            $new_request = new Request();
+                            (new SaleNoteController)->anulate($new_request, $document->id);
+                        }
                     }
                 }
                 $facturalo = new Facturalo();
@@ -1090,8 +1094,8 @@ class DocumentController extends Controller
         $document = $fact->getDocument();
         if ($request->vehiculo_id) {
             $historial = Historial::where('estado', false)
-            ->where('vehiculo_id', $request->vehiculo_id)
-            ->first();
+                ->where('vehiculo_id', $request->vehiculo_id)
+                ->first();
             if ($historial) {
                 $historial->document_id = $document->id;
                 $historial->estado = 1;
@@ -1943,7 +1947,7 @@ class DocumentController extends Controller
             // Convertir `d_end` al primer día y último día del mes
             $startOfMonth = Carbon::createFromFormat('Y-m', $d_end)->startOfMonth()->toDateString();
             $endOfMonth = Carbon::createFromFormat('Y-m', $d_end)->endOfMonth()->toDateString();
-    
+
             $records = $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
         }
         // Filtrar por rango de fechas si `d_start` y `d_end` tienen formato completo `YYYY-MM-DD`
@@ -2431,7 +2435,7 @@ class DocumentController extends Controller
                     Box::where('document_id', $document_id)->delete();
                     $desc = "App\Models\Tenant\Document";
                     // InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
-                    
+
                     $record->save();
                     if ($orden_id) {
                         $orden = Orden::find($orden_id);

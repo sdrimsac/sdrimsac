@@ -45,8 +45,9 @@
                             <td>
                                 {{ index + 1 }}
                                 <el-checkbox
+                                    v-if="!item.paid"
                                     v-model="item.selected"
-                                    @change="$forceUpdate()"
+                                    @change="refreshTable"
                                 ></el-checkbox>
                             </td>
                             <td>{{ item.full_number }}</td>
@@ -57,6 +58,7 @@
                             <td>
                                 <el-select
                                     v-model="item.payment_method"
+                                    :disabled="item.paid"
                                     filterable
                                     @change="changePaymentMethod($event, index)"
                                 >
@@ -82,8 +84,17 @@
                                     type="secondary"
                                     size="mini"
                                     @click="editDocument(item)"
+                                    v-if="!item.paid"
                                 >
                                     Editar
+                                </el-button>
+                                <el-button
+                                    disabled
+                                    type="success"
+                                    size="mini"
+                                    v-if="item.paid"
+                                >
+                                    Pagado
                                 </el-button>
                             </td>
                         </tr>
@@ -139,6 +150,10 @@ export default {
         }
     },
     methods: {
+        refreshTable() {
+            this.documents = [...this.documents];
+            this.$forceUpdate();
+        },
         editDocument(item) {
             this.loading = true;
             let { quotation_id } = item;
@@ -171,16 +186,31 @@ export default {
         },
         checkAll() {
             this.documents.forEach(item => {
-                item.selected = this.selectAll;
+                if (!item.paid) {
+                    item.selected = this.selectAll;
+                }
             });
             this.documents = [...this.documents];
             this.$forceUpdate();
         },
         payDocument(item) {
-            console.log("🚀 ~ payDocument ~ item:", item);
+            this.loading = true;
+            this.$http
+                .post(`/quotations/consolidateds/pay-document`, item)
+                .then(response => {
+                    this.$message.success("Documento pagado correctamente");
+                    this.getRecord();
+                })
+                .finally(() => {
+                    this.loading = false;
+                })
+                .catch(error => {
+                    this.$message.error(error.response.data.message);
+                });
         },
         changePaymentMethod(event, index) {
             this.documents[index].payment_method = event;
+            this.documents = [...this.documents];
             this.$forceUpdate();
         },
         getRecord() {
@@ -203,7 +233,7 @@ export default {
             this.$emit("update:showDialog", false);
         },
         open() {
-            // this.selectAll = true;
+            this.selectAll = false;
             this.getRecord();
         },
         paySelectedDocuments() {
@@ -214,19 +244,6 @@ export default {
                 );
                 return;
             }
-
-            console.log(
-                "Documentos seleccionados para pago global:",
-                selectedDocs
-            );
-
-            const payload = {
-                documents: selectedDocs.map(doc => ({
-                    id: doc.id,
-                    total: doc.total,
-                    payment_method: doc.payment_method
-                }))
-            };
 
             this.$confirm(
                 "¿Está seguro de realizar el pago global?",
@@ -239,10 +256,16 @@ export default {
             )
                 .then(() => {
                     this.loading = true;
-                    console.log("Enviando payload:", payload);
-                    this.loading = false;
+                    for (const doc of selectedDocs) {
+                        this.payDocument(doc);
+                    }
                 })
-                .catch(() => {});
+                .catch((e) => {
+                    console.log(e)
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         }
     }
 };
