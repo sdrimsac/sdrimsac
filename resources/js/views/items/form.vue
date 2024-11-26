@@ -2343,7 +2343,8 @@ export default {
             attribute_types: [],
             area_id: 2,
             timer: null,
-            madera: []
+            madera: [],
+            all_commercial_treatments: []
         };
     },
     async created() {
@@ -2352,6 +2353,7 @@ export default {
             this.unit_types = response.data.unit_types;
             this.accounts = response.data.accounts;
             this.currency_types = response.data.currency_types;
+            this.all_commercial_treatments = response.data.all_commercial_treatments;
             this.system_isc_types = response.data.system_isc_types;
             this.affectation_igv_types = response.data.affectation_igv_types;
             this.warehouses = response.data.warehouses;
@@ -2423,6 +2425,7 @@ export default {
 
     methods: {
         updateCommercialTreatmentItem(idx) {
+            if (!this.recordId) return;
             if (this.timer) clearTimeout(this.timer);
             this.timer = setTimeout(async () => {
                 let commercial_treatment_item = this.form.commercial_treatments[
@@ -2788,6 +2791,8 @@ export default {
                 await this.generateCode();
                 this.showSeries = true;
                 this.form.area_id = 2;
+                this.form.commercial_treatments = this.all_commercial_treatments;
+
             }
             // if(!this.record){
             //     this.form.has_igv= true

@@ -838,6 +838,16 @@ class ItemController extends Controller
         $attribute_types = AttributeType::whereActive()->orderByDescription()->get();
         $system_isc_types = SystemIscType::whereActive()->orderByDescription()->get();
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
+        $all_commercial_treatments = CommercialTreatment::all()->transform(function ($row, $key) {
+            return [
+                'id' => null,
+                'item_id' => null,
+                'commercial_treatment_id' => $row->id,
+                'amount' => null,
+                'active' => (bool) $row->active,
+                'commercial_treatment_description' => $row->description,
+            ];
+        });
         $areas = Area::all();
         // $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
         $warehouses = Warehouse::all();
@@ -848,6 +858,7 @@ class ItemController extends Controller
         $brands = Brand::all();
         $configuration = Configuration::first();
         return compact(
+            'all_commercial_treatments',
             'categoria_madera',
             'unit_types',
             'payment_method_types',
@@ -923,6 +934,13 @@ class ItemController extends Controller
             $food->image = 'imagen-no-disponible.jpg';
         }
         $item->save();
+        $commercial_treatments = $request->input('commercial_treatments');
+        if ($commercial_treatments && $id == null) {
+            foreach ($commercial_treatments as $commercial_treatment) {
+                if($commercial_treatment['amount'] == null) continue;
+                $item->commercial_treatments()->create($commercial_treatment);
+            }
+        }
         ItemCategoriaMadera::where('item_id', $item->id)->delete();
         $categoria_madera = $request->input('categoria_madera');
         /*  */
