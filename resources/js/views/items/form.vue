@@ -10,9 +10,8 @@
         append-to-body
         top="7vh"
         v-loading="loading"
-        class="rounded-dialog"
     >
-        <form autocomplete="off" @submit.prevent="submit">
+        <form autocomplete="off" @submit.prevent="submit" v-loading="loading">
             <div class="form-body">
                 <!-- Panel General -->
                 <el-tabs tab-position="top">
@@ -1459,8 +1458,20 @@
                                                     <td class="text-center">
                                                         {{ row.unit_type_id }}
                                                     </td>
-                                                    <td class="text-center">
+                                                    <!-- <td class="text-center">
                                                         {{ row.description }}
+                                                    </td> -->
+                                                    <td>
+                                                        <el-input
+                                                                v-model="
+                                                                    row.description
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i>
+                                                            </el-input>
                                                     </td>
                                                     <td class="text-center">
                                                         {{ row.quantity_unit }}
@@ -1660,12 +1671,11 @@
                                                             configuration.price_item_unit_type
                                                         "
                                                     >
-                                                    <td>
+                                                        <td>
                                                             <div
                                                                 class="form-group"
                                                             >
                                                                 <el-input
-                                                                    
                                                                     v-model="
                                                                         row.quantity_unit
                                                                     "
@@ -2291,7 +2301,7 @@ export default {
 
     data() {
         return {
-            loading: true,
+            loading: false,
             allEstablishment: false,
             showDialogLots: false,
             showDialogColorSize: false,
@@ -2353,7 +2363,8 @@ export default {
             this.unit_types = response.data.unit_types;
             this.accounts = response.data.accounts;
             this.currency_types = response.data.currency_types;
-            this.all_commercial_treatments = response.data.all_commercial_treatments;
+            this.all_commercial_treatments =
+                response.data.all_commercial_treatments;
             this.system_isc_types = response.data.system_isc_types;
             this.affectation_igv_types = response.data.affectation_igv_types;
             this.warehouses = response.data.warehouses;
@@ -2553,24 +2564,36 @@ export default {
         changeEnabledPercentageOfProfit() {
             // if(!this.enabled_percentage_of_profit) this.form.percentage_of_profit = 0
         },
-        clickDelete(id) {
-            this.$http
-                .delete(`/${this.resource}/item-unit-type/${id}`)
-                .then(res => {
-                    if (res.data.success) {
-                        this.loadRecord();
-                        this.$toast.success(
-                            "Se eliminó correctamente el registro"
-                        );
-                    }
-                })
-                .catch(error => {
-                    if (error.response.status === 500) {
-                        this.$toast.error("Error al intentar eliminar");
-                    } else {
-                        console.log(error.response.data.message);
-                    }
-                });
+        async clickDelete(id) {
+            try {
+                await this.$confirm("¿Estás seguro de eliminar este registro?");
+
+                this.loading = true;
+                console.log("before ",this.loading);
+                this.$http
+                    .delete(`/${this.resource}/item-unit-type/${id}`)
+                    .then(res => {
+                        if (res.data.success) {
+                            this.loadRecord();
+                            this.$toast.success(
+                                "Se eliminó correctamente el registro"
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        if (error.response.status === 500) {
+                            this.$toast.error("Error al intentar eliminar");
+                        } else {
+                            console.log(error.response.data.message);
+                        }
+                    })
+                    .finally(() => {
+                        console.log("finally ",this.loading);
+                        this.loading = false;
+                        console.log("finally ",this.loading);
+                    });
+            } catch (error) {
+            }
         },
         changeHasPerception() {
             if (!this.form.has_perception) {
@@ -2792,7 +2815,6 @@ export default {
                 this.showSeries = true;
                 this.form.area_id = 2;
                 this.form.commercial_treatments = this.all_commercial_treatments;
-
             }
             // if(!this.record){
             //     this.form.has_igv= true
@@ -2820,11 +2842,15 @@ export default {
         },
         loadRecord() {
             if (this.recordId) {
+                this.loading = true;
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
                         this.changeAffectationIgvType();
+                    })
+                    .finally(() => {
+                        this.loading = false;
                     });
             }
         },

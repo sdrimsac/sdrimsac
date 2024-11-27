@@ -1101,6 +1101,9 @@ export default {
       let listPricesDescription = ["price1", "price2", "price3"];
       let currentPriceIndx = listPricesDescription[type.price_default - 1];
       let price = type[currentPriceIndx];
+      if(this.configuration.price_item_unit_type){
+        return price;
+      }
       if (type.total == null) {
         // this.$toast.error(
         //     "Politica de precio sin total: Tomando precio unitario.."

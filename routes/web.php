@@ -9,6 +9,7 @@ use App\Http\Controllers\Tenant\DocumentController as TenantDocumentController;
 use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemColorSizeController;
 use App\Http\Controllers\Tenant\ItemController;
+use App\Http\Controllers\Tenant\ManifestController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\PrincipalCategoryController;
 use App\Http\Controllers\Tenant\PromotionDocumentController;
@@ -34,6 +35,7 @@ if ($hostname) {
                 'verify'   => false
             ]);
             Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'printTransfer']);
+            Route::get('manifest-tenant.json', [ManifestController::class, 'manifest']);
 
             Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
             Route::get('check-documents', [TenantDocumentController::class, 'checkDocuments']);
@@ -766,7 +768,6 @@ if ($hostname) {
                 Route::get('purchases/item/tables', [App\Http\Controllers\Tenant\PurchaseController::class, 'item_tables']);
                 Route::get('purchases/item', [App\Http\Controllers\Tenant\PurchaseController::class, 'item_id']);
                 // Route::get('documents/table/{table}', [App\Http\Controllers\Tenant\DocumentController::class, 'table']);
-
                 //quotations
                 Route::get('quotations', [App\Http\Controllers\Tenant\QuotationController::class, 'index'])->name('tenant.quotations.index')->middleware('redirect.level')->middleware('just.admin');
                 Route::get('quotations/get-last-num-orden', [App\Http\Controllers\Tenant\QuotationController::class, 'getLastNumOrden']);

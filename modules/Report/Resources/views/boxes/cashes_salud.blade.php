@@ -301,6 +301,33 @@
                     </td>
                 </tr>
             @endif
+            {{-- @dump($info_documents) --}}
+            @if (isset($info_documents['min_07']) || isset($info_documents['max_07']))
+                <tr>
+                    <td class="celda">NC-{{ $establishment->description }}</td>
+                    <td class="celda text-center">
+                        @isset($info_documents['min_07'])
+                            {{ $info_documents['min_07']->series }}
+                        @endisset
+                    </td>
+                    <td class="celda text-center">
+                        @isset($info_documents['min_07'])
+                            {{ $info_documents['min_07']->number }}
+                        @endisset
+                    </td>
+                    <td class="celda text-center">
+                        @isset($info_documents['max_07'])
+                            {{ $info_documents['max_07']->number }}
+                        @endisset
+                    </td>
+                    <td class="celda text-end">
+                        @isset($info_documents['total_07'])
+                            {{ number_format($info_documents['total_07'], 2) }}
+                        @endisset
+                    </td>
+                </tr>
+
+            @endif
             @if ($cash->pharmacy_info)
                 @php
                     $info = (array) $cash->pharmacy_info;

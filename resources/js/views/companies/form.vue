@@ -1296,10 +1296,15 @@ export default {
                             const formData = new FormData();
                             formData.append("file", file);
                             formData.append("type", field);
+                            
 
                             try {
+                                let url = "/companies/uploads";
+                                if (field === "favicon") {
+                                    url = "/companies/favicon";
+                                }
                                 const response = await this.$http.post(
-                                    "/companies/uploads",
+                                    url,
                                     formData,
                                     {
                                         headers: this.headers
@@ -1311,7 +1316,7 @@ export default {
                                     // Asegurarse de que la URL de la imagen sea correcta y única para evitar problemas de caché
                                     this.form[field] = `${
                                         response.data.name
-                                    }?timestamp=${new Date().getTime()}`;
+                                    }`;
                                     Swal.fire({
                                         icon: "success",
                                         title: "Imagen subida correctamente",

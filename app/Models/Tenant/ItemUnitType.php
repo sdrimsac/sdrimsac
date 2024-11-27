@@ -29,6 +29,13 @@ class ItemUnitType extends ModelTenant
         'total',
     ];
 
+    protected $casts = [
+        'price1' => 'decimal:2',
+        'price2' => 'decimal:2',
+        'price3' => 'decimal:2',
+        
+    ];
+
     public function unit_type()
     {
         return $this->belongsTo(UnitType::class, 'unit_type_id');

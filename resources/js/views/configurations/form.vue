@@ -315,10 +315,10 @@
                       <div class="card-body">
                         <div class="row">
                           <!-- Consolidado de cotizaciones -->
-                          <div class="col-md-3 mt-4">
+                          <div class="col-md-3 mt-4" v-if="canSee">
                             <div class="form-group">
                               <label class="control-label w-100">
-                                <i ref="quotationIcon" class="fas fa-file-invoice-dollar tab-icon"></i> Consolidado de cotizaciones
+                                <i ref="quotationIcon" class="fas fa-file-invoice-dollar tab-icon"></i> Habilitar distribuidora
                               </label>
                               <el-switch
                                 v-model="form.consolidated_quotations"
@@ -5626,7 +5626,6 @@ export default {
   },
 
   async created() {
-    console.log("🚀 ~ created ~ this.canSee:", this.canSee)
 
     await this.loadTables();
     await this.initForm();

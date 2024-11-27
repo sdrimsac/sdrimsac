@@ -87,7 +87,7 @@ class ItemResource extends JsonResource
             'item_code' => $this->item_code,
             'item_code_gsl' => $this->item_code_gsl,
             'currency_type_id' => $this->currency_type_id,
-            'sale_unit_price' => $this->sale_unit_price,
+            'sale_unit_price' => number_format($this->sale_unit_price, 2, '.', ''),
             'purchase_unit_price' => $this->purchase_unit_price,
             'unit_type_id' => $this->unit_type_id,
             'has_isc' => (bool) $this->has_isc,

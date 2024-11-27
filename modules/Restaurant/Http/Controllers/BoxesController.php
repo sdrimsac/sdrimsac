@@ -1298,8 +1298,11 @@ class BoxesController extends Controller
 
         $min_01_document_id = null;
         $max_01_document_id = null;
+        $min_07_document_id = null;
+        $max_07_document_id = null;
         $total_01_document = 0;
         $total_03_document = 0;
+        $total_07_document = 0;
         $min_03_document_id = null;
         $max_03_document_id = null;
         $document_anulate = Document::where('cash_id', $cash_id)->where('state_type_id', '11')->chunk(50, function ($documents) use (
@@ -1307,11 +1310,14 @@ class BoxesController extends Controller
             &$max_01_document_id,
             &$min_03_document_id,
             &$max_03_document_id
+    
         ) {
             foreach ($documents as $document) {
                 $document = Document::select(['id', 'document_type_id', 'total'])
                     ->with('items')
                     ->find($document->id);
+
+                
                 if ($document->document_type_id == '01') {
                     if ($min_01_document_id == null) {
                         $min_01_document_id = $document->id;
@@ -1339,14 +1345,19 @@ class BoxesController extends Controller
             }
         });
         $boxes = Box::select(['document_id', 'sale_note_id'])
-            ->where('cash_id', $cash_id)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use (
+            ->where('cash_id', $cash_id)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use 
+            
+            (
                 &$items,
                 &$min_01_document_id,
                 &$max_01_document_id,
                 &$min_03_document_id,
                 &$max_03_document_id,
                 &$total_01_document,
-                &$total_03_document
+                &$total_03_document,
+                &$min_07_document_id,
+                &$max_07_document_id,
+                &$total_07_document
 
             ) {
                 foreach ($boxes as $box) {
@@ -1360,8 +1371,28 @@ class BoxesController extends Controller
                         $document = Document::select(['id', 'document_type_id', 'total'])
                             ->with('items')
                             ->find($box->document_id);
+
+                            if ($document->document_affected_note) {
+                                $affected_document = Document::select(['id', 'document_type_id', 'total'])
+                                    ->find($document->document_affected_note->document_id);
+                                if ($affected_document->document_type_id == '07') {
+                                    if ($min_07_document_id == null) {
+                                        $min_07_document_id = $affected_document->id;
+                                    } else {
+                                        $min_07_document_id = ($affected_document->id < $min_07_document_id) ? $affected_document->id : $min_07_document_id;
+                                    }
+                                    if ($max_07_document_id == null) {
+                                        $max_07_document_id = $affected_document->id;
+                                    } else {
+                                        $max_07_document_id = ($affected_document->id > $max_07_document_id) ? $affected_document->id : $max_07_document_id;
+                                    }
+                                    $total_07_document += $affected_document->total;
+                                }
+                            }
                         if ($document->document_type_id == '01') {
-                            $total_01_document += $document->total;
+                            if (!$document->document_affected_note) {
+                                $total_01_document += $document->total;
+                            }
                             if ($min_01_document_id == null) {
                                 $min_01_document_id = $document->id;
                             } else {
@@ -1374,7 +1405,9 @@ class BoxesController extends Controller
                             }
                         }
                         if ($document->document_type_id == '03') {
-                            $total_03_document += $document->total;
+                            if (!$document->document_affected_note) {
+                                $total_03_document += $document->total;
+                            }
                             if ($min_03_document_id == null) {
                                 $min_03_document_id = $document->id;
                             } else {
@@ -1386,6 +1419,9 @@ class BoxesController extends Controller
                                 $max_03_document_id = ($document->id > $max_03_document_id) ? $document->id : $max_03_document_id;
                             }
                         }
+                    }
+                    if ($document->document_affected_note) {
+                        continue;
                     }
                     $document_items = $document->items;
                     foreach ($document_items as $item) {
@@ -1454,6 +1490,20 @@ class BoxesController extends Controller
         }
         $info_documents['max_03'] = $max_03_document;
         $info_documents['total_03'] = $total_03_document;
+        $min_07_document = null;
+        if ($min_07_document_id) {
+            $min_07_document = Document::select(['series', 'number'])->find($min_07_document_id);
+            $info_documents['min_07'] = $min_07_document;
+            $info_documents['total_07'] = $total_07_document;
+        }
+        $max_07_document = null;
+        if ($max_07_document_id) {
+            $max_07_document = Document::select(['series', 'number'])->find($max_07_document_id);
+            $info_documents['max_07'] = $max_07_document;
+        }
+
+
+
         try {
             $pdf = PDF::loadView(
                 'report::boxes.cashes_salud',
