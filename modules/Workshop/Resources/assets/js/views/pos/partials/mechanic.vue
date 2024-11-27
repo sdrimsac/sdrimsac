@@ -36,7 +36,7 @@
             </div>
             <div class="col-md-3">
               <label>Placa Vehiculo</label>
-              <el-input v-model="form.placa" placeholder="placa" @input="lisVehicle()"></el-input>
+              <el-input v-model="form.placa" placeholder="ingrese placa" @input="lisVehicle()"></el-input>
             </div>
             <div class="col-md-6 text-end">
               <el-button type="primary" @click="clickCreate()">Nuevo Registro</el-button>
@@ -101,7 +101,7 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ index + 1 }}</td>
+                <td>{{ customIndex(index) }}</td>
                 <td>{{ vehiculo.customer_name }}</td>
                 <td>{{ vehiculo.tipo_vehiculo_description }}</td>
                 <td>{{ vehiculo.placa }}</td>
@@ -112,12 +112,6 @@
                 <td>{{ vehiculo.anio_fabricacion }}</td>
                 <td>{{ vehiculo.kilometraje }}</td>
                 <td>{{ vehiculo.created_at }}</td>
-                <!-- <td>
-                  <el-button type="success" 
-                  >
-                    
-                  </el-button>
-                </td>-->
                 <td>
                   <el-button
                     v-if="vehiculo.historial_id"
@@ -180,7 +174,7 @@
                             <i class="far fa-file-alt"></i>
                             Ver PDF
                           </el-button>
-                        </a> -->
+                        </a>-->
                       </div>
                     </div>
                   </div>
@@ -188,14 +182,15 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <div>
-          <el-pagination
-            layout="total, prev, pager, next"
-            :total="pagination.total"
-            :current-page.sync="pagination.current_page"
-            :page-size="pagination.per_page"
-          ></el-pagination>
+          <div>
+            <el-pagination
+              layout="total, prev, pager, next"
+              :total="pagination.total"
+              :current-page.sync="pagination.current_page"
+              :page-size="pagination.per_page"
+              @current-change="handlePageChange"
+            ></el-pagination>
+          </div>
         </div>
       </div>
       <register-history :showDialog.sync="showDialogRegisterHistory" :recordId="recordId"></register-history>
@@ -263,12 +258,9 @@ export default {
     }
   },
   methods: {
-    customIndex(index) {
-      return (
-        this.pagination.per_page * (this.pagination.current_page - 1) +
-        index +
-        1
-      );
+    handlePageChange(page) {
+      this.pagination.current_page = page;
+      this.lisVehicle();
     },
     format_vehicle(id) {
       this.selectedVehiculoId = id;
@@ -282,7 +274,7 @@ export default {
       );
     },
     clickPrint(recordId) {
-      window.open(`/${this.resource}/print/${recordId}/a4`, "_blank");
+      window.open(`/${this.resource}/vehiculo/print/${recordId}/a4`, "_blank");
     },
     clickCreate(recordId = null) {
       this.recordId = recordId;
@@ -312,7 +304,7 @@ export default {
       this.errors = {};
     },
     fillForm(data) {
-      this.form.id = data.id; // Rellena el campo id
+      this.form.id = data.id;
       this.form.customer_id = data.customer_id;
       this.form.placa = data.placa;
       this.form.tipo_vehiculo_id = data.tipo_vehiculo_id;
@@ -402,6 +394,13 @@ export default {
           console.error("Error al obtener los tipos de vehículo:", error);
         });
     },
+    customIndex(index) {
+      return (
+        this.pagination.per_page * (this.pagination.current_page - 1) +
+        index +
+        1
+      );
+    },
     getQueryParameters() {
       this.search = {
         placa: this.form.placa
@@ -411,9 +410,6 @@ export default {
         limit: this.limit,
         ...this.search
       });
-    },
-    searchVehicles() {
-      /* this.$http.get(`/${this.resource}/vehiculo/records`, this.form)*/
     },
     clickRegisterHistory() {
       this.showDialogRegisterHistory = true;

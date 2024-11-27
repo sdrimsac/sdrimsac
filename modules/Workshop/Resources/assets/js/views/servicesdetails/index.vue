@@ -45,6 +45,7 @@
                 <th class="text-white">Tipo Servicio</th>
                 <th class="text-white">Servico</th>
                 <th class="text-white">Observacion o trabajo Rea.</th>
+                <th class="text-white">Precio</th>
                 <th class="text-white text-end">Acciones</th>
               </tr>
             </thead>
@@ -54,6 +55,7 @@
                 <td>{{ row.service_description}}</td>
                 <td>{{ row.name }}</td>
                 <td>{{ row.description }}</td>
+                <td> {{ row.price_unit }} </td>
                 <td class="text-end">
                   <button
                     class="btn p-0"

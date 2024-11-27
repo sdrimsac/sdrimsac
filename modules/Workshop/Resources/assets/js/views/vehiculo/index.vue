@@ -69,15 +69,15 @@
                         <tbody>
                             <tr v-for="(row, index) in records" :key="index">
                                 <td>{{ index + 1 }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>{{ row.description }}</td>
+                                <td>{{ row.customer_name }}</td>
+                                <td>{{ row.placa }}</td>
+                                <td>{{ row.tipo_vehiculo_description }}</td>
+                                <td>{{ row.serie }}</td>
+                                <td>{{ row.modelo }}</td>
+                                <td>{{ row.marca }}</td>
+                                <td>{{ row.color }}</td>
+                                <td>{{ row.anio_fabricacion }}</td>
+                                <td>{{ row.kilometraje }}</td>
                                 <td class="text-end">
                                     <button
                                         class="btn p-0"
@@ -130,7 +130,7 @@
             </div>
             <Vehiculo-form
                 :showDialog.sync="showDialog"
-                :recordId="recordId"
+                :recordId2="recordId2"
             ></Vehiculo-form>
         </div>
     </div>
@@ -138,7 +138,6 @@
 
 <script>
 import VehiculoForm from "./form.vue";
-/* import { deletable } from "../../mixins/deletable"; */
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 
 export default {
@@ -152,7 +151,7 @@ export default {
             title: "",
             showDialog: false,
             resource: "workshop/vehiculo",
-            recordId: null,
+            recordId2: null,
             records: []
         };
     },
@@ -168,8 +167,8 @@ export default {
                 this.records = response.data.data;
             });
         },
-        clickCreate(recordId = null) {
-            this.recordId = recordId;
+        clickCreate(recordId2 = null) {
+            this.recordId2 = recordId2;
             this.showDialog = true;
         },
         clickDelete(id) {

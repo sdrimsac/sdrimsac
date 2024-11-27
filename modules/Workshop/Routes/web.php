@@ -43,15 +43,16 @@ Route::prefix('workshop')->group(function () {
     Route::post('vehiculo', [VehiculoController::class, 'store']);
     Route::post('new-history', [VehiculoController::class, 'storeHistory']);
     Route::get('vehiculo/record/{id}', [VehiculoController::class, 'record']);
+    Route::get('vehiculo/record2/{id}', [VehiculoController::class, 'record2']);
     Route::get('vehiculo/payment/{id}', [VehiculoController::class, 'record_payment']);
     Route::delete('vehiculo/{tipo}', [VehiculoController::class, 'destroy']);
     Route::get('vehiculo/check_pdf/{id}_{date}', [VehiculoController::class, 'check_pdf']);
     /* Route::get('vehiculo/view_pdf/{id}', [VehiculoController::class, 'view_pdf']); */
     Route::get('/vehiculo/view_pdf/{id}_{timestamp}', [VehiculoController::class, 'view_pdf']);
-
     Route::get('vehiculo/format_vehicle/{id}', [VehiculoController::class, 'format_vehicle']);
-
     Route::get('vehiculo/format-historial/{historial_id}', [VehiculoController::class, 'format_History']);
+
+    Route::get('vehiculo/print/{id}/{format}', [VehiculoController::class, 'toPrint']);
 
     Route::post('items', [VehiculoController::class, 'setItems']);
 

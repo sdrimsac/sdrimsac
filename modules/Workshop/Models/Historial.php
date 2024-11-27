@@ -8,6 +8,7 @@ use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemWarehouse;
 use Modules\Workshop\Models\Vehiculo;
+use Modules\Workshop\Models\HistorialServicesDetails;
 
 class Historial extends ModelTenant
 {
@@ -25,7 +26,8 @@ class Historial extends ModelTenant
         'garantia',
         'mantenimiento',
         'diagnostico',
-        'estado'
+        'estado', 
+        'filename'
     ];
     public function vehiculo(){
         return $this->belongsTo(vehiculo::class, 'vehiculo_id');
@@ -52,6 +54,9 @@ class Historial extends ModelTenant
     public function vehicleFeatures()
     {
         return $this->hasMany(VehicleFeature::class);
+    }
+    public function servicesDetails(){
+        return $this->hasMany(HistorialServicesDetails::class);
     }
     
 

@@ -32,8 +32,13 @@ trait StorageDocument
 
     private function setData($filename, $file_type, $root)
     {
+        $file_type = trim($file_type);
         $extension = 'xml';
         switch ($file_type) {
+
+            case 'vehiculo':
+                $extension = 'pdf';
+                break;
             case 'unsigned':
                 break;
             case 'signed':

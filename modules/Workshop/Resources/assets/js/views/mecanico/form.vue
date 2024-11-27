@@ -6,6 +6,7 @@
     @open="create"
     :close-on-click-modal="false"
     width="60%"
+    append-to-body
   >
     <br />
     <form autocomplete="off" @submit.prevent="submit">

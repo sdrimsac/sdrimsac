@@ -17,6 +17,7 @@ class ServicesDetails extends ModelTenant
         'date_start',
         'date_end',
         'status',
+        'price_unit'
     ];
     public function service(){
         return $this->belongsTo(Services::class,'service_id');

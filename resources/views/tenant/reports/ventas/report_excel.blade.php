@@ -13,7 +13,7 @@
 <body>
     <table>
         <tr>
-            <td colspan="8"
+            <td colspan="10"
                 style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
                 <h3 align="center" class="title"><strong>Reporte De Productos vendidos</strong></h3>
             </td>
@@ -25,7 +25,7 @@
             {{-- <td colspan="4" style="border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Fecha Inicio: </strong>{{ date('Y-m-d') }}</p>  <b>Fecha Final</b>{{date('y-m-d')}}
             </td> --}}
-            <td colspan="4"
+            <td colspan="5"
                         style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
                         Reporte desde
                         {{ \Carbon\Carbon::parse($d_start)->format('d-m-Y') }}
@@ -33,10 +33,10 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4" style="border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
+            <td colspan="5" style="border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Ruc: </strong>{{ $company->number }}</p>
             </td>
-            <td colspan="4" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
+            <td colspan="5" style=" border: 1px solid black; background-color: #DCDCDC; font-size: 12px;">
                 <p><strong>Establecimiento: </strong>{{$establishment->address}} - {{$establishment->department->description}} - {{$establishment->district->description}} </p>
             </td>
         </tr>
@@ -49,6 +49,8 @@
                     <th style="border: 1px solid black; background-color: #DCDCDC;">Número</th>
                     <th style="border: 1px solid black; background-color: #DCDCDC;">Fecha emisión</th>
                     <th style="border: 1px solid black; background-color: #DCDCDC;">Establecimiento</th>
+                    <th style="border: 1px solid black; background-color: #DCDCDC;">Cliente</th>
+                    <th style="border: 1px solid black; background-color: #DCDCDC;">Documento</th>
                     <th style="border: 1px solid black; background-color: #DCDCDC;">Codigo Interno</th>
                     <th style="border: 1px solid black; background-color: #DCDCDC;">Producto</th>
                     <th style="border: 1px solid black; background-color: #DCDCDC;">Cantidad</th>
@@ -74,6 +76,9 @@
                                 </td>
                             @endif
                             <td style="border: 1px solid black;">{{ $establishment_description }}</td>
+                            <td style="border: 1px solid black;">{{ $record->customer->name}}</td>
+                            <td style="border: 1px solid black;">{{ $record->customer->number }}</td>
+
                             <td style="border: 1px solid black;">{{ $item->item->internal_id }}</td>
                             <td style="border: 1px solid black;">{{ $item->item->description }}</td>
                             <td style="border: 1px solid black;">{{ number_format($item->quantity, 2) }}</td>
@@ -95,7 +100,7 @@
             @endforeach
                 
                 <tr>
-                    <td colspan="7" style="border: 1px solid black; text-align: right; font-weight: bold; background-color: #DCDCDC;">
+                    <td colspan="9" style="border: 1px solid black; text-align: right; font-weight: bold; background-color: #DCDCDC;">
                         Total de Productos Vendidos 
                     </td>
 

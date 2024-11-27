@@ -24,6 +24,7 @@ class ServicesDetailsCollection extends ResourceCollection
                 'date_start' => $row->date_start,
                 'date_end' => $row->date_end,
                 'status' => $row->status,
+                'price_unit' => $row->price_unit,
             ];
         });
     }

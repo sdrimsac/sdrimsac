@@ -248,7 +248,7 @@ class EtiquetasController extends Controller
                 }
                 $stock = $row->getStockByWarehouse(auth()->user()->establishment_id);
 
-                /* dump($row->item_unit_types); */
+                
                 $price1 = null;
                 if (is_array($row->item_unit_types) && isset($row->item_unit_types[0])) {
                     $price1 = $row->item_unit_types[0]['price1'] ?? null;

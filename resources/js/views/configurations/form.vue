@@ -1540,7 +1540,6 @@
                                   ></el-switch>
                                 </div>
                               </div>
-
                               <!-- Una caja por establecimiento -->
                               <div class="col-md-2 mt-4">
                                 <div class="form-group">

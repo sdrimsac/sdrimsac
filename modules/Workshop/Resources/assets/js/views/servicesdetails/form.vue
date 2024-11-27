@@ -45,6 +45,17 @@
               <small class="form-control-feedback" v-if="errors.name" v-text="errors.description[0]"></small>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group" :class="{'has-danger': errors.price_unit}">
+              <label class="control-label">
+                <i class="fas fa-align-left"></i> Precio 
+              </label>
+              <el-input v-model="form.price_unit" type="number">
+                <i slot="prefix" class="el-icon-edit-outline"></i>
+              </el-input>
+              <small class="form-control-feedback" v-if="errors.price_unit" v-text="errors.price_unit[0]"></small>
+            </div>
+          </div>
         </div>
       </div>
       <div class="form-actions text-end pt-2 pb-2">
@@ -107,6 +118,7 @@ export default {
         service_description: null,
         name: null,
         description: null,
+        price_unit: null,
       };
     },
     resetForm() {

@@ -186,7 +186,7 @@
 
 <script>
 export default {
-  props: ["showDialog", "recordId"],
+  props: ["showDialog", "recordId2"],
   data() {
     return {
       loading_submit: false,
@@ -210,10 +210,10 @@ export default {
       };
     },
     create() {
-      this.titleDialog = this.recordId ? "Editar Vehiculo" : "Nuevo Vehiculo";
-      if (this.recordId) {
+      this.titleDialog = this.recordId2 ? "Editar Vehiculo" : "Nuevo Vehiculo";
+      if (this.recordId2) {
         this.$http
-          .get(`/${this.resource}/record/${this.recordId}`)
+          .get(`/${this.resource}/record/${this.recordId2}`)
           .then(response => {
             this.form = response.data.data;
           });

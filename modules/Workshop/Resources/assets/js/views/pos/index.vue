@@ -4714,6 +4714,7 @@ export default {
       });
     },
     async limpiarForm() {
+      this.vehiculo_id = null;
       if (this.configuration.hotels) {
         this.getTablesToLeave();
       }

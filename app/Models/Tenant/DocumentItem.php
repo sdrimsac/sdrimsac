@@ -31,10 +31,8 @@ class DocumentItem extends ModelTenant
         'percentage_other_taxes',
         'total_other_taxes',
         'total_taxes',
-
         'price_type_id',
         'unit_price',
-
         'total_value',
         'total_charge',
         'total_discount',
@@ -109,11 +107,15 @@ class DocumentItem extends ModelTenant
     {
         return $this->belongsTo(Item::class, 'item_id');
     }
+    public function customer(){
+        return $this->belongsTo(Person::class, 'customer_id');
+    }
 
     public function document()
     {
         return $this->belongsTo(Document::class);
     }
+
 
     public function relation_item()
     {

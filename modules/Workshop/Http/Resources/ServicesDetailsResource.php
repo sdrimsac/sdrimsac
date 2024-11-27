@@ -20,6 +20,7 @@ class ServicesDetailsResource extends JsonResource
             'service_id' => $this->service_id,
             'description' => $this->description,
             'service_description' => $this->service ? $this->service->name : null,
+            'price_unit' => $this->price_unit,
             /* 'date_start' => $this->date_start,
             'date_end' => $this->dete_end,
             'status' => $this->status, */

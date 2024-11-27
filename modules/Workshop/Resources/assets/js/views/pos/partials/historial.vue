@@ -32,7 +32,7 @@
             <thead>
               <tr class="bg-primary">
                 <th class="text-white">#</th>
-                <th class="text-white">Fecha</th>
+                <th class="text-white">Fecha Registro</th>
                 <th class="text-white">Vehiculo</th>
                 <th class="text-white">Personal</th>
                 <th class="text-white">Motivo de Ingreso</th>
@@ -46,7 +46,7 @@
             <tbody>
               <tr v-for="(item, index) in historial" :key="index">
                 <td>{{ index + 1 }}</td>
-                <td>{{ item.fecha}}</td>
+                <td>{{ item.created_at}}</td>
                 <td>{{ item.vehiculo_placa }} - {{ item.vehiculo_marca }}</td>
                 <td>{{ item.personal_name }}</td>
                 <td>{{ item.observacion}}</td>
@@ -73,14 +73,29 @@
                   </el-popover>
                 </td>
                 <td>{{ item.estado == 0 ? 'Activo' : 'Inactivo' }}</td>
-                <td>
+                <!-- <td>
                   <el-button
-                    @click.prevent="clickPrintFormat(historial_id)"
+                    @click.prevent="clickPrintFormat(item.item.historial_id)"
                     class="w-100"
                     type="success"
                   >
                     <i class="far fa-file-alt"></i>
                     Format Vehiculo
+                  </el-button>
+                </td>-->
+                <td>
+                  <!-- Aquí asociamos el historial_id del registro con el botón -->
+                  <el-button
+                    v-for="(subItem, subIndex) in item.item"
+                    :key="subIndex"
+                    @click.prevent="clickPrintFormat(subItem.historial_id)"
+                    type="success"
+                  >
+                    <!-- <i class="far fa-file-alt"></i> -->
+                    PDF Vehiculo
+                  </el-button><br>
+                  <el-button type="danger">
+                    PDF Servicio
                   </el-button>
                 </td>
               </tr>
@@ -105,6 +120,9 @@ export default {
       showDialogCarVehicle: false,
       resource: "workshop",
       historial: [],
+      record: {
+        item: []
+      },
       vehiculo: null
     };
   },
@@ -121,8 +139,12 @@ export default {
   }, */
   methods: {
     clickPrintFormat(historial_id) {
+      if (!historial_id) {
+        console.error("historial_id no definido", historial_id);
+        return;
+      }
       window.open(
-        `/${this.resource}/vehiculo/format_vehicle/${historial_id}`,
+        `/${this.resource}/vehiculo/format-historial/${historial_id}`,
         "_blank"
       );
     },
@@ -161,14 +183,24 @@ export default {
         )
         .then(response => {
           this.historial = response.data.data;
+
+          console.log("datos cargados de historial:", this.historial);
+          /* this.historialIds = []; */
+
+          /* this.historial.forEach(record => {
+            if (record.item && record.item.length > 0) {
+              record.item.forEach(subItem => {
+                this.historialIds.push(subItem.historial_id);
+                /* console.log("historial ID encontrado", subitem.historial_id);
+              });
+            }
+          }); */
+          /* console.log("Historial IDs:", this.historialIds); */
         })
         .catch(error => {
           console.error("Servicios Detallados:", error);
         });
     },
-    /* open() {
-      this.getData();
-    }, */
     open() {
       console.log("Abriendo diálogo con vehiculoId:", this.vehiculoId);
       this.getData();

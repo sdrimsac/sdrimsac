@@ -1435,14 +1435,6 @@ export default {
     if (!this.configuration.discount_with_base_variant) {
       this.discountTotal = true;
     }
-
-    if (this.form.is_room) {
-      if (this.form.credit_line && this.form.credit_line > 0) {
-        this.form.enter_amount = this.form.credit_line;
-
-        this.enterAmount();
-      }
-    }
   },
   mounted() {},
   methods: {
@@ -1467,7 +1459,8 @@ export default {
         this.form.establishment_id = this.vehiculo.establishment_id;
         this.form.vehiculo_id = this.vehiculo_id;
         this.reCalculateTotal();
-        console.log("🚀 ~ file: form.vue ~ line 566 ~ response", response);
+        this.form.enter_amount = this.form.total;
+        console.log("🚀 ~ file: form.vue ~ line 566 ~ response", this.form);
         this.reloadDataCustomers(this.vehiculo.customer_id);
       }
     },

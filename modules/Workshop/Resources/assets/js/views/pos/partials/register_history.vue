@@ -423,7 +423,13 @@ export default {
         tipo_vehiculo_id: null,
         personal_id: null,
         observacion: null,
-        motive: null
+        motive: null,
+        reparacion: 0,
+        garantia: 0,
+        mantenimiento: 0,
+        diagnostico: 0,
+        selectedServices: [],
+        services_detail_ids: [],
       };
     },
     searchPlaca() {
