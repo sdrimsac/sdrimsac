@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Log;
 function getTenantImagePath($filename) {
     $tenant = request()->getHost(); // Obtiene el subdominio actual
     Log::info("🚀 ~ getTenantImagePath ~ tenant: ".$tenant);
+    return $filename;
 }
 return [
     'name' => env('APP_NAME', 'SDRIMSAC-STORE'),
@@ -19,7 +20,7 @@ return [
         'status_bar'=> 'black',
         'icons' => [
             '72x72' => [
-                'path' => '/images/icons/icon-72x72.png',
+                'path' => getTenantImagePath('/images/icons/icon-72x72.png'),
                 'purpose' => 'any'
             ],
             '96x96' => [
