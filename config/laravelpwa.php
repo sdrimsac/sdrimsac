@@ -1,17 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Log;
 
-function getTenantImagePath($filename) {
-    $tenant = request()->getHost(); // Obtiene el subdominio actual
-    Log::info("🚀 ~ getTenantImagePath ~ tenant: ".$tenant);
-    return $filename;
-}
 return [
     'name' => env('APP_NAME', 'SDRIMSAC-STORE'),
+
     'manifest' => [
-        'name' => env('APP_NAME', 'SDRIMSAC-STORE'),
-        'short_name' => 'SDRIMSAC-STORE',
+        'name' => 'dynamic_name',
+        'short_name' => 'dynamic_short_name',
         'start_url' => '/',
         'background_color' => '#ffffff',
         'theme_color' => '#000000',

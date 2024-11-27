@@ -192,7 +192,8 @@ return [
     //Modules\Finance\Providers\GlobalPaymentServiceProvider::class,
     Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     Hyn\Tenancy\Providers\TenancyProvider::class,
-    // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class
+    // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
+    App\Providers\PWAServiceProvider::class,
   ],
 
   /*
