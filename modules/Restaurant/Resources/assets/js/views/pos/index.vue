@@ -3679,7 +3679,7 @@ export default {
                             Number(this.localOrden[indexFind].quantity) + 1;
                         // Number(type.quantity_unit);
                     } else {
-                        console.log("type", type);
+                        
                         if (
                             this.configuration.price_item_unit_type &&
                             type &&

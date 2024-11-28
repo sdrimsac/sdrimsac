@@ -934,6 +934,13 @@ class ItemController extends Controller
             $food->image = 'imagen-no-disponible.jpg';
         }
         $item->save();
+        $item->item_price_ranges()->delete();
+        $item_price_ranges = $request->input('item_price_ranges');
+        if ($item_price_ranges) {
+            foreach ($item_price_ranges as $item_price_range) {
+                $item->item_price_ranges()->create($item_price_range);
+            }
+        }
         $commercial_treatments = $request->input('commercial_treatments');
         if ($commercial_treatments && $id == null) {
             foreach ($commercial_treatments as $commercial_treatment) {

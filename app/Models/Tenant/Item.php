@@ -311,6 +311,11 @@ class Item extends ModelTenant
         // $data['name_product_pdf'] =$data['description'];
         return $data;
     }
+    
+    public function item_price_ranges()
+    {
+        return $this->hasMany(ItemPriceRange::class);
+    }
     private function getLotsBySerie($warehouse, $series,  $search_item_by_series)
     {
         $lots = [];

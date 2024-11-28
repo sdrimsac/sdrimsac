@@ -1792,6 +1792,22 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Precios por rango de cantidad
+                                  </label>
+                                  <el-switch
+                                    v-model="form.quantity_prices"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Precios por rango de cantidad', form.quantity_prices, 'quantity_prices', 'lockIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
                               <!-- <div class="col-md-2 mt-4">
                                                             <div class="form-group">
                                                                 <label class="control-label w-100">

@@ -55,18 +55,9 @@ class ItemResource extends JsonResource
         $commercial_treatments =  array_merge($commercial_treatments->toArray(), $all_commercial_treatments->toArray());
 
         return [
+            'item_price_ranges' => $this->item_price_ranges,
             'subject_to_detraction' => (bool) $this->subject_to_detraction,
             'commercial_treatments' => $commercial_treatments,
-            // 'commercial_treatments' => $this->commercial_treatments->transform(function ($row, $key) {
-            //     return [
-            //         'id' => $row->id,
-            //         'item_id' => $row->item_id,
-            //         'commercial_treatment_id' => $row->commercial_treatment_id,
-            //         'amount' => $row->amount,
-            //         'active' => (bool) $row->active,
-            //         'commercial_treatment_description' => $row->commercial_treatment->description,
-            //     ];
-            // }),
             'has_color_size' => (bool) $this->has_color_size,
             'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,

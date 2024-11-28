@@ -1306,7 +1306,10 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Lista de Precios">
+                    <el-tab-pane
+                        label="Lista de Precios"
+                        v-if="!configuration.quantity_prices"
+                    >
                         <div class="row">
                             <div
                                 v-if="form.unit_type_id != 'ZZ'"
@@ -1463,15 +1466,15 @@
                                                     </td> -->
                                                     <td>
                                                         <el-input
-                                                                v-model="
-                                                                    row.description
-                                                                "
-                                                            >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
+                                                            v-model="
+                                                                row.description
+                                                            "
+                                                        >
+                                                            <i
+                                                                slot="prefix"
+                                                                class="el-icon-edit-outline"
+                                                            ></i>
+                                                        </el-input>
                                                     </td>
                                                     <td class="text-center">
                                                         {{ row.quantity_unit }}
@@ -1890,6 +1893,66 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane v-else label="Precios por rango de cantidad">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">
+                                                <a
+                                                    href="#"
+                                                    class="control-label font-weight-bold text-info"
+                                                    @click.prevent="
+                                                        addPriceRange
+                                                    "
+                                                    >[ + Nuevo]</a
+                                                >
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Precio</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(row,
+                                            index) in form.item_price_ranges"
+                                            :key="index"
+                                        >
+                                            <td>
+                                                <el-input
+                                                    v-model="row.quantity_min"
+                                                ></el-input>
+                                            </td>
+                                            <td>
+                                                <el-input
+                                                    v-model="row.price"
+                                                ></el-input>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    class="btn waves-effect waves-light btn-sm btn-danger"
+                                                    @click.prevent="
+                                                        clickDeletePriceRange(
+                                                            index
+                                                        )
+                                                    "
+                                                >
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </el-tab-pane>
@@ -2327,7 +2390,8 @@ export default {
             errors: {},
             headers: headers_token,
             form: {
-                promotion_count: null
+                promotion_count: null,
+                item_price_ranges: []
             },
             configuration: {},
             unit_types: [],
@@ -2435,6 +2499,23 @@ export default {
     },
 
     methods: {
+        validatePriceRange() {
+            if (this.form.item_price_ranges.length == 0) return true;
+            return this.form.item_price_ranges.every(
+                row => row.quantity_min && row.price
+            );
+        },
+        addPriceRange() {
+            this.form.item_price_ranges.push({
+                quantity_min: null,
+                price: null
+            });
+        },
+        async clickDeletePriceRange(index) {
+            this.$confirm("¿Estás seguro de eliminar este registro?").then(() => {
+                this.form.item_price_ranges.splice(index, 1);
+            }).catch(() => {});
+        },
         updateCommercialTreatmentItem(idx) {
             if (!this.recordId) return;
             if (this.timer) clearTimeout(this.timer);
@@ -2569,7 +2650,7 @@ export default {
                 await this.$confirm("¿Estás seguro de eliminar este registro?");
 
                 this.loading = true;
-                console.log("before ",this.loading);
+                console.log("before ", this.loading);
                 this.$http
                     .delete(`/${this.resource}/item-unit-type/${id}`)
                     .then(res => {
@@ -2588,12 +2669,11 @@ export default {
                         }
                     })
                     .finally(() => {
-                        console.log("finally ",this.loading);
+                        console.log("finally ", this.loading);
                         this.loading = false;
-                        console.log("finally ",this.loading);
+                        console.log("finally ", this.loading);
                     });
-            } catch (error) {
-            }
+            } catch (error) {}
         },
         changeHasPerception() {
             if (!this.form.has_perception) {
@@ -2621,6 +2701,7 @@ export default {
         initForm() {
             (this.loading_submit = false), (this.errors = {});
             this.form = {
+                item_price_ranges: [],
                 categoria_madera: [],
                 subject_to_detraction: false,
                 is_manufactured: false,
@@ -2921,6 +3002,10 @@ export default {
                     100;
         },
         async submit() {
+            if (!this.validatePriceRange()) {
+                this.$toast.warning("Ingrese los rangos de precios");
+                return false;
+            }
             if (this.form.max_quantity && !this.form.max_quantity_description) {
                 this.$toast.warning(
                     "Ingrese una descripción del contenedor para la cantidad máxima"
