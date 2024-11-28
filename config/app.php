@@ -193,7 +193,7 @@ return [
     Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     Hyn\Tenancy\Providers\TenancyProvider::class,
     // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
-    App\Providers\PWAServiceProvider::class,
+    App\Providers\PWAServiceProvider::class
   ],
 
   /*
