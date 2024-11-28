@@ -319,6 +319,16 @@
                                         </el-tag>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label font-weight-bold h5"
+                                        >
+                                            Nonbre de la app
+                                        </label>
+                                        <el-input v-model="form.app_name"></el-input>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6 mt-4" v-show="false">

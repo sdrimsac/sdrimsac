@@ -18,6 +18,7 @@ class CompanyResource extends JsonResource
     {
         $configuration = Configuration::first();
         return [
+            'app_name' => $this->app_name,
             'api_extern_whatsapp_url' => $this->api_extern_whatsapp_url,
             'api_extern_whatsapp_token' => $this->api_extern_whatsapp_token,
             'api_extern_whatsapp_token_2' => $this->api_extern_whatsapp_token_2,

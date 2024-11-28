@@ -14,9 +14,12 @@ class PWAServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             try{
             $company = Company::first();
-            $subdomain = request()->getHost();
-            Config::set('laravelpwa.manifest.name', $subdomain);
-            Config::set('laravelpwa.manifest.short_name', $subdomain);
+            $app_name = "APP-SDRIMSAC";
+            if($company){
+                $app_name = $company->app_name ? strtoupper($company->app_name) : "APP-SDRIMSAC";
+            }
+            Config::set('laravelpwa.manifest.name', $app_name);
+            Config::set('laravelpwa.manifest.short_name', $app_name);
             $favicon = $company->favicon;
               $iconSizes = ['72x72', '96x96', '128x128', '144x144', '152x152', '192x192', '384x384', '512x512'];
               foreach ($iconSizes as $size) {
