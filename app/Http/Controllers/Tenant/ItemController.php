@@ -72,6 +72,7 @@ use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
 use App\Models\Tenant\BonusUnitType;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Models\Tenant\RegisterMovement;
+use App\Models\Tenant\SaleOffertDetail;
 
 class ItemController extends Controller
 {
@@ -82,6 +83,24 @@ class ItemController extends Controller
 
             "Item" => "App\Models\Item",
         ];
+    }
+    public function getSaleOffert(){
+        $sale_offert_details = SaleOffertDetail::all();
+        return response()->json($sale_offert_details);
+    }
+    public function saveSaleOffert(Request $request){
+        $sale_offert_detail = SaleOffertDetail::create($request->all());
+        return response()->json($sale_offert_detail);
+    }
+    public function updateSaleOffert(Request $request){
+        $sale_offert_detail = SaleOffertDetail::find($request->id);
+        $sale_offert_detail->update($request->all());
+        return response()->json($sale_offert_detail);
+    }
+    public function deleteSaleOffert(Request $request){
+        $sale_offert_detail = SaleOffertDetail::find($request->id);
+        $sale_offert_detail->delete();
+        return response()->json($sale_offert_detail);
     }
     public function importStockFormat(Request $request)
     {

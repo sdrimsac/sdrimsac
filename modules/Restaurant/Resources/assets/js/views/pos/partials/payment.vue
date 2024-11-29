@@ -3004,6 +3004,44 @@ export default {
             // if (this.form.promotion_id) {
             //     this.changePromotion();
             // }
+            if (this.form.offert) {
+                this.form.items = this.form.items.map(item => {
+                    let key = Math.random().toString(36).substring(2,7);
+                    return { ...item, temp_key: key };
+                });
+                this.setSaleOffert();
+                this.setOffertObservation();
+            }
+        },
+        setOffertObservation(){
+            let offert = this.form.offert;
+            let { quantity_free, quantity_total } = offert;
+            this.form.observation = `Oferta de ${quantity_free} x ${quantity_total}`;
+        },
+        setSaleOffert() {
+            let offert = this.form.offert;
+            let { quantity_free, quantity_total } = offert;
+            let quantity = quantity_free - quantity_total;
+
+        
+            let itemsOrdenados = [...this.form.items].sort((a, b) => {
+                return a.unit_price - b.unit_price;
+            });
+
+            let itemsSeleccionados = itemsOrdenados.slice(0, quantity);
+
+            itemsSeleccionados.forEach(item => {
+                let index = this.form.items.findIndex(i => i.temp_key === item.temp_key);
+                console.log("index ", index);
+                if (index !== -1) {
+                    this.form.items.splice(index, 1);
+                }
+            });
+
+            itemsSeleccionados.forEach(item => {
+                this.addFreeItem(item.item);
+            });
+            console.log(JSON.stringify(this.form.items));
         },
         checkDetraction() {
             if (!this.configuration.detraction) return false;

@@ -414,6 +414,12 @@ if ($hostname) {
 
                 //Items
                 Route::get('items', [App\Http\Controllers\Tenant\ItemController::class, 'index'])->name('tenant.items.index')->middleware(['redirect.level', 'just.admin']);
+                Route::prefix('items/sale-offert')->group(function(){
+                    Route::get('get', [App\Http\Controllers\Tenant\ItemController::class, 'getSaleOffert']);
+                    Route::post('save', [App\Http\Controllers\Tenant\ItemController::class, 'saveSaleOffert']);
+                    Route::post('update', [App\Http\Controllers\Tenant\ItemController::class, 'updateSaleOffert']);
+                    Route::post('delete', [App\Http\Controllers\Tenant\ItemController::class, 'deleteSaleOffert']);
+                });
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
                 Route::get('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'bonusUnitType']);
                 Route::post('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'storeBonusUnitType']);

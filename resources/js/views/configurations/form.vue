@@ -1808,6 +1808,22 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4"> 
+                                <div class="form-group">  
+                                  <label class="control-label w-100"> 
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Ofertas de venta
+                                  </label>
+                                  <el-switch
+                                    @change="submit('Ofertas de venta', form.sale_offert, 'sale_offert', 'lockIcon')"
+                                    v-model="form.sale_offert"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                  ></el-switch>
+                                </div>
+                              </div>
                               <!-- <div class="col-md-2 mt-4">
                                                             <div class="form-group">
                                                                 <label class="control-label w-100">

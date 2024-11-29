@@ -16,6 +16,7 @@ class ConfigurationResource extends JsonResource
     {
         return [
             'quantity_prices' => (bool) $this->quantity_prices,
+            'sale_offert' => (bool) $this->sale_offert,
             'promotions_by_points' => (bool) $this->promotions_by_points,
             'extorned_analist' => (bool) $this->extorned_analist,
             'origin' => (bool)$this->origin,

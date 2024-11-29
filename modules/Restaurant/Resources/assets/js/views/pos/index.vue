@@ -3322,6 +3322,7 @@ export default {
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
+            this.form.offert = form.offert;
             this.form.to_carry = form.to_carry;
             this.form.comercial_treatment_id = form.comercial_treatment_id;
             this.form.ref = form.ref;

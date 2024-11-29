@@ -35,6 +35,17 @@
             class
             style="margin-right: 5px;"
             href="javascript:void(0)"
+            @click.prevent="clickSaleOffert()"
+            v-if="config.sale_offert"
+          >
+            <i class="fas fa-tag"></i>
+            Ofertas de venta
+          </el-button>
+          <el-button
+            type="primary"
+            class
+            style="margin-right: 5px;"
+            href="javascript:void(0)"
             @click.prevent="clickBonus()"
           >
             <i class="fas fa-gift"></i>
@@ -295,7 +306,7 @@
         </div>
 
         <items-form :showDialog.sync="showDialog" :recordId.sync="recordId"></items-form>
-
+        <sale-offert :showDialog.sync="showSaleOffertDialog" :recordId.sync="recordId"></sale-offert>
         <items-import :showDialog.sync="showImportDialog"></items-import>
         <items-import-points-value :showDialog.sync="showImportPointsValueDialog"></items-import-points-value>
         <warehouses-detail
@@ -332,6 +343,7 @@ import ItemsImportListPrice from "./partials/import_list_price.vue";
 import DataTable from "../../components/DataTable.vue";
 import ItemsImportStockProducto from "./partials/stock_producto.vue";
 import BonusModal from "./partials/bonus_modal.vue";
+import SaleOffert from "./partials/sale_offert.vue";
 import { deletable } from "../../mixins/deletable";
 
 export default {
@@ -345,7 +357,8 @@ export default {
     WarehousesDetail,
     ItemsImportListPrice,
     ItemsImportStockProducto,
-    BonusModal
+    BonusModal,
+    SaleOffert
   },
   data() {
     return {
@@ -365,7 +378,8 @@ export default {
       config: {},
       records: [],
       showBonusDialog: false,
-      showImportPointsValueDialog: false
+      showImportPointsValueDialog: false,
+      showSaleOffertDialog: false
     };
   },
   created() {
@@ -374,6 +388,9 @@ export default {
     });
   },
   methods: {
+    clickSaleOffert() {
+      this.showSaleOffertDialog = true;
+    },
     clickImportPointsValue(){
       this.showImportPointsValueDialog = true;
     },

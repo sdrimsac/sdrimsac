@@ -329,7 +329,23 @@
                                 </button>
                             </template>
                         </template>
-
+                        <button
+                            v-if="canBeSaleOffert"
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="clickSaleOffert()"
+                            style="max-height: 45px ;"
+                        >
+                            <div>
+                                <i
+                                    class="fas fa-tag"
+                                    style="color: var(--primary) !important"
+                                ></i>
+                            </div>
+                            <div>
+                                {{ canBeSaleOffert }}
+                            </div>
+                        </button>
                         <button
                             v-if="
                                 isCreatingOrden == true ||
@@ -1395,11 +1411,18 @@
                                                                                 "
                                                                                 style="margin-bottom: 4px;"
                                                                             >
-                                                                                <strong>Cantidad:</strong> {{
+                                                                                <strong
+                                                                                    >Cantidad:</strong
+                                                                                >
+                                                                                {{
                                                                                     price_range.quantity_min
                                                                                 }}
-                                                                                <br>
-                                                                                <strong>Precio:</strong> S/. {{
+                                                                                <br />
+                                                                                <strong
+                                                                                    >Precio:</strong
+                                                                                >
+                                                                                S/.
+                                                                                {{
                                                                                     price_range.price
                                                                                 }}
                                                                             </div>
@@ -1541,7 +1564,7 @@
                                                                 <span
                                                                     class="fw-bold"
                                                                 >
-                                                                    Cantidada
+                                                                    Cantidad
                                                                     <br />
                                                                     <div
                                                                         class="input-group spinner"
@@ -2691,7 +2714,8 @@ export default {
             isHotel: false,
             customersSearch: [],
             loading_search: false,
-            customer_search_id: null
+            customer_search_id: null,
+            saleOfferts: []
         };
     },
 
@@ -2728,6 +2752,18 @@ export default {
         }
     },
     computed: {
+        canBeSaleOffert() {
+            if (!this.configuration.sale_offert) return null;
+            let quantityProducts = this.localOrden.length;
+            let offert = this.saleOfferts.find(
+                offert => offert.quantity_free == quantityProducts
+            );
+            if (offert) {
+                return `${offert.quantity_free} X ${offert.quantity_total}`;
+            }
+
+            return null;
+        },
         isSellerConsolidated() {
             return this.isSeller && this.configuration.consolidated_quotations;
         },
@@ -2812,8 +2848,31 @@ export default {
         this.getCommercialTreatments();
         this.checkCashAvailable();
         this.getLasNumOrden();
+        this.getSaleOfferts();
     },
     methods: {
+        getSaleOfferts() {
+            this.$http.get("/items/sale-offert/get").then(response => {
+                this.saleOfferts = response.data;
+            });
+        },
+        clickSaleOffert() {
+            let quantityProducts = this.localOrden.length;
+            let offert = this.saleOfferts.find(
+                offert => offert.quantity_free == quantityProducts
+            );
+            let { quantity_free, quantity_total } = offert;
+            let quantity = quantity_free - quantity_total;
+            let itemsOrdenados = [...this.localOrden].sort((a, b) => {
+                return a.food.item.unit_price - b.food.item.unit_price;
+            });
+
+            let itemsSeleccionados = itemsOrdenados.slice(0, quantity);
+
+            console.log("Línea 45 - Items seleccionados:", itemsSeleccionados);
+            // this.payOrden(offert, quantity);
+            this.payOrden(offert);
+        },
         openQuotationList() {},
         changeCustomer() {
             this.$emit("update:localOrden", []);
@@ -4237,7 +4296,7 @@ export default {
             }
             return pass;
         },
-        async payOrden() {
+        async payOrden(offert = null) {
             if (!this.checkIfHasZeroTotal()) {
                 this.$toast.error(
                     "No puede realizar una venta de productos con total 0"
@@ -4289,7 +4348,8 @@ export default {
                     status_orden_id: 1
                 },
 
-                pin: null
+                pin: null,
+                offert
             };
             if (this.clientTableData.table) {
                 form_submit.items = this.ordens;

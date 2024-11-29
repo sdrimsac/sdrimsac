@@ -22,9 +22,19 @@
                     <tr v-for="(item, index) in items" :key="index">
                         <td>
                             {{ item.description }}
+                            <div
+                                v-if="
+                                    item.affectation_igv_type_id == 15 ||
+                                        item.affectation_igv_type_id == 21
+                                "
+                            >
+                                <span class="badge badge-success">
+                                        Producto Gratuito
+                                </span>
+                            </div>
                         </td>
                         <td>
-                            {{ item.location}}
+                            {{ item.location }}
                         </td>
                         <td>
                             {{ item.sale_unit_price }}
@@ -39,7 +49,6 @@
         <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cerrar</el-button>
         </span>
-
     </el-dialog>
 </template>
 
