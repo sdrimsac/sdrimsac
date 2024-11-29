@@ -1054,7 +1054,7 @@ class ItemController extends Controller
                 $newUnitType->save();
 
                 ItemUnitTypePriceRange::where('unit_type_id', $newUnitType->id)->delete();
-                $item_unit_type_price_ranges = $unit['item_unit_type_price_ranges'];
+                $item_unit_type_price_ranges = isset($unit['item_unit_type_price_ranges']) ? $unit['item_unit_type_price_ranges'] : [];
                 if ($item_unit_type_price_ranges) {
                     foreach ($item_unit_type_price_ranges as $item_unit_type_price_range) {
                         $newUnitType->item_unit_type_price_ranges()->create($item_unit_type_price_range);
