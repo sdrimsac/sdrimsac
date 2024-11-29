@@ -2568,6 +2568,7 @@ export default {
             this.form.item_unit_types[index].item_unit_type_price_ranges.splice(indexx, 1);
         },
         addUnitTypePriceRange(index) {
+
             this.form.item_unit_types[index].item_unit_type_price_ranges.push({
                 quantity_min: null,
                 price: null
@@ -2756,6 +2757,7 @@ export default {
         },
         clickAddRow() {
             this.form.item_unit_types.push({
+                item_unit_type_price_ranges: [],
                 id: null,
                 description: null,
                 unit_type_id: "NIU",
