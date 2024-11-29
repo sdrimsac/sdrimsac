@@ -1044,6 +1044,9 @@ class ItemController extends Controller
             }
         }
         ItemUnitType::where('item_id', $item->id)->delete();
+        ItemUnitTypePriceRange::whereHas('item_unit_type', function ($query) use ($item) {
+            $query->where('item_id', $item->id);
+        })->delete();
         ItemWarehousePrice::where('item_id', $item->id)->delete();
         //---------------------------------------
         if ($request['item_unit_types'] != null) {
@@ -1053,7 +1056,7 @@ class ItemController extends Controller
                 $newUnitType->item_id = $item->id;
                 $newUnitType->save();
 
-                ItemUnitTypePriceRange::where('unit_type_id', $newUnitType->id)->delete();
+                // ItemUnitTypePriceRange::where('unit_type_id', $newUnitType->id)->delete();
                 $item_unit_type_price_ranges = isset($unit['item_unit_type_price_ranges']) ? $unit['item_unit_type_price_ranges'] : [];
                 if ($item_unit_type_price_ranges) {
                     foreach ($item_unit_type_price_ranges as $item_unit_type_price_range) {
