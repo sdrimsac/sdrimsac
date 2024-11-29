@@ -1043,10 +1043,10 @@ class ItemController extends Controller
                 $item_warehouse->save();
             }
         }
-        ItemUnitType::where('item_id', $item->id)->delete();
         ItemUnitTypePriceRange::whereHas('item_unit_type', function ($query) use ($item) {
             $query->where('item_id', $item->id);
         })->delete();
+        ItemUnitType::where('item_id', $item->id)->delete();
         ItemWarehousePrice::where('item_id', $item->id)->delete();
         //---------------------------------------
         if ($request['item_unit_types'] != null) {
