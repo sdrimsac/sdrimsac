@@ -1790,6 +1790,7 @@
         <detraction-payment
             :showDialog.sync="showDialogDetraction"
         ></detraction-payment>
+    
     </div>
 </template>
 
@@ -1868,6 +1869,7 @@ const ItemSet = () =>
 const ConsolidatedListModal = () =>
     import("./partials/consolidated_list_modal.vue");
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
+
 const options = {
     text: "Loading ...",
     customClass: "login_loading",
@@ -5818,6 +5820,7 @@ export default {
         enabledSearchItemsBarcode() {
             if (this.search_item_by_barcode) {
                 if (this.items.length == 1) {
+                    console.log("item ", this.items[0]);
                     this.clickAddItem(this.items[0], 0);
                     this.filterItems();
                 }

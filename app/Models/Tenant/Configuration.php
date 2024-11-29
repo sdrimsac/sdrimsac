@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'unit_type_select_barcode',
         'sale_offert',
         'quantity_prices',
         'price_item_unit_type',
@@ -274,6 +275,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'unit_type_select_barcode' => 'boolean',
         'sale_offert' => 'boolean',
         'quantity_prices' => 'boolean',
         'price_item_unit_type' => 'boolean',
@@ -488,6 +490,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'unit_type_select_barcode' => (bool)$this->unit_type_select_barcode,
             'sale_offert' => (bool)$this->sale_offert,
             'quantity_prices' => (bool)$this->quantity_prices,
             'price_item_unit_type' => (bool)$this->price_item_unit_type,
