@@ -4118,7 +4118,26 @@ export default {
         },
         getPriceRange(orden) {
             if (this.configuration.quantity_prices) {
-                let { item_price_ranges } = orden.food;
+                if(orden.type_id){
+                    let { type_price_ranges } = orden;
+                    if(type_price_ranges.length > 0){
+                        let sortedRanges = [...type_price_ranges].sort(
+                            (a, b) => b.quantity_min - a.quantity_min
+                        );
+                        let orderQuantity = Number(orden.quantity);
+
+                        let price_range = sortedRanges.find(
+                            row =>
+                                orderQuantity == row.quantity_min ||
+                                orderQuantity >= row.quantity_min
+                        );
+                        if (price_range) {
+                            return price_range.price;
+                        }
+                        return orden.original_price;
+                    }
+                }else{
+                    let { item_price_ranges } = orden.food;
                 if (item_price_ranges.length > 0) {
                     let sortedRanges = [...item_price_ranges].sort(
                         (a, b) => b.quantity_min - a.quantity_min
@@ -4135,6 +4154,7 @@ export default {
                     }
 
                     return orden.original_price;
+                }
                 }
             }
             return orden.price;

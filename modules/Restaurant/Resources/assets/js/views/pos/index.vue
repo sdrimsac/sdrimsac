@@ -3020,6 +3020,7 @@ export default {
                         if (unit_type) {
                             orden.type_id = unit_type.id;
                             orden.type_description = unit_type.description;
+                            orden.type_price_ranges = unit_type.item_unit_type_price_ranges;
                             orden.type_quantity = Number(
                                 unit_type.quantity_unit
                             );
@@ -3078,6 +3079,7 @@ export default {
                         if (unit_type) {
                             orden.type_id = unit_type.id;
                             orden.type_description = unit_type.description;
+                            orden.type_price_ranges = unit_type.item_unit_type_price_ranges;
                             orden.type_quantity = Number(
                                 unit_type.quantity_unit
                             );
@@ -3602,6 +3604,7 @@ export default {
 
                 orden.type_id = type ? type.id : null;
                 orden.type_description = type ? type.description : null;
+                orden.type_price_ranges = type ? type.item_unit_type_price_ranges : [];
                 orden.type_quantity = type ? Number(type.quantity_unit) : 0;
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.categoriaMadera = categoriaMadera;
@@ -3721,6 +3724,7 @@ export default {
                         orden.price = this.getDefaultPrice(type);
                         orden.type_id = type.id;
                         orden.type_description = type.description;
+                        orden.type_price_ranges = type ? type.item_unit_type_price_ranges : [];
                         orden.to_carry = false;
                         orden.change_subtotal = false;
                         orden.series = [];

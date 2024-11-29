@@ -1306,9 +1306,69 @@
                             </div>
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane v-if="configuration.quantity_prices" label="Precios por rango de cantidad">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">
+                                                <a
+                                                    href="#"
+                                                    class="control-label font-weight-bold text-info"
+                                                    @click.prevent="
+                                                        addPriceRange
+                                                    "
+                                                    >[ + Nuevo]</a
+                                                >
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Cantidad</th>
+                                            <th>Precio</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(row,
+                                            index) in form.item_price_ranges"
+                                            :key="index"
+                                        >
+                                            <td>
+                                                <el-input
+                                                    v-model="row.quantity_min"
+                                                ></el-input>
+                                            </td>
+                                            <td>
+                                                <el-input
+                                                    v-model="row.price"
+                                                ></el-input>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    class="btn waves-effect waves-light btn-sm btn-danger"
+                                                    @click.prevent="
+                                                        clickDeletePriceRange(
+                                                            index
+                                                        )
+                                                    "
+                                                >
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </el-tab-pane>
                     <el-tab-pane
                         label="Lista de Precios"
-                        v-if="!configuration.quantity_prices"
+                        
                     >
                         <div class="row">
                             <div
@@ -1896,24 +1956,28 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane v-else label="Precios por rango de cantidad">
+                    <el-tab-pane v-if="configuration.quantity_prices && form.item_unit_types && form.item_unit_types.length > 0" label="Precios por rango en politica de precio">
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table"
+                                    v-for="(unit_type, index) in form.item_unit_types"
+                                    :key="index"
+                                    v-show="unit_type.description"
+                                >
                                     <thead>
                                         <tr>
-                                            <th class="text-left">
+                                            <th class="text-left" colspan="3">
+                                                {{ unit_type.description }}
                                                 <a
                                                     href="#"
                                                     class="control-label font-weight-bold text-info"
                                                     @click.prevent="
-                                                        addPriceRange
+                                                        addUnitTypePriceRange(index)
                                                     "
                                                     >[ + Nuevo]</a
                                                 >
                                             </th>
-                                            <th></th>
-                                            <th></th>
+                                        
                                         </tr>
                                         <tr>
                                             <th>Cantidad</th>
@@ -1924,8 +1988,8 @@
                                     <tbody>
                                         <tr
                                             v-for="(row,
-                                            index) in form.item_price_ranges"
-                                            :key="index"
+                                            indexx) in unit_type.item_unit_type_price_ranges"
+                                            :key="indexx"
                                         >
                                             <td>
                                                 <el-input
@@ -1942,8 +2006,9 @@
                                                     type="button"
                                                     class="btn waves-effect waves-light btn-sm btn-danger"
                                                     @click.prevent="
-                                                        clickDeletePriceRange(
-                                                            index
+                                                        clickDeleteUnitTypePriceRange(
+                                                            index,
+                                                            indexx
                                                         )
                                                     "
                                                 >
@@ -2499,6 +2564,15 @@ export default {
     },
 
     methods: {
+        clickDeleteUnitTypePriceRange(index, indexx) {
+            this.form.item_unit_types[index].item_unit_type_price_ranges.splice(indexx, 1);
+        },
+        addUnitTypePriceRange(index) {
+            this.form.item_unit_types[index].item_unit_type_price_ranges.push({
+                quantity_min: null,
+                price: null
+            });
+        },
         validatePriceRange() {
             if (this.form.item_price_ranges.length == 0) return true;
             return this.form.item_price_ranges.every(

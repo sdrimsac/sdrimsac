@@ -1664,6 +1664,7 @@
             :showSplitPayment.sync="showSplitPayment"
             :customer_default="customer_default"
             @setPayments="setPayments"
+            :printerOn="printerOn"
         >
         </show-split-payment-form>
         <person-college-form

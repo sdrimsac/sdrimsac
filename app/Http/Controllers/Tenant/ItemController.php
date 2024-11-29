@@ -71,6 +71,7 @@ use App\Http\Resources\Tenant\ItemUltima_ventaCollection;
 use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
 use App\Models\Tenant\BonusUnitType;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
+use App\Models\Tenant\ItemUnitTypePriceRange;
 use App\Models\Tenant\RegisterMovement;
 use App\Models\Tenant\SaleOffertDetail;
 
@@ -1051,6 +1052,14 @@ class ItemController extends Controller
                 $newUnitType->fill($unit);
                 $newUnitType->item_id = $item->id;
                 $newUnitType->save();
+
+                ItemUnitTypePriceRange::where('unit_type_id', $newUnitType->id)->delete();
+                $item_unit_type_price_ranges = $unit['item_unit_type_price_ranges'];
+                if ($item_unit_type_price_ranges) {
+                    foreach ($item_unit_type_price_ranges as $item_unit_type_price_range) {
+                        $newUnitType->item_unit_type_price_ranges()->create($item_unit_type_price_range);
+                    }
+                }
             }
         }
         if ($request['color_sizes'] != null) {

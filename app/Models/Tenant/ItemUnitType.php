@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ItemUnitType extends ModelTenant
 {
-    protected $with = ['unit_type'];
+    protected $with = ['unit_type', 'item_unit_type_price_ranges'];
     public $timestamps = false;
 
     protected $fillable = [
@@ -44,5 +44,10 @@ class ItemUnitType extends ModelTenant
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function item_unit_type_price_ranges()
+    {
+        return $this->hasMany(ItemUnitTypePriceRange::class, 'unit_type_id');
     }
 }

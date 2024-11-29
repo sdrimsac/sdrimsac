@@ -249,6 +249,7 @@ export default {
         PersonForm
     },
     props: [
+        "printerOn",
         "showSplitPayment",
         "total",
         "orden_items",
@@ -424,6 +425,9 @@ export default {
         async sendDocument(form, resource) {
             this.loading = true;
             let newForm = this.reCalculateTotal(form);
+            if (this.printerOn) {
+                newForm.printerOn = true;
+            }
             const response = await this.$http.post(`/${resource}`, newForm);
             this.loading = false;
         },
