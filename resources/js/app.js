@@ -401,6 +401,7 @@ const app = new Vue({
         "tenant-banks-index": () => import("./views/banks/index.vue"),
 
         "tenant-unit_types-index": () => import("./views/unit_types/index.vue"),
+        "tenant-warranty-index": () => import("./views/warranty/index.vue"),
 
         "tenant-establishments-index": () =>
             import("./views/establishments/index.vue"),

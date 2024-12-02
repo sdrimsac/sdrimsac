@@ -1118,6 +1118,53 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3"
+                                >
+                                    <div
+                                        v-if="form.unit_type_id != 'ZZ'"
+                                        class="col-md-3 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.has_warranty"
+                                                @change="changeHasWarranty"
+                                                >¿Tiene Garantia?</el-checkbox
+                                            >
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-md-12"
+                                        v-if="
+                                            form.unit_type_id != 'ZZ' &&
+                                                form.has_warranty
+                                        "
+                                    >
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.month_day
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                >Ingrese Mumero de Meses Garantia</label
+                                            >
+                                            <el-input v-model="form.month_day" type="number">
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i>
+                                            </el-input>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.month_day"
+                                                v-text="errors.month_day[0]"
+                                            ></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                         <div class="row">
@@ -2705,6 +2752,11 @@ export default {
             //     this.form.lots = []
             // }
         },
+        changeHasWarranty() {
+            /* if (!this.form.has_warranty) {
+                this.form.warranty = null;
+            } */
+        },
         addRowLot(lots) {
             this.form.lots = lots;
         },
@@ -2825,7 +2877,8 @@ export default {
                 area_id: 2,
                 model: null,
                 quality: null,
-                origin: null
+                origin: null,
+                month_day: null,
             };
             this.show_has_igv = true;
             this.enabled_percentage_of_profit = false;

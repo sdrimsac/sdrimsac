@@ -524,7 +524,27 @@ export default {
       }
       return false;
     },
+    validateForm() {
+      const requiredFields = [
+        'customer_id', 'placa', 'tipo_vehiculo_id', 'serie', 'color', 'modelo',
+        'marca', 'motor', 'anio_fabricacion', 'kilometraje', 'personal_id', 'observacion'
+      ];
+      for (const field of requiredFields) {
+        if (!this.form[field]) {
+          this.$showSAlert(
+             "ALERTA",
+             `El campo ${field.replace('_', ' ')} es obligatorio`,
+             "error",
+          );
+          return false;
+        }
+      }
+      return true;
+    },
     async submit() {
+      if (!this.validateForm()) {
+        return;
+      }
       if (this.validateVehiculo(this.vehiculo)) {
         this.form.vehiculo = this.vehiculo;
       }

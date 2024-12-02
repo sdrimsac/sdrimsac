@@ -28,7 +28,19 @@ class HistorialResource extends JsonResource
             'garantia' => $this->garantia,
             'mantenimiento' => $this->mantenimiento,
             'diagnostico' => $this->diagnostico,
-            'estado' => $this->estado
+            'estado' => $this->estado,
+            'vehicle_features' => $this->vehicleFeatures,
+            'services_details' => $this->servicesDetails
         ];
+    }
+    
+    public function getVehicleFeaturesAttribute()
+    {
+        return $this->vehicleFeatures()->get();
+    }
+
+    public function getServicesDetailsAttribute()
+    {
+        return $this->servicesDetails()->get();
     }
 }

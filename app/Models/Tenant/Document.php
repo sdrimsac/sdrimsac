@@ -373,7 +373,7 @@ class Document extends ModelTenant
 
     public function person()
     {
-        return $this->belongsTo(Person::class, 'customer_id');
+        return $this->belongsTo(Person::class, 'customer_id', 'id');
     }
 
     public function group()

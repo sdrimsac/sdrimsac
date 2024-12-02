@@ -15,24 +15,9 @@
           <div class="row">
             <div class="col-md-3">
               <label>cliente</label>
-              <el-select
-                v-model="form.customer_id"
-                filterable
-                remote
-                class="border-left rounded-left border-info"
-                popper-class="el-select-customers"
-                dusk="customer_id"
-                placeholder="Escriba el nombre o número de documento del cliente"
-                :remote-method="searchRemoteCustomers"
-                :loading="loading_search"
-              >
-                <el-option
-                  v-for="option in customers"
-                  :key="option.id"
-                  :value="option.id"
-                  :label="option.description"
-                ></el-option>
-              </el-select>
+              <el-input v-model="form.customer" placeholder="Ingrese Cliente" @input="lisVehicle()">
+              </el-input>
+  
             </div>
             <div class="col-md-3">
               <label>Placa Vehiculo</label>
@@ -138,13 +123,13 @@
                             Historial
                           </el-button>
                         </a>
-                        <a class="dropdown-item">
+                        <!-- <a class="dropdown-item">
                           <el-button
                             type="primary"
                             @click="clickCreate(vehiculo.id)"
                             class="w-100"
                           >Editar</el-button>
-                        </a>
+                        </a> -->
                         <a class="dropdown-item">
                           <el-button
                             @click.prevent="clickPrintFormat(vehiculo.id)"
@@ -235,7 +220,8 @@ export default {
       loading_search: false,
       form: {
         customer_id: null,
-        placa: ""
+        placa: "",
+        customer: ""
       },
       customers: [],
       allFoods: [],
@@ -336,8 +322,16 @@ export default {
       return hasError;
     },
 
-    async openpayOrden(id) {
+    /* async openpayOrden(id) {
       this.$emit("payment", id);
+    }, */
+    async openpayOrden(id) {
+      if (this.vehiculos.length === 0) {
+      this.$toast.error("No hay items disponibles.");
+      return;
+      }
+      this.$emit("payment", id);
+      /* this.openpayOrden(id); */
     },
     selectItem(id, placa, historial_id) {
       if (historial_id == null) {
@@ -403,7 +397,8 @@ export default {
     },
     getQueryParameters() {
       this.search = {
-        placa: this.form.placa
+        placa: this.form.placa,
+        customer: this.form.customer
       };
       return queryString.stringify({
         page: this.pagination.current_page,

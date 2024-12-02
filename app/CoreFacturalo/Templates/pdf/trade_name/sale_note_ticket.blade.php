@@ -597,7 +597,10 @@ contain"
                                 @if (isset($row->item->origin))
                                 {{ $row->item->origin }} <br>
                                 @endif
-                                {{ $row->item->description }}
+                                {{ $row->item->description }} <br>
+                                @if (isset($row->item->month_day))
+                                    tiene {{ $row->item->month_day }} meses garantía
+                                @endif
                             @endif
                         @endif
                         @if (isset($row->item->categoriaMadera))
@@ -634,6 +637,9 @@ contain"
                                 <br />{!! $lot->series !!}
                             @endforeach
                         @endif
+                        {{-- @if (isset($row->item->month_day))
+                            {!! $row->month_day !!}
+                        @endif --}}
                         @if (isset($row->item->color_size))
                             @foreach ($row->item->color_size as $color_size)
                                 <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>

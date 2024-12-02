@@ -18,6 +18,7 @@ use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
 use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Http\Controllers\Tenant\SellerController;
+use App\Http\Controllers\Tenant\WarrantyController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\CashController;
@@ -123,6 +124,16 @@ if ($hostname) {
                         Route::post('/import', [ItemColorSizeController::class, 'import']);
                         Route::delete('/{id}', [ItemColorSizeController::class, 'delete']);
                         Route::post('/', [ItemColorSizeController::class, 'store']);
+                    });
+                Route::prefix('warranty')
+                    ->group(function () {
+                        Route::get('/', [WarrantyController::class, 'index'])->name('tenant.warranty.index');
+                        Route::get('/columns', [WarrantyController::class, 'columns']);
+                        Route::get('/records', [WarrantyController::class, 'records']);
+                        Route::get('/record/{id}', [WarrantyController::class, 'record']);
+                        Route::get('/export_excel', [WarrantyController::class, 'ExportarExcel']);
+                        Route::delete('/{id}', [WarrantyController::class, 'delete']);
+                        Route::post('/', [WarrantyController::class, 'store']);
                     });
                 Route::prefix('credit-list')->group(function () {
                     Route::get('/', [CreditListController::class, 'credit_list_report_index'])->name('tenant.credit_list.index');
@@ -460,7 +471,7 @@ if ($hostname) {
                 Route::get('items/export/barcode/print', [App\Http\Controllers\Tenant\ItemController::class, 'printBarCode'])->name('tenant.items.export.barcode.print')->middleware('just.admin');
                 Route::get('items/export/barcode/last', [App\Http\Controllers\Tenant\ItemController::class, 'itemLast'])->name('tenant.items.last')->middleware('just.admin');
                 Route::get('items/check_all_stock', [App\Http\Controllers\Tenant\ItemController::class, 'check_all_stock'])->name('tenant.items.check_stock')->middleware('just.admin');
-                
+
                 //ClientZone
                 Route::get('client_zones/records', [ClientZoneController::class, 'records']);
                 Route::post('client_zones', [ClientZoneController::class, 'store']);
@@ -918,7 +929,7 @@ if ($hostname) {
                     Route::post('deactivate/{id}', [PromotionDocumentController::class, 'deactivatePromotion']);
                 });
                 Route::get('promotion-document/items-by-person/{id}', [PromotionDocumentController::class, 'getItemsByPerson']);
-                
+
                 Route::get('/search-ce/{ce}', [App\Http\Controllers\Tenant\PersonController::class, 'serviceCe']);
                 //Promotion
                 Route::get('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');
@@ -1130,7 +1141,7 @@ if ($hostname) {
 
             Route::get('services/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-            
+
             Route::get('certificates/record', 'System\CertificateController@record');
             Route::post('certificates/uploads', 'System\CertificateController@uploadFile');
             Route::post('certificates/saveSoapUser', 'System\CertificateController@saveSoapUser');

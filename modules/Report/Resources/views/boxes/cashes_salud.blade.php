@@ -301,7 +301,6 @@
                     </td>
                 </tr>
             @endif
-            {{-- @dump($info_documents) --}}
             @if (isset($info_documents['min_07']) || isset($info_documents['max_07']))
                 <tr>
                     <td class="celda">NC-{{ $establishment->description }}</td>

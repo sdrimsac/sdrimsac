@@ -23,20 +23,16 @@ class SaleNoteItem extends ModelTenant
         'total_base_igv',
         'percentage_igv',
         'total_igv',
-
         'system_isc_type_id',
         'total_base_isc',
         'percentage_isc',
         'total_isc',
-
         'total_base_other_taxes',
         'percentage_other_taxes',
         'total_other_taxes',
         'total_taxes',
-
         'price_type_id',
         'unit_price',
-
         'total_value',
         'total_charge',
         'total_discount',
@@ -111,6 +107,10 @@ class SaleNoteItem extends ModelTenant
     public function relation_item()
     {
         return $this->belongsTo(Item::class, 'item_id');
+    }
+    public function warranty()
+    {
+        return $this->hasOne(ItemWarranty::class, 'sale_note_item_id');
     }
 
     public function scopeWhereDefaultDocumentType($query, $params)

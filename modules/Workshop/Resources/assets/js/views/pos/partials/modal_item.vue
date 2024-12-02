@@ -252,17 +252,17 @@ export default {
         })
         .then(response => {
           this.$emit("update:showDialog", false);
-          this.$message({
-            message: "Producto agregados con éxito",
-            type: "success"
-          });
+            this.$showSAlert(
+             "Producto agregados con éxito",
+             "success"
+            );
         })
         .catch(error => {
           console.log(error);
-          this.$message({
-            message: "Error al agregar producto",
-            type: "error"
-          });
+            this.$showSAlert( "ALERTA",
+            "Error al agregar producto",
+            "error"
+            );
         });
     },
     open() {

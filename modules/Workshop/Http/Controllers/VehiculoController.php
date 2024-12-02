@@ -47,29 +47,21 @@ class VehiculoController extends Controller
 
         return new VehiculoCollection($records);
     }
-    /* public function getRecords(Request $request)
+    public function getRecords(Request $request)
     {
         $placa = $request->input('placa');
-
+        $customer = $request->input('customer');
         $query = Vehiculo::query()
             ->when($placa, function ($query, $placa) {
                 return $query->where('placa', 'like', '%' . $placa . '%');
             })
-            ->get();
-
-        return $query;
-    } */
-    public function getRecords(Request $request)
-    {
-        $placa = $request->input('placa');
-
-        // Devuelve la consulta sin ejecutar con get()
-        $query = Vehiculo::query()
-            ->when($placa, function ($query, $placa) {
-                return $query->where('placa', 'like', '%' . $placa . '%');
+            ->when($customer, function ($query, $customer) {
+                return $query->whereHas('customer', function ($query) use ($customer) {
+                    $query->where('name', 'like', '%' . $customer . '%');
+                });
             });
 
-        return $query;  // Devuelve el query builder en lugar de una Collection
+        return $query;
     }
     public function setItems(Request $request)
     {
@@ -150,7 +142,11 @@ class VehiculoController extends Controller
             $row->item->sale_unit_price = $row->price;
             return $row->item;
         });
-
+        if ($items->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay items en el historial para este vehículo por favor no segir el proceso.'
+            ], 400);
+        }
         return ['customer_id' => $customer_id, 'establishment_id' => $historial->establishment_id, 'items' => $items];
     }
     public function tables()
@@ -168,7 +164,7 @@ class VehiculoController extends Controller
         $this->vehiculo->filename = join('-', $name);
         $this->vehiculo->save();
     }
-    private function setFilenameHistorial($historial)
+    private function setFilenameHistorial($historial, $services)
     {
         $name = ['TS', $historial->id, date('Ymd')];
         $historial->filename = join('-', $name);
@@ -191,7 +187,7 @@ class VehiculoController extends Controller
             $historial->vehiculo_id = $vehicle->id;
             $historial->establishment_id = $establishment_id;
             $historial->save();
-            $this->setFilenameHistorial($historial);
+            /* $this->setFilenameHistorial($historial); */
 
             $historial_id = $historial->id;
 
@@ -242,7 +238,7 @@ class VehiculoController extends Controller
         $historial->vehiculo_id = $vehicle->id;
         $historial->establishment_id = $establishment_id;
         $historial->save();
-        $this->setFilenameHistorial($historial);
+        /* $this->setFilenameHistorial($historial); */
 
         $historial_id = $historial->id;
 
@@ -330,12 +326,12 @@ class VehiculoController extends Controller
                 ->where('hsd.historial_id', $historial_id)
                 ->whereIn('hsd.services_detail_id', $services_detail_ids)
                 ->select('sd.name', 'sd.price_unit');
-            $historial = $query->get();
-           
+            $services = $query->get();
 
-            $this->setFilenameHistorial($historial);
 
-            $this->createPdfHistorial($historial, "a4", $historial->filename);
+            $this->setFilenameHistorial($historial, $services);
+
+            $this->createPdfHistorial($historial, $services, "a4", $historial->filename);
 
             return [
                 'success' => true,
@@ -546,18 +542,16 @@ class VehiculoController extends Controller
 
         $this->uploadFile($filename, $pdf->output('', 'S'), 'vehiculo');
     }
-    public function createPdfHistorial($historial = null, $format_pdf = null, $filename = null)
+    public function createPdfHistorial($historial = null, $format_pdf = null, $filename = null, $services = null)
     {
-        /* if (!$services) {
-            // Maneja el caso si $services es null o vacío
-            throw new \Exception("Los servicios no se pasaron correctamente");
-        } */
-
         ini_set("pcre.backtrack_limit", "5000000");
         $template = new Template();
         $pdf = new Mpdf();
 
+        $historial->services = $services;
+
         $document = $historial;
+        /* $document = $services; */
         $company = ($this->company != null) ? $this->company : Company::active();
         $filename = ($filename != null) ? $filename : $historial->filename;
 
@@ -565,10 +559,8 @@ class VehiculoController extends Controller
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
 
         $trade_name = $configuration->formats;
-
         /* $html = $template->pdf($trade_name, "vehiculo", $company, $document, $format_pdf, $establishment); */
         $html = $template->pdf($trade_name, "vehiculo", $company, $document, $format_pdf, $establishment);
-
 
         $pdf_font_regular = config('tenant.pdf_name_regular');
         $pdf_font_bold = config('tenant.pdf_name_bold');
@@ -641,28 +633,29 @@ class VehiculoController extends Controller
     {
         $this->uploadStorage($filename, $file_content, $file_type);
     }
-    private function reloadPDF($vehiculo, $format, $filename)
+    private function reloadPDF($vehiculo, $format, $filename, $services)
     {
-        $this->createPdfHistorial($vehiculo, $format, $filename);
+        $this->createPdfHistorial($vehiculo, $format, $filename, $services);
     }
     public function toPrint($id, $format)
     {
 
         $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
 
-        if (!$historial) throw new Exception("El código es inválido, no se encontró el servicio técnico relacionado");
+        if (!$historial) throw new Exception("El código es inválido, 
+        no se encontró el servicio técnico relacionado");
 
-        $this->reloadPDF($historial, $format, $historial->filename);
+        $services = DB::connection('tenant')
+            ->table('historial_service_details as hsd')
+            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+            ->where('hsd.historial_id', $historial->id)
+            ->select('sd.name', 'sd.price_unit')
+            ->get();
+
+        $this->reloadPDF($historial, $format, $historial->filename, $services);
         $temp = tempnam(sys_get_temp_dir(), 'vehiculo');
 
         file_put_contents($temp, $this->getStorage($historial->filename, 'vehiculo '));
-
-        /*
-            $headers = [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="'.$technical_service->filename.'"'
-            ];
-            */
 
         return response()->file($temp, $this->generalPdfResponseFileHeaders($historial->filename));
     }

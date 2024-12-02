@@ -273,14 +273,14 @@ class DocumentInput
                     'item_id' => $item->id,
                     'item' => [
                         
-                        /* 'origin' =>   Functions::valueKeyInArray($inputs, 'origin', null), */
                         'college' =>   Functions::valueKeyInArray($inputs, 'college', false),
                         'description_internet' => (isset($row['item']['descriptionInternet'])) ? $row['item']['descriptionInternet'] : null,
                         'has_unit_type'  => $type_desc,
-                        /* 'origin' => $item->origin, */
                         'origin'=>isset($item->origin) ? $item->origin : null,
                         'description' => $desc == null ? $item->description : $desc,
                         'item_type_id' => $item->item_type_id,
+                        'has_warranty' => $item->has_warranty,
+                        'month_day' => $item->month_day,
                         'second_name' => $item->second_name,
                         'barcode' => $item->barcode,
                         'is_promotion' => isset($row['item']['is_promotion']) ? $row['item']['is_promotion'] : false,

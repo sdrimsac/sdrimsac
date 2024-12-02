@@ -212,7 +212,7 @@
                   </div>
                   <div class="col-12 col-lg-4 p-2">
                     <template>
-                      <h2 class="font-weight-bold custom-text-size">Categorias aaa</h2>
+                      <h2 class="font-weight-bold custom-text-size">Categorias</h2>
                       <el-select
                         v-model="category"
                         filterable
@@ -230,7 +230,7 @@
                     </template>
                   </div>
                   <div class="col-12 col-lg-6 p-2">
-                    <h2 class="font-weight-bold custom-text-size">Buscar aaa</h2>
+                    <h2 class="font-weight-bold custom-text-size">Buscar</h2>
                     <template v-if="selectOption == 4">
                       <el-input
                         ref="input_items"

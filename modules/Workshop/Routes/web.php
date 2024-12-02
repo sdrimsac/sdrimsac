@@ -72,6 +72,7 @@ Route::prefix('workshop')->group(function () {
     Route::get('historial/records', [HistorialController::class, 'records']);
     Route::post('historial', [HistorialController::class, 'store']);
     Route::get('historial/record/{id}', [HistorialController::class, 'record']);
+    Route::get('historial/record2/{id}', [HistorialController::class, 'record2']);
     Route::delete('historial/{services}', [HistorialController::class, 'destroy']);
 
     Route::get('/historialItem', [HistorialItemController::class, 'index'])->name('tenant.workshop.historialItem');

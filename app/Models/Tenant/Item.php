@@ -84,6 +84,8 @@ class Item extends ModelTenant
         'has_orden_compra',
         'is_promotion',
         'promotion_count',
+        'has_warranty',
+        'month_day',
         //'warehouse_id'
     ];
 
@@ -178,9 +180,11 @@ class Item extends ModelTenant
         // }
 
         $data = [
+            'month_day' => $this->month_day,
             'points_value' => $this->points_value,
             'weight' => $this->weight,
             'origin' => $this->origin,
+            'has_warranty' => (bool)$this->has_warranty,
             'has_color_size' => (bool)$this->has_color_size,
             'id'                               => $this->id,
             'is_manufactured'                 => (bool)$this->is_manufactured,
@@ -282,6 +286,15 @@ class Item extends ModelTenant
                         'price' => $row->price,
                     ];
                 }),
+            /* 'warranty' => ItemWarranty::where('item_id', $this->id)->first()
+                ->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'warranty_end_date' => $row->warranty_end_date,
+                        'sale_note_item_id' => $row->sale_note_item_id,
+                        'document_item_id' => $row->document_item_id,
+                    ];
+                }), */
             'lots'           => $lots,
             'lots_enabled'   => (bool)$this->lots_enabled,
             'series_enabled' => (bool)$this->series_enabled,
@@ -594,6 +607,10 @@ class Item extends ModelTenant
     {
         return $this->hasMany(ItemLot::class, 'item_id');
     }
+    /* public function warranty()
+    {
+        return $this->hasOne(ItemWarranty::class, 'item_id');
+    } */
 
     public function lots()
     {

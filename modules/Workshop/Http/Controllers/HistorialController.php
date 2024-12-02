@@ -36,6 +36,21 @@ class HistorialController extends Controller
 
         return $record;
     }
+    public function record2($id)
+    {
+        $historial = Historial::findOrFail($id);
+
+        if ($historial->estado == 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede editar el historial porque está inactivo.'
+            ], 403);
+        }
+
+        $record = new HistorialResource($historial);
+
+        return $record;
+    }
 
     public function store(HistorialRequest $request)
     {

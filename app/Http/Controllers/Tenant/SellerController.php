@@ -36,51 +36,6 @@ class SellerController extends Controller
 
         return new SellerCollection($records->paginate(10));
     }
-    /* public function getRecords(Request $request)
-    {
-        $date_of_issue = $request->input('date_of_issue');
-        $month_start = $request->input('month_start');
-        $active = $request->input('active', 1);
-
-        $query = Seller::query()
-            ->withSum(['documents as documents_total' => function ($query) use ($date_of_issue, $month_start) {
-                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-
-                    $query->whereDate('date_of_issue', $date_of_issue);
-                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-
-                    $month_start_date = "{$month_start}-01";
-                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                }
-            }], 'total')
-            ->withSum(['saleNotes as sale_notes_total' => function ($query) use ($date_of_issue, $month_start) {
-
-                if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-
-                    $query->whereDate('date_of_issue', $date_of_issue);
-                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-
-                    $month_start_date = "{$month_start}-01";
-                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                }
-            }], 'total');
-        if ($request->has('active')) {
-            $active = $request->input('active');
-            $query->where('active', $active);
-        } else {
-            $query->where('active', 1);
-        }
-
-        if ($request->has('column') && $request->has('value') && !empty($request->value)) {
-            $column = $request->input('column');
-            if (in_array($column, ['name', 'document'])) {
-                $query->where($column, 'like', '%' . $request->value . '%');
-            }
-        }
-        return $query->orderBy('id', 'desc');
-    } */
     public function getRecords(Request $request)
     {
         $date_of_issue = $request->input('date_of_issue');

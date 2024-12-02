@@ -18,7 +18,6 @@ class JustAdmin
      */
     public function handle($request, Closure $next)
     {
-
         $config = Configuration::first();
         $user = $request->user();
         $path = $request->path();
@@ -27,7 +26,6 @@ class JustAdmin
         $isAccountant = false;
         $isLogistic = false;
         $isArca = false;
-
 
         $isLogistic = RoleService::isLogistic();
         //crear una variable $isArca y que sea true si el usuario actual tiene el worker_type de ARCA
@@ -71,7 +69,6 @@ class JustAdmin
                 if (!$pathPass) {
                     $roleService = new RoleService();
                     if ($roleService->isInterno()) {
-
                         return redirect('/', '/items');
                     } else {
                         return redirect('/', '/documents');
@@ -80,19 +77,14 @@ class JustAdmin
             } else if ($isLogistic) {
                 $pathPass = in_array($path, $paths_logistic);
                 if (!$pathPass) {
-
                     return redirect('/purchases');
                 }
             } else if ($isArca) {
-               
-
                 $pathPass = in_array($path, $paths_arca);
                 if (!$pathPass) {
-
                     return redirect('/incomes');
                 }
             } else {
-
                 $internet = (bool) $config->internet;
                 $billar = (bool) $config->billar;
                 $workshop = (bool) $config->workshop;
@@ -111,9 +103,6 @@ class JustAdmin
                 } else {
                     $redirect_to = "/caja/worker/";
                 }
-                /* $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/"; */
-                /* $redirect_to = $internet ? "/internet/worker/" : ($billar ? "/billar/worker/" : "/caja/worker/") 
-                : ($workshop ? "/workshop/worker/" : "/caja/worker"); */
 
                 $worker_type = WorkersType::find($user->worker_type_id);
                 if ($worker_type) {

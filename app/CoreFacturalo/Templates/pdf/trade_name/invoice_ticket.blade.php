@@ -780,7 +780,10 @@
                              @if(isset($row->item->origin))
                                 {{$row->item->origin}} <br>
                              @endif 
-                                {!! $row->item->description !!}
+                                {!! $row->item->description !!} <br>
+                                @if (isset($row->item->month_day))
+                                    tiene {{ $row->item->month_day }} meses garantía
+                                @endif
                             @endif
                             {{-- @if (isset($row->item->categoriaMadera))
                                 -

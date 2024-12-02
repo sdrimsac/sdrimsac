@@ -4,6 +4,7 @@ namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\CommercialTreatment;
 use App\Models\Tenant\CommercialTreatmentItem;
+use App\Models\Tenant\ItemWarranty;
 use Modules\Restaurant\Models\Food;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Item\Models\ItemLotsGroup;
@@ -29,6 +30,7 @@ class ItemResource extends JsonResource
                 $date_of_due = $lot_group->date_of_due;
             }
         }
+
         $commercial_treatments = $this->commercial_treatments->transform(function ($row, $key) {
             return [
                 'id' => $row->id,
@@ -58,6 +60,8 @@ class ItemResource extends JsonResource
             'item_price_ranges' => $this->item_price_ranges,
             'subject_to_detraction' => (bool) $this->subject_to_detraction,
             'commercial_treatments' => $commercial_treatments,
+            'has_warranty' => (bool) $this->has_warranty,
+            'month_day' => $this->month_day,
             'has_color_size' => (bool) $this->has_color_size,
             'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,
@@ -102,6 +106,7 @@ class ItemResource extends JsonResource
             'categoria_madera_item' => $this->categoria_madera,
             'brand_id' => $this->brand_id,
             'date_of_due' => $date_of_due,
+            /* 'warranty_end_date' => $warranty_end_date, */
             'image_url' => ($this->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $this->image) : asset("/logo/{$this->image}"),
             'individual_items' => $this->sets->transform(function ($row, $key) {
                 $full_description = ($row->individual_item->internal_id) ? $row->individual_item->internal_id . ' - ' . $row->individual_item->description : $row->individual_item->description;

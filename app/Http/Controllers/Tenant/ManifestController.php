@@ -10,7 +10,6 @@ class ManifestController extends Controller
     public function manifest(Request $request)
     {
         $subdomain = explode('.', $request->getHost())[0];
-        // dump($subdomain);
         $manifest = [
             'name' => env('APP_NAME', 'SDRIMSAC-STORE'),
             'short_name' => 'SDRIMSAC-STORE',

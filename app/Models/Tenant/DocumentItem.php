@@ -107,7 +107,8 @@ class DocumentItem extends ModelTenant
     {
         return $this->belongsTo(Item::class, 'item_id');
     }
-    public function customer(){
+    public function customer()
+    {
         return $this->belongsTo(Person::class, 'customer_id');
     }
 
@@ -120,6 +121,10 @@ class DocumentItem extends ModelTenant
     public function relation_item()
     {
         return $this->belongsTo(Item::class, 'item_id');
+    }
+    public function warranty()
+    {
+        return $this->hasOne(ItemWarranty::class, 'document_item_id');
     }
 
     public function getAdditionalInformationAttribute($value)

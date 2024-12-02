@@ -72,6 +72,7 @@ use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
 use App\Models\Tenant\BonusUnitType;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Models\Tenant\ItemUnitTypePriceRange;
+use App\Models\Tenant\ItemWarranty;
 use App\Models\Tenant\RegisterMovement;
 use App\Models\Tenant\SaleOffertDetail;
 
@@ -525,6 +526,7 @@ class ItemController extends Controller
             'barcode' => 'Código de barras',
             'brand' => 'Marca',
             'date_of_due' => 'Fecha vencimiento',
+            'warranty' => 'meses garantía',
             'lot_code' => 'Código lote',
             'active' => 'Habilitados',
             'inactive' => 'Inhabilitados',
@@ -843,10 +845,6 @@ class ItemController extends Controller
             });
         });
 
-
-
-
-
         return new ItemStockCollection($items->paginate(config('tenant.items_per_page')));
     }
 
@@ -905,6 +903,7 @@ class ItemController extends Controller
 
     public function store(ItemRequest $request)
     {
+        /* dump($request->all()); */
         $all_establishment = $request->all_establishment;
 
         $id = $request->input('id');
@@ -964,14 +963,13 @@ class ItemController extends Controller
         $commercial_treatments = $request->input('commercial_treatments');
         if ($commercial_treatments && $id == null) {
             foreach ($commercial_treatments as $commercial_treatment) {
-                if($commercial_treatment['amount'] == null) continue;
+                if ($commercial_treatment['amount'] == null) continue;
                 $item->commercial_treatments()->create($commercial_treatment);
             }
         }
         ItemCategoriaMadera::where('item_id', $item->id)->delete();
         $categoria_madera = $request->input('categoria_madera');
         /*  */
-
         if (is_array($categoria_madera) && !empty($categoria_madera)) {
             foreach ($categoria_madera as $categoria) { // Usar un nombre diferente para la variable interna
                 if (isset($categoria['precio']) && isset($categoria['id'])) {
@@ -1016,7 +1014,6 @@ class ItemController extends Controller
                         'item_id' => $item->id,
                         'quantity' => $stock,
                     ]);
-
 
                     InventoryKardex::create([
                         'date_of_issue' => date('Y-m-d '),
@@ -1124,6 +1121,20 @@ class ItemController extends Controller
             }
         }
 
+        /* $warranty_end_date = null;
+        if ($request['warranty_end_date']) {
+            /* dump($request['warranty_end_date']);
+            $exists = ItemWarranty::where('warranty_end_date', $request['warranty_end_date'])
+                ->first();
+            if (!$exists) {
+                $item_warranty = new ItemWarranty;
+                $item_warranty->warranty_end_date = $request['warranty_end_date'];
+                $item_warranty->sale_note_item_id = $request['sale_note_item_id'];
+                $item_warranty->document_item_id = $request['document_item_id'];
+                $item_warranty->save();
+                $warranty_end_date = $item_warranty->id;
+            }
+        } */
         //---------------------------------
         if ($request['file']) {
 
@@ -1346,33 +1357,6 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
-    /* public function excelForImport(Request $request)
-    {
-        $records = $this->getRecords($request, true)->get();
-        $company = Company::first();
-        $warehouse_id = $request->warehouse_id;
-        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
-        foreach ($records as $key => $row) {
-            if ($warehouse_id) {
-                $item_warehouse = ItemWarehouse::where([['item_id', $row->id], ['warehouse_id', $warehouse_id]])->first();
-                $row->stock = ($item_warehouse) ? $item_warehouse->stock : 0;
-            } else {
-                $item_sum_stock = ItemWarehouse::where('item_id', $row->id)->sum('stock');
-                $row->stock = $item_sum_stock;
-            }
-        }
-        $warehouse = Warehouse::find($warehouse_id);
-        $description_warehouse = ($warehouse) ? $warehouse->description : 'Todos';
-        $description_warehouse = str_replace('-', '', $description_warehouse);
-        $description_warehouse = str_replace(' ', '_', $description_warehouse);
-        return (new ItemExportGeneralForImport)
-            ->records($records)
-            ->company($company)
-            ->warehouse_id($warehouse_id)
-            ->establishment($establishment)
-            ->download('Productos_de_' . $description_warehouse . '_' . Carbon::now() . '.xlsx');
-    } */
-
     public function excelForImport(Request $request)
     {
         $records = $this->getRecords($request, true)->get();
@@ -1613,4 +1597,60 @@ class ItemController extends Controller
             return  ['success' => false, 'message' => 'Error inesperado, no se pudo habilitar el producto'];
         }
     }
+    /* public function storeWarranty(Request $request)
+    {
+        $itemId = $request->input('item_id'); // ID del producto
+        $saleDate = null;
+        $relatedId = null; // ID de la relación (sale_note_item o document_item)
+        $relationType = null; // Tipo de relación
+
+        // Buscar en sale_note_items
+        $saleNoteItem = SaleNoteItem::where('item_id', $itemId)->first();
+
+        if ($saleNoteItem) {
+            $relatedId = $saleNoteItem->id;
+            $relationType = 'sale_note_item';
+            $saleDate = $saleNoteItem->sale_date;
+        } else {
+            // Si no está en sale_note_items, buscar en document_items
+            $documentItem = DocumentItem::where('item_id', $itemId)->first();
+
+            if ($documentItem) {
+                $relatedId = $documentItem->id;
+                $relationType = 'document_item';
+                $saleDate = $documentItem->sale_date;
+            }
+        }
+
+        if ($relatedId) {
+            // Verificar si ya existe garantía para evitar duplicados
+            $existingWarranty = ItemWarranty::where($relationType . '_id', $relatedId)->first();
+
+            if (!$existingWarranty) {
+                // Guardar la garantía
+                $warranty = new ItemWarranty();
+                $warranty->item_id = $itemId;
+                if ($relationType == 'sale_note_item') {
+                    $warranty->sale_note_item_id = $relatedId;
+                } else {
+                    $warranty->document_item_id = $relatedId;
+                }
+                $warranty->warranty_months = $request->input('warranty_months', 12); // Por defecto 12 meses
+                $warranty->save();
+
+                return response()->json([
+                    'message' => 'Garantía registrada con éxito',
+                    'warranty' => $warranty,
+                ], 201);
+            }
+
+            return response()->json([
+                'message' => 'Ya existe una garantía para este producto en esta relación.',
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'No se encontró una relación válida para este producto.',
+        ], 404);
+    } */
 }

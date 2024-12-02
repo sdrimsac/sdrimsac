@@ -431,7 +431,10 @@
                                         @if (isset($row->item->origin))
                                             {{ $row->item->origin }} -
                                         @endif
-                                        {{ $row->item->description }}
+                                        {{ $row->item->description }} <br>
+                                        @if (isset($row->item->month_day))
+                                            tiene {{ $row->item->month_day }} meses garantía
+                                        @endif
                                     @endif
                                     @if (isset($row->item->has_unit_type))
                                         - {!! $row->item->has_unit_type !!}

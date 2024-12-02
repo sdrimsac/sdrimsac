@@ -1063,7 +1063,7 @@ class DocumentController extends Controller
                     }
                     if (!$document) {
                         $document = SaleNote::where('quotation_id', $quotation_id)->first();
-                        if ($document) {        
+                        if ($document) {
                             $new_request = new Request();
                             (new SaleNoteController)->anulate($new_request, $document->id);
                         }
@@ -1133,6 +1133,7 @@ class DocumentController extends Controller
         //&& $request->afectar_caja === true
         $establishment = Establishment::where('id', $document->establishment_id)->first();
         $configuration = Configuration::first();
+
         if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
             if ($request->boxes) {
                 $message = "";
@@ -1376,6 +1377,9 @@ class DocumentController extends Controller
             );
         }
 
+        // Call saveItemWarranty to check and save item warranties
+        $this->saveItemWarranty($document, $request->items);
+
         return [
             'success' => true,
             'data' => [
@@ -1399,7 +1403,29 @@ class DocumentController extends Controller
             ],
         ];
     }
+    private function saveItemWarranty($document, $items)
+    {
+        foreach ($items as $item) {
+            if ($item['item']['has_warranty']) {
+                $warranty_start_date = Carbon::parse($document->date_of_issue);
+                $warranty_end_date = $warranty_start_date->copy()->addMonths($item['item']['month_day']);
+                
+                // Find the document item ID
+                $documentItem = DocumentItem::where('document_id', $document->id)
+                    ->where('item_id', $item['item_id'])
+                    ->first();
 
+                if ($documentItem) {
+                    DB::connection('tenant')->table('item_warranty')->insert([
+                        'warranty_start_date' => $warranty_start_date,
+                        'warranty_end_date' => $warranty_end_date,
+                        'document_item_id' => $documentItem->id,
+                    ]);
+                }
+            }
+        }
+    }
+    
     public function reStoreRange(Request $request)
     {
         $date_of_start = $request->input('date_of_start');
@@ -1962,8 +1988,6 @@ class DocumentController extends Controller
         if ($establishments) {
             $records = $records->where('establishment_id', $establishments);
         }
-
-        $records = $records->with(['items.customer']); 
 
         $records = $records->orderBy('date_of_issue', 'desc');
         return $records;

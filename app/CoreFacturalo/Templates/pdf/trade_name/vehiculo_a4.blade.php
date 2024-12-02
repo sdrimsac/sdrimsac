@@ -1,7 +1,7 @@
 @php
     $establishment = $document->establishment;
-    $customer = $document->vehiculo->customer;
-    /* $customer = $document->customer; */
+    $customer = $document->vehiculo ? $document->vehiculo->customer : null;
+    /* $services = $document->vehiculo->services; */
     $services = $document->services;
     $tittle = str_pad($document->id, 8, '0', STR_PAD_LEFT);
 @endphp
@@ -63,16 +63,16 @@
     <table class="full-width mt-5">
         <tr>
             <td width="15%">Cliente:</td>
-            <td width="45%">{{ $customer->name }}</td>
+            <td width="45%">{{ $customer ? $customer->name : '' }}</td>
             <td width="25%">Fecha de emisión:</td>
             <td width="15%">{{ $document->created_at->format('Y-m-d') }}</td>
         </tr>
         <tr>
-            <td>{{ $customer->identity_document_type->description }}:</td>
-            <td>{{ $customer->number }}</td>
+            <td>{{ $customer ? $customer->identity_document_type->description : '' }}:</td>
+            <td>{{ $customer ? $customer->number : '' }}</td>
 
         </tr>
-        @if ($customer->address !== '')
+        @if ($customer && $customer->address !== '')
             <tr>
                 <td class="align-top">Dirección:</td>
                 <td colspan="">
@@ -111,22 +111,25 @@
         <tr>
             <td>{{ $document->observacion }}</td>
         </tr>
-        <tr>
+        {{-- <tr>
             <td><b> Estado:</b> {{ $document->state }} </td>
-        </tr>
-        <tr>
+        </tr> --}}
+        {{-- <tr>
             <td><b>Motivo:</b> {{ $document->reason }} </td>
-        </tr>
-        @if ($document->activities)
+        </tr> --}}
+        {{-- @if ($document->activities) --}}
             <tr>
-                <td><b>Actividades realizadas:</b> {{ $document->activities }} </td>
+                <td><b>Actividades realizadas:</b> {{ $document->motive }} </td>
             </tr>
-        @endif
+        {{-- @endif --}}
         <tr>
-            <td><b>Marca:</b> {{ $document->brand }} </td>
+            <td><b>Marca:</b> {{ $document->vehiculo->marca }} </td>
         </tr>
         <tr>
-            <td><b>Equipo:</b> {{ $document->equipment }} </td>
+            <td><b>Placa:</b> {{ $document->vehiculo->placa }} </td>
+        </tr>
+        <tr>
+            <td><b>Modelo:</b> {{ $document->vehiculo->modelo }} </td>
         </tr>
         <tr>
             <td style="padding-top: 7px;">
@@ -138,18 +141,31 @@
         <thead class="">
             <tr class="bg-grey">
                 <th class="border-top-bottom text-center py-2" width="20%">CANT.</th>
-                <th class="border-top-bottom text-center py-2" width="20%">UNIDAD</th>
-                <th class="border-top-bottom text-left py-2">DESCRIPCIÓN</th>
+                <th class="border-top-bottom text-center py-2">DESCRIPCIÓN</th>
                 <th class="border-top-bottom text-right py-2" width="25%">P.UNIT</th>
                 <th class="border-top-bottom text-right py-2" width="20%">TOTAL</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($document->$services as $service)
+            @php
+                $serviceQuantities = [];
+                foreach ($services as $s) {
+                    if (isset($serviceQuantities[$s->name])) {
+                        $serviceQuantities[$s->name]++;
+                    } else {
+                        $serviceQuantities[$s->name] = 1;
+                    }
+                }
+            @endphp
+            @foreach ($services as $service)
                 <tr>
-                    <td class="text-center align-top">1</td>
-                    <td class="text-center align-top"> {{ $service->name }}</td>
-                    <td class="text-center align-top">{{ number_format($service->price_unit, 2) }}</td>
+                    {{-- <td class="text-center align-top">1</td> --}}
+                    <td class="text-center align-top">
+                        {{ $serviceQuantities[$service->name] }}
+                    </td>
+                    <td class="text-center align-top">{{ $service->name }}</td>
+                    <td class="text-right align-top">{{ number_format($service->price_unit, 2) }}</td>
+                    <td class="text-right align-top">{{ number_format($service->price_unit, 2) }}</td>
                 </tr>
             @endforeach
             <tr>
@@ -160,17 +176,25 @@
 
     <table class="full-width">
         <tr>
-            <td colspan="4" class="text-right font-bold mb-3">COSTO DEL SERVICIO: </td>
-            <td class="text-right font-bold">{{ number_format($document->cost, 2) }}</td>
+            <td colspan="4" class="text-left font-bold mb-3">TOTAL DEL SERVICIO: </td>
+            <td class="text-right font-bold">
+                @php
+                    $total = 0;
+                    foreach ($services as $service) {
+                        $total += $service->price_unit;
+                    }
+                @endphp
+                {{ number_format($total, 2) }}
+            </td>
         </tr>
-        <tr>
+        {{-- <tr>
             <td colspan="4" class="text-right font-bold">PAGO ADELANTADO: </td>
             <td class="text-right font-bold">{{ number_format($document->prepayment, 2) }}</td>
         </tr>
         <tr>
             <td colspan="4" class="text-right font-bold">SALDO A PAGAR: </td>
             <td class="text-right font-bold">{{ number_format($document->cost - $document->prepayment, 2) }}</td>
-        </tr>
+        </tr> --}}
     </table>
     {{-- MITAD --}}
 

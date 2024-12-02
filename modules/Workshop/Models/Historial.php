@@ -53,11 +53,14 @@ class Historial extends ModelTenant
     }
     public function vehicleFeatures()
     {
-        return $this->hasMany(VehicleFeature::class);
+        return $this->hasMany(VehicleFeature::class, 'vehiculo_id', 'vehiculo_id');
     }
     public function servicesDetails(){
-        return $this->hasMany(HistorialServicesDetails::class);
+        return $this->belongsToMany(ServicesDetails::class, 'historial_service_details', 'historial_id', 'services_detail_id');
     }
+    /* public function servicesDetails(){
+        return $this->hasMany(HistorialServicesDetails::class);
+    } */
     
 
 }

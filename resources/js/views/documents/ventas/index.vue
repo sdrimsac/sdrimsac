@@ -39,8 +39,8 @@
                 <th class="text-white">Numero</th>
                 <th class="text-white">Fecha Emision</th>
                 <th class="text-white">Establecimiento</th>
-                <th class="text-white">Cliente</th>
-                <th class="text-white">Dni</th>
+                <th class="text-white text-center">Cliente</th>
+                <th class="text-white text-center">Dni</th>
                 <th class="text-white">Codigo Interno</th>
                 <th class="text-white">Producto</th>
                 <th class="text-white">Cantidad</th>
@@ -69,8 +69,8 @@
                     </template>
                   </td>
                   <td>{{ row.establishment_description }}</td>
-                  <td> {{ row.customer.name }} </td>
-                  <td> {{ row.customer.number }} </td>
+                  <td class="text-center"> {{ row.customer.name }} </td>
+                  <td class="text-center"> {{ row.customer.number }} </td>
                   <td>{{ item.item.internal_id }}</td>
                   <td>{{ item.item.description }}</td>
                   <td>{{ parseFloat(item.quantity).toFixed(2) }}</td>

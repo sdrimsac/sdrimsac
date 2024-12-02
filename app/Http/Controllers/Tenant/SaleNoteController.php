@@ -1780,6 +1780,8 @@ class SaleNoteController extends Controller
                 $this->sale_note->calculatePenalties();
             }
 
+            $this->saveItemWarranty($this->sale_note, $request->items);
+
             return [
                 'success' => true,
                 'data' => [
@@ -1815,7 +1817,28 @@ class SaleNoteController extends Controller
             ];
         }
     }
+    private function saveItemWarranty($sale_note, $items)
+    {
+        foreach ($items as $item) {
+            if ($item['item']['has_warranty']) {
+                $warranty_start_date = Carbon::parse($sale_note->date_of_issue);
+                $warranty_end_date = $warranty_start_date->copy()->addMonths($item['item']['month_day']);
+                
+                // Find the document item ID
+                $saleNoteItem = SaleNoteItem::where('sale_note_id', $sale_note->id)
+                    ->where('item_id', $item['item_id'])
+                    ->first();
 
+                if ($saleNoteItem) {
+                    DB::connection('tenant')->table('item_warranty')->insert([
+                        'warranty_start_date' => $warranty_start_date,
+                        'warranty_end_date' => $warranty_end_date,
+                        'sale_note_item_id' => $saleNoteItem->id,
+                    ]);
+                }
+            }
+        }
+    }
     public function updateStock($id, $is_set = false)
     {
         if ($is_set == true) {
