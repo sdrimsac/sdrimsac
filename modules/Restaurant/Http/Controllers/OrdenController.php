@@ -497,6 +497,7 @@ class OrdenController extends Controller
     public function recordWorker($id, Request $request)
     {
         $orden = Orden::find($id);
+        $print_pos = $request->printpos ?? false;
         $precuenta = $request->precuenta ?? false;
         $to_kitchen = $request->to_kitchen;
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -509,6 +510,13 @@ class OrdenController extends Controller
             $area = Area::where('description', 'like', '%COCIN%')->first();
             $area_id = $area->id;
         }
+        if ($print_pos) {
+            $area_pos_id = Area::getCajaAreaIdByTableId($orden->table_id);
+            $area = Area::find($area_pos_id);
+            $area_id = $area_pos_id;
+            
+        }
+
 
         if ($area != null) {
             $printer = $area->printer;
@@ -531,6 +539,8 @@ class OrdenController extends Controller
             return [
                 'success' => true,
                 'data' => $orden,
+                'area_id' => $area_id,
+                'area' => $area,
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,

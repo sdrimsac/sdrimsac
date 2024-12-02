@@ -71,6 +71,8 @@ use App\Http\Resources\Tenant\ItemUltima_ventaCollection;
 use App\Http\Resources\Tenant\ItemUltima_CompraCollection;
 use App\Models\Tenant\BonusUnitType;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
+use App\Imports\ItemsPriceRangeImport;
+use App\Imports\ItemsPriceRangeUnitTypeImport;
 use App\Models\Tenant\ItemUnitTypePriceRange;
 use App\Models\Tenant\ItemWarranty;
 use App\Models\Tenant\RegisterMovement;
@@ -86,20 +88,24 @@ class ItemController extends Controller
             "Item" => "App\Models\Item",
         ];
     }
-    public function getSaleOffert(){
+    public function getSaleOffert()
+    {
         $sale_offert_details = SaleOffertDetail::all();
         return response()->json($sale_offert_details);
     }
-    public function saveSaleOffert(Request $request){
+    public function saveSaleOffert(Request $request)
+    {
         $sale_offert_detail = SaleOffertDetail::create($request->all());
         return response()->json($sale_offert_detail);
     }
-    public function updateSaleOffert(Request $request){
+    public function updateSaleOffert(Request $request)
+    {
         $sale_offert_detail = SaleOffertDetail::find($request->id);
         $sale_offert_detail->update($request->all());
         return response()->json($sale_offert_detail);
     }
-    public function deleteSaleOffert(Request $request){
+    public function deleteSaleOffert(Request $request)
+    {
         $sale_offert_detail = SaleOffertDetail::find($request->id);
         $sale_offert_detail->delete();
         return response()->json($sale_offert_detail);
@@ -903,7 +909,6 @@ class ItemController extends Controller
 
     public function store(ItemRequest $request)
     {
-        /* dump($request->all()); */
         $all_establishment = $request->all_establishment;
 
         $id = $request->input('id');
@@ -1123,7 +1128,6 @@ class ItemController extends Controller
 
         /* $warranty_end_date = null;
         if ($request['warranty_end_date']) {
-            /* dump($request['warranty_end_date']);
             $exists = ItemWarranty::where('warranty_end_date', $request['warranty_end_date'])
                 ->first();
             if (!$exists) {
@@ -1330,6 +1334,58 @@ class ItemController extends Controller
     }
 
 
+    public function import_prices_range_unit_type(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', 30000);
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemsPriceRangeUnitTypeImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+    public function import_prices_range(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', 30000);
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemsPriceRangeImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
     public function import_prices(Request $request)
     {
 

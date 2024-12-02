@@ -3068,7 +3068,22 @@
                           ></el-switch>
                         </div>
                       </div>
-
+                      <div class="col-md-2 mt-4">
+                        <div class="form-group">
+                          <label class="control-label w-100">
+                            <i class="fas fa-ticket-alt tab-icon"></i>
+                            Imprimir comanda en caja desde cocina (manual)
+                          </label>
+                          <el-switch
+                            v-model="form.print_pos_worker"
+                            active-text="Si"
+                            inactive-text="No"
+                            :active-color="'#28a745'"
+                            :inactive-color="'#6c757d'"
+                            @change="submit('Imprimir comanda en caja desde cocina (manual)', form.print_pos_worker, 'print_pos_worker', 'printIcon')"
+                          ></el-switch>
+                        </div>
+                      </div>
                       <div class="row">
                         <!-- Imprimir política de precio - Cotización -->
                         <div class="col-md-2 mt-4">

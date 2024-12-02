@@ -40,10 +40,10 @@ class ItemsImport implements ToCollection
         $registered = 0;
         unset($rows[0]);
         foreach ($rows as $row) {
-            $origin = ($row[47] ?: null);
-            $quality = ($row[46] ?: null);
-            $model = ($row[45] ?: null);
-            $location = ($row[44] ?: null);
+            $origin = ($row[49] ?: null);
+            $quality = ($row[48] ?: null);
+            $model = ($row[47] ?: null);
+            $location = ($row[46] ?: null);
             $description = $row[0];
             $second_name = $row[1];
             $item_type_id = '01';
@@ -61,10 +61,10 @@ class ItemsImport implements ToCollection
             }
             $brand_name = strtoupper($row[15]);
             $area_description = strtoupper($row[16]);
-            $max_quantity = $row[30];
-            $max_quantity_description = $row[31];
-            $lote_code = ($row[32]) ?: null;
-            $lote_date = ($row[33]) ?: null;
+            $max_quantity = $row[32];
+            $max_quantity_description = $row[33];
+            $lote_code = ($row[34]) ?: null;
+            $lote_date = ($row[35]) ?: null;
 
             $establishment_id = 1;
 
@@ -83,10 +83,12 @@ class ItemsImport implements ToCollection
             $stock = $row[12];
             $stock_min = $row[13];
             $has_series = (strtoupper($row[17]) === 'SI') ? 1 : 0;
+            $lots_enabled = (strtoupper($row[18]) === 'SI') ? 1 : 0;
+            $has_color_size = (strtoupper($row[19]) === 'SI') ? 1 : 0;
             $prices = [];
             $commercial_treatments = [];
             for ($i = 1; $i <= 5; $i++) {
-                $descIndex = 34 + (($i - 1) * 2);
+                $descIndex = 36 + (($i - 1) * 2);
                 $priceIndex = $descIndex + 1;
                 if (empty($row[$descIndex])) {
                     continue;
@@ -99,7 +101,7 @@ class ItemsImport implements ToCollection
             //30 31
 
             for ($i = 1; $i <= 4; $i++) {
-                $descIndex = 18 + (($i - 1) * 3);
+                $descIndex = 20 + (($i - 1) * 3);
                 $qtyIndex = $descIndex + 1;
                 $priceIndex = $descIndex + 2;
 
@@ -161,7 +163,9 @@ class ItemsImport implements ToCollection
                         'category_id' => $category->id,
                         'brand_id' => $brand->id,
                         'warehouse_id' => request('warehouse_id'),
-                        'series_enabled' => $has_series
+                        'series_enabled' => $has_series,
+                        'lots_enabled' => $lots_enabled,
+                        'has_color_size' => $has_color_size,
                     ]);
 
                     $food_new = Food::create([
@@ -234,6 +238,8 @@ class ItemsImport implements ToCollection
                         'purchase_affectation_igv_type_id' => $purchase_affectation_igv_type_id,
                         'stock_min' => $stock_min,
                         'series_enabled' => $has_series,
+                        'lots_enabled' => $lots_enabled,
+                        'has_color_size' => $has_color_size,
                     ]);
 
 

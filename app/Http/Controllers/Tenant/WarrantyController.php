@@ -71,7 +71,6 @@ class WarrantyController extends Controller
     }
     public function getRecords(Request $request)
     {
-        /* dump($request->all()); */
         $records = ItemWarranty::query()
             ->with([
                 'documentItem.document',

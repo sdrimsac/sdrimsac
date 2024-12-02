@@ -459,6 +459,8 @@ if ($hostname) {
                 Route::delete('items/item-unit-type/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'destroyItemUnitType']);
                 Route::post('items/import', [App\Http\Controllers\Tenant\ItemController::class, 'import']);
                 Route::post('items/import_prices', [App\Http\Controllers\Tenant\ItemController::class, 'import_prices']);
+                Route::post('items/import_prices_range_unit_type', [App\Http\Controllers\Tenant\ItemController::class, 'import_prices_range_unit_type']);
+                Route::post('items/import_prices_range', [App\Http\Controllers\Tenant\ItemController::class, 'import_prices_range']);
                 Route::post('items/uploads', [App\Http\Controllers\Tenant\ItemController::class, 'upload']);
                 Route::post('items/visible_store', [App\Http\Controllers\Tenant\ItemController::class, 'visibleStore']);
                 Route::post('items/duplicate', [App\Http\Controllers\Tenant\ItemController::class, 'duplicate']);

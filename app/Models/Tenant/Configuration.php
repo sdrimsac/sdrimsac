@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'print_pos_worker',
         'unit_type_select_barcode',
         'sale_offert',
         'quantity_prices',
@@ -275,6 +276,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'print_pos_worker' => 'boolean',
         'unit_type_select_barcode' => 'boolean',
         'sale_offert' => 'boolean',
         'quantity_prices' => 'boolean',
@@ -490,6 +492,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'print_pos_worker' => (bool)$this->print_pos_worker,
             'unit_type_select_barcode' => (bool)$this->unit_type_select_barcode,
             'sale_offert' => (bool)$this->sale_offert,
             'quantity_prices' => (bool)$this->quantity_prices,
