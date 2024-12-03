@@ -698,7 +698,7 @@ class SaleNoteController extends Controller
     }
     public function totalRecords(Request $request)
     {
-        $records = $this->get_records($request);
+        $records = $this->get_records($request)->whereDoesntHave('documents');
         return $records->sum('total');
     }
     public function records(Request $request)
@@ -2689,7 +2689,9 @@ class SaleNoteController extends Controller
     public function totals()
     {
 
-        $records = SaleNote::where([['state_type_id', '01'], ['currency_type_id', 'PEN']])->get();
+        $records = SaleNote::where([['state_type_id', '01'], ['currency_type_id', 'PEN']])
+            ->whereDoesntHave('documents')
+        ->get();
         $total_pen = 0;
         $total_paid_pen = 0;
         $total_pending_paid_pen = 0;
