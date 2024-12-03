@@ -33,14 +33,14 @@
                     @endphp
                     <td class="general">
 
-                        <div style="{{ $jj - 1 < $stock ? 'color:black;' : 'color:white;' }}; font-size: 10px">
+                        <div style="{{ $jj - 1 < $stock ? 'color:black;' : 'color:white;' }}; font-size: 10px; padding: 3px">
                             <span>{{ $description }}</span>
                         </div>
                         <div>
                             @php
                                 if ($jj - 1 < $stock) {
                                     $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                                    echo '<img style="height: 15px;" width:100px; src="data:image/png;base64,' .
+                                    echo '<img style="height: 20px;" width:150px; src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
                                                 $barcode,

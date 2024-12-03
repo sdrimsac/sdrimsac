@@ -37,38 +37,6 @@
                             </el-input>
                         </template>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-                        <label for="value">
-                            Serie de Producto
-                        </label>
-
-                        <template>
-                            <el-input
-                                placeholder="Buscar"
-                                v-model="search.value"
-                                style="width: 100%;"
-                                prefix-icon="el-icon-search"
-                                @input="getRecords"
-                            >
-                            </el-input>
-                        </template>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-                        <label for="value">
-                            Cliente
-                        </label>
-
-                        <template>
-                            <el-input
-                                placeholder="Buscar"
-                                v-model="search.value"
-                                style="width: 100%;"
-                                prefix-icon="el-icon-search"
-                                @input="getRecords"
-                            >
-                            </el-input>
-                        </template>
-                    </div>
                     <div
                         v-if="
                             search.column == 'date_of_issue' ||
@@ -318,7 +286,20 @@ export default {
                     // Verificación y transformación de los registros
                     if (this.resource !== "caja/cash-transfer/report") {
                         this.records = data.data.map(record => {
-                            // Verifica cuál de los dos (document_item o sale_note_item) tiene el item
+                            const producto =
+                                record.producto_sale_note ??
+                                record.producto_document;
+
+                            const productoDescripcion = producto
+                                ? producto.description
+                                : "N/A";
+                            const productoInternalId = producto
+                                ? producto.internal_id
+                                : "N/A";
+                            const productoMonth = producto
+                                ? producto.month_day
+                                : "N/A";
+                
                             const item =
                                 record.document_item?.item ||
                                 record.sale_note_item?.item ||
@@ -341,7 +322,10 @@ export default {
                                     id: customer.id,
                                     name: customer.name,
                                     number: customer.number
-                                }
+                                },
+                                producto_descripcion: productoDescripcion,
+                                producto_internal_id: productoInternalId,
+                                producto_month_day: productoMonth
                             };
                         });
 

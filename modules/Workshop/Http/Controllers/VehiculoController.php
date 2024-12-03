@@ -51,7 +51,7 @@ class VehiculoController extends Controller
     {
         $placa = $request->input('placa');
         $customer = $request->input('customer');
-        $query = Vehiculo::query()
+        $records = Vehiculo::query()
             ->when($placa, function ($query, $placa) {
                 return $query->where('placa', 'like', '%' . $placa . '%');
             })
@@ -60,8 +60,7 @@ class VehiculoController extends Controller
                     $query->where('name', 'like', '%' . $customer . '%');
                 });
             });
-
-        return $query;
+        return $records;
     }
     public function setItems(Request $request)
     {
@@ -175,6 +174,7 @@ class VehiculoController extends Controller
     {
         $id = $request->input('id');
         $plate = $request->input('placa');
+        $customer_id = $request->input('customer_id');
         $establishment_id = auth()->user()->establishment_id;
 
         $vehicle = Vehiculo::where('id', $id)
@@ -182,12 +182,15 @@ class VehiculoController extends Controller
             ->first();
 
         if ($vehicle) {
+            if ($vehicle->customer_id == $customer_id) {
+                return response()->json(['success' => false, 'message' => 'El vehículo con esta placa ya está registrado para este cliente'], 422);
+            }
+
             $historial = new Historial;
             $historial->fill($request->except('vehiculo'));
             $historial->vehiculo_id = $vehicle->id;
             $historial->establishment_id = $establishment_id;
             $historial->save();
-            /* $this->setFilenameHistorial($historial); */
 
             $historial_id = $historial->id;
 
@@ -220,7 +223,7 @@ class VehiculoController extends Controller
             ->first();
 
         if ($existingVehicle) {
-            return response()->json(['message' => false, 'El vehículo ya existe'], 422);
+            return response()->json(['success' => false, 'message' => 'El vehículo con esta placa ya existe'], 422);
         }
 
         // Si no existe, se crea el nuevo vehículo
@@ -230,15 +233,12 @@ class VehiculoController extends Controller
             $vehicle->fill($data);
             $vehicle->save();
         }
-        /* $vehicle->fill($data);
-        $vehicle->save(); */
 
         $historial = new Historial;
         $historial->fill($data);
         $historial->vehiculo_id = $vehicle->id;
         $historial->establishment_id = $establishment_id;
         $historial->save();
-        /* $this->setFilenameHistorial($historial); */
 
         $historial_id = $historial->id;
 
@@ -259,12 +259,22 @@ class VehiculoController extends Controller
 
         DB::connection('tenant')->table('historial_service_details')->insert($dataToInsert);
 
-        $this->vehiculo = $vehicle;
-        $this->setFilename();
-        $this->createPdf($this->vehiculo, "a4", $this->vehiculo->filename);
+        $query = DB::connection('tenant')
+            ->table('historial_service_details as hsd')
+            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+            ->where('hsd.historial_id', $historial_id)
+            ->whereIn('hsd.services_detail_id', $services_detail_ids)
+            ->select('sd.name', 'sd.price_unit');
+        $services = $query->get();
 
-        /* $historial->filename = $this->vehiculo->filename;
-        $historial->save(); */
+
+        $this->setFilenameHistorial($historial, $services);
+
+        $this->createPdfHistorial($historial, $services, "a4", $historial->filename);
+
+        /* $this->vehiculo = $vehicle;
+        $this->setFilename();
+        $this->createPdf($this->vehiculo, "a4", $this->vehiculo->filename); */
 
         return [
             'success' => true,

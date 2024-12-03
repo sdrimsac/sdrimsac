@@ -46,14 +46,14 @@
                     <tr slot-scope="{ index, row }">
                         <td>{{ index + 1 }}</td>
                         <!-- <td>{{ row.item.internal_id  }}</td> -->
-                        <td>{{ row.item.internal_id }}</td>
-                        <td>{{ row.item.description }}</td>
+                        <td>{{ row.producto_internal_id }}</td>
+                        <td>{{ row.producto_descripcion }}</td>
                         <td>
                             {{ row.customer.name }}<br>
                             {{ row.customer.number }}
                         </td>
                         <td>{{ row.warranty_start_date }}</td>
-                        <td v-if="row.item.month_day && row.item.month_day !== 'NA'">{{ row.item.month_day }} meses</td>
+                        <td v-if="row.producto_month_day && row.producto_month_day !== 'NA'">{{ row.producto_month_day }} meses</td>
                         <td v-else></td>
                         <td>{{ row.warranty_end_date }}</td>
                         <td :class="{ 'text-danger': row.dias_restantes <= 0, 'text-success': row.dias_restantes > 0 }">

@@ -18,7 +18,6 @@
                     <h3 class="text-center fw-bold">
                         Lista de Productos Con Garantia
                     </h3>
-
                 </td>
             </tr>
             <tr>
@@ -36,53 +35,51 @@
             </tr>
         </table>
     </div>
-    @if (!empty($records))
-        <div class="">
-            <div class=" ">
-                <table>
-                    <tbody>
+
+    @if ($records->isNotEmpty())
+        <div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="encabezado" style="border: 1px solid black;">#</td>
+                        <td class="encabezado" style="border: 1px solid black">CODIGO</td>
+                        <td class="encabezado" style="border: 1px solid black">PRODUCTO</td>
+                        <td class="encabezado" style="border: 1px solid black">CLIENTE</td>
+                        <td class="encabezado" style="border: 1px solid black">FECHA DE INICIO DE GARANTIA</td>
+                        <td class="encabezado" style="border: 1px solid black">TIEMPO DE GARANTIA</td>
+                        <td class="encabezado" style="border: 1px solid black">FECHA FINAL DE GARANTIA</td>
+                        <td class="encabezado" style="border: 1px solid black">TIEMPO RESTANTE DE GARANTIA</td>
+                    </tr>
+
+                    @foreach ($records as $row)
                         <tr>
-                            <td class="encabezado" style="border: 1px solid black;">#</td>
-                            <td class="encabezado" style="border: 1px solid black">CODIGO</td>
-                            <td class="encabezado" style="border: 1px solid black">PRODUCTO</td>
-                            <td class="encabezado" style="border: 1px solid black">CLIENTE</td>
-                            <td class="encabezado" style="border: 1px solid black">FECHA DE INICIO DE GARANTIA</td>
-                            <td class="encabezado" style="border: 1px solid black">TIEMPO DE GARANTIA</td>
-                            <td class="encabezado" style="border: 1px solid black">FECHA FINAL DE GARANTIA</td>
-                            <td class="encabezado" style="border: 1px solid black">TIEMPO RESTANTE DE DE GARANTIA</td>
-
-
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $row['internal_id'] }}</td>
+                            <td>{{ $row['description'] }}</td>
+                            <td>{{ $row['customer_name'] }}</td>
+                            <td>{{ $row['warranty_start_date'] }}</td>
+                            <td>{{ $row['month_day'] }} meses</td>
+                            <td>{{ $row['warranty_end_date'] }}</td>
+                            <td>
+                                @php
+                                    $start_date = \Carbon\Carbon::parse($row['warranty_start_date']);
+                                    $end_date = \Carbon\Carbon::parse($row['warranty_end_date']);
+                                    $remaining_days = $end_date->diffInDays(\Carbon\Carbon::now());
+                                @endphp
+                                {{ $remaining_days }} días
+                            </td>
                         </tr>
-                    <tbody>
-                        @foreach ($records as $row)
-                            <tr>
-                                <td class="celda_loop" style="border: 1px solid black">{{ $loop->iteration }}</td>
-                                <td class="celda_left" style="border: 1px solid black">{{ $row->document }}</td>
-                                <td class="celda_left" style="border: 1px solid black">{{ $row->name }}</td>
-                                <td class="celda_left" style="border: 1px solid black">{{ $row->telephone }}</td>
-                                {{-- <td class="celda_left" style="border: 1px solid black">
-                                    {{ $row->establishment->description }}</td>
-                                <td class="celda_left" style="border: 1px solid black">
-                                    {{ number_format($row->documents_total, 2) }}</td>
-                                <td class="celda_left" style="border: 1px solid black">
-                                    {{ number_format($row->sale_notes_total, 2) }}</td>
-                                <td class="celda_left" style="border: 1px solid black">
-                                    {{ number_format($row->documents_total + $row->sale_notes_total, 2) }}
-                                </td> --}}
-
-                            </tr>
-                        @endforeach
+                    @endforeach
 
 
-                    </tbody>
-                </table>
-            @else
-                <div class="callout callout-info">
-                    <p>No se encontraron registros.</p>
-                </div>
-
+                </tbody>
+            </table>
+        </div>
+    @else
+        <div class="callout callout-info">
+            <p>No se encontraron registros.</p>
+        </div>
     @endif
 </body>
-
 
 </html>

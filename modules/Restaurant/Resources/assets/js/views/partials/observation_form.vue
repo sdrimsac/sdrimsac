@@ -6,7 +6,7 @@
         @open="open"
         :visible="showDialog"
         title="Agregar Observacion"
-        style="min-width: 500px;"
+        
     >
         <div class="d-flex flex-column" style="margin-top:15px">
             <el-input readonly v-model="observation"> </el-input>
@@ -32,7 +32,7 @@
                 </template>
             </div>
 
-            <div class="d-flex justify-content-end align-items-center">
+            <div class="d-flex flex-column flex-sm-row justify-content-end align-items-center">
                 <el-input
                     class="input-new-tag"
                     @input="search"
@@ -42,7 +42,7 @@
                 >
                 </el-input>
                 <el-button
-                    class="button-new-tag"
+                    class="button-new-tag mt-2 mt-sm-0"
                     size="small"
                     type="primary"
                     @click="handleInputConfirm"
@@ -80,6 +80,44 @@
     width: 250px;
     margin-left: 10px;
     vertical-align: bottom;
+}
+
+@media (max-width: 320px) {
+    .el-dialog {
+        margin: 5px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
+@media (max-width: 360px) {
+    .el-dialog {
+        margin: 5px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
+@media (max-width: 412px) {
+    .el-dialog {
+        margin: 5px !important;
+        width: 90% !important;
+        min-width: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .el-dialog {
+        margin: 10px !important;
+        width: 80% !important;
+        min-width: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
 }
 </style>
 <script>

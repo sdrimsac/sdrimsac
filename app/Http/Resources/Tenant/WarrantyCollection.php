@@ -26,19 +26,24 @@ class WarrantyCollection extends ResourceCollection
             } else {
                 $diasRestantes = 0;
             }
+
+            $productoSaleNote = $row->saleNoteItem->item ?? null;
+            $productoDocument = $row->documentItem->item ?? null;
+            $clienteSaleNote = $row->saleNoteItem->sale_note->customer ?? null;
+            $clienteDocumento = $row->documentItem->document->customer ?? null;
             return [
                 'id' => $row->id,
                 'warranty_start_date' => $row->warranty_start_date,
                 'warranty_end_date' => $row->warranty_end_date,
                 'dias_restantes' => $diasRestantes,
                 'sale_note_item_id' => $row->sale_note_item_id,
-                'sale_note_item' => $row->saleNoteItem,
                 'document_item_id' => $row->document_item_id,
-                'document_item' => $row->documentItem,
-                'sale_note_customer' => $row->saleNoteItem->sale_note->customer ?? null,
-                'document_customer' => $row->documentItem->document->customer ?? null,
                 'created_at' => $row->created_at,
                 'updated_at' => $row->updated_at,
+                'producto_sale_note' => $productoSaleNote,
+                'producto_document' => $productoDocument,
+                'sale_note_customer' => $clienteSaleNote,
+                'document_customer' => $clienteDocumento,
             ];
         });
     }
