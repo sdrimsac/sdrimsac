@@ -28,7 +28,7 @@ class UserController extends Controller
         $process->run();
         
         if (!$process->isSuccessful()) {
-            print('Línea 26 - Error en el proceso: ' . $process->getErrorOutput());
+            \Log::error('Línea 26 - Error en el proceso: ' . $process->getErrorOutput());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al ejecutar el proceso: ' . $process->getErrorOutput()
@@ -36,7 +36,7 @@ class UserController extends Controller
         }
 
         $output = $process->getOutput();
-        print('Línea 34 - Salida del proceso: ' . $output);
+        \Log::info('Línea 34 - Salida del proceso: ' . $output);
         
         return response()->json([
             'success' => true,
