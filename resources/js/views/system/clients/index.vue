@@ -313,6 +313,15 @@
                 <el-button
                     type="secondary"
                     class=""
+                    @click.prevent="clickSendPendingDocuments()"
+                >
+                    <i class="fab fa-whatsapp fa-lg"></i>
+                    <i class="fa fa-sync"></i>
+                    Enviar reportes de documentos pendientes
+                </el-button>
+                <el-button
+                    type="secondary"
+                    class=""
                     @click.prevent="clickRestartWhatsapp()"
                 >
                     <i class="fab fa-whatsapp fa-lg"></i>
@@ -905,6 +914,20 @@ export default {
         this.text_limit_users = "El límite de usuarios fue superado";
     },
     methods: {
+        clickSendPendingDocuments() {
+            this.loading = true;
+            this.$http
+                .get(`https://tunegocio.sdrimsac.site/check-documents`)
+                .then(response => {
+                    this.$showSAlert("Correcto", "Se enviaron los reportes");
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
         clickRestartWhatsapp() {
             this.loading = true;
             this.$http
