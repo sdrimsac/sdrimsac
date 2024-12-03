@@ -917,7 +917,7 @@ export default {
         clickSendPendingDocuments() {
             this.loading = true;
             this.$http
-                .get(`https://tunegocio.sdrimsac.site/check-documents`)
+                .get(`/check-documents`)
                 .then(response => {
                     this.$showSAlert("Correcto", "Se enviaron los reportes");
                 })
