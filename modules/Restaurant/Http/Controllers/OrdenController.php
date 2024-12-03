@@ -135,7 +135,8 @@ class OrdenController extends Controller
     }
     public function printTicket(Request $request)
     {
-
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
         $configuration = Configuration::first();
         $precuenta = $request->precuenta ?? false;
         $is_restaurant = $configuration->restaurant;
