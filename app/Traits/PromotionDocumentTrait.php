@@ -124,6 +124,7 @@ trait PromotionDocumentTrait
         $promotion_customer = PromotionDocumentCustomer::where('customer_id', $customer_id)
             ->where('promotion_document_id', $promotion_id)
             ->orderBy('id', 'desc')->first();
+        if (!$promotion_customer) return;
         $promotion_customer->active = 0;
         $promotion_customer->save();
     }
