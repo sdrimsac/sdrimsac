@@ -272,7 +272,6 @@ class TableController extends Controller
         //check in Table if exist the number
         $tables = Table::whereIn('number', $numbers)
             ->where('is_room', false)
-            ->where('has_bilar', false)
             ->where('establishment_id', $request->input('establishment_id'))
             ->where('area_id', $request->input('area_id'))
             ->get();
