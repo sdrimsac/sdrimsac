@@ -33,7 +33,7 @@ class PWAServiceProvider extends ServiceProvider
               }
             
             } catch (\Exception $e) {
-                Log::error($e->getMessage());
+                // Log::error($e->getMessage());
             }
         });
     }
