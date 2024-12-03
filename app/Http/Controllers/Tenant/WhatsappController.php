@@ -644,7 +644,7 @@ class WhatsappController extends Controller
             }
             return  $response->getBody()->getContents();
         } catch (\Exception $e) {
-
+            \Log::error('Línea 647 - Error en el proceso: ' . $e->getMessage());
             return response([
                 "message" => $e->getMessage(),
                 "line" => $e->getLine(),
