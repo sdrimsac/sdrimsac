@@ -265,6 +265,7 @@ class OrdenController extends Controller
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
+            \Log::error('Línea 268 - Error en el proceso: ' . $e->getMessage());
             return ['m' => $e->getMessage()];
         }
 
