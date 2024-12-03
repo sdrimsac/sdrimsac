@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Requests\System\UserRequest;
 use App\Http\Resources\System\UserResource;
 use App\Models\System\User;
@@ -10,15 +11,26 @@ use Hyn\Tenancy\Environment;
 use App\Models\System\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\System\Configuration;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
+use Symfony\Component\Process\Process;
+
 class UserController extends Controller
 {
     public function create()
     {
         return view('system.users.form');
     }
-
+    public function checkDocuments(Request $request)
+    {
+        $process = new Process(['/home/crons/checkStatus.sh']);
+        $process->run();
+        return response()->json([
+            'success' => true,
+            'message' => 'Se enviaron los reportes'
+        ]);
+    }
     public function setLogo(Request $request)
     {
     

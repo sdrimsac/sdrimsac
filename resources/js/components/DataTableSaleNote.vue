@@ -164,19 +164,18 @@
                         </tbody>
                     </table>
 
-                    <div class="row mb-5">
-                        <div class="col-md-4 text-center ">
-                            Total nota de venta en soles S/
-                            {{ totals.total_pen }}
-                        </div>
-                        <div class="col-md-4 text-center ">
-                            Total pagado en soles S/ {{ totals.total_paid_pen }}
-                        </div>
-                        <div class="col-md-4 text-center ">
-                            Total por cobrar en soles S/
-                            {{ totals.total_pending_paid_pen }}
-                        </div>
+                    <div class="row mb-5" v-if="totalsNV > 0">
+                    <div class="col-md-12 text-end  border-top">
+                        <h6>
+                            <b>Total Por busqueda S/ {{ totalsNV.toFixed(2) }}</b>
+                        </h6>
                     </div>
+                </div>
+                <div class="col-md-12 text-end ">
+                    <h6>
+                        <b>Total Suma Documentos S/ {{ totalSum.total_pen }}</b>
+                    </h6>
+                </div>
 
                     <div>
                         <el-pagination
@@ -214,6 +213,8 @@ export default {
     },
     data() {
         return {
+            totalSum: 0,
+            totalsNV: 0,
             state_types: [],
             sellers: [],
             customers: [],
@@ -303,7 +304,7 @@ export default {
         getTotals() {
             this.$http.get(`/${this.resource}/totals`).then(response => {
                 // console.log(response)
-                this.totals = response.data;
+                this.totalSum = response.data;
             });
         },
         customIndex(index) {
@@ -320,7 +321,8 @@ export default {
             );
         },
         getRecords() {
-            return this.$http
+            this.getTotalsNV();
+            this.$http
                 .get(`/${this.resource}/records?${this.getQueryParameters()}`)
                 .then(response => {
                     this.records = response.data.data;
@@ -328,6 +330,14 @@ export default {
                     this.pagination.per_page = parseInt(
                         response.data.meta.per_page
                     );
+                });
+        },
+        getTotalsNV() {
+            return this.$http
+                .get(`/${this.resource}/total_records?${this.getQueryParameters()}`)
+                .then(response => {
+                    console.log("la response", response);
+                    this.totalsNV = response.data;
                 });
         },
         getQueryParameters() {

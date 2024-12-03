@@ -836,6 +836,7 @@ if ($hostname) {
                 Route::get('sale-notes/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
                 Route::get('sale-notes/list-by-client', [App\Http\Controllers\Tenant\SaleNoteController::class, 'saleNotesByClient']);
                 Route::get('sale-notes/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records']);
+                Route::get('sale-notes/total_records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'totalRecords']);
                 Route::get('sale-notes/excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excel']);
                 Route::get('sale-notes/credit_pending', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getCreditPending']);
                 Route::get('sale-notes/totals', [App\Http\Controllers\Tenant\SaleNoteController::class, 'totals']);
@@ -1074,7 +1075,7 @@ if ($hostname) {
         Route::post('login', 'System\LoginController@login');
         Route::post('logout', 'System\LoginController@logout')->name('logout');
         Route::get('phone', 'System\UserController@getPhone');
-
+        Route::get('check-documents', 'System\UserController@checkDocuments');
 
         Route::middleware('auth:admin')->group(function () {
             Route::get('phpinfo', function () {

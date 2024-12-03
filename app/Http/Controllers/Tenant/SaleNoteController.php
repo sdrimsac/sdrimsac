@@ -696,6 +696,11 @@ class SaleNoteController extends Controller
         $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
         return $records;
     }
+    public function totalRecords(Request $request)
+    {
+        $records = $this->get_records($request);
+        return $records->sum('total');
+    }
     public function records(Request $request)
     {
 
