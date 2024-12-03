@@ -24,7 +24,7 @@ class UserController extends Controller
     }
     public function checkDocuments(Request $request)
     {
-        $process = new Process(['/home/crons/checkStatus.sh']);
+        $process = new Process(['/home/crons/enviarDocumentosNoProcesados.sh']);
         $process->run();
         
         if (!$process->isSuccessful()) {
