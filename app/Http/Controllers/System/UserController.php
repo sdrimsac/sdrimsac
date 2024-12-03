@@ -26,9 +26,22 @@ class UserController extends Controller
     {
         $process = new Process(['/home/crons/checkStatus.sh']);
         $process->run();
+        
+        if (!$process->isSuccessful()) {
+            print('Línea 26 - Error en el proceso: ' . $process->getErrorOutput());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al ejecutar el proceso: ' . $process->getErrorOutput()
+            ], 500);
+        }
+
+        $output = $process->getOutput();
+        print('Línea 34 - Salida del proceso: ' . $output);
+        
         return response()->json([
             'success' => true,
-            'message' => 'Se enviaron los reportes'
+            'message' => 'Se enviaron los reportes correctamente',
+            'output' => $output
         ]);
     }
     public function setLogo(Request $request)
