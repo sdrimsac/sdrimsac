@@ -4612,7 +4612,7 @@
                               active-text="Si"
                               inactive-text="No"
                               @change="
-                                                                                    submit
+                                                                                    checkPrecuentaSubmit
                                                                                 "
                             ></el-switch>
                           </div>
@@ -4628,7 +4628,7 @@
                               active-text="Si"
                               inactive-text="No"
                               @change="
-                                                                                    submit
+                                                                                    checkPrecuentaSubmit
                                                                                 "
                             ></el-switch>
                           </div>
@@ -5737,8 +5737,16 @@ export default {
   },
 
   methods: {
+    checkPrecuentaSubmit(){
+      if(this.form.imprimir_comanda_cocina){
+        this.form.imprimir_precuenta_comanda = false;
+      }
+      if(this.form.imprimir_precuenta_comanda){
+        this.form.imprimir_comanda_cocina = false;
+      }
+      this.submit();
+    },
     promotionsSetUp(optionName){
-        console.log("🚀 ~ promotionsSetUp ~ optionName:", optionName)
         if (optionName === 'Habilitar Promociones Documento' && this.form.is_promotion_document) {
           this.form.promotions_by_points = false;
         } else if (optionName === 'Habilitar Promociones por puntos' &&  this.form.promotions_by_points) {

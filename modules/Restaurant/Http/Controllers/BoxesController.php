@@ -1215,6 +1215,10 @@ class BoxesController extends Controller
         $documents = Document::select(['id'])
             ->where('cash_id', $cash_id)->pluck('id')->toArray();
         $credit_notes = Note::whereIn('affected_document_id', $documents)->get();
+        $documents_credit = Document::where("document_type_id", "07")
+        ->where("cash_id", $cash_id)
+        ->get();
+        
         foreach ($credit_notes as $credit_note) {
             $document = Document::find($credit_note->document_id);
             $all[] = [
@@ -1222,6 +1226,14 @@ class BoxesController extends Controller
                 'full_number' => $document->series . "-" . $document->number,
                 'date_of_issue' => $document->date_of_issue,
                 'total' => $document->total,
+            ];
+        }
+        foreach ($documents_credit as $document_credit) {
+            $all[] = [
+                'series' => $document_credit->series,
+                'full_number' => $document_credit->series . "-" . $document_credit->number,
+                'date_of_issue' => $document_credit->date_of_issue,
+                'total' => $document_credit->total,
             ];
         }
         usort($all, function ($a, $b) {
