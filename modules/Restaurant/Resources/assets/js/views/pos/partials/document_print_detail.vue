@@ -269,7 +269,7 @@
                                                 data.state_type_id != '13'
                                         "
                   />
-                  <template v-if="configuration.caja_actions">
+                  <template v-if="configuration.caja_actions && configuration.internal_voided">
                     <el-button
                       class="col-md-12 col-12"
                       v-if="

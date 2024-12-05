@@ -46,7 +46,9 @@ class JustAdmin
         $paths_arca = [
             "items",
             "item-sets",
-            "reports/inventory", "reports/stockmin", "reports/kardex",
+            "reports/inventory",
+            "reports/stockmin",
+            "reports/kardex",
             "persons/customers",
             "persons/suppliers",
             "reports/boxes/global",
@@ -54,13 +56,33 @@ class JustAdmin
             "advanced",
             "purchases",
             "purchases/create",
-            "sale-notes", "quotations", "summaries", "voided",
-            "incomes", "expenses", "boxes", "report_closed_cash", "documents","banks", "documents_ventas"
+            "sale-notes",
+            "quotations",
+            "summaries",
+            "voided",
+            "incomes",
+            "expenses",
+            "boxes",
+            "report_closed_cash",
+            "documents",
+            "banks",
+            "documents_ventas"
         ];
         $paths_logistic = [
-            "items", "purchases", "purchases/create",
-            "transfers", "transfers/transfer_place", "dispatches", "item-sets",
-            "reports/inventory", "report_product_client", "reports/stockmin", "reports/kardex","documents_ventas", "nota_venta", "productos"
+            "items",
+            "purchases",
+            "purchases/create",
+            "transfers",
+            "transfers/transfer_place",
+            "dispatches",
+            "item-sets",
+            "reports/inventory",
+            "report_product_client",
+            "reports/stockmin",
+            "reports/kardex",
+            "documents_ventas",
+            "nota_venta",
+            "productos"
         ];
 
         if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca) {
@@ -88,6 +110,7 @@ class JustAdmin
                 $internet = (bool) $config->internet;
                 $billar = (bool) $config->billar;
                 $workshop = (bool) $config->workshop;
+
                 $configuration = Configuration::first();
 
                 if ($configuration->toll) {
@@ -96,9 +119,9 @@ class JustAdmin
                 }
                 if ($internet) {
                     $redirect_to = "/internet/worker/";
-                } else if ($billar) {
+                } elseif ($billar) {
                     $redirect_to = "/billar/worker/";
-                } else if ($workshop) {
+                } if ($workshop) {
                     $redirect_to = "/workshop/worker/";
                 } else {
                     $redirect_to = "/caja/worker/";
@@ -111,10 +134,10 @@ class JustAdmin
                 } else {
                     $description_type = "";
                 }
-                
+
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
-                } else if (str_contains($description_type, 'CAJ')||str_contains($description_type, 'VEN')||str_contains($description_type, 'ANALISTA')) {
+                } else if (str_contains($description_type, 'CAJ') || str_contains($description_type, 'VEN') || str_contains($description_type, 'ANALISTA')) {
                     $redirect_to .= 'dashboard-pos';
                 } else if ($description_type == 'LIMPIEZA') {
                     $redirect_to .= 'cleaner';

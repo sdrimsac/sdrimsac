@@ -430,7 +430,7 @@ export default {
       this.$http(`/carros/${this.form.placa}`)
         .then(response => {
           const data = response.data.data;
-          console.log("rwerwer", data);
+         
           this.form.serie = data.serie || "";
           this.form.modelo = data.modelo || "";
           this.form.marca = data.marca || "";
