@@ -1751,6 +1751,7 @@ export default {
     },
 
     props: [
+        'user',
         "promotions_document",
         "itemDefault",
         "company",
