@@ -84,6 +84,14 @@ class VehicleFeature extends ModelTenant
         'state_toolkit',
         'quantity_owner_manual'
     ];
+    protected $casts = [
+        'gasoline_level' => 'integer',
+        'auth_drive' => 'boolean',
+        'move_on' => 'boolean',
+        'no_value_things' => 'boolean',
+        'cost_for_days' => 'boolean',
+        
+    ];
     public function vehiculo()
     {
         return $this->belongsTo(Vehiculo::class, 'vehiculo_id');

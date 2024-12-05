@@ -1882,6 +1882,7 @@ export default {
         if (response.status === 200) {
           this.vehiculo = response.data;
           this.form.items = this.formatItems(this.vehiculo.items);
+          this.form.services = this.formatItems(this.vehiculo.services);
           this.form.establishment_id = this.vehiculo.establishment_id;
           this.form.vehiculo_id = this.vehiculo_id;
           this.reCalculateTotal();
@@ -2105,7 +2106,7 @@ export default {
           ...i,
           warehouse_id: null,
           item: i,
-          item_id: i.id,
+          item_id: i.item_id,
           unit_value:
             affectation_igv_type_id == 10
               ? i.sale_unit_price / (1 + this.percentage_igv / 100)

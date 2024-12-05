@@ -17,8 +17,12 @@ class ServicesDetails extends ModelTenant
         'date_start',
         'date_end',
         'status',
-        'price_unit'
+        'price_unit',
+        
     ];
+    protected $casts = [
+        'price_unit' => 'decimal:2',
+        ];
     public function service(){
         return $this->belongsTo(Services::class,'service_id');
     }

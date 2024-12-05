@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="Nuevo Historial"
+        :title="titleDialog"
         :visible="showDialog"
         :close-on-click-modal="false"
         @close="close"
@@ -97,6 +97,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -111,6 +112,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -125,6 +127,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -142,6 +145,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -156,6 +160,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -173,6 +178,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -190,6 +196,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -207,6 +214,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -224,6 +232,7 @@
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -237,10 +246,11 @@
                             <div class="row">
                                 <div
                                     class="col-md-6"
-                                    v-for="service in servicesById[9]"
+                                    v-for="service in servicesById[10]"
                                     :key="service.id"
                                 >
                                     <el-checkbox
+                                        v-model="service.selected"
                                         @change="updateServicesIds(service.id)"
                                         >{{ service.name }}</el-checkbox
                                     >
@@ -294,11 +304,9 @@
 </template>
 <script>
 import checklist from "./checklist.vue";
-import personForm from "../../../../../../../../resources/js/views/persons/form.vue";
 import personalForm from "../../mecanico/form.vue";
 export default {
     components: {
-        personForm,
         checklist,
         personalForm
     },
@@ -309,21 +317,16 @@ export default {
             titleDialog: null,
             errors: {},
             form: {},
-            activeTab: "",
+            activeTab: "Motor",
             vehiculo: {},
             services_details: [],
             services_detail_ids: [],
-            activeTab: "Motor",
             services: [],
             loading_submit: false,
-            showDialogNewPerson: false,
             showDialogNewPersonal: false,
             showDialogChecklist: false,
-            errors: {},
-            form: {},
             loading_search: false,
             tipo_vehiculo: [],
-            servicesDetails: [],
             personal: [],
             historial: {},
             tipo_vehiculo_id: null,
@@ -352,6 +355,8 @@ export default {
     },
     methods: {
         create() {
+            this.resetForm();
+            this.getServicesDetails();
             this.titleDialog = this.recordId
                 ? "Editar Datos de Vehiculo"
                 : "Nuevo Registro de Vehiculo";
@@ -362,17 +367,19 @@ export default {
                         let data = response.data;
                         this.form = response.data.data;
                         this.historial = this.form.historial || {};
+                        this.vehiculo = this.form.vehicle_features[0];
+                        this.services_detail_ids = this.form.services_detail_ids;
+
+                        this.getServicesDetails();
                     });
+            } else {
+                this.initForm();
             }
-            this.initForm();
         },
         updateRecord() {
             console.log("Actualizando registro", this.form);
             this.close();
         },
-        /* fillForm(data) {
-      this.form = { ...data };
-    }, */
         listChekout() {
             this.showDialogChecklist = true;
         },
@@ -391,8 +398,18 @@ export default {
                 vehiculo_id: this.vehiculoId,
                 personal_id: null,
                 observacion: null,
-                motive: null
+                motive: null,
+                reparacion: false,
+                garantia: false,
+                mantenimiento: false,
+                diagnostico: false
             };
+        },
+        resetForm() {
+            this.form = {};
+            this.services_details = [];
+            this.services_detail_ids = [];
+            this.vehiculo = {};
         },
         getPersonalMecanica() {
             this.$http
@@ -409,13 +426,26 @@ export default {
             this.$http
                 .get(`/${this.resource}/servicesdetails/records`)
                 .then(response => {
-                    this.services_details = response.data.data;
-                    this.services = this.services_details;
+                    this.services_details = response.data.data.map(service => ({
+                        ...service,
+                        selected: false
+                    }));
                     console.log("Servicios detallados:", this.services_details);
+
+                    if (this.recordId && this.form.services_detail_ids) {
+                        this.markSelectedServices();
+                    }
                 })
                 .catch(error => {
                     console.error("Servicios Detallados:", error);
                 });
+        },
+        markSelectedServices() {
+            const selectedIds = new Set(this.services_detail_ids);
+            this.services_details = this.services_details.map(service => ({
+                ...service,
+                selected: selectedIds.has(service.id)
+            }));
         },
         validateVehiculo(vehiculo) {
             for (let prop in vehiculo) {
@@ -430,27 +460,33 @@ export default {
             if (this.validateVehiculo(this.vehiculo)) {
                 this.form.vehiculo = this.vehiculo;
             }
-            this.form.services_detail_ids = this.services_detail_ids;
+            this.form.services_detail_ids = this.services_details
+                .filter(service => service.selected)
+                .map(service => service.id);
             this.loading_submit = true;
             try {
                 const response = await this.$http.post(
-                    this.recordId ? `/${this.resource}/historial/update/${this.recordId}` : "/workshop/new-history",
+                    `/${this.resource}/new-history`,
                     this.form
                 );
                 console.log(response.data);
-                this.$message({
-                    message: this.recordId ? "El Vehiculo ha sido actualizado correctamente" : "El Vehiculo ha sido registrado correctamente"
-                });
+                this.$showSAlert(
+                    "Nuevo historial registrado con éxito",
+                    "success"
+                );
                 this.close();
+                this.$emit("actualizar");
             } catch (error) {
-                console.error("Error al guardar el vehículo:", error);
+                this.$showSAlert(
+                    "ERROR",
+                    "Error al guardar el vehículo",
+                    "error"
+                );
             }
             this.loading_submit = false;
         },
-        open() {
-          /* this.getServicesDetails(); */
-        },
         close() {
+            this.resetForm();
             this.$emit("update:showDialog", false);
         }
     }

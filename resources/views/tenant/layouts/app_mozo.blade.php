@@ -168,7 +168,7 @@
                    <span style="margin-right: 35px;">Commit: {{$commit}}</span>
                    @endif
                    <span>Todos
-                       los derechos reservados por Sdrimsac Solutions E.I.R.L {{ date('Y') }} <i
+                       los derechos reservados por Sdrimsac Solutions {{ date('Y') }} <i
                            class="far fa-copyright"></i></span></p>
                 </div>
               </div>

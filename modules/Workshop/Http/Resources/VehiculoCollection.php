@@ -16,9 +16,11 @@ class VehiculoCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             $historial_id = null;
+            $items = 0;
             $historial = $row->historiales()->where('estado', false)->latest()->first();
             if ($historial) {
                 $historial_id = $historial->id;
+                $items = $historial->historialItem->count();
             }
             return [
                 'id' => $row->id,
@@ -36,6 +38,7 @@ class VehiculoCollection extends ResourceCollection
                 'serie' => $row->serie,
                 'color' => $row->color,
                 'motor' => $row->motor,
+                'items' => $items,
                 'created_at' => $row->created_at->format('d-m-Y H:i'),
             ];
         });

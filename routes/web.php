@@ -983,6 +983,15 @@ if ($hostname) {
                 Route::post('person-types', [App\Http\Controllers\Tenant\PersonTypeController::class, 'store']);
                 Route::delete('person-types/{person}', [App\Http\Controllers\Tenant\PersonTypeController::class, 'destroy']);
 
+                // ruta para el commit 
+                Route::get('commit', [App\Http\Controllers\Tenant\CommitController::class, 'index'])->name('tenant.commit.index')->middleware('just.admin');
+                Route::get('commit/records', [App\Http\Controllers\Tenant\CommitController::class, 'records']);
+                Route::get('commit/record/{commit}', [App\Http\Controllers\Tenant\CommitController::class, 'record']);
+                Route::get('commit/store', [App\Http\Controllers\Tenant\CommitController::class, 'store']);
+                Route::delete('commit/{commit}', [App\Http\Controllers\Tenant\CommitController::class, 'destroy']);
+                Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
+
+
                 //Cuenta
                 Route::get('cuenta/payment_index', [App\Http\Controllers\Tenant\AccountController::class, 'paymentIndex'])->name('tenant.payment.index')->middleware('just.admin');
                 Route::get('cuenta/configuration', [App\Http\Controllers\Tenant\AccountController::class, 'index'])->name('tenant.configuration.index')->middleware('just.admin');

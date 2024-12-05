@@ -3,12 +3,12 @@
         @open="open"
         @close="close"
         append-to-body
-        :visible="showDialog"
+        :visible.sync="showDialog"
         title="Historial De Registro De Vehiculo"
         close-on-click-modal
         width="80%"
     >
-        <form action>
+        <form action="#">
             <br />
             <div class="form-body">
                 <div class="row">
@@ -21,7 +21,10 @@
             <el-input></el-input>-->
                     </div>
                     <div class="col-md-4 text-end">
-                        <el-button type="primary" @click="CarVehicle"
+                        <el-button type="primary"
+                       
+                            
+                        @click="editHistory()"
                             >Crear Nuevo Historia</el-button
                         >
                     </div>
@@ -115,11 +118,7 @@
                                     <el-button
                                         v-for="(subItem, subIndex) in item.item"
                                         :key="subIndex"
-                                        @click.prevent="
-                                            clickPrintFormat(
-                                                subItem.historial_id
-                                            )
-                                        "
+                                        @click.prevent="clickPrintFormat(subItem.historial_id)"
                                         type="success"
                                     >
                                         PDF Vehiculo </el-button
@@ -130,8 +129,9 @@
                                 </td>
                                 <td>
                                     <el-button
+                                       v-if="item.estado == 0"
                                         type="primary"
-                                        @click="clickCreate(item.id)"
+                                        @click="editHistory(item.id)"
                                         >Editar</el-button
                                     >
                                 </td>
@@ -145,6 +145,8 @@
             :showDialog.sync="showDialogCarVehicle"
             :vehiculoId="selectedVehiculoId"
             :recordId="recordId"
+            @actualizar="getData"
+            
         ></car-vehicle>
     </el-dialog>
 </template>
@@ -176,16 +178,21 @@ export default {
             }
         }
     },
-    /* mounted() {
-    console.log("VER EL ID DEL VEHICULO PARA LA HISTORIA", this.vehiculoId);
-  }, */
     methods: {
-        /* editHistory(id) {
-            console.log("Editar Historial con ID:", id);
-            this.recordId = id;
+        /* editHistory(recordId = null) {
+            this.recordId = recordId;
             this.showDialogCarVehicle = true;
         }, */
-        clickCreate(recordId = null) {
+        editHistory(recordId = null) {
+            const historialActivo = this.historial.find(item => item.estado === 0);
+            if (recordId === null && historialActivo) {
+            this.$showSAlert(
+                "error",
+                "No puede crear una nueva historia mientras una esté activa",
+                "error"
+            );
+            return;
+            }
             this.recordId = recordId;
             this.showDialogCarVehicle = true;
         },
@@ -238,17 +245,6 @@ export default {
                     this.historial = response.data.data;
 
                     console.log("datos cargados de historial:", this.historial);
-                    /* this.historialIds = []; */
-
-                    /* this.historial.forEach(record => {
-            if (record.item && record.item.length > 0) {
-              record.item.forEach(subItem => {
-                this.historialIds.push(subItem.historial_id);
-                /* console.log("historial ID encontrado", subitem.historial_id);
-              });
-            }
-          }); */
-                    /* console.log("Historial IDs:", this.historialIds); */
                 })
                 .catch(error => {
                     console.error("Servicios Detallados:", error);

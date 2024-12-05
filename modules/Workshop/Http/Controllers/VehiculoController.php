@@ -125,7 +125,7 @@ class VehiculoController extends Controller
         $record = new VehiculoResource(Vehiculo::findOrFail($id));
         return $record;
     }
-    public function record_payment($id)
+    /* public function record_payment($id)
     {
         $record = Vehiculo::find($id);
         $customer_id = $record->customer_id;
@@ -146,8 +146,373 @@ class VehiculoController extends Controller
                 'error' => 'No hay items en el historial para este vehículo por favor no segir el proceso.'
             ], 400);
         }
-        return ['customer_id' => $customer_id, 'establishment_id' => $historial->establishment_id, 'items' => $items];
+
+        $services = DB::connection('tenant')->table('historial_service_details as hsd')
+        ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+        ->where('hsd.historial_id', $historial->id)
+        ->get()
+        ->map(function ($row) {
+            return [
+                'id' => $row->id, 
+                'name' => $row->name,
+                'price_unit' => $row->price_unit,
+                'quantity' => 1,
+            ];
+        });
+
+        if ($services->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay servicios relacionados con este historial.'
+            ], 400);
+        }
+
+        return [
+            'customer_id' => $customer_id,
+            'establishment_id' => $historial->establishment_id,
+            'items' => $items,
+            'services' => $services
+        ];
+    } */
+
+    /* public function record_payment($id)
+    {
+        $record = Vehiculo::find($id);
+        $customer_id = $record->customer_id;
+        $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
+
+        if (!$historial) {
+            return response()->json([
+                'error' => 'No se encontró un historial activo para este vehículo.'
+            ], 404);
+        }
+
+        // Obtener los items relacionados con el historial
+        $items = $historial->historialItem->transform(function ($row) {
+            $item = $row->item;
+            $row->item->quantity = $row->cantidad;
+            $row->item->sale_unit_price = $row->price;
+            return $row->item;
+        });
+
+        if ($items->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay items en el historial para este vehículo, por favor no sigas el proceso.'
+            ], 400);
+        }
+
+        // Obtener los servicios relacionados con el historial
+        $services = DB::connection('tenant')->table('historial_service_details as hsd')
+            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+            ->where('hsd.historial_id', $historial->id)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'price_unit' => $row->price_unit,
+                    'quantity' => 1,
+                ];
+            });
+
+        if ($services->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay servicios relacionados con este historial.'
+            ], 400);
+        }
+
+        // Clonamos un item y le añadimos los servicios
+        // Aquí puedes elegir un item o recorrer todos, dependiendo de tu lógica
+        $items_with_services = $items->map(function ($item) use ($services) {
+            // Clonamos el item y le añadimos los servicios
+            $cloned_item = $item->replicate();  // Clonamos el item
+            $cloned_item->services = $services;  // Agregamos los servicios al item clonado
+            return $cloned_item;
+        });
+
+        return [
+            'customer_id' => $customer_id,
+            'establishment_id' => $historial->establishment_id,
+            'items' => $items_with_services
+        ];
+    } */
+
+    /* public function record_payment($id)
+    {
+        $record = Vehiculo::find($id);
+        $customer_id = $record->customer_id;
+        $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
+
+        if (!$historial) {
+            return response()->json([
+                'error' => 'No se encontró un historial activo para este vehículo.'
+            ], 404);
+        }
+
+        // Obtener los items relacionados con el historial
+        $items = $historial->historialItem->transform(function ($row) {
+            $item = $row->item;
+            $row->item->quantity = $row->cantidad;
+            $row->item->sale_unit_price = $row->price;
+            return $row->item;
+        });
+
+        if ($items->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay items en el historial para este vehículo, por favor no sigas el proceso.'
+            ], 400);
+        }
+
+        // Obtener los servicios relacionados con el historial
+        $services = DB::connection('tenant')->table('historial_service_details as hsd')
+            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+            ->where('hsd.historial_id', $historial->id)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'price_unit' => $row->price_unit,
+                    'quantity' => 1,
+                ];
+            });
+
+        if ($services->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay servicios relacionados con este historial.'
+            ], 400);
+        }
+
+        // Agregar los servicios como nuevos "items"
+        $items_with_services = $items->toArray(); // Convertimos los items a un array para manipularlos más fácilmente
+
+        // Cada servicio se agrega como un nuevo "item" en el array
+        foreach ($services as $service) {
+            $items_with_services[] = [
+                'id' => $service['id'],
+                'name' => $service['name'],
+                'description' => $service['name'],
+                'quantity' => $service['quantity'],
+                'sale_unit_price' => $service['price_unit'],
+            ];
+        }
+
+        return [
+            'customer_id' => $customer_id,
+            'establishment_id' => $historial->establishment_id,
+            'items' => $items_with_services
+        ];
+    } */
+
+    /* public function record_payment($id)
+    {
+        $record = Vehiculo::find($id);
+        $customer_id = $record->customer_id;
+        $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
+
+        if (!$historial) {
+            return response()->json([
+                'error' => 'No se encontró un historial activo para este vehículo.'
+            ], 404);
+        }
+
+        // Obtener los items relacionados con el historial
+        $items = $historial->historialItem->transform(function ($row) {
+            // Clonamos el item completo
+            $item = $row->item->replicate();  // Clonamos el item usando replicate()
+            $item->quantity = $row->cantidad; // Asignamos la cantidad
+            $item->sale_unit_price = $row->price; // Asignamos el precio de venta unitario
+            return $item;
+        });
+
+        if ($items->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay items en el historial para este vehículo, por favor no sigas el proceso.'
+            ], 400);
+        }
+
+        // Obtener los servicios relacionados con el historial
+        $services = DB::connection('tenant')->table('historial_service_details as hsd')
+            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+            ->where('hsd.historial_id', $historial->id)
+            ->get()
+            ->map(function ($row) {
+                // Aquí generamos una nueva estructura para los servicios, tratándolos como "items"
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    /* 'description' => $row->name,
+                    'quantity' => 1,
+                    'sale_unit_price' => $row->price_unit,
+                    'account_id' => null,  // Puedes agregar otros campos si es necesario
+                    'active' => 1,
+                    'amount_plastic_bag_taxes' => '0.10',
+                    'apply_store' => 0,
+                    'attributes' => [],
+                    'barcode' => null,
+                    'barcode_type' => null,
+                    'brand' => null,
+                    'brand_id' => null,
+                    'calculate_quantity' => 0,
+                    'category' => [
+                        'id' => 1,
+                        'name' => 'Servicio',
+                        'identifier' => null,
+                        'icono' => 'imagen-no-disponible.jpg',
+                        'pos_drag' => 0,
+                        'user_id' => 2,
+                    ],
+                    'category_id' => 1,
+                    'commission_amount' => null,
+                    'commission_type' => null,
+                    'currency_type' => [
+                        'id' => 'PEN',
+                        'active' => 1,
+                        'symbol' => 'S/',
+                        'description' => 'Soles'
+                    ],
+                    'currency_type_id' => 'PEN',
+                    'created_at' => now(),
+                    'delivery_cost' => '0.0000',
+                    'description' => $row->name,
+                    'has_color_size' => 0,
+                    'has_commercial_treatment' => 1,
+                    'has_igv' => 1,
+                    'has_isc' => 0,
+                    'has_orden_compra' => 0,
+                    'has_perception' => 0,
+                    'has_warranty' => 0,
+                    'id' => $row->id,
+                    'image' => 'imagen-no-disponible.jpg',
+                    'internal_id' => '100002',
+                    'is_manufactured' => 0,
+                    'is_promotion' => 0,
+                    'is_set' => 0,
+                    'is_stock' => 'Si',
+                    'item_code' => null,
+                    'item_code_gs1' => null,
+                    'item_type' => [
+                        'id' => '01',
+                        'description' => 'Servicio'
+                    ],
+                    'item_type_id' => '01',
+                    'item_warehouse_prices' => [['id' => 2, 'item_id' => $row->id, 'warehouse_id' => 1, 'price' => $row->price_unit]],
+                    'location' => null,
+                    'lot_code' => null,
+                    'lots_enabled' => 0,
+                    'max_quantity' => null,
+                    'max_quantity_description' => null,
+                    'model' => null,
+                    'quantity' => '1.00',
+                    'sale_affectation_igv_type_id' => '20',
+                    'sale_unit_price' => $row->price_unit,
+                    'stock' => '0.0000',
+                    'stock_min' => '1.00',
+                    'subject_to_detraction' => 0,
+                    'suggested_price' => '0.00',
+                    'unit_type' => [
+                        'id' => 'ZZ',
+                        'active' => 1,
+                        'symbol' => 'SERV',
+                        'description' => 'SERVICIO',
+                    ],
+                    'unit_type_id' => 'ZZ',
+                    'updated_at' => now(),
+                    'warehouse_id' => 1
+                ];
+            });
+
+        if ($services->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay servicios relacionados con este historial.'
+            ], 400);
+        }
+
+        $items_with_services = $items->toArray(); 
+
+        foreach ($services as $service) {
+            $items_with_services[] = (object)$service;
+        }
+
+        return [
+            'customer_id' => $customer_id,
+            'establishment_id' => $historial->establishment_id,
+            'items' => $items_with_services
+        ];
+    } */
+
+    public function record_payment($id)
+    {
+        $record = Vehiculo::find($id);
+        $customer_id = $record->customer_id;
+        $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
+
+        if (!$historial) {
+            return response()->json([
+                'error' => 'No se encontró un historial activo para este vehículo.'
+            ], 404);
+        }
+
+        $items = $historial->historialItem->transform(function ($row) {
+            $item = $row->item->replicate();  
+            $item->quantity = $row->cantidad;
+            $item->item_id = $row->item_id;
+            $item->sale_unit_price = $row->price;
+            return $item;
+        });
+
+        if ($items->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay items en el historial para este vehículo, por favor no sigas el proceso.'
+            ], 400);
+        }
+
+        $service_item = Item::where('description', 'SERVICIO')->first(); 
+        $services = DB::connection('tenant')->table('historial_service_details as hsd')
+            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+            ->where('hsd.historial_id', $historial->id)
+            ->get()
+            ->map(function ($row) use ($service_item) {
+               
+                if ($service_item) {
+                    $cloned_service_item = $service_item->replicate();
+
+                    
+                    $cloned_service_item->quantity = 1;
+                    $cloned_service_item->sale_unit_price = $row->price_unit;
+                    $cloned_service_item->description = $row->name;
+                    $cloned_service_item->price = $row->price_unit;
+                    $cloned_service_item->currency_type_id = 'PEN'; 
+                    $cloned_service_item->unit_type_id = 'ZZ';
+                    $cloned_service_item->item_id = $service_item->id;
+
+                    return $cloned_service_item;
+                }
+                return null;
+            });
+
+        $services = $services->filter()->values();
+
+        if ($services->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay servicios relacionados con este historial.'
+            ], 400);
+        }
+
+        $items_with_services = $items->toArray();
+
+        foreach ($services as $service) {
+            $items_with_services[] = $service;
+        }
+
+        return [
+            'customer_id' => $customer_id,
+            'establishment_id' => $historial->establishment_id,
+            'items' => $items_with_services
+        ];
     }
+
+
+
     public function tables()
     {
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get();
@@ -270,7 +635,7 @@ class VehiculoController extends Controller
 
         $this->setFilenameHistorial($historial, $services);
 
-        $this->createPdfHistorial($historial, $services, "a4", $historial->filename);
+        $this->createPdfHistorial($historial, "a4", $historial->filename, $services);
 
         /* $this->vehiculo = $vehicle;
         $this->setFilename();
@@ -286,6 +651,7 @@ class VehiculoController extends Controller
     {
         $vehiculo_id = $request->input('vehiculo_id');
         $establishment_id = auth()->user()->establishment_id;
+        $historial_id = $request->input('id');
 
         $historialData = $request->only([
             'vehiculo_id',
@@ -305,22 +671,32 @@ class VehiculoController extends Controller
         ]);
 
         try {
-            $historial = new Historial();
-            $historial->fill($historialData);
-            $historial->vehiculo_id = $vehiculo_id;
-            $historial->establishment_id = $establishment_id;
-            $historial->save();
+            $historial = Historial::find($historial_id);
 
-            $historial_id = $historial->id;
+            if ($historial) {
+                // Update existing historial
+                $historial->fill($historialData);
+                $historial->save();
+            } else {
+                // Create new historial
+                $historial = new Historial();
+                $historial->fill($historialData);
+                $historial->vehiculo_id = $vehiculo_id;
+                $historial->establishment_id = $establishment_id;
+                $historial->save();
+                $historial_id = $historial->id;
+            }
 
             $vehicleFeatureData = $request->input('vehiculo', []);
             $vehicleFeatureData['vehiculo_id'] = $vehiculo_id;
             $vehicleFeatureData['historial_id'] = $historial_id;
-            $vehicleFeature = new VehicleFeature();
-            $vehicleFeature->fill($vehicleFeatureData);
-            $vehicleFeature->save();
+            $vehicleFeature = VehicleFeature::updateOrCreate(
+                ['vehiculo_id' => $vehiculo_id, 'historial_id' => $historial_id],
+                $vehicleFeatureData
+            );
 
             $services_detail_ids = $request->input('services_detail_ids', []);
+            DB::connection('tenant')->table('historial_service_details')->where('historial_id', $historial_id)->delete();
             $dataToInsert = array_map(function ($service_detail_id) use ($historial) {
                 return [
                     'services_detail_id' => $service_detail_id,
@@ -338,18 +714,14 @@ class VehiculoController extends Controller
                 ->select('sd.name', 'sd.price_unit');
             $services = $query->get();
 
-
             $this->setFilenameHistorial($historial, $services);
 
-            $this->createPdfHistorial($historial, $services, "a4", $historial->filename);
+            $this->createPdfHistorial($historial, "a4", $historial->filename, $services);
 
             return [
                 'success' => true,
-                'message' => 'Historia registrada con éxito'
+                'message' => $historial_id ? 'Historial actualizado con éxito' : 'Historial registrado con éxito'
             ];
-            /* $this->vehiculo = $vehicle;
-            
-            $this->createPdf($this->vehiculo, "a4", $this->vehiculo->filename); */
         } catch (\Exception $e) {
             return [
                 'success' => false,

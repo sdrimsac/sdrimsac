@@ -66,6 +66,7 @@ class OrdenController extends Controller
             $table_old->save();
         }
         $caja_area_id = Area::getAreaCajaId();
+        
 
         event(new MessageEvent($message, $caja_area_id));
         return [

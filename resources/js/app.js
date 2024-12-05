@@ -154,6 +154,62 @@ const getAreaPrinter = async () => {
         }
     } catch (e) {}
 };
+function limpiarcache(reload = true) {
+    if ("caches" in window) {
+        caches.keys().then(function(cacheNames) {
+            console.log(cacheNames);
+            cacheNames.forEach(function(cacheName) {
+                caches.delete(cacheName);
+            });
+        });
+    }
+
+    navigator.serviceWorker?.getRegistrations().then(function(registrations) {
+        for (let registration of registrations) {
+            registration.unregister();
+        }
+    });
+
+    if (reload) {
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }
+}
+axios.get("/commit/store").then(response => {
+    let { data } = response;
+    if (data.update) {
+        Swal.fire({
+            title: "NUEVA ACTUALIZACION DISPONIBLE", // Título en mayúsculas y centrado
+            html: `<span style="font-weight: bold; font-size: 1.2rem;">la pagina se va a recargar espere por favor</span>
+    `, // Texto normal
+            timer: 1000, // Duración de 2 segundos
+            showConfirmButton: false,
+            customClass: {
+                popup: "swal2-no-border"
+
+                // Clase personalizada
+            },
+            didOpen: popup => {
+                // popup.style.zIndex = "2010"; // Ajusta este valor según necesites
+                const swalContainer = Swal.getPopup();
+                // let timerInterval;
+
+                swalContainer.addEventListener("mouseenter", () => {
+                    Swal.stopTimer();
+                });
+
+                swalContainer.addEventListener("mouseleave", () => {
+                    Swal.resumeTimer();
+                });
+            },
+            position: "center",
+            icon: "success"
+        });
+        console.log("actualizar");
+        limpiarcache();
+    }
+});
 /* Vue toast (notificaciones personalizadas )  */
 
 //Vue.prototype.$http.defaults.withCredentials = false;

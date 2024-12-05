@@ -84,6 +84,21 @@ try {
         disableStats: false,
         // enabledTransports: ['ws', 'wss'],
     });
+    console.log("window.Echo", window.Echo);
+    axios.get("/commit/configuration").then(response => {
+        console.log("configuration", response);
+        let { data } = response;
+
+        window.Echo.channel("commit").listen(
+            `.commit-${data.socket}`,
+            e => {
+                console.log("probando el nuevo evento", e);
+                
+                
+            }
+        );
+    });
+    /*  */
     // window.Echo = new Echo({
     //     broadcaster: "pusher",
     //     key: process.env.MIX_PUSHER_APP_KEY,

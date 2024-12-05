@@ -21,7 +21,6 @@ class HistorialResource extends JsonResource
             'document_id' => $this->document_id,
             'personal_id' => $this->personal_id,
             'personal_name' => $this->personal ? $this->personal->name : null,
-            'establishment_id' => $this->stablishment_id,
             'observacion' => $this->observacion,
             'motive' => $this->motive,
             'reparacion' => $this->reparacion,

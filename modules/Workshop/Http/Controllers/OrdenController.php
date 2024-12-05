@@ -67,7 +67,7 @@ class OrdenController extends Controller
         }
         $caja_area_id = Area::getAreaCajaId();
 
-        event(new MessageEvent($message, $caja_area_id));
+        event(new MessageEvent($message, $caja_area_id, ));
         return [
             'success' => true,
             'message' => 'Orden cambiada',

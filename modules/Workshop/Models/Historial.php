@@ -13,7 +13,7 @@ use Modules\Workshop\Models\HistorialServicesDetails;
 class Historial extends ModelTenant
 {
     protected $table = 'historial';
-    
+
     protected $fillable = [
         'vehiculo_id',
         'sale_note_id',
@@ -26,41 +26,61 @@ class Historial extends ModelTenant
         'garantia',
         'mantenimiento',
         'diagnostico',
-        'estado', 
+        'estado',
         'filename'
     ];
-    public function vehiculo(){
+    protected $casts = [
+        'reparacion' => 'boolean',
+        'mantenimiento' => 'boolean',
+        'diagnostico' => 'boolean',
+        'garantia' => 'boolean',
+    ];
+    public function vehiculo()
+    {
         return $this->belongsTo(vehiculo::class, 'vehiculo_id');
     }
-    public function SaleNote(){
+    public function SaleNote()
+    {
         return $this->belongsTo(SaleNote::class, 'sale_note_id');
     }
-    public function document(){
+    public function document()
+    {
         return $this->belongsTo(Document::class, 'document_id');
     }
-    public function peronal(){
+    public function peronal()
+    {
         return $this->belongsTo(WorkshopPersonal::class, 'personal_id');
     }
-    public function establishment(){
+    public function establishment()
+    {
         return $this->belongsTo(Establishment::class, 'establishment_id');
     }
 
-    public function personal(){
+    public function personal()
+    {
         return $this->belongsTo(WorkshopPersonal::class, 'personal_id');
     }
-    public function historialItem(){
+    public function historialItem()
+    {
         return $this->hasMany(HistorialItem::class, 'historial_id');
     }
     public function vehicleFeatures()
     {
         return $this->hasMany(VehicleFeature::class, 'vehiculo_id', 'vehiculo_id');
     }
-    public function servicesDetails(){
+    public function servicesDetails()
+    {
         return $this->belongsToMany(ServicesDetails::class, 'historial_service_details', 'historial_id', 'services_detail_id');
+    }
+    /* public function historialServiceDetails()
+    {
+        return $this->hasMany(HistorialServicesDetails::class, 'historial_id');
+    } */
+    public function historialServiceDetails()
+    {
+        return $this->hasMany(HistorialServicesDetails::class, 'historial_id');
     }
     /* public function servicesDetails(){
         return $this->hasMany(HistorialServicesDetails::class);
     } */
-    
-
 }

@@ -78,9 +78,9 @@
                                                     </template>
                                                     <el-radio-button
                                                         v-if="
-                                                            !variation &&
+                                                            (!variation &&
                                                                 sale_note &&
-                                                                !clientSaleNoteNumber
+                                                                !clientSaleNoteNumber || (configuration.hotels && user.id == 57))
                                                         "
                                                         label="80"
                                                     >

@@ -240,10 +240,14 @@ export default {
       }
     },
     submit() {
+      if (this.items.length === 0) {
+        this.$showSAlert("ALERTA", "Debe seleccionar Y Agregar a la lista almenos un producto", "warning");
+        return;
+      }
       const itemsTOSubmit = this.items.map(item => ({
         id: item.id,
         cantidad: item.cantidad
-      }))
+      }));
       this.$http
         .post(`/${this.resource}/items`, {
           historial_id: this.vehiculoHistorial,
@@ -251,18 +255,13 @@ export default {
           items: this.items
         })
         .then(response => {
-          this.$emit("update:showDialog", false);
-            this.$showSAlert(
-             "Producto agregados con éxito",
-             "success"
-            );
+          this.$emit("recargar", false);
+          this.close();
+          this.$showSAlert("Producto agregados con éxito", "success");
         })
         .catch(error => {
           console.log(error);
-            this.$showSAlert( "ALERTA",
-            "Error al agregar producto",
-            "error"
-            );
+          this.$showSAlert("ALERTA", "Error al agregar producto", "error");
         });
     },
     open() {

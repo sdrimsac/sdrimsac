@@ -323,22 +323,18 @@ export default {
       titleDialog: null,
       errors: {},
       form: {},
-      activeTab: "",
+      activeTab: "Motor",
       vehiculo: {},
       services_details: [],
       services_detail_ids: [],
-      activeTab: "Motor",
       services: [],
       loading_submit: false,
       showDialogNewPerson: false,
       showDialogNewPersonal: false,
       showDialogChecklist: false,
-      errors: {},
-      form: {},
       loading_search: false,
       customers: [],
       tipo_vehiculo: [],
-      servicesDetails: [],
       personal: [],
       historial: {},
       tipo_vehiculo_id: null,
@@ -393,9 +389,6 @@ export default {
       console.log("Actualizando registro", this.form);
       this.close();
     },
-    /* fillForm(data) {
-      this.form = { ...data };
-    }, */
     listChekout() {
       this.showDialogChecklist = true;
     },
@@ -552,13 +545,15 @@ export default {
       this.loading_submit = true;
       try {
         const response = await this.$http.post("/workshop/vehiculo", this.form);
-        console.log(response.data);
-        this.$message({
-          message: "El Vehiculo ha sido registrado correctamente"
-        });
+        this.$showSAlert("Vehiculo registrado correctamente", "success");
+        this.$emit("recargar");
         this.close();
       } catch (error) {
-        console.error("Error al guardar el vehículo:", error);
+        if (error.response.status === 422) {
+          this.errors = error.response.data.data;
+        } else {
+          this.$showSAlert("ALERTA", "Error al guardar el vehículo", "error");
+        }
       }
       this.loading_submit = false;
     },
