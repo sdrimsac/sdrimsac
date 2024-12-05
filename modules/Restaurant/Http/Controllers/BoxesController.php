@@ -1402,9 +1402,9 @@ class BoxesController extends Controller
                                 }
                             }
                         if ($document->document_type_id == '01') {
-                            if (!$document->document_affected_note) {
+                            // if (!$document->document_affected_note) {
                                 $total_01_document += $document->total;
-                            }
+                            // }
                             if ($min_01_document_id == null) {
                                 $min_01_document_id = $document->id;
                             } else {
@@ -1569,15 +1569,20 @@ class BoxesController extends Controller
 
         $min_01_document_id = null;
         $max_01_document_id = null;
+        $min_07_document_id = null;
+        $max_07_document_id = null;
         $total_01_document = 0;
         $total_03_document = 0;
+        $total_07_document = 0;
         $min_03_document_id = null;
         $max_03_document_id = null;
         $document_with_note = Document::whereIn('cash_id', $cashes)->whereHas('document_affected_note')->chunk(50, function ($documents) use (
             &$min_01_document_id,
             &$max_01_document_id,
             &$min_03_document_id,
-            &$max_03_document_id
+            &$max_03_document_id,
+            &$min_07_document_id,
+            &$max_07_document_id
         ) {
             foreach ($documents as $document) {
                 $document = Document::select(['id', 'document_type_id', 'total'])
@@ -1618,7 +1623,10 @@ class BoxesController extends Controller
                 &$min_03_document_id,
                 &$max_03_document_id,
                 &$total_01_document,
-                &$total_03_document
+                &$total_03_document,
+                &$min_07_document_id,
+                &$max_07_document_id,
+                &$total_07_document
 
             ) {
                 foreach ($boxes as $box) {
@@ -1632,6 +1640,23 @@ class BoxesController extends Controller
                         $document = Document::select(['id', 'document_type_id', 'total', 'number'])
                             ->with('items')
                             ->find($box->document_id);
+                            if ($document->document_affected_note) {
+                                $affected_document = Document::select(['id', 'document_type_id', 'total'])
+                                    ->find($document->document_affected_note->document_id);
+                                if ($affected_document->document_type_id == '07') {
+                                    if ($min_07_document_id == null) {
+                                        $min_07_document_id = $affected_document->id;
+                                    } else {
+                                        $min_07_document_id = ($affected_document->id < $min_07_document_id) ? $affected_document->id : $min_07_document_id;
+                                    }
+                                    if ($max_07_document_id == null) {
+                                        $max_07_document_id = $affected_document->id;
+                                    } else {
+                                        $max_07_document_id = ($affected_document->id > $max_07_document_id) ? $affected_document->id : $max_07_document_id;
+                                    }
+                                    $total_07_document += $affected_document->total;
+                                }
+                            }
                         if ($document->document_type_id == '01') {
                             $total_01_document += $document->total;
                             if ($min_01_document_id == null) {
@@ -1658,6 +1683,9 @@ class BoxesController extends Controller
                                 $max_03_document_id = ($document->id > $max_03_document_id) ? $document->id : $max_03_document_id;
                             }
                         }
+                    }
+                    if ($document->document_affected_note) {
+                        continue;
                     }
                     $document_items = $document->items;
                     foreach ($document_items as $item) {
@@ -1687,7 +1715,8 @@ class BoxesController extends Controller
                     }
                 }
             });
-        //sumar los totales del array items
+
+        
         $total_items = 0;
         foreach ($items as $item) {
             $total_items += $item["total"];
@@ -1727,6 +1756,17 @@ class BoxesController extends Controller
         }
         $info_documents['max_03'] = $max_03_document;
         $info_documents['total_03'] = $total_03_document;
+        $others_07_document = Document::whereIn('cash_id', $cashes)->where('document_type_id', '07')->get();
+        foreach ($others_07_document as $document) {
+            $total_07_document += $document->total;
+            $info_documents['others_07'][] = [
+                'series' => $document->series,
+                'number' => $document->number,
+                'total' => $document->total
+            ];
+        }
+        $info_documents['total_07'] = $total_07_document;
+
         try {
             $pdf = PDF::loadView(
                 'report::boxes.cashes_salud',

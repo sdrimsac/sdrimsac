@@ -249,6 +249,12 @@
                 <th>TOTAL S/</th>
             </tr>
         <tbody>
+            @php
+                $total_03_document = 0;
+                $total_01_document = 0;
+                $total_07_document = 0;
+                $total_others_07_document = 0;
+            @endphp
             @if (isset($info_documents['min_03']) || isset($info_documents['max_03']))
                 <tr>
 
@@ -271,6 +277,9 @@
                     <td class="celda text-end">
                         @isset($info_documents['total_03'])
                             {{ number_format($info_documents['total_03'], 2) }}
+                            @php
+                                $total_03_document = $info_documents['total_03'];
+                            @endphp
                         @endisset
                     </td>
                 </tr>
@@ -297,6 +306,9 @@
                     <td class="celda text-end">
                         @isset($info_documents['total_01'])
                             {{ number_format($info_documents['total_01'], 2) }}
+                            @php
+                                $total_01_document = $info_documents['total_01'];
+                            @endphp
                         @endisset
                     </td>
                 </tr>
@@ -322,10 +334,27 @@
                     <td class="celda text-end">
                         @isset($info_documents['total_07'])
                             {{ number_format($info_documents['total_07'], 2) }}
+                            @php
+                                $total_07_document = $info_documents['total_07'];
+                            @endphp
                         @endisset
                     </td>
                 </tr>
 
+            @endif
+            @if (isset($info_documents['others_07']))
+                @foreach ($info_documents['others_07'] as $document)
+                    <tr>
+                        <td class="celda">NC</td>
+                        <td class="celda text-center">{{ $document['series'] }}</td>
+                        <td class="celda text-center">{{ $document['number'] }}</td>
+                        <td class="celda text-center">{{ $document['number'] }}</td>
+                        <td class="celda text-end">-{{ number_format($document['total'], 2, '.', '') }}</td>
+                        @php
+                            $total_others_07_document += $document['total'];
+                        @endphp
+                    </tr>
+                @endforeach
             @endif
             @if ($cash->pharmacy_info)
                 @php
@@ -369,6 +398,15 @@
                     @endif
                 @endforeach
             @endif
+            <tr>
+                <td class="celda"></td>
+                <td class="celda"></td>
+                <td class="celda"></td>
+                <td class="celda"></td>
+                <td class="celda text-end">
+                    {{ number_format($total_03_document + $total_01_document - $total_07_document - $total_others_07_document, 2) }}
+                </td>
+            </tr>
         </tbody>
         </thead>
 
