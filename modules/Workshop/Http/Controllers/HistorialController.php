@@ -2,9 +2,9 @@
 
 namespace Modules\Workshop\Http\Controllers;
 
-use Modules\workshop\Http\Resources\HistorialCollection;
-use Modules\workshop\Http\Resources\HistorialResource;
-use Modules\workshop\Http\Requests\HistorialRequest;
+use Modules\Workshop\Http\Resources\HistorialCollection;
+use Modules\Workshop\Http\Resources\HistorialResource;
+use Modules\Workshop\Http\Requests\HistorialRequest;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;

@@ -39,14 +39,14 @@
                 </div>
             </div>
             <div class="data-table-visible-columns">
-                <el-button
+                <!-- <el-button
                     type="primary"
                     class=""
                     href="javascript:void(0)"
                     @click.prevent="clickCreate()"
                 >
                     Nuevo Vehiculo
-                </el-button>
+                </el-button> -->
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -78,7 +78,7 @@
                                 <td>{{ row.color }}</td>
                                 <td>{{ row.anio_fabricacion }}</td>
                                 <td>{{ row.kilometraje }}</td>
-                                <td class="text-end">
+                                <!-- <td class="text-end">
                                     <button
                                         class="btn p-0"
                                         type="button"
@@ -122,7 +122,7 @@
                                             </a>
                                         </template>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>

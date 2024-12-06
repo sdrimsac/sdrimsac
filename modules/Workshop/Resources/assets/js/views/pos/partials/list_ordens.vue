@@ -3691,7 +3691,8 @@ export default {
         return;
       }
       if (!this.cash_id) {
-        this.$toast.error("No tiene una caja abierta");
+        this.$showSAlert("ALERTA", "No tiene una caja abierta", "error");
+        /* this.$toast.error("No tiene una caja abierta"); */
         return;
       }
       if (this.clientTableData.table) {

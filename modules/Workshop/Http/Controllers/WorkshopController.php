@@ -280,7 +280,7 @@ class WorkshopController extends Controller
     public function pos()
     {
         $user = auth()->user();
-        $cash_worker = WorkersType::where('description', 'like', '%CAJERO MECANICO%')->orWhere('description', 'like', '%cajero mecanico%')->first();
+        $cash_worker = WorkersType::where('description', 'like', '%CAJERO MECÁNICO%')->orWhere('description', 'like', '%cajero mecanico%')->first();
         if ($cash_worker) {
             $id = $cash_worker->id; 
 
@@ -465,7 +465,7 @@ class WorkshopController extends Controller
     {
         return [
 
-            'description'       => 'Descripcion - Detalle',
+            'description'       => 'Descripción - Detalle',
             'date'              => 'Fecha',
         ];
     }
@@ -630,7 +630,7 @@ class WorkshopController extends Controller
         event(new OrdenPendingEvent(-1));
         return [
             'success'  => true,
-            'messsage' => "Se genero con exito el pedido"
+            'messsage' => "Se generó con éxito el pedido"
         ];
     }
     public function search_orden_document(Request $request)
@@ -709,7 +709,7 @@ class WorkshopController extends Controller
         $orden_delete->delete();
         return [
             "success" => true,
-            "message" => "Orden Eliminada Correctamente"
+            "message" => "Orden eliminada correctamente"
         ];
     }
     public function destroy_items($id)

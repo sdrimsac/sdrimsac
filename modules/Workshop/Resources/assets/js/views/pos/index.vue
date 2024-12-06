@@ -1438,6 +1438,7 @@
       :showDialog.sync="showDialogMechanic"
       :mechanicItem="allFoods"
       @payment="handlePayment"
+      :cash_id.sync="cashId"
     ></mechanic>
   </div>
 </template>

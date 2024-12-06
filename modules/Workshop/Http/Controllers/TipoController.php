@@ -2,10 +2,10 @@
 
 namespace Modules\Workshop\Http\Controllers;
 
-use Modules\workshop\Http\Resources\TipoVehiculoResource;
-use Modules\workshop\Http\Requests\TipoVehiculoRequest;
+use Modules\Workshop\Http\Resources\TipoVehiculoResource;
+use Modules\Workshop\Http\Requests\TipoVehiculoRequest;
 use App\Http\Controllers\Controller;
-use Modules\workshop\Models\TipoVehiculo;
+use Modules\Workshop\Models\TipoVehiculo;
 use Exception;
 use Modules\Workshop\Http\Resources\TipoVehiculoCollection;
 
@@ -32,31 +32,28 @@ class TipoController extends Controller
     public function store(TipoVehiculoRequest $request)
     {
         $id = $request->input('id');
-        $bank = TipoVehiculo::firstOrNew(['id' => $id]);
-        $bank->fill($request->all());
-        $bank->save();
+        $tipoVehiculo = TipoVehiculo::firstOrNew(['id' => $id]);
+        $tipoVehiculo->fill($request->all());
+        $tipoVehiculo->save();
 
         return [
             'success' => true,
-            'message' => ($id) ? 'Vehiculo editado con éxito' : 'Vehiculo registrado con éxito'
+            'message' => ($id) ? 'Vehículo editado con éxito' : 'Vehículo registrado con éxito'
         ];
     }
 
-public function destroy($id)
+    public function destroy($id)
     {
         try {
-
-            $bank = TipoVehiculo::findOrFail($id);
-            $bank->delete();
+            $tipoVehiculo = TipoVehiculo::findOrFail($id);
+            $tipoVehiculo->delete();
 
             return [
                 'success' => true,
-                'message' => 'Vehiculo eliminado con éxito'
+                'message' => 'Vehículo eliminado con éxito'
             ];
         } catch (Exception $e) {
-
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Vehiculo esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Vehiculo'];
+            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El vehículo está siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar vehículo'];
         }
     }
-
 }

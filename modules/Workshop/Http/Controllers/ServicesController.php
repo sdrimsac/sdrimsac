@@ -32,9 +32,9 @@ class ServicesController extends Controller
     public function store(ServicesRequest $request)
     {
         $id = $request->input('id');
-        $bank = Services::firstOrNew(['id' => $id]);
-        $bank->fill($request->all());
-        $bank->save();
+        $service = Services::firstOrNew(['id' => $id]);
+        $service->fill($request->all());
+        $service->save();
 
         return [
             'success' => true,
@@ -42,21 +42,18 @@ class ServicesController extends Controller
         ];
     }
 
-public function destroy($id)
+    public function destroy($id)
     {
         try {
-
-            $bank = Services::findOrFail($id);
-            $bank->delete();
+            $service = Services::findOrFail($id);
+            $service->delete();
 
             return [
                 'success' => true,
                 'message' => 'Sub Servicio eliminado con éxito'
             ];
         } catch (Exception $e) {
-
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Sub Servicio esta siendo usado por otros registros, no puede eliminar'] : ['success' => 
-                                                              false, 'message' => 'Error inesperado, no se pudo eliminar Sub Servicio'];
+            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Sub Servicio está siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Sub Servicio'];
         }
     }
 

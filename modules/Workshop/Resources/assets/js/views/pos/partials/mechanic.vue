@@ -153,7 +153,9 @@
                         </a> -->
                                                 <a class="dropdown-item">
                                                     <el-button
-                                                    v-if="vehiculo.historial_id"
+                                                        v-if="
+                                                            vehiculo.historial_id
+                                                        "
                                                         @click.prevent="
                                                             clickPrintFormat(
                                                                 vehiculo.id
@@ -170,7 +172,9 @@
                                                 </a>
                                                 <a class="dropdown-item">
                                                     <el-button
-                                                    v-if="vehiculo.historial_id"
+                                                        v-if="
+                                                            vehiculo.historial_id
+                                                        "
                                                         @click.prevent="
                                                             clickPrint(
                                                                 vehiculo.id
@@ -245,7 +249,7 @@ import modalItem from "./modal_item.vue";
 import FormatPdf from "./format_pdf.vue";
 import queryString from "query-string";
 export default {
-    props: ["showDialog", "mechanicItem", "visible"],
+    props: ["showDialog", "mechanicItem", "visible", "cash_id"],
     components: {
         registerHistory,
         historial,
@@ -376,8 +380,12 @@ export default {
       this.$emit("payment", id);
     }, */
         async openpayOrden(id) {
-            if (this.vehiculos.length === 0) {
-                this.$toast.error("No hay items disponibles.");
+            if (!this.cash_id) {
+                this.$showSAlert(
+                    "ALERTA",
+                    "No tiene una caja abierta",
+                    "error"
+                );
                 return;
             }
             this.$emit("payment", id);

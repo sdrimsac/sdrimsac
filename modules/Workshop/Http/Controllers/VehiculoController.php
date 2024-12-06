@@ -4,9 +4,9 @@ namespace Modules\Workshop\Http\Controllers;
 
 use App\CoreFacturalo\Template;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
-use Modules\workshop\Http\Resources\VehiculoCollection;
-use Modules\workshop\Http\Resources\VehiculoResource;
-use Modules\workshop\Http\Requests\VehiculoRequest;
+use Modules\Workshop\Http\Resources\VehiculoCollection;
+use Modules\Workshop\Http\Resources\VehiculoResource;
+use Modules\Workshop\Http\Requests\VehiculoRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Company;
@@ -43,9 +43,7 @@ class VehiculoController extends Controller
     }
     public function records(Request $request)
     {
-        /* $records = $this->getRecords($request); */
         $records = $this->getRecords($request)->paginate(10);
-
         return new VehiculoCollection($records);
     }
     public function getRecords(Request $request)
@@ -116,9 +114,7 @@ class VehiculoController extends Controller
     }
     public function record($id)
     {
-        /* $record = new VehiculoResource(Vehiculo::with('historial')->findOrFail($id)); */
         $record = new VehiculoResource(Vehiculo::findOrFail($id));
-
         return $record;
     }
     public function record2($id)
@@ -454,10 +450,7 @@ class VehiculoController extends Controller
         $vehicleFeatures = VehicleFeature::where('vehiculo_id', $id)
             ->where('historial_id', $historial->id)
             ->first();
-        // if(!$vehicleFeatures){
-        //     $vehicleFeatures = VehicleFeature::where('vehiculo_id', $id)
-        //     ->first();
-        // }
+
         $combinedData = array_merge(
             $vehiculo->toArray(),
             $vehicleFeatures ? $vehicleFeatures->toArray() : []
@@ -468,37 +461,35 @@ class VehiculoController extends Controller
             $this->get_vehiculo($combinedData, "Luces Direccionales Delanteros", "directional_lights_front"),
             $this->get_vehiculo($combinedData, "Luces Direccionales Posteriores", "directional_lights_back"),
             $this->get_vehiculo($combinedData, "Luces de Peligro", "hazard_lights"),
-            $this->get_vehiculo($combinedData, "Brazo y Plumilla Limpia Parabrizas", "wiper_washer_arm"),
+            $this->get_vehiculo($combinedData, "Brazo y Plumilla Limpia Parabrisas", "wiper_washer_arm"),
             $this->get_vehiculo($combinedData, "Tapa Gasolina", "gasoil_cap"),
             $this->get_vehiculo($combinedData, "Antena Radio", "radio_antenna"),
             $this->get_vehiculo($combinedData, "Espejos Laterales", "side_mirrors"),
-            $this->get_vehiculo($combinedData, "Manijas de Prueba ", "test_handles"),
+            $this->get_vehiculo($combinedData, "Manijas de Puerta", "door_handles"),
             $this->get_vehiculo($combinedData, "Alarma", "alarm"),
             $this->get_vehiculo($combinedData, "Escarpines", "booties"),
-            $this->get_vehiculo($combinedData, "Llanta y Aro de Respuesto", "spare_tire"),
-            $this->get_vehiculo($combinedData, "Dado Segruo de Rueda", "wheel_nut"),
+            $this->get_vehiculo($combinedData, "Llanta y Aro de Repuesto", "spare_tire"),
+            $this->get_vehiculo($combinedData, "Dado Seguro de Rueda", "wheel_nut"),
             $this->get_vehiculo($combinedData, "Copa de Aro", "wheel_cup"),
         ];
         $list2 = [
             $this->get_vehiculo($combinedData, "Cenicero", "ashtray"),
             $this->get_vehiculo($combinedData, "Espejo Retrovisor Interno", "internal_rearview_mirror"),
             $this->get_vehiculo($combinedData, "Auto Radio", "car_radio"),
-            $this->get_vehiculo($combinedData, "Alfombra de protección", "protection_mat"),
-            $this->get_vehiculo($combinedData, "Pisos de jebe", "rubber_floors"),
+            $this->get_vehiculo($combinedData, "Alfombra de Protección", "protection_mat"),
+            $this->get_vehiculo($combinedData, "Pisos de Jebe", "rubber_floors"),
             $this->get_vehiculo($combinedData, "Posa Vasos", "cup_holder"),
             $this->get_vehiculo($combinedData, "Llave de Vehículo", "vehicle_key"),
-
-
         ];
         $list3 = [
             $this->get_vehiculo($combinedData, "Extintor", "extinguisher"),
-            $this->get_vehiculo($combinedData, "Gata y palanca", "jack_lever"),
+            $this->get_vehiculo($combinedData, "Gata y Palanca", "jack_lever"),
             $this->get_vehiculo($combinedData, "Estuche de Herramientas", "toolkit"),
         ];
 
         $list4 = [
             $this->get_vehiculo($combinedData, "Tarjeta de Propiedad", "property_card"),
-            $this->get_vehiculo($combinedData, "Cuaderno de bitácora", "logbook"),
+            $this->get_vehiculo($combinedData, "Cuaderno de Bitácora", "logbook"),
             $this->get_vehiculo($combinedData, "Manual del Propietario", "owner_manual"),
             $this->get_vehiculo($combinedData, "Porta Documentos", "document_holder"),
         ];
@@ -513,14 +504,11 @@ class VehiculoController extends Controller
             "list4",
             "vehiculo",
             "combinedData"
-
         ));
-        /* $timestamp = now()->format('Ymd_His'); */
         $timestamp = now()->format('Y_m_d');
         $pdfPath = storage_path("app/public/format_vehiculo_{$id}_{$timestamp}.pdf");
         $pdf->save($pdfPath);
 
-        /* return $pdf->stream('FORMATO.pdf'); */
         return $pdf->stream("formato_vehiculo_{$id}_{$timestamp}.pdf");
     }
     public function createPdfHistorial($historial = null, $format_pdf = null, $filename = null, $services = null)
@@ -672,51 +660,46 @@ class VehiculoController extends Controller
             $vehicleFeatures ? $vehicleFeatures->toArray() : []
         );
 
-        // Crear listas basadas en los datos combinados
         $list1 = [
             $this->get_vehiculo($combinedData, "Faros Delanteros", "front_lights"),
             $this->get_vehiculo($combinedData, "Luces Direccionales Delanteros", "directional_lights_front"),
             $this->get_vehiculo($combinedData, "Luces Direccionales Posteriores", "directional_lights_back"),
             $this->get_vehiculo($combinedData, "Luces de Peligro", "hazard_lights"),
-            $this->get_vehiculo($combinedData, "Brazo y Plumilla Limpia Parabrizas", "wiper_washer_arm"),
+            $this->get_vehiculo($combinedData, "Brazo y Plumilla Limpia Parabrisas", "wiper_washer_arm"),
             $this->get_vehiculo($combinedData, "Tapa Gasolina", "gasoil_cap"),
             $this->get_vehiculo($combinedData, "Antena Radio", "radio_antenna"),
             $this->get_vehiculo($combinedData, "Espejos Laterales", "side_mirrors"),
-            $this->get_vehiculo($combinedData, "Manijas de Prueba ", "test_handles"),
+            $this->get_vehiculo($combinedData, "Manijas de Puerta", "door_handles"),
             $this->get_vehiculo($combinedData, "Alarma", "alarm"),
             $this->get_vehiculo($combinedData, "Escarpines", "booties"),
-            $this->get_vehiculo($combinedData, "Llanta y Aro de Respuesto", "spare_tire"),
-            $this->get_vehiculo($combinedData, "Dado Segruo de Rueda", "wheel_nut"),
+            $this->get_vehiculo($combinedData, "Llanta y Aro de Repuesto", "spare_tire"),
+            $this->get_vehiculo($combinedData, "Dado Seguro de Rueda", "wheel_nut"),
             $this->get_vehiculo($combinedData, "Copa de Aro", "wheel_cup"),
         ];
         $list2 = [
             $this->get_vehiculo($combinedData, "Cenicero", "ashtray"),
             $this->get_vehiculo($combinedData, "Espejo Retrovisor Interno", "internal_rearview_mirror"),
             $this->get_vehiculo($combinedData, "Auto Radio", "car_radio"),
-            $this->get_vehiculo($combinedData, "Alfombra de protección", "protection_mat"),
-            $this->get_vehiculo($combinedData, "Pisos de jebe", "rubber_floors"),
+            $this->get_vehiculo($combinedData, "Alfombra de Protección", "protection_mat"),
+            $this->get_vehiculo($combinedData, "Pisos de Jebe", "rubber_floors"),
             $this->get_vehiculo($combinedData, "Posa Vasos", "cup_holder"),
             $this->get_vehiculo($combinedData, "Llave de Vehículo", "vehicle_key"),
-
-
         ];
         $list3 = [
             $this->get_vehiculo($combinedData, "Extintor", "extinguisher"),
-            $this->get_vehiculo($combinedData, "Gata y palanca", "jack_lever"),
+            $this->get_vehiculo($combinedData, "Gata y Palanca", "jack_lever"),
             $this->get_vehiculo($combinedData, "Estuche de Herramientas", "toolkit"),
         ];
 
         $list4 = [
             $this->get_vehiculo($combinedData, "Tarjeta de Propiedad", "property_card"),
-            $this->get_vehiculo($combinedData, "Cuaderno de bitácora", "logbook"),
+            $this->get_vehiculo($combinedData, "Cuaderno de Bitácora", "logbook"),
             $this->get_vehiculo($combinedData, "Manual del Propietario", "owner_manual"),
             $this->get_vehiculo($combinedData, "Porta Documentos", "document_holder"),
         ];
 
-        // Obtener datos adicionales como la empresa y establecimiento
         $company = Company::active();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
-        // Generar el PDF
         $pdf = Pdf::loadView('workshop::vehiculo.format_vehiculo', compact(
             "company",
             "list1",

@@ -9,13 +9,13 @@ use App\Http\Controllers\Controller;
 use Modules\Workshop\Models\ServicesDetails;
 use Exception;
 
-
 class ServicesDetailsController extends Controller
 {
     public function index()
     {
         return view('workshop::servicesdetails.index');
     }
+
     public function records()
     {
         $records = ServicesDetails::all();
@@ -33,9 +33,9 @@ class ServicesDetailsController extends Controller
     public function store(ServicesDetailsRequest $request)
     {
         $id = $request->input('id');
-        $bank = ServicesDetails::firstOrNew(['id' => $id]);
-        $bank->fill($request->all());
-        $bank->save();
+        $serviceDetail = ServicesDetails::firstOrNew(['id' => $id]);
+        $serviceDetail->fill($request->all());
+        $serviceDetail->save();
 
         return [
             'success' => true,
@@ -43,22 +43,18 @@ class ServicesDetailsController extends Controller
         ];
     }
 
-public function destroy($id)
+    public function destroy($id)
     {
         try {
-
-            $bank = ServicesDetails::findOrFail($id);
-            $bank->delete();
+            $serviceDetail = ServicesDetails::findOrFail($id);
+            $serviceDetail->delete();
 
             return [
                 'success' => true,
                 'message' => 'Sub Servicio eliminado con éxito'
             ];
         } catch (Exception $e) {
-
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Sub Servicio esta siendo usado por otros registros, no puede eliminar'] : ['success' => 
-                                                              false, 'message' => 'Error inesperado, no se pudo eliminar Sub Servicio'];
+            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Sub Servicio está siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Sub Servicio'];
         }
     }
-
 }

@@ -2,11 +2,11 @@
 
 namespace Modules\Workshop\Http\Controllers;
 
-use Modules\workshop\Http\Resources\WorkshopPersonalCollection;
-use Modules\workshop\Http\Resources\WorkshopPersonalResource;
-use Modules\workshop\Http\Requests\WorkshopPersonalRequest;
+use Modules\Workshop\Http\Resources\WorkshopPersonalCollection;
+use Modules\Workshop\Http\Resources\WorkshopPersonalResource;
+use Modules\Workshop\Http\Requests\WorkshopPersonalRequest;
 use App\Http\Controllers\Controller;
-use Modules\workshop\Models\WorkshopPersonal;
+use Modules\Workshop\Models\WorkshopPersonal;
 use Exception;
 
 class PersonalController extends Controller
@@ -17,7 +17,7 @@ class PersonalController extends Controller
     }
     public function records()
     {
-        $records = workshopPersonal::all();
+        $records = WorkshopPersonal::all();
 
         return new WorkshopPersonalCollection($records);
     }
@@ -32,31 +32,28 @@ class PersonalController extends Controller
     public function store(WorkshopPersonalRequest $request)
     {
         $id = $request->input('id');
-        $bank = WorkshopPersonal::firstOrNew(['id' => $id]);
-        $bank->fill($request->all());
-        $bank->save();
+        $personal = WorkshopPersonal::firstOrNew(['id' => $id]);
+        $personal->fill($request->all());
+        $personal->save();
 
         return [
             'success' => true,
-            'message' => ($id) ? 'Mecanico editado con éxito' : 'Mecanico registrado con éxito'
+            'message' => ($id) ? 'Mecánico editado con éxito' : 'Mecánico registrado con éxito'
         ];
     }
 
-public function destroy($id)
+    public function destroy($id)
     {
         try {
-
-            $bank = WorkshopPersonal::findOrFail($id);
-            $bank->delete();
+            $personal = WorkshopPersonal::findOrFail($id);
+            $personal->delete();
 
             return [
                 'success' => true,
-                'message' => 'Mecanico eliminado con éxito'
+                'message' => 'Mecánico eliminado con éxito'
             ];
         } catch (Exception $e) {
-
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Mecanico esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Mecanico'];
+            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Mecánico está siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Mecánico'];
         }
     }
-
 }
