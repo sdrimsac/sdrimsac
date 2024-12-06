@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Establishment;
@@ -137,13 +138,24 @@ class StoreController extends Controller
     }
     public function carros($plateNumber)
     {
-        $url_api_factiliza = config('app.api_factiliza_service_url');
-        $token_api_factiliza = config('app.api_factiliza_service_token');
+        $url = config('app.api_factiliza_service_url');
+        $token = config('app.api_factiliza_service_token');
+        $client = new Client(['base_uri' => $url]);
+        $api= "/placa/info/".$plateNumber;
+        $path ="/pe/v1"; 
+        $response = $client->request('GET',$path. $api, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+            ],
+        ]);
+        $data = json_decode($response->getBody()->getContents());
+        return $data;
 
-        $full_url_api_factiliza = "{$url_api_factiliza}/{$plateNumber}";
+        /* $full_url_api_factiliza = "{$url_api_factiliza}/{$plateNumber}"; */
          
         // Realizar la solicitud GET con el token en el header
-        $response = Http::withoutVerifying()->withHeaders([
+        /* $response = Http::withoutVerifying()->withHeaders([
             'Authorization' => "Bearer {$token_api_factiliza}",  // Enviar el token en el header
         ])->get($full_url_api_factiliza);
         Log::info('Respuesta de Factiliza:', ['response' => $response->body()]);
@@ -159,7 +171,22 @@ class StoreController extends Controller
                 'message' => 'Error al obtener datos de Factiliza',
                 'status' => $response->status()
             ];
-        }
+        } */
+    }
+    public function serviceCe($cee){
+        $url = config('app.api_factiliza_service_url');
+        $token = config('app.api_factiliza_service_token');
+        $client = new Client(['base_uri' => $url]);
+        $api= "/cee/info/".$cee; 
+        $path ="/pe/v1";
+        $response = $client->request('GET',$path. $api, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+            ],
+        ]);
+        $data = json_decode($response->getBody()->getContents());
+        return $data;
     }
 
 
