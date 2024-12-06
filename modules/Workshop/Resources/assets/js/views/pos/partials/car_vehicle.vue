@@ -364,11 +364,21 @@ export default {
                 this.$http
                     .get(`/${this.resource}/historial/record2/${this.recordId}`)
                     .then(response => {
-                        let data = response.data;
+                        let data = response.data.data;
+                        let services_details_ids = data.services_details.map(
+                            element => element.id
+                        );
+
                         this.form = response.data.data;
                         this.historial = this.form.historial || {};
                         this.vehiculo = this.form.vehicle_features[0];
+
+                        this.form.services_detail_ids = services_details_ids;
                         this.services_detail_ids = this.form.services_detail_ids;
+                        console.log(
+                            "services_detail_ids",
+                            this.services_detail_ids
+                        );
 
                         this.getServicesDetails();
                     });

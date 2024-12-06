@@ -32,7 +32,7 @@ class Vehiculo extends ModelTenant
     public function person(){
         return $this->hasMany(Person::class,'person_id');
     }
-    public function historiales() {
+    public function historial() {
         return $this->hasMany(Historial::class,'vehiculo_id');
     }
 

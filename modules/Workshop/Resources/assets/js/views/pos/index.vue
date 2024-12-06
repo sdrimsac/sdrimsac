@@ -30,14 +30,14 @@
                     <template
                       v-if=" !configuration.hotels || (configuration.hotels && !isPiscinaArea) "
                     >
-                      <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables">
+                      <!-- <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables">
                         <i v-if="isHotelArea" class="fas fa-door-closed"></i>
                         <i
                           v-else
                           class="icofont-dining-table"
                           style="font-size: 28px; margin-top:-5px; "
                         ></i>
-                      </button>
+                      </button> -->
                     </template>
                   </template>
                   <template
@@ -1846,6 +1846,7 @@ export default {
     }
   },
   methods: {
+    buttonSmTables(){},
     handlePayment(id) {
       console.log("handlePayment", id);
       this.vehiculo_id = id;

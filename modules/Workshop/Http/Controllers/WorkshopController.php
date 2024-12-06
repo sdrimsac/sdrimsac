@@ -280,9 +280,9 @@ class WorkshopController extends Controller
     public function pos()
     {
         $user = auth()->user();
-        $cash_worker = WorkersType::where('description', 'like', '%CAJ%')->orWhere('description', 'like', '%caj%')->first();
+        $cash_worker = WorkersType::where('description', 'like', '%CAJERO MECANICO%')->orWhere('description', 'like', '%cajero mecanico%')->first();
         if ($cash_worker) {
-            $id = $cash_worker->id;
+            $id = $cash_worker->id; 
 
             if ($user->worker_type_id != $id) {
                 return redirect('/');

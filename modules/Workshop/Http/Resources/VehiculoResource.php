@@ -18,23 +18,23 @@ class VehiculoResource extends JsonResource
      */
     public function toArray($request)
     {
-        $historial = Historial::where('estado', 0)
+        /* $historial = Historial::where('estado', 0)
             ->where('vehiculo_id', $this->id)
-            ->first();
+            ->first(); */
 
-        $vehicleFeatures = VehicleFeature::where('vehiculo_id', $this->id)->get();
+        /* $vehicleFeatures = VehicleFeature::where('vehiculo_id', $this->id)->get(); */
 
-        $servicesDetails = [];
+        /* $servicesDetails = [];
         if ($historial) {
             $historialServiceDetails = HistorialServicesDetails::where('historial_id', $historial->id)->get();
             $servicesDetailsIds = $historialServiceDetails->pluck('services_detail_id');
             $servicesDetails = ServicesDetails::whereIn('id', $servicesDetailsIds)->get();
-        }
+        } */
 
         return [
             'id' => $this->id,
-            'customer_id' => $this->customer_id,
-            'customer_name' => $this->customer->name,
+            /* 'customer_id' => $this->customer_id, */
+            /* 'customer_name' => $this->customer->name, */
             'tipo_vehiculo_id' => $this->tipo_vehiculo_id,
             'tipo_vehiculo_description' => $this->tipo_vehiculo->name,
             'placa' => $this->placa,
@@ -45,9 +45,9 @@ class VehiculoResource extends JsonResource
             'motor' => $this->motor,
             'anio_fabricacion' => $this->anio_fabricacion,
             'kilometraje' => $this->kilometraje,
-            'historiales' => HistorialResource::collection($this->historiales),
-            'vehicle_features' => $vehicleFeatures,
-            'services_details' => $servicesDetails,
+            /* 'historiales' => HistorialResource::collection($this->historiales), */
+            /* 'vehicle_features' => $vehicleFeatures, */
+            /* 'services_details' => $servicesDetails, */
         ];
     }
 }

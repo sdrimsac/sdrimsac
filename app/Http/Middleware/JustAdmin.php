@@ -19,10 +19,9 @@ class JustAdmin
     public function handle($request, Closure $next)
     {
         $config = Configuration::first();
-        $user = $request->user();
-        $path = $request->path();
+        $user = $request->user(); //user name id woker_type_id
+        $path = $request->path(); //wpos/worker/dashboard
         $type = $user->type;
-
         $isAccountant = false;
         $isLogistic = false;
         $isArca = false;
@@ -84,16 +83,23 @@ class JustAdmin
             "nota_venta",
             "productos"
         ];
-
+        $worker_type = WorkersType::find($user->worker_type_id);
+        // $redirect_to = "";
+        if ($worker_type) {
+            $description_type = $worker_type->description;
+            $description_type = strtoupper($description_type);
+        } else {
+            $description_type = "";
+        }
         if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca) {
             if ($isAccountant) {
                 $pathPass = in_array($path, $paths);
                 if (!$pathPass) {
                     $roleService = new RoleService();
                     if ($roleService->isInterno()) {
-                        return redirect('/', '/items');
+                        return redirect('/items');
                     } else {
-                        return redirect('/', '/documents');
+                        return redirect('/documents');
                     }
                 }
             } else if ($isLogistic) {
@@ -111,9 +117,8 @@ class JustAdmin
                 $billar = (bool) $config->billar;
                 $workshop = (bool) $config->workshop;
 
-                $configuration = Configuration::first();
 
-                if ($configuration->toll) {
+                if ($config->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
                     return redirect($redirect_to);
                 }
@@ -121,19 +126,20 @@ class JustAdmin
                     $redirect_to = "/internet/worker/";
                 } elseif ($billar) {
                     $redirect_to = "/billar/worker/";
-                } if ($workshop) {
-                    $redirect_to = "/workshop/worker/";
-                } else {
+                } 
+                else if ($workshop) {
+                    if ($description_type == 'CAJERO MECANICO') {
+
+                        $redirect_to = "/workshop/worker/";
+                    }else{
+                        $redirect_to = "/caja/worker/";
+                    }
+                } 
+                else {
                     $redirect_to = "/caja/worker/";
                 }
 
-                $worker_type = WorkersType::find($user->worker_type_id);
-                if ($worker_type) {
-                    $description_type = $worker_type->description;
-                    $description_type = strtoupper($description_type);
-                } else {
-                    $description_type = "";
-                }
+             
 
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
@@ -153,3 +159,4 @@ class JustAdmin
         return $next($request);
     }
 }
+

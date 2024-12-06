@@ -153,6 +153,7 @@
                         </a> -->
                                                 <a class="dropdown-item">
                                                     <el-button
+                                                    v-if="vehiculo.historial_id"
                                                         @click.prevent="
                                                             clickPrintFormat(
                                                                 vehiculo.id
@@ -169,6 +170,7 @@
                                                 </a>
                                                 <a class="dropdown-item">
                                                     <el-button
+                                                    v-if="vehiculo.historial_id"
                                                         @click.prevent="
                                                             clickPrint(
                                                                 vehiculo.id

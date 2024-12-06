@@ -17,7 +17,7 @@ class VehiculoCollection extends ResourceCollection
         return $this->collection->transform(function ($row, $key) {
             $historial_id = null;
             $items = 0;
-            $historial = $row->historiales()->where('estado', false)->latest()->first();
+            $historial = $row->historial()->where('estado', false)->latest()->first();
             if ($historial) {
                 $historial_id = $historial->id;
                 $items = $historial->historialItem->count();

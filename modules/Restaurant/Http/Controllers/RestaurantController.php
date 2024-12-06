@@ -287,8 +287,12 @@ class RestaurantController extends Controller
             $maintenance = false;
             $collector = false;
             $logistic = false;
+            $mechanic = false;
             if (strtolower($user->worker_type->description) == "mozo") {
                 $waiter = true;
+            } else if (strtolower($user->worker_type->description) == "cajero mecanico") {
+                $mechanic = true;
+                $pos = true;
             } else if (strtolower($user->worker_type->description) == "peaje") {
                 $collector =  true;
             } else if (strtolower($user->worker_type->description) == "limpieza") {
@@ -312,16 +316,17 @@ class RestaurantController extends Controller
                     $pos = true;
                 } else if ($billar !== false) {
                     $pos = true;
-                } else {
+                } 
+             
+                else {
                     $kitchen = true;
                 }
             }
 
-            return [
+            $response = [
+                'mechanic' => $mechanic,
                 'area' => $area,
                 'series' => $series,
-                'establishment' => $establishment,
-                'configuration' => $configuration,
                 'success' => true,
                 'kitchen' => $kitchen,
                 'logistic' => $logistic,
@@ -331,7 +336,11 @@ class RestaurantController extends Controller
                 "cleaner" => $cleaner,
                 "maintenance" => $maintenance,
                 'user' => $user,
+                'establishment' => $establishment,
+                'configuration' => $configuration,
             ];
+           
+            return $response;
         } catch (Exception $e) {
             return [
                 "message" => $e->getMessage(),

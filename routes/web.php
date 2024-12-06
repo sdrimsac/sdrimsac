@@ -1070,7 +1070,6 @@ if ($hostname) {
                 Route::post('incomebox', [App\Http\Controllers\Tenant\BoxController::class, 'store']);
                 Route::get('incomebox/records', [App\Http\Controllers\Tenant\BoxController::class, 'records2']);
                 Route::delete('incomebox/{boxes}', [App\Http\Controllers\Tenant\BoxController::class, 'destroy']);
-                Route::middleware(['just.admin'])->group(function () {});
             });
         }
     );

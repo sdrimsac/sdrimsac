@@ -1070,7 +1070,7 @@
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.servicesdetails') }}">
                             <i class="fas fa-biliard"></i>
-                            Sub Servicios
+                            Servicios Mecanica 
                         </a>
                     </li>
                 </ul>

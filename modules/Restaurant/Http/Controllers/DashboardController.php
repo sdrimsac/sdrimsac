@@ -68,6 +68,7 @@ class DashboardController extends Controller
     }
     public function pos()
     {
+
         $user = auth()->user();
         $worker_types = WorkersType::where(function ($query) {
             $searchValue = '%search_value%';

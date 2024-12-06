@@ -21,6 +21,7 @@ Route::get('/vehiculo/view_pdf/{id}_{timestamp}', [VehiculoController::class, 'v
 Route::get('workshop/vehiculo/format_vehicle/{id}', [VehiculoController::class, 'format_vehicle']);
 Route::get('workshop/vehiculo/format-historial/{historial_id}', [VehiculoController::class, 'format_History']);
 Route::get('workshop/vehiculo/print/{id}/{format}', [VehiculoController::class, 'toPrint']);
+Route::get('workshop/vehiculo/reprint/{id}', [VehiculoController::class, 'RePrint']);
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('workshop')->group(function () {

@@ -63,6 +63,9 @@ Route::prefix('caja')->group(function () {
     Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']);
     Route::middleware(['auth', 'locked.tenant'])->group(function () {
+       
+        Route::get('logoutget', 'RestaurantController@logout');
+       
         Route::get('test-sender', function () {
 
             $keyword = request("message");

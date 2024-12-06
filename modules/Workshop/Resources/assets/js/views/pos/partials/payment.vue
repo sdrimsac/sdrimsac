@@ -1877,25 +1877,28 @@ export default {
       }
     }, */
     async getvehicle() {
+      if (!this.vehiculo_id) {
+      return;
+      }
       try {
-        const response = await axios.get(`/workshop/vehiculo/payment/${this.vehiculo_id}`);
-        if (response.status === 200) {
-          this.vehiculo = response.data;
-          this.form.items = this.formatItems(this.vehiculo.items);
-          this.form.services = this.formatItems(this.vehiculo.services);
-          this.form.establishment_id = this.vehiculo.establishment_id;
-          this.form.vehiculo_id = this.vehiculo_id;
-          this.reCalculateTotal();
-          this.form.enter_amount = this.form.total;
-          console.log("🚀 ~ file: form.vue ~ line 566 ~ response", this.form);
-          this.reloadDataCustomers(this.vehiculo.customer_id);
-        }
+      const response = await axios.get(`/workshop/vehiculo/payment/${this.vehiculo_id}`);
+      if (response.status === 200) {
+        this.vehiculo = response.data;
+        this.form.items = this.formatItems(this.vehiculo.items);
+        this.form.services = this.formatItems(this.vehiculo.services);
+        this.form.establishment_id = this.vehiculo.establishment_id;
+        this.form.vehiculo_id = this.vehiculo_id;
+        this.reCalculateTotal();
+        this.form.enter_amount = this.form.total;
+        console.log("🚀 ~ file: form.vue ~ line 566 ~ response", this.form);
+        this.reloadDataCustomers(this.vehiculo.customer_id);
+      }
       } catch (error) {
-        if (error.response && error.response.status === 400) {
-            this.$showSAlert("error", error.response.data.error, "error");
-        } else {
-          this.$showSAlert("error", "Ocurrió un error inesperado.", "error");
-        }
+      if (error.response && error.response.status === 400) {
+        this.$showSAlert("error", error.response.data.error, "error");
+      } else {
+        this.$showSAlert("error", "Ocurrió un error inesperado.", "error");
+      }
       }
     },
     insertReferenceNumber() {

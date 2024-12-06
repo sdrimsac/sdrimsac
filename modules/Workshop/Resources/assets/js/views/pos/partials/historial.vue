@@ -21,10 +21,7 @@
             <el-input></el-input>-->
                     </div>
                     <div class="col-md-4 text-end">
-                        <el-button type="primary"
-                       
-                            
-                        @click="editHistory()"
+                        <el-button type="primary" @click="editHistory()"
                             >Crear Nuevo Historia</el-button
                         >
                     </div>
@@ -118,18 +115,37 @@
                                     <el-button
                                         v-for="(subItem, subIndex) in item.item"
                                         :key="subIndex"
-                                        @click.prevent="clickPrintFormat(subItem.historial_id)"
+                                        @click.prevent="
+                                            clickPrintFormat(
+                                                subItem.historial_id
+                                            )
+                                        "
                                         type="success"
                                     >
-                                        PDF Vehiculo </el-button
-                                    ><br />
-                                    <!-- <el-button type="danger">
-                                        PDF Servicio
+                                        PDF V
+                                    </el-button>
+                                    <!-- <el-button
+                                        type="danger"
+                                        @click.prevent="
+                                            clickrePrint(subItem.historial_id)
+                                        "
+                                    >
+                                        PDF A4
                                     </el-button> -->
+                                    <el-button
+                                        v-for="(subItem, subIndex) in item.item"
+                                        :key="'a4-' + subIndex"
+                                        @click.prevent="
+                                            clickrePrint(subItem.historial_id)
+                                        "
+                                        type="danger"
+                                    >
+                                        PDF A4
+                                    </el-button>
                                 </td>
                                 <td>
                                     <el-button
-                                       v-if="item.estado == 0"
+                                        v-if="item.estado == 0"
                                         type="primary"
                                         @click="editHistory(item.id)"
                                         >Editar</el-button
@@ -146,7 +162,6 @@
             :vehiculoId="selectedVehiculoId"
             :recordId="recordId"
             @actualizar="getData"
-            
         ></car-vehicle>
     </el-dialog>
 </template>
@@ -184,18 +199,27 @@ export default {
             this.showDialogCarVehicle = true;
         }, */
         editHistory(recordId = null) {
-            const historialActivo = this.historial.find(item => item.estado === 0);
-            if (recordId === null && historialActivo) {
-            this.$showSAlert(
-                "error",
-                "No puede crear una nueva historia mientras una esté activa",
-                "error"
+            const historialActivo = this.historial.find(
+                item => item.estado === 0
             );
-            return;
+            if (recordId === null && historialActivo) {
+                this.$showSAlert(
+                    "error",
+                    "No puede crear una nueva historia mientras una esté activa",
+                    "error"
+                );
+                return;
             }
             this.recordId = recordId;
             this.showDialogCarVehicle = true;
         },
+        clickrePrint(historial_id) {
+            window.open(
+                `/${this.resource}/vehiculo/reprint/${historial_id}`,
+                "_blank"
+            );
+        },
+
         clickPrintFormat(historial_id) {
             if (!historial_id) {
                 console.error("historial_id no definido", historial_id);
@@ -255,6 +279,7 @@ export default {
             this.getData();
         },
         close() {
+            this.$emit("lisVehicle");
             this.$emit("update:showDialog", false);
         }
     }

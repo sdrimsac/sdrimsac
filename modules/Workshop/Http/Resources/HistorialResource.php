@@ -28,14 +28,14 @@ class HistorialResource extends JsonResource
             'mantenimiento' => $this->mantenimiento,
             'diagnostico' => $this->diagnostico,
             'estado' => $this->estado,
-            'vehicle_features' => $this->vehicleFeatures,
-            'services_details' => $this->servicesDetails
+            'vehicle_features' => $this->getVehicleFeaturesAttribute(),
+            'services_details' => $this->getServicesDetailsAttribute()
         ];
     }
     
     public function getVehicleFeaturesAttribute()
     {
-        return $this->vehicleFeatures()->get();
+        return $this->vehicleFeatures()->where('historial_id', $this->id)->get();
     }
 
     public function getServicesDetailsAttribute()

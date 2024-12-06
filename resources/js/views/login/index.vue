@@ -1,34 +1,46 @@
 <template>
-<div class="d-flex flex-column justify-content-start align-items-center">
-    <div id="form" autocomplete="off">
-        <div class="form-header">
-            <img v-if="company.logo != null" :src="`/storage/uploads/logos/${company.logo}`" alt="" />
-            <img v-else :src="`/acorn/img/restaurant.png`" alt="" />
-            <h2 v-if="company.trade_name != null" class="text-white">
-                {{ company.trade_name }}
-            </h2>
+    <div class="d-flex flex-column justify-content-start align-items-center">
+        <div id="form" autocomplete="off">
+            <div class="form-header">
+                <img
+                    v-if="company.logo != null"
+                    :src="`/storage/uploads/logos/${company.logo}`"
+                    alt=""
+                />
+                <img v-else :src="`/acorn/img/restaurant.png`" alt="" />
+                <h2 v-if="company.trade_name != null" class="text-white">
+                    {{ company.trade_name }}
+                </h2>
 
-            <h2 v-else class="text-white">Tu Negocio Peru</h2>
-        </div>
-        <div class="form-body" style="padding-bottom: 5px">
-            <div class="form-menu">
-                <!-- <button type="button" class="form-menu-btn" value="#admin">
+                <h2 v-else class="text-white">Tu Negocio Peru</h2>
+            </div>
+            <div class="form-body" style="padding-bottom: 5px">
+                <div class="form-menu">
+                    <!-- <button type="button" class="form-menu-btn" value="#admin">
                         <i class="fa fa-user"></i>   ADMINISTRADOR
                     </button> -->
-                <button type="button" class="form-menu-btn selected" value="#pin">
-                    <i class="fa fa-key"></i> PIN DE ACCESO
-                </button>
-            </div>
-            <div id="pin" style="display: block">
-                <p>Ingrese PIN de acceso</p>
-                <div id="pin-container">
-                    <input type="hidden" id="password-pin" name="password-pin" />
+                    <button
+                        type="button"
+                        class="form-menu-btn selected"
+                        value="#pin"
+                    >
+                        <i class="fa fa-key"></i> PIN DE ACCESO
+                    </button>
                 </div>
-                <table id="table-pin">
-                    <tbody></tbody>
-                </table>
-            </div>
-            <!-- <div id="admin" class="form-login" style="display: none">
+                <div id="pin" style="display: block">
+                    <p>Ingrese PIN de acceso</p>
+                    <div id="pin-container">
+                        <input
+                            type="hidden"
+                            id="password-pin"
+                            name="password-pin"
+                        />
+                    </div>
+                    <table id="table-pin">
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <!-- <div id="admin" class="form-login" style="display: none">
                     <label for="email">
                         <i class="fa fa-envelope"></i>
                         <input
@@ -64,32 +76,55 @@
                         INICIAR SESIÓN
                     </button>
                 </div> -->
-        </div>
-        <div class="d-flex justify-content-center" style="padding-bottom: 30px">
-            <div id="footer" class="">
-                <img id="logo" src="images/sdrimsac.png" alt="SDRIMSAC Solutions" />
-                <div class="text-white display-5">
-                    <a href="https://wa.me/51995764963" target="_blank" class="text-white me-3">
-                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                    </a>
+            </div>
+            <div
+                class="d-flex justify-content-center"
+                style="padding-bottom: 30px"
+            >
+                <div id="footer" class="">
+                    <img
+                        id="logo"
+                        src="images/sdrimsac.png"
+                        alt="SDRIMSAC Solutions"
+                    />
+                    <div class="text-white display-5">
+                        <a
+                            href="https://wa.me/51995764963"
+                            target="_blank"
+                            class="text-white me-3"
+                        >
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        </a>
 
-                    <a href="https://www.facebook.com/sdrimsac" target="_blank" class="text-white me-3">
-                        <i class="fab fa-facebook" aria-hidden="true"></i>
-                    </a>
+                        <a
+                            href="https://www.facebook.com/sdrimsac"
+                            target="_blank"
+                            class="text-white me-3"
+                        >
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
 
-                    <a href="https://www.instagram.com/sdrimsac" target="_blank" class="text-white me-3">
-                        <i class="fab fa-instagram" aria-hidden="true"></i>
-                    </a>
+                        <a
+                            href="https://www.instagram.com/sdrimsac"
+                            target="_blank"
+                            class="text-white me-3"
+                        >
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
 
-                    <a href="https://www.sdrimsac.com" target="_blank" class="text-white">
-                        <i class="fas fa-globe" aria-hidden="true"></i>
-                    </a>
+                        <a
+                            href="https://www.sdrimsac.com"
+                            target="_blank"
+                            class="text-white"
+                        >
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="" style="height: 50px"></div>
     </div>
-    <div class="" style="height: 50px"></div>
-</div>
 </template>
 
 <script>
@@ -140,7 +175,7 @@ export default {
                         this.$toast.error(response.data.message);
                     }
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.error(error);
                 });
         },
@@ -160,9 +195,7 @@ export default {
                 response
             );
             const {
-                data: {
-                    success
-                }
+                data: { success }
             } = response;
 
             if (success) {
@@ -171,33 +204,71 @@ export default {
 
                     //dashboard
                 }
+                let route = "";
                 this.$toast.success("Sesión exitosa. Bienvenido/a .");
+                // if (response.data.kitchen == true) {
+                //     window.location.href = "caja/worker/dashboard-kitchen";
+                // } else if (response.data.pos == true) {
+                //     if (this.config.internet) {
+                //         window.location.href = "internet/worker/dashboard-pos";
+                //     }
+
+                //     else if(this.config.workshop && response.data.mechanic){
+                //         window.location.href = "workshop/worker/dashboard-pos";
+                //     }
+                //     else {
+                //         window.location.href = "caja/worker/dashboard-pos";
+                //     }
+                // } else if (response.data.waiter == true) {
+                //     window.location.href = "caja/worker/dashboard";
+                // } else if (response.data.collector == true) {
+                //     window.location.href = "toll";
+                // } else if (response.data.logistic == true) {
+                //     window.location.href = "items";
+                // } else if (
+                //     response.data.cleaner == true ||
+                //     response.data.maintenance == true
+                // ) {
+                //     window.location.href = "caja/worker/cleaner";
+                // } else {
+                //     if (this.company.soap_type_id != "03") {
+                //         window.location.href = "documents";
+                //     } else {
+                //         window.location.href = "sale-notes";
+                //     }
+                // }
                 if (response.data.kitchen == true) {
-                    window.location.href = "caja/worker/dashboard-kitchen";
+                    route = "caja/worker/dashboard-kitchen";
                 } else if (response.data.pos == true) {
                     if (this.config.internet) {
-                        window.location.href = "internet/worker/dashboard-pos";
+                        route = "internet/worker/dashboard-pos";
+                    } else if (this.config.workshop && response.data.mechanic) {
+                        route = "workshop/worker/dashboard-pos";
                     } else {
-                        window.location.href = "caja/worker/dashboard-pos";
+                        route = "caja/worker/dashboard-pos";
                     }
                 } else if (response.data.waiter == true) {
-                    window.location.href = "caja/worker/dashboard";
+                    route = "caja/worker/dashboard";
                 } else if (response.data.collector == true) {
-                    window.location.href = "toll";
+                    route = "toll";
                 } else if (response.data.logistic == true) {
-                    window.location.href = "items";
+                    route = "items";
                 } else if (
                     response.data.cleaner == true ||
                     response.data.maintenance == true
                 ) {
-                    window.location.href = "caja/worker/cleaner";
+                    route = "caja/worker/cleaner";
                 } else {
                     if (this.company.soap_type_id != "03") {
-                        window.location.href = "documents";
+                        route = "documents";
                     } else {
-                        window.location.href = "sale-notes";
+                        route = "sale-notes";
                     }
                 }
+
+                // Realiza la redirección al final
+                // console.log("🚀 ~ file: index.vue:174 ~ enter ~ route:", route);
+                window.location.href = route;
             } else {
                 $("#password-pin").val("");
                 let pins = document.querySelectorAll(".pin-radio");
@@ -219,19 +290,19 @@ export default {
             instagram: "#",
             globe: "https://sdrimsac.com"
         };
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#email").focus();
         });
 
-        $(document).on("submit", "#form", function (e) {
+        $(document).on("submit", "#form", function(e) {
             e.preventDefault();
         });
 
-        $(document).on("reset", "#form", function () {
+        $(document).on("reset", "#form", function() {
             $("#password-pin").val("");
         });
 
-        $(document).on("click", ".form-menu-btn", function () {
+        $(document).on("click", ".form-menu-btn", function() {
             let value = $(this).val();
             $(".form-menu-btn").removeClass("selected");
             $(this).addClass("selected");
@@ -250,7 +321,7 @@ export default {
             $("#form").trigger("reset");
         });
 
-        $(document).on("click", ".btn-pin", function () {
+        $(document).on("click", ".btn-pin", function() {
             let newValue = $(this)
                 .text()
                 .trim();
@@ -265,7 +336,7 @@ export default {
             }
         });
 
-        $(document).on("change", "#password-pin", function () {
+        $(document).on("change", "#password-pin", function() {
             let value = $(this).val();
             let length = value.length;
             $(".pin-radio").prop("checked", false);
@@ -281,7 +352,7 @@ export default {
             $("#form").trigger("reset");
         };
 
-        $(document).on("keyup", function (e) {
+        $(document).on("keyup", function(e) {
             if (!$("#pin").is(":visible")) {
                 return;
             }
@@ -321,11 +392,7 @@ export default {
             return $(tr);
         };
 
-        const PinButton = ({
-            _type = "button",
-            _class = "btn-pin",
-            _text
-        }) => {
+        const PinButton = ({ _type = "button", _class = "btn-pin", _text }) => {
             return `
     <td>
         <button type="${_type}" class="${_class}" value="${_text}">
