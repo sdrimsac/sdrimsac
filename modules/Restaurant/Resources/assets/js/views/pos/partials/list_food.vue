@@ -798,7 +798,7 @@
                                                 <span
                                                     class="text-muted lead-font-weight-700"
                                                 >
-                                                    S/
+                                                    {{ data.currency }}
                                                     {{ data.price }}
                                                 </span>
                                             </span>

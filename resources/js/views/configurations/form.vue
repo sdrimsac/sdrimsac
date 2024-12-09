@@ -1840,6 +1840,22 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4"> 
+                                <div class="form-group">  
+                                  <label class="control-label w-100"> 
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Vender en otras monedas
+                                  </label>
+                                  <el-switch
+                                    @change="submit('Vender en otras monedas', form.other_currency_pos, 'other_currency_pos', 'lockIcon')"
+                                    v-model="form.other_currency_pos"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                  ></el-switch>
+                                </div>
+                              </div>
                               <!-- <div class="col-md-2 mt-4">
                                                             <div class="form-group">
                                                                 <label class="control-label w-100">

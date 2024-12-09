@@ -230,7 +230,10 @@
                                 {{ (total + totalOrdenItems).toFixed(2) }}
                             </h3>
                         </div>
-                        <!-- <div class="d-flex justify-content-end">
+                        <div
+                            class="d-flex justify-content-end"
+                            v-if="configuration.other_currency_pos"
+                        >
                             <div class="col-3 text-white">
                                 <label for="currency">
                                     <small>Moneda</small>
@@ -258,7 +261,7 @@
                                     @input="calculateTotal"
                                 ></el-input>
                             </div>
-            </div>-->
+                        </div>
                     </div>
                 </div>
 
@@ -1027,8 +1030,25 @@
                                                                             <span
                                                                                 slot="prepend"
                                                                                 style="padding-left: 6px;padding-right: 6px;"
-                                                                                >S/</span
                                                                             >
+                                                                                <template
+                                                                                    v-if="
+                                                                                        configuration.other_currency_pos
+                                                                                    "
+                                                                                >
+                                                                                    {{
+                                                                                        currency_id ==
+                                                                                        "USD"
+                                                                                            ? "$"
+                                                                                            : "S/"
+                                                                                    }}
+                                                                                </template>
+                                                                                <template
+                                                                                    v-else
+                                                                                >
+                                                                                    S/
+                                                                                </template>
+                                                                            </span>
                                                                         </el-input>
                                                                     </span>
                                                                 </span>
@@ -1718,6 +1738,9 @@
                                                                             class="fw-bold"
                                                                         >
                                                                             Precio
+                                                                            {{
+                                                                                currency_id
+                                                                            }}
                                                                             <br />
                                                                             <template
                                                                                 v-if="
@@ -1776,10 +1799,7 @@
                                                                                         slot="prepend"
                                                                                     >
                                                                                         {{
-                                                                                            currency_id ==
-                                                                                            "USD"
-                                                                                                ? "$"
-                                                                                                : "S/"
+                                                                                            currency_id
                                                                                         }}
                                                                                     </template>
                                                                                 </el-input>
@@ -2849,8 +2869,17 @@ export default {
         this.checkCashAvailable();
         this.getLasNumOrden();
         this.getSaleOfferts();
+        // this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
     },
     methods: {
+        searchExchangeRateByDate(date) {
+            this.$http(`/service/exchange?date=${date}`).then(response => {
+                if (response.status == 200) {
+                    let data = response.data;
+                    this.exchange_rate_sale = Number(data);
+                }
+            });
+        },
         getSaleOfferts() {
             this.$http.get("/items/sale-offert/get").then(response => {
                 this.saleOfferts = response.data;
@@ -2900,7 +2929,45 @@ export default {
         changeCurrency() {
             // ;
             this.$emit("updateCurrencyChoice", this.currency_id);
+            this.changeCurrencyItems();
             this.calculateTotal();
+        },
+        changeCurrencyItems() {
+            let items = [...this.localOrden];
+            for (let i = 0; i < items.length; i++) {
+                let orden = items[i];
+
+                let { currency_type_id: local_currency_type_id } = orden.food;
+                console.log("el currency_id ", this.currency_id);
+                console.log(
+                    "el local_currency_type_id ",
+                    local_currency_type_id
+                );
+                let isLocalCurrency = this.currency_id == "S/";
+
+                if (local_currency_type_id == "PEN" && isLocalCurrency) {
+                    items[i].price = Number(items[i].original_price);
+                    // No cambiar el precio
+                }
+
+                if (local_currency_type_id != "PEN" && isLocalCurrency) {
+                    // Multiplicar por tipo de cambio
+                    items[i].price = items[i].price * this.exchange_rate_sale;
+                    items[i].price = Number(items[i].price.toFixed(2));
+                }
+
+                if (local_currency_type_id == "PEN" && !isLocalCurrency) {
+                    console.log("aqui");
+                    // Dividir por tipo de cambio
+                    items[i].price = items[i].price / this.exchange_rate_sale;
+                    items[i].price = Number(items[i].price.toFixed(2));
+                }
+                if (local_currency_type_id != "PEN" && !isLocalCurrency) {
+                    items[i].price = Number(items[i].original_price);
+                }
+            }
+
+            this.$emit("update:localOrden", items);
         },
         async savePriceProduct(idx) {
             try {
@@ -4118,9 +4185,9 @@ export default {
         },
         getPriceRange(orden) {
             if (this.configuration.quantity_prices) {
-                if(orden.type_id){
+                if (orden.type_id) {
                     let { type_price_ranges } = orden;
-                    if(type_price_ranges.length > 0){
+                    if (type_price_ranges.length > 0) {
                         let sortedRanges = [...type_price_ranges].sort(
                             (a, b) => b.quantity_min - a.quantity_min
                         );
@@ -4136,25 +4203,25 @@ export default {
                         }
                         return orden.original_price;
                     }
-                }else{
+                } else {
                     let { item_price_ranges } = orden.food;
-                if (item_price_ranges.length > 0) {
-                    let sortedRanges = [...item_price_ranges].sort(
-                        (a, b) => b.quantity_min - a.quantity_min
-                    );
-                    let orderQuantity = Number(orden.quantity);
+                    if (item_price_ranges.length > 0) {
+                        let sortedRanges = [...item_price_ranges].sort(
+                            (a, b) => b.quantity_min - a.quantity_min
+                        );
+                        let orderQuantity = Number(orden.quantity);
 
-                    let price_range = sortedRanges.find(
-                        row =>
-                            orderQuantity == row.quantity_min ||
-                            orderQuantity >= row.quantity_min
-                    );
-                    if (price_range) {
-                        return price_range.price;
+                        let price_range = sortedRanges.find(
+                            row =>
+                                orderQuantity == row.quantity_min ||
+                                orderQuantity >= row.quantity_min
+                        );
+                        if (price_range) {
+                            return price_range.price;
+                        }
+
+                        return orden.original_price;
                     }
-
-                    return orden.original_price;
-                }
                 }
             }
             return orden.price;
@@ -4444,13 +4511,14 @@ export default {
             let OrdenPenAtendidos = 0;
             _.forEach(this.localOrden, value => {
                 let { item } = value.food;
-                OrdenPen =
-                    parseFloat(OrdenPen) +
-                    value.quantity *
-                        this.getPriceCurrency(
-                            value.price,
-                            item.currency_type_id
-                        );
+                OrdenPen += value.quantity * value.price;
+                // OrdenPen =
+                //     parseFloat(OrdenPen) +
+                //     value.quantity *
+                //         this.getPriceCurrency(
+                //             value.price,
+                //             item.currency_type_id
+                //         );
             });
             this.totalOrden = _.round(OrdenPen, 2);
             _.forEach(this.ordens, values => {

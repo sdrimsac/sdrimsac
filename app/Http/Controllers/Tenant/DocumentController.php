@@ -1022,7 +1022,7 @@ class DocumentController extends Controller
     // }
     public function store(DocumentRequest $request)
     {
-
+        DB::connection('tenant')->beginTransaction();
         $ids = [];
         $this->restoreOrderItems($request->all());
         if (key_exists('id', $request->all())) {
@@ -1034,7 +1034,6 @@ class DocumentController extends Controller
         }
 
         try {
-            $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $consolidated_quotations = Configuration::first()->consolidated_quotations;
                 $quotation_id = isset($request->quotation_id) ? $request->quotation_id : null;
                 if ($consolidated_quotations && $quotation_id) {
@@ -1083,325 +1082,327 @@ class DocumentController extends Controller
                 $facturalo->updateQr();
                 $facturalo->createPdf();
                 $facturalo->senderXmlSignedBill();
-                return $facturalo;
-            });
+                // return $facturalo;
+
+                $document = $facturalo->getDocument();
+                if ($request->vehiculo_id) {
+                    $historial = Historial::where('estado', false)
+                        ->where('vehiculo_id', $request->vehiculo_id)
+                        ->first();
+                    if ($historial) {
+                        $historial->document_id = $document->id;
+                        $historial->estado = 1;
+                        $historial->save();
+                    }
+                }
+                $this->associateSaleNoteToDocument($request, $document->id);
+                Box::where('document_id', $document->id)->delete();
+                // $Payments = DocumentPayment::where('document_id', $document->id)->first();
+                if ($request->cash_id == null && $document_id == null) {
+                    $user_id = auth()->user()->id;
+                    /* $user_id->seller_id = auth()->user()->id; */
+                    $cash = Cash::where('user_id', $user_id)
+                        ->where('state', true)
+                        ->first();
+                    if ($cash == null) {
+                        $cash = Cash::create([
+                            'user_id' => auth()->user()->id,
+                            'seller_id' => $user_id,
+                            'date_opening' => date('Y-m-d'),
+                            'time_opening' => date('H:i:s'),
+                            'date_closed' => null,
+                            'time_closed' => null,
+                            'beginning_balance' => 0,
+                            'final_balance' => 0,
+                            'income' => 0,
+                            'state' => true,
+                            'reference_number' => null
+                        ]);
+                    }
+                    $request->merge(['cash_id' => $cash->id]);
+                }
+                $response = $facturalo->getResponse();
+                $company = Company::first();
+                //&& $request->afectar_caja === true
+                $establishment = Establishment::where('id', $document->establishment_id)->first();
+                $configuration = Configuration::first();
+
+                if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
+                    if ($request->boxes) {
+                        $message = "";
+                        foreach ($request->boxes as $currentBox) {
+                            $method = $currentBox['method'];
+                            $amount = $currentBox['amount'];
+                            $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
+                            $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
+                            $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
+                            $box = new Box;
+                            $box->group_id = 1;
+                            $box->currency_type_id = $document->currency_type_id;
+                            $box->exchange_rate_sale = $document->exchange_rate_sale;
+                            $box->operation_number = $operation_number;
+                            $box->method = $method;
+                            if ($method == "Yape" || $method == "PLIN") {
+                                $message .= "Pago por " . $method . " del establecimiento " . $establishment->description . " de usuario " . auth()->user()->name . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
+                            }
+                            $box->bank_account_id = $bank_account_id;
+                            $box->bank_account_operation = $bank_account_operation;
+                            $box->category_id = 1;
+                            $box->subcategory_id = 1;
+                            $box->amount = $amount;
+                            $box->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                            $box->type = '1';
+                            $box->state = '1';
+                            $box->cash_id = $request->cash_id;
+                            $box->orden_id =  $request->orden_id;
+                            $box->document_id = $document->id;
+                            $box->user_id = auth()->user()->id;
+                            /* $box->seller_id = auth()->user()->id; */
+                            $box->establishment_id = auth()->user()->establishment_id;
+                            $document_save = Document::where('id', $document->id)->first();
+                            $document_save->cash_id = $request->cash_id;
+                            switch ($document_save->document_type_id) {
+                                case "01":
+                                    $type_document = "FACTURA ELECTRONICA";
+                                    break;
+                                case "03":
+                                    $type_document = "BOLETA DE VENTA ELECTRONICA";
+                                    break;
+                            }
+                            $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+                            $box->description = "VENTAS " . $documents_rows;
+                            if ($bank_account_id) {
+                                $bank_account = BankAccount::findOrFail($bank_account_id);
+                                $bank_account->balance = $bank_account->balance + $currentBox['amount'];
+                                $bank_account->save();
+                                $box->description = "VENTAS " . $documents_rows . " - " . $bank_account->bank->description . " - " . $bank_account->currency_type->description;
+                            }
+                            $box->soap_type_id = $company->soap_type_id;
+                            $box->soap_type_id = $company->soap_type_id;
+                            $box->save();
+                        }
+                        if ($configuration->send_whatsapp_digital_pay) {
+
+                            if ($message) {
+                                $numbers = NumberActivity::all();
+                                foreach ($numbers as $key => $number) {
+                                    (new WhatsappController)->sendMessage($message, $number->number);
+                                }
+                                (new WhatsappController)->sendMessage($message);
+                            }
+                        }
+                    } else {
+                        if ($request->sale_note_id == null && $request->method_pay) {
+                            $boxes    = Box::firstOrNew(['document_id' =>  $document->id]);
+                            $boxes->group_id = 1;
+                            $boxes->method = $request->method_pay;
+                            $boxes->operation_number = $request->operation_number;
+                            $boxes->category_id = 1;
+                            $boxes->subcategory_id = 1;
+                            $boxes->currency_type_id = $document->currency_type_id;
+                            $boxes->exchange_rate_sale = $document->exchange_rate_sale;
+                            $boxes->amount = $request->input('total_payment');
+                            $boxes->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                            $boxes->type = '1';
+                            $boxes->state = '1';
+                            $boxes->cash_id = $request->cash_id;
+                            $boxes->orden_id =  $request->orden_id;
+                            $boxes->document_id = $document->id;
+                            $boxes->user_id = auth()->user()->id;
+                            /* $boxes->seller_id = auth()->user()->id; */
+                            $boxes->establishment_id = auth()->user()->establishment_id;
+                            $document_save = Document::where('id', $document->id)->first();
+                            switch ($document_save->document_type_id) {
+                                case "01":
+                                    $type_document = "FACTURA ELECTRONICA";
+                                    break;
+                                case "03":
+                                    $type_document = "BOLETA DE VENTA ELECTRONICA";
+                                    break;
+                            }
+                            $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+                            $boxes->description = "VENTAS " . $documents_rows;
+                            $boxes->soap_type_id = $company->soap_type_id;
+                            $boxes->soap_type_id = $company->soap_type_id;
+                            $boxes->save();
+                        }
+                    }
+                }
+                event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
+
+                if ($request->orden_id != null) {
+                    $Orden = Orden::FindOrFail($request->orden_id);
+                    $Orden->document_id = $document->id;
+                    $Orden->status_orden_id = 4;
+                    $Orden->customer_id = $document->customer_id;
+                    $Orden->save();
+                    $document_orden = Document::FindOrFail($document->id);;
+                    $document_orden->orden_id = $request->orden_id;
+                    $document_orden->save();
+                    $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
+                    foreach ($orden_items as $orden_item) {
+                        $orden_item->status_orden_id = 4;
+                        $orden_item->save();
+                        event(new OrdenReadyEvent($orden_item->id));
+                    }
+                }
+                if ($request->orden_ids) {
+                    $ids = $request->orden_ids;
+                    foreach ($ids as $id) {
+                        $Orden = Orden::findOrFail($id);
+                        $Orden->document_id = $document->id;
+                        $Orden->status_orden_id = 4;
+                        $Orden->customer_id = $document->customer_id;
+                        $Orden->save();
+                        $orden_items = OrdenItem::where('orden_id', $id)->get();
+                        foreach ($orden_items as $orden_item) {
+                            $orden_item->status_orden_id = 4;
+                            $orden_item->save();
+                        }
+                    }
+                }
+                if ($request->is_list_credit) {
+                    CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
+                }
+                $vacate = $request->vacate;
+                if ($request->hotel_rent_item_ids) {
+                    $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
+                    foreach ($hotel_rent_items as $item) {
+                        $item->payment_status = "Pagado";
+                        if ($vacate) {
+                            $table = Table::where('id', $item->table_id)->first();
+                            $table->status_table_id = 5;
+                            $table->sendMessageDesocupied();
+                            $table->save();
+                        } else {
+                            $item->total = 0;
+                            $item->advances = 0;
+                            $id_to_document = $item->hotel_rent_id;
+                            HotelRentDocument::create([
+                                'hotel_rent_id' => $id_to_document,
+                                'document_id' => $document->id,
+                                'is_advance' => false,
+                            ]);
+                        }
+                        $item->save();
+                    }
+                }
+                if ($request->hotel_rent_id) {
+                    $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
+                    $hotel_rent_items = $hotel_rent->items;
+
+                    if ($request->is_advance) {
+                        HotelRentDocument::create([
+                            'hotel_rent_id' => $hotel_rent->id,
+                            'document_id' => $document->id,
+                            'is_advance' => true,
+                        ]);
+
+                        foreach ($hotel_rent_items as $item) {
+                            $advance = $item->advances;
+                            $advance = floatval($advance);
+                            $price = $item->getPrice();
+                            if ($advance == $price) {
+                                $item->payment_status = "Pagado";
+                                $item->advances = 0;
+                                $item->save();
+                            }
+                        }
+                    } else {
+                        foreach ($hotel_rent_items as $item) {
+                            $item->payment_status = "Pagado";
+                            if ($vacate) {
+                                $table = Table::where('id', $item->table_id)->first();
+                                $table->status_table_id = 5;
+                                $table->sendMessageDesocupied();
+                                $table->save();
+                            } else {
+                                $item->total = 0;
+                                $item->advances = 0;
+                                $id_to_document = $item->hotel_rent_id;
+                                HotelRentDocument::create([
+                                    'hotel_rent_id' => $id_to_document,
+                                    'document_id' => $document->id,
+                                    'is_advance' => false,
+                                ]);
+                            }
+                            $item->checkout_date = date('Y-m-d');
+                            $item->checkout_time = date('H:i:s');
+                            $item->save();
+                        }
+                        $hotel_rent->payment_status = "Pagado";
+                        $hotel_rent->document_id = $document->id;
+                        $hotel_rent->paid = 1;
+                        $hotel_rent->save();
+                    }
+                }
+                if (count($ids) != 0) {
+                    Orden::whereIn('id', $ids)->update(['document_id' => $document->id]);
+                }
+                if ($request->generar_document == "Si") {
+                    foreach ($request->items as $row_item) {
+                        if ($row_item['item']['is_stock'] == "No") {
+                            $inventoryKardex = InventoryKardex::where('item_id', $row_item['item_id'])->get()->last();
+                            $row_inventory = InventoryKardex::findOrFail($inventoryKardex->id);
+                            $row_inventory->delete();
+                        }
+                    }
+                }
+                if ($request->sale_note_id) {
+                    $desc = "App\Models\SaleNote";
+                    SaleNoteItem::where('sale_note_id', $request->sale_note_id)->update(["inventory_kardex_id" => null]);
+                    InventoryKardex::where('inventory_kardexable_type', $desc)->where('inventory_kardexable_id', $request->sale_note_id)->delete();
+                }
+                if ($document->quotation_id) {
+                    $quotation = Quotation::find($document->quotation_id);
+                    $quotation->changed = true;
+                    $quotation->save();
+                }
+                $establishment = Establishment::where('id', $document->establishment_id)->first();
+
+                if ($request->receive_promotion) {
+                    $this->updatePromotion($document);
+                }
+                if ($request->promotion_id) {
+                    $this->savePromotion(
+                        $document,
+                        $request->promotion_id
+                    );
+                }
+
+                // Call saveItemWarranty to check and save item warranties
+                $this->saveItemWarranty($document, $request->items);
+                DB::connection('tenant')->commit();
+                return [
+                    'success' => true,
+                    'data' => [
+                        'number' => $document->number_full,
+                        'filename' => $document->filename,
+                        'external_id' => $document->external_id,
+                        'state_type_id' => $document->state_type_id,
+                        'number_to_letter' => $document->number_to_letter,
+                        'hash' => $document->hash,
+                        'qr' => $document->qr,
+                        'token_user' => $document->token_user,
+                        'id' => $document->id,
+                        'format_printer' => $establishment->format_printer,
+                        'printer' => $establishment->printer,
+                        'printer_serve' => $establishment->printer_serve,
+                        'direct_printing' => (bool) $establishment->direct_printing,
+                        'print_ticket' => url('') . "/print/document/{$document->external_id}/ticket",
+                        'print_a4' => url('') . "/print/document/{$document->external_id}/a4",
+                        'print_a5' => url('') . "/print/document/{$document->external_id}/a5",
+                        'response' => $response
+                    ],
+                ];
+    
         } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
             return [
                 'success' => false,
                 'message' => $e->getMessage()
             ];
         }
-        $document = $fact->getDocument();
-        if ($request->vehiculo_id) {
-            $historial = Historial::where('estado', false)
-                ->where('vehiculo_id', $request->vehiculo_id)
-                ->first();
-            if ($historial) {
-                $historial->document_id = $document->id;
-                $historial->estado = 1;
-                $historial->save();
-            }
-        }
-        $this->associateSaleNoteToDocument($request, $document->id);
-        Box::where('document_id', $document->id)->delete();
-        // $Payments = DocumentPayment::where('document_id', $document->id)->first();
-        if ($request->cash_id == null && $document_id == null) {
-            $user_id = auth()->user()->id;
-            /* $user_id->seller_id = auth()->user()->id; */
-            $cash = Cash::where('user_id', $user_id)
-                ->where('state', true)
-                ->first();
-            if ($cash == null) {
-                $cash = Cash::create([
-                    'user_id' => auth()->user()->id,
-                    'seller_id' => $user_id,
-                    'date_opening' => date('Y-m-d'),
-                    'time_opening' => date('H:i:s'),
-                    'date_closed' => null,
-                    'time_closed' => null,
-                    'beginning_balance' => 0,
-                    'final_balance' => 0,
-                    'income' => 0,
-                    'state' => true,
-                    'reference_number' => null
-                ]);
-            }
-            $request->merge(['cash_id' => $cash->id]);
-        }
-        $response = $fact->getResponse();
-        $company = Company::first();
-        //&& $request->afectar_caja === true
-        $establishment = Establishment::where('id', $document->establishment_id)->first();
-        $configuration = Configuration::first();
-
-        if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
-            if ($request->boxes) {
-                $message = "";
-                foreach ($request->boxes as $currentBox) {
-                    $method = $currentBox['method'];
-                    $amount = $currentBox['amount'];
-                    $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
-                    $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
-                    $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
-                    $box = new Box;
-                    $box->group_id = 1;
-                    $box->currency_type_id = $document->currency_type_id;
-                    $box->exchange_rate_sale = $document->exchange_rate_sale;
-                    $box->operation_number = $operation_number;
-                    $box->method = $method;
-                    if ($method == "Yape" || $method == "PLIN") {
-                        $message .= "Pago por " . $method . " del establecimiento " . $establishment->description . " de usuario " . auth()->user()->name . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
-                    }
-                    $box->bank_account_id = $bank_account_id;
-                    $box->bank_account_operation = $bank_account_operation;
-                    $box->category_id = 1;
-                    $box->subcategory_id = 1;
-                    $box->amount = $amount;
-                    $box->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                    $box->type = '1';
-                    $box->state = '1';
-                    $box->cash_id = $request->cash_id;
-                    $box->orden_id =  $request->orden_id;
-                    $box->document_id = $document->id;
-                    $box->user_id = auth()->user()->id;
-                    /* $box->seller_id = auth()->user()->id; */
-                    $box->establishment_id = auth()->user()->establishment_id;
-                    $document_save = Document::where('id', $document->id)->first();
-                    $document_save->cash_id = $request->cash_id;
-                    switch ($document_save->document_type_id) {
-                        case "01":
-                            $type_document = "FACTURA ELECTRONICA";
-                            break;
-                        case "03":
-                            $type_document = "BOLETA DE VENTA ELECTRONICA";
-                            break;
-                    }
-                    $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
-                    $box->description = "VENTAS " . $documents_rows;
-                    if ($bank_account_id) {
-                        $bank_account = BankAccount::findOrFail($bank_account_id);
-                        $bank_account->balance = $bank_account->balance + $currentBox['amount'];
-                        $bank_account->save();
-                        $box->description = "VENTAS " . $documents_rows . " - " . $bank_account->bank->description . " - " . $bank_account->currency_type->description;
-                    }
-                    $box->soap_type_id = $company->soap_type_id;
-                    $box->soap_type_id = $company->soap_type_id;
-                    $box->save();
-                }
-                if ($configuration->send_whatsapp_digital_pay) {
-
-                    if ($message) {
-                        $numbers = NumberActivity::all();
-                        foreach ($numbers as $key => $number) {
-                            (new WhatsappController)->sendMessage($message, $number->number);
-                        }
-                        (new WhatsappController)->sendMessage($message);
-                    }
-                }
-            } else {
-                if ($request->sale_note_id == null && $request->method_pay) {
-                    $boxes    = Box::firstOrNew(['document_id' =>  $document->id]);
-                    $boxes->group_id = 1;
-                    $boxes->method = $request->method_pay;
-                    $boxes->operation_number = $request->operation_number;
-                    $boxes->category_id = 1;
-                    $boxes->subcategory_id = 1;
-                    $boxes->currency_type_id = $document->currency_type_id;
-                    $boxes->exchange_rate_sale = $document->exchange_rate_sale;
-                    $boxes->amount = $request->input('total_payment');
-                    $boxes->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                    $boxes->type = '1';
-                    $boxes->state = '1';
-                    $boxes->cash_id = $request->cash_id;
-                    $boxes->orden_id =  $request->orden_id;
-                    $boxes->document_id = $document->id;
-                    $boxes->user_id = auth()->user()->id;
-                    /* $boxes->seller_id = auth()->user()->id; */
-                    $boxes->establishment_id = auth()->user()->establishment_id;
-                    $document_save = Document::where('id', $document->id)->first();
-                    switch ($document_save->document_type_id) {
-                        case "01":
-                            $type_document = "FACTURA ELECTRONICA";
-                            break;
-                        case "03":
-                            $type_document = "BOLETA DE VENTA ELECTRONICA";
-                            break;
-                    }
-                    $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
-                    $boxes->description = "VENTAS " . $documents_rows;
-                    $boxes->soap_type_id = $company->soap_type_id;
-                    $boxes->soap_type_id = $company->soap_type_id;
-                    $boxes->save();
-                }
-            }
-        }
-        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
-
-        if ($request->orden_id != null) {
-            $Orden = Orden::FindOrFail($request->orden_id);
-            $Orden->document_id = $document->id;
-            $Orden->status_orden_id = 4;
-            $Orden->customer_id = $document->customer_id;
-            $Orden->save();
-            $document_orden = Document::FindOrFail($document->id);;
-            $document_orden->orden_id = $request->orden_id;
-            $document_orden->save();
-            $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
-            foreach ($orden_items as $orden_item) {
-                $orden_item->status_orden_id = 4;
-                $orden_item->save();
-                event(new OrdenReadyEvent($orden_item->id));
-            }
-        }
-        if ($request->orden_ids) {
-            $ids = $request->orden_ids;
-            foreach ($ids as $id) {
-                $Orden = Orden::findOrFail($id);
-                $Orden->document_id = $document->id;
-                $Orden->status_orden_id = 4;
-                $Orden->customer_id = $document->customer_id;
-                $Orden->save();
-                $orden_items = OrdenItem::where('orden_id', $id)->get();
-                foreach ($orden_items as $orden_item) {
-                    $orden_item->status_orden_id = 4;
-                    $orden_item->save();
-                }
-            }
-        }
-        if ($request->is_list_credit) {
-            CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
-        }
-        $vacate = $request->vacate;
-        if ($request->hotel_rent_item_ids) {
-            $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-            foreach ($hotel_rent_items as $item) {
-                $item->payment_status = "Pagado";
-                if ($vacate) {
-                    $table = Table::where('id', $item->table_id)->first();
-                    $table->status_table_id = 5;
-                    $table->sendMessageDesocupied();
-                    $table->save();
-                } else {
-                    $item->total = 0;
-                    $item->advances = 0;
-                    $id_to_document = $item->hotel_rent_id;
-                    HotelRentDocument::create([
-                        'hotel_rent_id' => $id_to_document,
-                        'document_id' => $document->id,
-                        'is_advance' => false,
-                    ]);
-                }
-                $item->save();
-            }
-        }
-        if ($request->hotel_rent_id) {
-            $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
-            $hotel_rent_items = $hotel_rent->items;
-
-            if ($request->is_advance) {
-                HotelRentDocument::create([
-                    'hotel_rent_id' => $hotel_rent->id,
-                    'document_id' => $document->id,
-                    'is_advance' => true,
-                ]);
-
-                foreach ($hotel_rent_items as $item) {
-                    $advance = $item->advances;
-                    $advance = floatval($advance);
-                    $price = $item->getPrice();
-                    if ($advance == $price) {
-                        $item->payment_status = "Pagado";
-                        $item->advances = 0;
-                        $item->save();
-                    }
-                }
-            } else {
-                foreach ($hotel_rent_items as $item) {
-                    $item->payment_status = "Pagado";
-                    if ($vacate) {
-                        $table = Table::where('id', $item->table_id)->first();
-                        $table->status_table_id = 5;
-                        $table->sendMessageDesocupied();
-                        $table->save();
-                    } else {
-                        $item->total = 0;
-                        $item->advances = 0;
-                        $id_to_document = $item->hotel_rent_id;
-                        HotelRentDocument::create([
-                            'hotel_rent_id' => $id_to_document,
-                            'document_id' => $document->id,
-                            'is_advance' => false,
-                        ]);
-                    }
-                    $item->checkout_date = date('Y-m-d');
-                    $item->checkout_time = date('H:i:s');
-                    $item->save();
-                }
-                $hotel_rent->payment_status = "Pagado";
-                $hotel_rent->document_id = $document->id;
-                $hotel_rent->paid = 1;
-                $hotel_rent->save();
-            }
-        }
-        if (count($ids) != 0) {
-            Orden::whereIn('id', $ids)->update(['document_id' => $document->id]);
-        }
-        if ($request->generar_document == "Si") {
-            foreach ($request->items as $row_item) {
-                if ($row_item['item']['is_stock'] == "No") {
-                    $inventoryKardex = InventoryKardex::where('item_id', $row_item['item_id'])->get()->last();
-                    $row_inventory = InventoryKardex::findOrFail($inventoryKardex->id);
-                    $row_inventory->delete();
-                }
-            }
-        }
-        if ($request->sale_note_id) {
-            $desc = "App\Models\SaleNote";
-            SaleNoteItem::where('sale_note_id', $request->sale_note_id)->update(["inventory_kardex_id" => null]);
-            InventoryKardex::where('inventory_kardexable_type', $desc)->where('inventory_kardexable_id', $request->sale_note_id)->delete();
-        }
-        if ($document->quotation_id) {
-            $quotation = Quotation::find($document->quotation_id);
-            $quotation->changed = true;
-            $quotation->save();
-        }
-        $establishment = Establishment::where('id', $document->establishment_id)->first();
-
-        if ($request->receive_promotion) {
-            $this->updatePromotion($document);
-        }
-        if ($request->promotion_id) {
-            $this->savePromotion(
-                $document,
-                $request->promotion_id
-            );
-        }
-
-        // Call saveItemWarranty to check and save item warranties
-        $this->saveItemWarranty($document, $request->items);
-
-        return [
-            'success' => true,
-            'data' => [
-                'number' => $document->number_full,
-                'filename' => $document->filename,
-                'external_id' => $document->external_id,
-                'state_type_id' => $document->state_type_id,
-                'number_to_letter' => $document->number_to_letter,
-                'hash' => $document->hash,
-                'qr' => $document->qr,
-                'token_user' => $document->token_user,
-                'id' => $document->id,
-                'format_printer' => $establishment->format_printer,
-                'printer' => $establishment->printer,
-                'printer_serve' => $establishment->printer_serve,
-                'direct_printing' => (bool) $establishment->direct_printing,
-                'print_ticket' => url('') . "/print/document/{$document->external_id}/ticket",
-                'print_a4' => url('') . "/print/document/{$document->external_id}/a4",
-                'print_a5' => url('') . "/print/document/{$document->external_id}/a5",
-                'response' => $response
-            ],
-        ];
     }
     private function saveItemWarranty($document, $items)
     {
@@ -1409,7 +1410,7 @@ class DocumentController extends Controller
             if ($item['item']['has_warranty']) {
                 $warranty_start_date = Carbon::parse($document->date_of_issue);
                 $warranty_end_date = $warranty_start_date->copy()->addMonths($item['item']['month_day']);
-                
+
                 // Find the document item ID
                 $documentItem = DocumentItem::where('document_id', $document->id)
                     ->where('item_id', $item['item_id'])
@@ -1425,7 +1426,7 @@ class DocumentController extends Controller
             }
         }
     }
-    
+
     public function reStoreRange(Request $request)
     {
         $date_of_start = $request->input('date_of_start');

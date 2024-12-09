@@ -49,7 +49,7 @@
                                     <div class="block mb-2">
                                         <span class="time font-weight-light">
                                             <span class="text-muted lead-font-weight-700">
-                                                S/ {{ data.price }}</span>
+                                             {{ data.currency }} {{ data.price }}</span>
                                         </span>
                                     </div>
                                     <div v-if="

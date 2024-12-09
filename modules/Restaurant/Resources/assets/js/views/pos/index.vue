@@ -1557,6 +1557,7 @@
         <template>
             <payment-form
                 :user="user"
+                :currencyIdChoice.sync="currencyIdChoice"
                 @clearVariation="clearVariation"
                 :promotions_document="promotions_document"
                 :itemDefault.sync="itemDefault"
@@ -2308,7 +2309,7 @@ export default {
             this.showDialogCreditReportDaily = false;
         },
         updateCurrencyChoice(currency) {
-            this.currencyIdChoice = currency;
+            this.currencyIdChoice = currency == "S/" ? "PEN" : "USD";
         },
         openCreditReportDaily() {
             this.showDialogCreditReportDaily = true;
@@ -3019,6 +3020,9 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             }
+            this.form.currency_type_id =
+                this.currency_id == "S/" ? "PEN" : "USD";
+            
             this.is_payment = true;
         },
         sendOrdensAllTables(orden_items) {
@@ -3465,7 +3469,10 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
-
+                this.form.currency_type_id =
+                    this.currency_id == "S/" || this.currency_id == undefined ? "PEN" : "USD";
+                console.log("this.currency_id", JSON.stringify(this.currency_id));
+                    console.log("this.form", JSON.stringify(this.form));
                 this.is_payment = true;
             }
         },
@@ -3699,6 +3706,8 @@ export default {
                 } else {
                     this.localOrden.unshift(orden);
                 }
+                this.$refs.list_orden.changeCurrencyItems();
+                // this.localOrden = this.changeCurrencyItems();
             }
             //aca existe en original o en alguna  presentación
             else {
@@ -3787,6 +3796,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
+                        this.$refs.list_orden.changeCurrencyItems();
                     }
 
                     //y si no agregarla como nueva
@@ -3819,6 +3829,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
+                        this.$refs.list_orden.changeCurrencyItems();
                     }
                 } else {
                     let {
@@ -3862,6 +3873,7 @@ export default {
                         } else {
                             this.localOrden.unshift(itemAwait);
                         }
+                        this.$refs.list_orden.changeCurrencyItems();
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
@@ -3873,13 +3885,16 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
+                        this.$refs.list_orden.changeCurrencyItems();
                     }
                 }
 
-                this.localOrden = [...this.localOrden];
+                // this.localOrden = [...this.localOrden];
+                this.localOrden = this.changeCurrencyItems();
             }
             this.$refs.ordenRef.calculateTotal();
         },
+    
         total_sales(val) {
             this.total_sales_pos = val;
         },
@@ -4745,6 +4760,9 @@ export default {
             if (!this.form.customer_id)
                 return this.$toast.error("Seleccione un cliente");
             this.form.establishment_id = this.establishment.id;
+            this.form.currency_type_id =
+                this.currency_id == "S/" ? "PEN" : "USD";
+            console.log("currency_type_id", this.currency_id);
             this.is_payment = true;
         },
         getLocalPrinter(key) {
@@ -4762,6 +4780,13 @@ export default {
             this.form.items = this.form.items.map(i => {
                 return {
                     ...i,
+                    currency_type_id: this.currency_id == "S/" ? "PEN" : "USD",
+                    currency_type: {
+                        id: this.currency_id == "S/" ? "PEN" : "USD",
+                        description:
+                            this.currency_id == "S/" ? "Soles" : "Dolares",
+                        symbol: this.currency_id
+                    },
                     attributes: i.attributes || [],
                     toWarehouse: i.toWarehouse || 0,
                     consignment_item_id: i.consignment_item_id,
@@ -5682,6 +5707,7 @@ export default {
             if (this.configuration.sale_note_credit_confirm) {
                 this.openCredit();
             }
+            this.getExchange();
         },
         typesearch() {
             this.ordens = [];

@@ -273,7 +273,7 @@ class Configuration extends ModelTenant
         'pos_drag_category',
         'init_stock',
         'observation_translate',
-
+        'other_currency_pos',
     ];
     protected $casts = [
         'print_pos_worker' => 'boolean',
@@ -449,6 +449,9 @@ class Configuration extends ModelTenant
         'edit_product_pos' => 'boolean',
         'quotation' => 'boolean',
         'print_incomes_expenses' => 'boolean',
+        'affectation_optional' => 'boolean',
+        'affectation_optional_id' => 'boolean',
+        'other_currency_pos' => 'boolean',
     ];
     public function scopeGetUnitPriceDispatchRelatedRecord($query)
     {
@@ -812,7 +815,6 @@ class Configuration extends ModelTenant
             'socket_channel'            => $this->socket_channel,
             'show_restriction'          => (bool) $this->show_restriction,
             'print_direct'              => (bool) $this->print_direct,
-            'socket_channel'            => $this->socket_channel,
             'refresh_price_sales'       => (bool) $this->refresh_price_sales,
             'search_type'               => (string) $this->search_type,
             'edit_price_sales'          => (bool)$this->edit_price_sales,
@@ -860,7 +862,7 @@ class Configuration extends ModelTenant
             'consignment' => (bool)$this->consignment,
             'affectation_optional' => (bool)$this->affectation_optional,
             'affectation_optional_id' => $this->affectation_optional_id,
-
+            'other_currency_pos' => (bool)$this->other_currency_pos,
         ];
     }
     public  function hasAffectationIgv(): ?bool

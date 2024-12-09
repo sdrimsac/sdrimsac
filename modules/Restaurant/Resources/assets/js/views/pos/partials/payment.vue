@@ -80,7 +80,10 @@
                                                         v-if="
                                                             (!variation &&
                                                                 sale_note &&
-                                                                !clientSaleNoteNumber || (configuration.hotels && user.id == 57))
+                                                                !clientSaleNoteNumber) ||
+                                                                (configuration.hotels &&
+                                                                    user.id ==
+                                                                        57)
                                                         "
                                                         label="80"
                                                     >
@@ -1171,12 +1174,13 @@
                                             }"
                                         >
                                             <label class="control-label h1"
-                                                >Total a cobrar: </label
+                                                >Total a cobrar:
+                                                 </label
                                             ><br />
                                             <span
                                                 class="control-label font-weight-semibold text-center h3"
                                             >
-                                                S/ {{ " " + form.total }}
+                                                {{ currencyIdChoice == 'PEN' ? 'S/ ' : '$ ' }} {{ " " + form.total }}
                                             </span>
                                         </div>
                                         <div
@@ -1751,7 +1755,8 @@ export default {
     },
 
     props: [
-        'user',
+        "currencyIdChoice",
+        "user",
         "promotions_document",
         "itemDefault",
         "company",
@@ -3008,14 +3013,16 @@ export default {
             // }
             if (this.form.offert) {
                 this.form.items = this.form.items.map(item => {
-                    let key = Math.random().toString(36).substring(2,7);
+                    let key = Math.random()
+                        .toString(36)
+                        .substring(2, 7);
                     return { ...item, temp_key: key };
                 });
                 this.setSaleOffert();
                 this.setOffertObservation();
             }
         },
-        setOffertObservation(){
+        setOffertObservation() {
             let offert = this.form.offert;
             let { quantity_free, quantity_total } = offert;
             this.form.observation = `Oferta de ${quantity_free} x ${quantity_total}`;
@@ -3025,7 +3032,6 @@ export default {
             let { quantity_free, quantity_total } = offert;
             let quantity = quantity_free - quantity_total;
 
-        
             let itemsOrdenados = [...this.form.items].sort((a, b) => {
                 return a.unit_price - b.unit_price;
             });
@@ -3033,7 +3039,9 @@ export default {
             let itemsSeleccionados = itemsOrdenados.slice(0, quantity);
 
             itemsSeleccionados.forEach(item => {
-                let index = this.form.items.findIndex(i => i.temp_key === item.temp_key);
+                let index = this.form.items.findIndex(
+                    i => i.temp_key === item.temp_key
+                );
                 console.log("index ", index);
                 if (index !== -1) {
                     this.form.items.splice(index, 1);
