@@ -37,6 +37,7 @@ use App\CoreFacturalo\WS\Services\ConsultCdrService;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\WS\Validator\XmlErrorCodeProvider;
 use App\Models\Tenant\DispatchItem;
+use App\Models\Tenant\SaleNote;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Modules\College\Models\CollegePayment;
@@ -410,8 +411,13 @@ class Facturalo
         $base_pdf_template = $configuration; //config(['tenant.pdf_template'=> $configuration]);
         // dd($base_pdf_template);
         $boxes = Box::where('document_id',  $this->document->id)->get();
-        if (is_null($boxes)) {
-            $boxes = [];
+        if (is_null($boxes) || $boxes->isEmpty()) {
+            $sale_note = SaleNote::where('document_id', $this->document->id)->first();
+            if ($sale_note) {
+                $boxes = Box::where('sale_note_id', $sale_note->id)->get();
+            } else {
+                $boxes = [];
+            }
         }
 
 

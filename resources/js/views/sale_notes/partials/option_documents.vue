@@ -134,11 +134,11 @@
                         :class="{ 'has-danger': errors.operation_type_id }"
                     >
                         <label class="control-label">Fecha </label>
-                        <el-input 
-                        v-model="document.date_of_issue"
-                        @change="changeOperationType"
-                        type="date">
-
+                        <el-input
+                            v-model="document.date_of_issue"
+                            @change="changeOperationType"
+                            type="date"
+                        >
                         </el-input>
                     </div>
                 </div>
@@ -287,7 +287,14 @@ import PersonForm from "../../persons/form.vue";
 export default {
     components: { DocumentOptions, PersonForm },
 
-    props: ["showDialog", "recordId", "showClose", "showGenerate", "fromCaja","configuration"],
+    props: [
+        "showDialog",
+        "recordId",
+        "showClose",
+        "showGenerate",
+        "fromCaja",
+        "configuration"
+    ],
     data() {
         return {
             titleDialog: null,
@@ -481,7 +488,7 @@ export default {
                 payments: [],
                 hotel: {},
                 orden_id: null,
-                seller_id:null,
+                seller_id: null
             };
         },
         resetDocument() {
@@ -530,25 +537,27 @@ export default {
                         this.documentNewId = response.data.data.id;
 
                         if (this.fromCaja) {
-                               this.$http
-                            .get(`/${this.resource}/changed/${this.recordId}`)
-                            .then(() => {
-                                this.$emit("getRecords");
-                               
-                            });
-                               this.showDialogDocumentOptions = true;
+                            this.$http
+                                .get(
+                                    `/${this.resource}/changed/${this.recordId}`
+                                )
+                                .then(() => {
+                                    this.$emit("getRecords");
+                                });
+                            this.showDialogDocumentOptions = true;
                             this.clickClose();
                         } else {
-                              this.$http
-                            .get(`/${this.resource}/changed/${this.form.id}`)
-                            .then(() => {
-                                this.$eventHub.$emit("reloadData");
-                                this.flag_generate = false;
-                            });
-                        this.resetDocument();
+                            this.$http
+                                .get(
+                                    `/${this.resource}/changed/${this.form.id}`
+                                )
+                                .then(() => {
+                                    this.$eventHub.$emit("reloadData");
+                                    this.flag_generate = false;
+                                });
+                            this.resetDocument();
                             this.showDialogDocumentOptions = true;
                         }
-                      
 
                         // this.clickClose();
                     } else {
@@ -584,11 +593,11 @@ export default {
         assignDocument() {
             let q = this.form.sale_note;
 
-            if (q.paid == 1 || q.paid == "1") {
-                this.document.payment_condition_id = "01";
-            } else {
-                this.document.payment_condition_id = "02";
-            }
+            // if (q.paid == 1 || q.paid == "1") {
+            this.document.payment_condition_id = "01";
+            // } else {
+            //     this.document.payment_condition_id = "02";
+            // }
             for (let index = 0; index < q.items.length; index++) {
                 q.items[index].item.is_stock = "No";
             }
