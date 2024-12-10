@@ -9,6 +9,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Transform\DocumentWebTransform;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
@@ -28,7 +29,7 @@ class DocumentInput
         if (array_key_exists('id', $inputs)) {
             $id = $inputs['id'];
         }
-
+        $configuration = Configuration::first();
         $document_type_id = $inputs['document_type_id'];
         $series = $inputs['series'];
         $number = $inputs['number'];
@@ -119,6 +120,10 @@ class DocumentInput
         }
         $total_payment =  Functions::valueKeyInArray($inputs, 'total_payment', 0.0);
         $detraction  = self::detraction($inputs);
+        $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
+        if($currency_type_id !== 'PEN' && !$configuration->other_currency_pos){
+            $currency_type_id = 'PEN';
+        }
         // if ($detraction) {
         //     $amount = $detraction['amount'];
         //     $total_payment = $total_payment - $amount;
@@ -173,7 +178,7 @@ class DocumentInput
             'time_of_issue' => date('H:i:s'),
             'customer_id' => $inputs['customer_id'],
             'customer' => $customer,
-            'currency_type_id' => $inputs['currency_type_id'],
+            'currency_type_id' => $currency_type_id,
             'purchase_order' => $inputs['purchase_order'],
             'sale_note_id' => Functions::valueKeyInArray($inputs, 'sale_note_id'),
             'exchange_rate_sale' => $inputs['exchange_rate_sale'],
