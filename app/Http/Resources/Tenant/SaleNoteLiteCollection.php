@@ -27,8 +27,7 @@ class SaleNoteLiteCollection extends ResourceCollection
 
             // Inicializar variables con conversión de tipos una sola vez
             $total = (float) $row->total;
-            $boxes = Box::where('sale_note_id', $row->id)->get();
-            $total_boxes = (float) $boxes->sum('amount');
+            $total_boxes = (float) $row->boxes->sum('amount');
 
             // Calcular pending con una lógica simplificada
             if ($row->paid) {
