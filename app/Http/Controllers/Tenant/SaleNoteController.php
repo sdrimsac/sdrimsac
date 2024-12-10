@@ -2002,13 +2002,16 @@ class SaleNoteController extends Controller
 
     public function mergeData($inputs)
     {
-
+        $configuration = Configuration::first();
         $this->company = Company::active();
         $type_period = $inputs['type_period'];
         $quantity_period = $inputs['quantity_period'];
         $d_of_issue = new Carbon($inputs['date_of_issue']);
         $automatic_date_of_issue = null;
-
+        $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
+        if($currency_type_id == 'USD' && !$configuration->enabled_currency_type_usd){
+            $currency_type_id = 'PEN';
+        }
 
         if ($type_period && $quantity_period > 0) {
 
@@ -2039,6 +2042,7 @@ class SaleNoteController extends Controller
             $customer['sum_coins'] = $sum_coins;
         }
         $values = [
+            'currency_type_id' => $currency_type_id,
             'additional_information' => $inputs['additional_information'],
             'automatic_date_of_issue' => $automatic_date_of_issue,
             'user_id' => $inputs['user_id'],
