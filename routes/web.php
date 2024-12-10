@@ -242,6 +242,7 @@ if ($hostname) {
                 Route::get('pos/payment_tables', [App\Http\Controllers\Tenant\PosController::class, 'payment_tables']);
                 Route::post('sale-notes', [App\Http\Controllers\Tenant\SaleNoteController::class, 'store']);
                 Route::get('sale-notes/credit-cash/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'credit_cash_records']);
+                Route::get('sale-notes/credit-cash/check-boxes', [App\Http\Controllers\Tenant\SaleNoteController::class, 'checkBoxesSaleNote']);
                 Route::post('cash/cash_document', [Modules\Restaurant\Http\Controllers\CashController::class, 'cash_document']);
                 Route::post('cash/abjusment', [Modules\Restaurant\Http\Controllers\CashController::class, 'adjusmentIncome']);
                 Route::prefix('cash/main_cash')->group(function () {

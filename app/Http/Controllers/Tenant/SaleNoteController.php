@@ -148,6 +148,34 @@ class SaleNoteController extends Controller
             ->establishment($establishment)
             ->download('Reporte_Crédito_Consolidado_' . Carbon::now() . '.xlsx');
     }
+    public function checkBoxesSaleNote(){
+        DB::connection('tenant')->update("
+            UPDATE sale_notes 
+            SET paid = 1 
+            WHERE credit_cash = true 
+            AND state_type_id <> '11' 
+            AND paid = 0 
+            AND NOT EXISTS (
+                SELECT 1 FROM payments 
+                WHERE payments.sale_note_id = sale_notes.id
+            )
+            AND id IN (
+                SELECT sale_note_id 
+                FROM (
+                    SELECT sale_note_id, SUM(amount) as total_box 
+                    FROM boxes 
+                    GROUP BY sale_note_id
+                ) as box_totals 
+                INNER JOIN sale_notes sn ON sn.id = box_totals.sale_note_id 
+                WHERE total_box >= sn.total
+            )
+        ");
+
+        return [
+            'success' => true,
+            'message' => 'Créditos actualizados',
+        ];
+    }
     public function records_consolidated(Request $request)
     {
         $data = $this->getRecordsConsolidated($request);
@@ -2320,6 +2348,7 @@ class SaleNoteController extends Controller
                 }
             }
             $legends           = $this->document->legends != '' ? '10' : '0';
+
 
 
             $alto = ($quantity_rows * 8) +
