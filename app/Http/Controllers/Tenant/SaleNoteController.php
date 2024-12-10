@@ -408,7 +408,7 @@ class SaleNoteController extends Controller
                 $query->where('name', 'like', "%{$value}%")
                     ->orWhere('alias', 'like', "%{$value}%")
                     ->orWhere('number', 'like', "%{$value}%");
-            })->orWhere('number_full', 'like', "%{$value}%");
+            })->orWhere('number', 'like', "%{$value}%");
         }
         $records->latest();
         return new SaleNoteLiteCollection($records->paginate(config('tenant.items_per_page')));
