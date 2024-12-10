@@ -1450,7 +1450,7 @@ class SaleNoteController extends Controller
                     $sale_note_item->percentage_igv = 18;
                     $sale_note_item->fill($row);
                     $sale_note_item->percentage_igv = 18;
-                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "");
+                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
                     $sale_note_item->sale_note_id = $this->sale_note->id;
                     $sale_note_item->save();
                     if (array_key_exists('toWarehouse', $row)) {
