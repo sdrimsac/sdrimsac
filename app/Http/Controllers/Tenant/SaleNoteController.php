@@ -149,26 +149,17 @@ class SaleNoteController extends Controller
             ->download('Reporte_Crédito_Consolidado_' . Carbon::now() . '.xlsx');
     }
     public function checkBoxesSaleNote(){
-        DB::connection('tenant')->update("
-            UPDATE sale_notes 
-            SET paid = 1 
-            WHERE credit_cash = true 
-            AND state_type_id <> '11' 
-            AND paid = 0 
-            AND NOT EXISTS (
-                SELECT 1 FROM payments 
-                WHERE payments.sale_note_id = sale_notes.id
-            )
-            AND id IN (
-                SELECT sale_note_id FROM (
-                    SELECT b.sale_note_id
-                    FROM boxes b
-                    JOIN sale_notes s ON s.id = b.sale_note_id
-                    GROUP BY b.sale_note_id
-                    HAVING SUM(b.amount) >= s.total
-                ) AS eligible_notes
-            )
-        ");
+
+        SaleNote::where('credit_cash', true)->whereDoesntHave('credit_payments')->where('state_type_id', '<>', '11')->where('paid', 0)->
+        chunk(100, function($sale_notes){
+            foreach($sale_notes as $sale_note){
+                $boxes = Box::where('sale_note_id', $sale_note->id)->sum('amount');
+                if($boxes >= $sale_note->total){
+                    $sale_note->paid = 1;
+                    $sale_note->save();
+                }
+            }
+        });
 
         return [
             'success' => true,
@@ -2347,7 +2338,6 @@ class SaleNoteController extends Controller
                 }
             }
             $legends           = $this->document->legends != '' ? '10' : '0';
-
 
 
             $alto = ($quantity_rows * 8) +
