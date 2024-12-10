@@ -70,6 +70,7 @@ use App\Exports\CreditByClientExport;
 use App\Exports\NotaVentaExport;
 use App\Exports\SaleNoteExport;
 use App\Http\Resources\Tenant\SaleNoteCreditPenaltyCollection;
+use App\Http\Resources\Tenant\SaleNoteLiteCollection;
 use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
@@ -407,10 +408,10 @@ class SaleNoteController extends Controller
                 $query->where('name', 'like', "%{$value}%")
                     ->orWhere('alias', 'like', "%{$value}%")
                     ->orWhere('number', 'like', "%{$value}%");
-            });
+            })->orWhere('number_full', 'like', "%{$value}%");
         }
         $records->latest();
-        return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
+        return new SaleNoteLiteCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function getItemsFromNotes(Request $request)
     {
