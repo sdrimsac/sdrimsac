@@ -53,7 +53,6 @@ class SaleNoteLiteCollection extends ResourceCollection
                 'advances' => $row->advances,
                 'paid_amount' => $total_boxes,
                 // 'paid_amount' => $paid,
-                'boxes' => $boxes,
                 'id' => $row->id,
                 'document_type_id' => $row->document_type_id,
                 'soap_type_id' => $row->soap_type_id,
