@@ -396,7 +396,7 @@ class SaleNoteController extends Controller
         $value = $request->value;
         
         // Consulta base optimizada usando with() para eager loading
-        $records = SaleNote::with(['boxes','customer', 'state_type', 'documents', 'user'])
+        $records = SaleNote::with(['boxes','customer', 'state_type', 'user'])
             ->where('credit_cash', true)
             ->where('state_type_id', '<>', '11')
             ->whereDoesntHave('credit_payments')

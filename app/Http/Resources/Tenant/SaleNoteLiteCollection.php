@@ -80,12 +80,7 @@ class SaleNoteLiteCollection extends ResourceCollection
                 'state_type_id' => $row->state_type_id,
                 'state_type_description' => $row->state_type->description,
                 'advances' => $row->advances,
-                'documents' => $row->documents->transform(function ($row) {
-                    return [
-                        'id' => $row->id,
-                        'number_full' => $row->number_full,
-                    ];
-                }),
+        
                 'changed' => (bool) $row->changed,
                 'enabled_concurrency' => (bool) $row->enabled_concurrency,
                 'quantity_period' => $row->quantity_period,
