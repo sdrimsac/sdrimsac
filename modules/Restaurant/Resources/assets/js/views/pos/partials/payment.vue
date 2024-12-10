@@ -1854,7 +1854,7 @@ export default {
     },
     data() {
         return {
-            currencyIdChoice: "PEN",
+            /* currencyIdChoice: "PEN", */
             showDialogPromotionBox: false,
             listPromotionItems: [],
             promotionItems: [],

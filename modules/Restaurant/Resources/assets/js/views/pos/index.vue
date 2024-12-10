@@ -3706,7 +3706,7 @@ export default {
                 } else {
                     this.localOrden.unshift(orden);
                 }
-                this.$refs.list_orden.changeCurrencyItems();
+                /* this.$refs.list_orden.changeCurrencyItems(); */
                 // this.localOrden = this.changeCurrencyItems();
             }
             //aca existe en original o en alguna  presentación
