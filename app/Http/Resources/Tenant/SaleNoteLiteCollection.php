@@ -39,7 +39,7 @@ class SaleNoteLiteCollection extends ResourceCollection
             }
 
             // Actualizar estado de pago si corresponde
-            if ($total_boxes == $total) {
+            if ($total_boxes >= $total) {
                 $pending = 0;
                 $row->paid = 1;
                 $row->save();
