@@ -510,6 +510,7 @@ class PurchaseController extends Controller
                     $payment_method = PaymentMethodType::find($payment_method_id);
                     $box->method = $payment_method->description;
                     $box->purchase_id = $doc->id;
+                    $box->currency_type_id = $doc->currency_type_id;
                     $box->save();
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
