@@ -3470,8 +3470,8 @@ export default {
                     this.isNoteIsDefault();
                 }
                 this.form.currency_type_id =
-                    this.currency_id == "S/" || this.currency_id == undefined ? "PEN" : "USD";
-                console.log("this.currency_id", JSON.stringify(this.currency_id));
+                    this.currencyIdChoice == "S/" || this.currencyIdChoice == undefined ? "PEN" : "USD";
+                console.log("this.currency_id", JSON.stringify(this.currencyIdChoice));
                     console.log("this.form", JSON.stringify(this.form));
                 this.is_payment = true;
             }
