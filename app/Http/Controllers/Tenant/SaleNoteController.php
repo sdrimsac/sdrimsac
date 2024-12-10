@@ -160,14 +160,13 @@ class SaleNoteController extends Controller
                 WHERE payments.sale_note_id = sale_notes.id
             )
             AND id IN (
-                SELECT sale_note_id 
-                FROM (
-                    SELECT sale_note_id, SUM(amount) as total_box 
-                    FROM boxes 
-                    GROUP BY sale_note_id
-                ) as box_totals 
-                INNER JOIN sale_notes sn ON sn.id = box_totals.sale_note_id 
-                WHERE total_box >= sn.total
+                SELECT sale_note_id FROM (
+                    SELECT b.sale_note_id
+                    FROM boxes b
+                    JOIN sale_notes s ON s.id = b.sale_note_id
+                    GROUP BY b.sale_note_id
+                    HAVING SUM(b.amount) >= s.total
+                ) AS eligible_notes
             )
         ");
 
@@ -1451,7 +1450,7 @@ class SaleNoteController extends Controller
                     $sale_note_item->percentage_igv = 18;
                     $sale_note_item->fill($row);
                     $sale_note_item->percentage_igv = 18;
-                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
+                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "");
                     $sale_note_item->sale_note_id = $this->sale_note->id;
                     $sale_note_item->save();
                     if (array_key_exists('toWarehouse', $row)) {
