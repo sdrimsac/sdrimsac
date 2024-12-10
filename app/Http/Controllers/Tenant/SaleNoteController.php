@@ -395,32 +395,32 @@ class SaleNoteController extends Controller
     {
         $value = $request->value;
         
-        // Consulta base optimizada usando with() para eager loading
-        $records = SaleNote::with(['boxes','customer', 'state_type', 'user'])
-            ->where('credit_cash', true)
-            ->where('state_type_id', '<>', '11')
-            ->whereDoesntHave('credit_payments')
-            // Subconsulta optimizada para el total de cajas
-            ->whereRaw('
-                sale_notes.total > COALESCE(
-                    (SELECT SUM(amount) 
-                    FROM boxes 
-                    WHERE sale_note_id = sale_notes.id
-                    GROUP BY sale_note_id), 
-                0)
-            ');
+        $records = SaleNote::query()
+        ->with([
+            'customer:id,name,number,alias',
+            'state_type:id,description',
+            'documents', // Quitamos la selección específica de campos
+            'user:id,name',
+            'boxes:id,sale_note_id,amount'
+        ])
+        ->where('credit_cash', true)
+        ->where('state_type_id', '<>', '11')
+        ->whereDoesntHave('credit_payments')
+        ->where('paid', 0)
+        ->select('sale_notes.*')
+        ->distinct(); // Usamos distinct en lugar de groupBy
     
         // Aplicar filtros de búsqueda si existe un valor
         if ($value) {
             $records->where(function($query) use ($value) {
-                $query->whereHas('customer', function ($subQuery) use ($value) {
-                    $subQuery->where(function($q) use ($value) {
-                        $q->where('name', 'like', "%{$value}%")
-                          ->orWhere('alias', 'like', "%{$value}%")
-                          ->orWhere('number', 'like', "%{$value}%");
-                    });
+                $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
+                
+                $query->whereHas('customer', function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', $searchTerm)
+                            ->orWhere('alias', 'like', $searchTerm)
+                            ->orWhere('number', 'like', $searchTerm);
                 })
-                ->orWhere('number', 'like', "%{$value}%");
+                ->orWhere('sale_notes.number', 'like', $searchTerm);
             });
         }
     
