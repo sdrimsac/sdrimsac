@@ -232,7 +232,7 @@
                     <el-button
                         class="submit"
                         type="success"
-                        v-if="resource !== 'item-color-size'"
+                        v-if="resource !== 'item-color-size' && typeUser == 'superadmin'"
                         icon="el-icon-tickets"
                         @click.prevent="clickDownload('excel')"
                         >Exportar Excel</el-button

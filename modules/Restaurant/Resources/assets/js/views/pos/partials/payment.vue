@@ -1211,13 +1211,17 @@
                                             }"
                                         >
                                             <label class="control-label h1"
-                                                >Total a cobrar:
-                                                 </label
+                                                >Total a cobrar: </label
                                             ><br />
                                             <span
                                                 class="control-label font-weight-semibold text-center h3"
                                             >
-                                                {{ currencyIdChoice == 'PEN' ? 'S/ ' : '$ ' }} {{ " " + form.total }}
+                                                {{
+                                                    currencyIdChoice == "PEN"
+                                                        ? "S/ "
+                                                        : "$ "
+                                                }}
+                                                {{ " " + form.total }}
                                             </span>
                                         </div>
                                         <div
@@ -1850,6 +1854,7 @@ export default {
     },
     data() {
         return {
+            currencyIdChoice: "PEN",
             showDialogPromotionBox: false,
             listPromotionItems: [],
             promotionItems: [],

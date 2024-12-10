@@ -2473,6 +2473,21 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="fas fa-id-card fa-lg"></i> Exportar productos a Excel modulo Inventario
+                                  </label>
+                                  <el-switch
+                                    v-model="form.product_export"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('opcion para poder visualizar la exportacion de productos', form.product_export, 'origin', 'idCardIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
                             </div>
                           </div>
 

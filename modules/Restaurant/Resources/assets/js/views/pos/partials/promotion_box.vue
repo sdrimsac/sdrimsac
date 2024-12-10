@@ -120,7 +120,10 @@ export default {
     },
     methods: {
         submit() {
-            console.log("Lista de promociones con cantidades seleccionadas:", this.listPromotionItems);
+            console.log(
+                "Lista de promociones con cantidades seleccionadas:",
+                this.listPromotionItems
+            );
             this.$emit("submit", this.listPromotionItems);
             this.$emit("update:showDialog", false);
         },
@@ -133,7 +136,7 @@ export default {
             // Initialize promotion quantities to zero when the dialog opens
             this.listPromotionItems.forEach(promotion => {
                 if (promotion.quantity === undefined) {
-                    this.$set(promotion, 'quantity', 0);
+                    this.$set(promotion, "quantity", 0);
                 }
             });
             console.log(
