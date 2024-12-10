@@ -3707,7 +3707,7 @@ export default {
                     this.localOrden.unshift(orden);
                 }
                 /* this.$refs.list_orden.changeCurrencyItems(); */
-                // this.localOrden = this.changeCurrencyItems();
+                //this.localOrden = this.changeCurrencyItems();
             }
             //aca existe en original o en alguna  presentación
             else {
@@ -3796,7 +3796,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems();
+                        /* this.$refs.list_orden.changeCurrencyItems(); */
                     }
 
                     //y si no agregarla como nueva
@@ -3829,7 +3829,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems();
+                        /* this.$refs.list_orden.changeCurrencyItems(); */
                     }
                 } else {
                     let {
@@ -3873,7 +3873,7 @@ export default {
                         } else {
                             this.localOrden.unshift(itemAwait);
                         }
-                        this.$refs.list_orden.changeCurrencyItems();
+                        /* this.$refs.list_orden.changeCurrencyItems(); */
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
@@ -3885,12 +3885,12 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems();
+                        /* this.$refs.list_orden.changeCurrencyItems(); */
                     }
                 }
 
                 // this.localOrden = [...this.localOrden];
-                this.localOrden = this.changeCurrencyItems();
+                /* this.localOrden = this.changeCurrencyItems(); */
             }
             this.$refs.ordenRef.calculateTotal();
         },
