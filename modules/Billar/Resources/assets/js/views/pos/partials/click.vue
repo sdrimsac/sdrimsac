@@ -13,8 +13,8 @@
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label class="control-label">Ingrese Referencia</label>
-              <el-input type="text" v-model="imput" clearable></el-input>
+              <label class="control-label">Ingrese Referencia O Nombre del cliente</label>
+              <el-input type="text" v-model="input" clearable></el-input>
             </div>
           </div>
           <div>
@@ -22,12 +22,6 @@
               <el-card>
                 <el-card>
                   <div class="text-center">{{ formattedTime }}</div>
-                </el-card>
-                <el-card>
-                  <div class="text-center">
-                    <el-button type="danger" @click="stopTimer" :disabled="!isRunning">Detener</el-button>
-                    <el-button type="warning" @click="resetTimer">Reiniciar</el-button>
-                  </div>
                 </el-card>
               </el-card>
             </div>
@@ -44,13 +38,15 @@
 
 <script>
 export default {
-  props: ["showDialog", "form", "table"],
+  props: ["showDialog", "form", "tableId"],
   data() {
     return {
-      imput: "",
+      input: "",
       secondsElapsed: 0,
       interval: null,
-      isRunning: false
+      resource: "billar",
+      isRunning: false,
+      startTime: null // Add startTime to data
     };
   },
   computed: {
@@ -63,11 +59,23 @@ export default {
     }
   },
   methods: {
+    getData() {
+       this.$http.get(`/${this.resource}/casino/records`).tehn(response => {
+        const casinos = response.data.data;
+         console.log("Response received:", casinos);
+       }).catch(error => {
+         console.error("Error en la solicitud:", error);
+       });
+
+    },
     startTimer() {
+      this.resetTimer(); // Reset the timer to zero
       if (!this.isRunning) {
         this.isRunning = true;
+        this.startTime = new Date(); // Set the start time
         this.interval = setInterval(() => {
-          this.secondsElapsed++;
+          const now = new Date();
+          this.secondsElapsed = Math.floor((now - this.startTime) / 1000);
         }, 1000);
       }
     },
@@ -88,25 +96,33 @@ export default {
       };
     },
     open() {
-      console.log("Datos recibidos en table:", this.table);
+      this.initForm();
+      this.getData();
+      console.log("Datos recibidos en table:", this.tableId);
       console.log("datos recibidos de", this.form);
     },
-    /* async submit() {
-      try {
-        const response = await this.$http.get("/billar/store2");
-        this.timerInicial = response.data.data;
-      } catch (error) {
-        console.error("Error en la solicitud:", error);
-      }
-    }, */
     async submit() {
+      if (!this.input) {
+        this.$showSAlert("ALERTA", "La referencia no puede estar vacía", "warning");
+        return;
+      }
       try {
         const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
         const data = {
-          reference: this.imput,
-          time_start: this.secondsElapsed
+          reference: this.input,
+          table_id: this.tableId,
+          time_start: formattedTime,
+          date_start: now.toISOString().slice(0, 19).replace("T", " "),
+          /* date_start: 0  */// Set date_start to null
         };
-        const response = await this.$http.post(`/caja/billar/${this.resource}`, data);
+        console.log("Sending data:", data); // Log the data being sent
+        const response = await this.$http.post(`/${this.resource}/casino-store`, data);
+        console.log("Response received:", response); // Log the response
 
         this.$message({
           message: "Datos enviados correctamente",
@@ -125,6 +141,9 @@ export default {
     close() {
       this.$emit("update:showDialog", false);
     }
+  },
+  created() {
+    // Remove localStorage logic
   }
 };
 </script>

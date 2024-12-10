@@ -26,6 +26,9 @@
                     >
                         <i class="fas fa-clipboard-list"></i>
                     </el-button>
+                    <!-- <el-button @click="Promotion()" type="primary" size="small">
+                        Promocion
+                    </el-button> -->
                 </div>
                 <div class="row pt-2">
                     <div class="col-lg-12">
@@ -305,6 +308,7 @@
                                             <template
                                                 v-if="sumCoins.length == 0"
                                             >
+                                                v-if="sumCoins.length == 0" >
                                                 Billetes/Monedas a recibir
                                             </template>
                                             <template v-else>
@@ -404,7 +408,7 @@
                                                 ></el-option>
                                             </el-select>
                                         </div>
-                                        <div
+                                        <!-- <div
                                             class="col-md-4 form-group"
                                             v-if="
                                                 promotionByPoints &&
@@ -436,7 +440,7 @@
                                                     :value="option.id"
                                                 ></el-option>
                                             </el-select>
-                                        </div>
+                                        </div> -->
                                         <div
                                             class="col-md-8 form-group"
                                             v-if="
@@ -452,6 +456,39 @@
                                             </el-checkbox>
                                             Aplicar promoción |
                                             {{ hasPromotionText }}
+                                        </div>
+                                        <!-- <div class="col-md-3 form-group "
+                                            v-if="
+                                                promotionByPoints &&
+                                                    hasPromotionText &&
+                                                    listPromotionItems.length >
+                                                        0
+                                            "
+                                        >
+                                            <el-button
+                                                @click="Promotion()"
+                                                type="primary"
+                                                size="small"
+                                            >
+                                                Canjear Promocion
+                                            </el-button>
+                                        </div> -->
+                                        <div
+                                            class="col-md-3 form-group d-flex align-items-center justify-content-center"
+                                            v-if="
+                                                promotionByPoints &&
+                                                    hasPromotionText &&
+                                                    listPromotionItems.length >
+                                                        0
+                                            "
+                                        >
+                                            <el-button
+                                                @click="Promotion()"
+                                                type="primary"
+                                                size="small"
+                                            >
+                                                Canjear Promoción
+                                            </el-button>
                                         </div>
                                         <!-- <div
                                             class="row"
@@ -1689,6 +1726,14 @@
             @addDocumentDetraction="addDocumentDetraction"
         ></document-detraction>
         <list-items :showDialog.sync="showListItems" :form="form"> </list-items>
+        <Promotion-Box
+            :showDialog.sync="showDialogPromotionBox"
+            :listPromotionItems="listPromotionItems"
+            :hasPromotionText="hasPromotionText"
+            @update:showDialog="showDialog = $event"
+            @submit="handleSubmit"
+        >
+        </Promotion-Box>
     </el-dialog>
 </template>
 
@@ -1728,6 +1773,7 @@ import printjs from "print-js";
 //import MultiplePaymentForm from "./multiple_payment.vue";
 //import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 //import ShowSplitPaymentForm from "./split_payment.vue";
+const PromotionBox = () => import("./promotion_box.vue");
 const ListItems = () => import("./list_items.vue");
 const CardBrandsForm = () =>
     import("../../../../../../../../resources/js/views/card_brands/form.vue");
@@ -1745,6 +1791,7 @@ const DocumentDetraction = () =>
     );
 export default {
     components: {
+        PromotionBox,
         ListItems,
         PersonCollegeForm,
         CardBrandsForm,
@@ -1755,7 +1802,6 @@ export default {
     },
 
     props: [
-        "currencyIdChoice",
         "user",
         "promotions_document",
         "itemDefault",
@@ -1804,6 +1850,7 @@ export default {
     },
     data() {
         return {
+            showDialogPromotionBox: false,
             listPromotionItems: [],
             promotionItems: [],
             hasPromotionText: null,
@@ -2094,6 +2141,35 @@ export default {
     },
     mounted() {},
     methods: {
+        //agragado para poder agregar la cantidad de promociones que se puede canjear
+        handleSubmit(updatedPromotionItems) {
+            this.listPromotionItems = updatedPromotionItems;
+            console.log("Updated Promotion Items:", this.listPromotionItems);
+            this.applySelectedPromotions();
+        },
+        Promotion() {
+            this.showDialogPromotionBox = true;
+        },
+        //aqui tamsforma los item y valida si la quantity es mayor a 0
+        applySelectedPromotions() {
+            const validItems = this.listPromotionItems.filter(
+                item => item.quantity > 0
+            );
+            validItems.forEach(item => {
+                console.log("Verificando item:", item);
+
+                this.form.item_promotion_id = item.id;
+
+                this.promotionPointsItem();
+                console.log(
+                    "Promotion Points Item ver seleccionar y pasar el valor:",
+                    item
+                );
+            });
+            if (validItems.length === 0) {
+                console.warn("No hay cantidad válida para ningún item.");
+            }
+        },
         changePromotion() {
             if (!this.form.promotion_id) return;
             if (this.configuration.is_promotion_document) {
@@ -2340,6 +2416,9 @@ export default {
             return affectation_igv_type_id;
         },
         addFreeItem(i) {
+            console.log("Ítem recibido:", i);
+            console.log("Cantidad recibida:", i.quantity);
+
             let affectation_igv_type_id = this.getFreeAfectation(
                 i.sale_affectation_igv_type_id
             );
@@ -2765,6 +2844,7 @@ export default {
                         if (data.success) {
                             this.hasPromotionText = data.message;
                             this.listPromotionItems = data.items;
+                            /* console.log("ver si esta llegando los items a este filla", this.listPromotionItems); */
                         }
                     }
                 });
@@ -4830,18 +4910,34 @@ export default {
             this.form.items = this.form.items.filter(i => !i.is_promotion);
             this.reCalculateTotal();
         },
+        //aqui modifique para que pueda recibir los item filtrado
         async promotionPointsItem() {
+            let item = this.listPromotionItems.find(
+                i => i.id == this.form.item_promotion_id
+            );
+            /* console.log("ver como esta llegando el item:", item); */
+
+            if (!item || item.quantity <= 0) {
+                /* console.warn("No hay cantidad válida para este ítem."); */
+                return;
+            }
+
             if (!this.form.item_promotion_id) {
                 this.clearPromotionPointsItem();
                 this.form.receive_promotion = false;
                 return;
             }
-            let item = this.listPromotionItems.find(
-                i => i.id == this.form.item_promotion_id
-            );
+
             if (item) {
-                this.addFreeItem(item.item);
-                this.form.receive_promotion = true;
+                if (item.quantity > 0) {
+                    /* this.addFreeItem(item.item, item.quantity); */
+                    //aqui se mofico para que se agrege la cantidad seleccionado del modal box
+                    this.addFreeItem({ ...item.item, quantity: item.quantity });
+                    console.log("Quantity from modal:", item.quantity);
+                    this.form.receive_promotion = true;
+                } else {
+                    this.form.receive_promotion = false;
+                }
             }
         },
         async fetchPromotionItems() {

@@ -26,13 +26,7 @@
         <template>
           <div>
             <div class="card-header bg-primary d-flex align-items-center">
-              <template v-if="resource == 'caja/tables'">
-                <i class="fas fa-table text-white mr-2"></i>
-              </template>
-              <template v-if="resource == 'caja/rooms'">
-                <i class="fas fa-door-open text-white mr-2"></i>
-              </template>
-              <h4 class="my-0 text-white">{{ title }}</h4>
+              <h4 class="my-0 text-white">MESA BILLAR</h4>
             </div>
           </div>
         </template>
@@ -51,7 +45,6 @@
             <span>Nuevo</span>
           </el-button>
           <el-button
-            v-if=" resource == 'billar'"
             type="primary"
             class="custom-button"
             href="javascript:void(0)"
@@ -68,24 +61,20 @@
               <th class="text-white">#</th>
               <th
                 class="text-white"
-                v-if=" type != 'billar'
-                                "
+                
               >Descripción</th>
               <th
                 class="text-white"
-                v-if=" type == 'billar'
-                                "
+               
               >Número</th>
               <th class="text-white" v-if="type == 'caja/rooms'">Tipo</th>
               <th
                 class="text-white"
-                v-if="  type == 'billar'
-                                "
+                
               >Área</th>
               <th
                 class="text-white"
-                v-if=" type == 'billar'
-                                "
+                
               >Establecimiento</th>
               <th class="text-white text-end">Acciones</th>
             </tr>
@@ -94,29 +83,20 @@
             <tr slot-scope="{ index, row }">
               <td>{{ index }}</td>
               <td
-                v-if=" type != 'billar' "
               >{{ row.description }}</td>
               <td
-                v-if=" type == 'billar'
-                                "
               >{{ row.number }}</td>
-              <td v-if="type == 'caja/rooms'">{{ row.type }}</td>
               <td
-                v-if="  type == 'billar'
-                                "
               >{{ row.area.description }}</td>
               <td
-                v-if="  type == 'billar'
-                                "
               >{{ row.establishment }}</td>
-              <td v-if="type == 'caja/areas'">
+              <td v-if="type == 'billar/areas'">
                 <el-switch
                   v-if="row.printer == null"
                   @change="updateSearchPrint(row)"
                   v-model="row.search_print"
                 ></el-switch>
               </td>
-              <td v-if="type == 'caja/rooms'">{{ row.price }}</td>
               <td class="text-end">
                 <button
                   class="btn p-0"

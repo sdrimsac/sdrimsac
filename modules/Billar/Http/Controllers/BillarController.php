@@ -261,32 +261,33 @@ class BillarController extends Controller
     }
     public function store_massive(Request $request)
     {
-        $numbers = $request->input('numbers');
-        //check in Table if exist the number
-        $tables = Table::whereIn('number', $numbers)
-            ->where('has_billar', true)
-            ->where('establishment_id', $request->input('establishment_id'))
-            ->where('area_id', $request->input('area_id'))
-            ->get();
-        if (count($tables) > 0) {
+            $numbers = $request->input('numbers');
+            //check in Table if exist the number
+            $tables = Table::whereIn('number', $numbers)
+                ->where('has_billar', true)
+                ->where('establishment_id', $request->input('establishment_id'))
+                ->where('area_id', $request->input('area_id'))
+                ->get();
+            if (count($tables) > 0) {
+                return [
+                    'success' => false,
+                    'message' => 'Ya existen mesas billar con los números ingresados'
+                ];
+            }
+            foreach ($numbers as $number) {
+                $table = new Table();
+                $table->number = $number;
+                $table->area_id = $request->input('area_id');
+                $table->status_table_id = $request->input('status_table_id');
+                $table->establishment_id = $request->input('establishment_id');
+                $table->has_billar = true;
+                $table->save();
+            }
             return [
-                'success' => false,
-                'message' => 'Ya existen mesas billar con los números ingresados'
+                'success' => true,
+                'message' => 'Tablas billar creadas con éxito'
             ];
         }
-        foreach ($numbers as $number) {
-            $table = new Table();
-            $table->number = $number;
-            $table->area_id = $request->input('area_id');
-            $table->status_table_id = $request->input('status_table_id');
-            $table->establishment_id = $request->input('establishment_id');
-            $table->save();
-        }
-        return [
-            'success' => true,
-            'message' => 'Mesas creadas con éxito'
-        ];
-    }
     public function pos1()
     {
         $cash = Cash::where('state', 1)

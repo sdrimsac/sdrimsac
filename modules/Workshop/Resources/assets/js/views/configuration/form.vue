@@ -15,7 +15,7 @@
         <br />
         <div class="row">
           <div
-            v-if="type !== 'caja/tables' && type !== 'caja/rooms' && type !== 'caja/billar'"
+            v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
             class="col-md-12"
           >
             <div class="form-group" :class="{ 'has-danger': errors.description }">
@@ -44,7 +44,7 @@
               <small class="text-danger" v-if="errors.copies" v-text="errors.copies[0]"></small>
             </div>
           </div>
-          <template v-if="type == 'caja/tables' || type == 'caja/rooms' || type == 'caja/billar'">
+          <template v-if="type == 'caja/tables' || type == 'caja/rooms'">
             <div class="col-md-4">
               <div class="form-group" :class="{ 'has-danger': errors.number }">
                 <label class="control-label">
@@ -355,8 +355,6 @@ export default {
       switch (type) {
         case "caja/tables":
           return "mesa";
-        case "caja/billar":
-          return "mesa billar";
         case "caja/rooms":
           return "habitación";
       }

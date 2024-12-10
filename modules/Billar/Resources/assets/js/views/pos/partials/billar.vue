@@ -103,8 +103,8 @@
         <button type="button" class="btn btn-light" @click="closeOrden">Regresar</button>
       </div>
     </div>
-    <timer :showDialog.sync="showDialogTimer"></timer>
-    <click :showDialog.sync="showDialogClick"></click>
+    <timer :showDialog.sync="showDialogTimer" :tableId="selectedTableId"></timer>
+    <click :showDialog.sync="showDialogClick" :tableId="selectedTableId"></click>
   </el-dialog>
 </template>
 <style scoped>
@@ -122,7 +122,7 @@ import Timer from "./timer.vue";
 import click from "./click.vue";
 export default {
   //tabla color verde
-  props: ["showBillar", "table", "configuration"],
+  props: ["showBillar", "table", "configuration", "cash_id"],
   components: {
     Swal,
     Timer,
@@ -146,7 +146,8 @@ export default {
       hasSelectedTableToChange: false,
       hasSelectedOrdenToChange: false,
       ordenToChange: null,
-      isDisabling: false
+      isDisabling: false,
+      selectedTableId: null
     };
   },
   computed: {
@@ -159,7 +160,8 @@ export default {
     startTableTimer() {
       this.showDialogTimer = true;
     },
-    showTableTime() {
+    showTableTime(table) {
+      this.selectedTableId = table.id;
       this.showDialogClick = true;
     },
     async disabledTable(id) {
@@ -302,7 +304,7 @@ export default {
           text: "La mesa no tiene ordenes",
           icon: "warning"
         }); */
-        this.$toast.warning("La mesa billor no tiene ordenes");
+        this.$toast.warning("La mesa billar no tiene ordenes");
         return;
       }
 

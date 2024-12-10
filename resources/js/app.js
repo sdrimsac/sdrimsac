@@ -370,6 +370,7 @@ const app = new Vue({
             import(
                 "../../modules/Billar/Resources/assets/js/views/configuration/items.vue"
             ),
+        
 
         "restaurant-ordens-index": () =>
             import(
@@ -791,6 +792,7 @@ const app = new Vue({
             import(
                 "../../modules/Workshop/Resources/assets/js/views/mecanico/index.vue"
             ),
+        "tenant-billar-tarifa": () => import("../../modules/billar/Resources/assets/js/views/tarifa/index.vue"),
         "tenant-workshop-tipo": () =>
             import(
                 "../../modules/Workshop/Resources/assets/js/views/tipo/index.vue"

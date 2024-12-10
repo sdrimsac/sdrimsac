@@ -22,7 +22,7 @@ class TableCasino extends Migration
             $table->date('date_start');
             $table->time('time_start');
             $table->integer('minutes')->default(0);
-            $table->date('date_end')->nulllable();
+            $table->date('date_end')->nullable();
             $table->time('time_end')->nullable();
             $table->boolean('active')->default=true;
             $table->timestamps();

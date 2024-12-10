@@ -126,7 +126,7 @@
             <span>Nuevo</span>
           </el-button>
           <el-button
-            v-if="resource == 'caja/tables' || resource == 'caja/rooms' || resource == 'caja/billar'"
+            v-if="resource == 'caja/tables' || resource == 'caja/rooms'"
             type="primary"
             class="custom-button"
             href="javascript:void(0)"
@@ -145,16 +145,16 @@
                 class="text-white"
                 v-if="
                                     type != 'caja/tables' &&
-                                        type != 'caja/rooms' && 
-                                        type != 'caja/billar'
+                                        type != 'caja/rooms'
+                                        
                                 "
               >Descripción</th>
               <th
                 class="text-white"
                 v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                                        type == 'caja/rooms'
+                                        
                                 "
               >Número</th>
               <th class="text-white" v-if="type == 'caja/rooms'">Tipo</th>
@@ -162,16 +162,16 @@
                 class="text-white"
                 v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                                        type == 'caja/rooms'
+                                        
                                 "
               >Área</th>
               <th
                 class="text-white"
                 v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms' ||
-                                        type == 'caja/billar'
+                                        type == 'caja/rooms'
+                                        
                                 "
               >Establecimiento</th>
               <th class="text-white" v-if="type == 'caja/rooms'">Torre</th>
@@ -189,30 +189,29 @@
               <td
                 v-if="
                                     type != 'caja/tables' &&
-                                        type != 'caja/rooms' && 
-                                        type != 'caja/billar'
+                                        type != 'caja/rooms'
                                 "
               >{{ row.description }}</td>
               <td
                 v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                                        type == 'caja/rooms'
+                                        
                                 "
               >{{ row.number }}</td>
               <td v-if="type == 'caja/rooms'">{{ row.type }}</td>
               <td
                 v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                                        type == 'caja/rooms' 
+                                        
                                 "
               >{{ row.area.description }}</td>
               <td
                 v-if="
                                     type == 'caja/tables' ||
-                                        type == 'caja/rooms' || 
-                                        type == 'caja/billar'
+                                        type == 'caja/rooms'
+                                        
                                 "
               >{{ row.establishment }}</td>
               <td v-if="type == 'caja/rooms'">{{ row.tower }}</td>
@@ -396,8 +395,8 @@ export default {
     console.log(this.type);
     if (
       this.type == "caja/tables" ||
-      this.type == "caja/rooms" ||
-      this.type == "caja/billar"
+      this.type == "caja/rooms"
+      
     ) {
       this.getTables();
     }

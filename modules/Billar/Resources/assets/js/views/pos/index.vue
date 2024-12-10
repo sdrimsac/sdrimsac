@@ -1583,6 +1583,7 @@
             @sendOrdens="sendOrdens"
             :billarSeeId="billarSeeId"
             :showBillar.sync="showBillar"
+            :cash_id.sync="cashId"
         ></billar>
         <documents-print
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
@@ -1607,17 +1608,6 @@
             :isAnalist="isAnalist"
             :user="user"
         ></credits-list>
-        <!-- <unit-type-modal
-      @addUnitType="addUnitType"
-      @addCategoriaMadera="addCategoriaMadera"
-      :showDialog.sync="showUnitTypeModal"
-      :medida_alto="medida_alto"
-      :medida_ancho="medida_ancho"
-      :medida_grosor="medida_grosor"
-      :categoria_madera="categoria_madera"
-      :item="selectedFood"
-      :currentIndex="currentIndex"
-    ></unit-type-modal> -->
 
         <dispatch-modal
             :configuration="configuration"
@@ -2366,16 +2356,6 @@ export default {
                         this.configuration.sale_note_credit_cash &&
                         !this.isSeller
                 },
-                /* {
-          id: 171,
-          title: [" Habitaciones "],
-          icon: "fas fa-map-pin ",
-          visible:
-            this.configuration.hotels &&
-            this.worker.area.description.toUpperCase() == "HOTEL" &&
-            !this.isSeller &&
-            !this.isAnalist
-        }, */
                 {
                     id: 6,
                     title: ["Venta", "del Dia"],
@@ -2392,13 +2372,6 @@ export default {
                     icon: "fas fa-history ",
                     visible: true && !this.isSeller
                 },
-
-                /* {
-          id: 9,
-          title: ["Matriculas", "Mensualidades"],
-          icon: "fas fa-user-edit",
-          visible: this.configuration.college && !this.isSeller
-        }, */
                 {
                     id: 10,
                     title: ["Canjear", "Promocion"],
@@ -2431,30 +2404,30 @@ export default {
                     icon: "fa fa-edit",
                     visible: this.configuration.edit_product_pos
                 },
-                {
+                /* {
                     id: 109,
                     title: ["Ver", "Consignaciones"],
                     icon: "fa fa-edit",
                     visible: this.configuration.consignment && !this.isSeller
-                },
-                {
+                }, */
+                /* {
                     id: 42,
                     title: ["Productos", "Por vencer", this.products_to_due],
                     icon: "far fa-calendar-alt",
                     visible: this.configuration.items_due_caja && !this.isSeller
-                },
-                {
+                }, */
+                /* {
                     id: 32,
                     title: ["Crear", "Producto compuesto"],
                     icon: "el-icon-connection",
                     visible: this.configuration.item_set_caja && !this.isSeller
-                },
-                {
+                }, */
+                /* {
                     id: 34,
                     title: ["Reporte", "Diario Crédito"],
                     icon: "el-icon-connection",
                     visible: this.configuration.sale_note_credit_confirm
-                }
+                } */
 
                 // {
                 //     title: ["Configuración"],
@@ -2565,6 +2538,10 @@ export default {
             return text;
         },
         buttonSmTables() {
+            /* if (!this.cash_id) {
+                this.$showSAlert("ALERTA", "Debe abrir una caja para poder ver las mesas billar", "error");
+                return;
+            } */
             this.openBillar();
         },
         handleKeydown(event) {

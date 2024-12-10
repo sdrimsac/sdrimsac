@@ -114,7 +114,7 @@ class JustAdmin
                 }
             } else {
                 $internet = (bool) $config->internet;
-                $billar = (bool) $config->billar;
+                $modo_billar = (bool) $config->modo_billar;
                 $workshop = (bool) $config->workshop;
 
 
@@ -124,7 +124,7 @@ class JustAdmin
                 }
                 if ($internet) {
                     $redirect_to = "/internet/worker/";
-                } elseif ($billar) {
+                } elseif ($modo_billar) {
                     $redirect_to = "/billar/worker/";
                 } 
                 else if ($workshop) {

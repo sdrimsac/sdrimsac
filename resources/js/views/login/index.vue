@@ -205,7 +205,9 @@ export default {
                     //dashboard
                 }
                 let route = "";
-                this.$toast.success("Sesión exitosa. Bienvenido/a .");
+                this.$showSAlert("Sesión exitosa. Bienvenido/a .", "success");
+
+                /* this.$toast.success("Sesión exitosa. Bienvenido/a ."); */
                 // if (response.data.kitchen == true) {
                 //     window.location.href = "caja/worker/dashboard-kitchen";
                 // } else if (response.data.pos == true) {
@@ -244,7 +246,10 @@ export default {
                         route = "internet/worker/dashboard-pos";
                     } else if (this.config.workshop && response.data.mechanic) {
                         route = "workshop/worker/dashboard-pos";
-                    } else {
+                    } else if (this.config.modo_billar) {
+                        route = "billar/worker/dashboard-pos";
+                    }
+                     else {
                         route = "caja/worker/dashboard-pos";
                     }
                 } else if (response.data.waiter == true) {

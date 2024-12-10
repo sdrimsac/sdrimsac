@@ -14,7 +14,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label class="control-label">Ingrese Referencia</label>
-              <el-input type="text" v-model="imput" clearable></el-input>
+              <el-input type="text" v-model="input" clearable></el-input>
             </div>
           </div>
           <div>
@@ -64,7 +64,7 @@ export default {
   props: ["showDialog", "form", "table"],
   data() {
     return {
-      imput: "",
+      input: "",
       totalTime: 0,
       interval: null,
       isRunning: false,
@@ -118,27 +118,23 @@ export default {
       };
     },
     open() {
-      console.log("Datos recibidos en table:", this.table);
+      console.log("Datos recibidos en table:", this.tableId);
       console.log("datos recibidos de", this.form);
     },
-    /* async submit() {
-      try {
-        const response = await this.$http.get("/caja/tableBillar/store2");
-        this.timerInicial = response.data.data;
-      } catch (error) {
-        console.error("Error en la solicitud:", error);
-      }
-    }, */
     async submit() {
       try {
         const now = new Date();
+        const endDate = new Date(now.getTime() + this.inputHours * 3600 * 1000 + this.inputMinutes * 60 * 1000);
         const data = {
-          reference: this.imput,
-          time_start: this.inputHours,
-          minutes: this.inputMinutes
+          reference: this.input,
+          table_id: this.table.id,
+          date_start: now.toISOString(),
+          time_start: now.toTimeString().split(' ')[0],
+          date_end: endDate.toISOString(),
+          time_end: endDate.toTimeString().split(' ')[0],
         };
 
-        const response = await this.$http.post(`/caja/billar/${this.resource}`, data);
+        const response = await this.$http.post(`/${this.resource}/casino-store`, data);
 
         this.$message({
           message: "Datos enviados correctamente",

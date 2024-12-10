@@ -1031,6 +1031,13 @@
                             Mesas Billar
                         </a>
                     </li>
+                    <li>
+                        <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
+                            href="{{ route('tenant.billar.tarifa') }}">
+                            <i class="fas fa-biliard"></i>
+                            Tarifas Por Tiempo
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif
@@ -1070,7 +1077,7 @@
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.servicesdetails') }}">
                             <i class="fas fa-biliard"></i>
-                            Servicios Mecanica 
+                            Servicios Mecanica
                         </a>
                     </li>
                 </ul>
