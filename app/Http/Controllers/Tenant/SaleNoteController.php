@@ -394,24 +394,41 @@ class SaleNoteController extends Controller
     public function credit_cash_records(Request $request)
     {
         $value = $request->value;
-        $records =  SaleNote::where('credit_cash', true)
+        
+        // Consulta base optimizada usando with() para eager loading
+        $records = SaleNote::with(['customer', 'state_type', 'documents', 'user'])
+            ->where('credit_cash', true)
             ->where('state_type_id', '<>', '11')
             ->whereDoesntHave('credit_payments')
-
-            ->leftJoin('boxes as b', 'sale_notes.id', '=', 'b.sale_note_id')
-            ->whereRaw('sale_notes.total > (SELECT COALESCE(SUM(b2.amount), 0) FROM boxes as b2 WHERE b2.sale_note_id = sale_notes.id)')
-
-            ->select('sale_notes.*')
-            ->distinct();
+            // Subconsulta optimizada para el total de cajas
+            ->whereRaw('
+                sale_notes.total > COALESCE(
+                    (SELECT SUM(amount) 
+                    FROM boxes 
+                    WHERE sale_note_id = sale_notes.id
+                    GROUP BY sale_note_id), 
+                0)
+            ');
+    
+        // Aplicar filtros de búsqueda si existe un valor
         if ($value) {
-            $records = $records->whereHas('customer', function ($query) use ($value) {
-                $query->where('name', 'like', "%{$value}%")
-                    ->orWhere('alias', 'like', "%{$value}%")
-                    ->orWhere('number', 'like', "%{$value}%");
-            })->orWhere('number', 'like', "%{$value}%");
+            $records->where(function($query) use ($value) {
+                $query->whereHas('customer', function ($subQuery) use ($value) {
+                    $subQuery->where(function($q) use ($value) {
+                        $q->where('name', 'like', "%{$value}%")
+                          ->orWhere('alias', 'like', "%{$value}%")
+                          ->orWhere('number', 'like', "%{$value}%");
+                    });
+                })
+                ->orWhere('number', 'like', "%{$value}%");
+            });
         }
-        $records->latest();
-        return new SaleNoteLiteCollection($records->paginate(config('tenant.items_per_page')));
+    
+        // Ordenar y paginar
+        return new SaleNoteLiteCollection(
+            $records->latest()
+                    ->paginate(config('tenant.items_per_page'))
+        );
     }
     public function getItemsFromNotes(Request $request)
     {

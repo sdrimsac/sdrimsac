@@ -3,12 +3,8 @@
 namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
-use App\Models\Tenant\Payment;
-use App\Models\Tenant\Configuration;
-use App\Models\Tenant\SaleNote;
-use App\Models\Tenant\SaleNotePayment;
+
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Modules\Restaurant\Models\Orden;
 
 class SaleNoteLiteCollection extends ResourceCollection
 {
@@ -23,45 +19,33 @@ class SaleNoteLiteCollection extends ResourceCollection
         return $this->collection->transform(function ($row, $key) {
 
 
-        
 
 
 
-            if ($row->paid == 1) {
-                $paid = true;
-            } else {
-                $paid = false;
-            }
 
 
-            $total = $row->total;
 
-        
-            $paid = (float)  Box::where('sale_note_id', $row->id)->sum('amount');
-            $pending = floatval($total) - floatval($paid);
+            // Inicializar variables con conversión de tipos una sola vez
+            $total = (float) $row->total;
+            $boxes = Box::where('sale_note_id', $row->id)->get();
+            $total_boxes = (float) $boxes->sum('amount');
+
+            // Calcular pending con una lógica simplificada
             if ($row->paid) {
                 $pending = 0;
+            } elseif ($row->advances > 0) {
+                $pending = $total - $row->advances;
+            } else {
+                $pending = $total - $total_boxes;
             }
 
-
-            $boxes = Box::where('sale_note_id', $row->id);
-            $total_boxes = floatval($boxes->sum('amount'));
-            $boxes = $boxes->get();
-    
-            if ($row->advances > 0) {
-                $pending = $row->total - $row->advances;
-            }
-
-            
-        
-            if($total_boxes == floatval($row->total)){
-
+            // Actualizar estado de pago si corresponde
+            if ($total_boxes == $total) {
                 $pending = 0;
-                // $paid = true;
                 $row->paid = 1;
                 $row->save();
             }
-        
+
             return [
                 'credit_cash' => (bool) $row->credit_cash,
                 'from_consignment' => (bool) $row->from_consignment,
