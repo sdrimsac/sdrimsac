@@ -429,7 +429,108 @@ class PosController extends Controller
         //dd($categoryid);
         return view('tenant.expenses.index', compact('cashid', 'groupid', 'categoryid', 'userid', 'subcategoryid', 'soaptypeid'));
     }
+    public function total_sales_usd(Request  $request)
+    {
+        $cash_id = $request->cash_id;
+        $only_cash = $request->only_cash;
+        $with_all = $request->with_all;
+        $send = $request->send;
+        $sum = 0;
+        $total_sales_usd = 0;
+        $total_expenses = 0;
+        $total_incomes = 0;
 
+        if ($cash_id) {
+            $cash = Cash::find($cash_id);
+            $beginning_balance = $cash->beginning_balance;
+            $sales = Box::where('cash_id', $cash_id)->where('currency_type_id', 'USD');
+            if ($only_cash) {
+                $sales = $sales->where('method', 'Efectivo');
+            }
+
+            $sales = $sales->where('expenses', 0)->where('incomes', 0)->chunk(50, function ($boxes) use (&$total_sales_usd) {
+                foreach ($boxes as $box) {
+                    $amount = $box->amount;
+                    if ($box->sale_note_id) {
+                        $sale_note = SaleNote::find($box->sale_note_id);
+                        if ($sale_note) {
+                            if ($box->sale_note_payment_id) {
+                                $total_sales_usd += $amount;
+                            } else {
+                                $total = $sale_note->total;
+                                if ($total < $amount) {
+                                    $total_sales_usd += $total;
+                                } else {
+                                    $total_sales_usd += $amount;
+                                }
+                            }
+                        }
+                    } else if ($box->document_id) {
+                        $document = Document::find($box->document_id);
+                        if ($document) {
+                            $total = $document->total;
+                            if ($total < $amount) {
+                                $total_sales_usd += $total;
+                            } else {
+                                $total_sales_usd += $amount;
+                            }
+                        }
+                    }
+                }
+            });
+            $cash_out = 0;
+            if ($only_cash) {
+                $cash_out = SaleNote::where('cash_id', $cash_id)
+                    ->where('is_cash', 1)
+                    ->where('state_type_id', '01')
+                    ->sum(DB::raw('total - advances'));
+
+                $expenses = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 1)->where('incomes', 0)
+                    ->where('currency_type_id', 'USD')
+                    ->chunk(50, function ($boxes) use (&$total_expenses) {
+                        foreach ($boxes as $box) {
+                            $amount = $box->amount;
+                        $total_expenses += $amount;
+                    }
+                });
+
+                $incomes = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 1)->where('currency_type_id', 'USD')
+                    ->chunk(50, function ($boxes) use (&$total_incomes) {
+                        foreach ($boxes as $box) {
+                            $amount = $box->amount;
+                        $total_incomes += $amount;
+                    }
+                });
+            }
+            if ($request->with_all) {
+                $total_sales_usd  = $total_sales_usd - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
+            } else {
+                $total_sales_usd  = $total_sales_usd - $total_expenses + $total_incomes - $cash_out;
+            }
+            $configuration = Configuration::first();
+            if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
+                $user_name = auth()->user()->name;
+                $number = $configuration->number_activity;
+                $message = "Usuario *$user_name* ha solicitado consulta para visualización en Ventas del Dìa";
+                // ()
+                $website = $this->getTenantWebsite();
+                // (new WhatsappController)->sendMessage($message, $number);
+                WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+                $numbers = NumberActivity::all();
+                foreach ($numbers as $number) {
+                    $number = $number->number;
+                    // (new WhatsappController)->sendMessage($message, $number);
+                    WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+                }
+            }
+            return compact('total_sales_usd');
+        } else {
+
+            $total_sales_usd  = $total_sales_usd - $total_expenses + $total_incomes;
+            return   $total_sales_usd;
+        }
+    
+    }
     public function total_sales(Request  $request)
     {
         $cash_id = $request->cash_id;
@@ -444,7 +545,7 @@ class PosController extends Controller
         if ($cash_id) {
             $cash = Cash::find($cash_id);
             $beginning_balance = $cash->beginning_balance;
-            $sales = Box::where('cash_id', $cash_id);
+            $sales = Box::where('cash_id', $cash_id)->where('currency_type_id', 'PEN');
             if ($only_cash) {
                 $sales = $sales->where('method', 'Efectivo');
             }
@@ -486,16 +587,18 @@ class PosController extends Controller
                     ->where('state_type_id', '01')
                     ->sum(DB::raw('total - advances'));
 
-                $expenses = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 1)->where('incomes', 0)->chunk(50, function ($boxes) use (&$total_expenses) {
-                    foreach ($boxes as $box) {
-                        $amount = $box->amount;
+                $expenses = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 1)->where('incomes', 0)->where('currency_type_id', 'PEN')
+                    ->chunk(50, function ($boxes) use (&$total_expenses) {
+                        foreach ($boxes as $box) {
+                            $amount = $box->amount;
                         $total_expenses += $amount;
                     }
                 });
 
-                $incomes = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 1)->chunk(50, function ($boxes) use (&$total_incomes) {
-                    foreach ($boxes as $box) {
-                        $amount = $box->amount;
+                $incomes = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 1)->where('currency_type_id', 'PEN')
+                    ->chunk(50, function ($boxes) use (&$total_incomes) {
+                        foreach ($boxes as $box) {
+                            $amount = $box->amount;
                         $total_incomes += $amount;
                     }
                 });
@@ -527,13 +630,7 @@ class PosController extends Controller
             $total_sales  = $total_sales - $total_expenses + $total_incomes;
             return   $total_sales;
         }
-        // $date = Carbon::now()->format('Y-m-d');
-        // $document = Document::where('date_of_issue', $date)->where('user_id', auth()->user()->id);
-        // $document = $document->sum('total');
-        // $saleNote = SaleNote::where('date_of_issue', $date)->where('user_id', auth()->user()->id);
-        // $saleNote = $saleNote->sum('total');
-        // $total_sales = $document + $saleNote;
-        // return compact('total_sales');
+    
     }
     public function income()
     {

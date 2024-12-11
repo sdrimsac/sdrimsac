@@ -5,7 +5,7 @@
         @open="open"
         @close="close"
         :title="title"
-        width="60%"
+        width="70%"
     >
         <br />
         <div class="card container table-responsive col-md-12">
@@ -98,6 +98,19 @@
                                     Ver
                                 </el-button>
                                 <el-button
+                                    v-if="configuration.other_currency_pos"
+                                    :type="
+                                        `${
+                                            box.has_ticket_usd
+                                                ? 'primary'
+                                                : 'danger'
+                                        }`
+                                    "
+                                    @click="openDetailUsd(box, idx)"
+                                >
+                                    Ver USD
+                                </el-button>
+                                <el-button
                                     class="margin-left:10px;"
                                     :type="
                                         `${box.has_a4 ? 'primary' : 'danger'}`
@@ -105,6 +118,19 @@
                                     @click="openA4(box, idx)"
                                 >
                                     A4
+                                </el-button>
+                                <el-button
+                                    v-if="configuration.other_currency_pos"
+                                    :type="
+                                        `${
+                                            box.has_a4_usd
+                                                ? 'primary'
+                                                : 'danger'
+                                        }`
+                                    "
+                                    @click="openA4Usd(box, idx)"
+                                >
+                                    A4 USD
                                 </el-button>
                             </template>
                             <!-- un boton para bajar un excel -->
@@ -201,7 +227,7 @@ import queryString from "query-string";
 import CashModal from "./cash_modal.vue";
 export default {
     components: { CashModal },
-    props: ["showHistoryCash", "cash_id", "area_id", "sender"],
+    props: ["showHistoryCash", "cash_id", "area_id", "sender","configuration"],
     data() {
         return {
             boxes: [],
@@ -266,6 +292,14 @@ export default {
                 this.currentUrlBox = box.path_ticket_url;
         
             } else {
+                this.generateReports(box.id, idx);
+            }
+        },
+        openDetailUsd(box, idx) {
+            if (box.has_ticket_usd) {
+                this.showFrame = true;
+                this.currentUrlBox = box.path_ticket_url_usd;
+            }else{
                 this.generateReports(box.id, idx);
             }
         },
@@ -344,6 +378,15 @@ export default {
                 this.generateReports(cash.id, idx);
             }
         },
+        openA4Usd(cash, idx) {
+            if (cash.has_a4) {
+                window.open(
+                    `/caja/report-boxes/reports_resumen_type_usd?cash_id=${cash.id}`
+                );
+            } else {
+                this.generateReports(cash.id, idx);
+            }
+        },
         seeDetail(cash) {
             this.currentBox = cash;
             this.showDetail = true;
@@ -377,6 +420,7 @@ export default {
         },
         async open() {
             await this.getRecords();
+            console.log("la configuracion", this.configuration);
         },
         close() {
             this.$emit("update:showHistoryCash");

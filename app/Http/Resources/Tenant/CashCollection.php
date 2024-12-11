@@ -29,17 +29,28 @@ class CashCollection extends ResourceCollection
         return $this->collection->transform(function ($row) use ($from_cash,$company_number) {
             $final_cash = 0;
             $has_ticket = false;
+            $has_ticket_usd = false;
             $has_a4 = false;
+            $has_a4_usd = false;
             $path_ticket_url = url('caja/worker/cash/print-report?cash_id='.$row->id);
+            $path_ticket_url_usd = url('caja/worker/cash/print-report-usd?cash_id='.$row->id);      
             // $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
             $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id .'_'.$company_number.'.pdf');
+            $path_ticket_usd = storage_path('app/public/report_resumen_pdf_pos_small_usd_' . $row->id .'_'.$company_number.'.pdf');
             if (file_exists($path_ticket)||$row->state == 1) {
                 $has_ticket = true;
             }
+            if (file_exists($path_ticket_usd)||$row->state == 1) {
+                $has_ticket_usd = true;
+            }
             $path_a4 = storage_path('app/public/report_resumen_pdf_pos_'.$row->id.'_'.$company_number.'.pdf');
+            $path_a4_usd = storage_path('app/public/report_resumen_pdf_pos_usd_'.$row->id.'_'.$company_number.'.pdf');
             // $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
             if (file_exists($path_a4) || $row->state == 1) {
                 $has_a4 = true;
+            }
+            if(file_exists($path_a4_usd) || $row->state == 1){
+                $has_a4_usd = true;
             }
             if($has_ticket || $has_a4){
                 $row->is_loading_report = false;
@@ -87,7 +98,10 @@ class CashCollection extends ResourceCollection
                 'is_loading_report' => (bool) $row->is_loading_report,
                 'has_ticket' => $has_ticket,
                 'has_a4' => $has_a4,
+                'has_a4_usd' => $has_a4_usd,
                 'path_ticket_url' => $path_ticket_url,
+                'has_ticket_usd' => $has_ticket_usd,
+                'path_ticket_url_usd' => $path_ticket_url_usd,
                 'from_cash' => (bool) $from_cash,
                 'tab_single' => $tab_single,
                 'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null,

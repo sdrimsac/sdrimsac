@@ -1618,6 +1618,7 @@
             ></person-form>
         </template>
         <cash-history
+            :configuration="configuration"
             :cash_id.sync="cashId"
             :showHistoryCash.sync="showHistoryCash"
             :area_id="area_id"
@@ -4234,6 +4235,15 @@ export default {
                 );
             } else {
                 this.$toast(`Sin ventas acumuladas en el día`);
+            }
+            if(this.configuration.other_currency_pos){
+                const response_usd = await this.$http.get(
+                    `/caja/worker/totales_sales_usd?cash_id=${this.cashId}&send=1`
+                );
+                let { total_sales_usd } = response_usd.data;
+                if (total_sales_usd) {
+                    this.$toast(` Venta Acumulada $ ` + total_sales_usd.toFixed(2));
+                }
             }
 
             this.loading = false;

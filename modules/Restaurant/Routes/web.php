@@ -42,6 +42,7 @@ Route::prefix('caja')->group(function () {
     Route::get('documents/records', [DocumentController::class, 'records']);
     Route::get('worker/print-ticket', 'OrdenController@printTicket');
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
+    Route::get('worker/cash/print-report-usd', [CashController::class, 'print_report_usd']);
     Route::get('worker/expenses/print-box', [PosController::class, 'print_box']);
 
     Route::get('report-boxes', 'BoxesController@report')->name('restaurant.report.boxes');
@@ -51,6 +52,7 @@ Route::prefix('caja')->group(function () {
     Route::get('report-boxes/cashes_salud_single', 'BoxesController@cashes_salud_single');
     Route::post('report-boxes/save_info_pharmacy/{id}', 'BoxesController@save_info_pharmacy');
     Route::get('report-boxes/reports_resumen_type', 'BoxesController@reports_resumen_type');
+    Route::get('report-boxes/reports_resumen_type_usd', 'BoxesController@reports_resumen_type_usd');
     Route::get('report-boxes/reports_resumen_type_page', 'BoxesController@reports_resumen_type_page');
     Route::get('cash/balance-final/{date_closed}', 'BoxesController@balance_final');
 
@@ -304,6 +306,7 @@ Route::prefix('caja')->group(function () {
             Route::get('maintenance', 'MaintenanceController@index')->name('restaurant.maintenance.index')->middleware('just.worker');;
 
             Route::get('totales_sales', 'PosController@total_sales');
+            Route::get('totales_sales_usd', 'PosController@total_sales_usd');
             Route::get('dashboard', 'DashboardController@index')->name('restaurant.workers.dashboard');
             Route::get('dashboard/foods', 'DashboardController@foods');
             Route::get('dashboard-kitchen', 'DashboardController@kitchen')->name('restaurant.kitchen.dashboard')->middleware('just.worker');
