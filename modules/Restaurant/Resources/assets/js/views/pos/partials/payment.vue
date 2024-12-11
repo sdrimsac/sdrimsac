@@ -1217,9 +1217,7 @@
                                                 class="control-label font-weight-semibold text-center h3"
                                             >
                                                 {{
-                                                    currencyIdChoice == "PEN"
-                                                        ? "S/ "
-                                                        : "$ "
+                                                 currencySymbol
                                                 }}
                                                 {{ " " + form.total }}
                                             </span>
@@ -1334,7 +1332,7 @@
                                                             <template
                                                                 slot="prepend"
                                                                 >{{
-                                                                    currencyTypeActive.symbol
+                                                                    currencySymbol
                                                                 }}</template
                                                             >
                                                         </el-input>
@@ -1477,7 +1475,7 @@
                                                     class="control-label font-weight-semibold text-center fs-4"
                                                 >
                                                     {{
-                                                        currencyTypeActive.symbol
+                                                        currencySymbol
                                                     }}{{
                                                         form.difference
                                                             .toFixed(2)
@@ -1521,7 +1519,7 @@
                         class="col-2"
                     >
                         Pago {{ idx + 1 }}:
-                        <strong>S/. {{ payment.amount }}</strong>
+                        <strong>{{ currencyIdChoice  }} {{ payment.amount }}</strong>
                     </div>
                 </div>
             </div>
@@ -1596,7 +1594,7 @@
                                         <b> Total</b>
                                     </td>
                                     <td class="text-muted text-small">
-                                        S/.
+                                    {{ currencySymbol }}
                                         {{
                                             totalItemSelected(payment.products)
                                         }}
@@ -2028,6 +2026,9 @@ export default {
         };
     },
     computed: {
+        currencySymbol() {
+            return this.currencyIdChoice == "PEN" ? "S/ " : "$";
+        },
         promotionByPoints() {
             return this.configuration.promotions_by_points;
         },
