@@ -1203,7 +1203,7 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
         try {
-            SaleNote::where('currency_type_id', 'USD')->update(['currency_type_id' => 'PEN']);
+            // SaleNote::where('currency_type_id', 'USD')->update(['currency_type_id' => 'PEN']);
             $configuration = Configuration::first();
             DB::connection('tenant')->transaction(function () use ($request, $configuration) {
 
@@ -1621,6 +1621,7 @@ class SaleNoteController extends Controller
                         foreach ($request->boxes as $currentBox) {
                             $method = $currentBox['method'];
                             $amount = $currentBox['amount'];
+                            $currency_type_id = $request->currency_type_id;
                             $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
                             $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
                             $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
@@ -1628,6 +1629,7 @@ class SaleNoteController extends Controller
                             $cajas->operation_number = $operation_number;
                             $cajas->group_id = 1;
                             $cajas->category_id = 1;
+                            $cajas->currency_type_id = $currency_type_id;
                             $cajas->subcategory_id = 1;
                             $cajas->amount = $amount;
                             $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
@@ -1669,6 +1671,7 @@ class SaleNoteController extends Controller
                         if (!$configuration->sale_note_credit_cash) {
                             $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
                             $cajas->group_id = 1;
+                            $cajas->currency_type_id = $request->currency_type_id;
                             $cajas->category_id = 1;
                             $cajas->subcategory_id = 1;
                             $cajas->operation_number = $request->operation_number;
@@ -2009,7 +2012,10 @@ class SaleNoteController extends Controller
         $quantity_period = $inputs['quantity_period'];
         $d_of_issue = new Carbon($inputs['date_of_issue']);
         $automatic_date_of_issue = null;
-        $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
+        // dump($inputs);
+        // dump("$inputs");
+        // $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
+        $currency_type_id = $inputs['currency_type_id'];
         if($currency_type_id == 'USD' && !$configuration->other_currency_pos){
             $currency_type_id = 'PEN';
         }

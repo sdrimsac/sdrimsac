@@ -1807,6 +1807,7 @@ export default {
 
     props: [
         "user",
+        "currencyIdChoice",
         "promotions_document",
         "itemDefault",
         "company",

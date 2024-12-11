@@ -2933,6 +2933,7 @@ export default {
             this.calculateTotal();
         },
         changeCurrencyItems() {
+            if(!this.configuration.other_currency_pos) return;
             let items = [...this.localOrden];
             for (let i = 0; i < items.length; i++) {
                 let orden = items[i];

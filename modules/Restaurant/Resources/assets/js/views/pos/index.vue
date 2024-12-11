@@ -1556,6 +1556,7 @@
 
         <template>
             <payment-form
+            
                 :user="user"
                 :currencyIdChoice.sync="currencyIdChoice"
                 @clearVariation="clearVariation"
@@ -2309,6 +2310,7 @@ export default {
             this.showDialogCreditReportDaily = false;
         },
         updateCurrencyChoice(currency) {
+            console.log("currency", currency);
             this.currencyIdChoice = currency == "S/" ? "PEN" : "USD";
         },
         openCreditReportDaily() {
@@ -3020,8 +3022,9 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             }
+            console.log("this.currencyIdChoice dd", this.currencyIdChoice);
             this.form.currency_type_id =
-                this.currency_id == "S/" ? "PEN" : "USD";
+                this.currencyIdChoice == "S/" ? "PEN" : "USD";
             
             this.is_payment = true;
         },
@@ -3470,9 +3473,9 @@ export default {
                     this.isNoteIsDefault();
                 }
                 this.form.currency_type_id =
-                    this.currencyIdChoice == "S/" || this.currencyIdChoice == undefined ? "PEN" : "USD";
-                console.log("this.currency_id", JSON.stringify(this.currencyIdChoice));
-                    console.log("this.form", JSON.stringify(this.form));
+                    this.currencyIdChoice == "S/" || this.currencyIdChoice == undefined || this.currencyIdChoice == "PEN" ? "PEN" : "USD";
+                console.log("this.currency_id ::::", JSON.stringify(this.form.currency_type_id));
+                console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice));
                 this.is_payment = true;
             }
         },
@@ -3758,6 +3761,7 @@ export default {
                         orden.quantity = orden.food.item.series_enabled
                             ? 0
                             : orden.quantity || 1;
+
                         orden.price = this.getDefaultPrice(type);
                         orden.type_id = type.id;
                         orden.type_description = type.description;
@@ -3788,6 +3792,7 @@ export default {
                                 }
                             }
                         }
+                        orden.original_price = orden.price;
                         orden.type_quantity = type
                             ? Number(type.quantity_unit)
                             : 0;
@@ -3796,7 +3801,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        /* this.$refs.list_orden.changeCurrencyItems(); */
+                        this.$refs.list_orden.changeCurrencyItems(); 
                     }
 
                     //y si no agregarla como nueva
@@ -3824,12 +3829,13 @@ export default {
                         orden.series = [];
                         orden.lotes = [];
                         orden.color_size = [];
+                        orden.original_price = orden.price;
                         if (this.configuration.order_desc_items == true) {
                             this.localOrden.push(orden);
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        /* this.$refs.list_orden.changeCurrencyItems(); */
+                        this.$refs.list_orden.changeCurrencyItems(); 
                     }
                 } else {
                     let {
@@ -3867,30 +3873,32 @@ export default {
                         this.localOrden[indexFind].quantity =
                             Number(this.localOrden[indexFind].quantity) + 1;
                         let itemAwait = this.localOrden[indexFind];
+                        orden.original_price = orden.price;
                         this.localOrden.splice(indexFind, 1);
                         if (this.configuration.order_desc_items == true) {
                             this.localOrden.push(itemAwait);
                         } else {
                             this.localOrden.unshift(itemAwait);
                         }
-                        /* this.$refs.list_orden.changeCurrencyItems(); */
+                         this.$refs.list_orden.changeCurrencyItems(); 
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
                         orden.series = [];
                         orden.lotes = [];
                         orden.color_size = [];
+                        orden.original_price = orden.price;
                         if (this.configuration.order_desc_items == true) {
                             this.localOrden.push(orden);
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        /* this.$refs.list_orden.changeCurrencyItems(); */
+                        this.$refs.list_orden.changeCurrencyItems(); 
                     }
                 }
 
                 // this.localOrden = [...this.localOrden];
-                /* this.localOrden = this.changeCurrencyItems(); */
+                //this.localOrden = this.changeCurrencyItems();
             }
             this.$refs.ordenRef.calculateTotal();
         },
