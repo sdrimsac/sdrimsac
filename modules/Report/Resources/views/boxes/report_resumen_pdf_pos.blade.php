@@ -708,7 +708,7 @@
                     </td>
                 @endif
                 <td width="65%" style="text-align: right;">
-                    <span style="font-size:20px !important;">EFECTIVO : S/.</span>
+                    <span style="font-size:20px !important;">EFECTIVO : {{$is_usd ? '$ ' :'S/ '}}</span>
                     <span style="font-size:20px !important; color: blue;">
                         @php
                             $n =
@@ -922,7 +922,7 @@
 
                                         <tr>
                                             <td class="right" colspan="3">
-                                                <span class="f12">TOTAL CONTEO S/
+                                                <span class="f12">TOTAL CONTEO {{$is_usd ? '$ ' :'S/ '}}
                                                     {{ number_format($total_coins, 2) }}</span>
                                             </td>
 
