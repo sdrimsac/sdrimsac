@@ -781,9 +781,12 @@
                                 {{$row->item->origin}} <br>
                              @endif 
                                 {!! $row->item->description !!} <br>
-                                @if (isset($row->item->month_day))
-                                    tiene {{ $row->item->month_day }} meses garantía
+                                @if (!empty($row->warranty_end_date)) 
+                                Garantía Hasta el {{ $row->warranty_end_date }}
                                 @endif
+                                {{-- @if (isset($row->item->month_day))
+                                    tiene {{ $row->item->month_day }} meses garantía
+                                @endif --}}
                             @endif
                             {{-- @if (isset($row->item->categoriaMadera))
                                 -

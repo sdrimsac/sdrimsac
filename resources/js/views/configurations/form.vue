@@ -3886,6 +3886,29 @@
                                 ></el-switch>
                               </div>
                             </div>
+                            <div class="col-md-2 mt-4">
+                              <div class="form-group">
+                                <label class="control-label w-100">
+                                  <i class="fa fa-tags"></i> Productos con Garantia
+                                  <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="aqui podemos ver los productos con garantia"
+                                    placement="top-start"
+                                  >
+                                    <i class="fa fa-info-circle"></i>
+                                  </el-tooltip>
+                                </label>
+                                <el-switch
+                                  v-model="form.warranty_product"
+                                  active-text="Si"
+                                  inactive-text="No"
+                                  :active-color="'#28a745'"
+                                  :inactive-color="'#6c757d'"
+                                  @change="submit('Productos Garantia', form.warranty_product, 'Productos Garantia', 'tagsIcon')"
+                                ></el-switch>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </el-tab-pane>

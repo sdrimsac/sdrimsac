@@ -5,7 +5,7 @@
         append-to-body
         :visible="showDialog"
         :title="titulo"
-        close-on-click-modal
+        :close-on-click-modal="true"
         width="70%"
     >
         <div class="card-body">
@@ -16,10 +16,11 @@
                             v-for="promotion in listPromotionItems"
                             :key="promotion.id"
                             class="col-md-3"
+                            style="margin-bottom: 20px;"
                         >
                             <div
                                 class="card"
-                                style="width: 100%; height: 100%;"
+                                style="width: 100%; height: 100%; padding: 10px; position: relative;"
                             >
                                 <div class="text-center">
                                     <template
@@ -46,10 +47,16 @@
                                             style="width: 100%; height: auto;"
                                         />
                                     </template>
+                                    <img
+                                        v-if="promotion.stock <= 0"
+                                        src="/status_images/agotado.png"
+                                        alt="Agotado"
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; pointer-events: none;"
+                                    />
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title text-center">
-                                        {{ promotion.item.description }}
+                                        {{ promotion.item.description.toUpperCase() }}
                                     </h5>
                                     <div>
                                         <p class="card-text text-center">
@@ -57,19 +64,32 @@
                                             {{ promotion.item.internal_id }}
                                         </p>
                                         <p class="card-text text-center">
-                                            Precio Puntos:
+                                             Puntos:
                                             {{ promotion.points_value }}
+                                        </p>
+                                        <p
+                                            class="card-text text-center"
+                                            v-if="promotion.stock > 0"
+                                        >
+                                            Stock:
+                                            {{
+                                                Number(
+                                                    promotion.stock
+                                                ).toFixed(2)
+                                            }}
                                         </p>
                                     </div>
                                     <div class="text-center">
-                                        <label for="num">Cantidad:</label>
+                                        <label for="num">Ingrese Cantidad:</label>
                                         <br />
                                         <el-input-number
                                             v-model="promotion.quantity"
                                             :min="0"
                                             :max="100"
-                                            :value="0"
                                             @input="updatePoints(promotion)"
+                                            :disabled="
+                                                promotion.stock <= 0
+                                            "
                                         ></el-input-number>
                                     </div>
                                 </div>
@@ -105,7 +125,7 @@ export default {
     },
     computed: {
         titulo() {
-            return `Promociones - Puntos Acumulados: ${this.hasPromotionText}`;
+            return `Promociones - Puntos Acumulados: ${this.hasPromotionText} - Puntos Restantes: ${this.remainingPoints}`;
         },
         remainingPoints() {
             return this.hasPromotionText - this.totalPointsUsed;
@@ -116,6 +136,11 @@ export default {
                     total + (promotion.quantity || 0) * promotion.points_value
                 );
             }, 0);
+        }
+    },
+    watch: {
+        totalPointsUsed() {
+            this.$forceUpdate();
         }
     },
     methods: {
@@ -146,7 +171,7 @@ export default {
             console.log("ver si tiene promocion", this.hasPromotionText);
         },
         close() {
-            /* this.resetPromotions(); */
+            this.resetPromotions();
             this.$emit("update:showDialog", false);
         },
         resetPromotions() {
@@ -166,21 +191,19 @@ export default {
                 0
             );
 
-            const newTotalPointsUsed =
-                otherPointsUsed + promotion.quantity * promotion.points_value;
+            const maxAllowedQuantity = Math.floor(
+                (this.hasPromotionText - otherPointsUsed) /
+                    promotion.points_value
+            );
 
-            if (newTotalPointsUsed > this.hasPromotionText) {
+            if (promotion.quantity > maxAllowedQuantity) {
+                promotion.quantity = maxAllowedQuantity;
                 this.$showSAlert(
                     "ALERTA",
-                    "No tienes suficientes puntos para agregar este item.",
+                    "No tienes suficientes puntos para agregar más de este ítem.",
                     "warning"
                 );
-                promotion.quantity = Math.max(promotion.quantity - 1, 0); // Restaura la cantidad previa
-            } else {
-                /* console.log("Puntos restantes:", this.remainingPoints); */
             }
-            // Ensure the quantity is updated correctly
-            this.$forceUpdate();
         }
     }
 };

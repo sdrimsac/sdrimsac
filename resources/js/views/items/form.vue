@@ -1118,7 +1118,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div
+                                <div 
+                                   v-if="configuration.warranty_product"
                                     class="col-12 col-lg-6 col-xl-3"
                                 >
                                     <div
@@ -1163,8 +1164,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                </div>
-                                
+                                </div>  
                             </div>
                         </div>
                         <div class="row">

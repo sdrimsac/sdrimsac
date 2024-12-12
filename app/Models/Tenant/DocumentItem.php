@@ -14,6 +14,7 @@ class DocumentItem extends ModelTenant
     public $timestamps = false;
 
     protected $fillable = [
+        'warranty_end_date',
         'document_id',
         'item_id',
         'item',

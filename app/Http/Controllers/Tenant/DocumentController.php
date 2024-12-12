@@ -1422,6 +1422,11 @@ class DocumentController extends Controller
                         'warranty_end_date' => $warranty_end_date,
                         'document_item_id' => $documentItem->id,
                     ]);
+                    DB::connection('tenant')->table('document_items')
+                    ->where('id', $documentItem->id)
+                    ->update([
+                        'warranty_end_date' => $warranty_end_date,
+                    ]);
                 }
             }
         }

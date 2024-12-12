@@ -1880,6 +1880,11 @@ class SaleNoteController extends Controller
                         'warranty_end_date' => $warranty_end_date,
                         'sale_note_item_id' => $saleNoteItem->id,
                     ]);
+                    DB::connection('tenant')->table('sale_note_items')
+                    ->where('id', $saleNoteItem->id)
+                    ->update([
+                        'warranty_end_date' => $warranty_end_date,
+                    ]);
                 }
             }
         }

@@ -3476,7 +3476,7 @@ export default {
                 this.form.currency_type_id =
                     this.currencyIdChoice == "S/" || this.currencyIdChoice == undefined || this.currencyIdChoice == "PEN" ? "PEN" : "USD";
                 console.log("this.currency_id ::::", JSON.stringify(this.form.currency_type_id));
-                console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice));
+                /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
                 this.is_payment = true;
             }
         },

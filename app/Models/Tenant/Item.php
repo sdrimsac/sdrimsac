@@ -26,6 +26,7 @@ class Item extends ModelTenant
     use RegisterMovementTrait;
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
+        'warranty_end_date',
         'points_value',
         'weight',
         'origin',
@@ -567,6 +568,10 @@ class Item extends ModelTenant
     public function warehouses()
     {
         return $this->hasMany(ItemWarehouse::class)->with('warehouse');
+    }
+    public function itemwarehouses()
+    {
+        return $this->hasMany(ItemWarehouse::class, 'item_id');
     }
     public function warehouse()
     {

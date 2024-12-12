@@ -457,27 +457,11 @@
                                             Aplicar promoción |
                                             {{ hasPromotionText }}
                                         </div>
-                                        <!-- <div class="col-md-3 form-group "
-                                            v-if="
-                                                promotionByPoints &&
-                                                    hasPromotionText &&
-                                                    listPromotionItems.length >
-                                                        0
-                                            "
-                                        >
-                                            <el-button
-                                                @click="Promotion()"
-                                                type="primary"
-                                                size="small"
-                                            >
-                                                Canjear Promocion
-                                            </el-button>
-                                        </div> -->
                                         <div
                                             class="col-md-3 form-group d-flex align-items-center justify-content-center"
                                             v-if="
                                                 promotionByPoints &&
-                                                    hasPromotionText &&
+                                                    hasPromotionText && 
                                                     listPromotionItems.length >
                                                         0
                                             "
@@ -1853,7 +1837,7 @@ export default {
     },
     data() {
         return {
-            /* currencyIdChoice: "PEN", */
+            currencyIdChoice: "PEN",
             showDialogPromotionBox: false,
             listPromotionItems: [],
             promotionItems: [],
@@ -2185,6 +2169,8 @@ export default {
                 this.verifyPromotionPointsCustomer();
             }
         },
+        
+
         receivePromotion() {
             // console.log(this.form.items);
             if (this.form.receive_promotion) {
@@ -2423,8 +2409,8 @@ export default {
             return affectation_igv_type_id;
         },
         addFreeItem(i) {
-            console.log("Ítem recibido:", i);
-            console.log("Cantidad recibida:", i.quantity);
+            /* console.log("Ítem recibido:", i);
+            console.log("Cantidad recibida:", i.quantity); */
 
             let affectation_igv_type_id = this.getFreeAfectation(
                 i.sale_affectation_igv_type_id
@@ -4969,7 +4955,7 @@ export default {
                     this.promotionItems.forEach(item => {
                         this.addFreeItem(item);
                     });
-                    console.log(this.form.items);
+                    console.log(" ver que pasa por aquiiiiii", this.form.items);
                 } else {
                     this.$toast.error("No se encontraron items de promoción");
                 }

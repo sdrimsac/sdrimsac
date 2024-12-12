@@ -64,7 +64,7 @@
           >
             <el-checkbox v-model="search.credit" @change="getRecords">A cuenta</el-checkbox>
           </div>
-          <div v-if="typeUser == 'superadmin'" class="col-md-2">
+          <div  class="col-md-2" v-if="typeUser == 'superadmin'">
             <el-button
               class="submit"
               type="success"

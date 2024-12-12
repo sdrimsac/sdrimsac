@@ -152,15 +152,23 @@ class PromotionDocumentController extends Controller
         $promotion_document_id = $record->promotion_document_id;
         $items = PromotionDocumentItem::where('promotion_document_id', $promotion_document_id)
             ->where('points_value', '<=', $points)
+            ->with('item.itemwarehouses')
             ->get()->transform(function ($item) {
                 $item_data = $item->item;
+                
+                /* $item_warehouse = $item_data->item_warehouse_prices->first(); */
+                $item_warehouse = $item_data->itemWarehouses ? $item_data->itemWarehouses->first() : null;
+                $stock = $item_warehouse ? $item_warehouse->stock : null;
+
                 $item_data->quantity = $item->quantity;
                 $item_data->is_promotion = true;
                 return [
                     'id' => $item->id,
                     'full_description' => "(" . $item->points_value . " pts) " . $item_data->description,
                     'points_value' => $item->points_value,
-                    'item'   => $item_data
+                    'stock' => $stock,
+                    'item'   => $item_data,
+                    
 
                 ];
             });

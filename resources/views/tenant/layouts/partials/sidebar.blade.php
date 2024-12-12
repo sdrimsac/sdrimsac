@@ -291,14 +291,14 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- @if ($user->type == 'superadmin' || ($has_series && $config->series_enabled)) --}}
-                        <li>
-                            <a class="{{ $path[0] === 'warranty' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.warranty.index') }}">
-                                <i class="icofont-soft-drinks"></i> Productos Con Garantia
-                            </a>
-                        </li>
-                        {{-- @endif --}}
+                        @if ($config->warranty_product)
+                            <li>
+                                <a class="{{ $path[0] === 'warranty' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.warranty.index') }}">
+                                    <i class="icofont-soft-drinks"></i> Productos Con Garantia
+                                </a>
+                            </li>
+                        @endif
                         @if ($user->type == 'superadmin' || ($has_series && $config->series_enabled))
                             <li>
                                 <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
