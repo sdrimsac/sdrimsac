@@ -5372,6 +5372,28 @@ export default {
                     total_value += _.round(row.total_value, 2);
                 }
                 if (
+                    ["11", "12", "13", "14", "15", "16"].includes(
+                        row.affectation_igv_type_id
+                    )
+                ) {
+                    let unit_value = row.total_value / row.quantity;
+                    let total_value_partial = unit_value * row.quantity;
+                    row.total_taxes =
+                        row.total_value -
+                        total_value_partial +
+                        isNaN(
+                    parseFloat(row.total_plastic_bag_taxes)
+                )
+                    ? 0.0
+                    : parseFloat(row.total_plastic_bag_taxes);
+                    row.total_igv =
+                        total_value_partial * (row.percentage_igv / 100);
+                    row.total_base_igv = total_value_partial;
+                    total_value -= row.total_value;
+
+                    total += parseFloat(row.total); 
+                }
+                if (
                     ["10", "20", "30", "40"].indexOf(
                         row.affectation_igv_type_id
                     ) < 0

@@ -1,4 +1,5 @@
 @php
+    $total_igv_free = 0;
     $invoice = $document->invoice;
     $establishment = $document->establishment;
     $customer = $document->customer;
@@ -8,7 +9,15 @@
             return str_replace(',', '.', $string);
         }
     }
-    
+    if($document->total_free > 0){
+        foreach ($document->items as $item) {
+            if (in_array($item->affectation_igv_type_id, ["11", "12", "13", "14", "15", "16"])) {
+                $total_igv_free += $item->total_igv;
+            }
+        }
+    }
+
+    $total_igv_free = number_format($total_igv_free, 2, '.', '');
     $amount_discount = 0;
     $discount_without_base = 0;
     if($document->discounts){
@@ -325,8 +334,7 @@
         @if ($document->total_free > 0)
             <cac:TaxSubtotal>
                 <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_free }}</cbc:TaxableAmount>
-                <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_igv }}
-                </cbc:TaxAmount>
+                <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $total_igv_free }}</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cac:TaxScheme>
                         <cbc:ID>9996</cbc:ID>

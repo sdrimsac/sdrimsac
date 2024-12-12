@@ -461,7 +461,7 @@
                                             class="col-md-3 form-group d-flex align-items-center justify-content-center"
                                             v-if="
                                                 promotionByPoints &&
-                                                    hasPromotionText && 
+                                                    hasPromotionText &&
                                                     listPromotionItems.length >
                                                         0
                                             "
@@ -1200,9 +1200,7 @@
                                             <span
                                                 class="control-label font-weight-semibold text-center h3"
                                             >
-                                                {{
-                                                 currencySymbol
-                                                }}
+                                                {{ currencySymbol }}
                                                 {{ " " + form.total }}
                                             </span>
                                         </div>
@@ -1458,8 +1456,7 @@
                                                     "
                                                     class="control-label font-weight-semibold text-center fs-4"
                                                 >
-                                                    {{
-                                                        currencySymbol
+                                                    {{ currencySymbol
                                                     }}{{
                                                         form.difference
                                                             .toFixed(2)
@@ -1503,7 +1500,9 @@
                         class="col-2"
                     >
                         Pago {{ idx + 1 }}:
-                        <strong>{{ currencyIdChoice  }} {{ payment.amount }}</strong>
+                        <strong
+                            >{{ currencyIdChoice }} {{ payment.amount }}</strong
+                        >
                     </div>
                 </div>
             </div>
@@ -1578,7 +1577,7 @@
                                         <b> Total</b>
                                     </td>
                                     <td class="text-muted text-small">
-                                    {{ currencySymbol }}
+                                        {{ currencySymbol }}
                                         {{
                                             totalItemSelected(payment.products)
                                         }}
@@ -1837,7 +1836,6 @@ export default {
     },
     data() {
         return {
-            currencyIdChoice: "PEN",
             showDialogPromotionBox: false,
             listPromotionItems: [],
             promotionItems: [],
@@ -2169,7 +2167,6 @@ export default {
                 this.verifyPromotionPointsCustomer();
             }
         },
-        
 
         receivePromotion() {
             // console.log(this.form.items);
@@ -2401,10 +2398,10 @@ export default {
         },
         getFreeAfectation(affectation_igv_type_id) {
             if (affectation_igv_type_id == 10) {
-                return 15;
+                return "15";
             }
             if (affectation_igv_type_id == 20) {
-                return 21;
+                return "21";
             }
             return affectation_igv_type_id;
         },
@@ -2421,10 +2418,7 @@ export default {
                 warehouse_id: null,
                 item: i,
                 item_id: i.id,
-                unit_value:
-                    affectation_igv_type_id == 10
-                        ? i.sale_unit_price / (1 + this.percentage_igv / 100)
-                        : i.sale_unit_price,
+                unit_value: 0,
                 quantity: i.quantity,
                 aux_quantity: i.quantity,
                 total_base_igv:
@@ -2434,14 +2428,17 @@ export default {
                         : i.sale_unit_price * i.quantity,
                 percentage_igv: this.percentage_igv,
                 total_igv:
-                    affectation_igv_type_id == 10
-                        ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                    affectation_igv_type_id == 10 ||
+                    affectation_igv_type_id == 15
+                        ? (i.sale_unit_price *
+                              i.quantity *
+                              this.percentage_igv) /
+                          100
                         : 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
                 total_isc: 0.0,
+                total: 0,
                 total_base_other_taxes: 0.0,
                 percentage_other_taxes: 0.0,
                 total_other_taxes: 0.0,
@@ -2449,8 +2446,8 @@ export default {
                 total_value: i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
                 total_discount: 0.0,
-                total: i.sale_unit_price * i.quantity,
-                price_type_id: "01",
+                // total: i.sale_unit_price * i.quantity,
+                price_type_id: "02",
                 unit_price: i.sale_unit_price,
                 unit_price_value: i.sale_unit_price,
                 has_igv: i.has_igv,
@@ -3122,9 +3119,9 @@ export default {
             });
 
             itemsSeleccionados.forEach(item => {
+                console.log("agregando el item");
                 this.addFreeItem(item.item);
             });
-            console.log(JSON.stringify(this.form.items));
         },
         checkDetraction() {
             if (!this.configuration.detraction) return false;
@@ -3650,6 +3647,30 @@ export default {
                 }
                 if (row.affectation_igv_type_id === "40") {
                     total_exportation += parseFloat(row.total_value);
+                }
+                console.log("row: ", row.affectation_igv_type_id);
+                if (
+                    ["11", "12", "13", "14", "15", "16"].includes(
+                        row.affectation_igv_type_id
+                    )
+                ) {
+                    let unit_value = row.total_value / row.quantity;
+                    let total_value_partial = unit_value * row.quantity;
+                    row.total_taxes =
+                        row.total_value -
+                        total_value_partial +
+                        isNaN(
+                    parseFloat(row.total_plastic_bag_taxes)
+                )
+                    ? 0.0
+                    : parseFloat(row.total_plastic_bag_taxes);
+                    row.total_igv =
+                        total_value_partial * (row.percentage_igv / 100);
+                    row.total_base_igv = total_value_partial;
+                    console.log("restando de", row.total_value, total_value);
+                    total_value -= row.total_value;
+                    console.log("sumando", row.total, total);
+                    total += parseFloat(row.total);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
