@@ -24,13 +24,13 @@
       <div class="card">
         <div class="card-header bg-primary">
           <h4 class="my-0 text-white">
-            <i class="far fa-address-book mr-2"></i> Lista de Usuarios
+            <i class="far fa-address-book mr-2"></i> Módulo de Usuarios
           </h4>
         </div>
         <div class="data-table-visible-columns">
           <el-button type="primary" class href="javascript:void(0)" @click.prevent="clickCreate()">
             <i class="fa fa-user-plus"></i>
-            Nuevo Usuario
+            Nuevo Usuario wwwww
           </el-button>
         </div>
         <div class="card-body">

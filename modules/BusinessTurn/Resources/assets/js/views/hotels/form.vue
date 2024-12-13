@@ -302,7 +302,8 @@
             },
             async searchServiceNumberByType() {
                 if(this.hotel.number === '') {
-                    this.$toast.error('Ingresar el número a buscar')
+                    /* this.$toast.error('Ingresar el número a buscar'); */
+                    this.$showSAlert("", "Ingresar el número a buscar", "error");
                     return
                 }
                 let identity_document_type_name = ''

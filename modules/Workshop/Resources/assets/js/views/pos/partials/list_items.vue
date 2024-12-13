@@ -31,9 +31,12 @@
                 </tbody>
             </table>
         </div>
-
+     
         <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cerrar</el-button>
+            <!-- <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
+                <span>Cancelar</span>
+            </el-button>
+            <el-button @click="close">Cerrar</el-button> -->
         </span>
 
     </el-dialog>

@@ -1,170 +1,106 @@
-<!-- Listado de Bancos -->
+<!-- Módulo de Bancos -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>{{ title }}</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">{{ title }}</span>
-                            </li>
-                        </ol>
-                    </div>
+            <div class="card">
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                        <i class="fas fa-university" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                        Módulo de Bancos
+                    </h4>
                 </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header bg-primary">
-                <h4 class="my-0 text-white">
-                    <i class="fas fa-university"></i> Listado de Bancos
-                </h4>
-                <div class="card-actions white-text">
-                    <a
-                        href="#"
-                        class="card-action card-action-toggle text-white"
-                        data-card-toggle=""
-                    ></a>
-                    <a
-                        href="#"
-                        class="card-action card-action-dismiss text-white"
-                        data-card-dismiss=""
-                    ></a>
-                </div>
-            </div>
-            <div class="data-table-visible-columns">
-                <el-button
-                    type="primary"
-                    class=""
-                    href="javascript:void(0)"
-                    @click.prevent="clickCreate()"
-                >
-                    <i class="fas fa-university fa-lg"></i>
-                    <i class="fa fa-plus"></i>
-                    Nuevo Banco
-                </el-button>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr slot="heading" class="bg-primary">
-                                <th class="text-white">#</th>
-                                <th class="text-white">Descripción</th>
-                                <th class="text-white">Imagen</th>
-                                <th class="text-white text-end">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(row, index) in records" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ row.description }}</td>
-                                <td>
-                                    <!-- si la imagen existe mostrarla y al darle click abrir el dialog de archivo para subir otra imagen y reemplazar la  anterior, si no existe mostrar un boton para subir la imagen             -->
-                                    <template v-if="row.image">
-                                        <img
-                                            :src="row.image"
-                                            alt="image"
-                                            class="img-thumbnail"
-                                            style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;"
-                                            @click="clickUploadImage(row.id)"
-                                        />
-                                        <button
-                                            class="btn btn-danger btn-sm"
-                                            @click="clickDeleteImage(row.id)"
-                                        >
-                                            <i class="fa fa-trash"></i> 
-                                            
-                                        </button>
-                                    </template>
-                                    <template v-else>
-                                        <button
-                                            class="btn btn-primary"
-                                            @click="clickUploadImage(row.id)"
-                                        >
-                                            <i class="fa fa-upload"></i> Subir
-                                            Imagen
-                                        </button>
-                                    </template>
-                                </td>
-                                <td class="text-end">
-                                    <button
-                                        class="btn p-0"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <span
-                                            class="btn btn-primary dropdown-toggle"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            data-bs-delay="0"
-                                            title=""
-                                            data-bs-original-title="Item Count"
-                                            aria-label="Item Count"
-                                            >Acciones</span
-                                        >
-                                    </button>
-                                    <div
-                                        class="dropdown-menu dropdown-menu-end"
-                                        style=""
-                                    >
-                                        <a
-                                            type="button"
-                                            class="dropdown-item text-secondary"
-                                            @click.prevent="clickCreate(row.id)"
-                                        >
-                                            <i class="fa fa-edit"></i> Editar
-                                        </a>
-                                        <template
-                                            v-if="
-                                                typeUser === 'admin' ||
-                                                    typeUser === 'superadmin'
-                                            "
-                                        >
-                                            <a
-                                                type="button"
-                                                class="dropdown-item text-danger"
-                                                @click.prevent="
-                                                    clickDelete(row.id)
-                                                "
+                <!-- <div class="data-table-visible-columns">
+                    <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+                        <i class="fas fa-university fa-lg"></i>
+                        <i class="fa fa-plus"></i>
+                        <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo Banco</span>
+                    </el-button>
+                </div> -->
+                <div class="data-table-visible-columns">
+    <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+        <i class="fa fa-university"></i>
+        <i class="fa fa-plus"></i>
+        <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+    </el-button>
+</div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover custom-table">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Imagen</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row, index) in records" :key="index" :class="index % 2 === 0 ? 'table-row-even' : 'table-row-odd'">
+                                    <td class="text-center">{{ index + 1 }}</td>
+                                    <td class="text-center">{{ row.description }}</td>
+                                    <td class="text-center">
+                                        <template v-if="row.image">
+                                            <img
+                                                :src="row.image"
+                                                alt="image"
+                                                class="img-thumbnail"
+                                                style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;"
+                                                @click="clickUploadImage(row.id)"
+                                            />
+                                            <button
+                                                class="btn btn-danger btn-sm"
+                                                @click="clickDeleteImage(row.id)"
                                             >
                                                 <i class="fa fa-trash"></i>
-                                                Eliminar
-                                            </a>
+                                            </button>
                                         </template>
-                                        <!-- <a type="button" class="dropdown-item text-warning" @click.prevent="
-                                    clickDisable(row.id)" v-if="row.active">Inhabilitar
-                                </a>
-                                <a type="button" class="dropdown-item text-success" @click.prevent="
-                                    clickEnable(row.id)" v-else>Habilitar
-                                </a> -->
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <template v-else>
+                                            <button
+                                                class="btn btn-primary"
+                                                @click="clickUploadImage(row.id)"
+                                            >
+                                                <i class="fa fa-upload"></i> Subir Imagen
+                                            </button>
+                                        </template>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                Acciones
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item text-info" @click.prevent="clickCreate(row.id)">
+                                                        <i class="fa fa-edit"></i> Editar
+                                                    </a>
+                                                </li>
+                                                <li v-if="typeUser === 'admin' || typeUser === 'superadmin'">
+                                                    <a class="dropdown-item text-danger" @click.prevent="clickDelete(row.id)">
+                                                        <i class="fa fa-trash"></i> Eliminar
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <input
+                        type="file"
+                        id="file"
+                        ref="file"
+                        style="display: none"
+                        @change="uploadImage"
+                        accept="image/*"
+                    />
                 </div>
-                <input
-                    type="file"
-                    id="file"
-                    ref="file"
-                    style="display: none"
-                    @change="uploadImage"
-                    accept="image/*"
-                />
+                <banks-form
+                    :showDialog.sync="showDialog"
+                    :recordId="recordId"
+                ></banks-form>
             </div>
-            <banks-form
-                :showDialog.sync="showDialog"
-                :recordId="recordId"
-            ></banks-form>
         </div>
     </div>
 </template>

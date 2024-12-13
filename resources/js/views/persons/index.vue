@@ -1,122 +1,81 @@
-<!-- Listado de Clientes 
-    Listado de Proveedores -->
+<!-- Módulo de Clientes 
+    Módulo de Proveedores -->
 <template>
-    <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>{{ title }}</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">{{ title }}</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
+<div>
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="card mb-0">
+            <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                    <i class="fas fa-coins" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                    Módulo de {{ title }}
+                </h4>
             </div>
-        </div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white"><i class="fas fa-users"></i> Listado de {{ title }}</h4>
-                </div>
 
-                <div class="data-table-visible-columns">
-                        <el-button type="primary" 
-                                    class="" 
-                                    href="javascript:void(0)" 
-                                    @click.prevent="clickCreate()">
-                                    <i class="fas fa-users fa-lg"></i>
-                                    <i class="icofont-plus-circle"></i>
-                                Nuevo
-                        </el-button>
-                        <el-button type="primary" 
-                                    class="" 
-                                    href="javascript:void(0)" 
-                                    @click.prevent="clickZones()">
-                                    <i class="icofont-location-pin fa-lg"></i>
-                                Zonas
-                        </el-button>
-                        <el-button type="primary" 
-                                    class="" 
-                                    href="javascript:void(0)" 
-                                    @click.prevent="clickImport()">
-                                <i class="fa fa-upload"></i>
-                                Importar
-                        </el-button>
-                </div> 
-                <div class="card-body">
-                   
-                    <data-table :resource="resource + `/${this.type}`">
-                        <tr slot="heading" class="bg-primary">
-                            <th class="text-white">#</th>
-                            <th class="text-white">Nombre</th>
-                            <th class="text-end text-white">Alias</th>
-                            <th class="text-end text-white">DNI/RUC</th>
-                            <th class="text-end text-white">Zona</th>
-                            <th class="text-end text-white">Telefonos</th>
-                            <th class="text-end text-white">Acciones</th>
-                        </tr>
+            <div class="data-table-visible-columns">
+                <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+                    <i class="fas fa-users"></i>
+                    <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+                </el-button>
+                <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickZones()">
+                    <i class="icofont-location-pin"></i>
+                    <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Zona</span>
+                </el-button>
+                <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickImport()">
+                    <i class="fa fa-upload"></i>
+                    <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Importar</span>
+                </el-button>
+            </div>
+            <div class="card-body">
 
-                        <tr></tr>
-                        <tr
-                            slot-scope="{ index, row }"
-                            :class="{ 'bg-primary': !row.enabled }"
-                        >
-                            <td>{{ index }}</td>
-                            <td>{{ row.name }}</td>
-                            <td class="text-end">{{ row.alias }}</td>
-                            <td class="text-end">{{ row.number }}</td>
-                            <td class="text-end">{{ row.zone_description }}</td>
-                            <td class="text-end">{{ row.telephone }}</td>
-                            <td class="text-end">
+                <data-table :resource="resource + `/${this.type}`">
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-white">Nombre</th>
+                        <th class="text-end text-white">Alias</th>
+                        <th class="text-end text-white">DNI/RUC</th>
+                        <th class="text-end text-white">Zona</th>
+                        <th class="text-end text-white">Telefonos</th>
+                        <th class="text-end text-white">Acciones</th>
+                    </tr>
 
-                                <!-- **** -->
-                                <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
-                                    </button>
-                                    
-                                    <div class="dropdown-menu dropdown-menu-end" style="">
-                                        <template v-if="row.enabled">
-                                            <a  type="button" 
-                                                class="dropdown-item text-secondary" 
-                                                @click.prevent=" clickCreate(row.id)"> 
-                                                <i class="fa fa-edit"></i> Editar
-                                            </a>
-                                        </template>
+                    <tr></tr>
+                    <tr slot-scope="{ index, row }" :class="{ 'bg-primary': !row.enabled }">
+                        <td>{{ index }}</td>
+                        <td>{{ row.name }}</td>
+                        <td class="text-end">{{ row.alias }}</td>
+                        <td class="text-end">{{ row.number }}</td>
+                        <td class="text-end">{{ row.zone_description }}</td>
+                        <td class="text-end">{{ row.telephone }}</td>
+                        <td class="text-end">
 
-                                        <template v-if="typeUser === 'admin' || typeUser === 'superadmin'">    
-                                            <a type="button" class="dropdown-item text-danger" @click.prevent="
+                            <!-- **** -->
+                            <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-end" style="">
+                                <template v-if="row.enabled">
+                                    <a type="button" class="dropdown-item text-secondary" @click.prevent=" clickCreate(row.id)">
+                                        <i class="fa fa-edit"></i> Editar
+                                    </a>
+                                </template>
+
+                                <template v-if="typeUser === 'admin' || typeUser === 'superadmin'">
+                                    <a type="button" class="dropdown-item text-danger" @click.prevent="
                                             clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
-                                            </a>
-                                        </template>
-
-                                    <a  type="button" 
-                                        class="dropdown-item text-warning" 
-                                        @click.prevent="clickDisable(row.id)" 
-                                        v-if="row.active"
-                                        >
-                                        Inhabilitar
                                     </a>
-                                    <a  type="button" 
-                                        class="dropdown-item text-success" 
-                                        @click.prevent="clickEnable(row.id)" 
-                                        v-else
-                                        >
-                                        Habilitar
-                                    </a>
-                                    </div>
+                                </template>
 
-                                    
+                                <a type="button" class="dropdown-item text-warning" @click.prevent="clickDisable(row.id)" v-if="row.active">
+                                    Inhabilitar
+                                </a>
+                                <a type="button" class="dropdown-item text-success" @click.prevent="clickEnable(row.id)" v-else>
+                                    Habilitar
+                                </a>
+                            </div>
 
-                                <!-- **** -->
-                                <!-- <template v-if="row.enabled">
+                            <!-- **** -->
+                            <!-- <template v-if="row.enabled">
                                     <button
                                         type="button"
                                         class="btn waves-effect waves-light btn-sm btn-info"
@@ -157,29 +116,19 @@
                                         Habilitar
                                     </button>
                                 </template> -->
-                            </td>
-                        </tr>
-                    </data-table>
-                </div>
-                <Printer :showDialogPrinter.sync="showDialogPrinter"></Printer>
-                <persons-form
-                :typeUser="typeUser"
-                    :showDialog.sync="showDialog"
-                    :type="type"
-                    :recordId="recordId"
-                    :api_service_token="api_service_token"
-                    :isArca="isArca"
-                ></persons-form>
-
-                <persons-import
-                    :showDialog.sync="showImportDialog"
-                    :type="type"
-                ></persons-import>
-                <client-zones :showDialog.sync="showDialogZones">
-                </client-zones>
+                        </td>
+                    </tr>
+                </data-table>
             </div>
+            <Printer :showDialogPrinter.sync="showDialogPrinter"></Printer>
+            <persons-form :typeUser="typeUser" :showDialog.sync="showDialog" :type="type" :recordId="recordId" :api_service_token="api_service_token" :isArca="isArca"></persons-form>
+
+            <persons-import :showDialog.sync="showImportDialog" :type="type"></persons-import>
+            <client-zones :showDialog.sync="showDialogZones">
+            </client-zones>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -188,11 +137,19 @@ import PersonsImport from "./import.vue";
 import Printer from "./printer.vue";
 import ClientZones from "./client_zones.vue";
 import DataTable from "../../components/DataTablePersons.vue";
-import { deletable } from "../../mixins/deletable";
+import {
+    deletable
+} from "../../mixins/deletable";
 export default {
     mixins: [deletable],
-    props: ["type", "typeUser", "api_service_token","isArca"],
-    components: { PersonsForm, PersonsImport, DataTable, Printer, ClientZones },
+    props: ["type", "typeUser", "api_service_token", "isArca"],
+    components: {
+        PersonsForm,
+        PersonsImport,
+        DataTable,
+        Printer,
+        ClientZones
+    },
     data() {
         return {
             showDialogZones: false,

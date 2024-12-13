@@ -2,7 +2,7 @@
 <template>
 <div>
     <div class="container-fluid p-l-0 p-r-0">
-        <div class="page-header">
+        <!-- <div class="page-header">
             <div class="row">
                 <div class="col-sm-6">
                     <h6><span>Clientes</span></h6>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid p-l-0 p-r-0">

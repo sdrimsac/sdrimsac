@@ -8,8 +8,7 @@
                 :close-on-click-modal="false"
                 width="30%"
     >
- <br>
-        <form autocomplete="off" @submit.prevent="submit">
+         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -17,26 +16,27 @@
                             <label class="control-label">
                                 <i class="fas fa-tag"></i> Marca
                             </label>
-                            <el-input v-model="form.name"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                            <el-input v-model="uppercaseName"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                             <small class="form-control-feedback" v-if="errors.name" v-text="errors.name[0]"></small>
                         </div>
                     </div> 
                 </div> 
             </div>
-           <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
-                <el-button icon="fas fa-save"type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
-            </div>
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <!-- Botón Cancelar -->
+            <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
+                <span>Cancelar</span>
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit">
+                <span>Guardar</span>
+            </el-button>
+        </div>
         </form>
     </el-dialog>
 </template>
 
-<style>
-.el-dialog {
-border-radius: 10px;
-overflow: hidden;
-}
-</style>
+
 
 <script>
  
@@ -49,7 +49,20 @@ overflow: hidden;
                 titleDialog: null,
                 resource: 'brands', 
                 errors: {}, 
-                form: {}, 
+                form: {
+                    id: null,
+                    name: null, 
+                }, 
+            }
+        },
+        computed: {
+            uppercaseName: {
+                get() {
+                    return this.form.name ? this.form.name.toUpperCase() : '';
+                },
+                set(value) {
+                    this.form.name = value.toUpperCase();
+                }
             }
         },
         created() {
@@ -77,6 +90,7 @@ overflow: hidden;
  
 
                 this.loading_submit = true  
+                this.form.name = this.form.name.toUpperCase();
                 this.$http.post(`${this.resource}`, this.form)
                     .then(response => {
                         if (response.data.success) {

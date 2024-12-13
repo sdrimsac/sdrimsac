@@ -37,7 +37,9 @@ Vue.prototype.$setStorage = function(name, obj) {
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Swal from "sweetalert2";
+window.Swal = Swal;
 import { cleanData } from "jquery";
+
 const options = {
     timeout: 5000
 };
@@ -104,6 +106,99 @@ Vue.prototype.$showSAlert = (title, text, type = "success") => {
         icon: type
     });
 };
+
+/* Vue.prototype.$showSAlert = (title, text, type = "success") => {
+// Función para alertas rápidas (ya existente, ajustada para mayor flexibilidad)
+Vue.prototype.$showSAlert = ({
+    title = "Aviso",
+    text = "",
+    type = "success",
+    timer = 2000,
+    position = "center",
+    html = null, // Soporte para HTML
+    customClass = {},
+    showConfirmButton = false
+} = {}) => {
+    Swal.fire({
+        title: title.toUpperCase(),
+        html: html || `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>`,
+        timer,
+        showConfirmButton,
+        customClass: {
+            popup: "swal2-no-border", // Clase personalizada
+            ...customClass // Añade clases extra si es necesario
+        },
+        didOpen: popup => {
+            const swalContainer = Swal.getPopup();
+            if (timer) {
+                swalContainer.addEventListener("mouseenter", () => Swal.stopTimer());
+                swalContainer.addEventListener("mouseleave", () => Swal.resumeTimer());
+            }
+        },
+        position,
+        icon: type
+    });
+}}; */
+
+// Función adicional para confirmaciones
+Vue.prototype.$showSConfirm = ({
+    title = "¿Estás seguro?",
+    text = "Esta acción no se puede deshacer.",
+    type = "warning",
+    confirmButtonText = "Sí, confirmar",
+    cancelButtonText = "Cancelar",
+    showCancelButton = true,
+    allowOutsideClick = false,
+    allowEscapeKey = false,
+    allowEnterKey = true,
+    customClass = {},
+    html = null
+} = {}) => {
+    return Swal.fire({
+        title: title.toUpperCase(),
+        html: html || `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>`,
+        icon: type,
+        showCancelButton,
+        confirmButtonText,
+        cancelButtonText,
+        customClass: {
+            popup: "swal2-no-border",
+            ...customClass
+        },
+        allowOutsideClick,
+        allowEscapeKey,
+        allowEnterKey
+    });
+};
+
+// Función adicional para alertas manuales (sin temporizador, requiere cierre manual)
+Vue.prototype.$showSManualAlert = ({
+    title = "Cargando...",
+    text = "Por favor, espere un momento.",
+    type = "info",
+    allowOutsideClick = false,
+    showConfirmButton = false,
+    customClass = {},
+    html = null
+} = {}) => {
+    Swal.fire({
+        title: title.toUpperCase(),
+        html: html || `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>`,
+        icon: type,
+        showConfirmButton,
+        customClass: {
+            popup: "swal2-no-border",
+            ...customClass
+        },
+        allowOutsideClick
+    });
+};
+
+// Cierre manual para alertas sin temporizador
+Vue.prototype.$closeSManualAlert = () => {
+    Swal.close();
+};
+
 
 Vue.use(Toast, options);
 

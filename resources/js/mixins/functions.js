@@ -98,7 +98,11 @@ export const functions = {
                             this.form.district_id = res.data.district_id;
                             this.form.phone = res.data.phone;
                         } else {
-                            this.$message.error(res.message);
+                            this.$showSAlert({
+                                title: "ERROR",
+                                text: res.message,
+                                type: "error"
+                            });
                         }
                         resolve();
                     })
@@ -158,7 +162,7 @@ export const exchangeRate = {
             }
 
             let num = Number(data);
-            return isNaN(num) ? 1 : num;
+            return isNaN(num ? 1 : num);
         }
     }
 };
@@ -191,7 +195,11 @@ export const serviceNumber = {
         },
         async searchServiceNumberByType2() {
             if (this.form.number === "") {
-                this.$message.error("Ingresar el número a buscar");
+                this.$showSAlert({
+                    title: "ERROR",
+                    text: "Ingresar el número a buscar",
+                    type: "error"
+                });
                 return;
             }
             let identity_document_type_name = "";
@@ -217,7 +225,11 @@ export const serviceNumber = {
                     this.form.district_id = data.district_id;
                     this.form.phone = data.phone;
                 } else {
-                    this.$message.error(response.data.notification);
+                    this.$showSAlert({
+                        title: "ERROR",
+                        text: response.data.notification,
+                        type: "error"
+                    });
                 }
             } catch (e) {
                 this.$toast.error("Ocurrió un error");
@@ -227,7 +239,12 @@ export const serviceNumber = {
         },
         async searchServiceNumberByType() {
             if (this.form.number === "") {
-                this.$message.error("Ingresar el número a buscar");
+                /* this.$message.error("Ingresar el número a buscar"); */
+                this.$showSAlert({
+                    title: "ERROR",
+                    text: "Ingresar el número a buscar",
+                    type: "error"
+                });
                 return;
             }
             let identity_document_type_name = "";
@@ -247,12 +264,12 @@ export const serviceNumber = {
                     response = await this.$http.get(
                         `/search-ce/${this.form.number}`
                     );
-                    console.log("🚀 ~ searchServiceNumberByType ~ response:", response)
                 } else {
                     response = await this.$http.get(
                         `/service/${identity_document_type_name}/${this.form.number}`
                     );
                 }
+                console.log("🚀 ~ searchServiceNumberByType ~ response:", response)
                 // console.log(response.data.data)
                 if (response.data.success) {
                     let data = response.data.data;
@@ -260,31 +277,53 @@ export const serviceNumber = {
                         let name = data.nombres;
                         let last_name =
                         data.apellido_paterno + " " + data.apellido_materno;
+                     
                         this.form.name = last_name + ", " + name;
+                    
                     } else {
-                        this.form.name = data.name;
+                        if(this.form.workers){
+                            let firstName = data.nombres.split(" ")[0];
+                            this.form.name = firstName + " " + data.apellido_paterno;
+                        }else{
+                            this.form.name = data.name;
+                        }
                         this.form.trade_name = data.trade_name;
                         this.form.address = data.address;
-                        this.form.department_id = data.department_id;
-                        this.form.province_id = data.province_id;
-                        this.form.district_id = data.district_id;
-                        this.form.phone = data.phone;
-                        this.filterProvinces();
-                        this.filterDistricts();
+                        if(!this.form.workers){
+                            this.form.department_id = data.department_id;
+                            this.form.province_id = data.province_id;
+                            this.form.district_id = data.district_id;
+                            this.form.phone = data.phone;
+                            this.filterProvinces();
+                            this.filterDistricts();
+                        }
                     }
     
                 
                 } else {
-                    this.$message.error(response.data.notification);
+                    this.$showSAlert({
+                        title: "ERROR",
+                        text: response.data.notification,
+                        type: "error"
+                    });
                 }
             }catch(e){
-                this.$toast.error("Ocurrió un error");
+                console.log(e)
+                this.$showSAlert({
+                    title: "ERROR",
+                    text: "Ocurrió un error",
+                    type: "error"
+                });
             }
             this.loading_search = false;
         },
         async searchServiceNumber() {
             if (this.form.number === "") {
-                this.$message.error("Ingresar el número a buscar");
+                this.$showSAlert({
+                    title: "ERROR",
+                    text: "Ingresar el número a buscar",
+                    type: "error"
+                });
                 return;
             }
             this.loading_search = true;
@@ -296,7 +335,11 @@ export const serviceNumber = {
                 this.form.name = data.name;
                 this.form.trade_name = data.trade_name;
             } else {
-                this.$message.error(response.data.message);
+                this.$showSAlert({
+                    title: "ERROR",
+                    text: response.data.message,
+                    type: "error"
+                });
             }
             this.loading_search = false;
         }

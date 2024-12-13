@@ -4,7 +4,7 @@
         @close="close"
         append-to-body
         :visible="showDialog"
-        :title="`Lista de productos ${form.total.toFixed(2)}`"
+        :title="`Lista de productos  ${form.total.toFixed(2)}`"
         close-on-click-modal
     >
         <div class="row">

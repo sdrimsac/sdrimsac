@@ -1,7 +1,7 @@
 <!-- Listado de Vendedores -->
 <template>
   <div>
-    <div class="container-fluid p-l-0 p-r-0">
+    <!-- <div class="container-fluid p-l-0 p-r-0">
       <div class="page-header">
         <div class="row">
           <div class="col-sm-6">
@@ -19,24 +19,24 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="container-fluid p-l-0 p-r-0">
       <div class="card">
-        <div class="card-header bg-primary">
-          <h4 class="my-0 text-white">
-            <i class="fas fa-user-tie"></i> Listado de vendedores
+        <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+          <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+            <i class="fas fa-user-tie" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+            Módulo de Vendedores
           </h4>
         </div>
         <div class="data-table-visible-columns">
-          <el-button type="primary" class href="javascript:void(0)" @click.prevent="clickCreate()">
+          <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
             <i class="fas fa-user-tie fa-lg"></i>
             <i class="fa fa-plus"></i>
-            Nuevo Vendedor
+            <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
           </el-button>
         </div>
         <div class="card-body">
           <br />
-
           <data-table :resource="resource">
             <tr slot="heading" class="bg-primary">
               <th class="text-white">#</th>
@@ -51,7 +51,6 @@
               <th class="text-white">Productos Vendidos</th>
               <th class="text-white text-end">Acciones</th>
             </tr>
-
             <tr></tr>
             <tr slot-scope="{ index, row }">
               <td>{{ index + 1 }}</td>
@@ -66,7 +65,6 @@
               <td>
                 <el-button type="info" @click="getProd(row.id)">ver</el-button>
               </td>
-
               <td class="text-end">
                 <button
                   class="btn p-0"

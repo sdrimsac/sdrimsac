@@ -3,10 +3,8 @@
             :visible="showDialog" 
             @close="close" 
             @open="create" 
-            class="rounded-dialog"
-            :close-on-click-modal="false"
->
-
+            class="rounded-dialog" 
+            :close-on-click-modal="false">
 
     <form autocomplete="off" @submit.prevent="submit">
         <div class="form-body">
@@ -28,7 +26,7 @@
                         <label class="control-label">
                             <i class="fas fa-align-left"></i> Descripción
                         </label>
-                        <el-input v-model="form.description"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                        <el-input v-model="form.description" @input="convertToUppercase('description')"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                         <small class="form-control-feedback" v-if="errors.description" v-text="errors.description[0]"></small>
                     </div>
                 </div>
@@ -39,7 +37,7 @@
                         <label class="control-label">
                             <i class="fas fa-credit-card"></i> Número
                         </label>
-                        <el-input v-model="form.number"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                        <el-input v-model="form.number" @input="validateNumbers('number')"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                         <small class="form-control-feedback" v-if="errors.number" v-text="errors.number[0]"></small>
                     </div>
                 </div>
@@ -72,22 +70,23 @@
                 </div>
             </div>
         </div>
-        <div class="form-actions text-end pt-2 pb-2">
-            <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
-            <el-button icon="fas fa-save" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <!-- Botón Cancelar -->
+            <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
+                <span>Cancelar</span>
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit">
+                <span>Guardar</span>
+            </el-button>
         </div>
     </form>
 </el-dialog>
 </template>
 
-<style>
-.el-dialog {
-    border-radius: 10px;
-    overflow: hidden;
-}
-</style>
 
 <script>
+import Swal from 'sweetalert2'
 import {
     EventBus
 } from '../../helpers/bus'
@@ -162,6 +161,21 @@ export default {
                 .then(() => {
                     this.loading_submit = false
                 })
+        },
+        validateNumbers(field) {
+            const value = this.form[field];
+            if (/[^0-9]/.test(value)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Solo se permiten números.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                this.form[field] = value.replace(/[^0-9]/g, ""); // Reemplazar caracteres no válidos
+            }
+        },
+        convertToUppercase(field) {
+            this.form[field] = this.form[field].toUpperCase();
         },
         close() {
             this.$emit('update:showDialog', false)

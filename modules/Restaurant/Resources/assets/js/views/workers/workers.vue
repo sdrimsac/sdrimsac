@@ -1,182 +1,235 @@
-<!-- Lista de Usuarios -->
+<!-- Módulo de Usuarios Principal -->
 <template>
-  <div>
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="page-header">
-        <div class="row">
-          <div class="col-sm-6">
-            <h6>
-              <span>Lista de Usuarios</span>
-            </h6>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="/dashboard">Dashboard</a>
-              </li>
-              <li class="breadcrumb-item active">
-                <span class="text-muted">Usuarios</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid p-l-0 p-r-0">
-      <div class="card">
-        <div class="card-header bg-primary">
-          <h4 class="my-0 text-white">
-            <i class="far fa-address-book mr-2"></i> Lista de Usuarios
-          </h4>
-        </div>
-        <div class="data-table-visible-columns">
-          <el-button type="primary" class href="javascript:void(0)" @click.prevent="clickCreate()">
-            <i class="fa fa-user-plus"></i>
-            Nuevo Usuario
-          </el-button>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label class="control-label">Filtro Por Estado</label>
-                <el-select v-model="form.qty_type" clearable filterable>
-                  <el-option
-                    v-for="option in qty_types"
-                    :key="option.id"
-                    :value="option.value"
-                    :label="option.name"
-                  ></el-option>
-                </el-select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label class="control-label">Buscar por Nombre de Usuario</label>
-                <el-input
-                  v-model="form.name"
-                  placeholder="Ingrese el nombre de usuario"
-                  clearable
-                  @change="getData"
-                ></el-input>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-md-4 col-sm-12 d-flex align-items-center">
-              <el-button
-                class="submit"
-                type="primary"
-                @click.prevent="getRecordsByFilter"
-                :loading="loading_submit"
-                icon="el-icon-search"
-              >Buscar</el-button>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr slot="heading" class="bg-primary">
-                  <th class="text-white text-center">#</th>
-                  <th class="text-white text-center text-end">Estado</th>
-                  <th class="text-white text-center">Nombre</th>
-                  <th class="text-white text-center">Tipo de Usuario</th>
-                  <th class="text-white text-center">Área</th>
-                  <th class="text-white text-center">PIN</th>
-                  <th class="text-white text-center">Actividad</th>
-                  <th class="text-white text-center">Establecimiento</th>
-                  <th class="text-white text-center">Serie</th>
-                  <th class="text-white text-center text-end">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(row, index) in records" :key="index">
-                  <td class="text-center">{{ index + 1 }}</td>
-                  <td class="text-center">
-                    <button
-                      class="btn"
-                      :style="{
-                                color: 'white', 
-                                backgroundColor: row.active ? 'green' : 'red', 
-                                fontWeight: 'bold',
-                                width: '110px' 
-                            }"
-                    >{{ row.active ? 'Activo' : 'Suspendido' }}</button>
-                  </td>
-                  <td class="text-center">{{ row.name }}</td>
+    <div>
+        <div class="container-fluid p-l-0 p-r-0">
+            <div class="card">
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                        <i class="far fa-address-book" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                        Módulo de Usuarios
+                    </h4>
+                </div>
 
-                  <td class="text-center">{{ row.type }}</td>
-                  <td class="text-center">{{ row.area }}</td>
-                  <td class="text-center">
-                    {{ row.visible ? row.pin : "****" }}
-                    <button
-                      class="btn ml-1 btn-sm btn-success"
-                      @click="visiblePin(index)"
-                      title="Mostrar Pin"
-                    >
-                      <i class="fas fa-eye"></i>
-                    </button>
+                <div class="data-table-visible-columns">
+                    <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+                        <i class="fa fa-user-plus"></i>
+                        <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+                    </el-button>
+                </div>
 
-                    <button
-                      class="btn ml-1 btn-sm btn-primary"
-                      @click="editPin(row)"
-                      title="Editar Pin"
-                    >
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </td>
-                  <td class="tex-center">
-                    <template v-if=" row.last_register && row.last_register.user" class="text-center">
-                      <span class="text-center fw-bold">{{ row.last_register.user }}</span> :
-                      <span class="text-primary">
-                        {{ row.last_register.description }}
-                      </span>
-                      <br />
-                      <span
-                        :class=" `${ row.last_register.date_time .is24Hours ? 'text-danger' : ''}`">
-                        {{
-                        formatDateTime( row.last_register.date_time)
-                        }}
-                      </span>
+                <!-- <div class="data-table-visible-columns">
+                    <el-button type="primary" class="btn-large" href="javascript:void(0)" @click.prevent="clickCreate()">
+                        <i class="fa fa-user-plus" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+                        <span style="font-size: 1.25rem; font-weight: bold;">Nuevo Usuario</span>
+                    </el-button>
+                </div> -->
+                <div class="card-body">
+                    <template>
+                        <div class="row m-3 align-items-center">
+                            <!-- Filtro por Estado -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label fw-bold" for="filter-state">Filtro por Estado</label>
+                                    <el-select id="filter-state" v-model="form.qty_type" clearable filterable placeholder="Seleccione un estado" class="input-custom">
+                                        <el-option v-for="option in qty_types" :key="option.id" :value="option.value" :label="option.name">
+                                            {{ option.name }}
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+
+                            <!-- Buscar por Nombre de Usuario -->
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label fw-bold" for="user-name">Buscar por Nombre de Usuario</label>
+                                    <el-input id="user-name" v-model="form.name" placeholder="Ingrese el nombre de usuario" clearable @change="getData" class="input-custom"></el-input>
+                                </div>
+                            </div>
+
+                            <!-- Botón Buscar -->
+                            <div class="col-md-3 d-flex align-items-center justify-content-center">
+                                <el-button class="btn_buscar" type="primary" @click.prevent="getRecordsByFilter" :loading="loading_submit">
+                                    <i class="fas fa-search icon-style"></i>
+                                    <span class="label-style">Buscar</span>
+                                </el-button>
+                            </div>
+                        </div>
                     </template>
-                  </td>
 
-                  <td class="text-center">{{ row.establishment_description }}</td>
-                  <td class="text-center">{{ row.series }}</td>
-                  <td class="text-center">
-                    <button
-                      class="btn p-0"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      <span
-                        class="btn btn-primary dropdown-toggle"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-delay="0"
-                        title
-                        data-bs-original-title="Item Count"
-                        aria-label="Item Count"
-                      >Acciones</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" style>
-                      <a type="button" class="dropdown-item" @click.prevent="clickCreate(row.id)">
-                        <i class="fas fa-edit"></i> Editar
-                      </a>
-                      <a type="button" class="dropdown-item" @click.prevent="clickDelete(row.id)">
-                        <i
-                          class="fas"
-                          :class="{'fa-toggle-on': row.active, 'fa-toggle-off': !row.active}"
-                        ></i>
-                        {{row.active ? "Desactivar" : "Activar"}}
-                      </a>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover custom-table">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th class="text-center">ITEM</th>
+                                    <th class="text-center">NOMBRE</th>
+                                    <th class="text-center">TIPO USUARIO</th>
+                                    <th class="text-center">ÁREA</th>
+                                    <th class="text-center">PIN</th>
+                                    <th class="text-center">ACTIVIDAD</th>
+                                    <th class="text-center">ESTABLECIMIENTO</th>
+                                    <th class="text-center">SERIES</th>
+                                    <th class="text-center">ACCIONES</th>
+                                    <th class="text-center">ESTADO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row, index) in records" :key="index" :class="index % 2 === 0 ? 'table-row-even' : 'table-row-odd'">
+                                    <!-- ITEM -->
+                                    <td class="text-center">{{ index + 1 }}</td>
+
+                                    <!-- NOMBRE -->
+                                    <td class="text-center">{{ row.name }}</td>
+
+                                    <!-- TIPO USUARIO -->
+                                    <td class="text-center">{{ row.type }}</td>
+
+                                    <!-- ÁREA -->
+                                    <td class="text-center">{{ row.area }}</td>
+
+                                    <!-- PIN -->
+                                    <td class="text-center d-flex align-items-center justify-content-center">
+                                        <span>{{ row.visible ? row.pin : "****" }}</span>
+                                        <button class="btn btn-outline-success btn-sm mx-1" @click="visiblePin(index)" title="Mostrar PIN">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm mx-1" @click="editPin(row)" title="Editar PIN">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+
+                                    <!-- ACTIVIDAD -->
+                                    <td class="text-center">
+                                        <div v-if="row.last_register && row.last_register.user">
+                                            <strong>{{ row.last_register.user }}</strong>:
+                                            <span class="text-primary">{{ row.last_register.description }}</span>
+                                            <br />
+                                            <span :class="{ 'text-danger': row.last_register.date_time.is24Hours }">
+                                                {{ formatDateTime(row.last_register.date_time) }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- ESTABLECIMIENTO -->
+                                    <td class="text-center">{{ row.establishment_description }}</td>
+
+                                    <!-- SERIES -->
+                                    <td class="text-center">{{ row.series }}</td>
+
+                                    <!-- ACCIONES -->
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                Acciones
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item text-info" @click.prevent="clickCreate(row.id)">
+                                                        <i class="fas fa-edit"></i> Editar
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" @click.prevent="clickDelete(row.id)">
+                                                        <i class="fas fa-toggle-off"></i> Desactivar
+                                                    </a>
+                                                </li>
+                                                <li v-if="!row.active">
+                                                    <a class="dropdown-item text-success" @click.prevent="clickActivate(row.id)">
+                                                        <i class="fas fa-toggle-on"></i> Activar
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+
+                                    <!-- ESTADO -->
+                                    <td class="text-center">
+                                        <strong :class="{ 'text-success': row.active, 'text-danger': !row.active }">
+                                            {{ row.active ? "ACTIVO" : "SUSPENDIDO" }}
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <create-form
+
+                    <!-- <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr slot="heading" class="bg-primary">
+                                    <th class="text-white text-center">ITEM</th>
+                                    <th class="text-white text-center">NOMBRE</th>
+                                    <th class="text-white text-center">TIPO USUARIO</th>
+                                    <th class="text-white text-center">ÁREA</th>
+                                    <th class="text-white text-center">PIN</th>
+                                    <th class="text-white text-center">ACTIVIDAD</th>
+                                    <th class="text-white text-center">ESTABLECIMIENTO</th>
+                                    <th class="text-white text-center">SERIES</th>
+                                    <th class="text-white text-center text-end">ACCIONES</th>
+                                    <th class="text-white text-center text-end">ESTADO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row, index) in records" :key="index">
+                                    <td class="text-center">{{ index + 1 }}</td>
+                                    <td class="text-center">{{ row.name }}</td>
+                                    <td class="text-center">{{ row.type }}</td>
+                                    <td class="text-center">{{ row.area }}</td>
+                                    <td class="text-center">
+                                        {{ row.visible ? row.pin : "****" }}
+                                        <button class="btn ml-1 btn-sm btn-success" @click="visiblePin(index)" title="Mostrar Pin">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+
+                                        <button class="btn ml-1 btn-sm btn-primary" @click="editPin(row)" title="Editar Pin">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                    <td class="tex-center">
+                                        <template v-if=" row.last_register && row.last_register.user" class="text-center">
+                                            <span class="text-center fw-bold">{{ row.last_register.user }}</span> :
+                                            <span class="text-primary">
+                                                {{ row.last_register.description }}
+                                            </span>
+                                            <br />
+                                            <span :class=" `${ row.last_register.date_time .is24Hours ? 'text-danger' : ''}`">
+                                                {{
+                            formatDateTime( row.last_register.date_time)
+                            }}
+                                            </span>
+                                        </template>
+                                    </td>
+
+                                    <td class="text-center">{{ row.establishment_description }}</td>
+                                    <td class="text-center">{{ row.series }}</td>
+                                    <td class="text-center">
+                                        <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" style>
+                                            <a type="button" class="dropdown-item" @click.prevent="clickCreate(row.id)">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="clickDelete(row.id)">
+                                                <i class="fas" :class="{'fa-toggle-on': row.active, 'fa-toggle-off': !row.active}"></i>
+                                                {{row.active ? "Desactivar" : "Activar"}}
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn" :style="{
+                                    color: 'white', 
+                                    backgroundColor: row.active ? 'green' : 'red', 
+                                    fontWeight: 'bold',
+                                    width: '110px' 
+                                }">{{ row.active ? 'Activo' : 'Suspendido' }}</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+                </div>
+            </div>
+            <create-form
         :configuration="configuration"
         :showDialog.sync="showDialog"
         :areas="areas"
@@ -188,33 +241,32 @@
         :allWarehouses="allWarehouses"
         :commercial_treatment="commercial_treatment"
       ></create-form>
-    </div>
-    <el-dialog
-      :visible.sync="showEditPin"
-      title="Editar PIN"
-      v-if="currentUser"
-      width="350px"
-      v-loading="loading"
-    >
-      <div class="row m-2">
-        <div class="col-12">
-          <label for>PIN</label>
-          <input type="text" class="form-control" v-model="newPin" />
         </div>
-      </div>
-      <div class="d-flex justify-content-end m-2">
-        <button class="btn btn-primary" @click="updatePin">Guardar</button>
-        <button class="btn" @click="showEditPin = false">Cerrar</button>
-      </div>
-      <div class="row m-2"></div>
-    </el-dialog>
-  </div>
+        <el-dialog :visible.sync="showEditPin" title="Editar PIN" v-if="currentUser" width="450px" v-loading="loading">
+            <div class="row m-2">
+                <!-- Campo para ingresar el nuevo PIN de usuario -->
+                <div class="col-12">
+                    <label for="newPin">Ingrese Nuevo PIN de Usuario</label>
+                    <input type="password" id="newPin" class="form-control" v-model="newPin" placeholder="Nuevo PIN" />
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-end m-2" style="gap: 10px;">
+                <button class="btn btn-primary" @click="updatePin">Guardar</button>
+                <button class="btn btn-danger" @click="showEditPin = false">Cerrar</button>
+            </div>
+
+        </el-dialog>
+    </div>
 </template>
 
 <script>
 /* import DataTableUser from "../../../../../../../resources/js/components/DataTableUser.vue"; */
 import CreateForm from "./form.vue";
-import { deletable } from "../../../../../../../resources/js/mixins/deletable";
+import {
+    deletable
+} from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 export default {
   props: ["establishments", "typeUser", "configuration"],
@@ -341,18 +393,6 @@ export default {
       await this.getData();
       this.loading_submit = await false;
     },
-
-    /* async getData() {
-      const response = await this.$http
-        .get(`${this.resource}/records?${this.getQueryParameters()}`)
-        .then(response => {
-          this.records = response.data.data.map(d => {
-            d.visible = false;
-            return d;
-          });
-        });
-      this.loading_submit = false;
-    }, */
     getData() {
       if (this.time) {
         clearTimeout(this.time);
@@ -387,3 +427,24 @@ export default {
   }
 };
 </script>
+
+<style>
+.table-striped tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.custom-table th {
+  background-color: #007bff;
+  color: white;
+}
+.custom-table td {
+  vertical-align: middle;
+}
+.icon-style {
+  font-size: 1.25rem;
+  margin-right: 0.5rem;
+}
+.label-style {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+</style>

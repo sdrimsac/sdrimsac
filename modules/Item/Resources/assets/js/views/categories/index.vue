@@ -1,36 +1,42 @@
-<!-- Listado de Categorías -->
+<!-- Módulo de Categorías -->
 <template>
   <div v-loading="loading">
     <div class="container-fluid p-l-0 p-r-0">
-      <div class="page-header">
-        <div class="row">
-          <div class="col-sm-6">
-            <h6>
-              <span>Productos / {{ title }}</span>
-            </h6>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="/dashboard">Dashboard</a>
-              </li>
-              <li class="breadcrumb-item active">
-                <span class="text-muted">Productos / {{ title }}</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid p-l-0 p-r-0">
       <div class="card mb-0">
-        <div class="card-header bg-primary">
+        <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                        <i class="fas fa-sitemap" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                        Módulo de {{ title }}
+                    </h4>
+                </div>
+
+                <div class="data-table-visible-columns">
+                    <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+                        <i class="fas fa-sitemap"></i>
+                        <i class="fas fa-plus"></i>
+                        <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+                    </el-button>
+                    <el-button
+                      v-if="configuration.health_network"
+                      type="primary"
+                      class="btn_titulos_modal"
+                      href="javascript:void(0)"
+                      @click.prevent="clickImport()"
+                    >
+                      <i class="fa fa-upload fa-lg"></i>
+                      Importar
+                    </el-button>
+                </div>
+                <
+
+        <!-- <div class="card-header bg-primary">
           <h4 class="my-0 text-white">
             <i class="fas fa-sitemap"></i>
-            Listado de {{ title }}
+            Módulo de {{ title }}
           </h4>
-        </div>
+        </div> -->
 
-        <div class="data-table-visible-columns">
+        <!-- <div class="data-table-visible-columns">
           <el-button type="primary" class href="javascript:void(0)" @click.prevent="clickCreate()">
             <i class="fas fa-sitemap fa-lg"></i>
             <i class="fa fa-plus"></i>
@@ -46,7 +52,7 @@
             <i class="fa fa-upload fa-lg"></i>
             Importar
           </el-button>
-        </div>
+        </div> -->
         <div class="card-body">
           <data-table :resource="resource" @clickReport="clickReport" class="table-striped">
             <tr slot="heading" class="bg-primary">
@@ -142,6 +148,21 @@
 <style>
 .table-striped tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+.custom-table th {
+  background-color: #007bff;
+  color: white;
+}
+.custom-table td {
+  vertical-align: middle;
+}
+.icon-style {
+  font-size: 1.25rem;
+  margin-right: 0.5rem;
+}
+.label-style {
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 </style>
 

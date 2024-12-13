@@ -31,8 +31,8 @@
                     <tr v-for="(sale, index) in sales " :key="index">
                       <td>{{ customIndex(index)}}</td>
                       <td>{{ sale.date_of_issue }}</td>
-                      <td class="text-center">{{ sale.series }}-{{ sale.number }}</td>
-                      <td class="text-center">
+                      <td class="text-left">{{ sale.series }}-{{ sale.number }}</td>
+                      <td class="text-left">
                         {{ sale.customer_name }}
                         <br />
                         {{sale.customer_number}}

@@ -15,7 +15,7 @@
                 <div class="col-md-6">
                     <div class="form-group" :class="{'has-danger': errors.name}">
                         <label class="control-label">
-                            <i class="fas fa-tag"></i> Nombre
+                            <i class="fas fa-tag"></i> Catergoría
                         </label>
                         <el-input v-model="form.name"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                         <small class="form-control-feedback" v-if="errors.name" v-text="errors.name[0]"></small>
@@ -24,7 +24,7 @@
                 <div class="col-md-6">
                     <div class="form-group" :class="{'has-danger': errors.identifier}">
                         <label class="control-label">
-                            <i class="fas fa-code"></i> Identificador
+                            <i class="fas fa-code"></i> Identificador (Clasificador)
                         </label>
                         <el-input v-model="form.identifier"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                         <small class="form-control-feedback" v-if="errors.identifier" v-text="errors.identifier[0]"></small>
@@ -42,20 +42,20 @@
                 </div> -->
             </div>
         </div>
-        <div class="form-actions text-end pt-2 pb-2">
-            <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
-            <el-button icon="fas fa-save" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <!-- Botón Cancelar -->
+            <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
+                <span>Cancelar</span>
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit">
+                <span>Guardar</span>
+            </el-button>
         </div>
+
     </form>
 </el-dialog>
 </template>
-
-<style>
-.el-dialog {
-border-radius: 10px;
-overflow: hidden;
-}
-</style>
 
 <script>
 export default {

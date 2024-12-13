@@ -74,7 +74,7 @@
                         if (res.success) {
                             this.$emit('search', res.data)
                         } else {
-                            this.$toast.error(res.message)
+                            this.$showAlert("ERROR", res.message, "error")
                         }
                     })
                     .catch(error => {

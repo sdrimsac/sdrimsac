@@ -1,1191 +1,1287 @@
-<!-- Modal de Creación de Productos -->
+<!-- Crear y Editar Productos Principal -->
 <template>
     <el-dialog
-        width="90%"
+        width="80%"
         :title="titleDialog"
         :visible="showDialog"
         :close-on-click-modal="false"
         @close="close"
         @open="create"
         append-to-body
-        top="7vh"
-        v-loading="loading"
+        top="2vh"
+        
     >
-        <form autocomplete="off" @submit.prevent="submit" v-loading="loading">
-            <div class="form-body">
+        <form autocomplete="off" @submit.prevent="submit">
+            <div class="form-body p-2">
                 <!-- Panel General -->
                 <el-tabs tab-position="top">
                     <el-tab-pane label="General">
-                        <div class="row">
-                            <div class="col-12 col-lg-6 col-xl-3">
-                                <!-- <div class="col-lg-6 col-xl-3"> -->
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.internal_id
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-barcode"></i>
-                                        Código Interno
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Código interno de la empresa para el control de sus productos"
-                                            placement="top-start"
-                                        >
-                                            <i class="fas fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-
-                                    <el-input
-                                        ref="internal_id"
-                                        v-model="form.internal_id"
-                                        dusk="internal_id"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.internal_id"
-                                        v-text="errors.internal_id[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-3"
-                                v-if="
-                                    configuration.show_second_name_external_code
-                                "
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{ 'has-danger': errors.barcode }"
-                                >
-                                    <label class="control-label">
-                                        Código Externo
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Código Barra de la empresa para el control de sus productos"
-                                            placement="top-start"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input
-                                        v-model="form.barcode"
-                                        dusk="barcode"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.barcode"
-                                        v-text="errors.barcode[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-3"
-                                v-if="configuration.origin"
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{ 'has-danger': errors.origin }"
-                                >
-                                    <label class="control-label">
-                                        Código Origen
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Código Barra de la empresa para el control de sus productos"
-                                            placement="top-start"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input
-                                        v-model="form.origin"
-                                        dusk="barcode"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.origin"
-                                        v-text="errors.origin[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div
-                                :class="
-                                    `col-12 col-lg-6 ${
-                                        configuration.show_second_name_external_code
-                                            ? 'col-xl-3'
-                                            : 'col-xl-9'
-                                    }`
-                                "
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.description
-                                    }"
-                                >
-                                    <label
-                                        class="control-label font-weight-bold"
-                                    >
-                                        <i class="fas fa-tag"></i>
-                                        Nombre
-                                        <el-tooltip
-                                            content="Campo Obligatorio, aqui se ingresa el nombre del producto o servicio"
-                                        >
-                                            <span class="text-danger">
-                                                <i
-                                                    class="fas fa-exclamation-circle"
-                                                ></i>
-                                            </span>
-                                        </el-tooltip>
-                                    </label>
-
-                                    <el-input
-                                        v-model="form.description"
-                                        dusk="description"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.description"
-                                        v-text="errors.description[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-3"
-                                v-if="
-                                    configuration.show_second_name_external_code
-                                "
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.second_name
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-user-tag"></i>
-                                        <i class="fas fa-tag"></i>
-                                        Nombre secundario
-                                    </label>
-                                    <el-input
-                                        v-model="form.second_name"
-                                        dusk="second_name"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.second_name"
-                                        v-text="errors.second_name[0]"
-                                    ></small>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6 col-xl-3">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.category_id
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-folder"></i>
-                                        Categoría
-                                        <el-tooltip content="Campo Obligatorio">
-                                            <span class="text-danger">
-                                                <i
-                                                    class="fas fa-exclamation-circle"
-                                                ></i>
-                                            </span>
-                                        </el-tooltip>
-                                    </label>
-                                    <a
-                                        href="#"
-                                        v-if="form_category.add == false"
-                                        class="control-label font-weight-bold text-info"
-                                        @click="form_category.add = true"
-                                    >
-                                        <i class="fas fa-plus-circle"></i> Nuevo
-                                    </a>
-                                    <a
-                                        href="#"
-                                        v-if="form_category.add == true"
-                                        class="control-label font-weight-bold text-info"
-                                        @click="saveCategory()"
-                                    >
-                                        <i class="fas fa-save fa-lg"></i>
-                                    </a>
-                                    <a
-                                        href="#"
-                                        v-if="form_category.add == true"
-                                        class="control-label font-weight-bold text-danger"
-                                        @click="form_category.add = false"
-                                    >
-                                        <i class="fas fa-times fa-lg"></i>
-                                    </a>
-                                    <el-input
-                                        v-if="form_category.add == true"
-                                        v-model="form_category.name"
-                                        dusk="item_code"
-                                        style="margin-bottom:1.5%;"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-
-                                    <el-select
-                                        v-if="form_category.add == false"
-                                        v-model="form.category_id"
-                                        filterable
-                                        clearable
-                                    >
-                                        <el-option
-                                            v-for="option in categories"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.name"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.category_id"
-                                        v-text="errors.category_id[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-3">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger':
-                                            errors.sale_affectation_igv_type_id
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        Zona
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Lugar en donde se despacha el producto"
-                                            placement="top-start"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-select
-                                        :disabled="configuration.college != 0"
-                                        v-model="form.area_id"
-                                    >
-                                        <el-option
-                                            v-for="option in areas"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        class="form-control-feedback"
-                                        v-if="
-                                            errors.sale_affectation_igv_type_id
-                                        "
-                                        v-text="
-                                            errors
-                                                .sale_affectation_igv_type_id[0]
-                                        "
-                                    ></small>
-                                </div>
-                            </div>
-
-                            <!-- <div v-if="form.unit_type_id !='ZZ'" class="col-md-3 center-el-checkbox">
-                                        <div class="form-group" :class="{'has-danger': errors.calculate_quantity}">
-                                            <el-checkbox v-model="form.calculate_quantity">Calcular cantidad por precio</el-checkbox><br>
-                                            <small class="text-danger" v-if="errors.calculate_quantity" v-text="errors.calculate_quantity[0]"></small>
-                                        </div>
-              </div>-->
-
-                            <div class="col-xl-2 col-lg-4">
-                                <div
-                                    class="form-group"
-                                    :class="{ 'has-danger': errors.location }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-hand-pointer"></i>
-                                        Ubicación
-                                    </label>
-                                    <el-input
-                                        v-model="form.location"
-                                        dusk="name"
-                                    ></el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.location"
-                                        v-text="errors.location[0]"
-                                    ></small>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-2 col-lg-4">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.unit_type_id
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fa-ruler"></i>
-                                        Unidad
-                                    </label>
-                                    <el-select
-                                        v-model="form.unit_type_id"
-                                        dusk="unit_type_id"
-                                    >
-                                        <el-option
-                                            v-for="option in unit_types"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.unit_type_id"
-                                        v-text="errors.unit_type_id[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div class="col-xl-2 col-lg-4">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.currency_type_id
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fas fas fa-coins"></i>
-                                        Moneda
-                                    </label>
-                                    <el-select
-                                        v-model="form.currency_type_id"
-                                        dusk="currency_type_id"
-                                    >
-                                        <el-option
-                                            v-for="option in currency_types"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.currency_type_id"
-                                        v-text="errors.currency_type_id[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-4">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.sale_unit_price
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i class="fa fa-tag fa-lg"></i>
-                                        P. Venta
-                                        <el-tooltip
-                                            content="Campo Obligatorio, aqui se ingresa el precio unitario de venta"
-                                        >
-                                            <span class="text-danger">
-                                                <i
-                                                    class="fas fa-exclamation-circle"
-                                                ></i>
-                                            </span>
-                                        </el-tooltip>
-                                    </label>
-
-                                    <el-input
-                                        v-model="form.sale_unit_price"
-                                        dusk="sale_unit_price"
-                                        @input="
-                                            calculatePercentageOfProfitBySale
-                                        "
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.sale_unit_price"
-                                        v-text="errors.sale_unit_price[0]"
-                                    ></small>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-lg-6 col-xl-4">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger':
-                                            errors.sale_affectation_igv_type_id
-                                    }"
-                                >
-                                    <label class="control-label"
-                                        >Afectación</label
-                                    >
-                                    <el-select
-                                        v-model="
-                                            form.sale_affectation_igv_type_id
-                                        "
-                                        @change="changeAffectationIgvType"
-                                    >
-                                        <el-option
-                                            v-for="option in affectation_igv_types"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        ></el-option>
-                                    </el-select>
-                                    <small v-if="show_has_igv">
-                                        <el-checkbox v-model="form.has_igv">
-                                            Incluye Igv
-                                            {{ configuration.include_igv }}
-                                        </el-checkbox>
-                                    </small>
-                                </div>
-                            </div>
-
-                            <div
-                                class="col-xl-4 col-lg-6"
-                                v-if="recordId == null"
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.warehouse_id
-                                    }"
-                                >
-                                    <label class="control-label">
-                                        <i
-                                            class="fas fa-warehouse red-icon fa-lg"
-                                        ></i>
-                                        Almacén
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-select
-                                        :disabled="
-                                            configuration.college ||
-                                                allEstablishment
-                                        "
-                                        @change="changeWarehouse"
-                                        v-model="form.warehouse_id"
-                                    >
-                                        <el-option
-                                            v-for="option in warehouses"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        ></el-option>
-                                    </el-select>
-                                    <small v-if="!recordId">
-                                        <el-checkbox v-model="allEstablishment"
-                                            >Todos los almacenes</el-checkbox
-                                        >
-                                    </small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                v-if="
-                                    recordId == null &&
-                                        form.unit_type_id != 'ZZ'
-                                "
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{ 'has-danger': errors.stock }"
-                                >
-                                    <label
-                                        v-if="!allEstablishment"
-                                        class="control-label"
-                                    >
-                                        <i class="fa fa-boxes fa-lg"></i>
-                                        Stock Inicial
-                                    </label>
-                                    <label v-else class="control-label"
-                                        >Stock Inicial en cada
-                                        establecimiento</label
-                                    >
-                                    <el-input
-                                        :disabled="
-                                            configuration.init_stock == 1
-                                        "
-                                        v-model="form.stock"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.stock"
-                                        v-text="errors.stock[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                v-if="form.unit_type_id != 'ZZ'"
-                            >
-                                <div
-                                    class="form-group"
-                                    :class="{ 'has-danger': errors.stock_min }"
-                                >
-                                    <label class="control-label">
-                                        <i
-                                            class="fa fa-exclamation-circle fa-lg"
-                                        ></i>
-                                        Stock Mínimo
-                                    </label>
-                                    <el-input v-model="form.stock_min">
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.stock_min"
-                                        v-text="errors.stock_min[0]"
-                                    ></small>
-                                </div>
-                            </div>
-
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                v-if="
-                                    form.unit_type_id != 'ZZ' &&
-                                        !form.has_color_size
-                                "
-                            >
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        <i
-                                            class="fa fa-tachometer-alt fa-lg"
-                                        ></i>
-                                        Cant.Máx
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="La cantidad máxima representada en el envase/contenedor"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input
-                                        :disabled="
-                                            form.item_unit_types.length != 0
-                                        "
-                                        v-model="form.max_quantity"
-                                    ></el-input>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                v-if="configuration.consolidated_quotations"
-                            >
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        <i class="fa fa-box fa-lg"></i>
-                                        Peso
-                                    </label>
-                                    <el-input v-model="form.weight"></el-input>
-                                </div>
-                            </div>
-
-                            <div
-                                class="col-12 col-lg-6 col-xl-4"
-                                v-if="
-                                    form.unit_type_id != 'ZZ' &&
-                                        !form.has_color_size
-                                "
-                            >
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        <i class="fa fa-box fa-lg"></i>
-                                        Contenedor de Productos
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Nombre del contenedor de la cantidad máxima Ej. Botella(s), Caja(s), Saco(s)"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input
-                                        :disabled="
-                                            form.max_quantity == 0 ||
-                                                form.max_quantity == null
-                                        "
-                                        v-model="form.max_quantity_description"
-                                    ></el-input>
-                                </div>
-                            </div>
-
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                v-if="form.unit_type_id != 'ZZ'"
-                            >
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        <i class="fa fa-motorcycle fa-lg"></i>
-                                        Add. Delivery
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Valor agregado en SOLES al enviar el producto por delivery"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input
-                                        v-model="form.delivery_cost"
-                                    ></el-input>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-2">
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        <!-- <i class="fa fa-motorcycle fa-lg"></i> -->
-                                        Modelo
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="aqui va el modelo del producto"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input v-model="form.model"></el-input>
-                                </div>
-                            </div>
-                            <div
-                                class="col-12 col-lg-6 col-xl-2"
-                                v-if="form.unit_type_id != 'ZZ'"
-                            >
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        <!-- <i class="fa fa-motorcycle fa-lg"></i> -->
-                                        Calidad Producto
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="aqui se agrega la calidad de producto"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </label>
-                                    <el-input v-model="form.quality"></el-input>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-12 col-xl-12">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.brand_id
-                                    }"
-                                >
-                                    <label class="control-label">Marca</label>
-                                    <!-- Nuevo, Guardar y Cancelar Marca -->
-                                    <a
-                                        href="#"
-                                        v-if="form_brand.add == false"
-                                        class="control-label font-weight-bold text-info"
-                                        @click="form_brand.add = true"
-                                    >
-                                        <i class="fas fa-plus-circle"></i>
-                                        Nuevo
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        v-if="form_brand.add == true"
-                                        class="control-label font-weight-bold text-info"
-                                        @click="saveBrand()"
-                                    >
-                                        <i class="fas fa-save fa-lg"></i>
-                                    </a>
-                                    <a
-                                        href="#"
-                                        v-if="form_brand.add == true"
-                                        class="control-label font-weight-bold text-danger"
-                                        @click="form_brand.add = false"
-                                    >
-                                        <i class="fas fa-times fa-lg"></i>
-                                    </a>
-
-                                    <el-input
-                                        v-if="form_category.add == true"
-                                        v-model="form_category.name"
-                                        dusk="item_code"
-                                        style="margin-bottom:1.5%;"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-                                    <el-input
-                                        v-if="form_brand.add == true"
-                                        v-model="form_brand.name"
-                                        dusk="item_code"
-                                        style="margin-bottom:1.5%;"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i>
-                                    </el-input>
-
-                                    <el-select
-                                        v-if="form_brand.add == false"
-                                        v-model="form.brand_id"
-                                        filterable
-                                        clearable
-                                    >
-                                        <el-option
-                                            v-for="option in brands"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.name"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        class="text-danger"
-                                        v-if="errors.brand_id"
-                                        v-text="errors.brand_id[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-md-3 center-el-checkbox"
-                                v-if="configuration.detraction"
-                            >
-                                <div class="form-group">
-                                    <el-checkbox
-                                        v-model="form.subject_to_detraction"
-                                        >Sujeto a detracción</el-checkbox
-                                    >
-                                </div>
-                            </div>
-                            <!-- **** -->
-                            <div class="d-flex row" v-if="showSeries">
-                                <div
-                                    class="col-12 col-lg-6 col-xl-3"
-                                    v-if="configuration.series_enabled"
-                                >
-                                    <div
-                                        v-if="form.unit_type_id != 'ZZ'"
-                                        class="col-md-3 center-el-checkbox"
-                                    >
-                                        <div class="form-group">
-                                            <el-checkbox
-                                                v-model="form.series_enabled"
-                                                @change="changeLotsEnabled"
+                        <!-- Primer bloque de fila-->
+                        <div class="container">
+                            <div class="row">
+                                <!-- Apartado de Código  Nombre y Almacén-->
+                                <div class="col-9">
+                                    <div class="row col-12">
+                                        <!-- Código Interno -->
+                                        <div class="col-12 col-lg-6 col-xl-4">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.internal_id
+                                                }"
                                             >
-                                                ¿Maneja series?
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="Agregar Series"
-                                                    placement="top"
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-barcode"
+                                                    ></i>
+                                                    <i class="fas fa-key"></i>
+                                                    Código Interno
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Código interno de la empresa para el control de sus productos"
+                                                        placement="top-start"
+                                                    >
+                                                        <i
+                                                            class="fas fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+
+                                                <el-input
+                                                    ref="internal_id"
+                                                    v-model="form.internal_id"
+                                                    dusk="internal_id"
                                                 >
                                                     <i
-                                                        class="fa fa-info-circle"
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
                                                     ></i>
-                                                </el-tooltip>
-                                            </el-checkbox>
-                                            <br />
+                                                </el-input>
+                                                <small
+                                                    class="text-danger"
+                                                    v-if="errors.internal_id"
+                                                    v-text="
+                                                        errors.internal_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div
-                                        class="col-md-4 d-flex align-items-end"
-                                        v-if="
-                                            form.unit_type_id != 'ZZ' &&
-                                                form.series_enabled &&
-                                                recordId == null
-                                        "
-                                    >
+                                        <!-- Código Externo -->
                                         <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.lot_code
-                                            }"
-                                        >
-                                            <!-- <label class="control-label">series
-                                                <el-tooltip class="item" effect="dark" content="ingrese series de productos" placement="top">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </el-tooltip>
-                                                <el-button style="margin-top:2%;margin-left:15px;" type="primary" icon="el-icon-edit-outline" @click.prevent="clickLotcode"></el-button>
-                      </label>-->
-                                            <el-button
-                                                style="margin-top:2%;margin-left:15px;"
-                                                type="primary"
-                                                icon="el-icon-edit-outline"
-                                                @click.prevent="clickLotcode"
-                                            ></el-button>
-
-                                            <small
-                                                class="text-danger"
-                                                v-if="errors.lot_code"
-                                                v-text="errors.lot_code[0]"
-                                            ></small>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="col-12 col-lg-6 col-xl-3"
-                                    v-if="configuration.lots_enabled"
-                                >
-                                    <div
-                                        v-if="form.unit_type_id != 'ZZ'"
-                                        class="col-md-3 center-el-checkbox"
-                                    >
-                                        <div class="form-group">
-                                            <el-checkbox
-                                                v-model="form.lots_enabled"
-                                                @change="changeLotsEnabled"
-                                                >¿Maneja lotes?</el-checkbox
-                                            >
-                                            <br />
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="col-md-12"
-                                        v-if="
-                                            form.unit_type_id != 'ZZ' &&
-                                                form.lots_enabled
-                                        "
-                                    >
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.lot_code
-                                            }"
-                                        >
-                                            <label class="control-label"
-                                                >Código lote</label
-                                            >
-                                            <el-input v-model="form.lot_code">
-                                                <i
-                                                    slot="prefix"
-                                                    class="el-icon-edit-outline"
-                                                ></i>
-                                            </el-input>
-                                            <small
-                                                class="text-danger"
-                                                v-if="errors.lot_code"
-                                                v-text="errors.lot_code[0]"
-                                            ></small>
-                                        </div>
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.date_of_due
-                                            }"
-                                            v-if="form.unit_type_id != 'ZZ'"
-                                        >
-                                            <label class="control-label">
-                                                Fecha de Vencimiento
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="Fecha Vencimiento del lote"
-                                                    placement="top"
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
-                                                </el-tooltip>
-                                            </label>
-                                            <el-date-picker
-                                                class="col-md-12"
-                                                v-model="form.date_of_due"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                                :clearable="true"
-                                            ></el-date-picker>
-                                            <small
-                                                class="text-danger"
-                                                v-if="errors.date_of_due"
-                                                v-text="errors.date_of_due[0]"
-                                            ></small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="col-12 col-lg-6 col-xl-3"
-                                    v-if="configuration.color_size_enabled"
-                                >
-                                    <div
-                                        v-if="form.unit_type_id != 'ZZ'"
-                                        class="col-md-4 center-el-checkbox"
-                                    >
-                                        <div class="form-group">
-                                            <el-checkbox
-                                                :disabled="recordId != null"
-                                                v-model="form.has_color_size"
-                                            >
-                                                ¿Maneja Color y Talla ?
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="ingresa talla y color del producto"
-                                                    placement="top"
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
-                                                </el-tooltip>
-                                            </el-checkbox>
-                                            <br />
-                                        </div>
-                                        <div
-                                            class="d-flex align-items-end"
+                                            class="col-12 col-lg-6 col-xl-4"
                                             v-if="
-                                                form.unit_type_id != 'ZZ' &&
-                                                    form.has_color_size &&
-                                                    recordId == null
+                                                configuration.show_second_name_external_code
                                             "
                                         >
                                             <div
                                                 class="form-group"
                                                 :class="{
-                                                    'has-danger':
-                                                        errors.has_color_size
+                                                    'has-danger': errors.barcode
                                                 }"
                                             >
-                                                <el-button
-                                                    style="margin-top:2%;margin-left:15px;"
-                                                    type="primary"
-                                                    icon="el-icon-edit-outline"
-                                                    @click.prevent="
-                                                        clickColorSize
-                                                    "
-                                                ></el-button>
-
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-qrcode"
+                                                    ></i>
+                                                    Código Externo
+                                                    <el-tooltip
+                                                        content="Código interno de la empresa para el control de sus productos"
+                                                        placement="top-start"
+                                                    >
+                                                        <i
+                                                            class="fas fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    v-model="form.barcode"
+                                                    dusk="barcode"
+                                                >
+                                                    <i
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
+                                                    ></i>
+                                                </el-input>
                                                 <small
                                                     class="text-danger"
-                                                    v-if="errors.has_color_size"
-                                                    v-text="
-                                                        errors.has_color_size[0]
-                                                    "
+                                                    v-if="errors.barcode"
+                                                    v-text="errors.barcode[0]"
                                                 ></small>
+                                            </div>
+                                        </div>
+                                        <!-- Código Origen -->
+                                        <div
+                                            class="col-12 col-lg-6 col-xl-4"
+                                            v-if="configuration.origin"
+                                        >
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger': errors.origin
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i class="fas fa-globe"></i>
+                                                    Código Origen
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Código Barra de la empresa para el control de sus productos"
+                                                        placement="top-start"
+                                                    >
+                                                        <i
+                                                            class="fas fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    v-model="form.origin"
+                                                    dusk="barcode"
+                                                >
+                                                    <i
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
+                                                    ></i>
+                                                </el-input>
+                                                <small
+                                                    class="text-danger"
+                                                    v-if="errors.origin"
+                                                    v-text="errors.origin[0]"
+                                                ></small>
+                                            </div>
+                                        </div>
+                                        <!-- Nombre y Servicio -->
+                                        <div
+                                            class="col-12"
+                                            
+                                        >
+                                            <div
+                                                :class="
+                                                    `col-12 col-lg-12 ${
+                                                        configuration.show_second_name_external_code
+                                                            ? 'col-xl-12'
+                                                            : 'col-xl-12'
+                                                    }`
+                                                "
+                                            >
+                                                <div
+                                                    class="form-group"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.description
+                                                    }"
+                                                >
+                                                    <label
+                                                        class="control-label font-weight-bold"
+                                                    >
+                                                        <i
+                                                            class="fas fa-tag"
+                                                        ></i>
+                                                        Nombre/Servicio
+                                                        <el-tooltip
+                                                            content="Campo Obligatorio, aqui se ingresa el nombre del producto o servicio"
+                                                        >
+                                                            <span
+                                                                class="text-danger"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-exclamation-circle"
+                                                                ></i>
+                                                            </span>
+                                                        </el-tooltip>
+                                                    </label>
+
+                                                    <el-input
+                                                        @input="
+                                                            value =>
+                                                                (form.description = value.toUpperCase())
+                                                        "
+                                                        v-model="
+                                                            form.description
+                                                        "
+                                                        dusk="description"
+                                                    >
+                                                        <i
+                                                            slot="prefix"
+                                                            class="el-icon-edit-outline"
+                                                        ></i>
+                                                    </el-input>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="
+                                                            errors.description
+                                                        "
+                                                        v-text="
+                                                            errors
+                                                                .description[0]
+                                                        "
+                                                    ></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <template>
+                                            <div class="row align-items-start">
+                                                <!-- Nombre Secundario -->
+                                                <div
+                                                    class="col-md-6 px-2"
+                                                    v-if="
+                                                        configuration.origin &&
+                                                            configuration.show_second_name_external_code
+                                                    "
+                                                >
+                                                    <div
+                                                        class="form-group"
+                                                        :class="{
+                                                            'has-danger':
+                                                                errors.second_name
+                                                        }"
+                                                    >
+                                                        <label
+                                                            class="control-label"
+                                                        >
+                                                            <i
+                                                                class="fas fa-user-tag"
+                                                            ></i>
+                                                            <i
+                                                                class="fas fa-tag"
+                                                            ></i>
+                                                            Nombre Secundario
+                                                        </label>
+
+                                                        <el-input
+                                                            @input="
+                                                                value =>
+                                                                    (form.second_name = value.toUpperCase())
+                                                            "
+                                                            v-model="
+                                                                form.second_name
+                                                            "
+                                                            dusk="second_name"
+                                                        >
+                                                            <i
+                                                                slot="prefix"
+                                                                class="el-icon-edit-outline"
+                                                            ></i>
+                                                        </el-input>
+                                                        <small
+                                                            class="text-danger"
+                                                            v-if="
+                                                                errors.second_name
+                                                            "
+                                                            v-text="
+                                                                errors
+                                                                    .second_name[0]
+                                                            "
+                                                        ></small>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Almacenes -->
+                                                <div
+                                                    class="col-md-6 px-2"
+                                                    v-if="recordId == null"
+                                                >
+                                                    <div
+                                                        class="form-group"
+                                                        :class="{
+                                                            'has-danger':
+                                                                errors.warehouse_id
+                                                        }"
+                                                    >
+                                                        <label
+                                                            class="control-label d-flex align-items-center"
+                                                        >
+                                                            <i
+                                                                class="fas fa-warehouse red-icon fa-lg me-1"
+                                                            ></i>
+                                                            Almacén
+                                                            <el-tooltip
+                                                                class="item ms-2"
+                                                                effect="dark"
+                                                                content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento"
+                                                                placement="top"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-info-circle"
+                                                                ></i>
+                                                            </el-tooltip>
+                                                        </label>
+                                                        <el-select
+                                                            :disabled="
+                                                                configuration.college ||
+                                                                    allEstablishment
+                                                            "
+                                                            @change="
+                                                                changeWarehouse
+                                                            "
+                                                            v-model="
+                                                                form.warehouse_id
+                                                            "
+                                                            class="full-width-select"
+                                                        >
+                                                            <el-option
+                                                                v-for="option in warehouses"
+                                                                :key="option.id"
+                                                                :value="
+                                                                    option.id
+                                                                "
+                                                                :label="
+                                                                    option.description
+                                                                "
+                                                            >
+                                                            </el-option>
+                                                        </el-select>
+                                                        <small v-if="!recordId">
+                                                            <el-checkbox
+                                                                v-model="
+                                                                    allEstablishment
+                                                                "
+                                                            >
+                                                                Todos los
+                                                                almacenes</el-checkbox
+                                                            >
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <!-- Apartado Imagen -->
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Imagen
+                                            <span class="text-danger"></span>
+                                        </label>
+                                        <el-upload
+                                            class="avatar-uploader"
+                                            :data="{ type: 'items' }"
+                                            :headers="headers"
+                                            :action="`/${resource}/uploads`"
+                                            :show-file-list="false"
+                                            :on-success="onSuccess"
+                                        >
+                                            <img
+                                                v-if="form.image_url"
+                                                :src="form.image_url"
+                                                class="avatar"
+                                            />
+                                            <i
+                                                v-else
+                                                class="el-icon-plus avatar-uploader-icon"
+                                            ></i>
+                                        </el-upload>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- segundo bloque de fila-->
+                        <div class="container">
+                            <div class="row">
+                                <!-- Categoría -->
+                                <div class="col-12 col-lg-6 col-xl-3">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.category_id
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-baseline justify-content-between"
+                                        >
+                                            <span
+                                                ><i class="fas fa-folder"></i>
+                                                Categoría</span
+                                            >
+                                            <div class="btn-group">
+                                                <button
+                                                    type="button"
+                                                    v-if="!form_category.add"
+                                                    class="btn btn-sm btn-primary btn-circle mx-1"
+                                                    @click="
+                                                        activateForm('category')
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-plus-circle"
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    v-if="form_category.add"
+                                                    class="btn btn-sm btn-success btn-circle mx-1"
+                                                    @click="
+                                                        saveForm('category')
+                                                    "
+                                                >
+                                                    <i class="fas fa-save"></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    v-if="form_category.add"
+                                                    class="btn btn-sm btn-danger btn-circle mx-1"
+                                                    @click="
+                                                        cancelForm('category')
+                                                    "
+                                                >
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </label>
+
+                                        <el-input
+                                            v-if="form_category.add"
+                                            ref="categoryInput"
+                                            @input="
+                                                value =>
+                                                    (form_category.name = value.toUpperCase())
+                                            "
+                                            v-model="form_category.name"
+                                            placeholder="Ingrese el nombre de la categoría"
+                                        ></el-input>
+
+                                        <el-select
+                                            v-if="!form_category.add"
+                                            v-model="form.category_id"
+                                            filterable
+                                            clearable
+                                        >
+                                            <el-option
+                                                v-for="option in categories"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.name"
+                                            ></el-option>
+                                        </el-select>
+
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.category_id"
+                                            v-text="errors.category_id[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+
+                                <!-- Marca -->
+                                <div class="col-12 col-lg-6 col-xl-3">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.brand_id
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-baseline justify-content-between"
+                                        >
+                                            <span
+                                                ><i class="fas fa-tags"></i>
+                                                Marca</span
+                                            >
+                                            <div class="btn-group">
+                                                <button
+                                                    type="button"
+                                                    v-if="!form_brand.add"
+                                                    class="btn btn-sm btn-primary btn-circle mx-1"
+                                                    @click="
+                                                        activateForm('brand')
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-plus-circle"
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    v-if="form_brand.add"
+                                                    class="btn btn-sm btn-success btn-circle mx-1"
+                                                    @click="saveForm('brand')"
+                                                >
+                                                    <i class="fas fa-save"></i>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    v-if="form_brand.add"
+                                                    class="btn btn-sm btn-danger btn-circle mx-1"
+                                                    @click="cancelForm('brand')"
+                                                >
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </label>
+
+                                        <el-input
+                                            v-if="form_brand.add"
+                                            ref="brandInput"
+                                            @input="
+                                                value =>
+                                                    (form_brand.name = value.toUpperCase())
+                                            "
+                                            v-model="form_brand.name"
+                                            placeholder="Ingrese el nombre de la marca"
+                                        ></el-input>
+
+                                        <el-select
+                                            v-if="!form_brand.add"
+                                            v-model="form.brand_id"
+                                            filterable
+                                            clearable
+                                        >
+                                            <el-option
+                                                v-for="option in brands"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.name"
+                                            ></el-option>
+                                        </el-select>
+
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.brand_id"
+                                            v-text="errors.brand_id[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+
+                                <!-- Modelo -->
+                                <div class="col-12 col-lg-6 col-xl-3">
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label d-flex align-items-baseline"
+                                        >
+                                            <span
+                                                ><i class="fas fa-box-open"></i>
+                                                Modelo</span
+                                            >
+                                        </label>
+                                        <el-input
+                                            v-model="form.model"
+                                        ></el-input>
+                                    </div>
+                                </div>
+
+                                <!-- Calidad -->
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3 px-2"
+                                    v-if="form.unit_type_id != 'ZZ'"
+                                >
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <!-- <i class="fa fa-motorcycle fa-lg"></i> -->
+                                            Calidad
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Aquí se agrega la Calidad de Producto"
+                                                placement="top"
+                                            >
+                                                <i
+                                                    class="fas fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            v-model="form.quality"
+                                        ></el-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- tercer bloque de fila-->
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <!-- Afectación -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 px-2">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger':
+                                                errors.sale_affectation_igv_type_id
+                                        }"
+                                    >
+                                        <label class="control-label"
+                                            >Afectación</label
+                                        >
+                                        <el-select
+                                            v-model="
+                                                form.sale_affectation_igv_type_id
+                                            "
+                                            @change="changeAffectationIgvType"
+                                        >
+                                            <el-option
+                                                v-for="option in affectation_igv_types"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.description"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                        <small v-if="show_has_igv">
+                                            <el-checkbox v-model="form.has_igv">
+                                                Incluye Igv
+                                                {{ configuration.include_igv }}
+                                            </el-checkbox>
+                                        </small>
+                                    </div>
+                                </div>
+                                <!-- Moneda -->
+                                <div class="col-12 col-lg-6 col-xl-3 px-2">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger':
+                                                errors.currency_type_id
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i class="fas fa-coins me-2"></i>
+                                            Moneda
+                                        </label>
+                                        <el-select
+                                            v-model="form.currency_type_id"
+                                            dusk="currency_type_id"
+                                            class="uniform-input"
+                                        >
+                                            <el-option
+                                                v-for="option in currency_types"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.description"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.currency_type_id"
+                                            v-text="errors.currency_type_id[0]"
+                                        >
+                                        </small>
+                                    </div>
+                                </div>
+                                <!-- Precio de Venta -->
+                                <div class="col-xl-3 col-lg-4 col-md-6 px-2">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.sale_unit_price
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i class="fa fa-tag fa-lg me-1"></i>
+                                            P. Venta
+                                            <el-tooltip
+                                                class="ms-2"
+                                                content="Campo Obligatorio, aquí se ingresa el precio unitario de venta"
+                                            >
+                                                <span class="text-danger">
+                                                    <i
+                                                        class="fas fa-exclamation-circle"
+                                                    ></i>
+                                                </span>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            v-model="form.sale_unit_price"
+                                            dusk="sale_unit_price"
+                                            @input="
+                                                calculatePercentageOfProfitBySale
+                                            "
+                                        >
+                                            <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                            ></i>
+                                        </el-input>
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.sale_unit_price"
+                                            v-text="errors.sale_unit_price[0]"
+                                        >
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Delivery -->
+                                <div
+                                    class="col-xl-3 col-lg-4 col-md-6 px-2"
+                                    v-if="form.unit_type_id != 'ZZ'"
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i
+                                                class="fa fa-motorcycle fa-lg me-1"
+                                            ></i>
+                                            Add. Delivery
+                                            <el-tooltip
+                                                class="ms-2"
+                                                effect="dark"
+                                                content="Valor agregado en SOLES al enviar el producto por delivery"
+                                                placement="top"
+                                            >
+                                                <i
+                                                    class="fas fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            v-model="form.delivery_cost"
+                                        ></el-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- cuarto bloque de fila-->
+                        <div class="container">
+                            <div class="row">
+                                <!-- Zona -->
+                                <div class="col-12 col-lg-6 col-xl-3 px-2">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger':
+                                                errors.sale_affectation_igv_type_id
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i
+                                                class="fas fa-map-marker-alt me-2"
+                                            ></i>
+                                            Zona
+                                            <el-tooltip
+                                                class="ms-2"
+                                                effect="dark"
+                                                content="Lugar en donde se despacha e iprime el producto "
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fas fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-select
+                                            :disabled="
+                                                configuration.college != 0
+                                            "
+                                            v-model="form.area_id"
+                                            class="uniform-input"
+                                        >
+                                            <el-option
+                                                v-for="option in areas"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.description"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="
+                                                errors.sale_affectation_igv_type_id
+                                            "
+                                            v-text="
+                                                errors
+                                                    .sale_affectation_igv_type_id[0]
+                                            "
+                                        >
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Ubicación -->
+                                <div class="col-12 col-lg-6 col-xl-3 px-2">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.location
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i
+                                                class="fas fa-hand-pointer me-2"
+                                            ></i>
+                                            Ubicación
+                                        </label>
+                                        <el-input
+                                            v-model="form.location"
+                                            dusk="name"
+                                            class="uniform-input"
+                                        >
+                                        </el-input>
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.location"
+                                            v-text="errors.location[0]"
+                                        >
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Stock Mínimo -->
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3 px-2"
+                                    v-if="form.unit_type_id != 'ZZ'"
+                                >
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.stock_min
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i
+                                                class="fa fa-exclamation-circle fa-lg me-2"
+                                            ></i>
+                                            Stock Mínimo
+                                        </label>
+                                        <el-input
+                                            v-model="form.stock_min"
+                                            class="uniform-input"
+                                        >
+                                            <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                            ></i>
+                                        </el-input>
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.stock_min"
+                                            v-text="errors.stock_min[0]"
+                                        >
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Unidad de Medida -->
+                                <div class="col-12 col-lg-6 col-xl-3">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.unit_type_id
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label d-flex align-items-baseline"
+                                        >
+                                            <span
+                                                ><i class="fas fa-ruler"></i>
+                                                Unidad Medida</span
+                                            >
+                                        </label>
+                                        <el-select
+                                            v-model="form.unit_type_id"
+                                            dusk="unit_type_id"
+                                        >
+                                            <el-option
+                                                v-for="option in unit_types"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.description"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.unit_type_id"
+                                            v-text="errors.unit_type_id[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- quinto bloque de fila-->
+                        <div class="container">
+                            <div class="row">
+                                <!-- Cantidad Máxima -->
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3 px-2"
+                                    v-if="
+                                        form.unit_type_id != 'ZZ' &&
+                                            !form.has_color_size
+                                    "
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i
+                                                class="fa fa-tachometer-alt fa-lg me-2"
+                                            ></i>
+                                            Cant.Máx
+                                            <el-tooltip
+                                                class="ms-2"
+                                                effect="dark"
+                                                content="La cantidad máxima representada en el envase/contenedor"
+                                                placement="top"
+                                            >
+                                                <i
+                                                    class="fas fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            :disabled="
+                                                form.item_unit_types.length != 0
+                                            "
+                                            v-model="form.max_quantity"
+                                            class="uniform-input"
+                                        >
+                                        </el-input>
+                                    </div>
+                                </div>
+
+                                <!-- Contenedor de Productos -->
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3 px-2"
+                                    v-if="
+                                        form.unit_type_id != 'ZZ' &&
+                                            !form.has_color_size
+                                    "
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i class="fa fa-box fa-lg me-2"></i>
+                                            Contenedor
+                                            <el-tooltip
+                                                class="ms-2"
+                                                effect="dark"
+                                                content="Nombre del contenedor de la cantidad máxima Ej. Botella(s), Caja(s), Saco(s)"
+                                                placement="top"
+                                            >
+                                                <i
+                                                    class="fas fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            :disabled="
+                                                form.max_quantity == 0 ||
+                                                    form.max_quantity == null
+                                            "
+                                            v-model="
+                                                form.max_quantity_description
+                                            "
+                                            class="uniform-input"
+                                        >
+                                        </el-input>
+                                    </div>
+                                </div>
+
+                                <!-- Peso -->
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3 px-2"
+                                    v-if="configuration.consolidated_quotations"
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i class="fa fa-box fa-lg me-2"></i>
+                                            Peso
+                                        </label>
+                                        <el-input
+                                            v-model="form.weight"
+                                            class="uniform-input"
+                                        >
+                                        </el-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <div class="row">
+                                <!-- Columna 1 - Sujeto a Detracción y Se Fabrica -->
+                                <div class="col-md-3">
+                                    <div
+                                        class="form-group"
+                                        v-if="configuration.detraction"
+                                    >
+                                        <el-checkbox
+                                            v-model="form.subject_to_detraction"
+                                            style="color: black;"
+                                        >
+                                            Sujeto a Detracción
+                                        </el-checkbox>
+                                    </div>
+                                    <div
+                                        class="form-group"
+                                        v-if="configuration.transform_item"
+                                    >
+                                        <el-checkbox
+                                            v-model="form.is_manufactured"
+                                            style="color: black;"
+                                        >
+                                            ¿Se fabrica?
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Aquí se indica si el Producto es Principal para TRANSFORMACIÓN"
+                                                placement="top"
+                                            >
+                                                <i
+                                                    class="fas fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-checkbox>
+                                    </div>
+                                </div>
+
+                                <!-- Columna 2 - Maneja series, Maneja lotes, Talla y Color -->
+                                <div class="col-md-9">
+                                    <div class="d-flex flex-wrap">
+                                        <!-- Maneja Series -->
+                                        <div
+                                            class="col-12 col-lg-4 col-xl-3"
+                                            v-if="configuration.series_enabled"
+                                        >
+                                            <div
+                                                v-if="form.unit_type_id != 'ZZ'"
+                                                class="col-md-3 center-el-checkbox"
+                                            >
+                                                <div class="form-group">
+                                                    <el-checkbox
+                                                        v-model="
+                                                            form.series_enabled
+                                                        "
+                                                        @change="
+                                                            changeLotsEnabled
+                                                        "
+                                                        style="color: black;"
+                                                    >
+                                                        Series
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="Agregar Series"
+                                                            placement="top"
+                                                        >
+                                                            <i
+                                                                class="fas fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                    </el-checkbox>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Maneja Lotes -->
+                                        <div
+                                            class="col-12 col-lg-4 col-xl-3"
+                                            v-if="configuration.lots_enabled"
+                                        >
+                                            <div
+                                                v-if="form.unit_type_id != 'ZZ'"
+                                                class="col-md-3 center-el-checkbox"
+                                            >
+                                                <div class="form-group">
+                                                    <el-checkbox
+                                                        v-model="
+                                                            form.lots_enabled
+                                                        "
+                                                        @change="
+                                                            changeLotsEnabled
+                                                        "
+                                                        style="color: black;"
+                                                    >
+                                                        Lotes
+                                                    </el-checkbox>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Maneja Color y Talla -->
+                                        <div
+                                            class="col-12 col-lg-4 col-xl-3"
+                                            v-if="
+                                                configuration.color_size_enabled
+                                            "
+                                        >
+                                            <div
+                                                v-if="form.unit_type_id != 'ZZ'"
+                                                class="col-md-4 center-el-checkbox"
+                                            >
+                                                <div class="form-group">
+                                                    <el-checkbox
+                                                        :disabled="
+                                                            recordId != null
+                                                        "
+                                                        v-model="
+                                                            form.has_color_size
+                                                        "
+                                                        style="color: black;"
+                                                    >
+                                                        Talla y Color
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="Ingresa talla y color del producto"
+                                                            placement="top"
+                                                        >
+                                                            <i
+                                                                class="fas fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                    </el-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Columna de promoción -->
+                                        <div
+                                            class="col-xl-2 col-lg-4"
+                                            v-if="configuration.promotions_sell"
+                                        >
+                                            <div
+                                                v-if="form.unit_type_id != 'ZZ'"
+                                                class="col-md-3 center-el-checkbox"
+                                            >
+                                                <div class="form-group">
+                                                    <el-checkbox
+                                                        v-model="
+                                                            form.is_promotion
+                                                        "
+                                                        style="color: black;"
+                                                    >
+                                                        Promoción
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="Ingrese cantidad Promoción"
+                                                            placement="top"
+                                                        >
+                                                            <i
+                                                                class="fas fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                    </el-checkbox>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-xl-6 col-lg-12"
+                                                v-if="
+                                                    form.unit_type_id != 'ZZ' &&
+                                                        form.is_promotion
+                                                "
+                                            >
+                                                <div
+                                                    class="form-group"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.promotion_count
+                                                    }"
+                                                >
+                                                    <el-input
+                                                        v-model="
+                                                            form.promotion_count
+                                                        "
+                                                        type="number"
+                                                    >
+                                                        <i
+                                                            slot="prefix"
+                                                            class="el-icon-edit-outline"
+                                                        ></i>
+                                                    </el-input>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="
+                                                            errors.promotion_count
+                                                        "
+                                                        v-text="
+                                                            errors
+                                                                .promotion_count[0]
+                                                        "
+                                                    ></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-if="
+                                                configuration.warranty_product
+                                            "
+                                            class="col-12 col-lg-6 col-xl-3"
+                                        >
+                                            <div
+                                                v-if="form.unit_type_id != 'ZZ'"
+                                                class="col-md-3 center-el-checkbox"
+                                            >
+                                                <div class="form-group">
+                                                    <el-checkbox
+                                                        v-model="
+                                                            form.has_warranty
+                                                        "
+                                                        @change="
+                                                            changeHasWarranty
+                                                        "
+                                                        >¿Tiene
+                                                        Garantia?</el-checkbox
+                                                    >
+                                                    <br />
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-md-12"
+                                                v-if="
+                                                    form.unit_type_id != 'ZZ' &&
+                                                        form.has_warranty
+                                                "
+                                            >
+                                                <div
+                                                    class="form-group"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.month_day
+                                                    }"
+                                                >
+                                                    <label class="control-label"
+                                                        >Ingrese Mumero de Meses
+                                                        Garantia</label
+                                                    >
+                                                    <el-input
+                                                        v-model="form.month_day"
+                                                        type="number"
+                                                    >
+                                                        <i
+                                                            slot="prefix"
+                                                            class="el-icon-edit-outline"
+                                                        ></i>
+                                                    </el-input>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="errors.month_day"
+                                                        v-text="
+                                                            errors.month_day[0]
+                                                        "
+                                                    ></small>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    class="col-12 col-lg-6 col-xl-3"
-                                    v-if="configuration.transform_item"
-                                >
-                                    <div
-                                        v-if="form.unit_type_id != 'ZZ'"
-                                        class="col-md-3 center-el-checkbox"
-                                    >
-                                        <div class="form-group">
-                                            <el-checkbox
-                                                v-model="form.is_manufactured"
-                                            >
-                                                ¿Se fabrica?
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="Producto principal para transformación"
-                                                    placement="top"
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
-                                                </el-tooltip>
-                                            </el-checkbox>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="col-xl-2 col-lg-4"
-                                    v-if="configuration.promotions_sell"
-                                >
-                                    <div
-                                        v-if="form.unit_type_id != 'ZZ'"
-                                        class="col-md-3 center-el-checkbox"
-                                    >
-                                        <div class="form-group">
-                                            <el-checkbox
-                                                v-model="form.is_promotion"
-                                            >
-                                                ¿Maneja Promoción?
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="Ingrese cantidad Promoción"
-                                                    placement="top"
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
-                                                </el-tooltip>
-                                            </el-checkbox>
-                                            <br />
-                                        </div>
-                                    </div>
-                                    <!-- Sólo muestra este div si form.is_promotion es true -->
-                                    <div
-                                        class="col-xl-6 col-lg-12"
-                                        v-if="
-                                            form.unit_type_id != 'ZZ' &&
-                                                form.is_promotion
-                                        "
-                                    >
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger':
-                                                    errors.promotion_count
-                                            }"
-                                        >
-                                            <el-input
-                                                v-model="form.promotion_count"
-                                                type="number"
-                                            >
-                                                <i
-                                                    slot="prefix"
-                                                    class="el-icon-edit-outline"
-                                                ></i>
-                                            </el-input>
-                                            <small
-                                                class="text-danger"
-                                                v-if="errors.promotion_count"
-                                                v-text="
-                                                    errors.promotion_count[0]
-                                                "
-                                            ></small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div 
-                                   v-if="configuration.warranty_product"
-                                    class="col-12 col-lg-6 col-xl-3"
-                                >
-                                    <div
-                                        v-if="form.unit_type_id != 'ZZ'"
-                                        class="col-md-3 center-el-checkbox"
-                                    >
-                                        <div class="form-group">
-                                            <el-checkbox
-                                                v-model="form.has_warranty"
-                                                @change="changeHasWarranty"
-                                                >¿Tiene Garantia?</el-checkbox
-                                            >
-                                            <br />
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="col-md-12"
-                                        v-if="
-                                            form.unit_type_id != 'ZZ' &&
-                                                form.has_warranty
-                                        "
-                                    >
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.month_day
-                                            }"
-                                        >
-                                            <label class="control-label"
-                                                >Ingrese Mumero de Meses Garantia</label
-                                            >
-                                            <el-input v-model="form.month_day" type="number">
-                                                <i
-                                                    slot="prefix"
-                                                    class="el-icon-edit-outline"
-                                                ></i>
-                                            </el-input>
-                                            <small
-                                                class="text-danger"
-                                                v-if="errors.month_day"
-                                                v-text="errors.month_day[0]"
-                                            ></small>
-                                        </div>
-                                    </div>
-                                </div>  
                             </div>
                         </div>
-                        <div class="row">
-                            <br />
-                            <div class="col-md-12">
-                                <!-- <h6 class="separator-title">
-                                    Campos adicionales
-                </h6>-->
-                            </div>
-                            <div class="row col-md-12">
-                                <!-- <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Imágen
-                                            <span class="text-danger"></span></label>
-                                        <el-upload class="avatar-uploader" :data="{ type: 'items' }" :headers="headers" :action="`/${resource}/uploads`" :show-file-list="false" :on-success="onSuccess">
-                                            <img v-if="form.image_url" :src="form.image_url" class="avatar" />
-                                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                        </el-upload>
-                                    </div>
-                </div>-->
 
+                        <div class="row">
+                            <div class="col-md-12"></div>
+                            <div class="row col-md-12">
+                                <!-- Atributos -->
                                 <div
                                     v-if="attribute_types.length > 0"
                                     class="col-12 col-lg-12 col-xl-12"
@@ -1198,7 +1294,7 @@
                                             content="Diferentes presentaciones para la venta del producto"
                                             placement="top"
                                         >
-                                            <i class="fa fa-info-circle"></i>
+                                            <i class="fas fa-info-circle"></i>
                                         </el-tooltip>
                                         <a
                                             href="#"
@@ -1290,35 +1386,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label class="control-label">
-                                            Imágen
-                                            <span class="text-danger"></span>
-                                        </label>
-                                        <el-upload
-                                            class="avatar-uploader"
-                                            :data="{ type: 'items' }"
-                                            :headers="headers"
-                                            :action="`/${resource}/uploads`"
-                                            :show-file-list="false"
-                                            :on-success="onSuccess"
-                                        >
-                                            <img
-                                                v-if="form.image_url"
-                                                :src="form.image_url"
-                                                class="avatar"
-                                            />
-                                            <i
-                                                v-else
-                                                class="el-icon-plus avatar-uploader-icon"
-                                            ></i>
-                                        </el-upload>
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                        <!-- Botones de Guardar y Candelar dentro del tab-pane -->
                     </el-tab-pane>
+
+                    <!-- Almacenes  -->
                     <el-tab-pane
                         v-if="form.unit_type_id != 'ZZ'"
                         label="Almacenes"
@@ -1328,9 +1401,7 @@
                                 <h4 class="separator-title mt-0">
                                     <strong>Precios por Almacén</strong>
                                 </h4>
-                                <!-- <h4  class="separator-title mt-0">
-                                Precios por Almacén
-                </h4>-->
+
                                 <table>
                                     <tbody>
                                         <tr
@@ -1351,9 +1422,13 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- Botones de Guardar y Candelar dentro del tab-pane -->
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane v-if="configuration.quantity_prices" label="Precios por rango de cantidad">
+                    <el-tab-pane
+                        v-if="configuration.quantity_prices"
+                        label="Precios por rango de cantidad"
+                    >
                         <div class="row">
                             <div class="table-responsive">
                                 <table class="table">
@@ -1413,10 +1488,7 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane
-                        label="Lista de Precios"
-                        
-                    >
+                    <el-tab-pane label="Lista de Precios">
                         <div class="row">
                             <div
                                 v-if="form.unit_type_id != 'ZZ'"
@@ -1433,7 +1505,7 @@
                                         content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
                                         placement="top"
                                     >
-                                        <i class="fa fa-info-circle"></i>
+                                        <i class="fas fa-info-circle"></i>
                                     </el-tooltip>
                                     <a
                                         href="#"
@@ -1482,7 +1554,7 @@
                                                         placement="top"
                                                     >
                                                         <i
-                                                            class="fa fa-info-circle"
+                                                            class="fas fa-info-circle"
                                                         ></i>
                                                     </el-tooltip>
                                                 </th>
@@ -1491,7 +1563,7 @@
                                                     class="text-white text-center"
                                                 >
                                                     Precio
-                                                    <br />unitario
+                                                    <br />unitario 1
                                                 </th>
                                                 <template
                                                     v-if="
@@ -1540,8 +1612,8 @@
                                                     Almacén
                                                 </th>
                                                 <!-- <th class="text-center">
-                                                            Poli. x defecto
-                        </th> -->
+                                                              Poli. x defecto
+                          </th> -->
                                                 <th class="text-white">
                                                     MAX
                                                     <el-tooltip
@@ -1551,7 +1623,7 @@
                                                         placement="top"
                                                     >
                                                         <i
-                                                            class="fa fa-info-circle"
+                                                            class="fas fa-info-circle"
                                                         ></i>
                                                     </el-tooltip>
                                                 </th>
@@ -1569,7 +1641,7 @@
                                                         {{ row.unit_type_id }}
                                                     </td>
                                                     <!-- <td class="text-center">
-                                                        {{ row.description }}
+                                                    {{ row.description }}
                                                     </td> -->
                                                     <td>
                                                         <el-input
@@ -2003,11 +2075,20 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane v-if="configuration.quantity_prices && form.item_unit_types && form.item_unit_types.length > 0" label="Precios por rango en politica de precio">
+                    <el-tab-pane
+                        v-if="
+                            configuration.quantity_prices &&
+                                form.item_unit_types &&
+                                form.item_unit_types.length > 0
+                        "
+                        label="Precios por rango en politica de precio"
+                    >
                         <div class="row">
                             <div class="table-responsive">
-                                <table class="table"
-                                    v-for="(unit_type, index) in form.item_unit_types"
+                                <table
+                                    class="table"
+                                    v-for="(unit_type,
+                                    index) in form.item_unit_types"
                                     :key="index"
                                     v-show="unit_type.description"
                                 >
@@ -2019,12 +2100,13 @@
                                                     href="#"
                                                     class="control-label font-weight-bold text-info"
                                                     @click.prevent="
-                                                        addUnitTypePriceRange(index)
+                                                        addUnitTypePriceRange(
+                                                            index
+                                                        )
                                                     "
                                                     >[ + Nuevo]</a
                                                 >
                                             </th>
-                                        
                                         </tr>
                                         <tr>
                                             <th>Cantidad</th>
@@ -2092,7 +2174,7 @@
                                             content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
                                             placement="top"
                                         >
-                                            <i class="fa fa-info-circle"></i>
+                                            <i class="fas fa-info-circle"></i>
                                         </el-tooltip>
                                     </h6>
                                 </div>
@@ -2135,7 +2217,7 @@
                                                             placement="top"
                                                         >
                                                             <i
-                                                                class="fa fa-info-circle"
+                                                                class="fas fa-info-circle"
                                                             ></i>
                                                         </el-tooltip>
                                                     </th>
@@ -2203,28 +2285,6 @@
                                                                 ></i>
                                                             </el-input>
                                                         </td>
-                                                        <!-- <td class="text-center">
-                                                            <el-input
-                                                                v-model="
-                                                                    row.total
-                                                                "
-                                                                @input="
-                                                                    totalToUnd(
-                                                                        index,
-                                                                        row.total,
-                                                                        row.quantity_unit
-                                                                    )
-                                                                "
-                                                                type="number"
-                                                                step="0.01"
-                                                                pattern="^\d*(\.\d{0,2})?$"
-                                                            >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
-                                                        </td> -->
                                                     </template>
                                                 </tr>
                                             </tbody>
@@ -2379,6 +2439,8 @@
                             </div>
                         </div>
                     </el-tab-pane>
+
+                    <!-- Categoria madera -->
                     <el-tab-pane
                         label="Categoria Madera"
                         v-if="configuration.maderera"
@@ -2412,25 +2474,35 @@
                             </div>
                         </div>
                     </el-tab-pane>
+                    <div
+                        class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                    >
+                        <!-- Botón Cancelar -->
+                        <el-button
+                            class="btn-cancel btn-cancel:hover"
+                            icon="fas fa-times fa-lg"
+                            @click.prevent="close()"
+                        >
+                            <span>Cancelar</span>
+                        </el-button>
+                        <!-- Botón Guardar -->
+                        <el-button
+                            class="btn-save btn-save:hover"
+                            icon="fas fa-save fa-lg"
+                            type="primary"
+                            native-type="submit"
+                            :loading="loading_submit"
+                        >
+                            <span>Guardar</span>
+                        </el-button>
+                    </div>
                 </el-tabs>
-            </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"
-                    >Cancelar</el-button
-                >
-                <el-button
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                    >Guardar</el-button
-                >
             </div>
         </form>
         <!-- <percentage-perception
-                        :showDialog.sync="showPercentagePerception"
-                        :percentage_perception="percentage_perception">
-    </percentage-perception>-->
+                          :showDialog.sync="showPercentagePerception"
+                          :percentage_perception="percentage_perception">
+      </percentage-perception>-->
 
         <lots-form
             :showDialog.sync="showDialogLots"
@@ -2450,10 +2522,10 @@
 </template>
 
 <style>
-.el-dialog {
+/* .el-dialog {
     border-radius: 10px;
     overflow: hidden;
-}
+} */
 
 @media screen and (max-width: 1280px) {
     .label-text {
@@ -2461,12 +2533,81 @@
         /* Oculta el texto del label */
     }
 }
+
+.btn-circle {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+/* Estilo botón Cancelar */
+/* Estilo botón Guardar */
+.avatar {
+    width: 100%;
+    /* Ocupar todo el ancho del contenedor */
+    height: 100%;
+    /* Ocupar todo el alto del contenedor */
+    object-fit: contain;
+    /* Mantener la proporción de la imagen */
+    display: block;
+    /* Asegurar que no haya espacio extra alrededor de la imagen */
+    margin: 0 auto;
+    /* Centrar la imagen dentro del contenedor */
+    border-radius: 10px;
+    /* Opcional: Bordes redondeados para darle un toque más profesional */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombra suave */
+}
+
+.avatar-uploader {
+    width: 100%;
+    /* Hacer que el uploader ocupe todo el espacio disponible */
+    height: 200px;
+    /* Altura fija para el uploader (ajustable según el diseño) */
+    border: 2px dashed #d9d9d9;
+    /* Borde estilo dashed */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    display: flex;
+    align-items: center;
+    /* Centrar contenido verticalmente */
+    justify-content: center;
+    /* Centrar contenido horizontalmente */
+    background-color: #f9f9f9;
+    /* Fondo claro para el uploader */
+    transition: background-color 0.3s;
+    /* Transición suave al pasar el mouse */
+}
+
+.avatar-uploader:hover {
+    background-color: #f0f0f0;
+    /* Fondo ligeramente más oscuro al pasar el mouse */
+}
+
+.avatar-uploader-icon {
+    font-size: 2em;
+    /* Tamaño del ícono */
+    color: #999;
+    /* Color del ícono */
+    transition: color 0.3s;
+    /* Transición suave del color */
+}
+
+.avatar-uploader:hover .avatar-uploader-icon {
+    color: #666;
+    /* Cambiar a un color más oscuro al pasar el mouse */
+}
 </style>
 
 <script>
 // import PercentagePerception from './partials/percentage_perception.vue'
 import LotsForm from "./partials/lots.vue";
 import ColorSize from "./partials/color_size.vue";
+
 export default {
     props: ["showDialog", "recordId", "external", "worker"],
     components: {
@@ -2476,15 +2617,25 @@ export default {
 
     data() {
         return {
+            form_category: false,
+            form_category: {
+                add: false,
+                name: ""
+            },
+            categories: [], // Lista de categorías
+            form: {
+                category_id: null // ID seleccionado
+            },
+            errors: {}, // Errores de validación
             loading: false,
             allEstablishment: false,
             showDialogLots: false,
             showDialogColorSize: false,
-            form_category: {
-                add: false,
-                name: null,
-                id: null
-            },
+            // form_category: {
+            //     add: false,
+            //     name: null,
+            //     id: null
+            // },
             form_brand: {
                 add: false,
                 name: null,
@@ -2505,6 +2656,7 @@ export default {
                 promotion_count: null,
                 item_price_ranges: []
             },
+            sale_unit_price: null,
             configuration: {},
             unit_types: [],
             areas: [],
@@ -2610,12 +2762,43 @@ export default {
         await this.setDefaultConfiguration();
     },
 
+    computed: {
+        formattedSaleUnitPrice: {
+            get() {
+                // Formatea el valor con dos decimales siempre que sea numérico
+                return this.form.sale_unit_price !== null
+                    ? parseFloat(this.form.sale_unit_price).toFixed(2)
+                    : "";
+            },
+            set(value) {
+                // Elimina caracteres no numéricos y actualiza el valor original
+                const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""));
+                this.form.sale_unit_price = isNaN(numericValue)
+                    ? null
+                    : numericValue;
+            }
+        }
+    },
+    closeForm() {
+        // Lógica para cerrar el formulario principal
+        this.resetCategoryForm();
+    },
+    resetCategoryForm() {
+        // Reiniciar el estado de la categoría
+        this.form_category = {
+            add: false,
+            name: ""
+        };
+    },
+
     methods: {
         clickDeleteUnitTypePriceRange(index, indexx) {
-            this.form.item_unit_types[index].item_unit_type_price_ranges.splice(indexx, 1);
+            this.form.item_unit_types[index].item_unit_type_price_ranges.splice(
+                indexx,
+                1
+            );
         },
         addUnitTypePriceRange(index) {
-
             this.form.item_unit_types[index].item_unit_type_price_ranges.push({
                 quantity_min: null,
                 price: null
@@ -2634,10 +2817,170 @@ export default {
             });
         },
         async clickDeletePriceRange(index) {
-            this.$confirm("¿Estás seguro de eliminar este registro?").then(() => {
-                this.form.item_price_ranges.splice(index, 1);
-            }).catch(() => {});
+            this.$confirm("¿Estás seguro de eliminar este registro?")
+                .then(() => {
+                    this.form.item_price_ranges.splice(index, 1);
+                })
+                .catch(() => {});
         },
+
+        // Activar el formulario (Categoría o Marca)
+        activateForm(type) {
+            if (type === "category") {
+                this.form_category.add = true; // Activa el formulario de categoría
+                this.form.category_id = null; // Limpia el valor seleccionado
+                this.$nextTick(() => {
+                    if (this.$refs.categoryInput) {
+                        this.$refs.categoryInput.focus(); // Coloca el cursor en el input
+                    }
+                });
+            } else if (type === "brand") {
+                this.form_brand.add = true; // Activa el formulario de marca
+                this.form.brand_id = null; // Limpia el valor seleccionado
+                this.$nextTick(() => {
+                    if (this.$refs.brandInput) {
+                        this.$refs.brandInput.focus(); // Coloca el cursor en el input
+                    }
+                });
+            }
+        },
+
+        // Guardar (Categoría o Marca)
+        saveForm(type) {
+            let endpoint = "";
+            let form = {};
+            let list = [];
+            let successMessage = "";
+
+            if (type === "category") {
+                endpoint = "/items/categories";
+                form = this.form_category;
+                list = this.categories;
+                successMessage = "Categoría registrada correctamente.";
+            } else if (type === "brand") {
+                endpoint = "/brands";
+                form = this.form_brand;
+                list = this.brands;
+                successMessage = "Marca registrada correctamente.";
+            }
+
+            if (!form.name) {
+                this.$showSAlert({
+                    title: "Campo Requerido",
+                    text: `Debe ingresar un nombre para la ${
+                        type === "category" ? "categoría" : "marca"
+                    }.`,
+                    type: "warning"
+                });
+                return;
+            }
+
+            this.$http
+                .post(endpoint, form)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$showSAlert(
+                             "Éxito",
+                             successMessage,
+                             "success"
+                        );
+
+                        // Actualiza la lista (categorías o marcas)
+                        list.push(response.data.data);
+                        console.log("List:", list);
+                        let lastElement = list[list.length - 1];
+                        // Selecciona automáticamente la nueva categoría o marca
+                        if (type === "category") {
+                            this.form.category_id = lastElement.id;
+                            this.categories = [...list];
+                            this.form_category.name = "";
+                            this.form_category.add = false;
+                        } else if (type === "brand") {
+                            this.form.brand_id = lastElement.id;
+                            this.brands = [...list];
+                            this.form_brand.name = "";
+                            this.form_brand.add = false;
+                            this.form.brand_id = lastElement.id;
+                        }
+
+                        // Reinicia el formulario y fuerza la actualización del DOM
+                        // this.resetForm(type);
+                        this.$forceUpdate(); // Fuerza la reactividad de Vue
+                        console.log(this.form.category_id);
+                    } else {
+                        
+                        this.$showSAlert(
+                             "Error",
+                             `No se pudo guardar la ${
+                                type === "category" ? "categoría" : "marca"
+                            }.`,
+                             "error"
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error al guardar la ${type}:`, error);
+                    this.$showSAlert(
+                         "Error",
+                         `Ocurrió un error al guardar la ${
+                            type === "category" ? "categoría" : "marca"
+                        }.`,
+                         "error"
+                    );
+                    /* this.$showSAlert({
+                        title: "Error",
+                        text: `Ocurrió un error al guardar la ${
+                            type === "category" ? "categoría" : "marca"
+                        }.`,
+                        type: "error"
+                    }); */
+                });
+        },
+
+        // Cancelar la creación (Categoría o Marca)
+        cancelForm(type) {
+            this.$showSAlert(
+                 "Cancelado",
+                 `Se canceló la creación de la ${
+                    type === "category" ? "categoría" : "marca"
+                }.`,
+                 "info"
+            );
+
+            this.resetForm(type); // Reinicia el formulario correspondiente
+        },
+
+        // Reiniciar el formulario (Categoría o Marca)
+        resetForm(type) {
+            if (type === "category") {
+                console.log("Reiniciando formulario de categoría...");
+                this.form_category = {
+                    add: false,
+                    name: ""
+                };
+            } else if (type === "brand") {
+                console.log("Reiniciando formulario de marca...");
+                this.form_brand = {
+                    add: false,
+                    name: ""
+                };
+            }
+            this.$forceUpdate();
+        },
+
+        // Cerrar el formulario principal
+        cancelForm(type) {
+            this.$showSAlert(
+                 "Cancelado",
+                 `Se canceló la creación de la ${
+                    type === "category" ? "categoría" : "marca"
+                }.`,
+                 "info"
+            );
+
+            this.resetForm(type);
+        },
+
         updateCommercialTreatmentItem(idx) {
             if (!this.recordId) return;
             if (this.timer) clearTimeout(this.timer);
@@ -2878,7 +3221,7 @@ export default {
                 model: null,
                 quality: null,
                 origin: null,
-                month_day: null,
+                month_day: null
             };
             this.show_has_igv = true;
             this.enabled_percentage_of_profit = false;
@@ -2937,7 +3280,7 @@ export default {
         async create() {
             console.log("dsadasda");
             /* console.log("🚀 ~ create ~ this.configuration:", this.configuration);
-      console.log("🚀 ~ create ~ this.configuration:", this.allEstablishment); */
+        console.log("🚀 ~ create ~ this.configuration:", this.allEstablishment); */
             this.categoria_madera = this.categoria_madera.map(c => {
                 c.precio = 0;
                 return c;
@@ -3026,9 +3369,6 @@ export default {
                 this.form.area_id = 2;
                 this.form.commercial_treatments = this.all_commercial_treatments;
             }
-            // if(!this.record){
-            //     this.form.has_igv= true
-            // }
         },
         restoreUnitTypes() {
             let hasSelected = false;
@@ -3080,14 +3420,7 @@ export default {
         },
         calculatePercentageOfProfitBySale() {
             console.log(this.configuration);
-            // if (this.configuration.maderera) {
-            //   let sale_unit_price = this.form.sale_unit_price;
-            //   for (let i = 0; i < this.form.item_unit_types.length; i++) {
-            //     let unit_type = this.form.item_unit_types[i];
-            //     this.form.item_unit_types[i].price2 = sale_unit_price;
-            //     this.undToTotal(i, sale_unit_price, unit_type.quantity_unit);
-            //   }
-            // }
+
             let w = this.form.warehouse_prices.find(
                 ww => ww.warehouse_id == this.form.warehouse_id
             );
@@ -3135,14 +3468,21 @@ export default {
                 this.$toast.warning("Ingrese los rangos de precios");
                 return false;
             }
+
             if (this.form.max_quantity && !this.form.max_quantity_description) {
-                this.$toast.warning(
-                    "Ingrese una descripción del contenedor para la cantidad máxima"
+                this.$showSAlert(
+                    "ALERTA",
+                    "Ingrese una descripción del contenedor para la cantidad máxima",
+                    "warning"
                 );
                 return false;
             }
-            if (!this.form.category_id) {
-                this.$toast.warning("Seleccione una categoria");
+            if (!this.form.category_id && !this.form_category.add) {
+                this.$showSAlert(
+                    "ALERTA",
+                    "Seleccione una categoria",
+                    "warning"
+                );
                 return false;
             }
 
@@ -3159,12 +3499,6 @@ export default {
             if (!this.form.warehouse_id)
                 return this.$toast.error("Seleccione un almacen");
             if (!this.recordId && this.form.lots_enabled) {
-                // if (!this.form.lot_code)
-                //     return this.$toast.error("Código de lote es requerido");
-                // if (!this.form.date_of_due)
-                //     return this.$toast.error(
-                //         "Fecha de vencimiento es requerido si lotes esta habilitado."
-                //     );
             }
 
             if (!this.recordId && this.form.series_enabled) {
@@ -3192,10 +3526,13 @@ export default {
                 .post(`/${this.resource}`, this.form)
                 .then(response => {
                     if (response.data.success) {
-                        this.$toast.success(response.data.message);
+                        this.$showSAlert(
+                            "SUCCESS",
+                            response.data.message,
+                            "success"
+                        );
                         if (this.external) {
                             this.$emit("add", response.data.data);
-                            //this.$eventHub.$emit('reloadDataItems', response.data.id)
                         } else {
                             this.$eventHub.$emit("reloadData");
                         }
@@ -3215,6 +3552,7 @@ export default {
                     this.loading_submit = false;
                 });
         },
+        // ****
         close() {
             this.$emit("update:showDialog", false);
             this.showSeries = false;
@@ -3230,8 +3568,6 @@ export default {
                 id: null,
                 description: null
             }));
-            /* this.form.categoria_madera = [...this.categoria_madera]; */
-            /* this.form.categoria_madera = this.categoria_madera; */
         },
 
         changeHasIsc() {
@@ -3244,39 +3580,109 @@ export default {
                 this.form.suggested_price = 0;
             }
         },
+        // saveCategory() {
+        //     this.form_category.add = false;
+
+        //     this.$http
+        //         .post(`/items/categories`, this.form_category)
+        //         .then(response => {
+        //             if (response.data.success) {
+        //                 this.$toast.success(response.data.message);
+        //                 this.categories.push(response.data.data);
+        //                 this.form.category_id = response.data.data.id;
+        //                 this.form_category.name = null;
+        //             } else {
+        //                 this.$toast.error("No se guardaron los cambios");
+        //             }
+        //         })
+        //         .catch(error => {});
+        // },
         saveCategory() {
+            // Desactivar el estado "add"
             this.form_category.add = false;
 
+            // Enviar la solicitud al backend
             this.$http
                 .post(`/items/categories`, this.form_category)
                 .then(response => {
                     if (response.data.success) {
-                        this.$toast.success(response.data.message);
+                        // Mostrar mensaje de éxito con SweetAlert2
+                        this.$showSAlert(
+                            "Éxito",
+                            
+                                response.data.message ||
+                                "Categoría guardada correctamente.",
+                             "success"
+                        );
+
+                        // Actualizar la lista de categorías y seleccionar la nueva
                         this.categories.push(response.data.data);
                         this.form.category_id = response.data.data.id;
+
+                        // Reiniciar el formulario
                         this.form_category.name = null;
                     } else {
-                        this.$toast.error("No se guardaron los cambios");
+                        // Mostrar mensaje de error con SweetAlert2
+                        this.$showSAlert(
+                             "Error",
+                                "No se guardaron los cambios en la categoría.",
+                             "error"
+                        );
                     }
                 })
-                .catch(error => {});
+                .catch(error => {
+                    // Manejar errores de red u otros problemas
+                    console.error("Error al guardar la categoría:", error);
+                    this.$showSAlert(
+                         "Error",
+                        
+                            "Ocurrió un error al guardar la categoría. Por favor, intente de nuevo.",
+                         "error"
+                    );
+                });
         },
         saveBrand() {
+            // Desactivar el estado "add"
             this.form_brand.add = false;
 
+            // Enviar la solicitud al backend
             this.$http
                 .post(`/brands`, this.form_brand)
                 .then(response => {
                     if (response.data.success) {
-                        this.$toast.success(response.data.message);
+                        // Mostrar mensaje de éxito con SweetAlert2
+                        this.$showSAlert(
+                             "Éxito",
+                            
+                                response.data.message ||
+                                "Marca guardada correctamente.",
+                             "success"
+                        );
+
+                        // Actualizar la lista de marcas y reiniciar el formulario
                         this.brands.push(response.data.data);
                         this.form_brand.name = null;
                     } else {
-                        this.$toast.error("No se guardaron los cambios");
+                        // Mostrar mensaje de error con SweetAlert2
+                        this.$showSAlert(
+                             "Error",
+                             "No se guardaron los cambios en la marca.",
+                             "error"
+                        );
                     }
                 })
-                .catch(error => {});
+                .catch(error => {
+                    // Manejar errores de red u otros problemas
+                    console.error("Error al guardar la marca:", error);
+                    this.$showSAlert(
+                         "Error",
+                        
+                            "Ocurrió un error al guardar la marca. Por favor, intente de nuevo.",
+                         "error"
+                    );
+                });
         },
+
         changeAttributeType(index) {
             let attribute_type_id = this.form.attributes[index]
                 .attribute_type_id;
@@ -3289,22 +3695,7 @@ export default {
         clickRemoveAttribute(index) {
             this.form.attributes.splice(index, 1);
         },
-        maderaUpdate() {
-            /* this.reloadTables(); */
-        }
-        /* maderaUpdate(idx) {
-      if (this.timer) clearTimeout(this.timer);
-      this.timer = setTimeout(async () => {
-        let categoria_madera = this.form.categoria_madera[idx];
-        const response = await this.$http.post(
-          `/items/store/${ItemCategoriaMadera}`,
-          item_categoria_madera
-        );
-        if (response.data.success) {
-          this.$toast.success("Se actualizó correctamente");
-        }
-      }, 700);
-    }, */
+        maderaUpdate() {}
     }
 };
 </script>

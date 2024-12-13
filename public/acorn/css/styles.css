@@ -3166,8 +3166,10 @@ html[data-color='light-pink'] {
     --muted-rgb: 176, 176, 176;
     --separator-rgb: 221, 221, 221;
     --separator-light-rgb: 241, 241, 241;
-    --background: #f9f9f9;
-    --foreground: #ffffff;
+    --background:  #afb1a0;
+    /* color de la vista del index */
+    /* --foreground: #ffffff; */
+    --foreground: #e4dccf;
     --background-rgb: 249, 249, 249;
     --foreground-rgb: 255, 255, 255;
     --background-theme: #f1eaee;
@@ -3175,7 +3177,7 @@ html[data-color='light-pink'] {
 
     /* para el nav */
     --gradient-1: #073f68;
-    --gradient-2: #0015ff;
+    --gradient-2: #073f68;
     --gradient-3: #073f68;
     --gradient-1-darker: #b9437c;
     --gradient-2-darker: #d35291;
@@ -12745,28 +12747,8 @@ html[data-show='true'] .settings-button {
 .el-select {
     width: 100% !important;
 }
-.el-dialog__body {
-    padding: 0px 20px !important;
-}
-.el-dialog{
-  background: #afb1a0 !important;
-  font-weight: bolder !important;
-  color: #000 !important;
-
-}
-.el-dialog div{
-  color: #000 !important;
-}
-.el-dialog label{
-  color: #000 !important; 
-}
-.el-dialog h4,
-.el-dialog h5,
-.el-dialog h6{
-  color: #000 !important;
-}
 .form-group{
-    padding-bottom: 10px;
+    padding-bottom: 0px;
 }
 
 .is-focus{
@@ -12777,16 +12759,666 @@ html[data-show='true'] .settings-button {
   overflow: hidden;
   width: 181px;
 }
+
+
+.is-focus{
+  border:1px solid #DCDFE6;
+  border-radius: 5px !important;
+}
+.fix-logo{
+overflow: hidden;
+width: 181px;
+}
+
+/* --- Variables globales para el tema oscuro --- */
+:root {
+  --primary: #073f68; /* Azul profesional */
+  --background-dialog: #afb1a0; /* Fondo beige */
+  --input-background: #ffffff; /* Fondo blanco para inputs */
+  --text-color: #000; /* Texto principal negro */
+  --input-text-color: #000; /* Texto dentro de inputs negro */
+  --label-color: #073f68; /* Color de los títulos de los inputs */
+  --border-color: #565a5e; /* Bordes sutiles */
+  --button-background: #4a90e2; /* Fondo de botones */
+  --button-text-color: #ffffff; /* Texto claro en botones */
+  --header-background: #073f68; /* Fondo azul profesional */
+  --header-text-color: #ffffff; /* Texto blanco */
+  --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Sombra oscura */
+  --hover-effect: rgba(200, 200, 200, 0.3); /* Efecto hover */
+  --input-focus: #d3d3d3; /* Gris claro para enfoque */
+}
+
+/* --- Encabezado del diálogo --- */
 .el-dialog__header {
-  background-color: var(--primary) !important; 
-  border-radius: 10px;
+  background-color: var(--header-background); /* Fondo azul profesional */
+  color: var(--header-text-color); /* Texto blanco */
+  padding: 5px 10px;
+  border-radius: 12px 12px 0 0; /* Bordes redondeados superiores */
+  border-bottom: 1px solid var(--border-color); /* Línea separadora */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra leve para el encabezado */
 }
-.el-dialog__title {
-  color: var(--light-text) !important;
+
+.el-dialog__header * {
+  color: #ffffff !important; /* Forza blanco en elementos internos */
 }
-.el-dialog__headerbtn .el-dialog__close{
-  color:white !important;
+
+/* --- Diálogo principal --- */
+.el-dialog {
+  background: #afb1a0 !important; /* Fondo beige */
+  
+  border-radius: 12px !important; /* Bordes redondeados */
+  box-shadow: var(--box-shadow); /* Sombra profunda */
+  font-weight: bolder; /* Texto principal en negrita */
+  color: var(--text-color); /* Texto negro */
+  font-family: 'Montserrat', sans-serif; /* Fuente moderna */
+  font-size: 1rem;
+  overflow: hidden !important;
+  animation: scaleUp 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Animación más profesional */
 }
-.el_dialog .rounded_dialog{
- border-radius: 10px;
+
+/* --- Animación personalizada --- */
+@keyframes scaleUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.8); /* Comienza pequeño */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1); /* Expande a tamaño normal */
+  }
+}
+
+/* --- Cuerpo del diálogo --- */
+.el-dialog__body {
+  padding: 5px 10px !important; /* Espaciado amplio */
+  line-height: 1.6; /* Separación de líneas cómoda */
+  color: var(--text-color); /* Texto principal negro */
+}
+
+/* --- Inputs dentro del diálogo --- */
+.el-dialog input,
+.el-dialog select {
+  background: var(--input-background); /* Fondo blanco */
+  color: var(--input-text-color); /* Texto negro */
+  border: 1px solid var(--border-color); /* Bordes suaves */
+  border-radius: 6px; /* Bordes redondeados */
+  font-weight: bold; /* Texto en negrita */
+  padding: 5px 10px; /* Espaciado interno */
+  width: 100%; /* Ajuste completo al contenedor */
+  transition: border-color 0.3s ease, background 0.3s ease; /* Transiciones suaves */
+}
+
+/* --- Input en enfoque --- */
+.el-dialog input:focus,
+.el-dialog select:focus {
+  border-color: var(--primary); /* Azul para enfoque */
+  outline: none; /* Elimina el borde predeterminado */
+  background: var(--input-focus); /* Fondo gris claro en foco */
+}
+
+/* --- Títulos de los inputs --- */
+.el-dialog label {
+  font-weight: 900; /* Negrita intensa */
+  color: var(--label-color); /* Azul profesional */
+  display: block;
+  margin-bottom: 2px; /* Separación con el input */
+}
+
+/* --- Botón de cierre --- */
+.el-dialog__headerbtn .el-dialog__close {
+  color: #ffffff; /* Texto blanco */
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.3s ease; /* Transición de color */
+}
+
+.el-dialog__headerbtn .el-dialog__close:hover {
+  color: var(--primary); /* Azul en hover */
+}
+
+/* --- Botones de acción --- */
+.el-dialog .el-dialog__footer button {
+  background: var(--button-background); /* Fondo azul */
+  color: var(--button-text-color); /* Texto blanco */
+  border: none;
+  padding: 5px 10px;
+  border-radius: 20px; /* Bordes redondeados */
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 300ms ease, transform 0.2s ease; /* Animaciones suaves */
+}
+
+.el-dialog .el-dialog__footer button:hover {
+  background: darken(var(--button-background), 10%);
+  transform: scale(1.05); /* Efecto de zoom */
+}
+
+/* --- Inputs alineados en columnas --- */
+.el-dialog .input-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px; /* Espacio entre columnas */
+}
+
+/* --- Sombras y bordes adicionales --- */
+.el-dialog__footer {
+  border-top: 1px solid var(--border-color); /* Línea separadora */
+  padding: 5px 10px;
+  text-align: right; /* Alineación de botones */
+}
+
+.el-dialog__footer button:first-child {
+  margin-right: 10px; /* Separación entre botones */
+}
+
+
+/* DESEÑO DE EL-TAB */
+/* --- Contenedor de los tabs --- */
+.el-tabs {
+  border: 1px solid #565a5e; /* Borde para el contenedor */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #e4dccf; /* Fondo del contenedor */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  overflow: hidden; /* Evita desbordes */
+
+    margin-top: 0 !important; /* Ajusta la distancia superior del tab */
+    padding-top: 0; /* Elimina cualquier relleno superior */
+
+}
+
+/* --- Navegación de los tabs (barra de títulos) --- */
+.el-tabs__nav {
+  background-color: #e4dccf; /* Fondo igual al fondo del diálogo */
+  border-bottom: 1px solid #565a5e; /* Línea separadora */
+  display: flex;
+  justify-content: space-between; /* Espaciado uniforme */
+  padding: 2px 0; /* Espaciado interno */
+}
+
+/* --- Títulos de los tabs individuales --- */
+.el-tabs__item {
+  font-weight: bold; /* Texto en negrita */
+  color: #073f68; /* Azul profesional */
+  background-color: #e4dccf; /* Fondo igual al diálogo */
+  flex: 1; /* Todos los tabs tienen el mismo ancho */
+  text-align: center; /* Centra el texto */
+  padding: 5px 0; /* Espaciado vertical */
+  max-width: 35ch; /* Limita el ancho a 25 caracteres */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
+  border-right: 1px solid #d6d8c2; /* Línea divisoria entre tabs */
+}
+
+/* Elimina la línea del último tab */
+.el-tabs__item:last-child {
+  border-right: none;
+}
+
+/* --- Tab activo (seleccionado) --- */
+.el-tabs__item.is-active {
+  background-color: #4a90e2; /* Fondo azul elegante */
+  color: #073f68; /* azul */
+  font-weight: bold; /* Texto en negrita */
+  border-radius: 4px; /* Bordes redondeados */
+}
+
+/* --- Hover sobre los tabs --- */
+.el-tabs__item:hover {
+  background-color: #565a5e; /* Fondo gris oscuro en hover */
+  color: #073f68; /* Texto azul */
+}
+
+
+
+/* --- Contenido de los tabs --- */
+.el-tabs__content {
+  padding: 5px; /* Espaciado interno */
+  font-family: 'Montserrat', sans-serif; /* Fuente moderna */
+  color: #073f68; /* Texto azul */
+  background-color: #e4dccf; /* Fondo igual al diálogo */
+  border-radius: 0 0 8px 8px; /* Bordes redondeados solo abajo */
+}
+.el-tabs__content input {
+  text-transform: uppercase; /* Convierte el texto visualmente a mayúsculas */
+}
+
+
+/* --- Tab activo (seleccionado) --- */
+.el-tabs__item.is-active {
+  background-color: #073f68 !important; /* Fondo azul profesional */
+  color: #073f68 !important; /* Texto azul */
+  border-radius: 4px; /* Bordes redondeados */
+}
+
+/* --- Tab no activo --- */
+.el-tabs__item {
+  background-color: #e4dccf!important; /* Fondo igual al diálogo */
+  color: #073f68 !important; /* Texto azul profesional */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
+}
+
+/* --- Hover sobre los tabs --- */
+.el-tabs__item:hover {
+  background-color: #e4dccf!important; /* Fondo gris oscuro en hover */
+  color: #073f68 !important; /* Texto blanco en hover */
+}
+/* --- Contenedor de los tabs --- */
+.el-tabs {
+  border: 1px solid #565a5e; /* Borde para el contenedor */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #e4dccf; /* Fondo del contenedor */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  overflow: hidden; /* Evita desbordes */
+}
+
+/* --- Navegación de los tabs (barra de títulos) --- */
+.el-tabs__nav {
+  background-color: #e4dccf; /* Fondo igual al fondo del diálogo */
+  border-bottom: 1px solid #565a5e; /* Línea separadora */
+  display: flex;
+  justify-content: space-between; /* Espaciado uniforme */
+  padding: 5px 0; /* Espaciado interno */
+}
+
+/* --- Títulos de los tabs individuales --- */
+.el-tabs__item {
+  font-weight: bold; /* Texto en negrita */
+  color: #073f68; /* Azul profesional */
+  background-color: #e4dccf; /* Fondo igual al diálogo */
+  flex: 1; /* Todos los tabs tienen el mismo ancho */
+  text-align: center; /* Centra el texto */
+  width: calc(1ch * 25); /* Ancho fijo para 25 caracteres */
+  white-space: nowrap; /* Evita saltos de línea */
+  overflow: hidden; /* Oculta texto desbordado */
+  text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
+  padding: 10px 0; /* Espaciado interno vertical */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
+  border-right: 1px solid #d6d8c2; /* Línea divisoria entre tabs */
+}
+
+/* Elimina la línea del último tab */
+.el-tabs__item:last-child {
+  border-right: none;
+}
+
+/* --- Tab activo (seleccionado) --- */
+.el-tabs__item.is-active {
+  background-color: #073f68 !important; /* Fondo azul profesional */
+  color: #ffffff !important; /* Texto blanco */
+  border-radius: 4px; /* Bordes redondeados */
+  text-align: center; /* Centra el texto */
+  width: calc(1ch * 25); /* Ancho fijo para 25 caracteres */
+  white-space: nowrap; /* Evita saltos de línea */
+  overflow: hidden; /* Oculta texto desbordado */
+  text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
+}
+
+/* --- Hover sobre los tabs --- */
+.el-tabs__item:hover {
+  background-color: #e4dccf!important; /* Fondo gris oscuro en hover */
+  color: #073f68 !important; /* Texto blanco en hover */
+  cursor: pointer; /* Cambia el cursor a una mano para indicar interacción */
+}
+
+/* --- Contenido de los tabs --- */
+.el-tabs__content {
+  padding: 20px; /* Espaciado interno */
+  font-family: 'Montserrat', sans-serif; /* Fuente moderna */
+  color: #000; /* Texto negro */
+  background-color: #e4dccf; /* Fondo igual al diálogo */
+  border-radius: 0 0 8px 8px; /* Bordes redondeados solo abajo */
+  text-align: left; /* Centra el texto del contenido */
+}
+
+/* --- Tab pane no seleccionado --- */
+.el-tab-pane {
+  background-color: #e4dccf; /* Fondo igual al diálogo */
+  color: #000; /* Letras azules */
+  padding: 10px 20px; /* Espaciado interno */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
+}
+
+.tab-pane input {
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+}
+
+/* --- Tab pane seleccionado --- */
+.el-tab-pane.is-active {
+  background-color: #4a90e2; /* Fondo azul elegante */
+  color: #ffffff; /* Letras blancas */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Estilo del ícono */
+.fas.fa-info-circle {
+  color: #1e5a85; /* Azul cielo */
+  font-size: 18px;
+  transition: color 0.3s; /* Transición suave */
+}
+
+.fas.fa-info-circle:hover {
+  color: #6C757D; /* Azul ligeramente más oscuro */
+}
+
+/* Estilo del tooltip */
+.el-tooltip__popper {
+  background-color: #ffffff; /* Fondo blanco para mayor contraste */
+  color: #333333; /* Texto oscuro para legibilidad */
+  font-size: 14px; /* Fuente más grande */
+  line-height: 1.5; /* Espaciado entre líneas */
+  border: 1px solid #ddd; /* Borde sutil */
+  border-radius: 6px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Sombra sutil */
+  padding: 10px; /* Espacio interno para legibilidad */
+  max-width: 250px; /* Limitar el ancho para evitar tooltips muy grandes */
+}
+
+/* Flecha del tooltip */
+.el-tooltip__popper::before {
+  border-color: transparent transparent #ffffff transparent; /* Color de la flecha */
+}
+
+/* Cambiar estilo al pasar el cursor */
+.el-tooltip:hover .el-tooltip__popper {
+  background-color: #f9f9f9; /* Cambia ligeramente el fondo al pasar el cursor */
+}
+.btn-cancel {
+  background-color: #dc3545 !important; /* Rojo */
+  border: none !important;
+  color: white !important; /* Icono y texto blanco */
+  border-radius: 5px !important; /* Bordes redondeados */
+  font-size: 1.1em !important; /* Tamaño del texto */
+  min-height: 50px !important; /* Altura mínima más alta */
+  padding: 10px 20px !important; /* Espaciado interno */
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important; /* Espaciado entre el icono y el texto */
+  transition: background-color 0.3s, color 0.3s !important; /* Transición suave */
+}
+
+.btn-cancel:hover {
+  background-color: #c82333 !important; /* Rojo más oscuro al pasar el mouse */
+  color: #b1b1b1 !important; /* Texto gris (plomo) */
+}
+.btn-save {
+  background-color: #28a745 !important; /* Verde */
+  border: none !important;
+  color: white !important; /* Icono y texto blanco */
+  border-radius: 5px !important; /* Bordes redondeados */
+  font-size: 1.1em !important; /* Tamaño del texto */
+  min-height: 50px !important; /* Altura mínima más alta */
+  padding: 10px 20px !important; /* Espaciado interno */
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important; /* Espaciado entre el icono y el texto */
+  transition: background-color 0.3s, color 0.3s !important; /* Transición suave */
+}
+
+.btn-save:hover {
+  background-color: #218838 !important; /* Verde más oscuro al pasar el mouse */
+  color: #b1b1b1 !important; /* Texto gris (plomo) */
+}
+
+/* botones de titulo de modal */
+.btn_titulos_modal {
+  background: #1e5a85; /* Color inicial del botón */
+  color: #514c4c; /* Texto blanco */
+  font-size: 1.5rem; /* Tamaño de fuente */
+  font-weight: bold;
+  padding: 16px 40px; /* Espaciado interno */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25); /* Sombra */
+  transition: all 0.3s ease; /* Transición suave */
+  display: flex;
+  align-items: center; /* Alineación vertical */
+  justify-content: center; /* Centrado horizontal */
+  gap: 1rem; /* Espacio entre ícono y texto */
+  margin: 15px auto; /* Margen para evitar que quede pegado al borde */
+  text-align: center; /* Asegurar centrado del contenido */
+  cursor: pointer;
+}
+.btn_titulos_modal span {
+  color: #514c4c; /* Texto negro */
+  font-size: 1.5rem; /* Ajusta el tamaño si es necesario */
+  font-weight: bold; /* Mantén el texto en negrita */
+}
+/* Efecto hover: cambio de gradiente y sombra más pronunciada */
+.btn_titulos_modal:hover {
+  transform: translateY(-3px); /* Efecto de desplazamiento */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35); /* Sombra más pronunciada */
+  background: linear-gradient(100deg, #073f68, #073f68); /* Gradiente azul */
+}
+
+/* Efecto clic: agrandamiento temporal */
+.btn_titulos_modal:active {
+  transform: scale(1.08); /* Agrandamiento */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Reducción de sombra */
+}
+
+/* Estilo para el ícono */
+.btn_titulos_modal i {
+  color: #514c4c; /* Texto blanco */
+  
+  font-size: 2rem; /* Tamaño del ícono */
+  transition: transform 0.3s ease; /* Transición para el efecto */
+}
+
+/* Efecto hover en el ícono */
+.btn_titulos_modal:hover i {
+  transform: translateY(-2px); /* Ícono se mueve ligeramente hacia arriba */
+}
+
+/* Estilo del texto */
+.btn_titulos_modal span {
+  color: #fff; /* Texto blanco */
+  font-size: 1.5rem; /* Tamaño grande para el texto */
+}
+
+/* Efecto hover en el texto */
+.btn_titulos_modal:hover span {
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); /* Brillo en el texto */
+}
+
+
+
+
+/* Botón personalizado para "Buscar" */
+.btn_buscar {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb); /* Gradiente dinámico */
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 12px 25px;
+  border-radius: 10px; /* Bordes ligeramente redondeados */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* Sombra elegante */
+  transition: all 0.3s ease; /* Transición suave */
+  display: flex;
+  align-items: center; /* Centra verticalmente contenido */
+  justify-content: center; /* Centra horizontalmente contenido */
+  gap: 0.5rem; /* Espacio entre ícono y texto */
+}
+
+/* Hover para el botón */
+.btn_buscar:hover {
+  background: linear-gradient(135deg, #8f94fb, #4e54c8); /* Invertir gradiente */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35); /* Sombra más intensa */
+  transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+/* Botón en estado activo */
+.btn_buscar:active {
+  transform: scale(1); /* Tamaño normal cuando se hace clic */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+}
+
+/* Ícono del botón */
+.btn_buscar .icon-style {
+  font-size: 1.2rem; /* Tamaño reducido del ícono */
+  color: #ffe400; /* Color llamativo para el ícono */
+  transition: transform 0.3s ease, color 0.3s ease; /* Transición de movimiento y color */
+}
+
+/* Hover para el ícono */
+.btn_buscar:hover .icon-style {
+  transform: rotate(10deg); /* Efecto de rotación leve del ícono */
+  color: #ffeb3b; /* Color más brillante */
+}
+
+/* Texto del botón */
+.btn_buscar .label-style {
+  font-size: 1.25rem; /* Tamaño del texto del botón */
+  font-weight: bold;
+  line-height: 1; /* Centra verticalmente el texto */
+  color: #fff; /* Color blanco */
+}
+
+/* Botón deshabilitado */
+.btn_buscar[disabled] {
+  background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+/* Títulos de los inputs en negrita */
+.control-label {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.25rem; /* Espaciado reducido */
+}
+
+/* Input con borde azul */
+.input-custom {
+  width: 100%;
+  border: 1px solid #007bff; /* Azul claro */
+  border-radius: 6px; /* Bordes redondeados */
+  padding: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Input en foco */
+.input-custom:focus,
+.input-custom:hover {
+  border-color: #0056b3; /* Azul más oscuro */
+  box-shadow: 0 0 5px rgba(0, 91, 187, 0.5); /* Sombra azul */
+  outline: none;
+}
+
+/* ESTILO DE LA TABLA */
+/* Tabla general */
+.custom-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+/* Títulos de las columnas */
+.custom-table thead th {
+  background-color: #073f68; /* Azul profesional */
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px;
+}
+
+/* Diferenciación de filas */
+.table-row-even {
+  background-color: #f8f9fa; /* Fondo claro para filas pares */
+}
+
+.table-row-odd {
+  background-color: #ffffff; /* Fondo blanco para filas impares */
+}
+
+.table-row-even:hover,
+.table-row-odd:hover {
+  background-color: #e9ecef; /* Color de hover */
+}
+
+
+/* Botón de acciones */
+.btn-primary.dropdown-toggle {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* Dropdown - Estilo de las opciones */
+.dropdown-menu .dropdown-item {
+  font-size: 0.85rem;
+  padding: 8px 12px;
+}
+
+.dropdown-menu .dropdown-item.text-info {
+  color: #17a2b8; /* Azul para Editar */
+}
+
+.dropdown-menu .dropdown-item.text-danger {
+  color: #dc3545; /* Rojo para Eliminar */
+}
+
+.dropdown-menu .dropdown-item.text-warning {
+  color: #ffc107; /* Amarillo para Inhabilitar */
+}
+
+.dropdown-menu .dropdown-item.text-success {
+  color: #28a745; /* Verde para Habilitar */
+}
+
+/* Estado */
+.text-success {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+
+/* Botones de PIN */
+.btn-outline-success,
+.btn-outline-primary {
+  border-radius: 4px;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+}
+
+/* Dropdown - Estilo de las opciones */
+.dropdown-menu .dropdown-item {
+  font-size: 0.85rem;
+  padding: 8px 12px;
+}
+
+.dropdown-menu .dropdown-item.text-info {
+  color: #17a2b8;
+}
+
+.dropdown-menu .dropdown-item.text-danger {
+  color: #dc3545;
+}
+
+.dropdown-menu .dropdown-item.text-success {
+  color: #28a745;
+}
+
+/* Estado de la fila */
+.text-success {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
+}
+.input-maxlength {
+  position: relative;
 }

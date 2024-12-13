@@ -37,10 +37,14 @@
                 </tbody>
             </table>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="save">Guardar</el-button>
-        </span>
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <el-button class="btn-cancel btn-cancel:hover" @click="close"
+                >Cancelar</el-button
+            >
+            <el-button class="btn-save btn-save:hover" @click="save"
+                >Guardar</el-button
+            >
+        </div>
     </el-dialog>
 </template>
 

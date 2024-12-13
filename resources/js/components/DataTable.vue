@@ -251,7 +251,7 @@
             <div class="col-md-12">
                 <div class="table-responsive">
                     <br>
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="scroll2" style="overflow-x: auto">
                         <thead>
                             <slot name="heading"></slot>
                         </thead>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
+            <!-- <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
                         <h6>
@@ -18,27 +18,28 @@
                     </div>
                    
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="container-fluid p-l-0 p-r-0">
-            <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white">
-                         <i class="fas fa-layer-group"></i>
-                         Listado de Categorías Principales
-                    </h4>
+                    <div class="card">
+                        <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                            <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                                <i class="far fa-address-book" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                                Módulo de Categorías Principales
+                            </h4>
+                        </div>
 
-                </div>
-                <div class="data-table-visible-columns">
-                        <el-button type="primary" 
-                                    class="" 
-                                    href="javascript:void(0)" 
-                                    @click.prevent="clickCreate()">
-                                    <i class="fas fa-layer-group"></i>
-                                    <i class="fa fa-plus"></i>
-                                Nueva Categoría
-                        </el-button>
-                </div> 
+                        <div class="data-table-visible-columns">
+                            <el-button type="primary" 
+                                        class="btn-large" 
+                                        href="javascript:void(0)" 
+                                        @click.prevent="clickCreate()">
+                                        <i class="fas fa-layer-group" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+                                        <i class="fa fa-plus"></i>
+                                        <span style="font-size: 1.25rem; font-weight: bold;">Nueva Categoría </span>
+                                    
+                            </el-button>
+                        </div> 
                 
 
                 <div class="card-body">

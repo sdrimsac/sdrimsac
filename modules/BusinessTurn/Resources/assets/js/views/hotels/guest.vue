@@ -324,7 +324,7 @@ export default {
         },
         async searchServiceNumberByType() {
             if (this.form.number === "") {
-                this.$toast.error("Ingresar el número a buscar");
+                this.$showSAlert("", "Ingresar el número a buscar", "error");
                 return;
             }
             let identity_document_type_name = "";

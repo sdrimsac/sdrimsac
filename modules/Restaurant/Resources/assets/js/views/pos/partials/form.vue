@@ -18,7 +18,7 @@
                   <div class="col-md-3">
                     <div class="form-group">
                       <label class="control-label"
-                        >Imágen <span class="text-danger"></span
+                        >Imágen<span class="text-danger"></span
                       ></label>
                       <el-upload
                         class="avatar-uploader"

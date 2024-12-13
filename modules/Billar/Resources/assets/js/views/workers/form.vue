@@ -1,3 +1,4 @@
+Nuevo Usuaio
 <template>
     <el-dialog
         :title="titleDialog"
@@ -7,7 +8,6 @@
         class="rounded-dialog"
         :close-on-click-modal="false"
     >
-        <br />
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
@@ -335,12 +335,6 @@
     </el-dialog>
 </template>
 
-<style>
-.el-dialog {
-    border-radius: 10px;
-    overflow: hidden;
-}
-</style>
 
 <script>
 export default {
