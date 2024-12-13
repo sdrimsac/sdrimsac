@@ -70,7 +70,7 @@ if ($hostname) {
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
 
-            Route::post('digital_payment', [App\Http\Controllers\Tenant\PosController::class, 'digital_payment']);
+            // Route::post('digital_payment', [App\Http\Controllers\Tenant\PosController::class, 'digital_payment']);
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
