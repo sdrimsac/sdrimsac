@@ -2893,6 +2893,7 @@ export default {
             this.$http(`/service/exchange?date=${date}`).then(response => {
                 if (response.status == 200) {
                     let data = response.data;
+                    data = data.toString();
                     data = data.replace(",", ".");
                     this.exchange_rate_sale = Number(data);
                     console.log(
