@@ -2321,12 +2321,14 @@
             :showPendingOrdens.sync="showPendingOrdens"
         ></table-ordens-pending>
         <cash-form
+            v-if="showDialogCash"
             :showDialog.sync="showDialogCash"
             :recordId="cash_id"
             :fromBox="true"
             @updateCashId="updateCashId"
         ></cash-form>
         <close-cash
+            v-if="showDialogClose"
             :recordId.sync="cash_id"
             :showDialogClose.sync="showDialogClose"
             :fromBox="true"
@@ -2334,6 +2336,7 @@
             @updateCashId="updateCashId"
         ></close-cash>
         <expenses-incomes
+            v-if="configuration.show_expenses_incomes_caja"
             :showDialog.sync="showExpensesIncomes"
             :company="company"
             :cash_id="cash_id"
@@ -2347,6 +2350,7 @@
             @addObservation="addObservation"
         ></observation-form>
         <quotation-form
+            v-if="configuration.quotation"
             :configuration="configuration"
             :isSeller="isSeller"
             :showDialog.sync="showQuotationForm"
@@ -2361,7 +2365,7 @@
         ></quotation-form>
 
         <credit-form
-            v-if="user"
+            v-if="user && configuration.sale_note_credit_penalty"
             :users.sync="users"
             :user.sync="user"
             :showDialog.sync="showCreditForm"
@@ -2495,6 +2499,9 @@
             </div>
         </el-dialog>
         <consignment-form
+            v-if="
+                configuration.consignment && localOrden.length != 0 && !isSeller
+            "
             :showDialog.sync="showConsignmentForm"
             :items="localOrden"
             :all_customers="customers"
@@ -2505,6 +2512,7 @@
             :showDialog.sync="showConsolidated"
         ></consolidated-modal>
         <credit-list-modal
+            v-if="configuration.credit_list"
             :showDialog.sync="showCreditListModal"
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"
@@ -2512,6 +2520,7 @@
         ></credit-list-modal>
 
         <credit-list-dialog
+            v-if="configuration.credit_list"
             :showDialog.sync="showCreditListDialog"
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"
@@ -2645,8 +2654,8 @@ export default {
         "ordenId",
         "cash_id",
         "isHotelArea",
-        "user",
-        "exchange_rate_sale"
+        "user"
+        // "exchange_rate_sale"
     ],
 
     data() {
@@ -2656,7 +2665,7 @@ export default {
             isRestaurantWarehouse: true,
             showConsolidated: false,
             quotationDirect: false,
-            // exchange_rate_sale: 1,
+            exchange_rate_sale: 1,
             currency_id: "S/",
             cashAvailable: 0,
             showColorSize: false,
@@ -2869,21 +2878,28 @@ export default {
         this.checkCashAvailable();
         this.getLasNumOrden();
         this.getSaleOfferts();
-        // this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
+        this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
     },
     methods: {
         searchExchangeRateByDate(date) {
             this.$http(`/service/exchange?date=${date}`).then(response => {
                 if (response.status == 200) {
                     let data = response.data;
+                    data = data.replace(",", ".");
                     this.exchange_rate_sale = Number(data);
+                    console.log(
+                        "el exchange_rate_sale",
+                        this.exchange_rate_sale
+                    );
                 }
             });
         },
         getSaleOfferts() {
-            this.$http.get("/items/sale-offert/get").then(response => {
-                this.saleOfferts = response.data;
-            });
+            if (this.configuration.sale_offert) {
+                this.$http.get("/items/sale-offert/get").then(response => {
+                    this.saleOfferts = response.data;
+                });
+            }
         },
         clickSaleOffert() {
             let quantityProducts = this.localOrden.length;
@@ -2933,7 +2949,7 @@ export default {
             this.calculateTotal();
         },
         changeCurrencyItems() {
-            if(!this.configuration.other_currency_pos) return;
+            if (!this.configuration.other_currency_pos) return;
             let items = [...this.localOrden];
             for (let i = 0; i < items.length; i++) {
                 let orden = items[i];
@@ -3343,12 +3359,17 @@ export default {
         },
 
         getCommercialTreatments() {
-            this.$http
-                .get("/commercial_treatment/records?all=true")
-                .then(res => {
-                    this.commercialTreatments = res.data;
-                })
-                .catch(err => {});
+            if (
+                this.configuration.commercial_treatments &&
+                this.configuration.commercial_treatment_items
+            ) {
+                this.$http
+                    .get("/commercial_treatment/records?all=true")
+                    .then(res => {
+                        this.commercialTreatments = res.data;
+                    })
+                    .catch(err => {});
+            }
         },
         setQuotationStock() {
             let quotation_stock = this.quotation_stock ? 1 : 0;
@@ -3717,10 +3738,15 @@ export default {
             this.$emit("update:localOrden", ordensModified);
         },
         async getTags() {
-            const response = await this.$http("../observations/records");
-            if (response.status == 200) {
-                const { data } = response;
-                this.tags = data;
+            if (
+                this.configuration.restaurant &&
+                !this.configuration.college
+            ) {
+                const response = await this.$http("../observations/records");
+                if (response.status == 200) {
+                    const { data } = response;
+                    this.tags = data;
+                }
             }
         },
         async updateCashId(id) {

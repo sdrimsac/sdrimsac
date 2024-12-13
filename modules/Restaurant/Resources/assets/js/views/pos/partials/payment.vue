@@ -577,6 +577,7 @@
                                     "
                                 ></label>
                                 <span
+                                    v-if="is_payment == true"
                                     class="control-label fs-5 fw-bold text-white"
                                 >
                                     {{ currencyTypeActive.symbol
@@ -1217,7 +1218,9 @@
                             </td>
                             <td>{{ paymnt.method }}</td>
                             <td>
-                                <strong>{{ paymnt.amount.toFixed(2) }}</strong>
+                                <strong v-if="!isNaN(paymnt.amount)">{{
+                                    Number(paymnt.amount).toFixed(2)
+                                }}</strong>
                             </td>
                             <td>
                                 <el-tooltip
@@ -1228,7 +1231,7 @@
                                         type="danger"
                                         icon="el-icon-delete"
                                         circle
-                                        @click="removePayment(paymnt.id)"
+                                        @click="removePaymentp(paymnt.id)"
                                     ></el-button>
                                 </el-tooltip>
                             </td>
@@ -1559,6 +1562,7 @@
         </div>
 
         <multiple-payment-form
+            v-if="showDialogMultiplePayment"
             :showDialog.sync="showDialogMultiplePayment"
             :payments="payments"
             @add="addRow"
@@ -1574,6 +1578,7 @@
             :recordId="null"
         ></card-brands-form>
         <person-form
+            v-if="showDialogNewPerson"
             :showDialog.sync="showDialogNewPerson"
             type="customers"
             :input_person="input_person"
@@ -1597,6 +1602,7 @@
         >
         </show-split-payment-form>
         <person-college-form
+            v-if="showCollegePersonDialog"
             :showDialog.sync="showCollegePersonDialog"
             :extern="true"
             :fromPerson="true"
@@ -1852,7 +1858,6 @@ export default {
         "company",
         "desarrollador",
         "percentage_igv",
-        "all_series",
         "all_customers",
         "personalWhatsapp",
         "sellers"
@@ -1867,6 +1872,7 @@ export default {
     },
     data() {
         return {
+            all_series: [],
             listPromotionItems: [],
             promotionItems: [],
             showDialogPromotionBox: false,
@@ -2068,18 +2074,27 @@ export default {
         }
     },
     async created() {
-        await this.$http.get(`/documents/detraction/tables`).then(response => {
-            this.detraction_types = response.data.detraction_types;
-            this.cat_payment_method_types =
-                response.data.cat_payment_method_types;
+        await this.$http.get(`/caja/pos/series`).then(response => {
+            this.all_series = response.data.series;
         });
+        if (this.configuration.detraction) {
+            await this.$http
+                .get(`/documents/detraction/tables`)
+                .then(response => {
+                    this.detraction_types = response.data.detraction_types;
+                    this.cat_payment_method_types =
+                        response.data.cat_payment_method_types;
+                });
+        }
         this.$eventHub.$on("initInputPerson", () => {
             this.initInputPerson();
         });
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
-        this.form.identity_document_type_id = this.currentDocumentsType[0].id;
+        if (this.currentDocumentsType.length > 0) {
+            this.form.identity_document_type_id = this.currentDocumentsType[0].id;
+        }
         if (!this.form.customer_id && !this.form.promotion_sale) {
             this.form.customer_id = this.establishments.customer_id;
             this.value = this.establishments.customer_id;
@@ -2088,14 +2103,10 @@ export default {
         }
 
         this.isInterno = this.company.soap_type_id == "03";
-        if (!this.conf.pos_quick_sale) {
-            await this.getLastNumbersDocument();
-        }
+
         // await this.getTables();
         await this.date_of_issue();
 
-        await this.initFormPayment();
-        await this.setInitialAmount();
         this.$eventHub.$on("reloadDataCardBrands", card_brand_id => {
             this.reloadDataCardBrands(card_brand_id);
         });
@@ -2103,7 +2114,7 @@ export default {
             this.reloadDataCustomers(customer_id);
         });
 
-        await this.getFormPosLocalStorage();
+        // await this.getFormPosLocalStorage();
 
         if (this.conf.pos_quick_sale) {
             qz.security.setCertificatePromise((resolve, reject) => {
@@ -2134,8 +2145,6 @@ export default {
                 };
             });
         }
-
-        this.setAmountCash(this.form.total);
 
         // this.filterSeries();
 
@@ -2989,29 +2998,39 @@ export default {
             localStorage.setItem(key, JSON.stringify(obj));
         },
         async getLastNumbersDocument() {
-            const response = await this.$http.post(
-                `${this.resource}/last_number_documents`,
-                {
-                    series: this.all_series,
-                    ordenId: this.idOrden
-                }
-            );
-            if (response.status == 200) {
-                this.last_number = response.data.result;
-                this.refCustomer = response.data.customer;
-                if (this.refCustomer != null) {
-                    this.refCustomer.description = `${this.refCustomer.number} - ${this.refCustomer.name}`;
-                    this.customers = [
-                        this.refCustomer,
-                        ...this.customers.filter(
-                            f =>
-                                f.id != this.refCustomer.id &&
-                                f.number != "88888888"
-                        )
-                    ];
+            this.loadingLastNumber = true;
+            try {
+                const response = await this.$http.post(
+                    `${this.resource}/last_number_documents`,
+                    {
+                        series: this.all_series,
+                        ordenId: this.idOrden
+                    }
+                );
+                if (response.status == 200) {
+                    this.last_number = response.data.result;
+                    this.refCustomer = response.data.customer;
+                    if (this.refCustomer != null) {
+                        this.refCustomer.description = `${this.refCustomer.number} - ${this.refCustomer.name}`;
+                        this.customers = [
+                            this.refCustomer,
+                            ...this.customers.filter(
+                                f =>
+                                    f.id != this.refCustomer.id &&
+                                    f.number != "88888888"
+                            )
+                        ];
 
-                    this.value = this.refCustomer.id;
+                        this.value = this.refCustomer.id;
+                    }
+                    this.selectDocumentType(this.form.document_type_id);
                 }
+            } catch (e) {
+                this.$toast.error(
+                    "Error al obtener el ultimo numero de documento"
+                );
+            } finally {
+                this.loadingLastNumber = false;
             }
         },
         changeEnabledDiscount() {
@@ -3053,11 +3072,88 @@ export default {
                 }
             }
         },
+        resetForm() {
+            this.currentPayments = [];
+            this.hasPromotionText = null;
+            this.paymentVariation = {
+                description: "Consumo",
+                price: 0
+            };
+            this.isRestaurantWarehouse = false;
+            this.showDialogDocumentDetraction = false;
+            this.hasDetraction = false;
+            this.notRegister = false;
+            this.loadingText = "Cargando...";
+            this.gotClient = false;
+            this.showListItems = false;
+            this.discountTotal = false;
+            this.paymentCondition = "01";
+            this.affectation_optional_id = null;
+            this.hasCreditCardCharge = false;
+            this.chargeCredit = {
+                credit_type: "1",
+                total_charge: 0,
+                amount: 5
+            };
+            this.collegePersonId = null;
+            this.started = true;
+            this.refCustomer = null;
+            this.time = null;
+            this.splitPayments = [];
+            this.splitProducts = [];
+            this.showCollegePersonDialog = false;
+            this.isInterno = false;
+            this.showSplitPayment = false;
+            this.currencyTypeActive = {
+                symbol: "S/ "
+            };
+            this.currentPayments = [];
+            this.input_person = {};
+            this.customer = null;
+            this.value = null;
+            this.enabled_discount = true;
+            this.discount_amount = 0;
+            this.loading_submit = false;
+            this.showDialogOptions = false;
+            this.showDialogMultiplePayment = false;
+            this.showDialogSaleNote = false;
+            this.showDialogNewCardBrand = false;
+            this.documentNewId = null;
+            this.saleNotesNewId = null;
+            this.resource_options = null;
+            this.has_card = false;
+            this.method_payments = "01";
+            this.number = null;
+
+            this.amount = 0;
+            this.operation_number = null;
+            this.printerOn = 0;
+            this.button_payment = false;
+            this.input_item = "";
+            this.form_payment = {
+                is_bank: false
+            };
+
+            this.cancel = false;
+            this.form_cash_document = {};
+
+            this.invoice = true;
+            this.receipt = true;
+            this.sale_note = true;
+            this.last_date = null;
+
+            this.bank = null;
+            this.hasExceedBank = false;
+        },
         async date_of_issue() {
+            this.resetForm();
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
-            console.log("la confituracion", this.configuration);
+
+            if (!this.conf.pos_quick_sale) {
+                this.getLastNumbersDocument();
+            }
             this.sumCoins = [];
             if (!this.form.is_room) {
                 this.value = null;
@@ -3110,7 +3206,7 @@ export default {
             //     form_efectivo
             // );
             if (this.clientSaleNoteNumber) {
-                if (!this.gotClient) {
+                if (!this.gotClient && this.$refs.select_person) {
                     setTimeout(() => {
                         this.$refs.select_person.$el.getElementsByTagName(
                             "input"
@@ -3174,6 +3270,9 @@ export default {
                 this.setSaleOffert();
                 this.setOffertObservation();
             }
+            await this.initFormPayment();
+            await this.setInitialAmount();
+            this.setAmountCash(this.form.total);
         },
         setOffertObservation() {
             let offert = this.form.offert;
@@ -3435,17 +3534,19 @@ export default {
             this.form.payments = this.payments;
             //get with screen size
             let width = window.innerWidth;
-            if (width > 800) {
-                await this.$refs.enter_amount.$el
-                    .getElementsByTagName("input")[0]
-                    .focus();
-                await this.$refs.enter_amount.$el
-                    .getElementsByTagName("input")[0]
-                    .select();
-            } else {
-                await this.$refs.observation.$el
-                    .getElementsByTagName("textarea")[0]
-                    .focus();
+            if (this.$refs.enter_amount) {
+                if (width > 800) {
+                    await this.$refs.enter_amount.$el
+                        .getElementsByTagName("input")[0]
+                        .focus();
+                    await this.$refs.enter_amount.$el
+                        .getElementsByTagName("input")[0]
+                        .select();
+                } else {
+                    await this.$refs.observation.$el
+                        .getElementsByTagName("textarea")[0]
+                        .focus();
+                }
             }
         },
         inputDiscountAmount() {
@@ -3918,6 +4019,9 @@ export default {
             this.setAmount(amount);
         },
         async diferen() {
+            console.log("enter_amount", this.form.enter_amount);
+            console.log("totalPayments", this.totalPayments());
+            console.log("total", this.form.total);
             let differen =
                 (parseFloat(this.form.enter_amount) || 0) +
                 this.totalPayments() -
@@ -3971,6 +4075,7 @@ export default {
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
             // this.setAmountCash(amount)
         },
+
         getLocalStoragePayment(key, re_default = null) {
             let ls_obj = localStorage.getItem(key);
             ls_obj = JSON.parse(ls_obj);

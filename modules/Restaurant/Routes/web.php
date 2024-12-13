@@ -275,7 +275,7 @@ Route::prefix('caja')->group(function () {
         Route::get('pos', 'PosController@index')->name('restaurant.pos');
         Route::get('pos/search_orden', 'PosController@search');
         Route::get('pos/update_items_warehouse', 'PosController@updateItemWithWarehouse');
-
+        Route::get('pos/series', 'PosController@series');
         Route::post('pos/orden_payment', 'PosController@payment');
         Route::get('pos/foods', 'PosController@foods');
         Route::get('boxes', 'BoxesController@index')->name('restaurant.boxes');

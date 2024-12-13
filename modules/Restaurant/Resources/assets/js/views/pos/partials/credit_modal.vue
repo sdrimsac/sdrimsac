@@ -318,7 +318,6 @@ export default {
         "cash_id",
         "all_customers",
         "showDialog",
-        "all_series",
         "establishments"
     ],
     components: { PersonForm },
@@ -347,13 +346,15 @@ export default {
             percentage_igv: 18,
             loading: false,
             hasProblems: false,
-            isSimulate: false
+            isSimulate: false,
+            all_series: []
         };
     },
     created() {
         this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
         });
+        this.getSeries();
     },
     watch: {
         all_customers(newCustomer, _) {
@@ -364,6 +365,11 @@ export default {
     
     },
     methods: {
+        async getSeries() {
+            this.$http.get(`/pos/payment_tables`).then(response => {
+                this.all_series = response.data.series;
+            });
+        },
         createPayment(date_of_issue, num_cuota, type_payment) {
             let date = moment(date_of_issue);
             let payments = [];
@@ -817,6 +823,7 @@ export default {
         async getUsers() {
             const response = await this.$http.get(`/reports/credits/filter`);
             if (response.data) {
+                console.log("aqui? 1312");
                 this.users = response.data.users;
             }
         },

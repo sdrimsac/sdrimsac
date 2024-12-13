@@ -39,7 +39,9 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaAncho;
 use App\Models\Tenant\ItemMedidaGrosor;
+use App\Models\Tenant\Series;
 use App\Models\Tenant\UnitTypePerson;
+use App\Models\Tenant\UserSerie;
 use App\Traits\JobReportTrait;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
@@ -76,6 +78,27 @@ class PosController extends Controller
     }
 
 
+    public function series(){
+        $user = auth()->user();
+        $establishment = $user->establishment_id;
+        $user_id = $user->id; //9
+        if (!$establishment) {
+            $establishment = Establishment::first()->id;
+        }
+        $user_series = UserSerie::where('user_id', $user_id)
+        ->pluck('serie_id')->toArray();
+        
+        if(count($user_series)>0){
+            // $series = 
+            $series = Series::whereIn('id',$user_series)->get();
+        }else{
+            $series = Series::whereIn('document_type_id', ['01', '03', '80'])
+            ->where([['establishment_id', $establishment], ['contingency', false]])
+            ->get();
+
+        }
+        return compact('series');
+    }
     public function updateItemWithWarehouse()
     {
         $counter = 0;

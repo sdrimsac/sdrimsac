@@ -1577,7 +1577,6 @@
                 :variation.sync="variation"
                 :documentsType="documentsType"
                 :cash_id.sync="cashId"
-                v-if="is_payment == true"
                 :percentage_igv="percentage_igv"
                 :is_payment.sync="is_payment"
                 :form="form"
@@ -1608,11 +1607,13 @@
         </template>
         <template v-if="configuration.college">
             <college-parents
+                v-if="showDialogNewPerson"
                 :showDialog.sync="showDialogNewPerson"
             ></college-parents>
         </template>
         <template v-else>
             <person-form
+                v-if="showDialogNewPerson"
                 :external="false"
                 :showDialog.sync="showDialogNewPerson"
             ></person-form>
@@ -1625,26 +1626,31 @@
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
         ></cash-history>
         <item-form
+            v-if="showDialogNewItem"
             :showDialog.sync="showDialogNewItem"
             :external="true"
             :worker="worker"
         ></item-form>
         <college
+            v-if="configuration.college"
             :showDialog.sync="showDialogCollege"
             :configuration="configuration"
         ></college>
         <warehouses-detail
+            v-if="showWarehousesDetail"
             :showDialog.sync="showWarehousesDetail"
             :warehouses="warehousesDetail"
             :unit_type="unittypeDetail"
         ></warehouses-detail>
         <tables
+
             :configuration="configuration"
             @creatingOrden="creatingOrden"
             @sendOrdens="sendOrdens"
             :showTables.sync="showTables"
         ></tables>
         <tables-rooms
+            v-if="configuration.hotels"
             :cash_id.sync="cashId"
             :configuration="configuration"
             :printer.sync="printer"
@@ -1675,6 +1681,7 @@
             :establishment.sync="establishment"
         ></PromotionCanje>
         <credits-list
+            v-if="configuration.sale_note_credit_penalty"
             :showDialog.sync="showCredits"
             :configuration="configuration"
             :isAnalist="isAnalist"
@@ -1792,6 +1799,7 @@
             <br />
         </el-dialog>
         <detraction-payment
+            v-if="configuration.detraction"
             :showDialog.sync="showDialogDetraction"
         ></detraction-payment>
     </div>
@@ -2148,7 +2156,6 @@ export default {
         this.loading = true;
         //this.socketWhatsappConfig();
         await this.getTables();
-        await this.getSeries();
         await this.initForm(this.customer_default.id);
         await this.getFoods();
         await this.filterCategorie(0, false);
@@ -5418,9 +5425,14 @@ export default {
             }
         },
         getExchange() {
-            let now = moment().format("YYYY-MM-DD");
-            this.searchExchangeRateByDate(now).then(response => {
-                this.form.exchange_rate_sale = response;
+            let date = moment().format("YYYY-MM-DD");
+            this.$http(`/service/exchange?date=${date}`).then(response => {
+                if (response.status == 200) {
+                    let data = response.data;
+                    data = data.replace(",", ".");
+                    this.form.exchange_rate_sale = Number(data);
+                    
+                }
             });
         },
         changeExchangeRate() {
@@ -5614,11 +5626,7 @@ export default {
 
             // this.loadingInstance.close()
         },
-        async getSeries() {
-            this.$http.get(`/pos/payment_tables`).then(response => {
-                this.all_series = response.data.series;
-            });
-        },
+    
         getColor(i) {
             return this.colors[i % this.colors.length];
         },
