@@ -101,7 +101,7 @@ const PenaltyForm = () =>
         "../../../../../../../Consignment/Resources/assets/js/views/partials/penalty_form.vue"
     );
 export default {
-    props: ["showDialog", "items", "all_customers", "establishments"],
+    props: ["showDialog", "items", "all_customers", "establishments", "fromPos"],
     components: {
         PersonForm,
         PenaltyForm
@@ -120,6 +120,9 @@ export default {
     },
     created() {
         this.getPenalties();
+        if (this.fromPos) {
+            this.open();
+        }
     },
     methods: {
         initForm() {

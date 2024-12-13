@@ -2760,6 +2760,7 @@ export default {
         });
 
         await this.setDefaultConfiguration();
+        this.create();
     },
 
     computed: {

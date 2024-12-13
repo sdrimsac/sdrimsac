@@ -33,6 +33,7 @@ class Area extends ModelTenant
     {
         return $this->description == 'BILLAR';
     }
+    
 
     public static function getAreaCajaId()
     {

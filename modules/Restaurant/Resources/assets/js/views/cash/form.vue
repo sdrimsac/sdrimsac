@@ -119,7 +119,7 @@
 
 <script>
 export default {
-  props: ["showDialog", "recordId", "typeUser", "fromBox", "principal"],
+  props: ["showDialog", "recordId", "typeUser", "fromBox", "principal", "fromPos"],
   data() {
     return {
       newCash: false,
@@ -172,6 +172,9 @@ export default {
     });
 
     this.initForm();
+    if (this.fromPos) {
+      this.open();
+    }
   },
   computed: {
     disableUser() {

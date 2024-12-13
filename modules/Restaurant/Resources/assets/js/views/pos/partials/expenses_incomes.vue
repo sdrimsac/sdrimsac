@@ -78,7 +78,7 @@ import ExpensesIncomesForm from "./expenses_incomes_form.vue";
 import queryString from "query-string";
 export default {
     components: { ExpensesIncomesDetail, ExpensesIncomesForm },
-    props: ["showDialog", "company", "cash_id", "establishments","area_id"],
+    props: ["showDialog", "company", "cash_id", "establishments","area_id", "fromPos"],
     data() {
         return {
             recordId:null,
@@ -106,6 +106,9 @@ export default {
         await this.getPrinter();
         await this.getItemsDetail();
         await this.getUnitTypes();
+        if (this.fromPos) {
+            this.open();
+        }
     },
     watch: {
         activeName(oldVal, newVal) {

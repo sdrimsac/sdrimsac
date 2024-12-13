@@ -196,6 +196,7 @@ export default {
     components: { CreateForm, CreateRegisterForm, PaymentForm, StudentView },
     created() {
         this.getTables();
+        this.open();
     },
     data() {
         return {

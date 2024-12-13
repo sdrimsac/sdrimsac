@@ -128,7 +128,8 @@ export default {
         "isSeller",
         "configuration",
         "establishment",
-        "categoriaMadera"
+        "categoriaMadera",
+        "fromPos"
     ],
     components: { PersonForm, QuotationOptions },
     data() {
@@ -153,6 +154,9 @@ export default {
         console.log("Props categoriaMadera recibido :", {
         items: this.items,
     });
+    if (this.fromPos) {
+        this.open();
+    }
     },
     watch: {
         all_customers(newCustomer, _) {

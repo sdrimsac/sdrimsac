@@ -482,7 +482,7 @@
 const PersonForm = () =>
     import("../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["showDialog", "recordId", "extern", "fromPerson"],
+    props: ["showDialog", "recordId", "extern", "fromPerson", "fromPos"],
     components: {
         PersonForm
     },
@@ -527,6 +527,9 @@ showDialogNewPerson:false,
         this.$eventHub.$on("reloadData", () => {
             this.open();
         });
+        if (this.fromPos) {
+            this.open();
+        }
     },
     methods: {
         editPerson(child){

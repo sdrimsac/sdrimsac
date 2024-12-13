@@ -318,7 +318,8 @@ export default {
         "cash_id",
         "all_customers",
         "showDialog",
-        "establishments"
+        "establishments",
+        "fromPos"
     ],
     components: { PersonForm },
     data() {
@@ -355,6 +356,9 @@ export default {
             this.reloadDataCustomers(customer_id);
         });
         this.getSeries();
+        if (this.fromPos) {
+            this.open();
+        }
     },
     watch: {
         all_customers(newCustomer, _) {

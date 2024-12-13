@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Events\DigitalPayEvent;
 use Exception;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
@@ -152,6 +153,14 @@ class PosController extends Controller
         return null;
         // $customer 
 
+    }
+    public function digital_payment(Request $request){
+        $package = $request->package;
+        $title = $request->title;
+        $content = $request->content;
+        $message = $title . " " . $content;
+        event(new DigitalPayEvent($message));
+        return ['success' => true];
     }
     public function index()
     {

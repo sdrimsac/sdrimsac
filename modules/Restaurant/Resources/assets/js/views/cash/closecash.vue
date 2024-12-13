@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <el-dialog
-                title="Cierra de Caja - Contador de dinero"
+                title="Cierra de Caja - Contador de dineraaao"
                 :visible.sync="showDialogClose"
                 @open="dateclosed"
                 :before-close="closeDialog"
@@ -534,7 +534,7 @@ export default {
         SeriesBillsDialog
     },
     mixins: [deletable],
-    props: ["showDialogClose", "recordId", "fromBox", "configuration"],
+    props: ["showDialogClose", "recordId", "fromBox", "configuration", "fromPos"],
     data() {
         return {
             total: 0,
@@ -557,7 +557,11 @@ export default {
             showSeriesBillsDialog: false
         };
     },
-
+    created() {
+        if (this.fromPos) {
+            this.dateclosed();
+        }
+    },
     methods: {
         uploadExcelBillsSeries(event) {
             let file = event.target.files[0];
@@ -679,6 +683,7 @@ export default {
                 .catch(action => {});
         },
         async dateclosed() {
+            console.log("dateclosed");
             this.totalCoins = 0;
             this.totalBills = 0;
             try {

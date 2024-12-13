@@ -1084,7 +1084,8 @@ export default {
         "printer",
         "configuration",
         "cash_id",
-        "itemDefault"
+        "itemDefault",
+        "fromPos"
     ],
     components: {
         RoomForm,
@@ -1143,6 +1144,12 @@ export default {
             hotelRentId: null,
             showServices: false
         };
+    },
+    created() {
+
+        if (this.fromPos) {
+            this.open();
+        }
     },
     methods: {
         clickShowVariationModal() {

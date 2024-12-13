@@ -446,7 +446,8 @@ export default {
         "user_id",
         "newTech",
         "typeUser",
-        "isArca"
+        "isArca",
+        "fromPos"
     ],
     data() {
         return {
@@ -510,6 +511,9 @@ export default {
             this.item_unit_types_general = response.data.item_unit_types;
             this.item_unit_types = this.item_unit_types_general;
         });
+        if (this.fromPos) {
+            this.open();
+        }
     },
     computed: {
         maxLength: function () {

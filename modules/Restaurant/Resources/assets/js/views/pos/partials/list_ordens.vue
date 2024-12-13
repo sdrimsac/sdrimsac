@@ -2325,6 +2325,7 @@
             :showDialog.sync="showDialogCash"
             :recordId="cash_id"
             :fromBox="true"
+            :fromPos="true"
             @updateCashId="updateCashId"
         ></cash-form>
         <close-cash
@@ -2333,6 +2334,7 @@
             :showDialogClose.sync="showDialogClose"
             :fromBox="true"
             :configuration="configuration"
+            :fromPos="true"
             @updateCashId="updateCashId"
         ></close-cash>
         <expenses-incomes
@@ -2342,6 +2344,7 @@
             :cash_id="cash_id"
             :establishments="establishments"
             @checkCashAvailable="checkCashAvailable"
+            :fromPos="true"
         ></expenses-incomes>
         <observation-form
             :current="current"
@@ -2362,6 +2365,7 @@
             :sellers="sellers"
             :establishment="establishments"
             :formQtn.sync="formQtn"
+            :fromPos="true"
         ></quotation-form>
 
         <credit-form
@@ -2376,6 +2380,7 @@
             :all_series.sync="all_series"
             :establishments="establishments"
             :configuration="configuration"
+            :fromPos="true"
         ></credit-form>
         <el-dialog
             :visible.sync="showChangeDescriptionVariation"
@@ -2507,6 +2512,7 @@
             :all_customers="customers"
             :establishments="establishments"
             @limpiarForm="limpiarForm"
+            :fromPos="true"
         ></consignment-form>
         <consolidated-modal
             :showDialog.sync="showConsolidated"
@@ -2517,6 +2523,7 @@
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"
             :cashId="cash_id"
+            :fromPos="true"
         ></credit-list-modal>
 
         <credit-list-dialog
@@ -2525,6 +2532,7 @@
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"
             @paymentsOrden="paymentsOrden"
+            :fromPos="true"
         ></credit-list-dialog>
         <el-dialog
             :visible.sync="showChangeName"

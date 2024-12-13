@@ -871,7 +871,7 @@ export default {
         SaleNoteGenerate,
         SaleNoteDetail
     },
-    props: ["showDialog", "configuration", "isAnalist", "user"],
+    props: ["showDialog", "configuration", "isAnalist", "user", "fromPos"],
     data() {
         return {
             users: [],
@@ -922,6 +922,9 @@ export default {
             this.getRecords();
         });
         this.getTables();
+        if (this.fromPos) {
+            this.open();
+        }
     },
     methods: {
         clickReportByPerson() {

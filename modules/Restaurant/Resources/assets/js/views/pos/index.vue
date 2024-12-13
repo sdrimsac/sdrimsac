@@ -1609,6 +1609,7 @@
             <college-parents
                 v-if="showDialogNewPerson"
                 :showDialog.sync="showDialogNewPerson"
+                :fromPos="true"
             ></college-parents>
         </template>
         <template v-else>
@@ -1616,6 +1617,7 @@
                 v-if="showDialogNewPerson"
                 :external="false"
                 :showDialog.sync="showDialogNewPerson"
+                :fromPos="true"
             ></person-form>
         </template>
         <cash-history
@@ -1630,17 +1632,20 @@
             :showDialog.sync="showDialogNewItem"
             :external="true"
             :worker="worker"
+            :fromPos="true"
         ></item-form>
         <college
             v-if="configuration.college"
             :showDialog.sync="showDialogCollege"
             :configuration="configuration"
+            :fromPos="true"
         ></college>
         <warehouses-detail
             v-if="showWarehousesDetail"
             :showDialog.sync="showWarehousesDetail"
             :warehouses="warehousesDetail"
             :unit_type="unittypeDetail"
+            :fromPos="true"
         ></warehouses-detail>
         <tables
 
@@ -1662,6 +1667,7 @@
             :roomSeeId="roomSeeId"
             :showTables.sync="showTablesRooms"
             :itemDefault.sync="itemDefault"
+            :fromPos="true"
         ></tables-rooms>
         <documents-print
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
@@ -1686,6 +1692,7 @@
             :configuration="configuration"
             :isAnalist="isAnalist"
             :user="user"
+            :fromPos="true"
         ></credits-list>
         <unit-type-modal
             @addUnitType="addUnitType"
@@ -1801,6 +1808,7 @@
         <detraction-payment
             v-if="configuration.detraction"
             :showDialog.sync="showDialogDetraction"
+            :fromPos="true"
         ></detraction-payment>
     </div>
 </template>
@@ -5429,6 +5437,7 @@ export default {
             this.$http(`/service/exchange?date=${date}`).then(response => {
                 if (response.status == 200) {
                     let data = response.data;
+                    data = data.toString();
                     data = data.replace(",", ".");
                     this.form.exchange_rate_sale = Number(data);
                     
@@ -6265,6 +6274,16 @@ export default {
                 }
             }
         );
+        Echo.channel("digitalpay").listen(
+            `.digitalpay-${this.configuration.socket_channel}`,
+            e => {
+                let { message } = e;
+                
+                    this.$toast.success(message);
+                
+            }
+        );
+
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {

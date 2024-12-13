@@ -56,7 +56,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "amountToAdd","cashId"],
+    props: ["showDialog", "amountToAdd","cashId", "fromPos"],
     data() {
         return {
             loading: false,
@@ -72,6 +72,11 @@ export default {
                 number: null
             }
         };
+    },
+    created() {
+        if (this.fromPos) {
+            this.open();
+        }
     },
     methods: {
         submit() {

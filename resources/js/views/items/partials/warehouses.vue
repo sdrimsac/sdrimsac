@@ -301,7 +301,8 @@ export default {
     "hasSerie",
     "item",
     "config",
-    "record"
+    "record",
+    "fromPos"
   ],
   data() {
     return {
@@ -333,6 +334,9 @@ export default {
     this.$eventHub.$on("reloadData", () => {
       this.close();
     });
+    if (this.fromPos) {
+      this.open();
+    }
   },
   mounted() {
     console.log(this.user);
