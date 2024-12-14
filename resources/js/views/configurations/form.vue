@@ -1892,7 +1892,7 @@
                               </div>
 
                               <!-- Usar número personal (whatsapp) -->
-                              <div class="col-md-2 mt-4">
+                              <!-- <div class="col-md-2 mt-4">
                                 <div class="form-group">
                                   <label class="control-label w-100">
                                     <i class="fas fa-phone tab-icon"></i>
@@ -1907,7 +1907,7 @@
                                     @change="submit('Usar número personal (whatsapp)', form.personal_phone, 'personal_phone', 'phoneIcon')"
                                   ></el-switch>
                                 </div>
-                              </div>
+                              </div> -->
 
                               <!-- Enviar whatsapp al ver venta diaria -->
                               <div class="col-md-2 mt-4">
