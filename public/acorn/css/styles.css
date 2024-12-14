@@ -13419,6 +13419,17 @@ width: 181px;
   color: #dc3545;
   font-weight: bold;
 }
-.input-maxlength {
-  position: relative;
+.custom-bg-light {
+  background-color: #f8f9fa !important;
+}
+.custom-bg-danger {
+  background-color: #C0C4CC !important; 
+  color:#42ca6f !important;
+  
+}
+
+.form-control[readonly] {
+  background-color: #e9fffe !important;
+  color:#000 !important;
+  font-weight: bold !important;
 }

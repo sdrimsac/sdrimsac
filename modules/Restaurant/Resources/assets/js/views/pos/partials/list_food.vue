@@ -371,7 +371,7 @@
                                 </div>
                                 <div
                                     id="card"
-                                    class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
+                                    class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-light"
                                     :style="
                                         `${
                                             configuration.trunc_txt
@@ -486,9 +486,6 @@
                                         <div
                                             class="d-flex flex-column align-items-end"
                                         >
-                                            <!-- <div class="text-uppercase font-weight-light h5">
-                                                    {{ data.category.name }}
-                      </div>-->
                                             <div class="block mb-2">
                                                 <span
                                                     class="time font-weight-light"
@@ -587,15 +584,6 @@
                                                             data.item.stock
                                                         )
                                                     }}
-                                                    <!-- {{
-                                                        parseFloat(
-                                                            data.item
-                                                                .stock /
-                                                                data
-                                                                    .item
-                                                                    .max_quantity
-                                                        )
-                          }}-->
                                                 </template>
                                                 <template v-else>
                                                     {{
@@ -678,7 +666,7 @@
                             </div>
                             <div
                                 id="card"
-                                class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
+                                class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-light"
                                 :style="
                                     `${
                                         configuration.trunc_txt
@@ -919,8 +907,16 @@
                                             class="badge rounded-pill bg-danger m-l-0"
                                             style="text-align: center !important"
                                             >Agotado</span
-                                        >
+                                        > 
+                                        
                                     </template>
+                                    <!-- <template v-else>
+                                        <img
+                                            src="/status_images/agotado.png"
+                                            style="position: relative; top: -120px; left: 0; opacity: 0.5; pointer-events: none; width: 400px; height: 150px;"
+                                            class=""
+                                        />
+                                    </template> -->
                                 </div>
                             </div>
                         </el-tooltip>
@@ -1165,7 +1161,7 @@ export default {
     methods: {
         selectUnitType(unit_type) {
             this.showDialogUnitType = false;
-            
+
             this.addFood(0, unit_type);
         },
         addUnitType(type) {
@@ -1247,7 +1243,10 @@ export default {
             ) {
                 let [food] = this.listFoods;
                 let { types } = food;
-                if (types.length > 1 && this.configuration.unit_type_select_barcode) {
+                if (
+                    types.length > 1 &&
+                    this.configuration.unit_type_select_barcode
+                ) {
                     this.foodWithTypes = food;
                     this.showDialogUnitType = true;
                 } else {

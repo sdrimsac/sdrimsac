@@ -319,6 +319,7 @@
                                                 clearable
                                             >
                                                 <el-button
+                                                    class="bg-light"
                                                     slot="append"
                                                     icon="el-icon-search"
                                                     @click="search"
@@ -336,6 +337,7 @@
                                                 autofocus
                                             >
                                                 <el-button
+                                                class="bg-light"
                                                     slot="append"
                                                     icon="el-icon-search"
                                                     @click="search"
@@ -1556,7 +1558,6 @@
 
         <template>
             <payment-form
-            
                 :user="user"
                 :currencyIdChoice.sync="currencyIdChoice"
                 @clearVariation="clearVariation"

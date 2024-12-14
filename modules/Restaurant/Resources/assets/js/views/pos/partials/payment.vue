@@ -505,11 +505,14 @@
                                     class="control-label text-primary fs-5 fw-bold mb-0"
                                 >
                                     Total Venta
-                                </label>
+                                </label> 
+                                <!-- <label>Total Venta</label> -->
                                 <span
                                     class="control-label text-primary fs-2 fw-bold mb-0 text-right"
                                 >
-                                    S/ {{ formatNumber(form.total) }}
+                                 <!-- S/ {{ " " + form.total }} -->
+
+                                                {{ currencyIdChoice == 'PEN' ? 'S/ ' : '$ ' }} {{ " " + form.total }}
                                 </span>
                             </div>
                         </div>
@@ -580,8 +583,8 @@
                                     v-if="is_payment == true"
                                     class="control-label fs-5 fw-bold text-white"
                                 >
-                                    {{ currencyTypeActive.symbol
-                                    }}{{
+                                {{ currencySymbol }}
+                                    {{
                                         form.difference
                                             .toFixed(2)
                                             .replace("-", "")
@@ -869,21 +872,29 @@
                     <div class="col-lg-4 col-md-12 mb-2">
                         <div class="row">
                             <!-- N° de Operación -->
+                            
                             <div
-                                class="col-12 d-flex align-items-center"
+                                class=""
                                 v-if="methodsValidate.includes(form.method_pay)"
                             >
-                                <label
+                                <!-- <label
                                     class="control-label font-weight-bold text-muted mr-2"
                                     style="font-size: 0.9em; white-space: nowrap;"
                                     >Nº Op. :</label
-                                >
-                                <el-input
-                                    v-model="operation_number"
-                                    size="mini"
-                                    class="d-inline-flex"
-                                >
-                                </el-input>
+                                > -->
+                                <label class="control-label">N° De Operacion</label>
+                                <div class="d-flex align-items-center">
+                                    <el-input
+                                        type="number"
+                                        v-model="operation_number"
+                                        size="mini"
+                                        class="d-inline-flex"
+                                    >
+                                    </el-input>
+                                </div>
+                                
+
+                                
                             </div>
 
                             <!-- Cargos de Tarjeta -->
@@ -1231,7 +1242,11 @@
                                         type="danger"
                                         icon="el-icon-delete"
                                         circle
-                                        @click="removePaymentp(paymnt.id)"
+                                        @click="
+                                                                removePayment(
+                                                                    paymnt.id
+                                                                )
+                                                            "
                                     ></el-button>
                                 </el-tooltip>
                             </td>
@@ -1587,6 +1602,7 @@
             :document_type_id.sync="form.document_type_id"
             @add_customer="add_customer"
             :recordId="form.customer_id"
+            :fromPos="true"
         >
         </person-form>
         <show-split-payment-form
@@ -2503,6 +2519,7 @@ export default {
             return affectation_igv_type_id;
         },
         addFreeItem(i) {
+            /* console.log("Ítem recibido:", i); */
             /* console.log("Ítem recibido:", i);
             console.log("Cantidad recibida:", i.quantity); */
 
@@ -2662,16 +2679,24 @@ export default {
         calculateCharge() {
             if (this.form.original_total == undefined) {
                 this.form.original_total = this.form.total;
+                console.log("total original", this.form.original_total);
             }
+            const originalTotal = this.form.original_total;
             let { amount, credit_type } = this.chargeCredit;
             if (credit_type == "1") {
-                this.chargeCredit.total_charge =
-                    this.form.original_total * (amount / 100);
+                this.chargeCredit.total_charge = originalTotal * (amount / 100);
+                console.log("Total charge (percentage):", this.chargeCredit.total_charge);
+                    
+                
             } else {
                 this.chargeCredit.total_charge = Number(amount);
+                console.log("Total charge (fixed amount):", this.chargeCredit.total_charge);
+               
             }
             this.chargeCredit.total_charge = Number(
                 this.chargeCredit.total_charge.toFixed(1)
+                
+                
             );
             if (this.form.total < this.chargeCredit.total_charge) {
                 this.chargeCredit.total_charge = 0;
@@ -2682,13 +2707,18 @@ export default {
                 // this.reCalculateTotal();
                 // return;
             }
-
+            
             let prices = this.divideCharge(this.form.items.length);
+            console.log("ver los item divididos :", this.form.items);
             let items = this.setItemsNewPrice(prices);
+            console.log("dividir los precios :", prices);
             items = this.formatItems(items);
             this.form.items = items;
+            console.log("aqui llego bien total:", this.form.total);
             this.reCalculateTotal();
+            console.log("After recalculating total:", this.form.total);
             this.form.enter_amount = this.form.total;
+            console.log("Final total before enterAmount:", this.form.total);
             this.enterAmount();
         },
         openDialogPerson() {
@@ -3572,7 +3602,7 @@ export default {
                 this.enterAmount();
             }
         },
-
+        // para calcular el descuento global que se puede aplicar a toda la venta 
         discountGlobal() {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
@@ -3770,6 +3800,7 @@ export default {
                 }
             }
         },
+        // aqui es donde se considera todo los metodos de pago 
         method_payment(method_pay) {
             this.hasCreditCardCharge = false;
             this.form.payment_condition_id = "01";
@@ -3793,8 +3824,9 @@ export default {
                 this.operation_number = null;
             }
         },
-
+        // aqui hace el proceso de recalculo de los montos
         reCalculateTotal() {
+            console.log("Recalculando totales");
             let total_discount = 0;
             let total_charge = 0;
 
@@ -3807,6 +3839,7 @@ export default {
             let total_value = 0;
             let total = 0;
             let total_plastic_bag_taxes = 0;
+            /* console.log("Items antes del cálculo:", JSON.stringify(this.form.items)); */
             if (
                 this.affectation_optional_id != null &&
                 this.affectation_optional_id != undefined &&
@@ -3834,7 +3867,7 @@ export default {
                 if (row.affectation_igv_type_id === "40") {
                     total_exportation += parseFloat(row.total_value);
                 }
-                console.log("row: ", row.affectation_igv_type_id);
+                console.log("row:", row.affectation_igv_type_id);
                 if (
                     ["11", "12", "13", "14", "15", "16"].includes(
                         row.affectation_igv_type_id
@@ -3862,6 +3895,7 @@ export default {
                     ) < 0
                 ) {
                     total_free += parseFloat(row.total_value);
+                    console.log("Total value actualizado:", total_value);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
@@ -3878,6 +3912,12 @@ export default {
                     ? 0.0
                     : parseFloat(row.total_plastic_bag_taxes);
             });
+            console.log("Totales antes del redondeo:");
+            console.log("Total Taxed:", total_taxed);
+            console.log("Total Exonerated:", total_exonerated);
+            console.log("Total IGV:", total_igv);
+            console.log("Total Value:", total_value);
+
 
             this.form.total_exportation = _.round(total_exportation, 2);
             this.form.total_taxed = _.round(total_taxed, 2);
@@ -3892,11 +3932,19 @@ export default {
                 total_plastic_bag_taxes,
                 2
             );
+            console.log("Totales después del redondeo:", {
+                total_taxed: this.form.total_taxed,
+                total_igv: this.form.total_igv,
+                total_value: this.form.total_value,
+            });
+
+
             // this.form.total = _.round(total, 2)
             this.form.total = _.round(
                 total_charge + total + this.form.total_plastic_bag_taxes,
                 2
             );
+            console.log("Total final calculado:", this.form.total);
 
             if (this.discount_amount) {
                 this.discountGlobal();

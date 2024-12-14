@@ -1627,6 +1627,11 @@
                                                                                 order_pend.quantity
                                                                             "
                                                                             data-rule="currency"
+                                                                            :class="{
+                                                                                'custom-bg-light': !configuration.item_set_quantity_pos,
+                                                                                'custom-bg-danger;': configuration.item_set_quantity_pos
+                                                                            }"
+                                                                            
                                                                             @input="
                                                                                 verifyStock(
                                                                                     order_pend,
@@ -1778,7 +1783,7 @@
                                                                                 v-else
                                                                             >
                                                                                 <el-input
-                                                                                    class="custom_input"
+                                                                                    class="custom_input text-dark"
                                                                                     :disabled="
                                                                                         isSellerConsolidated ||
                                                                                             configuration.editar_precio_politica ===

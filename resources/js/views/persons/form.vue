@@ -512,7 +512,7 @@ export default {
             this.item_unit_types = this.item_unit_types_general;
         });
         if (this.fromPos) {
-            this.open();
+            this.create();
         }
     },
     computed: {
@@ -739,11 +739,10 @@ export default {
                 .post(`/${this.resource}`, this.form)
                 .then(response => {
                     if (response.data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Éxito',
-                            text: response.data.message,
-                        });
+                        this.$showSAlert(
+                             'Éxito',
+                             response.data.message,
+                        );
                         this.$emit("add_customer", response.data.id);
                         if (this.external) {
                             this.$eventHub.$emit(
@@ -756,11 +755,11 @@ export default {
                         }
                         this.close();
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.data.message,
-                        });
+                        this.$showSAlert( 
+                            'ALERTA',
+                            response.data.message,
+                            'error',
+                        );
                     }
                 })
                 .catch(error => {
