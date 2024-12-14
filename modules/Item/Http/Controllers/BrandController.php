@@ -12,6 +12,7 @@ use Modules\Item\Http\Resources\BrandCollection;
 use Modules\Item\Http\Resources\BrandResource;
 use Modules\Item\Http\Requests\BrandRequest;
 use Modules\Report\Exports\BrandExport;
+use Exception;
 
 class BrandController extends Controller
 {
@@ -61,15 +62,15 @@ class BrandController extends Controller
         $id = $request->input('id');
         $brand = Brand::firstOrNew(['id' => $id]);
         $brand->fill($request->all());
+        $user_id = auth()->id();
+        $brand->user_id = $user_id;
         $brand->save();
-
 
         return [
             'success' => true,
             'message' => ($id)?'Marca editada con éxito':'Marca registrada con éxito',
             'data' => $brand
         ];
-
     }
 
     public function destroy($id)
@@ -89,10 +90,5 @@ class BrandController extends Controller
             return ($e->getCode() == '23000') ? ['success' => false,'message' => "La Marca esta siendo usada por otros registros, no puede eliminar"] : ['success' => false,'message' => "Error inesperado, no se pudo eliminar la Marca"];
 
         }
-
     }
-
-
-
-
 }

@@ -31,6 +31,7 @@
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
                         <th class="text-white">Nombre</th>
+                        <th class="text-white text-center">Creado por Usuario</th>
                         <th class="text-end text-white">Alias</th>
                         <th class="text-end text-white">DNI/RUC</th>
                         <th class="text-end text-white">Zona</th>
@@ -42,6 +43,8 @@
                     <tr slot-scope="{ index, row }" :class="{ 'bg-primary': !row.enabled }">
                         <td>{{ index }}</td>
                         <td>{{ row.name }}</td>
+                        <td class="text-center">{{ row.user_name }} <br> {{ row.updated_at }}
+                        </td>
                         <td class="text-end">{{ row.alias }}</td>
                         <td class="text-end">{{ row.number }}</td>
                         <td class="text-end">{{ row.zone_description }}</td>

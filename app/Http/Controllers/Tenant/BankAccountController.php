@@ -10,6 +10,7 @@ use App\Models\Tenant\Bank;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use Exception;
+use Modules\Restaurant\Models\Food;
 
 class BankAccountController extends Controller
 {
@@ -51,6 +52,10 @@ class BankAccountController extends Controller
         $id = $request->input('id');
         $bank_account = BankAccount::firstOrNew(['id' => $id]);
         $bank_account->fill($request->all());
+        $user_id = auth()->id();
+        $bank_account->user_id = $user_id;
+
+    
         $bank_account->save();
 
         return [
@@ -74,5 +79,19 @@ class BankAccountController extends Controller
 
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'La Cuenta bancaria esta siendo usada por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar la cuenta bancaria'];
         }
+    }
+    public function update_category($bank_account_id)
+    {
+        $food = Food::findOrFail($bank_account_id);
+        $food->bank_account_id = $bank_account_id;
+        $food->save();
+
+        /* $item = Item::findOrFail($food->item_id);
+        $item->category_id = $category_id;
+        $item->save(); */
+        return [
+            'success' => true,
+            'message' => 'Se cambio la categoria del producto'
+        ];
     }
 }

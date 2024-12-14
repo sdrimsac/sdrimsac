@@ -20,7 +20,10 @@ class BankAccount extends ModelTenant
         'currency_type_id',
         'cci',
         'status',
-        'balance'
+        'balance',
+        'user_id',
+        'created_at',
+        'updated_at',
     ];
 
     // protected static function boot()
@@ -45,6 +48,9 @@ class BankAccount extends ModelTenant
     public function global_destination()
     {
         return $this->morphMany(GlobalPayment::class, 'destination')->with(['payment']);
+    }
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
  
 }

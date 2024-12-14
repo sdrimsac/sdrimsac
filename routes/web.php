@@ -382,6 +382,7 @@ if ($hostname) {
                 Route::get('bank_accounts/tables', [App\Http\Controllers\Tenant\BankAccountController::class, 'tables']);
                 Route::get('bank_accounts/record/{bank_account}', [App\Http\Controllers\Tenant\BankAccountController::class, 'record']);
                 Route::post('bank_accounts', [App\Http\Controllers\Tenant\BankAccountController::class, 'store']);
+                Route::get('bank_accounts/update_accounts/{bank_accounts_id}', [App\Http\Controllers\Tenant\BankAccountController::class, 'update_accounts']);
                 Route::delete('bank_accounts/{bank_account}', [App\Http\Controllers\Tenant\BankAccountController::class, 'destroy']);
 
                 //Series

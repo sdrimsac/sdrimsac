@@ -302,7 +302,8 @@
                 </td> --}}
                 <td width="50%" style="vertical-align: top;text-align: right">
                     <div>
-                        <span style="font-size: 25px !important;font-weight: bold">RESUMEN DE VENTA DIARIA {{ $is_usd ? ' EN DOLARES' : '' }}</span>
+                        <span style="font-size: 25px !important;font-weight: bold">RESUMEN DE VENTA DIARIA
+                            {{ $is_usd ? ' EN DOLARES' : '' }}</span>
                     </div>
                     <div>
 
@@ -399,7 +400,7 @@
                                                 <tr>
                                                     <td class="right" colspan="3">
                                                         <span class="f12">
-                                                        {{ $is_usd ? '$ ' :'S/ '}}
+                                                            {{ $is_usd ? '$ ' : 'S/ ' }}
                                                             {{ number_format($documents['facturas']['total'] + $documents['boletas']['total'] + $documents['notas']['total'] + $documents['recibos']['total'], 2) }}
                                                         </span>
                                                     </td>
@@ -526,7 +527,8 @@
                                             $incomes_expenses_cash['incomes']['amount'] -
                                             $incomes_expenses_cash['expenses']['amount'];
                                     @endphp
-                                    <span class="f12">{{$is_usd ? '$ ' :'S/ '}}{{ number_format($total_cierre, 2) }}</span>
+                                    <span
+                                        class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($total_cierre, 2) }}</span>
                                 </td>
                             </tr>
                         </table>
@@ -579,7 +581,8 @@
                                             <span class="f12">TOTAL</span>
                                         </td>
                                         <td colspan="3" class="right">
-                                            <span class="f12">{{$is_usd ? '$ ' :'S/ '}}{{ number_format($t_d, 2) }}</span>
+                                            <span
+                                                class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -626,7 +629,8 @@
                                             <span class="f12">TOTAL</span>
                                         </td>
                                         <td colspan="3" class="right">
-                                            <span class="f12">{{$is_usd ? '$ ' :'S/ '}}{{ number_format($t_d, 2) }}</span>
+                                            <span
+                                                class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -645,7 +649,8 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="4" class="center">
-                                            <span class="f12 bold">{{$is_usd ? '$ ' :'S/ '}}{{ number_format($total_discount, 2) }}</span>
+                                            <span
+                                                class="f12 bold">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($total_discount, 2) }}</span>
 
                                         </td>
                                     </tr>
@@ -708,7 +713,7 @@
                     </td>
                 @endif
                 <td width="65%" style="text-align: right;">
-                    <span style="font-size:20px !important;">EFECTIVO : {{$is_usd ? '$ ' :'S/ '}}</span>
+                    <span style="font-size:20px !important;">EFECTIVO : {{ $is_usd ? '$ ' : 'S/ ' }}</span>
                     <span style="font-size:20px !important; color: blue;">
                         @php
                             $n =
@@ -720,27 +725,29 @@
                         @endphp
                         {{ number_format($n, 2) }}
                     </span>
-                    @isset($difference)
-                        @php
-                            \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
-                            $result = $difference - $cash->final_balance + $cash->beginning_balance;
-                        @endphp
-                        @if ($difference != 0 && $difference != number_format($n, 2) && $result != 0)
-                            <br>
+                    @if (!$is_usd)
+                        @isset($difference)
                             @php
+                                \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
+                                $result = $difference - $cash->final_balance + $cash->beginning_balance;
                             @endphp
-                            <span
-                                style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
-                                @if ($result < 0)
-                                    SOBRANTE
-                                    {{ number_format($result * -1, 2) }}
-                                @else
-                                    DIFERENCIA DE CONTEO
-                                    {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
-                                @endif
-                            </span>
-                        @endif
-                    @endisset
+                            @if ($difference != 0 && $difference != number_format($n, 2) && $result != 0)
+                                <br>
+                                @php
+                                @endphp
+                                <span
+                                    style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
+                                    @if ($result < 0)
+                                        SOBRANTE
+                                        {{ number_format($result * -1, 2) }}
+                                    @else
+                                        DIFERENCIA DE CONTEO
+                                        {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
+                                    @endif
+                                </span>
+                            @endif
+                        @endisset
+                    @endif
                 </td>
             </tr>
         </table>
@@ -922,7 +929,7 @@
 
                                         <tr>
                                             <td class="right" colspan="3">
-                                                <span class="f12">TOTAL CONTEO {{$is_usd ? '$ ' :'S/ '}}
+                                                <span class="f12">TOTAL CONTEO {{ $is_usd ? '$ ' : 'S/ ' }}
                                                     {{ number_format($total_coins, 2) }}</span>
                                             </td>
 
@@ -1382,7 +1389,7 @@
                                             0,
                                         );
                                     @endphp
-                                    {{$is_usd ? '$ ' :'S/ '}}{{ number_format($t, 2) }}
+                                    {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
                                 </td>
                             </tr>
                         </tbody>
@@ -1587,7 +1594,7 @@
                                         0,
                                     );
                                 @endphp
-                                {{$is_usd ? '$ ' :'S/ '}}{{ number_format($t, 2) }}
+                                {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
                             </td>
                         </tr>
                     </tbody>
@@ -1648,7 +1655,7 @@
                                         0,
                                     );
                                 @endphp
-                                {{$is_usd ? '$ ' :'S/ '}}{{ number_format($t, 2) }}
+                                {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
                             </td>
                         </tr>
                     </tbody>
@@ -1727,7 +1734,7 @@
                                             0,
                                         );
                                     @endphp
-                                    {{$is_usd ? '$ ' :'S/ '}}{{ number_format($t, 2) }}
+                                    {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
                                 </td>
                             </tr>
                         </tbody>

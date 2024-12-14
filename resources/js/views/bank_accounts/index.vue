@@ -40,6 +40,7 @@
                     <tr class="bg-primary text-white">
                         <th class="text-white">#</th>
                         <th class="text-white">Descripción</th>
+                        <th class="text-white text-center">Creado Por</th>
                         <th class="text-white text-center">Número</th>
                         <th class="text-white text-center">Balance</th>
                         <th class="text-end text-white">Acciones</th>
@@ -52,6 +53,7 @@
 
                         <!-- Descripción -->
                         <td>{{ row.description }}</td>
+                        <td class="text-center">{{ row.user_name }}</td>
 
                         <!-- Número -->
                         <td class="text-center">{{ row.number }}</td>

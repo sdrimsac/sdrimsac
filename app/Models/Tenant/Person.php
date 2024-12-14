@@ -19,6 +19,7 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
     protected $fillable = [
+        'user_id',
         'adderss_secondary',
         'varios',
         'document_type_id',
@@ -61,6 +62,10 @@ class Person extends ModelTenant
     //         $builder->where('status', 1);
     //     });
     // }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
     public function getCollectionData($withFullAddress = false, $childrens = false, $servers = false)
     {
         $addresses = $this->addresses;
@@ -225,7 +230,8 @@ class Person extends ModelTenant
     {
         return $this->hasMany(UnitTypePerson::class, 'customer_id');
     }
-    public static function getZone($id){
+    public static function getZone($id)
+    {
         $person = Person::find($id);
         $zone_id = $person->client_zone_id;
         if($zone_id){

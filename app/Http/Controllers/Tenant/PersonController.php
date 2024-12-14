@@ -72,7 +72,8 @@ class PersonController extends Controller
         }
         return null;
     }
-    public function serviceCe($cee){
+    public function serviceCe($cee)
+    {
         $url = config('app.api_factiliza_service_url');
         $token = config('app.api_factiliza_service_token');
         $client = new Client(['base_uri' => $url]);
@@ -255,6 +256,8 @@ class PersonController extends Controller
         $id = $request->input('id');
         $person = Person::firstOrNew(['id' => $id]);
         $person->fill($request->all());
+        $user_id = auth()->id();
+        $person->user_id = $user_id;
         $person->save();
         UnitTypePerson::where('customer_id', $person->id)->delete();
         $item_unit_types = $request->input('item_unit_types');

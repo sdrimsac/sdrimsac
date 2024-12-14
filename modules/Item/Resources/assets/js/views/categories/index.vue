@@ -27,32 +27,6 @@
                       Importar
                     </el-button>
                 </div>
-                <
-
-        <!-- <div class="card-header bg-primary">
-          <h4 class="my-0 text-white">
-            <i class="fas fa-sitemap"></i>
-            Módulo de {{ title }}
-          </h4>
-        </div> -->
-
-        <!-- <div class="data-table-visible-columns">
-          <el-button type="primary" class href="javascript:void(0)" @click.prevent="clickCreate()">
-            <i class="fas fa-sitemap fa-lg"></i>
-            <i class="fa fa-plus"></i>
-            Nueva Categoría
-          </el-button>
-          <el-button
-            v-if="configuration.health_network"
-            type="primary"
-            class
-            href="javascript:void(0)"
-            @click.prevent="clickImport()"
-          >
-            <i class="fa fa-upload fa-lg"></i>
-            Importar
-          </el-button>
-        </div> -->
         <div class="card-body">
           <data-table :resource="resource" @clickReport="clickReport" class="table-striped">
             <tr slot="heading" class="bg-primary">

@@ -20,6 +20,7 @@
                 <tr slot="heading" class="bg-primary">
                     <th class="text-white">#</th>
                     <th class="text-white">Marca</th>
+                    <th class="text-white">Creado Por Usuario</th>
                     <th class="text-white">Fecha creación</th>
                     <th class="text-end text-white">Acciones</th>
                 </tr>
@@ -28,6 +29,7 @@
                 <tr slot-scope="{ index, row }">
                     <td>{{ index }}</td>
                     <td>{{ row.name }}</td>
+                    <td>{{ row.user_name }}</td>
                     <td>{{ row.created_at }}</td>
 
                     <td class="text-end">
