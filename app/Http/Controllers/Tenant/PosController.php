@@ -185,6 +185,8 @@ class PosController extends Controller
         return $details;
     }
     public function digital_payments(Request $request){
+        
+
         $person_name = $request->person_name;
         $amount = $request->amount;
         $date = $request->date;
@@ -202,6 +204,10 @@ class PosController extends Controller
         return new DigitalPaymentCollection($records->paginate(20));
     }
     public function digital_payment(Request $request){
+        $configuration = Configuration::first();
+        if(!$configuration->digital_notifications){
+            return ['success' => false, 'message' => 'No se puede registrar pagos digitales'];
+        }
         $package_name = $request->package_name;
         $title = $request->title;
         $content = $request->content;
