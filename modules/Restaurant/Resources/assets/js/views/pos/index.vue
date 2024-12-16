@@ -3580,10 +3580,8 @@ export default {
             let currentPriceIndx =
                 listPricesDescription[type.price_default - 1];
             let price = type[currentPriceIndx];
-            if (type.total == null) {
-                // this.$toast.error(
-                //     "Politica de precio sin total: Tomando precio unitario.."
-                // );
+            if (type.total == null || this.configuration.price_item_unit_type) {
+            
             } else {
                 price = Number(type.total);
             }
@@ -3677,14 +3675,7 @@ export default {
                     orden.categoriaMadera = categoriaMadera;
                 }
 
-                if (type) {
-                    // orden.quantity = Number(type.quantity_unit);
-                    orden.quantity = orden.food.item.series_enabled
-                        ? 0
-                        : orden.quantity || 1;
-                    orden.price = this.getDefaultPrice(type);
-                }
-
+            
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.price = categoriaMadera.price;
                 }
@@ -3701,6 +3692,13 @@ export default {
                 }
 
                 orden.original_price = orden.price;
+                if(type){
+                    orden.quantity = orden.food.item.series_enabled
+                        ? 0
+                        : orden.quantity || 1;
+                    orden.price = this.getDefaultPrice(type);
+                    console.log("orden.price", JSON.stringify(orden.price));
+                }
                 if (
                     this.configuration.price_item_unit_type &&
                     type &&
@@ -3721,7 +3719,6 @@ export default {
                             unit_type.price3
                         ];
                         let default_price = unit_type.price_default - 1;
-
                         let newPrices = [
                             prices[default_price],
                             ...prices.filter(
