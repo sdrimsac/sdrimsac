@@ -6309,6 +6309,8 @@ export default {
                     icon: true,
                     rtl: false
                 })
+
+                this.playSound("yape_notification.mp3");
             }
         );
 
