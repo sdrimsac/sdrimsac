@@ -13,60 +13,63 @@
                             {{ Number(total).toFixed(2) }}</span
                         >
                     </div>
-                    <div class="col-sm-6">
-                        <h6><span>Compras</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">Compras</span>
-                            </li>
-                        </ol>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card">
-                <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white">
-                        <i class="fas fa-shopping-cart"></i> Listado de Compras
+                <div
+                    class="card-header bg-primary d-flex align-items-center"
+                    style="padding: 15px;"
+                >
+                    <h4
+                        class="my-0 text-white d-flex align-items-center"
+                        style="font-size: 1.5rem; font-weight: bold;"
+                    >
+                        <i
+                            class="fas fa-shopping-cart"
+                            style="font-size: 2rem; margin-right: 0.5rem;"
+                        ></i>
+                        Módulo de Compras
                     </h4>
                 </div>
 
-                <div class="card-body">
-                    <div class="data-table-visible-columns">
-                        <el-button
-                            type="primary"
-                            class=""
-                            href="javascript:void(0)"
-                            @click.prevent="clickRestaurar()"
+                <div class="data-table-visible-columns">
+                    <!-- <el-button
+                                type="primary"
+                                class=""
+                                href="javascript:void(0)"
+                                @click.prevent="clickRestaurar()"
+                            >
+                                Restaurar Compra
+                            </el-button> -->
+                    <el-button
+                        class="btn_titulos_modal"
+                        href="javascript:void(0)"
+                        @click.prevent="clickNuevo()"
+                    >
+                        <i class="fas fa-plus"></i>
+                        <span
+                            style="color: #000; font-size: 1.25rem; font-weight: bold;"
+                            >Nuevo</span
                         >
-                            Restaurar Compra
-                        </el-button>
-                        
-                        <el-button
-                            type="primary"
-                            class=""
-                            href="javascript:void(0)"
-                            @click.prevent="clickNuevo()"
+                    </el-button>
+                    <el-button
+                        class="btn_titulos_modal"
+                        href="javascript:void(0)"
+                        @click.prevent="clickImport()"
+                    >
+                        <i class="fa fa-upload"></i>
+                        <span
+                            style="color: #000; font-size: 1.25rem; font-weight: bold;"
+                            >Importar</span
                         >
-                            <i class="fas fa-cart-plus fa-lg"></i>
-                            Nueva Compra
-                        </el-button>
-                        <el-button
-                            type="primary"
-                            class=""
-                            href="javascript:void(0)"
-                            @click.prevent="clickImport()"
-                        >
-                            <i class="fas fa-file-import fa-lg"></i>
-                            Importar Compra
-                        </el-button>
-                    </div>
+                    </el-button>
+                </div>
+                <!-- ********** -->
 
+                <div class="card-body">
                     <data-table
                         :resource="resource"
                         @clickReport="clickReport"
@@ -87,10 +90,7 @@
                             <th class="text-white text-center">Número</th>
                             <th class="text-white text-center">Productos</th>
                             <th class="text-white text-center">Pagos</th>
-                            <!-- <th>F. Pago</th> -->
-                            <!-- <th>Estado</th> -->
                             <th class="text-center text-white">Moneda</th>
-                            <!-- <th class="text-end">T.Exportación</th> -->
                             <th
                                 v-if="columns.total_free.visible"
                                 class="text-end"
@@ -128,24 +128,19 @@
                                 Percepcion
                             </th>
                             <th class="text-end text-white">Total</th>
-                            <!-- <th class="text-center">Descargas</th> -->
                             <th class="text-end text-white">Acciones</th>
                         </tr>
 
-                        <tr></tr>
+                        <!-- Filas de datos -->
                         <tr class="text-center" slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td class="text-center">
                                 {{ row.date_of_issue }}
                                 <div>
-                                    <small>
-                                        {{ row.time_of_issue }}
-                                    </small>
+                                    <small>{{ row.time_of_issue }}</small>
                                 </div>
                             </td>
-                            <td class="text-center">
-                                {{ row.user_name }}
-                            </td>
+                            <td class="text-center">{{ row.user_name }}</td>
                             <td
                                 v-if="columns.date_of_due.visible"
                                 class="text-center"
@@ -156,7 +151,6 @@
                                 {{ row.supplier_name }}<br /><small
                                     v-text="row.supplier_number"
                                 ></small>
-                                
                             </td>
                             <td
                                 :class="{
@@ -165,86 +159,85 @@
                             >
                                 {{ row.state_type_payment_description }}
                             </td>
-                            <template v-if="row.number != '-0'">
-                                <td>
-                                    {{ row.number }}<br />
-                                    <small
-                                        v-text="row.document_type_description"
-                                    ></small
-                                    ><br />
-                                </td>
-                            </template>
-                            <template v-else>
-                                <td>
-                                    {{ row.number_full }}<br />
-                                    <small
-                                        v-text="row.document_type_description"
-                                    ></small
-                                    ><br />
-                                </td>
-                            </template>
+                            <td>
+                                {{ row.number }}<br /><small
+                                    v-text="row.document_type_description"
+                                ></small>
+                            </td>
                             <td class="text-center">
                                 <el-popover
                                     placement="right"
-                                    width="400"
+                                    width="600"
                                     trigger="click"
+                                    popper-class="custom-popover"
                                 >
-                                    <el-table :data="row.items">
-                                        <el-table-column
-                                            width="80"
-                                            property="key"
-                                            label="#"
-                                        ></el-table-column>
-                                        <el-table-column
-                                            width="220"
-                                            label="Nombre"
+                                    <div class="popover-header">
+                                        <h5>Detalles del Producto</h5>
+                                    </div>
+                                    <div class="popover-content">
+                                        <el-table
+                                            :data="row.items"
+                                            border
+                                            style="width: 100%"
                                         >
-                                            <template slot-scope="scope">
-                                                <template
-                                                    v-if="
-                                                        scope.row
-                                                            .name_product_pdf
-                                                    "
-                                                >
-                                                    <span
-                                                        v-html="
+                                            <el-table-column
+                                                width="80"
+                                                property="key"
+                                                label="#"
+                                                align="center"
+                                            ></el-table-column>
+                                            <el-table-column
+                                                width="220"
+                                                label="Nombre"
+                                                align="left"
+                                            >
+                                                <template slot-scope="scope">
+                                                    <template
+                                                        v-if="
                                                             scope.row
                                                                 .name_product_pdf
                                                         "
-                                                    ></span>
+                                                    >
+                                                        <span
+                                                            v-html="
+                                                                scope.row
+                                                                    .name_product_pdf
+                                                            "
+                                                        ></span>
+                                                    </template>
+                                                    <template v-else>
+                                                        {{
+                                                            scope.row
+                                                                .description
+                                                        }}
+                                                    </template>
                                                 </template>
-                                                <template v-else>
-                                                    {{ scope.row.description }}
+                                            </el-table-column>
+                                            <el-table-column
+                                                width="90"
+                                                label="Cantidad"
+                                                align="center"
+                                            >
+                                                <template slot-scope="scope">
+                                                    {{ calculate(scope.row) }}
                                                 </template>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column
-                                            width="90"
-                                            label="Cantidad"
-                                        >
-                                            <template slot-scope="scope">{{
-                                                calculate(scope.row)
-                                            }}</template>
-                                        </el-table-column>
-                                    </el-table>
-                                    <el-button slot="reference">
-                                        <i class="fa fa-eye"></i
-                                    ></el-button>
+                                            </el-table-column>
+                                        </el-table>
+                                    </div>
+                                    <el-button
+                                        slot="reference"
+                                        class="btn-view-details"
+                                    >
+                                        <i class="fa fa-eye"></i>
+                                    </el-button>
                                 </el-popover>
                             </td>
-                            <!-- <td>{{ row.payment_method_type_description }}</td> -->
-                            <!-- <td>
-                            <template v-for="(it,ind) in row.payments">
-                                {{it.payment_method_type_description}} - {{it.payment}}
-                            </template>
-                        </td> -->
-                            <!-- <td>{{ row.state_type_description }}</td> -->
+
                             <td class="text-center">
                                 <button
                                     v-if="row.state_type_id != '11'"
                                     type="button"
-                                    style="min-width: 41px"
-                                    class="btn waves-effect waves-light btn-sm btn-info m-1__2"
+                                    class="btn btn-info btn-sm m-1__2"
                                     @click.prevent="
                                         clickPurchasePayment(row.id)
                                     "
@@ -252,11 +245,9 @@
                                     Pagos
                                 </button>
                             </td>
-
                             <td class="text-center">
                                 {{ row.currency_type_id }}
                             </td>
-                            <!-- <td class="text-end">{{ row.total_exportation }}</td> -->
                             <td
                                 v-if="columns.total_free.visible"
                                 class="text-end"
@@ -291,96 +282,73 @@
                                 v-if="columns.total_perception.visible"
                                 class="text-end"
                             >
-                                {{
-                                    row.total_perception
-                                        ? row.total_perception
-                                        : 0
-                                }}
+                                {{ row.total_perception || 0 }}
                             </td>
                             <td class="text-end">{{ row.total }}</td>
-
                             <td class="text-end">
-                                <button
-                                    class="btn p-0"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    <span
-                                        class="btn btn-primary dropdown-toggle"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        data-bs-delay="0"
-                                        title=""
-                                        data-bs-original-title="Item Count"
-                                        aria-label="Item Count"
-                                        >Acciones</span
-                                    >
-                                </button>
-                                <div
-                                    class="dropdown-menu dropdown-menu-end"
-                                    style=""
-                                >
-                                    <a
+                                <div class="dropdown">
+                                    <button
+                                        class="btn btn-sm dropdown-toggle btn-acciones"
                                         type="button"
-                                        class="dropdown-item text-secondary"
-                                        v-if="row.state_type_id != '11'"
-                                        :href="`/${resource}/edit/${row.id}`"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
                                     >
-                                        <i class="fa fa-edit"></i> Editar
-                                    </a>
-
-                                    <a
-                                        v-if="row.state_type_id != '11'"
-                                        @click.prevent="clickAnulate(row.id)"
-                                        type="button"
-                                        class="dropdown-item text-danger"
+                                        Acciones
+                                    </button>
+                                    <div
+                                        class="dropdown-menu dropdown-menu-end custom-dropdown"
                                     >
-                                        <i class="fa fa-ban"></i> Anular
-                                    </a>
-                                    <!-- <a
-                                        v-if="row.state_type_id == '11'"
-                                        type="button"
-                                        @click.prevent="clickDelete(row.id)"
-                                        class="dropdown-item text-danger"
-                                        ><i class="fa fa-trash"></i> Eliminar
-                                    </a> -->
-
-                                    <a
-                                        v-if="
-                                            row.document_type_description !=
-                                                'FACTURA ELECTRÓNICA' &&
-                                                row.state_type_id != '11'
-                                        "
-                                        @click.prevent="clickFacturar(row)"
-                                        type="button"
-                                        class="dropdown-item text-success"
-                                    >
-                                        <i class="fas fa-file-invoice"></i>
-                                        Facturar
-                                    </a>
-                                    <a
-                                        type="button"
-                                        class="dropdown-item text-primary"
-                                        @click.prevent="clickOptions(row.id)"
-                                        >Opciones</a
-                                    >
+                                        <a
+                                            v-if="row.state_type_id != '11'"
+                                            :href="
+                                                `/${resource}/edit/${row.id}`
+                                            "
+                                            class="dropdown-item text-edit"
+                                        >
+                                            <i class="fa fa-edit"></i> Editar
+                                        </a>
+                                        <a
+                                            v-if="row.state_type_id != '11'"
+                                            @click.prevent="
+                                                clickAnulate(row.id)
+                                            "
+                                            class="dropdown-item text-anular"
+                                        >
+                                            <i class="fa fa-ban"></i> Anular
+                                        </a>
+                                        <a
+                                            v-if="
+                                                row.document_type_description !=
+                                                    'FACTURA ELECTRÓNICA' &&
+                                                    row.state_type_id != '11'
+                                            "
+                                            @click.prevent="clickFacturar(row)"
+                                            class="dropdown-item text-facturar"
+                                        >
+                                            <i class="fas fa-file-invoice"></i>
+                                            Facturar
+                                        </a>
+                                        <a
+                                            @click.prevent="
+                                                clickOptions(row.id)
+                                            "
+                                            class="dropdown-item text-imprimir"
+                                        >
+                                            <i class="fas fa-print"></i>
+                                            Imprimir
+                                        </a>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                     </data-table>
                 </div>
 
-                <!-- <documents-voided :showDialog.sync="showDialogVoided"
-                            :recordId="recordId"></documents-voided>
--->
                 <document-options
                     :showDialog.sync="showDialogOptions"
                     :recordId="recordId"
                     :showClose="true"
                 ></document-options>
-
                 <purchase-import
                     :showDialog.sync="showImportDialog"
                 ></purchase-import>
@@ -401,6 +369,231 @@
 <style>
 .table-striped tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+/* ***** */
+/* Estilo general del Popover */
+.custom-popover {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    background-color: #f9f9f9;
+    font-family: "Arial", sans-serif;
+}
+
+/* Encabezado del Popover */
+.popover-header {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+}
+
+/* Contenido del Popover */
+.popover-content {
+    text-align: left;
+}
+
+/* Tabla dentro del Popover */
+.el-table {
+    font-size: 0.9rem;
+    background-color: #ffffff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* Columnas de la tabla */
+.el-table th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.el-table td {
+    color: #555;
+}
+
+/* Botón para abrir el Popover */
+.btn-view-details {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-view-details:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
+
+/* Botón principal de Acciones */
+.btn-acciones {
+    background-color: #0d335b;
+    /* Azul por defecto */
+    color: #fff;
+    /* Texto blanco */
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-acciones:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Menú desplegable personalizado */
+.custom-dropdown {
+    min-width: 180px;
+    /* Ancho fijo */
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.custom-dropdown .dropdown-item {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Espacio entre ícono y texto */
+    font-weight: bold;
+    color: #595656;
+    /* Letras blancas */
+    transition: all 0.3s ease;
+}
+
+/* Colores específicos con fondo igual al texto */
+.text-edit {
+    background-color: #28a745;
+    /* Verde */
+}
+
+.text-anular {
+    background-color: #dc3545;
+    /* Rojo */
+}
+
+.text-facturar {
+    background-color: #17a2b8;
+    /* Celeste */
+}
+
+.text-imprimir {
+    background-color: #6c757d;
+    /* Gris */
+}
+
+/* Efecto hover: Opacidad y escala */
+.custom-dropdown .dropdown-item:hover {
+    opacity: 0.85;
+    transform: translateX(5px);
+    /* Efecto desplazamiento sutil */
+}
+
+/* ************ */
+/* Botones Generales */
+.btn {
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.btn i {
+    margin-right: 8px;
+    /* Espacio entre el icono y el texto */
+    font-size: 18px;
+    /* Tamaño del icono */
+}
+
+/* Botón Restaurar */
+.btn-restore {
+    background-color: #28a745;
+    /* Verde */
+    color: #fff;
+}
+
+.btn-restore:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Botón Aparcar */
+.btn-apark {
+    background-color: #0056b3;
+    /* Azul oscuro */
+    color: #fff;
+}
+
+.btn-apark:hover {
+    background-color: #004080;
+    transform: scale(1.05);
+}
+
+/* Botón Agregar Productos */
+.btn-add-product {
+    background-color: #17a2b8;
+    /* Color celeste/teal */
+    color: #fff;
+}
+
+.btn-add-product:hover {
+    background-color: #138496;
+    transform: scale(1.05);
+}
+
+/* Tooltip Personalizado */
+.tooltip-custom {
+    background-color: #333;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+/* Iconos dentro de los botones */
+.btn i {
+    vertical-align: middle;
+    font-size: 1.1rem;
+}
+
+/* Contenedor de botones */
+.button-group {
+    display: flex;
+    gap: 10px;
+    /* Espacio entre botones */
+    justify-content: flex-end;
+    /* Alinea los botones a la derecha */
+}
+
+/* Botón de Tacho de Basura (Eliminar) */
+.btn-trash {
+    background-color: #dc3545;
+    /* Rojo */
+    color: #fff;
+}
+
+.btn-trash:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
 }
 </style>
 

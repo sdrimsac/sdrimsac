@@ -3,7 +3,7 @@
         :title="titleDialog"
         :visible="showDialog"
         @open="create"
-        width="30%"
+        width="40%"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :show-close="false"
@@ -20,7 +20,34 @@
             </button>
             <p>Imprimir A4</p>
         </div>
+        
+
         <span slot="footer" class="dialog-footer">
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <template v-if="showClose">
+                    <el-button  class="btn-cancel btn-cancel:hover" 
+                                icon="fas fa-times fa-lg" 
+                                @click="clickClose">
+                        <span> Cerrar</span>
+                    </el-button>
+                </template>
+            <!-- Botón Listado de Compras -->
+            <el-button  class="btn-cancel btn-cancel:hover" 
+                        icon="fas fa-times fa-lg" 
+                        @click="clickFinalize">
+                <span> Listado de Compras</span>
+            </el-button>
+
+            <!-- Botón Guardar -->
+            <el-button  class="btn-save btn-save:hover" 
+                        icon="fas fa-save fa-lg" 
+                        type="primary" 
+                        native-type="submit" 
+                        @click="clickNewDocument">
+                <span> Nueva compra</span>
+            </el-button>
+        </div>
+        
             <template v-if="showClose">
                 <el-button @click="clickClose">Cerrar</el-button>
             </template>

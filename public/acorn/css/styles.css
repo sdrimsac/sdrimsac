@@ -13128,6 +13128,9 @@ width: 181px;
 .el-tooltip:hover .el-tooltip__popper {
   background-color: #f9f9f9; /* Cambia ligeramente el fondo al pasar el cursor */
 }
+/* ************ */
+
+/* **** */
 .btn-cancel {
   background-color: #dc3545 !important; /* Rojo */
   border: none !important;

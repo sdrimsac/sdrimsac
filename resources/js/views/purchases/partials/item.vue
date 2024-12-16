@@ -6,6 +6,7 @@
         @open="create"
         @close="close"
         :close-on-click-modal="false"
+        width="80%"
     >
         <br />
         <form
@@ -14,7 +15,6 @@
             @keydown.enter.prevent
         >
             <div class="form-body">
-                <br />
                 <div class="row">
                     <div class="col-md-8">
                         <div
@@ -66,13 +66,6 @@
                                                 ).toFixed(2)
                                             }}</span
                                         >
-                                        <!-- <el-button
-                                         :disabled="!form.item_id"
-                                            @click.prevent="
-                                                clickWarehouseDetail()
-                                            "
-                                            ><i class="fa fa-search"></i
-                                        ></el-button> -->
                                     </div>
                                 </el-tooltip>
                             </div>
@@ -141,7 +134,6 @@
                             ></small>
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div
                             class="form-group"
@@ -224,12 +216,6 @@
                             ></small>
                         </div>
                     </div>
-                    <!-- <div class="col-md-3 d-flex align-items-end">
-                        <el-checkbox v-model="noIsUnid"
-                            >No son unidades</el-checkbox
-                        >
-                    </div> -->
-
                     <div class="col-md-3">
                         <label class="control-label"
                             >Cantidad por embalaje</label
@@ -257,63 +243,11 @@
                         >
                         </el-input>
                     </div>
-
                     <div class="col-md-3 " v-if="noIsUnid">
                         <label class="control-label">Cantidad total</label>
                         <el-input readonly v-model="form.real_quantity">
                         </el-input>
                     </div>
-                    <!-- <div
-                        class="col-md-6 mt-2"
-                        v-if="form.item && form.item.lots_enabled"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.lot_code }"
-                            v-if="form.item.lots_enabled"
-                        >
-                            <label class="control-label">
-                                Código lote
-                            </label>
-                            <el-input v-model="lot_code">
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.lot_code"
-                                v-text="errors.lot_code[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div
-                        style="padding-top: 1%;"
-                        class="col-md-3"
-                        v-if="form.item && form.item.lots_enabled"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.date_of_due }"
-                            v-if="form.item.lots_enabled"
-                        >
-                            <label class="control-label"
-                                >Fec. Vencimiento</label
-                            >
-                            <el-date-picker
-                                v-model="form.date_of_due"
-                                type="date"
-                                value-format="yyyy-MM-dd"
-                                :clearable="true"
-                            ></el-date-picker>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.date_of_due"
-                                v-text="errors.date_of_due[0]"
-                            ></small>
-                        </div>
-                    </div> -->
                     <div
                         class="col-md-3"
                         v-if="form.item && form.item.lots_enabled"
@@ -336,19 +270,16 @@
                             <div>
                                 <div>
                                     <label class="control-label w-100">
-                                        <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
                                         <i class="fas fa-tshirt"></i>
                                         <i class="fas fa-palette"></i>
                                         Ingrese color & talla
                                     </label>
-
                                     <el-button
                                         style="margin-top:2%;"
                                         type="primary"
                                         icon="fas fa-sign-in-alt icon"
                                         @click.prevent="clickColorSize"
                                     ></el-button>
-
                                     <small
                                         class="form-control-feedback"
                                         v-if="errors.has_color_size"
@@ -374,7 +305,6 @@
                                             Descargar formato
                                         </a>
                                     </label>
-
                                     <el-button
                                         style="margin-top:2%;"
                                         type="primary"
@@ -392,7 +322,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-3" v-show="form.item_id">
                         <div
                             class="form-group"
@@ -402,11 +331,9 @@
                             <div>
                                 <div>
                                     <label class="control-label w-100">
-                                        <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
                                         <i class="fas fa-list-ol"></i>
                                         Ingrese series
                                     </label>
-
                                     <el-button
                                         style="margin-top:2%;"
                                         type="primary"
@@ -414,7 +341,6 @@
                                         @click.prevent="clickLotcode"
                                         class="text-end"
                                     ></el-button>
-
                                     <small
                                         class="form-control-feedback"
                                         v-if="errors.lot_code"
@@ -434,12 +360,10 @@
                                 <div>
                                     <label class="control-label w-100">
                                         Subir excel
-
                                         <a href="/formats/series_compras.xlsx"
                                             >Descargar formato</a
                                         >
                                     </label>
-
                                     <el-button
                                         style="margin-top:2%;"
                                         type="primary"
@@ -482,7 +406,6 @@
                                         <th class="text-center">Unidad</th>
                                         <th class="text-center">Descripción</th>
                                         <th class="text-center">Factor</th>
-
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -501,7 +424,6 @@
                                         <td class="text-center">
                                             {{ row.quantity_unit }}
                                         </td>
-
                                         <td
                                             class="series-table-actions text-end"
                                         >
@@ -546,7 +468,6 @@
             :external="true"
             @add="addRowItems"
         ></item-form>
-
         <lots-form
             :showDialog.sync="showDialogLots"
             :stock="form.quantity"
