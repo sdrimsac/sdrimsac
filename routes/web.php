@@ -70,7 +70,7 @@ if ($hostname) {
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
 
-            Route::post('digital_payment', [App\Http\Controllers\Tenant\PosController::class, 'digital_payment']);
+        
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
@@ -80,6 +80,9 @@ if ($hostname) {
                 Route::get('/documents-salud/records', [App\Http\Controllers\Tenant\DocumentSaludController::class, 'records']);
                 Route::post('store_zip', [DocumentController::class, 'storeZip']);
 
+                Route::prefix('/digital-payments')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Tenant\PosController::class, 'digital_payments']);
+                });
                 Route::prefix('/principal_categories')
                     ->group(function () {
                         Route::get('/', [PrincipalCategoryController::class, 'index'])->name('tenant.principal_categories.index');

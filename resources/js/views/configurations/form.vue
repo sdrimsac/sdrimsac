@@ -1856,6 +1856,23 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              
+                              <div class="col-md-2 mt-4"> 
+                                <div class="form-group">  
+                                  <label class="control-label w-100"> 
+                                    <i class="el-icon-s-grid icon-tab"></i>
+                                    Notificaciones pagos digitales
+                                  </label>
+                                  <el-switch
+                                    @change="submit('Notificaciones pagos digitales', form.digital_notifications, 'digital_notifications', 'lockIcon')"
+                                    v-model="form.digital_notifications"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                  ></el-switch>
+                                </div>
+                              </div>
                               <!-- <div class="col-md-2 mt-4">
                                                             <div class="form-group">
                                                                 <label class="control-label w-100">

@@ -337,7 +337,7 @@
                                                 autofocus
                                             >
                                                 <el-button
-                                                class="bg-light"
+                                                    class="bg-light"
                                                     slot="append"
                                                     icon="el-icon-search"
                                                     @click="search"
@@ -1649,7 +1649,6 @@
             :fromPos="true"
         ></warehouses-detail>
         <tables
-
             :configuration="configuration"
             @creatingOrden="creatingOrden"
             @sendOrdens="sendOrdens"
@@ -1815,6 +1814,9 @@
 </template>
 
 <style>
+ .Vue-Toastification__toast--default.digital-pay-toast {
+        background-color: red;
+    }
 .warning-color {
     background-color: #ffa407 !important;
     color: #fff !important;
@@ -1890,6 +1892,8 @@ const ConsolidatedListModal = () =>
     import("./partials/consolidated_list_modal.vue");
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 
+import  DigitalPayComponent from "./partials/digital_pay_component.vue";
+
 const options = {
     text: "Loading ...",
     customClass: "login_loading",
@@ -1945,6 +1949,7 @@ export default {
 
     data() {
         return {
+            digitalPayMessage: null,
             quality: false,
             model: false,
             showMonthSales: false,
@@ -2240,7 +2245,6 @@ export default {
     },
     methods: {
         async limpiarcache(reload = true) {
-
             if ("caches" in window) {
                 caches.keys().then(function(cacheNames) {
                     console.log(cacheNames);
@@ -3042,7 +3046,7 @@ export default {
             console.log("this.currencyIdChoice dd", this.currencyIdChoice);
             this.form.currency_type_id =
                 this.currencyIdChoice == "S/" ? "PEN" : "USD";
-            
+
             this.is_payment = true;
         },
         sendOrdensAllTables(orden_items) {
@@ -3490,8 +3494,15 @@ export default {
                     this.isNoteIsDefault();
                 }
                 this.form.currency_type_id =
-                    this.currencyIdChoice == "S/" || this.currencyIdChoice == undefined || this.currencyIdChoice == "PEN" ? "PEN" : "USD";
-                console.log("this.currency_id ::::", JSON.stringify(this.form.currency_type_id));
+                    this.currencyIdChoice == "S/" ||
+                    this.currencyIdChoice == undefined ||
+                    this.currencyIdChoice == "PEN"
+                        ? "PEN"
+                        : "USD";
+                console.log(
+                    "this.currency_id ::::",
+                    JSON.stringify(this.form.currency_type_id)
+                );
                 /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
                 this.is_payment = true;
             }
@@ -3818,7 +3829,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems(); 
+                        this.$refs.list_orden.changeCurrencyItems();
                     }
 
                     //y si no agregarla como nueva
@@ -3852,7 +3863,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems(); 
+                        this.$refs.list_orden.changeCurrencyItems();
                     }
                 } else {
                     let {
@@ -3897,7 +3908,7 @@ export default {
                         } else {
                             this.localOrden.unshift(itemAwait);
                         }
-                         this.$refs.list_orden.changeCurrencyItems(); 
+                        this.$refs.list_orden.changeCurrencyItems();
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
@@ -3910,7 +3921,7 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems(); 
+                        this.$refs.list_orden.changeCurrencyItems();
                     }
                 }
 
@@ -3919,7 +3930,7 @@ export default {
             }
             this.$refs.ordenRef.calculateTotal();
         },
-    
+
         total_sales(val) {
             this.total_sales_pos = val;
         },
@@ -4252,13 +4263,15 @@ export default {
             } else {
                 this.$toast(`Sin ventas acumuladas en el día`);
             }
-            if(this.configuration.other_currency_pos){
+            if (this.configuration.other_currency_pos) {
                 const response_usd = await this.$http.get(
                     `/caja/worker/totales_sales_usd?cash_id=${this.cashId}&send=1`
                 );
                 let { total_sales_usd } = response_usd.data;
                 if (total_sales_usd) {
-                    this.$toast(` Venta Acumulada $ ` + total_sales_usd.toFixed(2));
+                    this.$toast(
+                        ` Venta Acumulada $ ` + total_sales_usd.toFixed(2)
+                    );
                 }
             }
 
@@ -5397,17 +5410,15 @@ export default {
                     row.total_taxes =
                         row.total_value -
                         total_value_partial +
-                        isNaN(
-                    parseFloat(row.total_plastic_bag_taxes)
-                )
-                    ? 0.0
-                    : parseFloat(row.total_plastic_bag_taxes);
+                        isNaN(parseFloat(row.total_plastic_bag_taxes))
+                            ? 0.0
+                            : parseFloat(row.total_plastic_bag_taxes);
                     row.total_igv =
                         total_value_partial * (row.percentage_igv / 100);
                     row.total_base_igv = total_value_partial;
                     total_value -= row.total_value;
 
-                    total += parseFloat(row.total); 
+                    total += parseFloat(row.total);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
@@ -5441,7 +5452,6 @@ export default {
                     data = data.toString();
                     data = data.replace(",", ".");
                     this.form.exchange_rate_sale = Number(data);
-                    
                 }
             });
         },
@@ -5636,7 +5646,7 @@ export default {
 
             // this.loadingInstance.close()
         },
-    
+
         getColor(i) {
             return this.colors[i % this.colors.length];
         },
@@ -6279,9 +6289,26 @@ export default {
             `.digitalpay-${this.configuration.socket_channel}`,
             e => {
                 let { message } = e;
-                
-                    this.$toast.success(message);
-                
+                this.$toast({
+                    
+                    component: DigitalPayComponent,
+                    toastClassName: "digital-pay-toast",
+                    props: {
+                        message,
+                    },
+                    position: "top-right",
+                    timeout: 8000,
+                    closeOnClick: true,
+                    pauseOnFocusLoss: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    draggablePercent: 0.6,
+                    showCloseButtonOnHover: false,
+                    hideProgressBar: true,
+                    closeButton: "button",
+                    icon: true,
+                    rtl: false
+                })
             }
         );
 

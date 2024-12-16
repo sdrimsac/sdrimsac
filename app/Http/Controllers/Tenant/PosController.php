@@ -22,6 +22,7 @@ use App\Models\Tenant\PaymentMethodType;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\BoxCollection;
+use App\Http\Resources\Tenant\DigitalPaymentCollection;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use Modules\Item\Models\CategoryItem;
 use Modules\Inventory\Models\Warehouse;
@@ -44,6 +45,7 @@ use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\Table;
 use Modules\Services\Data\ServiceData;
 use App\Models\Tenant\CategoriaMadera;
+use App\Models\Tenant\DigitalPayment;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaGrosor;
 use App\Models\Tenant\ItemMedidaAncho;
@@ -154,11 +156,65 @@ class PosController extends Controller
         // $customer 
 
     }
+    function getDetailsDigitalPayment($content){
+        // Yape! Jose O. Huaman P. te envió un pago por S/ 100.00
+        $message = explode(" ", $content);
+        
+        $details = [
+            'type' => str_replace('!', '', $message[0]), // Elimina el ! del tipo
+            'person_name' => 'NN', 
+            'amount' => 0
+        ];
+
+        // Obtener nombre completo de la persona
+        $person_name_parts = [];
+        for($i = 1; $i < count($message); $i++) {
+            if($message[$i] === 'te') break;
+            $person_name_parts[] = $message[$i];
+        }
+        $details['person_name'] = implode(' ', $person_name_parts);
+
+        // Obtener monto
+        for($i = 0; $i < count($message); $i++) {
+            if($message[$i] === 'S/') {
+                $details['amount'] = (float) str_replace(',', '', $message[$i + 1]);
+                break;
+            }
+        }
+
+        return $details;
+    }
+    public function digital_payments(Request $request){
+        $person_name = $request->person_name;
+        $amount = $request->amount;
+        $date = $request->date;
+        $records = DigitalPayment::query();
+        if($person_name){
+            $records->where('person_name', 'like', '%'.$person_name.'%');
+        }
+        if($amount){
+            $records->where('amount', $amount);
+        }
+        if($date){
+            $records->whereDate('created_at', $date);
+        }
+        $records->orderBy('created_at', 'desc');
+        return new DigitalPaymentCollection($records->paginate(20));
+    }
     public function digital_payment(Request $request){
-        $package = $request->package;
+        $package_name = $request->package_name;
         $title = $request->title;
         $content = $request->content;
-        $message = $title . " " . $content;
+        $details = $this->getDetailsDigitalPayment($content);
+        $message = $content;
+        $digital_payment = new DigitalPayment();
+        $digital_payment->type = 'yape';
+        $digital_payment->title = $title;
+        $digital_payment->person_name = $details['person_name'];
+        $digital_payment->amount = $details['amount'];
+        $digital_payment->all_message = $content;
+        $digital_payment->package_name = $package_name;
+        $digital_payment->save();
         event(new DigitalPayEvent($message));
         return ['success' => true];
     }

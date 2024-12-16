@@ -56,6 +56,9 @@
                     <button class="btn btn-success" type="button">
                         {{ formattedCountdown }} restantes
                     </button>
+                    <button 
+                    v-if="configuration.digital_notifications"
+                    class="btn btn-warning" type="button" @click="openDigitalPay">Pagos Digitales</button>
                     <button
                         v-if="
                             configuration.sale_note_credit_confirm &&
@@ -2558,6 +2561,7 @@
                 >
             </div>
         </el-dialog>
+        <digital-payments :showDigitalPay.sync="showDigitalPay" />
     </div>
 </template>
 <style>
@@ -2616,11 +2620,13 @@ const TransfersModal = () => import("../partials/transfer_modal.vue");
 const CreditListModal = () => import("../partials/credit_list_modal.vue");
 const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
 const ConsolidatedModal = () => import("../partials/consolidated_modal.vue");
+const DigitalPayments = () => import("../partials/digital_payments.vue");
 import { exchangeRate } from "@mixins/functions";
 export default {
     mixins: [exchangeRate],
 
     components: {
+        DigitalPayments,
         ConsolidatedModal,
         CreditListDialog,
         CreditListModal,
@@ -2673,6 +2679,7 @@ export default {
 
     data() {
         return {
+            showDigitalPay: false,
             countdown: 0,
             num_orden: 0,
             isRestaurantWarehouse: true,
@@ -2894,6 +2901,9 @@ export default {
         this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
     },
     methods: {
+        openDigitalPay(){
+          this.showDigitalPay = true;
+        },
         searchExchangeRateByDate(date) {
             this.$http(`/service/exchange?date=${date}`).then(response => {
                 if (response.status == 200) {

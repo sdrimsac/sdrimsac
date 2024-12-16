@@ -40,7 +40,7 @@ if ($hostname) {
     Route::domain($hostname->fqdn)->group(function () {
 
         Route::post('/login-app', [RestaurantController::class, 'login']);
-        
+        Route::post('digital_payment', [App\Http\Controllers\Tenant\PosController::class, 'digital_payment']);
         // Route::get('/documents/series', 'Api\MobileController@getSeries');
         Route::get('categories/init', [ItemController::class, 'init_categories']);
         Route::post('store_file', [DocumentController::class, 'storeFile']);
