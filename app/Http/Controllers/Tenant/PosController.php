@@ -212,6 +212,9 @@ class PosController extends Controller
         $title = $request->title;
         $content = $request->content;
         $details = $this->getDetailsDigitalPayment($content);
+        if ($details['amount'] == 0) {
+            return ['success' => false, 'message' => 'El monto es 0, no es un pago'];
+        }
         $message = $content;
         $digital_payment = new DigitalPayment();
         $digital_payment->type = 'yape';
