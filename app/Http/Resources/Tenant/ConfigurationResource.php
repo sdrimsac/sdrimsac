@@ -16,6 +16,9 @@ class ConfigurationResource extends JsonResource
     {
         return [
             'user_edit' => (bool) $this->user_edit,
+            'android_configuration' => (bool) $this->android_configuration,
+            'download_all_files' => (bool) $this->download_all_files,
+            'digital_notifications' => (bool) $this->digital_notifications,
             'warranty_product' => (bool) $this->warranty_product,
             'product_export' => (bool) $this->product_export,
             'other_currency_pos' => (bool)$this->other_currency_pos,

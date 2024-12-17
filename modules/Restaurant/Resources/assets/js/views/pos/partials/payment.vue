@@ -2063,6 +2063,9 @@ export default {
         };
     },
     computed: {
+        isAndroid() {
+            return this.configuration.android_configuration;
+        },
         promotionByPoints() {
             return this.configuration.promotions_by_points;
         },
@@ -2331,9 +2334,11 @@ export default {
             return pass;
         },
         focusObservation() {
-            this.$nextTick(() => {
-                this.$refs.observation.focus();
-            });
+            if(!this.isAndroid()){
+                this.$nextTick(() => {
+                    this.$refs.observation.focus();
+                });
+            }
         },
         addDocumentDetraction(detraction) {
             //si  detraction no es objecto vacio
@@ -3566,16 +3571,20 @@ export default {
             let width = window.innerWidth;
             if (this.$refs.enter_amount) {
                 if (width > 800) {
+                    if(!this.isAndroid()){
                     await this.$refs.enter_amount.$el
                         .getElementsByTagName("input")[0]
                         .focus();
+                    }
                     await this.$refs.enter_amount.$el
                         .getElementsByTagName("input")[0]
                         .select();
                 } else {
+                    if(!this.isAndroid()){
                     await this.$refs.observation.$el
                         .getElementsByTagName("textarea")[0]
                         .focus();
+                    }
                 }
             }
         },

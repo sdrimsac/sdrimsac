@@ -413,6 +413,9 @@ const app = new Vue({
     el: "#main",
 
     components: {
+        "tenant-download-files-index": () =>
+            import("@views/download_files/index.vue"),
+        
         "report-promotion-index": () =>
             import(
                 "../../modules/Report/Resources/assets/js/views/promotions/index.vue"

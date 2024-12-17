@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\CoreFacturalo\Facturalo;
 use App\CoreFacturalo\Template;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use Mpdf\Mpdf;
 use Exception;
@@ -106,9 +107,14 @@ class DownloadController extends Controller
         $this->reloadPDF($document, $type, $format);
 
         $temp = tempnam(sys_get_temp_dir(), 'pdf');
-
+        $configuration = Configuration::first();
+        $android_configuration = $configuration->android_configuration;
+        
         file_put_contents($temp, $this->getStorage($document->filename, 'pdf'));
-
+    
+        if($android_configuration){
+            return response()->download($temp, $document->filename.'.pdf')->deleteFileAfterSend();
+        }
         /*
         $headers = [
             'Content-Type' => 'application/pdf',

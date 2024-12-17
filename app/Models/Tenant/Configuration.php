@@ -11,6 +11,8 @@ class Configuration extends ModelTenant
 {
     protected $fillable = [
         'user_edit',
+        'android_configuration',
+        'download_all_files',
         'digital_notifications',
         'warranty_product',
         'product_export',
@@ -281,6 +283,8 @@ class Configuration extends ModelTenant
     ];
     protected $casts = [
         'user_edit' => 'boolean',
+        'android_configuration' => 'boolean',
+        'download_all_files' => 'boolean',
         'digital_notifications' => 'boolean',
         'warranty_product' => 'boolean',
         'product_export' => 'boolean', 
@@ -504,6 +508,8 @@ class Configuration extends ModelTenant
         $skins = [];
         return [
             'user_edit' => (bool)$this->user_edit,
+            'android_configuration' => (bool)$this->android_configuration,
+            'download_all_files' => (bool)$this->download_all_files,
             'digital_notifications' => (bool)$this->digital_notifications,
             'warranty_product' => (bool)$this->warranty_product,
             'product_export' => (bool)$this->product_export,

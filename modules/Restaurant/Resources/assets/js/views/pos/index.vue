@@ -2230,6 +2230,9 @@ export default {
     },
     sockets: {},
     computed: {
+        isAndroid() {
+            return this.configuration.android_configuration;
+        },
         isSellerConsolidated() {
             return this.isSeller && this.configuration.consolidated_quotations;
         },
@@ -3310,7 +3313,9 @@ export default {
             }
         },
         buscarnuevo() {
+            if(!this.isAndroid()){
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
+            }
             this.$refs.input_items.$el.getElementsByTagName("input")[0].value =
                 "";
             if (this.configuration.all_items_pos) {
@@ -5767,7 +5772,9 @@ export default {
                 await this.getFoods();
             }
             await this.calculateTotal();
-            this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
+            if(!this.isAndroid()){
+                this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
+            }
             this.total_sales_pos = 0;
             if (this.configuration.sale_note_credit_confirm) {
                 this.openCredit();

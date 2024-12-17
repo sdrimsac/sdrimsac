@@ -270,7 +270,7 @@ class OrdenController extends Controller
             return ['m' => $e->getMessage()];
         }
 
-        return $pdf->stream('pdf_file.pdf');
+        return $pdf->stream($orden->id.'_orden_.pdf');
     }
     public function printTicket2(Request $request)
     {

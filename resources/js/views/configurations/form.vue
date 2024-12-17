@@ -610,6 +610,29 @@
                               ></el-switch>
                             </div>
                           </div>
+                          <div class="col-md-3 mb-4">
+                            <div class="form-group">
+                              <label class="control-label w-100">
+                                <i ref="androidIcon" class="fas fa-mobile-alt tab-icon"></i> Habilitar modo Android
+                                <el-tooltip
+                                  class="item"
+                                  effect="dark"
+                                  content="Habilitar modo Android"
+                                  placement="top-start"
+                                >
+                                  <i class="fa fa-info-circle"></i>
+                                </el-tooltip>
+                              </label>
+                              <el-switch
+                                v-model="form.android_configuration"
+                                active-text="HABILITADO"
+                                inactive-text="DESHABILITADO"
+                                :active-color="'#28a745'"
+                                :inactive-color="'#6c757d'"
+                                @change="() => submit('Habilitar Android', form.android_configuration, 'androidIcon')"
+                              ></el-switch>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1141,6 +1164,26 @@
                                     :active-color="'#28a745'"
                                     :inactive-color="'#6c757d'"
                                     @change="submit('clientes vendedor', form.button_consolidate, 'button_consolidate', 'handHoldingUsdIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="fas fa-file-download tab-icon"></i> Descargar todos los archivos
+                                  </label>
+                                  <el-tooltip
+                                    content="Descargar todos los archivos"
+                                  >
+                                    <i class="fa fa-info-circle"></i>
+                                  </el-tooltip>
+                                  <el-switch
+                                    v-model="form.download_all_files"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Descargar todos los archivos', form.download_all_files, 'download_all_files', 'fileIcon')"
                                   ></el-switch>
                                 </div>
                               </div>

@@ -148,18 +148,18 @@ class SaleNoteController extends Controller
             ->establishment($establishment)
             ->download('Reporte_Crédito_Consolidado_' . Carbon::now() . '.xlsx');
     }
-    public function checkBoxesSaleNote(){
+    public function checkBoxesSaleNote()
+    {
 
-        SaleNote::where('credit_cash', true)->whereDoesntHave('credit_payments')->where('state_type_id', '<>', '11')->where('paid', 0)->
-        chunk(100, function($sale_notes){
-            foreach($sale_notes as $sale_note){
-                $boxes = Box::where('sale_note_id', $sale_note->id)->sum('amount');
-                if($boxes >= $sale_note->total){
-                    $sale_note->paid = 1;
-                    $sale_note->save();
+        SaleNote::where('credit_cash', true)->whereDoesntHave('credit_payments')->where('state_type_id', '<>', '11')->where('paid', 0)->chunk(100, function ($sale_notes) {
+                foreach ($sale_notes as $sale_note) {
+                    $boxes = Box::where('sale_note_id', $sale_note->id)->sum('amount');
+                    if ($boxes >= $sale_note->total) {
+                        $sale_note->paid = 1;
+                        $sale_note->save();
+                    }
                 }
-            }
-        });
+            });
 
         return [
             'success' => true,
@@ -412,40 +412,40 @@ class SaleNoteController extends Controller
     public function credit_cash_records(Request $request)
     {
         $value = $request->value;
-        
+
         $records = SaleNote::query()
-        ->with([
-            'customer:id,name,number,alias',
-            'state_type:id,description',
-            'documents', // Quitamos la selección específica de campos
-            'user:id,name',
-            'boxes:id,sale_note_id,amount'
-        ])
-        ->where('credit_cash', true)
-        ->where('state_type_id', '<>', '11')
-        ->whereDoesntHave('credit_payments')
-        ->where('paid', 0)
-        ->select('sale_notes.*')
-        ->distinct(); // Usamos distinct en lugar de groupBy
-    
+            ->with([
+                'customer:id,name,number,alias',
+                'state_type:id,description',
+                'documents', // Quitamos la selección específica de campos
+                'user:id,name',
+                'boxes:id,sale_note_id,amount'
+            ])
+            ->where('credit_cash', true)
+            ->where('state_type_id', '<>', '11')
+            ->whereDoesntHave('credit_payments')
+            ->where('paid', 0)
+            ->select('sale_notes.*')
+            ->distinct(); // Usamos distinct en lugar de groupBy
+
         // Aplicar filtros de búsqueda si existe un valor
         if ($value) {
-            $records->where(function($query) use ($value) {
+            $records->where(function ($query) use ($value) {
                 $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
-                
+
                 $query->whereHas('customer', function ($subQuery) use ($searchTerm) {
                     $subQuery->where('name', 'like', $searchTerm)
-                            ->orWhere('alias', 'like', $searchTerm)
-                            ->orWhere('number', 'like', $searchTerm);
+                        ->orWhere('alias', 'like', $searchTerm)
+                        ->orWhere('number', 'like', $searchTerm);
                 })
-                ->orWhere('sale_notes.number', 'like', $searchTerm);
+                    ->orWhere('sale_notes.number', 'like', $searchTerm);
             });
         }
-    
+
         // Ordenar y paginar
         return new SaleNoteLiteCollection(
             $records->latest()
-                    ->paginate(config('tenant.items_per_page'))
+                ->paginate(config('tenant.items_per_page'))
         );
     }
     public function getItemsFromNotes(Request $request)
@@ -1209,7 +1209,7 @@ class SaleNoteController extends Controller
 
                 $vehiculo_id = Functions::valueKeyInArray($request->all(), "vehiculo_id", null);
 
-                if ($vehiculo_id){
+                if ($vehiculo_id) {
                     (new VehiculoController)->restoreItems($vehiculo_id);
                 }
                 $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
@@ -1227,30 +1227,30 @@ class SaleNoteController extends Controller
                 $consolidated_quotations = Configuration::first()->consolidated_quotations;
                 if ($consolidated_quotations && $quotation_id) {
                     $document = Document::where('quotation_id', $quotation_id)->first();
-                    if($document){
+                    if ($document) {
                         $state_type_id = $document->state_type_id;
-                    if($state_type_id == '05'){
-                        $new_request = new Request();
-                        $new_request->merge([
-                            'summary_status_type_id' => 3,
-                            'date_of_reference' => $document->date_of_issue,
-                            'documents' => [
-                                [
-                                    'document_id' => $document->id,
-                                    'description' => 'Anulación de la operación',
+                        if ($state_type_id == '05') {
+                            $new_request = new Request();
+                            $new_request->merge([
+                                'summary_status_type_id' => 3,
+                                'date_of_reference' => $document->date_of_issue,
+                                'documents' => [
+                                    [
+                                        'document_id' => $document->id,
+                                        'description' => 'Anulación de la operación',
+                                    ]
                                 ]
-                            ]
-                            // 'quotation_id' => $quotation_id,
-                        ]);
-                        (new VoidedController)->store($new_request);
-                    }else if($state_type_id == '01'){
-                        $response = (new DocumentController)->destroyDocument($document->id);
+                                // 'quotation_id' => $quotation_id,
+                            ]);
+                            (new VoidedController)->store($new_request);
+                        } else if ($state_type_id == '01') {
+                            $response = (new DocumentController)->destroyDocument($document->id);
+                        }
                     }
-                    }
-                    if(!$document){
+                    if (!$document) {
                         $document = SaleNote::where('quotation_id', $quotation_id)->first();
                         $new_request = new Request();
-                        (new SaleNoteController)->anulate($new_request,$document->id);
+                        (new SaleNoteController)->anulate($new_request, $document->id);
                     }
                 }
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
@@ -1263,14 +1263,13 @@ class SaleNoteController extends Controller
                 );
                 if ($vehiculo_id) {
                     $historial = Historial::where('estado', false)
-                    ->where('vehiculo_id', $vehiculo_id)
-                    ->first();
+                        ->where('vehiculo_id', $vehiculo_id)
+                        ->first();
                     if ($historial) {
                         $historial->sale_note_id = $this->sale_note->id;
                         $historial->estado = 1;
                         $historial->save();
                     }
-
                 }
                 if ($request->input('id') != null) {
                     SaleNoteItem::where('sale_note_id', $request->input('id'))->delete();
@@ -1868,7 +1867,7 @@ class SaleNoteController extends Controller
             if ($item['item']['has_warranty']) {
                 $warranty_start_date = Carbon::parse($sale_note->date_of_issue);
                 $warranty_end_date = $warranty_start_date->copy()->addMonths($item['item']['month_day']);
-                
+
                 // Find the document item ID
                 $saleNoteItem = SaleNoteItem::where('sale_note_id', $sale_note->id)
                     ->where('item_id', $item['item_id'])
@@ -1881,10 +1880,10 @@ class SaleNoteController extends Controller
                         'sale_note_item_id' => $saleNoteItem->id,
                     ]);
                     DB::connection('tenant')->table('sale_note_items')
-                    ->where('id', $saleNoteItem->id)
-                    ->update([
-                        'warranty_end_date' => $warranty_end_date,
-                    ]);
+                        ->where('id', $saleNoteItem->id)
+                        ->update([
+                            'warranty_end_date' => $warranty_end_date,
+                        ]);
                 }
             }
         }
@@ -2021,7 +2020,7 @@ class SaleNoteController extends Controller
         // dump("$inputs");
         // $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
         $currency_type_id = $inputs['currency_type_id'];
-        if($currency_type_id == 'USD' && !$configuration->other_currency_pos){
+        if ($currency_type_id == 'USD' && !$configuration->other_currency_pos) {
             $currency_type_id = 'PEN';
         }
 
@@ -2095,20 +2094,31 @@ class SaleNoteController extends Controller
         $this->sale_note->save();
     }
 
-    public function toPrint($external_id, $format)
+    public function toPrint($external_id, $format, $filename = null)
     {
-
+        $configuration = Configuration::first();
+        $android_configuration = $configuration->android_configuration;
         $sale_note = SaleNote::where('external_id', $external_id)->first();
 
-        if (!$sale_note) throw new Exception("El código {$external_id} es inválido, no se encontro la Nota de venta relacionada");
+        if (!$sale_note) {
+            throw new Exception("El código {$external_id} es inválido, no se encontró la Nota de venta relacionada");
+        }
+
         $boxes = Box::where('sale_note_id', $sale_note->id)->get();
         $this->reloadPDF($sale_note, $format, $sale_note->filename, $boxes);
+
+        // Usa el nombre proporcionado o genera uno predeterminado
+        $downloadFilename = $filename ?? "sale_note_{$sale_note->id}.pdf";
+
         $temp = tempnam(sys_get_temp_dir(), 'sale_note');
-
         file_put_contents($temp, $this->getStorage($sale_note->filename, 'sale_note'));
-
-        return response()->file($temp);
+        if ($android_configuration) {
+            return response()->download($temp, $downloadFilename)->deleteFileAfterSend();
+        } else {
+            return response()->file($temp);
+        }
     }
+
     public function cash_out($sale_note_id, $page = 1)
     {
         $data = Payment::where('sale_note_id', $sale_note_id)->get();
@@ -2743,7 +2753,7 @@ class SaleNoteController extends Controller
 
         $records = SaleNote::where([['state_type_id', '01'], ['currency_type_id', 'PEN']])
             ->whereDoesntHave('documents')
-        ->get();
+            ->get();
         $total_pen = 0;
         $total_paid_pen = 0;
         $total_pending_paid_pen = 0;

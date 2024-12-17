@@ -789,8 +789,11 @@ if ($hostname) {
                 Route::get('purchases/delete/{id}', [App\Http\Controllers\Tenant\PurchaseController::class, 'delete']);
                 Route::post('purchases/import', [App\Http\Controllers\Tenant\PurchaseController::class, 'import']);
                 Route::post('purchases/facturar', [App\Http\Controllers\Tenant\PurchaseController::class, 'updatefacturar']);
+                
 
-
+                Route::prefix('download_files')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'index'])->name('tenant.download_files.index');
+                });
                 // Route::get('documents/send/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'send']);
                 // Route::get('documents/consult_cdr/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'consultCdr']);
                 // Route::post('documents/email', [App\Http\Controllers\Tenant\DocumentController::class, 'email']);

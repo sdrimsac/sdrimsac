@@ -1663,7 +1663,7 @@ class CashController extends Controller
         $company = Company::first();
         $company_number = $company->number;
         $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
-        if (file_exists($path) && $cash->state == 0) {
+        if (file_exists($path) && $cash->state == 0) {  
             return response()->file($path);
         }
 
