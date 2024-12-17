@@ -594,7 +594,7 @@
                                                 </template>
                                             </span>
                                         </template>
-                                        <template v-else>
+                                        <!-- <template v-else>
                                             <span
                                                 class="badge rounded-pill bg-danger m-l-0"
                                                 style="text-align: center !important"
@@ -605,10 +605,35 @@
                                                             .unit_type_id !=
                                                             'ZZ'
                                                     "
-                                                    >Agotado</template
+                                                    >Agotado 3333</template
                                                 >
+                                                
                                             </span>
+                                        </template> -->
+                                        <template v-else>
+                                            <template 
+                                            v-if="
+                                                        data.item
+                                                            .unit_type_id !=
+                                                            'ZZ'
+                                                    ">
+                                                <div
+                                                class="text-center"
+                                                style="width: 100%; position: relative; height: 50px;"
+                                            >
+                                                <img
+                                                    src="/status_images/stock.png"
+                                                    style="position: absolute; top: -50px; left: 50%; 
+                                                    transform: translate(-50%, -50%); opacity: 0.5;
+                                                     pointer-events: none; 
+                                                     width: 400px; height: 200px;"
+                                                    class=""
+                                                />
+                                            </div>
+
+                                            </template> 
                                         </template>
+
                                     </div>
                                 </div>
                             </el-tooltip>
@@ -907,16 +932,8 @@
                                             class="badge rounded-pill bg-danger m-l-0"
                                             style="text-align: center !important"
                                             >Agotado</span
-                                        > 
-                                        
+                                        >
                                     </template>
-                                    <!-- <template v-else>
-                                        <img
-                                            src="/status_images/agotado.png"
-                                            style="position: relative; top: -120px; left: 0; opacity: 0.5; pointer-events: none; width: 400px; height: 150px;"
-                                            class=""
-                                        />
-                                    </template> -->
                                 </div>
                             </div>
                         </el-tooltip>

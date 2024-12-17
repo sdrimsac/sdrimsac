@@ -92,7 +92,7 @@ class WorkerController extends Controller
             ]
         ];
     }
-    public function images($worker)
+    /* public function images($worker)
     {
         $records = WorkersImage::where('worker_id', $worker)->get()->transform(function ($row) {
             return [
@@ -105,7 +105,7 @@ class WorkerController extends Controller
             'success' => true,
             'data' => $records
         ];
-    }
+    } */
 
     /* public function delete_images($id)
     {
