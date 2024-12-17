@@ -548,7 +548,7 @@
                                 <span class="label">Ingresos</span>
                             </a>
                         @else
-                            <a href="#">
+                            <a href="/report_closed_cash">
 
                                 <i class="icofont-money icon-parent"></i>
                                 <span class="label text-danger">
@@ -564,7 +564,7 @@
                                 <span class="label">Gastos</span>
                             </a>
                         @else
-                            <a href="#">
+                            <a href="/report_closed_cash">
 
                                 <i class="icofont-spreadsheet icon-parent"></i>
                                 <span class="label text-danger">
@@ -1112,6 +1112,13 @@
                             <i class="icofont-ui-settings"></i> Avanzado
                         </a>
                     </li>
+                    @if($config->download_all_files)
+                        <li>
+                            <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                                href="{{ route('tenant.download_files.index') }}"><i class="icofont-tasks-alt"></i>
+                                Descargar archivos</a>
+                        </li>
+                    @endif
                     @if (!$roleService->isArca())
                         <li>
                             <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
