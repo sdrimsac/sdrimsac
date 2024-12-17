@@ -269,8 +269,8 @@ class OrdenController extends Controller
             /* \Log::error('Línea 268 - Error en el proceso: ' . $e->getMessage()); */
             return ['m' => $e->getMessage()];
         }
-
-        return $pdf->stream($ordenes->id.'_orden_.pdf');
+        $timestamp = Carbon::now()->format('YmdHis');
+        return $pdf->stream($timestamp.'_orden_.pdf');
     }
     public function printTicket2(Request $request)
     {
