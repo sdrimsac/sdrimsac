@@ -1369,6 +1369,9 @@ class CashController extends Controller
     /*  */
     public function print_report_usd(Request $request)
     {
+
+        $configuration = Configuration::first();
+        $socket_channel = $configuration->socket_channel;
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
         $currency_type_id = 'USD';
@@ -1376,7 +1379,7 @@ class CashController extends Controller
         ini_set('max_execution_time', '30000');
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -1643,12 +1646,15 @@ class CashController extends Controller
         $company = Company::first();
         $company_number = $company->number;
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
         return $pdf->stream('pdf_file.pdf');
     }
     public function print_report(Request $request)
     {
+
+        $configuration = Configuration::first();
+        $socket_channel = $configuration->socket_channel;
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
         $currency_type_id = 'PEN';
@@ -1656,7 +1662,7 @@ class CashController extends Controller
         ini_set('max_execution_time', '30000');
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -1923,7 +1929,7 @@ class CashController extends Controller
         $company = Company::first();
         $company_number = $company->number;
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
         return $pdf->stream('pdf_file.pdf');
     }

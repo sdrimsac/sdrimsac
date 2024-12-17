@@ -1796,12 +1796,13 @@ class BoxesController extends Controller
     {
         ini_set('memory_limit', '10096M');
         ini_set('max_execution_time', '30000');
-
+        $configuration = Configuration::first();    
+        $socket_channel = $configuration->socket_channel;
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_usd_' . $cash_id . '_' . $company_number . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_usd_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -2335,7 +2336,7 @@ class BoxesController extends Controller
         $company_number = $company->number;
         //duardar el pdf 
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_usd_' . $cash->id . '_' . $company_number . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_usd_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
 
         return $pdf->stream('pdf_file.pdf');
@@ -2346,10 +2347,12 @@ class BoxesController extends Controller
         ini_set('max_execution_time', '30000');
 
         $cash_id = $request->cash_id;
+        $configuration = Configuration::first();
+        $socket_channel = $configuration->socket_channel;
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number .'_ '.$socket_channel.'.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -2883,7 +2886,7 @@ class BoxesController extends Controller
         $company_number = $company->number;
         //duardar el pdf 
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $cash->id . '_' . $company_number . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
 
         return $pdf->stream('pdf_file.pdf');
