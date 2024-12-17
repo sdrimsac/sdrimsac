@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'user_edit',
         'digital_notifications',
         'warranty_product',
         'product_export',
@@ -279,6 +280,7 @@ class Configuration extends ModelTenant
         'other_currency_pos',
     ];
     protected $casts = [
+        'user_edit' => 'boolean',
         'digital_notifications' => 'boolean',
         'warranty_product' => 'boolean',
         'product_export' => 'boolean', 
@@ -501,6 +503,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'user_edit' => (bool)$this->user_edit,
             'digital_notifications' => (bool)$this->digital_notifications,
             'warranty_product' => (bool)$this->warranty_product,
             'product_export' => (bool)$this->product_export,

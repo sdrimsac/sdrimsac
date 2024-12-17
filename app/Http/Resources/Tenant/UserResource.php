@@ -56,6 +56,9 @@ class UserResource extends JsonResource
             'locked' => (bool) $this->locked,
             'category' => $this->category,
             'is_arca' => (bool) $this->is_arca,
+            /* 'image' => $this->image, */
+            'image_url' => ($this->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'workers' . DIRECTORY_SEPARATOR . $this->image) : asset("/logo/{$this->image}"),
+
         ];
     }
 }

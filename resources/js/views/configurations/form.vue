@@ -2493,15 +2493,15 @@
                               <div class="col-md-2 mt-4">
                                 <div class="form-group">
                                   <label class="control-label w-100">
-                                    <i class="fas fa-id-card fa-lg"></i> Exportar productos a Excel modulo Inventario
+                                    <i class="fas fa-id-card fa-lg"></i> Editar Clave de Usuario en Caja
                                   </label>
                                   <el-switch
-                                    v-model="form.product_export"
+                                    v-model="form.user_edit"
                                     active-text="Si"
                                     inactive-text="No"
                                     :active-color="'#28a745'"
                                     :inactive-color="'#6c757d'"
-                                    @change="submit('opcion para poder visualizar la exportacion de productos', form.product_export, 'origin', 'idCardIcon')"
+                                    @change="submit('El Canbiar Clave Usuario', form.user_edit, 'origin', 'idCardIcon')"
                                   ></el-switch>
                                 </div>
                               </div>

@@ -70,6 +70,9 @@ if ($hostname) {
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
 
+            Route::post('users/cambiar_contrasena', [App\Http\Controllers\Tenant\UserController::class, 'cambiarContrasena'])->name('cambiar_contrasena');
+            
+
         
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
@@ -402,6 +405,8 @@ if ($hostname) {
                 Route::get('users/record/{user}', [App\Http\Controllers\Tenant\UserController::class, 'record']);
                 Route::post('users', [App\Http\Controllers\Tenant\UserController::class, 'store']);
                 Route::post('users/update_pin', [App\Http\Controllers\Tenant\UserController::class, 'update_pin']);
+                Route::post('users/update_code', [App\Http\Controllers\Tenant\UserController::class, 'update_code'])->name('update_code');
+                /* Route::post('users/', [App\Http\Controllers\Tenant\UserController::class, 'update_pin']); */
                 Route::get('users/{type}/records', [App\Http\Controllers\Tenant\UserController::class, 'records']);
                 Route::delete('users/{user}', [App\Http\Controllers\Tenant\UserController::class, 'destroy']);
 

@@ -139,7 +139,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.unit_price }"
                         >
-                            <label class="control-label">Precio Compra Unitario</label>
+                            <label class="control-label"
+                                >Precio Compra Unitario</label
+                            >
                             <el-input
                                 v-model="form.unit_price"
                                 @input="updatePriceTotal"
@@ -260,6 +262,39 @@
                         >
                             Ingresar lotes
                         </el-button>
+                    </div>
+                    <div class="col-md-3" v-show="form.item_id">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.lots_enabled }"
+                            v-if="form.item.lots_enabled"
+                        >
+                            <div>
+                                <div>
+                                    <label class="control-label w-100">
+                                        Subir excel
+                                        <a
+                                            href="/formats/lots_group_compras.xlsx"
+                                            >Descargar formato</a
+                                        >
+                                        <i class="fa-solid fa-download"></i>
+                                    </label>
+                                    <el-button
+                                        style="margin-top:2%;"
+                                        type="primary"
+                                        icon="el-icon-tickets"
+                                        @click.prevent="$refs.file.click()"
+                                    ></el-button>
+                                    <input
+                                        type="file"
+                                        @change="uploadExcelGroup"
+                                        style="visibility:hidden;"
+                                        ref="file"
+                                        accept=".xlsx,.xls"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div v-show="form.item_id" class="col-md-3">
                         <div
@@ -478,6 +513,7 @@
         <lots-group-form
             :showDialog.sync="showDialogLotsGroup"
             :stock="form.quantity"
+            :lotsGroup.sync="lotsGroup"
             @addRowLot="addRowLotGroup"
         ></lots-group-form>
         <color-size-form
@@ -547,6 +583,7 @@ export default {
             items: [],
             warehouses: [],
             lots: [],
+            lots_group: [],
             affectation_igv_types: [],
             system_isc_types: [],
             discount_types: [],
@@ -573,8 +610,20 @@ export default {
         });
     },
     methods: {
-        addRowLotGroup(lotsgroup) {
+        /* addRowLotGroup(lotsgroup) {
+            console.log("ver los lotes recividos", lotsgroup);
             this.lotsGroup = lotsgroup;
+        }, */
+        addRowLotGroup(lotsgroup) {
+            console.log("ver los lotes recibidos", lotsgroup);
+            this.lotsGroup = lotsgroup;
+
+            const totalQuantity = this.lotsGroup.reduce((sum, lot) => {
+                return sum + parseFloat(lot.quantity);
+            }, 0);
+            this.form.quantity = totalQuantity;
+
+            console.log("Cantidad total de lotes:", totalQuantity);
         },
         clickLotGroupCode() {
             this.showDialogLotsGroup = true;
@@ -605,6 +654,57 @@ export default {
                 this.attribute_types = response.data.attribute_types;
                 this.warehouses = response.data.warehouses;
                 // this.filterItems()
+            });
+        },
+        /* uploadExcelGroup(event) {
+            let file = event.target.files[0];
+            readXlsxFile(file).then(rows => {
+                //skip header
+                rows.shift();
+                this.lotsGroup = rows.map(row => {
+                    let date = moment(row[1])
+                        .add(5, "hours")
+                        .format("YYYY-MM-DD");
+                    return {
+                        code: row[0],
+                        quantity: row[1],
+                        date_of_due: date,
+                        state: "Activo"
+                    };
+                });
+                this.form.quantity = this.lotsGroup.length;
+                console.log("lotes ver accion", this.lotsGroup);
+                event.target.value = "";
+            });
+        }, */
+        uploadExcelGroup(event) {
+            let file = event.target.files[0];
+            readXlsxFile(file).then(rows => {
+                // Saltar el encabezado
+                rows.shift();
+                this.lotsGroup = rows.map(row => {
+                    let date = moment(row[1])
+                        .add(5, "hours")
+                        .format("YYYY-MM-DD");
+                    return {
+                        code: row[0],
+                        quantity: row[1], // Asegúrate de que esta columna contenga la cantidad
+                        date_of_due: date,
+                        state: "Activo"
+                    };
+                });
+
+                // Sumar todas las cantidades
+                const totalQuantity = this.lotsGroup.reduce((sum, lot) => {
+                    return sum + parseFloat(lot.quantity); // Asegúrate de convertir a número
+                }, 0);
+
+                // Asignar la suma total al formulario
+                this.form.quantity = totalQuantity;
+
+                console.log("lotes ver acción", this.lotsGroup);
+                console.log("Cantidad total importada:", totalQuantity);
+                event.target.value = "";
             });
         },
         uploadExcelColorSize(event) {
@@ -909,7 +1009,7 @@ export default {
                 this.input_barcode = this.form.item.full_description;
                 this.changing_name = false;
             }
-            
+
             this.form.unit_price = this.form.item.purchase_unit_price;
             this.form.sale_unit_price = this.form.item.sale_unit_price;
             this.form.affectation_igv_type_id = this.form.item.purchase_affectation_igv_type_id;

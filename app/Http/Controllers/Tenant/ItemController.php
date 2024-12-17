@@ -1126,19 +1126,6 @@ class ItemController extends Controller
             }
         }
 
-        /* $warranty_end_date = null;
-        if ($request['warranty_end_date']) {
-            $exists = ItemWarranty::where('warranty_end_date', $request['warranty_end_date'])
-                ->first();
-            if (!$exists) {
-                $item_warranty = new ItemWarranty;
-                $item_warranty->warranty_end_date = $request['warranty_end_date'];
-                $item_warranty->sale_note_item_id = $request['sale_note_item_id'];
-                $item_warranty->document_item_id = $request['document_item_id'];
-                $item_warranty->save();
-                $warranty_end_date = $item_warranty->id;
-            }
-        } */
         //---------------------------------
         if ($request['file']) {
 
@@ -1653,60 +1640,4 @@ class ItemController extends Controller
             return  ['success' => false, 'message' => 'Error inesperado, no se pudo habilitar el producto'];
         }
     }
-    /* public function storeWarranty(Request $request)
-    {
-        $itemId = $request->input('item_id'); // ID del producto
-        $saleDate = null;
-        $relatedId = null; // ID de la relación (sale_note_item o document_item)
-        $relationType = null; // Tipo de relación
-
-        // Buscar en sale_note_items
-        $saleNoteItem = SaleNoteItem::where('item_id', $itemId)->first();
-
-        if ($saleNoteItem) {
-            $relatedId = $saleNoteItem->id;
-            $relationType = 'sale_note_item';
-            $saleDate = $saleNoteItem->sale_date;
-        } else {
-            // Si no está en sale_note_items, buscar en document_items
-            $documentItem = DocumentItem::where('item_id', $itemId)->first();
-
-            if ($documentItem) {
-                $relatedId = $documentItem->id;
-                $relationType = 'document_item';
-                $saleDate = $documentItem->sale_date;
-            }
-        }
-
-        if ($relatedId) {
-            // Verificar si ya existe garantía para evitar duplicados
-            $existingWarranty = ItemWarranty::where($relationType . '_id', $relatedId)->first();
-
-            if (!$existingWarranty) {
-                // Guardar la garantía
-                $warranty = new ItemWarranty();
-                $warranty->item_id = $itemId;
-                if ($relationType == 'sale_note_item') {
-                    $warranty->sale_note_item_id = $relatedId;
-                } else {
-                    $warranty->document_item_id = $relatedId;
-                }
-                $warranty->warranty_months = $request->input('warranty_months', 12); // Por defecto 12 meses
-                $warranty->save();
-
-                return response()->json([
-                    'message' => 'Garantía registrada con éxito',
-                    'warranty' => $warranty,
-                ], 201);
-            }
-
-            return response()->json([
-                'message' => 'Ya existe una garantía para este producto en esta relación.',
-            ], 400);
-        }
-
-        return response()->json([
-            'message' => 'No se encontró una relación válida para este producto.',
-        ], 404);
-    } */
 }

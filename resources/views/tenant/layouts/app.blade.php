@@ -69,8 +69,6 @@
                                 <img style="max-width: 80%  ; max-height: 80% " src="{{ asset('logo/logo.png') }}"
                                     class="icono" />
                             @endif
-
-
                         </div>
                     </div>
                 </div>
@@ -93,8 +91,6 @@
                             @endif
                         </div>
                         <div class="name">
-
-
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
@@ -105,7 +101,7 @@
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
-                                            <span class="align-middle">Cerrar Sessión</span>
+                                            <span class="align-middle">Cerrar Sessión qqq</span>
                                         </a>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                             style="display: none;">
@@ -628,8 +624,6 @@
                             registration.unregister();
                         }
                     });
-
-
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);

@@ -28,11 +28,11 @@
                                 @input="validateNumbers('number')"
                             >
                                 <el-button
-                                  slot="append"
-                                  :loading="loading_search"
-                                  icon="el-icon-search"
-                                  @click.prevent="searchWorker"
-                                  type="primary"
+                                    slot="append"
+                                    :loading="loading_search"
+                                    icon="el-icon-search"
+                                    @click.prevent="searchWorker"
+                                    type="primary"
                                 ></el-button>
                             </el-input>
                             <small
@@ -182,7 +182,10 @@
                     </div>
 
                     <!-- Créditos en Notas de Venta -->
-                    <div class="col-md-4" v-if="configuration.sale_note_credit_confirm">
+                    <div
+                        class="col-md-4"
+                        v-if="configuration.sale_note_credit_confirm"
+                    >
                         <label for="credit_sales">
                             <i class="far fa-credit-card"></i> Créditos en Notas
                             de Venta
@@ -201,10 +204,9 @@
                             label="Acepta Créditos"
                         ></el-checkbox>
                     </div>
-                 
 
                     <!-- Usuario Arca -->
-                    <div class="col-md-4" v-if="configuration.principal_cash" >
+                    <div class="col-md-4" v-if="configuration.principal_cash">
                         <label for="arca_user">
                             <i class="fas fa-cash-register"></i> Usuario Arca
                             <el-tooltip
@@ -221,6 +223,32 @@
                             id="arca_user"
                             label="Es Arca?"
                         ></el-checkbox>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Imagen del Trabajador
+                                <span class="text-danger"></span>
+                            </label>
+                            <el-upload
+                                class="avatar-uploader"
+                                :data="{ type: 'workers' }"
+                                :headers="headers"
+                                :action="`/caja/${resource}/uploads`"
+                                :show-file-list="false"
+                                :on-success="onSuccess"
+                            >
+                                <img
+                                    v-if="form.image_url"
+                                    :src="form.image_url"
+                                    class="avatar bg-white"
+                                />
+                                <i
+                                    v-else
+                                    class="el-icon-plus avatar-uploader-icon"
+                                ></i>
+                            </el-upload>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,7 +282,7 @@
 import Swal from "sweetalert2";
 import { serviceNumber } from "../../../../../../../resources/js/mixins/functions";
 export default {
-  mixins: [serviceNumber],
+    mixins: [serviceNumber],
     props: [
         "showDialog",
         "recordId",
@@ -266,8 +294,8 @@ export default {
     data() {
         return {
             form: {
-              workers:true,
-              identity_document_type_id:"1", // Tipo de documento
+                workers: true,
+                identity_document_type_id: "1", // Tipo de documento
                 number: "", // DNI
                 name: "", // Nombres y apellidos
                 worker_type_id: null, // Tipo de trabajador
@@ -276,13 +304,16 @@ export default {
                 telephone: null, // Teléfono
                 can_accept_credit_sale_note: false, // Créditos en notas de venta
                 is_arca: false, // Usuario Arca
-                active: 1 // Estado activo
+                active: 1, // Estado activo
+                image_url: null // Ensure image_url is part of the form
             },
             errors: {}, // Almacena errores
             loading_submit: false,
             loading_search: false,
             titleDialog: null,
-            resource: "workers"
+            resource: "workers",
+            headers: headers_token,
+            image_url: null
         };
     },
     created() {
@@ -307,16 +338,33 @@ export default {
             if (selectedWorkerType) {
                 this.form.name = `${selectedWorkerType.description} - ${this.form.name}`;
             }
-        }
+        },
+        /* "form.image_url"(newVal) {
+            if (newVal) {
+                this.$nextTick(() => {
+                    // Ensure the image is updated after DOM updates
+                    this.$refs.image.src = newVal;
+                });
+            }
+        } */
     },
     methods: {
+        onSuccess(response, file, fileList) {
+            if (response.success) {
+                this.form.image = response.data.filename;
+                this.form.image_url = response.data.temp_image;
+                this.form.temp_path = response.data.temp_path;
+            } else {
+                this.$toast.error(response.message);
+            }
+        },
         // Validar números en tiempo real
         validateNumbers(field) {
             const value = this.form[field];
             if (/[^0-9]/.test(value)) {
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'Solo se permiten números.',
+                    icon: "warning",
+                    title: "Solo se permiten números.",
                     timer: 2000,
                     showConfirmButton: false
                 });
@@ -333,8 +381,8 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
-              workers:true,
-              identity_document_type_id: "1",
+                workers: true,
+                identity_document_type_id: "1",
                 number: "",
                 name: "",
                 worker_type_id: null,
@@ -343,7 +391,8 @@ export default {
                 telephone: null,
                 can_accept_credit_sale_note: false,
                 is_arca: false,
-                active: 1
+                active: 1,
+                image_url: null
             };
         },
 
@@ -379,8 +428,8 @@ export default {
 
             if (Object.keys(this.errors).length > 0) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Faltan Rellenar los campos obligatorios.',
+                    icon: "error",
+                    title: "Faltan Rellenar los campos obligatorios.",
                     timer: 2000,
                     showConfirmButton: false
                 });
@@ -401,8 +450,8 @@ export default {
                 .then(response => {
                     if (response.data.success) {
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Formulario enviado correctamente.',
+                            icon: "success",
+                            title: "Formulario enviado correctamente.",
                             timer: 2000,
                             showConfirmButton: false
                         });
@@ -410,7 +459,7 @@ export default {
                         this.close();
                     } else {
                         Swal.fire({
-                            icon: 'error',
+                            icon: "error",
                             title: response.data.message,
                             timer: 2000,
                             showConfirmButton: false
@@ -459,6 +508,7 @@ export default {
                         this.form.is_arca = this.form.is_arca === 1;
                         this.form.can_accept_credit_sale_note =
                             this.form.can_accept_credit_sale_note === 1;
+                        this.form.image_url = this.form.image_url;
                     });
             } else {
                 this.initForm();
@@ -466,8 +516,7 @@ export default {
         },
         searchWorker() {
             this.searchServiceNumberByType();
-        },
-      
+        }
     }
 };
 </script>

@@ -13,12 +13,23 @@ use App\Http\Resources\Tenant\UserCollection;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Desarrollador;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Modules\LevelAccess\Models\ModuleLevel;
 use Modules\Restaurant\Models\WorkersType;
 
 class UserController extends Controller
 {
-
+    public function update_pin(Request  $request)
+    {
+        $pin = $request->input('pin');
+        $user = User::findOrFail($request->input('id'));
+        $user->pin = $pin;
+        $user->save();
+        return [
+            'success' => true,
+            'message' => 'Pin actualizado con éxito'
+        ];
+    }
 
     public function getCashId()
     {
@@ -65,6 +76,25 @@ class UserController extends Controller
             ];
         }
     }
+    public function deleteImage($bank_id)
+    {
+        try {
+            $bank = User::findOrFail($bank_id);
+            $path = 'public/banks/' . $bank->image;
+            Storage::delete($path);
+            $bank->image = null;
+            $bank->save();
+            return [
+                'success' => true,
+                'message' => 'Imagen eliminada con éxito'
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar la imagen'
+            ];
+        }
+    }
     
     public function index()
     {
@@ -89,12 +119,14 @@ class UserController extends Controller
 
         return $name;
     }
-    public function update_pin(Request  $request)
+    public function update_code(Request  $request)
     {
         $pin = $request->input('pin');
-        $user = User::findOrFail($request->input('id'));
+        $user = auth()->user();
+        // $user = User::findOrFail($request->input('id'));
         $user->pin = $pin;
         $user->save();
+        auth()->logout();
         return [
             'success' => true,
             'message' => 'Pin actualizado con éxito'

@@ -44,6 +44,8 @@ Route::prefix('caja')->group(function () {
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
     Route::get('worker/cash/print-report-usd', [CashController::class, 'print_report_usd']);
     Route::get('worker/expenses/print-box', [PosController::class, 'print_box']);
+    Route::post('workers/uploads', [WorkerController::class, 'upload']);
+    Route::get('workers/images/{workers}', [WorkerController::class, 'images']);
 
     Route::get('report-boxes', 'BoxesController@report')->name('restaurant.report.boxes');
     Route::get('report-boxes/tables', 'BoxesController@tables');
@@ -268,9 +270,9 @@ Route::prefix('caja')->group(function () {
         Route::get('workers/{id}', 'WorkerController@active');
         Route::get('workers/columns', 'WorkerController@columns');
         Route::post('workers/commercial_treatment', 'WorkerController@commercial_treatment');
-
         Route::get('workers/record/{id}', 'WorkerController@record');
         Route::post('workers', 'WorkerController@store');
+        
 
         Route::get('pos', 'PosController@index')->name('restaurant.pos');
         Route::get('pos/search_orden', 'PosController@search');
@@ -290,6 +292,8 @@ Route::prefix('caja')->group(function () {
     Route::middleware(['auth', 'locked.tenant'])->group(function () {
         //**** MESAS */
         Route::prefix('worker')->group(function () {
+
+            
 
 
 

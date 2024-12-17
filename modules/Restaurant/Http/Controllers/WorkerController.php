@@ -21,6 +21,9 @@ use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Requests\WorkerRequest;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Workers;
 
 class WorkerController extends Controller
 {
@@ -54,6 +57,66 @@ class WorkerController extends Controller
             'tipo usuario' => 'type'
         ];
     }
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $new_request = [
+                'file' => $request->file('file'),
+                'type' => $request->input('type'),
+            ];
+
+            return $this->upload_image($new_request);
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+    function upload_image($request)
+    {
+        $file = $request['file'];
+        $type = $request['type'];
+
+        $temp = tempnam(sys_get_temp_dir(), $type);
+        file_put_contents($temp, file_get_contents($file));
+
+        $mime = mime_content_type($temp);
+        $data = file_get_contents($temp);
+
+        return [
+            'success' => true,
+            'data' => [
+                'filename' => $file->getClientOriginalName(),
+                'temp_path' => $temp,
+                'temp_image' => 'data:' . $mime . ';base64,' . base64_encode($data)
+            ]
+        ];
+    }
+    public function images($worker)
+    {
+        $records = WorkersImage::where('worker_id', $worker)->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->image,
+                'url' => asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'workers' . DIRECTORY_SEPARATOR . $row->image)
+            ];
+        });
+        return [
+            'success' => true,
+            'data' => $records
+        ];
+    }
+
+    /* public function delete_images($id)
+    {
+        $record = ItemImage::findOrFail($id);
+        $record->delete();
+
+        return [
+            'success' => true,
+            'message' => 'Imagen eliminada con éxito'
+        ];
+    } */
 
     public function report_products_w(Request $request)
     {
@@ -209,6 +272,9 @@ class WorkerController extends Controller
             $worker->series = $user_serie->serie_id;
         }
         $worker->commercial_treatment = $commercial_treatment;
+        if($worker->image){
+            $worker->image_url = url(''). '/storage/uploads/workers/' . $worker->image;
+        }
         return [
             'success' => true,
             'data' => $worker,
@@ -257,6 +323,7 @@ class WorkerController extends Controller
         ];
         $serie_id = $request->series;
         $id = $request->input('id');
+        $temp_path = $request->input('temp_path');
 
         $user = User::firstOrNew(['id' => $id]);
         UserSerie::where('user_id', $id)->delete();
@@ -298,6 +365,7 @@ class WorkerController extends Controller
                 $user_serie->save();
             }
         }
+        
 
         //actualización
         if ($id) {
@@ -312,6 +380,21 @@ class WorkerController extends Controller
             $user->type = 'seller';
             $user->fill($request->all());
             // $user->establishment_id = auth()->user()->establishment_id;
+        }
+        if ($temp_path) {
+            $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'workers' . DIRECTORY_SEPARATOR;
+            $file_name_old = $request->input('image');
+            $file_name_old_array = explode('.', $file_name_old);
+            $file_content = file_get_contents($temp_path);
+        
+            $datenow = date('YmdHis');
+            $file_name = Str::slug($user->name) . '-' . $datenow . '.' . end($file_name_old_array);
+    
+            Storage::put($directory . $file_name, $file_content);
+            $user->image = $file_name;
+        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+            
+            $user->image = 'imagen-no-disponible.jpg';
         }
         $user->save();
 

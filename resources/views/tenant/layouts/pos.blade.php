@@ -56,7 +56,7 @@
     <link rel="stylesheet" href="{{ asset('porto-light/vendor/font-awesome/5.11/css/all.min.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" type="text/css" href="{{ asset('icofont/icofont.min.css') }}">
-    <script src="{{asset('socket/socket_io.js')}}"></script>
+    <script src="{{ asset('socket/socket_io.js') }}"></script>
     <!-- Vendor Styles End -->
     <!-- Template Base Styles Start -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style_header.css') }}">
@@ -95,9 +95,28 @@
                     </div>
                 </div>
                 <!-- Logo End -->
-            
+
                 <!-- User Menu Start -->
-                <div class="user-container d-flex" style="max-width: 250px ;max-height: 120px;">
+                <div class="user-container d-flex" style="max-width: 300px ;max-height: 120px;">
+                    <div class="name" style="width: 80px; height: 80px; overflow: hidden;">
+                        @php
+                            $config = DB::connection('tenant')->table('configurations')->first();
+                            $user = auth()->user();
+                        @endphp
+
+                        @if ($user && $user->image)
+                            @php
+                                $imagePath = public_path("storage/uploads/workers/{$user->image}");
+                                $imageData = base64_encode(file_get_contents($imagePath));
+                                $mimeType = mime_content_type($imagePath);
+                            @endphp
+                            <img src="data:{{ $mimeType }};base64, {{ $imageData }}" alt="{{ $user->image }}"
+                                style="width: 80%; height: 80%; object-fit: cover;" class="profile" alt="profile">
+                        @else
+                            <img src="/status_images/user.png" style="width: 100%; height: 100%; object-fit: cover;"
+                                class="profile" alt="profile">
+                        @endif
+                    </div>
                     <div class="name " style="color: var(--light-text); line-height: 1;">
                         {{ $vc_user->name }} <br>
 
@@ -114,7 +133,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         <img style="width:90%;height:90%" class="profile" alt="profile"
                             src="{{ asset('acorn/img/profile/store.png') }}" />
-                        
+
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
 
@@ -131,13 +150,57 @@
                                             style="display: none;">
                                             @csrf
                                         </form>
-
                                     </li>
+                                    @if ($config->user_edit)
+                                        <li>
+                                            <a href="#" data-bs-toggle="modal"
+                                                data-bs-target="#changePasswordModal">
+                                                <i data-cs-icon="key" class="me-2" data-cs-size="17"></i>
+                                                <span class="align-middle">Cambiar contraseña</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+                {{-- modal para cambiar la contraseñpa del usario caja  --}}
+                @auth
+                    <div class="modal fade" id="changePasswordModal" tabindex="-1"
+                        aria-labelledby="changePasswordModalLabel" aria-hidden="true" data-bs-backdrop="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form id="changePasswordForm" action="{{ route('update_code') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="changePasswordModalLabel">Cambiar PIN</h5>
+                                        <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="input-group">
+                                            <input type="pin" placeholder="Ingrese el PIN de 4 dígitos"
+                                                class="form-control bg-white" id="pin" name="pin" required>
+                                            <button class="btn btn-outline-secondary" type="button"
+                                                id="showPasswordButton">
+                                                Mostrar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-info"
+                                            data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endauth
+
+
+
                 <!-- User Menu End -->
 
                 <!-- Icons Menu Start -->
@@ -179,8 +242,9 @@
                     <!-- Scrollspy Mobile Dropdown End -->
 
                     <!-- Menu Button Start -->
-                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{-- <a href="#" id="mobileMenuButton" class="menu-button" aria-haspopup="true" data-bs-toggle="dropdown"> --}}
+                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        {{-- <a href="#" id="mobileMenuButton" class="menu-button" aria-haspopup="true" data-bs-toggle="dropdown"> --}}
                         <i data-cs-icon="menu"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
@@ -204,7 +268,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Menu Button End -->
                 </div>
                 <!-- Mobile Buttons End -->
@@ -499,7 +563,7 @@
                 <i data-cs-icon="paint-roller" class="position-relative"></i>
             </button>
             <!-- Theme Settings Modal End -->
-            @endif
+        @endif
         <!-- Layout Footer Start -->
         <footer>
             <div class="footer-content">
@@ -507,16 +571,17 @@
                     <div class="row">
                         <div class="col-12 col-sm-12">
                             @php
-                            $commit = exec('git rev-parse HEAD');
-                            $commit = substr($commit, 0, 7);
-                        @endphp
-                        <p class="mb-0 text-muted text-medium" style="text-align: right ; color:darkblue ">
-                        @if ($commit)
-                        <span style="margin-right: 35px;">Commit: {{$commit}}</span>
-                        @endif
-                        <span>Todos
-                            los derechos reservados por Sdrimsac Solutions {{ date('Y') }} <i
-                                class="far fa-copyright"></i></span></p>
+                                $commit = exec('git rev-parse HEAD');
+                                $commit = substr($commit, 0, 7);
+                            @endphp
+                            <p class="mb-0 text-muted text-medium" style="text-align: right ; color:darkblue ">
+                                @if ($commit)
+                                    <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
+                                @endif
+                                <span>Todos
+                                    los derechos reservados por Sdrimsac Solutions {{ date('Y') }} <i
+                                        class="far fa-copyright"></i></span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -526,9 +591,10 @@
     </div>
 
     <style>
-      .swal2-container.swal2-center.swal2-backdrop-show {
+        .swal2-container.swal2-center.swal2-backdrop-show {
             z-index: 3000 !important;
         }
+
         @media (min-width: 320px) and (max-width: 768px) {
 
             .card .card-body,
@@ -598,7 +664,6 @@
                         });
                     });
                 }
-
                 navigator.serviceWorker
                     ?.getRegistrations()
                     .then(function(registrations) {
@@ -607,14 +672,63 @@
                             registration.unregister();
                         }
                     });
-                   
-
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
         });
-      </script>
+        $(document).ready(function() {
+            $("#showPasswordButton").click(function() {
+                var passwordInput = $("#pin");
+                var type = passwordInput.attr("type");
+                if (type === "pin") {
+                    passwordInput.attr("type", "text");
+                } else {
+                    passwordInput.attr("type", "pin");
+                }
+            });
+            $("#pin").on("input", function() {
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+            });
+            $("#changePasswordForm").submit(function(event) {
+                event.preventDefault();
+
+                const pin = document.getElementById('pin').value;
+
+                if (pin.length !== 4) {
+                    alert('El PIN debe tener 4 dígitos.');
+                    return;
+                }
+
+                fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            pin: pin
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('closeModal').click();
+                            setTimeout(() => {
+                                alert('PIN actualizado correctamente');
+                                window.location.href = "/login";
+                            }, 800);
+
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
     <!-- Page Specific Scripts End -->
 </body>
 

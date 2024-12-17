@@ -25,6 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'image',
         'is_arca',
         'establishment_table_id',
         'warehouse_product_id',

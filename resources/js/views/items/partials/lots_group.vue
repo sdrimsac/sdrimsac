@@ -102,11 +102,12 @@
 
 <script>
 export default {
-    props: ["showDialog", "stock", "recordId"],
+    props: ["showDialog", "stock", "recordId", "lotsGroup"],
     data() {
         return {
             currentPage: 1,
-            lotsGroup: [],
+            localLotsGroup: [...this.lotsGroup],
+            /* lotsGroup: [], */
             lotsGroup_splice: [],
             titleDialog: "Lotes",
             loading: false,
@@ -115,15 +116,27 @@ export default {
             states: ["Activo", "Inactivo", "Desactivado", "Voz", "M2m"]
         };
     },
-    async created() {
-        // await this.$http.get(`/pos/payment_tables`)
-        //     .then(response => {
-        //         this.payment_method_types = response.data.payment_method_types
-        //         this.cards_brand = response.data.cards_brand
-        //         this.clickAddLot()
-        //     })
+    async created() {},
+    computed: {
+        // Sumar las cantidades de todos los lotes
+        totalQuantity() {
+            return this.lotsGroup.reduce((total, lot) => total + (parseFloat(lot.quantity) || 0), 0);
+        }
+    },
+    watch: {
+        lotsGroup: {
+            handler(newVal) {
+                this.lotsGroup_splice = newVal.slice(0, 20);
+                this.updateTotalQuantity(); // Update total quantity when lotsGroup changes
+            },
+            immediate: true
+        }
     },
     methods: {
+        updateTotalQuantity() {
+            // Actualizar la cantidad total basada en las cantidades de los lotes
+            this.form.quantity = this.totalQuantity;
+        },
         handleCurrentChange(val) {
             this.currentPage = val;
             this.lotsGroup_splice = this.lotsGroup.slice(
@@ -138,6 +151,7 @@ export default {
             }
         },
         create() {
+            console.log("ver los lotes", this.lotsGroup);
             if (
                 !this.recordId &&
                 this.lotsGroup.filter(lg => lg.code != null).length == 0
@@ -147,6 +161,7 @@ export default {
                         id: null,
                         item_id: null,
                         code: null,
+                        quantity: 0,
                         date_of_due: moment().format("YYYY-MM-DD"),
                         state: "Activo"
                     }
@@ -200,9 +215,10 @@ export default {
             let val_lotsGroup = await this.validatelotsGroup();
             if (!val_lotsGroup.success)
                 return this.$toast.error(val_lotsGroup.message);
-
+            this.updateTotalQuantity(); // Ensure total quantity is updated before emitting
             await this.$emit("addRowLot", this.lotsGroup);
             await this.$emit("update:showDialog", false);
+            await this.$emit("totalQuantity", this.totalQuantity); // Emit total quantity
         },
         clickAddLot() {
             // if (!this.recordId) {
@@ -237,9 +253,6 @@ export default {
         async clickCancelSubmit() {
             this.$emit("addRowLot", []);
             await this.$emit("update:showDialog", false);
-        },
-        close() {
-            this.$emit("update:showDialog", false);
         }
     }
 };
