@@ -1699,10 +1699,9 @@ class SaleNoteController extends Controller
                 if (auth()->user()->type != 'admin') {
                     if($configuration->android_configuration){
                         sleep(5);
-                        event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
-                    }else{
-                        event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                     }
+            
+                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 if (count($request->payments) > 0) {
                     $total_payment = 0;
