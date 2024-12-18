@@ -4,6 +4,7 @@ namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -23,10 +24,11 @@ class CashCollection extends ResourceCollection
         if (!$from_cash) {
             $this->collection->each->load(['user', 'user.establishment', 'boxes.salenote', 'boxes.document']);
         }
-
+        $configuration = Configuration::first();
+        $socket_channel = $configuration->socket_channel;
         $company = Company::first();
         $company_number = $company->number;
-        return $this->collection->transform(function ($row) use ($from_cash,$company_number) {
+        return $this->collection->transform(function ($row) use ($from_cash,$company_number,$socket_channel) {
             $final_cash = 0;
             $has_ticket = false;
             $has_ticket_usd = false;
@@ -35,16 +37,16 @@ class CashCollection extends ResourceCollection
             $path_ticket_url = url('caja/worker/cash/print-report?cash_id='.$row->id);
             $path_ticket_url_usd = url('caja/worker/cash/print-report-usd?cash_id='.$row->id);      
             // $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id . '.pdf');
-            $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id .'_'.$company_number.'.pdf');
-            $path_ticket_usd = storage_path('app/public/report_resumen_pdf_pos_small_usd_' . $row->id .'_'.$company_number.'.pdf');
+            $path_ticket = storage_path('app/public/report_resumen_pdf_pos_small_' . $row->id .'_'.$company_number.'_'.$socket_channel.'.pdf');
+            $path_ticket_usd = storage_path('app/public/report_resumen_pdf_pos_small_usd_' . $row->id .'_'.$company_number.'_'.$socket_channel.'.pdf');
             if (file_exists($path_ticket)||$row->state == 1) {
                 $has_ticket = true;
             }
             if (file_exists($path_ticket_usd)||$row->state == 1) {
                 $has_ticket_usd = true;
             }
-            $path_a4 = storage_path('app/public/report_resumen_pdf_pos_'.$row->id.'_'.$company_number.'.pdf');
-            $path_a4_usd = storage_path('app/public/report_resumen_pdf_pos_usd_'.$row->id.'_'.$company_number.'.pdf');
+            $path_a4 = storage_path('app/public/report_resumen_pdf_pos_'.$row->id.'_'.$company_number.'_'.$socket_channel.'.pdf');
+            $path_a4_usd = storage_path('app/public/report_resumen_pdf_pos_usd_'.$row->id.'_'.$company_number.'_'.$socket_channel.'.pdf');
             // $path_a4 = storage_path('app/public/report_resumen_pdf_pos_' . $row->id . '.pdf');
             if (file_exists($path_a4) || $row->state == 1) {
                 $has_a4 = true;
