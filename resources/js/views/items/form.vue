@@ -227,7 +227,6 @@
                                                 <div
                                                     class="col-md-6 px-2"
                                                     v-if="
-                                                        configuration.origin &&
                                                             configuration.show_second_name_external_code
                                                     "
                                                 >

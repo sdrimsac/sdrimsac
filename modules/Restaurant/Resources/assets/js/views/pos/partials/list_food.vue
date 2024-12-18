@@ -611,29 +611,27 @@
                                             </span>
                                         </template> -->
                                         <template v-else>
-                                            <template 
-                                            v-if="
-                                                        data.item
-                                                            .unit_type_id !=
-                                                            'ZZ'
-                                                    ">
-                                                <div
-                                                class="text-center"
-                                                style="width: 100%; position: relative; height: 50px;"
+                                            <template
+                                                v-if="
+                                                    data.item.unit_type_id !=
+                                                        'ZZ'
+                                                "
                                             >
-                                                <img
-                                                    src="/status_images/stock.png"
-                                                    style="position: absolute; top: -50px; left: 50%; 
+                                                <div
+                                                    class="text-center"
+                                                    style="width: 100%; position: relative; height: 50px;"
+                                                >
+                                                    <img
+                                                        src="/status_images/stock.png"
+                                                        style="position: absolute; top: -50px; left: 50%; 
                                                     transform: translate(-50%, -50%); opacity: 0.5;
                                                      pointer-events: none; 
                                                      width: 400px; height: 200px;"
-                                                    class=""
-                                                />
-                                            </div>
-
-                                            </template> 
+                                                        class=""
+                                                    />
+                                                </div>
+                                            </template>
                                         </template>
-
                                     </div>
                                 </div>
                             </el-tooltip>
@@ -927,12 +925,27 @@
                                             </span>
                                         </div>
                                     </template>
-                                    <template v-else>
+                                    <!-- <template v-else>
                                         <span
                                             class="badge rounded-pill bg-danger m-l-0"
                                             style="text-align: center !important"
                                             >Agotado</span
                                         >
+                                    </template> -->
+                                    <template v-else>
+                                            <div
+                                                class="text-center"
+                                                style="width: 100%; position: relative; height: 50px;"
+                                            >
+                                                <img
+                                                    src="/status_images/stock.png"
+                                                    style="position: absolute; top: -50px; left: 50%; 
+                                                    transform: translate(-50%, -50%); opacity: 0.5;
+                                                     pointer-events: none; 
+                                                     width: 400px; height: 200px;"
+                                                    class=""
+                                                />
+                                            </div>
                                     </template>
                                 </div>
                             </div>

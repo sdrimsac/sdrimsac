@@ -505,14 +505,17 @@
                                     class="control-label text-primary fs-5 fw-bold mb-0"
                                 >
                                     Total Venta
-                                </label> 
+                                </label>
                                 <!-- <label>Total Venta</label> -->
                                 <span
                                     class="control-label text-primary fs-2 fw-bold mb-0 text-right"
                                 >
-                                 <!-- S/ {{ " " + form.total }} -->
+                                    <!-- S/ {{ " " + form.total }} -->
 
-                                                {{ currencyIdChoice == 'PEN' ? 'S/ ' : '$ ' }} {{ " " + form.total }}
+                                    {{
+                                        currencyIdChoice == "PEN" ? "S/ " : "$ "
+                                    }}
+                                    {{ " " + form.total }}
                                 </span>
                             </div>
                         </div>
@@ -583,7 +586,7 @@
                                     v-if="is_payment == true"
                                     class="control-label fs-5 fw-bold text-white"
                                 >
-                                {{ currencySymbol }}
+                                    {{ currencySymbol }}
                                     {{
                                         form.difference
                                             .toFixed(2)
@@ -872,7 +875,7 @@
                     <div class="col-lg-4 col-md-12 mb-2">
                         <div class="row">
                             <!-- N° de Operación -->
-                            
+
                             <div
                                 class=""
                                 v-if="methodsValidate.includes(form.method_pay)"
@@ -882,7 +885,9 @@
                                     style="font-size: 0.9em; white-space: nowrap;"
                                     >Nº Op. :</label
                                 > -->
-                                <label class="control-label">N° De Operacion</label>
+                                <label class="control-label"
+                                    >N° De Operacion</label
+                                >
                                 <div class="d-flex align-items-center">
                                     <el-input
                                         type="number"
@@ -892,9 +897,6 @@
                                     >
                                     </el-input>
                                 </div>
-                                
-
-                                
                             </div>
 
                             <!-- Cargos de Tarjeta -->
@@ -1105,9 +1107,12 @@
                     <!-- Columna 3: Promoción / Imprimir No imprimir -->
                     <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
                         <!-- Sección Promoción -->
-                        <div
+                        <!-- <div
                             class=""
-                            v-if="configuration.is_promotion_document"
+                            v-if="
+                                configuration.is_promotion_document ||
+                                    configuration.promotions_by_points
+                            "
                         >
                             <label for="promotion" class="w-100 fw-bold"
                                 >Promoción</label
@@ -1128,12 +1133,134 @@
                                         :value="option.id"
                                     ></el-option>
                                 </el-select>
+                                <template v-if="
+                                            promotionByPoints &&
+                                                hasPromotionText &&
+                                                listPromotionItems.length > 0
+                                        ">
+                                    <el-button
+                                        
+                                        @click="Promotion()"
+                                        type="primary"
+                                        size="small"
+                                    >
+                                        Canjear
+                                    </el-button>
+                                </template>
+                            </div>
+                            <div
+                                class="col-md-8 form-group"
+                                v-if="promotionDocument && hasPromotionText"
+                            >
+                                <br />
+                                <el-checkbox
+                                    @change="receivePromotion"
+                                    v-model="form.receive_promotion"
+                                >
+                                </el-checkbox>
+                                Aplicar promoción |
+                                {{ hasPromotionText }}
+                            </div>
+                            <div
+                                class="col-md-2 form-group"
+                                v-if="
+                                    promotionByPoints &&
+                                        hasPromotionText &&
+                                        listPromotionItems.length > 0
+                                "
+                            >
                                 <el-button
                                     @click="Promotion()"
                                     type="primary"
                                     size="small"
                                 >
-                                    Canjear
+                                    Promocion
+                                </el-button>
+                            </div>
+                        </div> -->
+                        <div
+                            class=""
+                            v-if="
+                                configuration.is_promotion_document ||
+                                    configuration.promotions_by_points
+                            "
+                        >
+                            <label for="promotion" class="w-100 fw-bold">Promoción</label>
+                            <div class="d-flex justify-content-center">
+                                
+                                <el-select
+                                    v-model="form.promotion_id"
+                                    filterable
+                                    clearable
+                                    placeholder="Promoción"
+                                    @change="changePromotion"
+                                >
+                                    <el-option
+                                        v-for="(option,
+                                        idx) in promotions_document"
+                                        :key="idx"
+                                        :label="option.description"
+                                        :value="option.id"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                            <!-- <div
+                                class="col-md-4 form-group"
+                                v-if="
+                                    promotionByPoints &&
+                                        hasPromotionText &&
+                                        listPromotionItems.length > 0
+                                "
+                            >
+                                <label for="promotion">
+                                    Puntos para canjear
+                                    <strong>{{ hasPromotionText }}</strong>
+                                </label>
+                                <el-select
+                                    v-model="form.item_promotion_id"
+                                    filterable
+                                    clearable
+                                    placeholder="Promoción"
+                                    @change="promotionPointsItem"
+                                >
+                                    <el-option
+                                        v-for="(option,
+                                        idx) in listPromotionItems"
+                                        :key="idx"
+                                        :label="option.full_description"
+                                        :value="option.id"
+                                    ></el-option>
+                                </el-select>
+                            </div> -->
+                            
+                            <div
+                                class="col-md-12 form-group"
+                                v-if="promotionDocument && hasPromotionText"
+                            >
+                                <br />
+                                <el-checkbox
+                                    @change="receivePromotion"
+                                    v-model="form.receive_promotion"
+                                >
+                                </el-checkbox>
+                                Aplicar promoción |
+                                {{ hasPromotionText }}
+                            </div>
+                            <br>
+                            <div
+                                class="col-md-2 form-group text-center"
+                                v-if="
+                                    promotionByPoints &&
+                                        hasPromotionText &&
+                                        listPromotionItems.length > 0
+                                "
+                            >
+                                <el-button
+                                    @click="Promotion()"
+                                    type="primary"
+                                    size="small"
+                                >
+                                    Promocion
                                 </el-button>
                             </div>
                         </div>
@@ -1242,11 +1369,7 @@
                                         type="danger"
                                         icon="el-icon-delete"
                                         circle
-                                        @click="
-                                                                removePayment(
-                                                                    paymnt.id
-                                                                )
-                                                            "
+                                        @click="removePayment(paymnt.id)"
                                     ></el-button>
                                 </el-tooltip>
                             </td>
@@ -2216,6 +2339,14 @@ export default {
                 this.verifyPromotionPointsCustomer();
             }
         },
+        receivePromotion() {
+            // console.log(this.form.items);
+            if (this.form.receive_promotion) {
+                this.fetchPromotionItems();
+            } else {
+                this.clearPromotionPointsItem();
+            }
+        },
         //aqui tamsforma los item y valida si la quantity es mayor a 0
         applySelectedPromotions() {
             const validItems = this.listPromotionItems.filter(
@@ -2334,7 +2465,7 @@ export default {
             return pass;
         },
         focusObservation() {
-            if(!this.isAndroid()){
+            if (!this.isAndroid) {
                 this.$nextTick(() => {
                     this.$refs.observation.focus();
                 });
@@ -2690,18 +2821,19 @@ export default {
             let { amount, credit_type } = this.chargeCredit;
             if (credit_type == "1") {
                 this.chargeCredit.total_charge = originalTotal * (amount / 100);
-                console.log("Total charge (percentage):", this.chargeCredit.total_charge);
-                    
-                
+                console.log(
+                    "Total charge (percentage):",
+                    this.chargeCredit.total_charge
+                );
             } else {
                 this.chargeCredit.total_charge = Number(amount);
-                console.log("Total charge (fixed amount):", this.chargeCredit.total_charge);
-               
+                console.log(
+                    "Total charge (fixed amount):",
+                    this.chargeCredit.total_charge
+                );
             }
             this.chargeCredit.total_charge = Number(
                 this.chargeCredit.total_charge.toFixed(1)
-                
-                
             );
             if (this.form.total < this.chargeCredit.total_charge) {
                 this.chargeCredit.total_charge = 0;
@@ -2712,7 +2844,7 @@ export default {
                 // this.reCalculateTotal();
                 // return;
             }
-            
+
             let prices = this.divideCharge(this.form.items.length);
             console.log("ver los item divididos :", this.form.items);
             let items = this.setItemsNewPrice(prices);
@@ -2977,14 +3109,18 @@ export default {
             this.hasPromotionText = null;
             this.$http
                 .get(
-                    `/promotions-document/records-customers/${this.form.customer_id}`
+                    `/promotions-document/records-customers/${this.form.customer_id}/${this.form.promotion_id}`
                 )
                 .then(response => {
                     if (response.status == 200) {
-                        let { data } = response;
-                        this.hasPromotionText = data
-                            .map(p => p.message)
-                            .join("\n");
+                        let { promotions, success } = response.data;
+                        if (success) {
+                            this.hasPromotionText = promotions
+                                .map(p => p.message)
+                                .join("\n");
+                        } else {
+                            this.$toast.error(data.message);
+                        }
                     }
                 });
         },
@@ -3181,6 +3317,10 @@ export default {
             this.hasExceedBank = false;
         },
         async date_of_issue() {
+            console.log(
+                "entra a date_of_issue",
+                this.configuration.is_promotion_document
+            );
             this.resetForm();
             // this.discount_amount = 0;
             // this.form.customer_id
@@ -3571,19 +3711,19 @@ export default {
             let width = window.innerWidth;
             if (this.$refs.enter_amount) {
                 if (width > 800) {
-                    if(!this.isAndroid()){
-                    await this.$refs.enter_amount.$el
-                        .getElementsByTagName("input")[0]
-                        .focus();
+                    if (!this.isAndroid) {
+                        await this.$refs.enter_amount.$el
+                            .getElementsByTagName("input")[0]
+                            .focus();
                     }
                     await this.$refs.enter_amount.$el
                         .getElementsByTagName("input")[0]
                         .select();
                 } else {
-                    if(!this.isAndroid()){
-                    await this.$refs.observation.$el
-                        .getElementsByTagName("textarea")[0]
-                        .focus();
+                    if (!this.isAndroid) {
+                        await this.$refs.observation.$el
+                            .getElementsByTagName("textarea")[0]
+                            .focus();
                     }
                 }
             }
@@ -3611,7 +3751,7 @@ export default {
                 this.enterAmount();
             }
         },
-        // para calcular el descuento global que se puede aplicar a toda la venta 
+        // para calcular el descuento global que se puede aplicar a toda la venta
         discountGlobal() {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
@@ -3809,7 +3949,7 @@ export default {
                 }
             }
         },
-        // aqui es donde se considera todo los metodos de pago 
+        // aqui es donde se considera todo los metodos de pago
         method_payment(method_pay) {
             this.hasCreditCardCharge = false;
             this.form.payment_condition_id = "01";
@@ -3927,7 +4067,6 @@ export default {
             console.log("Total IGV:", total_igv);
             console.log("Total Value:", total_value);
 
-
             this.form.total_exportation = _.round(total_exportation, 2);
             this.form.total_taxed = _.round(total_taxed, 2);
             this.form.total_exonerated = _.round(total_exonerated, 2);
@@ -3944,9 +4083,8 @@ export default {
             console.log("Totales después del redondeo:", {
                 total_taxed: this.form.total_taxed,
                 total_igv: this.form.total_igv,
-                total_value: this.form.total_value,
+                total_value: this.form.total_value
             });
-
 
             // this.form.total = _.round(total, 2)
             this.form.total = _.round(

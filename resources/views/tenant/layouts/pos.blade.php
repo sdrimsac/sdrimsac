@@ -111,12 +111,13 @@
                                 $mimeType = mime_content_type($imagePath);
                             @endphp
                             <img src="data:{{ $mimeType }};base64, {{ $imageData }}" alt="{{ $user->image }}"
-                                style="width: 80%; height: 80%; object-fit: cover;" class="profile" alt="profile">
+                                style="width: 80%; height: 80%; object-fit: cover; margin: 0; transform: translateY(5px);" class="profile" alt="profile">
                         @else
-                            <img src="/status_images/user.png" style="width: 100%; height: 100%; object-fit: cover;"
+                            <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
                                 class="profile" alt="profile">
                         @endif
                     </div>
+                    <span></span>
                     <div class="name " style="color: var(--light-text); line-height: 1;">
                         {{ $vc_user->name }} <br>
 
