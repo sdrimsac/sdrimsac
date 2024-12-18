@@ -791,8 +791,10 @@ if ($hostname) {
                 Route::post('purchases/facturar', [App\Http\Controllers\Tenant\PurchaseController::class, 'updatefacturar']);
                 
 
-                Route::prefix('download_files')->group(function () {
+                Route::prefix('download-files')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'index'])->name('tenant.download_files.index');
+                    Route::post('/search', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'searchFiles']);
+                    Route::post('/download-zip', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'downloadZip']);
                 });
                 // Route::get('documents/send/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'send']);
                 // Route::get('documents/consult_cdr/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'consultCdr']);
@@ -1250,3 +1252,4 @@ if ($hostname) {
 
 // Dentro del grupo de rutas existente
 Route::post('quotations/consolidateds/anular-document', [App\Http\Controllers\Tenant\QuotationController::class, 'anularDocument']);
+

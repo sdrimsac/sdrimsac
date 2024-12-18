@@ -1185,9 +1185,10 @@
                                     configuration.promotions_by_points
                             "
                         >
-                            <label for="promotion" class="w-100 fw-bold">Promoción</label>
+                            <label for="promotion" class="w-100 fw-bold"
+                                >Promoción</label
+                            >
                             <div class="d-flex justify-content-center">
-                                
                                 <el-select
                                     v-model="form.promotion_id"
                                     filterable
@@ -1232,7 +1233,7 @@
                                     ></el-option>
                                 </el-select>
                             </div> -->
-                            
+
                             <div
                                 class="col-md-12 form-group"
                                 v-if="promotionDocument && hasPromotionText"
@@ -1246,7 +1247,7 @@
                                 Aplicar promoción |
                                 {{ hasPromotionText }}
                             </div>
-                            <br>
+                            <br />
                             <div
                                 class="col-md-2 form-group text-center"
                                 v-if="
@@ -3729,26 +3730,31 @@ export default {
             }
         },
         inputDiscountAmount() {
-            if (
-                this.discount_amount &&
-                !isNaN(this.discount_amount) &&
-                parseFloat(this.discount_amount) > 0
-            ) {
-                this.form.total = this.form.total_value;
+            if (this.enabled_discount) {
+                if (
+                    this.discount_amount &&
+                    !isNaN(this.discount_amount) &&
+                    parseFloat(this.discount_amount) > 0
+                ) {
+                    this.form.total = this.form.total_value;
+                    if (this.discount_amount >= this.form.total)
+                        return Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text:
+                                "El monto de descuento debe ser menor al total de venta",
+                            timer: 3000,
+                            showConfirmButton: false,
+                            toast: true
+                        });
 
-                if (this.discount_amount >= this.form.total)
-                    return Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text:
-                            "El monto de descuento debe ser menor al total de venta",
-                        timer: 3000,
-                        showConfirmButton: false,
-                        toast: true
-                    });
-                this.del;
-                this.reCalculateTotal();
-                this.enterAmount();
+                    this.reCalculateTotal();
+                    this.enterAmount();
+                } else {
+                    this.deleteDiscountGlobal();
+                    this.reCalculateTotal();
+                    this.enterAmount();
+                }
             }
         },
         // para calcular el descuento global que se puede aplicar a toda la venta
