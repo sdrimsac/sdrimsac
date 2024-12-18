@@ -134,7 +134,9 @@
 
         header {
             position: fixed;
-            height: 1cm;
+            top: 0;
+            width: 100%;
+            height: 80px;
             color: #000;
             text-align: center;
             padding: 10px;
@@ -175,9 +177,13 @@
         }
 
         body {
-            padding: 0.1cm;
+            padding-top: 60px; /* Adjust padding to account for fixed header */
             margin: 0.1cm;
             /* margin: 1.5cm 0.5cm 0.5cm 0.5cm; */
+        }
+
+        .company-info {
+            margin-top: 20px; /* Adjust this value to reduce space */
         }
     </style>
 </head>
@@ -207,7 +213,7 @@
         </div>
     </header>
 
-    <div style="margin-top: 80px;">
+    <div class="company-info">
         <table class="">
             <tr>
                 <td>
@@ -262,10 +268,10 @@
                         <th class="celda">Mes</th>
                         <th class="celda">Establecimiento</th>
                         <th class="celda">Serie</th>
-                        <th class="celda">Nro_ini</th>
+                        <th class="celda">Nro_inicio</th>
                         <th class="celda">Nro_fin</th>
-                        <th class="celda">Anulados</th>
-                        <th class="celda">Rechazados</th>
+                        <th class="celda">Documentos Anulados</th>
+                        <th class="celda">Documentos Rechazados</th>
                         <th class="celda">Notas de crédito</th>
                         <th class="celda_right">Importe total</th>
                     </tr>

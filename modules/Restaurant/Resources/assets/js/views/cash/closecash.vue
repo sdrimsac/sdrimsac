@@ -501,12 +501,16 @@
                         </template>
                     </div>
                 </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="closeDialog()">Cerrar</el-button>
-                    <el-button type="primary" @click="clickCloseCash"
-                        >Guardar</el-button
+                <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                    <!-- <span slot="footer" class="dialog-footer"> -->
+                    <el-button @click="closeDialog()" class="btn-cancel btn-cancel:hover">Cancelar</el-button>
+                    <el-button type="primary" @click="clickCloseCash" class="btn-save btn-save:hover"
+                        >Cerrar Caja</el-button
                     >
-                </span>
+                <!-- </span> -->
+
+                </div>
+                
             </el-dialog>
         </div>
         <series-bills-dialog

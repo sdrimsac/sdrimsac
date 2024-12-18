@@ -173,7 +173,7 @@ export default {
 
     this.initForm();
     if (this.fromPos) {
-      this.open();
+      this.create();
     }
   },
   computed: {

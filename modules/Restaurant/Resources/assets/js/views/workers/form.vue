@@ -227,11 +227,11 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">
-                                Imagen del Trabajador
+                                Imagen
                                 <span class="text-danger"></span>
                             </label>
                             <el-upload
-                                class="avatar-uploader"
+                                class="avatar-uploader bg-white"
                                 :data="{ type: 'workers' }"
                                 :headers="headers"
                                 :action="`/caja/${resource}/uploads`"
@@ -241,7 +241,7 @@
                                 <img
                                     v-if="form.image_url"
                                     :src="form.image_url"
-                                    class="avatar bg-white"
+                                    class="avatar"
                                 />
                                 <i
                                     v-else
@@ -304,8 +304,7 @@ export default {
                 telephone: null, // Teléfono
                 can_accept_credit_sale_note: false, // Créditos en notas de venta
                 is_arca: false, // Usuario Arca
-                active: 1, // Estado activo
-                image_url: null // Ensure image_url is part of the form
+                active: 1 // Estado activo
             },
             errors: {}, // Almacena errores
             loading_submit: false,
@@ -338,15 +337,7 @@ export default {
             if (selectedWorkerType) {
                 this.form.name = `${selectedWorkerType.description} - ${this.form.name}`;
             }
-        },
-        /* "form.image_url"(newVal) {
-            if (newVal) {
-                this.$nextTick(() => {
-                    // Ensure the image is updated after DOM updates
-                    this.$refs.image.src = newVal;
-                });
-            }
-        } */
+        }
     },
     methods: {
         onSuccess(response, file, fileList) {
@@ -391,8 +382,7 @@ export default {
                 telephone: null,
                 can_accept_credit_sale_note: false,
                 is_arca: false,
-                active: 1,
-                image_url: null
+                active: 1
             };
         },
 
@@ -508,7 +498,6 @@ export default {
                         this.form.is_arca = this.form.is_arca === 1;
                         this.form.can_accept_credit_sale_note =
                             this.form.can_accept_credit_sale_note === 1;
-                        this.form.image_url = this.form.image_url;
                     });
             } else {
                 this.initForm();

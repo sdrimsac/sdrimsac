@@ -127,7 +127,6 @@ export default {
         lotsGroup: {
             handler(newVal) {
                 this.lotsGroup_splice = newVal.slice(0, 20);
-                this.updateTotalQuantity(); // Update total quantity when lotsGroup changes
             },
             immediate: true
         }
@@ -215,10 +214,10 @@ export default {
             let val_lotsGroup = await this.validatelotsGroup();
             if (!val_lotsGroup.success)
                 return this.$toast.error(val_lotsGroup.message);
-            this.updateTotalQuantity(); // Ensure total quantity is updated before emitting
+             console.log("ver retormar los lotes con datos", this.lotsGroup);   
             await this.$emit("addRowLot", this.lotsGroup);
+            console.log("ver retormar los lotes con datos", this.lotsGroup);
             await this.$emit("update:showDialog", false);
-            await this.$emit("totalQuantity", this.totalQuantity); // Emit total quantity
         },
         clickAddLot() {
             // if (!this.recordId) {

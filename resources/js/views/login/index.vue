@@ -205,7 +205,7 @@ export default {
                     //dashboard
                 }
                 let route = "";
-                this.$showSAlert("Sesión exitosa. Bienvenido/a .", "success");
+                this.$showSAlert("Sesión exitosa. Bienvenido/a.", "success");
 
                 /* this.$toast.success("Sesión exitosa. Bienvenido/a ."); */
                 // if (response.data.kitchen == true) {

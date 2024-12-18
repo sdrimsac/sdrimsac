@@ -572,7 +572,7 @@
                                                 class="badge rounded-pill bg-primary m-l-0"
                                                 style="text-align: center !important"
                                             >
-                                                Stock
+                                                Stock qqqqq
                                                 <template
                                                     v-if="
                                                         data.item.max_quantity
@@ -873,10 +873,10 @@
                                     <template v-if="data.item.stock > 0">
                                         <div class="container">
                                             <span
-                                                class="badge rounded-pill bg-primary w-80 col-10 fw-bold"
+                                                class="badge rounded-pill bg-primary w-50 col-10 fw-bold"
                                                 style="text-align: center !important justify-content: center;"
                                             >
-                                                Stock
+                                                Stock aaa
                                                 <template
                                                     v-if="
                                                         data.item.max_quantity
