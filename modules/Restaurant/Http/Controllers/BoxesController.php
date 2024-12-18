@@ -2352,7 +2352,7 @@ class BoxesController extends Controller
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number .'_ '.$socket_channel.'.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number .'_'.$socket_channel.'.pdf');
         if($cash_id == 565){
              Log::info($path);
         }
