@@ -2353,10 +2353,12 @@ class BoxesController extends Controller
         $company = Company::first();
         $company_number = $company->number;
         $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number .'_ '.$socket_channel.'.pdf');
+        if($cash_id == 565){
+             Log::info($path);
+        }
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
-        $configuration = Configuration::first();
         $total_discount = 0;
         if (!$configuration->sale_note_credit_confirm) {
             Box::where('cash_id', $cash_id)->where('description', 'Ajuste de caja por centavos')->delete();
