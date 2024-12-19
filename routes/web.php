@@ -221,6 +221,8 @@ if ($hostname) {
                 Route::prefix('health-global')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'index'])->name('tenant.health_global.index');
                     Route::get('/report', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'report']);
+                    Route::get('/records', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'records']);
+                    Route::get('/records/{month}', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'records']);
                 });
 
                 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');

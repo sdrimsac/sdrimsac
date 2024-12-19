@@ -12922,14 +12922,14 @@ width: 181px;
 /* DESEÑO DE EL-TAB */
 /* --- Contenedor de los tabs --- */
 .el-tabs {
-  border: 1px solid #565a5e; /* Borde para el contenedor */
-  border-radius: 8px; /* Bordes redondeados */
-  background-color: #e4dccf; /* Fondo del contenedor */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  overflow: hidden; /* Evita desbordes */
+  border: 1px solid #565a5e;
+  border-radius: 8px;
+  background-color: #e4dccf;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 
-    margin-top: 0 !important; /* Ajusta la distancia superior del tab */
-    padding-top: 0; /* Elimina cualquier relleno superior */
+    margin-top: 0 !important;
+    padding-top: 0;
 
 }
 

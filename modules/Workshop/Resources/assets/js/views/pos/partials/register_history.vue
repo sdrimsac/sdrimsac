@@ -268,7 +268,7 @@
       <br />
       <div class="col-md-12">
         <div class="card">
-          <div class="card-body">
+          <div class="">
             <el-tabs v-model="activeTab">
               <el-tab-pane label="Check-List" name="vehiculo">
                 <span slot="label">
@@ -320,6 +320,7 @@ export default {
   props: ["showDialog", "recordId"],
   data() {
     return {
+      tabPosition: 'left',
       titleDialog: null,
       errors: {},
       form: {},

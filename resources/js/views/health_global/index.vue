@@ -63,6 +63,43 @@
                 </div>
             </form>
         </div>
+        <!-- <div class="card">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Rubro</th>
+                        <th>Año</th>
+                        <th>Mes</th>
+                        <th>Establecimiento</th>
+                        <th>Serie</th>
+                        <th>Numero Inicio</th>
+                        <th>Numero Final</th>
+                        <th>Documentos Anulados</th>
+                        <th>Documentos Rechazados</th>
+                        <th>Notas de Credito</th>
+                        <th>Importe Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(record, index) in records" :key="index">
+                        <td>{{ record.is_service == 1 ? 'Servicios' : 'Medicamentos' }}</td>
+                        <td>{{ record.year }}</td>
+                        <td>{{ record.month }}</td>
+                        <td>{{ record.establishment }}</td>
+                        <td>
+                            {{ record.first_ft ? record.first_ft.series : '' }}
+                        </td>
+                        <td>{{ record.rubro }}</td>
+                        <td>{{ record.rubro }}</td>
+                        <td>{{ record.rubro }}</td>
+                        <td>{{ record.rubro }}</td>
+                        <td>{{ record.rubro }}</td>
+                        <td>{{ record.rubro }}</td>
+                        <td>{{ record.rubro }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> -->
     </div>
 </template>
 
@@ -98,18 +135,12 @@ export default {
             totals_depositos: 0,
             modaltype: false,
             ruta: null,
-            totals: [],
-        
+            totals: []
         };
     },
     created() {
         this.initForm();
-        
-        //                .then(response => {
-        //                    if (response.data !== '') {
-        //                        this.form = response.data.data
-        //                    }
-        //                })
+        /* this.getData();  */// Call getData to fetch data when the component is created
     },
     methods: {
         calculateSumEstablishment(item) {
@@ -150,7 +181,7 @@ export default {
             );
         },
         initForm() {
-        console.log(moment().format("YYYY-MM"));
+            console.log(moment().format("YYYY-MM"));
             this.errors = {};
             this.form = {
                 id: null,
@@ -158,8 +189,8 @@ export default {
                 // type: "pdf",
                 type_box: null,
                 period: "month",
-            
-                month_start: moment().format("YYYY-MM"),
+
+                month_start: moment().format("YYYY-MM")
             };
         },
         date_start() {
@@ -184,6 +215,26 @@ export default {
             await this.getRecords();
             this.loading_submit = false;
         },
+        /* getData() {
+            
+            this.$http
+                .get(
+                    `/health-global/records/${this.getQueryParameters()}`
+                )
+                .then(response => {
+                   
+                    this.data = response.data; 
+                    this.records = response.data;
+                    console.log(
+                        "🚀 ~ file: global.vue:198 ~ getRecords ~ response:",
+                        response
+                    );
+                })
+                .catch(error => {
+                    this.loading_submit = false;
+                    console.error(error); // Maneja el error
+                });
+        }, */
         getRecords(type) {
             // window.open(`/expensesbox/reports?${this.getQueryParameters()}`, '_blank');
             this.loading_submit = true;
@@ -229,7 +280,7 @@ export default {
             );
         },
         getQueryParameters(type) {
-            console.log("🚀 ~ getQueryParameters ~ type:", type)
+            console.log("🚀 ~ getQueryParameters ~ type:", type);
             return queryString.stringify({
                 page: this.pagination.current_page,
                 limit: this.limit,
@@ -237,10 +288,9 @@ export default {
                 ...this.form
             });
         },
-    
-    
+
         clickDownload(type) {
-        console.log("🚀 ~ clickDownload ~ type:", type)
+            console.log("🚀 ~ clickDownload ~ type:", type);
 
             this.getRecords(type);
             return;

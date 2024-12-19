@@ -74,6 +74,12 @@ class HealthGlobalController
         //     'data' => $records,
         // ];
     }
+    public function records(Request $request)
+    {
+        $records = $this->getRecords($request);
+
+        return $records;
+    }
 
     function getRecords($month)
     {
