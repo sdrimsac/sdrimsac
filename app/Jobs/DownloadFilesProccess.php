@@ -25,15 +25,15 @@ class DownloadFilesProccess implements ShouldQueue
     protected $types;
     protected $month;
     protected $website_id;
-    protected $fqdn;
 
 
-    public function __construct($website_id, $types, $month, $fqdn)
+
+    public function __construct($website_id, $types, $month)
     {
         $this->website_id = $website_id;
         $this->types = $types;
         $this->month = $month;
-        $this->fqdn = $fqdn;
+    
     }
 
 

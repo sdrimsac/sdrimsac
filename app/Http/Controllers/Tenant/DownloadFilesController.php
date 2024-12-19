@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Tenant;
 
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Controllers\Controller;
+use App\Jobs\DownloadFilesProccess;
 use App\Models\Tenant\Company;
+use App\Traits\JobReportTrait;
 use Hyn\Tenancy\Environment;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -14,7 +16,7 @@ use ZipArchive;
 
 class DownloadFilesController extends Controller
 {
-    use StorageDocument;
+    use StorageDocument,JobReportTrait;
 
     public function download_all_files()
     {
@@ -28,7 +30,16 @@ class DownloadFilesController extends Controller
         return view('tenant.download_files.index', compact('company_name', 'company_number'));
     }
 
-    public function downloadZip(Request $request)
+    public function downloadZipJob(Request $request){
+        $website = $this->getTenantWebsite();
+        new DownloadFilesProccess($website->id, $request->types, $request->month);
+
+        return [
+            'success' => true,
+            'message' => 'Se están descargando los archivos, estos se visualizarán en la lista de archivos',
+        ];
+    }
+    private function downloadZip(Request $request)
     {
 
         $company = Company::first();

@@ -796,7 +796,7 @@ if ($hostname) {
                 Route::prefix('download-files')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'index'])->name('tenant.download_files.index');
                     Route::post('/search', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'searchFiles']);
-                    Route::post('/download-zip', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'downloadZip']);
+                    Route::post('/download-zip', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'downloadZipJob']);
                 });
                 // Route::get('documents/send/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'send']);
                 // Route::get('documents/consult_cdr/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'consultCdr']);

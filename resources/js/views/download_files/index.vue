@@ -80,7 +80,7 @@
                                             <thead
                                                 class="bg-primary text-white"
                                             >
-                                                <tr>
+                                                <tr class="text-white">
                                                     <th>Nombre del archivo</th>
                                                     <th width="100">
                                                         Acciones

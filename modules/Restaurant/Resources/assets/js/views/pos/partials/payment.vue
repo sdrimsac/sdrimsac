@@ -1354,6 +1354,7 @@
                             <td>{{ idx + 1 }}</td>
                             <td v-if="form.payment_condition_id !== '01'">
                                 <el-date-picker
+                                    :clearable="false"
                                     v-model="paymnt.date"
                                 ></el-date-picker>
                             </td>
