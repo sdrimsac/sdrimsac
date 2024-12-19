@@ -548,6 +548,8 @@
                                 <!-- Fila 2: Checkboxes alineados al lado derecho -->
                                 <div class="d-flex justify-content-end">
                                     <el-checkbox
+                                    
+                                    v-if="configuration.affectation_igv_type_id == '10'"
                                         v-model="discountTotal"
                                         @change="reCalculateTotal"
                                         class="is-success text-success"
@@ -2323,10 +2325,12 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth); // Limpiar el evento al destruir el componente
     },
     methods: {
+        someItemAffected20(){
+            return this.form.items.some(item => item.affectation_igv_type_id == "20");
+        },
         //agragado para poder agregar la cantidad de promociones que se puede canjear
         handleSubmit(updatedPromotionItems) {
             this.listPromotionItems = updatedPromotionItems;
-            console.log("Updated Promotion Items:", this.listPromotionItems);
             this.applySelectedPromotions();
         },
         Promotion() {
@@ -2354,18 +2358,13 @@ export default {
                 item => item.quantity > 0
             );
             validItems.forEach(item => {
-                console.log("Verificando item:", item);
 
                 this.form.item_promotion_id = item.id;
 
                 this.promotionPointsItem();
-                console.log(
-                    "Promotion Points Item ver seleccionar y pasar el valor:",
-                    item
-                );
+            
             });
             if (validItems.length === 0) {
-                console.warn("No hay cantidad válida para ningún item.");
             }
         },
         validateAndProcess(event) {
@@ -2442,7 +2441,6 @@ export default {
             this.sendPayment();
         },
         insertReferenceNumber() {
-            console.log("entra a referencia");
             let pass = false;
             if (this.form.reference_number && this.form.bank_account_id) {
                 let bank = this.bank_accounts.find(
@@ -2459,10 +2457,7 @@ export default {
                 }
                 pass = true;
             }
-            console.log(
-                "🚀 ~ insertReferenceNumber ~ this.form.observatio:",
-                this.form.observatio
-            );
+        
             return pass;
         },
         focusObservation() {
@@ -2816,22 +2811,15 @@ export default {
         calculateCharge() {
             if (this.form.original_total == undefined) {
                 this.form.original_total = this.form.total;
-                console.log("total original", this.form.original_total);
             }
             const originalTotal = this.form.original_total;
             let { amount, credit_type } = this.chargeCredit;
             if (credit_type == "1") {
                 this.chargeCredit.total_charge = originalTotal * (amount / 100);
-                console.log(
-                    "Total charge (percentage):",
-                    this.chargeCredit.total_charge
-                );
+                
             } else {
                 this.chargeCredit.total_charge = Number(amount);
-                console.log(
-                    "Total charge (fixed amount):",
-                    this.chargeCredit.total_charge
-                );
+                
             }
             this.chargeCredit.total_charge = Number(
                 this.chargeCredit.total_charge.toFixed(1)
@@ -2847,16 +2835,11 @@ export default {
             }
 
             let prices = this.divideCharge(this.form.items.length);
-            console.log("ver los item divididos :", this.form.items);
             let items = this.setItemsNewPrice(prices);
-            console.log("dividir los precios :", prices);
             items = this.formatItems(items);
             this.form.items = items;
-            console.log("aqui llego bien total:", this.form.total);
             this.reCalculateTotal();
-            console.log("After recalculating total:", this.form.total);
             this.form.enter_amount = this.form.total;
-            console.log("Final total before enterAmount:", this.form.total);
             this.enterAmount();
         },
         openDialogPerson() {
@@ -3318,10 +3301,7 @@ export default {
             this.hasExceedBank = false;
         },
         async date_of_issue() {
-            console.log(
-                "entra a date_of_issue",
-                this.configuration.is_promotion_document
-            );
+            
             this.resetForm();
             // this.discount_amount = 0;
             // this.form.customer_id
@@ -3449,6 +3429,7 @@ export default {
             await this.initFormPayment();
             await this.setInitialAmount();
             this.setAmountCash(this.form.total);
+            this.discountTotal = this.someItemAffected20();
         },
         setOffertObservation() {
             let offert = this.form.offert;
@@ -3470,14 +3451,12 @@ export default {
                 let index = this.form.items.findIndex(
                     i => i.temp_key === item.temp_key
                 );
-                console.log("index ", index);
                 if (index !== -1) {
                     this.form.items.splice(index, 1);
                 }
             });
 
             itemsSeleccionados.forEach(item => {
-                console.log("agregando el item");
                 this.addFreeItem(item.item);
             });
         },
@@ -3757,6 +3736,26 @@ export default {
                 }
             }
         },
+        getTotalAffected() {
+            let { items } = this.form;
+            let total_affected = 0;
+            items.forEach((item) => {
+                if (item.affectation_igv_type_id === "10") {
+                    total_affected += item.total_value;
+                }
+            });
+            return total_affected;
+        },
+        getTotalExonerated(){
+            let { items } = this.form;
+            let total_exonerated = 0;
+            items.forEach((item) => {
+                if (item.affectation_igv_type_id === "20") {
+                    total_exonerated += item.total_value;
+                }
+            });
+            return total_exonerated;
+        },
         // para calcular el descuento global que se puede aplicar a toda la venta
         discountGlobal() {
             // this.form.total = this.form.total_value;
@@ -3842,6 +3841,7 @@ export default {
                 this.form.subtotal = this.form.total;
             }
         },
+
         discountGlobal3() {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
@@ -4022,7 +4022,6 @@ export default {
                 if (row.affectation_igv_type_id === "40") {
                     total_exportation += parseFloat(row.total_value);
                 }
-                console.log("row:", row.affectation_igv_type_id);
                 if (
                     ["11", "12", "13", "14", "15", "16"].includes(
                         row.affectation_igv_type_id
@@ -4039,9 +4038,7 @@ export default {
                     row.total_igv =
                         total_value_partial * (row.percentage_igv / 100);
                     row.total_base_igv = total_value_partial;
-                    console.log("restando de", row.total_value, total_value);
                     total_value -= row.total_value;
-                    console.log("sumando", row.total, total);
                     total += parseFloat(row.total);
                 }
                 if (
@@ -4050,7 +4047,6 @@ export default {
                     ) < 0
                 ) {
                     total_free += parseFloat(row.total_value);
-                    console.log("Total value actualizado:", total_value);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
@@ -4067,11 +4063,7 @@ export default {
                     ? 0.0
                     : parseFloat(row.total_plastic_bag_taxes);
             });
-            console.log("Totales antes del redondeo:");
-            console.log("Total Taxed:", total_taxed);
-            console.log("Total Exonerated:", total_exonerated);
-            console.log("Total IGV:", total_igv);
-            console.log("Total Value:", total_value);
+            
 
             this.form.total_exportation = _.round(total_exportation, 2);
             this.form.total_taxed = _.round(total_taxed, 2);
@@ -4086,23 +4078,23 @@ export default {
                 total_plastic_bag_taxes,
                 2
             );
-            console.log("Totales después del redondeo:", {
-                total_taxed: this.form.total_taxed,
-                total_igv: this.form.total_igv,
-                total_value: this.form.total_value
-            });
+    
+        
 
             // this.form.total = _.round(total, 2)
             this.form.total = _.round(
                 total_charge + total + this.form.total_plastic_bag_taxes,
                 2
             );
-            console.log("Total final calculado:", this.form.total);
 
             if (this.discount_amount) {
                 this.discountGlobal();
             }
-
+            console.log("Totales después del redondeo:", {
+                total_taxed: this.form.total_taxed,
+                total_igv: this.form.total_igv,
+                total_value: this.form.total_value
+            });
             // this.discountGlobal();
         },
         chargeGlobal() {
@@ -4140,13 +4132,15 @@ export default {
             //     this.form.discounts.splice(index, 1);
             //     this.form.total_discount = 0;
             // }
-            for (let index = 0; index < this.form.items.length; index++) {
+            if(this.form.items){
+                for (let index = 0; index < this.form.items.length; index++) {
                 const item = this.form.items[index];
                 item.discounts = [];
 
                 item.total_discount = 0;
                 item.total = item.originalTotal || item.total;
                 item.total_value = item.originalTotalValue || item.total_value;
+            }
             }
             this.form.total_discount = 0;
             this.form.discounts = [];
@@ -4220,9 +4214,7 @@ export default {
             this.setAmount(amount);
         },
         async diferen() {
-            console.log("enter_amount", this.form.enter_amount);
-            console.log("totalPayments", this.totalPayments());
-            console.log("total", this.form.total);
+    
             let differen =
                 (parseFloat(this.form.enter_amount) || 0) +
                 this.totalPayments() -
@@ -4762,10 +4754,7 @@ export default {
                     printOrdenHotel = resultado;
                 }
 
-                console.log(
-                    "🚀 ~ clickPayment ~ form.variation:",
-                    form.variation
-                );
+        
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined ||
@@ -5373,7 +5362,6 @@ export default {
                     this.promotionItems.forEach(item => {
                         this.addFreeItem(item);
                     });
-                    console.log(" ver que pasa por aquiiiiii", this.form.items);
                 } else {
                     this.$toast.error("No se encontraron items de promoción");
                 }
