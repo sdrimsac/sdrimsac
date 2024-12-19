@@ -32,6 +32,7 @@ class PrintEvent implements ShouldBroadcast
     public $data;
     public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null)
     {
+        $configuration = Configuration::first();
         $company = Company::active();
         $user_establishment_id_printer =  auth()->user()->establishment_id;
         $zone_id = $area_id;
@@ -76,7 +77,6 @@ class PrintEvent implements ShouldBroadcast
         if ($establishment->format_printer == 1) {
             $format = 'a4';
         }
-        $configuration = Configuration::first();
         $multiple_boxes = (bool) $configuration->multiple_boxes;
 
         if ($document_type == "0") {
@@ -146,14 +146,23 @@ class PrintEvent implements ShouldBroadcast
             case "01":
                 $doc = Document::where('id', $id)->first();
                 $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
+                if($configuration->android_configuration){
+                    sleep(15);
+                }
                 break;
             case "03":
                 $doc = Document::where('id', $id)->first();
                 $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
+                if($configuration->android_configuration){
+                    sleep(15);
+                }
                 break;
             case "80":
                 $doc = SaleNote::where('id', $id)->first();
                 $documentLink = url('') . "/sale-notes/print/{$doc->external_id}/{$format}";
+                if($configuration->android_configuration){
+                    sleep(15);
+                }
                 break;
             case "CO":
                 $doc = $id;

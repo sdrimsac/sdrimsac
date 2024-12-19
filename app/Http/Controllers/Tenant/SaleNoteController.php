@@ -1697,9 +1697,9 @@ class SaleNoteController extends Controller
                 $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
                 $paid = $request->paid;
                 if (auth()->user()->type != 'admin') {
-                    if($configuration->android_configuration){
-                        sleep(5);
-                    }
+                    // if($configuration->android_configuration){
+                    //     sleep(5);
+                    // }
             
                 event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }

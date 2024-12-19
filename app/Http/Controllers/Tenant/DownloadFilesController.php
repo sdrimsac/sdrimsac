@@ -32,18 +32,18 @@ class DownloadFilesController extends Controller
 
     public function downloadZipJob(Request $request){
         $website = $this->getTenantWebsite();
-        new DownloadFilesProccess($website->id, $request->types, $request->month);
+         DownloadFilesProccess::dispatch($website->id, $request->types, $request->month);
 
         return [
             'success' => true,
             'message' => 'Se están descargando los archivos, estos se visualizarán en la lista de archivos',
         ];
     }
-    private function downloadZip(Request $request)
+    public function downloadZip(Request $request)
     {
 
         $company = Company::first();
-        $company_name = $company->name;
+        $company_number = $company->number;
         $month = $request->input('month', date('Y-m'));
         $is_job = $request->input('is_job', false);
 
@@ -51,7 +51,7 @@ class DownloadFilesController extends Controller
         $searchFiles = $this->searchFiles($request);
         $filesData = $searchFiles->getData()->data;
 
-        $zipFileName = "{$company_name}-{$month}.zip";
+        $zipFileName = "{$company_number}-{$month}.zip";
         $tempPath = storage_path("app/temp");
 
         // Crear directorio temp si no existe

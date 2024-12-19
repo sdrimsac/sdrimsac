@@ -3163,7 +3163,7 @@
                         <div class="form-group">
                           <label class="control-label w-100">
                             <i class="fas fa-ticket-alt tab-icon"></i>
-                            Imprimir comanda en caja desde cocina (manual)
+                            Imprimir comanda en caja desde mozo (manual)
                           </label>
                           <el-switch
                             v-model="form.print_pos_worker"

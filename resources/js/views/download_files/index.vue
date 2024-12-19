@@ -329,7 +329,7 @@
 
 <script>
 export default {
-    props: ["typeUser","companyNumber"],
+    props: ["typeUser", "companyNumber"],
     components: {},
     data() {
         return {
@@ -435,29 +435,20 @@ export default {
 
         async downloadZip() {
             try {
-                const response = await axios.post(
+                const response = await this.$http.post(
                     "/download-files/download-zip",
                     {
                         month: this.form.month,
                         types: this.form.selectedTypes
-                    },
-                    {
-                        responseType: "blob"
                     }
                 );
+                if (response.data.success) {
+                    this.$message({
+                        message: response.data.message,
+                        type: "success"
+                    });
+                }
 
-                const url = window.URL.createObjectURL(
-                    new Blob([response.data])
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.setAttribute(
-                    "download",
-                    `${this.companyNumber}-${this.form.month}.zip`
-                );
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
             } catch (error) {
                 console.error("Error al descargar:", error);
                 this.$swal(

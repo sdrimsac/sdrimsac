@@ -1229,9 +1229,9 @@ class DocumentController extends Controller
                     }
                 }
             
-                if($configuration->android_configuration){
-                    sleep(5);
-                }
+                // if($configuration->android_configuration){
+                //     sleep(5);
+                // }
                 event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
 
                 if ($request->orden_id != null) {
