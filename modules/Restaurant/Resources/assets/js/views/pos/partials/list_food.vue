@@ -876,7 +876,7 @@
                                                 class="badge rounded-pill bg-primary w-50 col-10 fw-bold"
                                                 style="text-align: center !important justify-content: center;"
                                             >
-                                                Stock aaa
+                                                Stock
                                                 <template
                                                     v-if="
                                                         data.item.max_quantity

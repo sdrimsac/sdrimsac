@@ -740,6 +740,7 @@
                                                 <el-input-number
                                                     :min="0.01"
                                                     v-model="row.quantity"
+                                                    :disabled="row.lots.length > 0 || row.color_size.length > 0"
                                                     @change="
                                                         calculateItem(
                                                             index,
@@ -751,12 +752,9 @@
                                             </td>
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
-                                                <!-- {{
-                                                    getFormatUnitPriceRow(
-                                                        row.unit_price
-                                                    )
-                                                }} -->
                                                 <el-input-number
+
+                                                    :disabled="row.lots.length > 0 || row.color_size.length > 0"
                                                     :min="0.01"
                                                     v-model="row.unit_price"
                                                     @change="

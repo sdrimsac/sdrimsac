@@ -610,10 +610,6 @@ export default {
         });
     },
     methods: {
-        /* addRowLotGroup(lotsgroup) {
-            console.log("ver los lotes recividos", lotsgroup);
-            this.lotsGroup = lotsgroup;
-        }, */
         addRowLotGroup(lotsgroup) {
             console.log("ver los lotes recibidos", lotsgroup);
             this.lotsGroup = lotsgroup;
@@ -656,27 +652,6 @@ export default {
                 // this.filterItems()
             });
         },
-        /* uploadExcelGroup(event) {
-            let file = event.target.files[0];
-            readXlsxFile(file).then(rows => {
-                //skip header
-                rows.shift();
-                this.lotsGroup = rows.map(row => {
-                    let date = moment(row[1])
-                        .add(5, "hours")
-                        .format("YYYY-MM-DD");
-                    return {
-                        code: row[0],
-                        quantity: row[1],
-                        date_of_due: date,
-                        state: "Activo"
-                    };
-                });
-                this.form.quantity = this.lotsGroup.length;
-                console.log("lotes ver accion", this.lotsGroup);
-                event.target.value = "";
-            });
-        }, */
         uploadExcelGroup(event) {
             let file = event.target.files[0];
             readXlsxFile(file).then(rows => {
@@ -1031,26 +1006,26 @@ export default {
         },
         async clickAddItem() {
             this.insertTotalPrice = false;
-            // if (this.form.item.lots_enabled) {
-            //     if (!this.lot_code)
-            //         return this.$toast.error("Código de lote es requerido");
 
-            //     if (!this.form.date_of_due)
-            //         return this.$toast.error(
-            //             "Fecha de vencimiento es requerido si lotes esta habilitado."
-            //         );
-            // }
+            // Validation for color and size
+            if (this.form.item.has_color_size && this.color_size.length === 0) {
+                return this.$toast.error("Debe agregar al menos un color y talla para poder realizar la compra.");
+            }
 
+            // Validation for lots
+            /* if (this.form.item.lots_enabled && this.lots.length === 0) {
+                return this.$toast.error("Debe agregar al menos un lote para poder realizar la compra.");
+            } */
+
+            // Validation for series
             if (this.form.item.series_enabled) {
-                if (this.lots.length > this.form.quantity)
-                    return this.$toast.error(
-                        "La cantidad de series registradas es superior al stock"
-                    );
+                if (this.lots.length > this.form.quantity) {
+                    return this.$toast.error("La cantidad de series registradas es superior al stock");
+                }
 
-                if (this.lots.length != this.form.quantity)
-                    return this.$toast.error(
-                        "La cantidad de series registradas son diferentes al stock"
-                    );
+                if (this.lots.length != this.form.quantity) {
+                    return this.$toast.error("La cantidad de series registradas son diferentes al stock");
+                }
             }
 
             let date_of_due = this.form.date_of_due;
@@ -1092,7 +1067,6 @@ export default {
             if (this.barcode_lector) {
                 this.$refs.input_barcode.focus();
             }
-            // this.initializeFields()
             this.$emit("add", this.row);
         },
         changeWarehouse(row) {

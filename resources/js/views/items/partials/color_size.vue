@@ -124,16 +124,24 @@ export default {
                 total += parseInt(item.stock);
             });
             if (total != this.stock) {
-                this.$toast.warning(
-                    "El stock total debe ser igual al stock del producto"
+                this.$showSAlert(
+                    "warning",
+                    "El stock total debe ser igual al stock del producto", "warning"
                 );
+                /* this.$toast.warning(
+                    "El stock total debe ser igual al stock del producto"
+                ); */
                 return false;
             }
             return true;
         },
         clickAddColorSize() {
             if(this.totalStock >= this.stock){
-                this.$toast.warning("El stock total no puede ser mayor al stock del producto");
+                this.$showSAlert(
+                    "warning",
+                    "El stock total no puede ser mayor al stock del producto", "warning"
+                );
+                /* this.$toast.warning("El stock total no puede ser mayor al stock del producto"); */
                 return;
             }
             this.colorSizes.push({
