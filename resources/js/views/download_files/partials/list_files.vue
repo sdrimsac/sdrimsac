@@ -22,7 +22,7 @@
                         <td>{{ file.items_count }}</td>
                         <td>
                             <button class="btn btn-primary"
-                                @click="downloadZip(file.id)"
+                                @click="downloadZip(file)"
                             >
                                 <i class="fas fa-download"></i>
                             </button>
