@@ -797,6 +797,10 @@ if ($hostname) {
                     Route::get('/', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'index'])->name('tenant.download_files.index');
                     Route::post('/search', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'searchFiles']);
                     Route::post('/download-zip', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'downloadZipJob']);
+                    Route::get('/get-zip-files', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'getZipFiles']);
+                    Route::get('/download-zip-file/{id}', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'downloadZipFile']);
+                    Route::delete('/delete-zip-file/{id}', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'deleteZipFile']);
+                    Route::get('/download-file/{type}/{filename}', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'downloadFile']);
                 });
                 // Route::get('documents/send/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'send']);
                 // Route::get('documents/consult_cdr/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'consultCdr']);

@@ -117,11 +117,15 @@
                                     type="button"
                                     class="dropdown-item text-info"
                                     @click.prevent="
-                                        clickDeactivatePromotion(row.id)
+                                        clickDeactivatePromotion(row)
                                     "
                                 >
                                     <i class="fa fa-power-off"></i>
-                                    Desactivar Promoción
+                                    {{
+                                        row.active
+                                            ? "Desactivar Promoción"
+                                            : "Activar Promoción"
+                                    }}
                                 </a>
                                 <a
                                     type="button"
@@ -205,9 +209,11 @@ export default {
                     });
             });
         },
-        clickDeactivatePromotion(id) {
+        clickDeactivatePromotion(row) {
             this.$confirm(
-                "¿Estás seguro de querer desactivar la promoción?",
+                "¿Estás seguro de querer " +
+                    (row.active ? "desactivar" : "activar") +
+                    " la promoción?",
                 "Confirmación",
                 {
                     confirmButtonText: "Desactivar",
@@ -216,10 +222,13 @@ export default {
                 }
             ).then(() => {
                 this.$http
-                    .post(`/${this.resource}/deactivate/${id}`)
+                    .post(`/${this.resource}/deactivate/${row.id}`)
                     .then(() => {
+                        this.$toast.success(
+                            "Promoción " +
+                                (row.active ? "desactivada" : "activada")
+                        );
                         this.$eventHub.$emit("reloadData");
-                        this.$toast.success("Promoción desactivada");
                     });
             });
         },

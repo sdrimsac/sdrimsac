@@ -32,7 +32,8 @@ class PromotionDocumentCollection extends ResourceCollection
                 'date_end' => $row->date_end,
                 'total' => $row->total,
                 'points_value' => $row->points_value,
-                'limit_changes' => $row->limit_changes
+                'limit_changes' => $row->limit_changes,
+                'active' => (bool) $row->active
             
             ];
         });

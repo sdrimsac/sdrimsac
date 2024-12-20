@@ -54,6 +54,13 @@
                                     Buscar
                                 </button>
                                 <button
+                                    class="btn btn-primary"
+                                    @click="openDialog"
+                                >
+                                    <i class="fas fa-list"></i>Archivos
+                                    pendientes
+                                </button>
+                                <button
                                     v-if="filesFound"
                                     class="btn btn-success ml-2"
                                     @click="confirmDownload"
@@ -81,10 +88,15 @@
                                                 class="bg-primary text-white"
                                             >
                                                 <tr class="text-white">
-                                                    <th>Nombre del archivo</th>
-                                                    <th width="100">
-                                                        Acciones
+                                                    <th class="text-white">
+                                                        Nombre del archivo
                                                     </th>
+                                                    <!-- <th
+                                                        width="100"
+                                                        class="text-white"
+                                                    >
+                                                        Acciones
+                                                    </th> -->
                                                 </tr>
                                             </thead>
                                             <tbody
@@ -98,7 +110,7 @@
                                                     :key="file"
                                                 >
                                                     <td>{{ file }}</td>
-                                                    <td class="text-center">
+                                                    <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -112,7 +124,7 @@
                                                                 class="fas fa-download"
                                                             ></i>
                                                         </button>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             </tbody>
                                             <tbody v-else>
@@ -144,9 +156,9 @@
                                             >
                                                 <tr>
                                                     <th>Nombre del archivo</th>
-                                                    <th width="100">
+                                                    <!-- <th width="100">
                                                         Acciones
-                                                    </th>
+                                                    </th> -->
                                                 </tr>
                                             </thead>
                                             <tbody
@@ -160,7 +172,7 @@
                                                     :key="file"
                                                 >
                                                     <td>{{ file }}</td>
-                                                    <td class="text-center">
+                                                    <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -174,7 +186,7 @@
                                                                 class="fas fa-download"
                                                             ></i>
                                                         </button>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             </tbody>
                                             <tbody v-else>
@@ -206,9 +218,9 @@
                                             >
                                                 <tr>
                                                     <th>Nombre del archivo</th>
-                                                    <th width="100">
+                                                    <!-- <th width="100">
                                                         Acciones
-                                                    </th>
+                                                    </th> -->
                                                 </tr>
                                             </thead>
                                             <tbody
@@ -222,7 +234,7 @@
                                                     :key="file"
                                                 >
                                                     <td>{{ file }}</td>
-                                                    <td class="text-center">
+                                                    <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -236,7 +248,7 @@
                                                                 class="fas fa-download"
                                                             ></i>
                                                         </button>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             </tbody>
                                             <tbody v-else>
@@ -270,9 +282,9 @@
                                             >
                                                 <tr>
                                                     <th>Nombre del archivo</th>
-                                                    <th width="100">
+                                                    <!-- <th width="100">
                                                         Acciones
-                                                    </th>
+                                                    </th> -->
                                                 </tr>
                                             </thead>
                                             <tbody
@@ -287,7 +299,7 @@
                                                     :key="file"
                                                 >
                                                     <td>{{ file }}</td>
-                                                    <td class="text-center">
+                                                    <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -301,7 +313,7 @@
                                                                 class="fas fa-download"
                                                             ></i>
                                                         </button>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             </tbody>
                                             <tbody v-else>
@@ -322,18 +334,23 @@
                         </div>
                     </div>
                 </div>
+                <list-files :showDialog.sync="showDialog" @update:showDialog="showDialog = $event" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import ListFiles from "./partials/list_files.vue";
 export default {
     props: ["typeUser", "companyNumber"],
-    components: {},
+    components: {
+        ListFiles
+    },
     data() {
         return {
             loading: false,
+            showDialog: false,
             title: "Descargas archivos",
             resource: "download-files",
             recordId: null,
@@ -364,6 +381,10 @@ export default {
         }
     },
     methods: {
+        openDialog() {
+            this.showDialog = true;
+        },
+
         async search() {
             if (this.form.selectedTypes.length === 0) {
                 this.$message({
@@ -417,9 +438,32 @@ export default {
                 this.loading = false;
             }
         },
+        
         downloadFile(type, filename) {
-            // Implementa la lógica para descargar el archivo aquí
-            console.log(`Descargando archivo ${filename} del tipo ${type}`);
+            let fileType = 'application/pdf';
+            if(type === 'xml'){
+                fileType = 'application/xml';
+            }
+            if(type === 'cdr'){
+                fileType = 'application/zip';
+            }
+            if(type === 'sale_note'){
+                fileType = 'application/pdf';
+            }
+            this.$http.get(`/download-files/download-file/${type}/${filename}`, {
+                responseType: 'blob'
+            }).then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data], {
+                    type: fileType
+                }));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            });
         },
         async confirmDownload() {
             const result = await this.$confirm(
@@ -448,7 +492,6 @@ export default {
                         type: "success"
                     });
                 }
-
             } catch (error) {
                 console.error("Error al descargar:", error);
                 this.$swal(
