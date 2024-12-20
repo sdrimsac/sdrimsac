@@ -181,6 +181,57 @@
                         </div>
                     </div>
 
+                    <div class="col-md-4">
+                        <i class="fas fa-cube"></i>
+                        <!-- Icono de producto -->
+                        <i class="fas fa-store-alt"></i>
+                        <!-- Icono de sucursal -->
+                        <label for="product"
+                            >Establecimiento productos
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Establecimiento desde el cual obtendrá los productos"
+                                placement="top"
+                            >
+                                <i class="fas fa-info-circle"></i>
+                            </el-tooltip>
+                        </label>
+                        <el-select v-model="form.warehouse_product_id">
+                            <el-option
+                                v-for="(data, index) in allWarehouses"
+                                :key="index"
+                                :label="data.description"
+                                :value="data.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fas fa-chair"></i>
+                        <!-- Icono de mesa -->
+                        <i class="fas fa-store-alt"></i>
+                        <!-- Icono de establecimiento -->
+                        <label for="product"
+                            >Establecimiento mesa
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Establecimiento desde el cual obtendrá las mesas"
+                                placement="top"
+                            >
+                                <i class="fas fa-info-circle"></i>
+                            </el-tooltip>
+                        </label>
+                        <el-select v-model="form.establishment_table_id">
+                            <el-option
+                                v-for="(data, index) in allEstablishments"
+                                :key="index"
+                                :label="data.description"
+                                :value="data.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+
                     <!-- Créditos en Notas de Venta -->
                     <div
                         class="col-md-4"
@@ -223,6 +274,53 @@
                             id="arca_user"
                             label="Es Arca?"
                         ></el-checkbox>
+                    </div>
+                    <div
+                        class="col-md-4"
+                        v-if="configuration.user_series_independientes_caja"
+                    >
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.series }"
+                        >
+                            <div>
+                                <i class="fas fa-toolbox"></i>
+                                <!-- Icono de Tipo de trabajador -->
+                                <label class="control-label"
+                                    >Seleccione Serie</label
+                                >
+                            </div>
+                            <el-select clearable v-model="form.series">
+                                <el-option
+                                    v-for="(data, index) in series"
+                                    :key="index"
+                                    :label="data.number"
+                                    :value="data.id"
+                                ></el-option>
+                            </el-select>
+                            <!-- <small class="form-control-feedback" v-if="errors.series" v-text="errors.series[0]"></small> -->
+                        </div>
+                    </div>
+                    <div
+                        class="row"
+                        v-if="configuration.commercial_treatment_items"
+                    >
+                        <div class="col-12">
+                            Tratamientos Comerciales
+                        </div>
+                        <div class="col-12">
+                            <el-tag
+                                v-for="(data,
+                                index) in commercial_treatment_users"
+                                :key="index"
+                                :type="`${data.active ? 'success' : 'info'}`"
+                                style="margin-right: 5px;"
+                                role="button"
+                                @click="clickTag(data)"
+                            >
+                                {{ data.description }}
+                            </el-tag>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
@@ -289,7 +387,11 @@ export default {
         "areas",
         "workersType",
         "establishments",
-        "configuration"
+        "configuration",
+        "allEstablishments",
+        "allWarehouses",
+        "series",
+        "commercial_treatment"
     ],
     data() {
         return {
@@ -312,13 +414,14 @@ export default {
             titleDialog: null,
             resource: "workers",
             headers: headers_token,
-            image_url: null
+            image_url: null,
+            commercial_treatment_users: []
         };
     },
     created() {
         this.initForm();
     },
-    watch: {
+    /* watch: {
         "form.worker_type_id"(newVal, oldVal) {
             if (oldVal) {
                 const oldWorkerType = this.workersType.find(
@@ -336,6 +439,36 @@ export default {
             );
             if (selectedWorkerType) {
                 this.form.name = `${selectedWorkerType.description} - ${this.form.name}`;
+            }
+        }
+    }, */
+    watch: {
+        "form.worker_type_id"(newVal, oldVal) {
+            if (oldVal) {
+                const oldWorkerType = this.workersType.find(
+                    type => type.id === oldVal
+                );
+                if (oldWorkerType) {
+                    // Elimina la descripción del tipo anterior
+                    this.form.name = this.form.name.replace(
+                        `${oldWorkerType.description} - `,
+                        ""
+                    );
+                }
+            }
+
+            const selectedWorkerType = this.workersType.find(
+                type => type.id === newVal
+            );
+            if (selectedWorkerType) {
+                // Solo agrega la descripción si aún no está presente
+                if (
+                    !this.form.name.startsWith(
+                        `${selectedWorkerType.description} - `
+                    )
+                ) {
+                    this.form.name = `${selectedWorkerType.description} - ${this.form.name}`;
+                }
             }
         }
     },

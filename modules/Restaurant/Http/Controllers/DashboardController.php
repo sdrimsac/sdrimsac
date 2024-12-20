@@ -9,6 +9,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Desarrollador;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
@@ -147,7 +148,7 @@ class DashboardController extends Controller
                 if ($establishment_table_id) {
                     $tables = $tables->where('establishment_id', $establishment_table_id);
                 }
-                $tables_area = collect($tables->get())->transform(function ($row) use($category_ins_id){
+                $tables_area = collect($tables->get())->transform(function ($row) use ($category_ins_id) {
                     $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
                     return [
                         'id'                => $row->id,
@@ -170,7 +171,7 @@ class DashboardController extends Controller
 
             // $select_category = CategoryItem::first();
             // $select_category_id = $select_category->id;
-            $categories = CategoryItem::where('id','<>',$category_ins_id)->get();
+            $categories = CategoryItem::where('id', '<>', $category_ins_id)->get();
             $status_table = StatusTable::all();
             return view('restaurant::worker.index', compact('configuration', 'areas', 'tables_active', 'categories', 'status_table', 'company', 'tables_area'));
         } catch (Exception $e) {

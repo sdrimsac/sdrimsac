@@ -89,6 +89,7 @@ use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
 use App\Traits\PromotionDocumentTrait;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Modules\Item\Models\CategoryItem;
 use Modules\Report\Exports\ReportConsolidatedCreditExport;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\Food;
@@ -659,11 +660,14 @@ class SaleNoteController extends Controller
     {
         $customer_id = $request->customer_id;
         $seller_id = $request->seller_id;
+        $date_of_issue = $request->date_of_issue;
         $state_type_id = $request->state_type_id;
         $date_start = $request->date_start;
         $date_end = $request->date_end;
         $number = $request->number;
         $series = $request->series;
+        $description = $request->description;
+        $category_id = $request->category_id;
         $records = SaleNote::query();
 
         if ($customer_id) {
@@ -672,6 +676,9 @@ class SaleNoteController extends Controller
         if ($seller_id) {
             $records = $records->where("seller_id", $seller_id);
         }
+        /* if ($category_id) {
+            $records = $records->where("category_id", $category_id);
+        } */
         if ($state_type_id) {
             $records = $records->where("state_type_id", $state_type_id);
         }
@@ -693,6 +700,23 @@ class SaleNoteController extends Controller
         if ($series) {
             $records = $records->where('series', 'like', '%' . $series . '%');
         }
+        if ($description) {
+            $records = $records->whereHas('items', function ($query) use ($description) {
+                $query->whereHas('item', function ($subQuery) use ($description) {
+                    $subQuery->where('description', 'like', '%' . $description . '%');
+                });
+            });
+        }
+        if ($category_id) {
+
+            $records = $records->whereHas('items', function ($query) use ($category_id) {
+                $query->whereHas('relation_item', function ($q) use ($category_id) {
+                    $q->where('category_id', $category_id);
+                });
+            });
+        }
+
+
         $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
         return $records;
     }
@@ -836,6 +860,7 @@ class SaleNoteController extends Controller
 
     public function tables()
     {
+        $categories = CategoryItem::all();
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $customers = $this->table('customers');
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get();
@@ -862,6 +887,7 @@ class SaleNoteController extends Controller
         $payment_destinations = $this->getPaymentDestinations();
         // $state_t
         return compact(
+            'categories',
             'state_types',
             'sellers',
             'customers',
@@ -2020,8 +2046,6 @@ class SaleNoteController extends Controller
         $quantity_period = $inputs['quantity_period'];
         $d_of_issue = new Carbon($inputs['date_of_issue']);
         $automatic_date_of_issue = null;
-        // dump($inputs);
-        // dump("$inputs");
         // $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
         $currency_type_id = $inputs['currency_type_id'];
         if ($currency_type_id == 'USD' && !$configuration->other_currency_pos) {

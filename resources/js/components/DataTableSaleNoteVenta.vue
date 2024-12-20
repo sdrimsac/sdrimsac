@@ -20,8 +20,23 @@
                             ></el-option>
                         </el-select>
                     </div>
+                    <div class="col-lg-2 col-md-2">
+                        <div class="form-group">
+                            <label class="control-label w-100">Número</label>
+                            <el-input
+                                placeholder="Ingresar"
+                                v-model="search.number"
+                                @input="getRecords"
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                        </div>
+                    </div>
                     <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
-                        <label for="date_start">Fecha Unica</label>
+                        <label for="date_start">Fecha Emision</label>
                         <el-date-picker
                             v-model="search.date_start"
                             type="date"
@@ -65,7 +80,7 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-3 col-lg-3">
+                    <div class="col-md-2 col-lg-2">
                         <label for="state_type_id">Estado</label>
 
                         <el-select
@@ -82,6 +97,61 @@
                             ></el-option>
                         </el-select>
                     </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <label class="control-label w-100">Productos</label>
+                            <el-input
+                                placeholder="Ingrese nombre del producto"
+                                v-model="search.description"
+                                @input="getRecords"
+                                clearable
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                        </div>
+                    </div>
+                    <div
+                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                    >
+                        <div class="form-group">
+                            <label class="control-label w-100">Categoría</label>
+                            <el-select
+                                v-model="search.category_id"
+                                filterable
+                                clearable
+                                @change="getRecords"
+                            >
+                                <el-option
+                                    v-for="(option, idx) in categories"
+                                    :key="idx"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3 col-lg-3">
+                        <label for="seller_id">Vendedor</label>
+
+                        <el-select
+                            clearable
+                            v-model="search.seller_id"
+                            class="border-left rounded-left border-info w-100"
+                            popper-class="el-select-customers"
+                            placeholder="Seleccione un Asesor - Vendedor"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in sellers"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.name"
+                            ></el-option>
+                        </el-select>
+                    </div> -->
                     <div class="col-md-6 col-sm-12">
                         <el-button
                             type="success"
@@ -91,13 +161,14 @@
                             @click="exportRecords"
                             :disabled="!search.date_start && !search.date_end"
                         >
-                        <el-tooltip 
-                            class="item" 
-                            effect="dark" 
-                            content="debe seleccionar al menos una fecha unico o mes para poder exportar a excel" 
-                            placement="top-start">
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="debe seleccionar al menos una fecha unico o mes para poder exportar a excel"
+                                placement="top-start"
+                            >
                                 <i class="fa fa-download"></i>
-                        </el-tooltip>
+                            </el-tooltip>
                             Exportar
                         </el-button>
                     </div>
@@ -117,7 +188,11 @@
                             <slot name="heading"></slot>
                         </thead>
                         <tbody>
-                            <slot v-for="(row, index) in records" :row="row" :index_="customIndex(index) "></slot>
+                            <slot
+                                v-for="(row, index) in records"
+                                :row="row"
+                                :index_="customIndex(index)"
+                            ></slot>
                         </tbody>
                     </table>
                     <div>
@@ -156,6 +231,8 @@ export default {
     },
     data() {
         return {
+            items: [],
+            categories: [],
             state_types: [],
             sellers: [],
             customers: [],
@@ -167,6 +244,7 @@ export default {
                 date_start: null,
                 date_end: null,
                 seller_id: null,
+                category_id: null,
                 series: null,
                 end: null
             },
@@ -195,6 +273,7 @@ export default {
             console.log(response);
             this.array_users = response.data.users;
             this.sellers = response.data.sellers;
+            this.categories = response.data.categories;
             this.state_types = response.data.state_types;
         });
     },
@@ -269,7 +348,7 @@ export default {
         changeClearInput() {
             this.search.value = "";
             this.getRecords();
-        },
+        }
     }
 };
 </script>

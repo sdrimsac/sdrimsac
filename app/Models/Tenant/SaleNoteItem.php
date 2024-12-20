@@ -109,6 +109,10 @@ class SaleNoteItem extends ModelTenant
     {
         return $this->belongsTo(Item::class, 'item_id');
     }
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
     public function warranty()
     {
         return $this->hasOne(ItemWarranty::class, 'sale_note_item_id');
