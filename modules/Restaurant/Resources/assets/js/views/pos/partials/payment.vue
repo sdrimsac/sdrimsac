@@ -3841,6 +3841,9 @@ export default {
                 );
                 this.form.subtotal = this.form.total;
             }
+            this.form.enter_amount = this.form.total;
+            this.enterAmount();
+            
         },
 
         discountGlobal3() {
@@ -4087,7 +4090,8 @@ export default {
                 total_charge + total + this.form.total_plastic_bag_taxes,
                 2
             );
-
+            this.form.enter_amount = this.form.total;
+            this.enterAmount();
             if (this.discount_amount) {
                 this.discountGlobal();
             }
