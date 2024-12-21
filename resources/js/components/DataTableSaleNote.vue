@@ -39,6 +39,21 @@
                             ></el-option>
                         </el-select>
                     </div>
+                    <div class="col-lg-2 col-md-2">
+                        <div class="form-group">
+                            <label class="control-label w-100">Número Nota Venta</label>
+                            <el-input
+                                placeholder="Ingresar"
+                                v-model="search.number"
+                                @input="getRecords"
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                        </div>
+                    </div>
                     <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
                         <label for="date_start">Fecha inicial</label>
                         <el-date-picker

@@ -3,25 +3,26 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                    v-if="resource == 'caja/cash-transfer/report'"
+                    <div
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                        v-if="resource == 'caja/cash-transfer/report'"
                     >
-                    <label for="value">
-                        Caja principal
-                    </label>
-                    <el-select
-                        v-model="search.cash_id"
-                        @change="getRecords"
-                        placeholder="Seleccione la caja"
-                    >
-                        <el-option
-                            v-for="item in cashes"
-                            :key="item.id"
-                            :label="`${item.user_name}-${item.description}`"
-                            :value="item.id"
+                        <label for="value">
+                            Caja principal
+                        </label>
+                        <el-select
+                            v-model="search.cash_id"
+                            @change="getRecords"
+                            placeholder="Seleccione la caja"
                         >
-                        </el-option>
-                    </el-select>
+                            <el-option
+                                v-for="item in cashes"
+                                :key="item.id"
+                                :label="`${item.user_name}-${item.description}`"
+                                :value="item.id"
+                            >
+                            </el-option>
+                        </el-select>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label style="width:100%">
@@ -30,14 +31,13 @@
                         <el-select
                             v-model="search.column"
                             placeholder="Select"
-                            @change="changeClearInput" 
+                            @change="changeClearInput"
                         >
                             <el-option
                                 v-for="(label, key) in columns"
                                 :key="key"
                                 :value="key"
                                 :label="label"
-                                clearable
                             ></el-option>
                         </el-select>
                     </div>
@@ -108,7 +108,12 @@
                                 </el-option>
                             </el-select>
                         </template>
-                        <template v-else-if="search.column == 'active' && resource=='caja/workers-type'">
+                        <template
+                            v-else-if="
+                                search.column == 'active' &&
+                                    resource == 'caja/workers-type'
+                            "
+                        >
                             <el-select
                                 v-model="search.value"
                                 @change="getRecords"
@@ -121,7 +126,7 @@
                                     ]"
                                     :key="idx"
                                     :label="item.description"
-                                    :value="item.description"
+                                    :value="item.id"
                                 >
                                 </el-option>
                             </el-select>
@@ -207,6 +212,29 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <div
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                        v-if="resource == 'items'"
+                    >
+                        <label>Estados</label>
+                        <el-select
+                            v-model="search.active"
+                            @change="getRecords"
+                            clearable
+                            placeholder="Seleccione el estado"
+                        >
+                            <el-option
+                                v-for="(item, idx) in [
+                                    { id: 1, active: 'Habilitado' },
+                                    { id: 0, active: 'Inhabilitado' }
+                                ]"
+                                :key="idx"
+                                :label="item.active"
+                                :value="item.active"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
             </div>
             <div v-if="resource == 'items'" class="row"></div>
@@ -226,18 +254,22 @@
                         >Exportar PDF</el-button
                     >
                 </div>
-                <div class="col-md-6 d-flex"
-                v-if="resource !== 'caja/cash-transfer'"
+                <div
+                    class="col-md-6 d-flex"
+                    v-if="resource !== 'caja/cash-transfer'"
                 >
                     <el-button
                         class="submit"
                         type="success"
-                        v-if="resource !== 'item-color-size' && typeUser == 'superadmin'"
+                        v-if="
+                            resource !== 'item-color-size' &&
+                                typeUser == 'superadmin'
+                        "
                         icon="el-icon-tickets"
                         @click.prevent="clickDownload('excel')"
                         >Exportar Excel</el-button
                     >
-                        <el-button
+                    <el-button
                         class="submit"
                         type="success"
                         v-if="search.warehouse_id && typeUser == 'superadmin'"
@@ -246,12 +278,15 @@
                         >Exportar Excel - Formato de importacion</el-button
                     >
                 </div>
-       
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <br>
-                    <table class="table table-striped" id="scroll2" style="overflow-x: auto">
+                    <br />
+                    <table
+                        class="table table-striped"
+                        id="scroll2"
+                        style="overflow-x: auto"
+                    >
                         <thead>
                             <slot name="heading"></slot>
                         </thead>
@@ -263,10 +298,7 @@
                             ></slot>
                         </tbody>
                         <tfoot>
-                            <slot name="footer"
-                            
-                            >
-                            </slot>
+                            <slot name="footer"> </slot>
                         </tfoot>
                     </table>
                     <div>
@@ -315,10 +347,11 @@ export default {
     },
     data() {
         return {
-            cashes:[],
+            cashes: [],
             search: {
                 column: null,
-                value: null
+                value: null,
+                active: null
             },
             columns: [],
             records: [],
@@ -334,7 +367,7 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
-        if(this.resource == "caja/cash-transfer/report"){
+        if (this.resource == "caja/cash-transfer/report") {
             this.getCashes();
         }
         if (this.resource == "items") {
@@ -353,37 +386,44 @@ export default {
             this.columns = response.data;
             this.search.column = _.head(Object.keys(this.columns));
         });
-        if(this.resource !== "caja/cash-transfer/report"){
+        if (this.resource !== "caja/cash-transfer/report") {
             await this.getRecords();
         }
     },
     methods: {
-        total_income(){
-            return this.records.reduce((acc, item) => acc + Number(item.income), 0);
+        total_income() {
+            return this.records.reduce(
+                (acc, item) => acc + Number(item.income),
+                0
+            );
         },
-        total_expense(){
-            return this.records.reduce((acc, item) => acc + Number(item.expense), 0);
+        total_expense() {
+            return this.records.reduce(
+                (acc, item) => acc + Number(item.expense),
+                0
+            );
         },
         getCashes() {
-            this.$http.get(`/caja/cash-transfer/cashes-principal`).then(response => {
-                this.cashes = response.data.cashes;
-                let [cash] = this.cashes;
-                if(cash){
-                    this.search.cash_id = cash.id;
-                    this.getRecords();
-                }
-            });
+            this.$http
+                .get(`/caja/cash-transfer/cashes-principal`)
+                .then(response => {
+                    this.cashes = response.data.cashes;
+                    let [cash] = this.cashes;
+                    if (cash) {
+                        this.search.cash_id = cash.id;
+                        this.getRecords();
+                    }
+                });
         },
         clickDownload(type) {
             this.$emit("clickReport", this.search, type);
         },
-        clickDownloadForImport(){
+        clickDownloadForImport() {
             this.$emit("clickReportForImport", this.search);
         },
 
         customIndex(index) {
-
-            if(this.resource == "caja/cash-transfer/report" ){
+            if (this.resource == "caja/cash-transfer/report") {
                 return index + 1;
             }
             return (
@@ -396,11 +436,6 @@ export default {
             if (this.time) {
                 clearTimeout(this.time);
             }
-            //   this.$http.get(`/filtrar_distritos/records`)
-            // .then(response => {
-            //     this.array_district = response.data.district
-
-            // })
             this.time = setTimeout(async () => {
                 let url = `/${
                     this.resource
@@ -411,13 +446,13 @@ export default {
                     }/records?${this.getQueryParameters()}&fromAdmin=true`;
                 }
                 return this.$http.get(url).then(response => {
-                    if(this.resource !== "caja/cash-transfer/report"){
-                     this.records = response.data.data;
-                    this.pagination = response.data.meta;
-                    this.pagination.per_page = parseInt(
-                        response.data.meta.per_page
-                    );   
-                    }else{
+                    if (this.resource !== "caja/cash-transfer/report") {
+                        this.records = response.data.data;
+                        this.pagination = response.data.meta;
+                        this.pagination.per_page = parseInt(
+                            response.data.meta.per_page
+                        );
+                    } else {
                         let data = response.data;
                         this.records = data.data;
                     }
@@ -437,6 +472,7 @@ export default {
                 limit: this.limit,
                 value: this.search.value,
                 column: this.search.column,
+                active: this.search.active,
                 cash_id: this.search.cash_id,
                 end_date: this.search.end_date,
                 warehouse_id: this.search.warehouse_id,

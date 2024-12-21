@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
-                            <label class="control-label w-100">Número</label>
+                            <label class="control-label w-100">Número Nota Venta</label>
                             <el-input
                                 placeholder="Ingresar"
                                 v-model="search.number"

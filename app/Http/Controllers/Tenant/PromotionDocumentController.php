@@ -66,8 +66,6 @@ class PromotionDocumentController extends Controller
         } else {
             $records = $records->where('is_points', 0);
         }
-
-
         return new PromotionDocumentCollection($records->paginate(config('tenant.items_per_page')));
     }
 

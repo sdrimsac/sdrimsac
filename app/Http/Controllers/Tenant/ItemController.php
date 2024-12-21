@@ -534,11 +534,16 @@ class ItemController extends Controller
             'date_of_due' => 'Fecha vencimiento',
             'warranty' => 'meses garantía',
             'lot_code' => 'Código lote',
-            'active' => 'Habilitados',
-            'inactive' => 'Inhabilitados',
             // 'description' => 'Descripción'
         ];
     }
+    /* public function columns2()
+    {
+        return [
+            'active' => 'Habilitados',
+            'inactive' => 'Inhabilitados',
+        ];
+    } */
     // public function generateCode()
     // {
     //     $new_code = "100001";
@@ -646,6 +651,7 @@ class ItemController extends Controller
         $warehouse_id = $request->warehouse_id;
         $categoria_madera_id = $request->categoria_madera_id;
         $area_id = $request->area_id;
+        $active = $request->active;
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
         if (!$services) {
@@ -659,7 +665,7 @@ class ItemController extends Controller
                 });
                 break;
 
-            case 'active':
+            /* case 'active':
                 $records
                     ->whereIsActive();
                 break;
@@ -667,14 +673,15 @@ class ItemController extends Controller
             case 'inactive':
                 $records
                     ->whereIsNotActive();
-                break;
+                break; */
             case 'description':
                 if ($request->value) {
                     if (count($textoIntoArray) === 1) {
                         $records
                             ->where('description', 'like', "%{$request->value}%")
                             ->orWhere('internal_id', 'like', "%{$request->value}%")
-                            ->orWhere('second_name', 'like', "%{$request->value}%");
+                            ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('active', 'like', "%{$request->value}%");
                     } else {
 
                         foreach ($textoIntoArray as $key => $value) {
@@ -698,6 +705,14 @@ class ItemController extends Controller
                 $records
                     ->where($request->column, 'like', "%{$request->value}%");
                 break;
+        }
+
+        if ($active !== null) {
+            $active = trim($active);
+            $active = ($active === 'Habilitado') ? 1 : 0;
+            $records = $records->where('active', $active);
+        } else {
+            $records = $records->where('active', 1);
         }
 
         if ($warehouse_id) {
