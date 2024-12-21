@@ -970,7 +970,7 @@ if ($hostname) {
 
                 Route::get('item-sets', [App\Http\Controllers\Tenant\ItemSetController::class, 'index'])->name('tenant.item_sets.index')->middleware('just.admin');
                 Route::get('item-sets/columns', [App\Http\Controllers\Tenant\ItemSetController::class, 'columns']);
-                Route::get('item-sets/columns2', [App\Http\Controllers\Tenant\ItemSetController::class, 'columns2']);
+                /* Route::get('item-sets/columns2', [App\Http\Controllers\Tenant\ItemSetController::class, 'columns2']); */
                 Route::get('item-sets/records', [App\Http\Controllers\Tenant\ItemSetController::class, 'records']);
                 Route::get('item-sets/check/{id}/{qty}', [App\Http\Controllers\Tenant\ItemSetController::class, 'set_item_check_stock']);
                 Route::get('item-sets/tables', [App\Http\Controllers\Tenant\ItemSetController::class, 'tables']);
