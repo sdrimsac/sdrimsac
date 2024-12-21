@@ -572,7 +572,7 @@
                                                 class="badge rounded-pill bg-primary m-l-0"
                                                 style="text-align: center !important"
                                             >
-                                                Stock qqqqq
+                                                Stock
                                                 <template
                                                     v-if="
                                                         data.item.max_quantity

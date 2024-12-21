@@ -548,8 +548,10 @@
                                 <!-- Fila 2: Checkboxes alineados al lado derecho -->
                                 <div class="d-flex justify-content-end">
                                     <el-checkbox
-                                    
-                                    v-if="configuration.affectation_igv_type_id == '10'"
+                                        v-if="
+                                            configuration.affectation_igv_type_id ==
+                                                '10'
+                                        "
                                         v-model="discountTotal"
                                         @change="reCalculateTotal"
                                         class="is-success text-success"
@@ -1109,77 +1111,6 @@
                     <!-- Columna 3: Promoción / Imprimir No imprimir -->
                     <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
                         <!-- Sección Promoción -->
-                        <!-- <div
-                            class=""
-                            v-if="
-                                configuration.is_promotion_document ||
-                                    configuration.promotions_by_points
-                            "
-                        >
-                            <label for="promotion" class="w-100 fw-bold"
-                                >Promoción</label
-                            >
-                            <div class="d-flex justify-content-center">
-                                <el-select
-                                    v-model="form.promotion_id"
-                                    filterable
-                                    clearable
-                                    placeholder="Seleccione una promoción"
-                                    class="me-2"
-                                >
-                                    <el-option
-                                        v-for="(option,
-                                        idx) in promotions_document"
-                                        :key="idx"
-                                        :label="option.description"
-                                        :value="option.id"
-                                    ></el-option>
-                                </el-select>
-                                <template v-if="
-                                            promotionByPoints &&
-                                                hasPromotionText &&
-                                                listPromotionItems.length > 0
-                                        ">
-                                    <el-button
-                                        
-                                        @click="Promotion()"
-                                        type="primary"
-                                        size="small"
-                                    >
-                                        Canjear
-                                    </el-button>
-                                </template>
-                            </div>
-                            <div
-                                class="col-md-8 form-group"
-                                v-if="promotionDocument && hasPromotionText"
-                            >
-                                <br />
-                                <el-checkbox
-                                    @change="receivePromotion"
-                                    v-model="form.receive_promotion"
-                                >
-                                </el-checkbox>
-                                Aplicar promoción |
-                                {{ hasPromotionText }}
-                            </div>
-                            <div
-                                class="col-md-2 form-group"
-                                v-if="
-                                    promotionByPoints &&
-                                        hasPromotionText &&
-                                        listPromotionItems.length > 0
-                                "
-                            >
-                                <el-button
-                                    @click="Promotion()"
-                                    type="primary"
-                                    size="small"
-                                >
-                                    Promocion
-                                </el-button>
-                            </div>
-                        </div> -->
                         <div
                             class=""
                             v-if="
@@ -1192,6 +1123,7 @@
                             >
                             <div class="d-flex justify-content-center">
                                 <el-select
+                                    :disabled="isClientesVarios()"
                                     v-model="form.promotion_id"
                                     filterable
                                     clearable
@@ -1207,35 +1139,6 @@
                                     ></el-option>
                                 </el-select>
                             </div>
-                            <!-- <div
-                                class="col-md-4 form-group"
-                                v-if="
-                                    promotionByPoints &&
-                                        hasPromotionText &&
-                                        listPromotionItems.length > 0
-                                "
-                            >
-                                <label for="promotion">
-                                    Puntos para canjear
-                                    <strong>{{ hasPromotionText }}</strong>
-                                </label>
-                                <el-select
-                                    v-model="form.item_promotion_id"
-                                    filterable
-                                    clearable
-                                    placeholder="Promoción"
-                                    @change="promotionPointsItem"
-                                >
-                                    <el-option
-                                        v-for="(option,
-                                        idx) in listPromotionItems"
-                                        :key="idx"
-                                        :label="option.full_description"
-                                        :value="option.id"
-                                    ></el-option>
-                                </el-select>
-                            </div> -->
-
                             <div
                                 class="col-md-12 form-group"
                                 v-if="promotionDocument && hasPromotionText"
@@ -2291,6 +2194,7 @@ export default {
                 };
             });
         }
+        this.setAmountCash(this.form.total);
 
         // this.filterSeries();
 
@@ -2326,8 +2230,10 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth); // Limpiar el evento al destruir el componente
     },
     methods: {
-        someItemAffected20(){
-            return this.form.items.some(item => item.affectation_igv_type_id == "20");
+        someItemAffected20() {
+            return this.form.items.some(
+                item => item.affectation_igv_type_id == "20"
+            );
         },
         //agragado para poder agregar la cantidad de promociones que se puede canjear
         handleSubmit(updatedPromotionItems) {
@@ -2359,11 +2265,9 @@ export default {
                 item => item.quantity > 0
             );
             validItems.forEach(item => {
-
                 this.form.item_promotion_id = item.id;
 
                 this.promotionPointsItem();
-            
             });
             if (validItems.length === 0) {
             }
@@ -2458,7 +2362,7 @@ export default {
                 }
                 pass = true;
             }
-        
+
             return pass;
         },
         focusObservation() {
@@ -2817,10 +2721,8 @@ export default {
             let { amount, credit_type } = this.chargeCredit;
             if (credit_type == "1") {
                 this.chargeCredit.total_charge = originalTotal * (amount / 100);
-                
             } else {
                 this.chargeCredit.total_charge = Number(amount);
-                
             }
             this.chargeCredit.total_charge = Number(
                 this.chargeCredit.total_charge.toFixed(1)
@@ -3302,7 +3204,6 @@ export default {
             this.hasExceedBank = false;
         },
         async date_of_issue() {
-            
             this.resetForm();
             // this.discount_amount = 0;
             // this.form.customer_id
@@ -3740,17 +3641,17 @@ export default {
         getTotalAffected() {
             let { items } = this.form;
             let total_affected = 0;
-            items.forEach((item) => {
+            items.forEach(item => {
                 if (item.affectation_igv_type_id === "10") {
                     total_affected += item.total_value;
                 }
             });
             return total_affected;
         },
-        getTotalExonerated(){
+        getTotalExonerated() {
             let { items } = this.form;
             let total_exonerated = 0;
-            items.forEach((item) => {
+            items.forEach(item => {
                 if (item.affectation_igv_type_id === "20") {
                     total_exonerated += item.total_value;
                 }
@@ -3841,9 +3742,14 @@ export default {
                 );
                 this.form.subtotal = this.form.total;
             }
-            this.form.enter_amount = this.form.total;
-            this.enterAmount();
-            
+            // para calcular descuentos
+            if ( this.configuration.sale_note_credit_cash &&
+                this.form.document_type_id == "80"
+            ) {
+            } else {
+                this.form.enter_amount = this.form.total;
+                this.enterAmount();
+            }
         },
 
         discountGlobal3() {
@@ -4067,7 +3973,6 @@ export default {
                     ? 0.0
                     : parseFloat(row.total_plastic_bag_taxes);
             });
-            
 
             this.form.total_exportation = _.round(total_exportation, 2);
             this.form.total_taxed = _.round(total_taxed, 2);
@@ -4082,16 +3987,20 @@ export default {
                 total_plastic_bag_taxes,
                 2
             );
-    
-        
 
             // this.form.total = _.round(total, 2)
             this.form.total = _.round(
                 total_charge + total + this.form.total_plastic_bag_taxes,
                 2
             );
-            this.form.enter_amount = this.form.total;
-            this.enterAmount();
+            //para el calculo de venta en descuento global
+            /* if (!(
+                boxes + amount1 < amount2 &&
+                this.form.document_type_id == "80")){
+                this.form.enter_amount = this.form.total;
+                this.enterAmount();
+            } */
+
             if (this.discount_amount) {
                 this.discountGlobal();
             }
@@ -4137,15 +4046,16 @@ export default {
             //     this.form.discounts.splice(index, 1);
             //     this.form.total_discount = 0;
             // }
-            if(this.form.items){
+            if (this.form.items) {
                 for (let index = 0; index < this.form.items.length; index++) {
-                const item = this.form.items[index];
-                item.discounts = [];
+                    const item = this.form.items[index];
+                    item.discounts = [];
 
-                item.total_discount = 0;
-                item.total = item.originalTotal || item.total;
-                item.total_value = item.originalTotalValue || item.total_value;
-            }
+                    item.total_discount = 0;
+                    item.total = item.originalTotal || item.total;
+                    item.total_value =
+                        item.originalTotalValue || item.total_value;
+                }
             }
             this.form.total_discount = 0;
             this.form.discounts = [];
@@ -4219,7 +4129,6 @@ export default {
             this.setAmount(amount);
         },
         async diferen() {
-    
             let differen =
                 (parseFloat(this.form.enter_amount) || 0) +
                 this.totalPayments() -
@@ -4514,490 +4423,11 @@ export default {
                 this.$toast.error(message);
                 return false;
             }
-        },
-        /* async clickPayment(form) {
-            let amount1 = Number(this.form.enter_amount);
-            let amount2 = Number(this.form.total);
-            if (
-                this.configuration.sale_note_credit_cash &&
-                amount1 < amount2 &&
-                this.form.document_type_id == "80"
-            ) {
-                try {
-                    await this.$confirm(
-                        "¿Desear realizar la nota de venta al crédito?",
-                        "Advertencia",
-                        {
-                            confirmButtonText: "Sí",
-                            cancelButtonText: "No",
-                            type: "warning"
-                        }
-                    );
-                } catch (e) {
-                    /* return;
-                }
-            }
-
-            if (this.configuration.auth_discount && this.discount_amount > 0) {
-                this.loading_submit = true;
-                //con async y await deten el flujo por 5 segundos
-                this.loadingText =
-                    "VERIFICANDO AUTORIZACIÓN PARA EL DESCUENTO...";
-                await this.sleep(3000);
-                this.loadingText = "DESCUENTO AUTORIZADO";
-                await this.sleep(2000);
-                this.loadingText = "CARGANDO...";
-                this.loading_submit = false;
-            }
-            if (this.form.promotion_sale) {
-                this.form.document_type_id = "80";
-                this.setSeries();
-            }
-            if (!this.checkBankAccount()) {
-                return;
-            }
-
-            let how_is;
-            this.reCalculateTotal();
-            // return;
-            if (
-                (!this.form.series_id && this.conf.pos_quick_sale) ||
-                this.ordens_all_table
-            ) {
-                this.setSeries();
-            }
-            if (
-                this.configuration.college &&
-                !this.conf.pos_quick_sale &&
-                !this.notRegister
-            ) {
-                if (!this.form.student_id) {
-                    this.$toast.error("El alumno es obligatorio");
-
-                    return;
-                }
-            }
-            if (
-                (form.document_type_id == "01" ||
-                    form.document_type_id == "03") &&
-                form.total <= 0
-            ) {
-                this.$toast.error(
-                    "El monto total no puede ser menor o igual a 0"
-                );
-                return;
-            }
-            if (form.total + 200 <= form.enter_amount) {
-                this.$toast.error(
-                    "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
-                );
-                return;
-            }
-
-            let customer = this.customers.find(c => c.id == form.customer_id);
-
-            if (customer == undefined) {
-                console.log("entrando...");
-                await this.reloadDataCustomers(form.customer_id);
-                customer = this.customers.find(c => c.id == form.customer_id);
-            }
-
-            if (
-                form.customer_telephone != null &&
-                form.customer_telephone != ""
-            ) {
-                if (!this.existNumber()) {
-                    this.$toast.error("Número para envío whatsapp inválido");
-                    return;
-                }
-            }
-            if (form.customer_id == null || form.customer_id == "") {
-                return this.$toast.error("Elija un cliente");
-            }
-            if (
-                customer.identity_document_type_id == "1" &&
-                form.document_type_id == "01"
-            ) {
-                return this.$toast.error("No puede emitir Factura con DNI");
-            }
-            if (!form.series_id) {
-                return this.$toast.warning(
-                    "El establecimiento no tiene series disponibles para el comprobante"
-                );
-            }
-            // form.date_of_issue = moment().format("YYYY-MM-DD");
-            if (form.document_type_id === "80") {
-                form.prefix = "NV";
-
-                form.paid = this.form.total == this.form.enter_amount;
-                this.resource_documents = "sale-notes";
-                this.resource_payments = "sale_note_payments";
-                this.resource_options = this.resource_documents;
-            } else {
-                form.prefix = null;
-                this.resource_documents = "documents";
-                this.resource_payments = "document_payments";
-                this.resource_options = this.resource_documents;
-            }
-            if (this.orden != null) {
-                form.additional_information = `Orden N°${this.orden}`;
-            }
-            form.advances = 0.0;
-            form.total_advances = 0.0;
-            form.total_payment = form.total - (amount2 - amount1);
-
-            // {
-            //     payment_method_type_id: "01",
-            //     date_of_payment: form.date_of_issue,
-            //     payment: this.form.enter_amount,
-            // }
-            form.cash_id = this.cash_id;
-            if (this.form.payment_condition_id == "01") {
-                form.boxes = this.currentPayments;
-                if (this.form_payment.is_bank) {
-                    this.changeBankAccount();
-                }
-            } else {
-                let isOk = this.checkPaymentsIsOk();
-                if (!isOk) {
-                    this.$toast.error("Las cuotas no coinciden con el total");
-                    return;
-                }
-            }
-
-            if (this.form.payment_condition_id !== "01") {
-                form.fee = this.currentPayments.map(b => ({
-                    id: null,
-                    currency_type_id: "PEN",
-                    amount: b.amount,
-                    date: b.date
-                }));
-                form.payment_condition_id = "02";
-            } else {
-                this.addPayment();
-                if (this.configuration.require_code) {
-                    if (!this.verifyHasOperationNumber()) {
-                        this.currentPayments.pop();
-                        this.enterAmount();
-                        return;
-                    } else {
-                        if (
-                            this.currentPayments
-                                .filter(p =>
-                                    this.methodsValidate.includes(p.method)
-                                )
-                                .map(p => ({
-                                    method: p.method,
-                                    operation_number: p.operation_number
-                                })).length > 0
-                        ) {
-                            if (
-                                !(await this.validOperationNumber({
-                                    payments: this.currentPayments
-                                        .filter(p =>
-                                            this.methodsValidate.includes(
-                                                p.method
-                                            )
-                                        )
-                                        .map(p => ({
-                                            method: p.method,
-                                            operation_number: p.operation_number
-                                        }))
-                                }))
-                            ) {
-                                this.currentPayments.pop();
-                                this.method_payment("Efectivo");
-                                if (this.currentPayments.length == 0) {
-                                    this.form.enter_amount = this.form.total;
-                                }
-                                this.enterAmount();
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.checkLimitReceipt()) {
-                this.$toast.error(
-                    "Las boletas mayores a 699 deben tener un dni o ruc válido."
-                );
-                return;
-            }
-            this.verifyBoxesDuplicate();
-            if (this.form.boxes) {
-                form.payments = this.form.boxes.map(p => ({
-                    payment_method_type_id: p.method_payment_id,
-                    date_of_payment: form.date_of_issue,
-                    payment: p.amount
-                }));
-            }
-            if (this.quotationId) {
-                form.quotation_id = this.quotationId;
-            }
-            this.loading_submit = true;
-            this.button_payment = true;
-
-            this.form.items = this.form.items.filter(
-                item => Number(item.quantity) > 0
-            );
-            if (this.isConsignment) {
-                this.form.from_consignment = true;
-            }
-
-            try {
-                let ordenId = this.idOrden;
-
-                let hotels = this.configuration.hotels;
-                let printOrdenHotel = true;
-
-                if (hotels) {
-                    let resultado =
-                        this.form.is_room !== undefined &&
-                        this.form.promotion_sale !== undefined
-                            ? this.form.is_room && this.form.promotion_sale
-                            : false;
-                    printOrdenHotel = resultado;
-                }
-
-        
-                if (
-                    (ordenId == undefined || ordenId == null) &&
-                    (form.variation == undefined ||
-                        form.variation == null ||
-                        form.variation == false) &&
-                    !this.conf.pos_quick_sale &&
-                    !this.ordens_all_table &&
-                    printOrdenHotel
-                ) {
-                    const responses = await this.$http.post(
-                        "/caja/worker/send-orden",
-                        this.orden_items
-                    );
-                    ordenId = responses.data.id;
-                    if (responses.status != 200) {
-                        return;
-                    }
-                }
-                form.orden_id = ordenId;
-                if (this.ordens_all_table) {
-                    form.all_ordens = true;
-                }
-                // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
-                if (this.sumCoins.length > 0) {
-                    form.sumCoins = this.sumCoins;
-                }
-                const response = await this.$http.post(
-                    `/${this.resource_documents}`,
-                    form
-                );
-                let { data } = response;
-                if (response.status == 200 && data.data) {
-                    let format = null;
-                    let data = response.data.data;
-                    switch (data.format_printer) {
-                        case 1:
-                            format = data.print_a4;
-                            break;
-                        case 2:
-                            format = data.print_a5;
-                            break;
-                        default:
-                            format = data.print_ticket;
-                            break;
-                    }
-                    if (this.printer && format && this.printerOn == 1) {
-                        // this.printerDocument(this.printer,format)
-                        //this.$emit("printer",this.printer,format,1);
-                    }
-                    this.operation_number = null;
-                    if (response.data.success == true) {
-                        let document_id = 0;
-                        if (form.document_type_id === "80") {
-                            this.number = response.data.data.number;
-                            document_id = response.data.data.id;
-                            this.form_cash_document.sale_note_id =
-                                response.data.data.id;
-                        } else {
-                            document_id = response.data.data.id;
-                            this.form_cash_document.document_id =
-                                response.data.data.id;
-                            this.number = response.data.data.number;
-                        }
-                        this.documentNewId = response.data.data.id;
-
-                        if (response.data.success == true) {
-                            if (this.configuration.all_items_pos) {
-                                this.$emit("reloadItems");
-                            }
-                            /* let customer = this.all_customers.find(
-                                c => c.id == form.customer_id
-                            ); 
-
-                            if (ordenId) {
-                                if (
-                                    this.configuration.college &&
-                                    this.form.student_id
-                                ) {
-                                    const registerCollegeResponse = await this.$http.post(
-                                        "/college/registers/sale",
-                                        {
-                                            is_sale_note:
-                                                form.document_type_id == "80",
-                                            document_id: this.documentNewId,
-                                            detail: {
-                                                items: this.form.items.map(
-                                                    s => s.item
-                                                )
-                                            },
-                                            student_id: this.form.student_id
-                                        }
-                                    );
-                                }
-
-                                if (
-                                    this.configuration.consignment &&
-                                    this.consignment_id &&
-                                    this.isConsignment
-                                ) {
-                                    const consigmentLiquidate = await this.$http.post(
-                                        `/consignment/liquidated`,
-                                        {
-                                            id: this.consignment_id,
-                                            items: this.form.items.map(i => ({
-                                                consignment_item_id:
-                                                    i.consignment_item_id,
-                                                toWarehouse: i.toWarehouse,
-                                                quantity: i.quantity
-                                            })),
-                                            document_id: this.documentNewId,
-                                            document_type_id:
-                                                form.document_type_id
-                                        }
-                                    );
-                                    if (consigmentLiquidate.status == 200) {
-                                        this.$toast.success(
-                                            "Liquidación de consignación realizada."
-                                        );
-                                    }
-                                }
-                                const response2 = await this.$http.post(
-                                    "pos/orden_payment",
-                                    {
-                                        id: ordenId,
-                                        customer_id: customer.id,
-                                        document: {
-                                            isNoteSale:
-                                                form.document_type_id === "80",
-                                            id: this.documentNewId
-                                        }
-                                    }
-                                );
-
-                                if (this.configuration.promotions_sell) {
-                                    how_is = this.all_customers.find(
-                                        c => c.id == form.customer_id
-                                    );
-                                    if (!how_is.name.includes("VARIOS")) {
-                                        let itemspromo = form.items;
-
-                                        const procesarOferta = await axios.post(
-                                            `pos/processPromo`,
-                                            {
-                                                itemspromo,
-                                                how_is
-                                            }
-                                        );
-                                    }
-                                }
-
-                                if (response2.data.success == true) {
-                                    if (this.form.customer_telephone) {
-                                        if (this.personalWhatsapp) {
-                                            await this.$emit("getFile", {
-                                                total: this.form.total,
-                                                documentId: this.documentNewId,
-                                                documentTypeId:
-                                                    form.document_type_id,
-                                                number: this.form
-                                                    .customer_telephone,
-                                                message: this.form.message
-                                            });
-                                        } else {
-                                            await this.clickSendWhatsapp(
-                                                form.document_type_id,
-                                                this.documentNewId,
-                                                this.number,
-                                                form
-                                            );
-                                        }
-                                        this.$emit("limpiarForm");
-                                        this.loading_submit = false;
-                                        this.$emit("removeConsignment");
-
-                                        this.back(true);
-                                    } else {
-                                        this.$emit("limpiarForm");
-                                        this.loading_submit = false;
-                                        this.$emit("removeConsignment");
-                                        this.back(true);
-                                    }
-                                } else {
-                                    console.log(response2);
-                                }
-                            } else {
-                                if (this.conf.pos_quick_sale) {
-                                    this.$toast.success("Venta realizada.");
-                                }
-                                if (this.form.customer_telephone) {
-                                    if (this.personalWhatsapp) {
-                                        await this.$emit("getFile", {
-                                            total: this.form.total,
-                                            documentId: this.documentNewId,
-                                            documentTypeId:
-                                                form.document_type_id,
-                                            number: this.form
-                                                .customer_telephone,
-                                            message: this.form.message
-                                        });
-                                    } else {
-                                        await this.clickSendWhatsapp(
-                                            form.document_type_id,
-                                            this.documentNewId,
-                                            this.number,
-                                            form
-                                        );
-                                    }
-                                }
-                                this.$emit("limpiarForm");
-                                this.$emit("removeConsignment");
-                                this.loading_submit = false;
-
-                                this.back(true);
-                            }
-                        }
-                    }
-                } else {
-                    this.loading_submit = true;
-                    let {
-                        data: { message }
-                    } = response;
-                    this.$toast.error(message || "Ocurrió un error");
-                    this.loading_submit = false;
-                }
-            } catch (error) {
-                console.log(error);
-                const response = error.response;
-                let {
-                    data: { message }
-                } = response;
-
-                this.$toast.error(message || "Ocurrió un error");
-                this.loading_submit = false;
-            } finally {
-                this.button_payment = false;
-            }
-        }, */
-        async clickPayment(form) {
+        }, 
+                    
+    async clickPayment(
+            form
+        ) {
             let boxes = this.currentPayments.reduce(
                 (a, b) => a + Number(b.amount),
                 0
@@ -5478,7 +4908,6 @@ export default {
                 this.button_payment = false;
             }
         },
-
         async clickPrintPos(printerName, formatoPdf, userId = null) {
             try {
                 let config = qz.configs.create(
