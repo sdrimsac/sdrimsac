@@ -103,97 +103,99 @@ class Template
             $footer_text = $config->footer_text;
             $detail_points = [];
             $detail_message = [];
-            if ($configuration->promotions_by_points || $configuration->is_promotion_document) {
-                if ($configuration->promotions_by_points) {
-                    $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
-                        ->select('total', 'promotion_customer_id');
+            if ($document->document_type_id == '80' || $document->document_type_id == '03' || $document->document_type_id == '01') {
+                if ($configuration->promotions_by_points || $configuration->is_promotion_document) {
+                    if ($configuration->promotions_by_points) {
+                        $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
+                            ->select('total', 'promotion_customer_id');
 
-                    // Calcular puntos del documento actual
-                    $currentDocumentPoints = (clone $baseQuery)
-                        ->where($document_type, $document->id)
-                        ->get()
-                        ->sum(function ($row) {
-                            $promotion_document = $row->promotion_customer->promotion_document;
-                            return ($row->total / $promotion_document->total) * $promotion_document->points_value;
-                        });
+                        // Calcular puntos del documento actual
+                        $currentDocumentPoints = (clone $baseQuery)
+                            ->where($document_type, $document->id)
+                            ->get()
+                            ->sum(function ($row) {
+                                $promotion_document = $row->promotion_customer->promotion_document;
+                                return ($row->total / $promotion_document->total) * $promotion_document->points_value;
+                            });
 
-                    $detail_points['total_document_points'] = $currentDocumentPoints;
+                        $detail_points['total_document_points'] = $currentDocumentPoints;
 
-                    // Calcular puntos acumulados
-                    $type_promotion = PromotionDocumentCustomerDetail::where($document_type, $document->id)
-                        ->first();
-                    $accumulatedPoints = $type_promotion->promotion_customer->points;
-                    // $accumulatedPoints = $baseQuery
-                    //     ->whereHas('promotion_customer', function ($query) use ($document) {
-                    //         $query->where('customer_id', $document->customer_id);
-                    //     })
-                    //     ->get()
-                    //     ->sum(function ($row) {
-                    //         $promotion_document = $row->promotion_customer->promotion_document;
-                    //         return ($row->total / $promotion_document->total) * $promotion_document->points_value;
-                    //     });
-
-                    // $detail_points['acc_points'] = $accumulatedPoints;
-                    $points_before_detail = $type_promotion->getPointBeforeDetail($type_promotion->id);
-                    $detail_points['acc_points'] = $points_before_detail + $currentDocumentPoints;
-                    // $detail_points['points_before_detail'] = $points_before_detail;
-                    $detail_points['is_points'] = true;
-                } else {
-                    $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
-                        ->select('total', 'promotion_customer_id');
-
-                    $currentPromotionDetail = (clone $baseQuery)
-                        ->from('promotion_document_customer_detail')
-                        ->join('promotion_document_customers', 'promotion_document_customer_detail.promotion_customer_id', '=', 'promotion_document_customers.id')
-                        ->where($document_type, $document->id)
-                        ->where('promotion_document_customers.active', 1)
-                        ->first();
-
-                    if ($currentPromotionDetail) {
-                        $promotion_document = $currentPromotionDetail->promotion_customer->promotion_document;
-                        $limit_changes = $promotion_document->limit_changes;
-                        $promotion_document_total = $promotion_document->total;
-                        $promotion_document_description = $promotion_document->description;
-                        $promotion_document_id = $promotion_document->id;
                         // Calcular puntos acumulados
-                        $counts = (clone $baseQuery)
+                        $type_promotion = PromotionDocumentCustomerDetail::where($document_type, $document->id)
+                            ->first();
+                        $accumulatedPoints = $type_promotion->promotion_customer->points;
+                        // $accumulatedPoints = $baseQuery
+                        //     ->whereHas('promotion_customer', function ($query) use ($document) {
+                        //         $query->where('customer_id', $document->customer_id);
+                        //     })
+                        //     ->get()
+                        //     ->sum(function ($row) {
+                        //         $promotion_document = $row->promotion_customer->promotion_document;
+                        //         return ($row->total / $promotion_document->total) * $promotion_document->points_value;
+                        //     });
 
-                            ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
-                                $query->where('customer_id', $document->customer_id)
-                                    ->where('acc_total', $promotion_document_total)
-                                    ->where('active', 1)
-                                    ->where('promotion_document_id', $promotion_document_id);
-                            })
-                            ->count();
-                        $counts_desactive = (clone $baseQuery)
-                            ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
-                                $query->where('customer_id', $document->customer_id)
-                                    ->where('acc_total', $promotion_document_total)
-                                    ->where('active', 0)
-                                    ->where('promotion_document_id', $promotion_document_id);
-                            })
-                            ->count();
-                        // $to_log = [
-                        //     'counts' => $counts,
-                        //     'limit_changes' => $limit_changes,
-                        //     'count_desactive' => $counts_desactive
-                        // ];
-                        // Log::info(json_encode($to_log));
-                        if ($counts > $limit_changes) {
-                            $counts = $limit_changes;
-                        }
-                        $counts = $counts - $counts_desactive;
-                        // $to_log = [
-                        //     'counts' => $counts,
-                        //     'counts_desactive' => $counts_desactive
-                        // ];
-                        // Log::info(json_encode($to_log));
-                        if ($counts > 0) {
-                            $detail_message['message'] = "Puede canjear " . $counts . " de la promoción " . $promotion_document_description;
-                        }
+                        // $detail_points['acc_points'] = $accumulatedPoints;
+                        $points_before_detail = $type_promotion->getPointBeforeDetail($type_promotion->id);
+                        $detail_points['acc_points'] = $points_before_detail + $currentDocumentPoints;
+                        // $detail_points['points_before_detail'] = $points_before_detail;
+                        $detail_points['is_points'] = true;
                     } else {
-                        $promotion_document_total = 0;
-                        $promotion_document_description = '';
+                        $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
+                            ->select('total', 'promotion_customer_id');
+
+                        $currentPromotionDetail = (clone $baseQuery)
+                            ->from('promotion_document_customer_detail')
+                            ->join('promotion_document_customers', 'promotion_document_customer_detail.promotion_customer_id', '=', 'promotion_document_customers.id')
+                            ->where($document_type, $document->id)
+                            ->where('promotion_document_customers.active', 1)
+                            ->first();
+
+                        if ($currentPromotionDetail) {
+                            $promotion_document = $currentPromotionDetail->promotion_customer->promotion_document;
+                            $limit_changes = $promotion_document->limit_changes;
+                            $promotion_document_total = $promotion_document->total;
+                            $promotion_document_description = $promotion_document->description;
+                            $promotion_document_id = $promotion_document->id;
+                            // Calcular puntos acumulados
+                            $counts = (clone $baseQuery)
+
+                                ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
+                                    $query->where('customer_id', $document->customer_id)
+                                        ->where('acc_total', $promotion_document_total)
+                                        ->where('active', 1)
+                                        ->where('promotion_document_id', $promotion_document_id);
+                                })
+                                ->count();
+                            $counts_desactive = (clone $baseQuery)
+                                ->whereHas('promotion_customer', function ($query) use ($document, $promotion_document_id, $promotion_document_total) {
+                                    $query->where('customer_id', $document->customer_id)
+                                        ->where('acc_total', $promotion_document_total)
+                                        ->where('active', 0)
+                                        ->where('promotion_document_id', $promotion_document_id);
+                                })
+                                ->count();
+                            // $to_log = [
+                            //     'counts' => $counts,
+                            //     'limit_changes' => $limit_changes,
+                            //     'count_desactive' => $counts_desactive
+                            // ];
+                            // Log::info(json_encode($to_log));
+                            if ($counts > $limit_changes) {
+                                $counts = $limit_changes;
+                            }
+                            $counts = $counts - $counts_desactive;
+                            // $to_log = [
+                            //     'counts' => $counts,
+                            //     'counts_desactive' => $counts_desactive
+                            // ];
+                            // Log::info(json_encode($to_log));
+                            if ($counts > 0) {
+                                $detail_message['message'] = "Puede canjear " . $counts . " de la promoción " . $promotion_document_description;
+                            }
+                        } else {
+                            $promotion_document_total = 0;
+                            $promotion_document_description = '';
+                        }
                     }
                 }
             }
