@@ -1718,7 +1718,15 @@ class SaleNoteController extends Controller
                 }
                 $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
 
-
+                if ($request->receive_promotion) {
+                    $this->updatePromotion($this->sale_note);
+                }
+                if ($request->promotion_id) {
+                    $this->savePromotion(
+                        $this->sale_note,
+                        $request->promotion_id
+                    );
+                }
                 $this->setFilename();
                 $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
                 $paid = $request->paid;
@@ -1841,15 +1849,7 @@ class SaleNoteController extends Controller
                 $message = "Se ha generado un documento con variación para la habitación " . $room . " por S/" . $total_variation . " Total Original: S/" . $total_original . "" . ($is_discount ? " (Descuento)" : " (Recargo)");
                 (new WhatsappController)->sendMessageAll($message);
             }
-            if ($request->receive_promotion) {
-                $this->updatePromotion($this->sale_note);
-            }
-            if ($request->promotion_id) {
-                $this->savePromotion(
-                    $this->sale_note,
-                    $request->promotion_id
-                );
-            }
+        
             if ($this->sale_note->creditPayments) {
                 $this->sale_note->calculatePenalties();
             }

@@ -111,13 +111,17 @@ trait PromotionDocumentTrait
             $query->where('promotion_document_id', $promotion_id)
                 ->where('customer_id', $customer_id);
         });
+
         if ($configuration->promotions_by_points) {
-            $changes = $changes->count();
+            $changes = $changes->groupBy('item_id')
+            ->selectRaw('item_id, count(*) as total')
+            ->get()
+            ->count();
         } else {
             $changes = $changes->distinct('promotion_document_customer_id')
                 ->count('promotion_document_customer_id');
         }
-        return $changes < $limit_changes;
+        return $changes <= $limit_changes;
     }
     private function desactivePromotionCustomer($customer_id, $promotion_id)
     {

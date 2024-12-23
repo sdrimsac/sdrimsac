@@ -110,7 +110,6 @@ class ReportPromotionController extends Controller
             $query->where('is_points', $configuration->promotions_by_points);
         });
         $period = $this->getDatesOfPeriod($request);
-        Log::info(json_encode($period));
         $person_id = $request->person_id;
         if ($period['d_start'] && $period['d_end']) {
             $d_start = Carbon::parse($period['d_start'])->startOfDay();
@@ -129,14 +128,31 @@ class ReportPromotionController extends Controller
         $configuration = Configuration::first();
         $company = Company::first();
         $records = $this->getRecords($request)->get()->transform(function ($row) {
+            $changeInfo = $this->checkLimit($row->promotion_document_id, $row->customer_id);
+            $receiveds = PromotionReceived::where('promotion_document_customer_id', $row->id)->get()->transform(function ($received) {
+                $item = $received->promotion_document_customer->promotion_document->items->where('item_id', $received->item_id)->first();
+                $points = $item->points_value;
+                return [
+                    'product' => $received->item->description,
+                    'quantity' => $received->quantity,
+                    'date' => $received->created_at->format('d/m/Y'),
+                    'time' => $received->created_at->format('H:i:s'),
+                    'seller' => isset($received->user) ? $received->user->name : '-',
+                    'points' => $points
+                ];
+            });
+
             return (object) [
                 'id' => $row->id,
                 'customer_name' => $row->customer->name,
                 'promotion_name' => $row->promotion_document->description,
                 'points' => $row->points,
                 'acc_total' => $row->acc_total,
+                'receiveds' => $receiveds,
+                'change_count' => $changeInfo['change_count']
             ];
         });
+
         $establishment = Establishment::first();
         $pdf = PDF::loadView('report::promotions.report_pdf', compact("records", "company", "establishment"))
             ->setPaper('a4', 'landscape');
@@ -146,20 +162,61 @@ class ReportPromotionController extends Controller
         return $pdf->stream($filename . '.pdf');
     }
 
+    public function checkLimit($promotion_id, $customer_id)
+    {
+        $configuration = Configuration::first();
+        if (!$configuration->promotions_by_points) return true;
+        $promotion_document = PromotionDocument::find($promotion_id);
+        $limit_changes = $promotion_document->limit_changes;
+        $changes = PromotionReceived::whereHas('promotion_document_customer', function ($query) use ($promotion_id, $customer_id) {
+            $query->where('promotion_document_id', $promotion_id)
+                ->where('customer_id', $customer_id);
+        });
 
+        if ($configuration->promotions_by_points) {
+            $changes = $changes->groupBy('item_id')
+                ->selectRaw('item_id, count(*) as total')
+                ->get()
+                ->count();
+        } else {
+            $changes = $changes->distinct('promotion_document_customer_id')
+                ->count('promotion_document_customer_id');
+        }
+
+        return [
+            'within_limit' => $changes <= $limit_changes,
+            'change_count' => $changes
+        ];
+    }
 
     public function excel(Request $request)
     {
-
         $records = $this->getRecords($request)->get()->transform(function ($row) {
-            return  (object)[
+            $changeInfo = $this->checkLimit($row->promotion_document_id, $row->customer_id);
+            $receiveds = PromotionReceived::where('promotion_document_customer_id', $row->id)->get()->transform(function ($received) {
+                $item = $received->promotion_document_customer->promotion_document->items->where('item_id', $received->item_id)->first();
+                $points = $item->points_value;
+                return [
+                    'product' => $received->item->description,
+                    'quantity' => $received->quantity,
+                    'date' => $received->created_at->format('d/m/Y'),
+                    'time' => $received->created_at->format('H:i:s'),
+                    'seller' => isset($received->user) ? $received->user->name : '-',
+                    'points' => $points
+                ];
+            });
+
+            return (object) [
                 'id' => $row->id,
                 'customer_name' => $row->customer->name,
                 'promotion_name' => $row->promotion_document->description,
                 'points' => $row->points,
                 'acc_total' => $row->acc_total,
+                'receiveds' => $receiveds,
+                'change_count' => $changeInfo['change_count']
             ];
         });
+
         $company = Company::first();
 
         return (new ReportPromotionDocumentExport)

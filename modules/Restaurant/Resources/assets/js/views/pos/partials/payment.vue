@@ -2231,6 +2231,7 @@ export default {
     },
     methods: {
         someItemAffected20() {
+            if (!this.form.items) return false;
             return this.form.items.some(
                 item => item.affectation_igv_type_id == "20"
             );
@@ -2988,6 +2989,9 @@ export default {
                             this.hasPromotionText = data.message;
                             this.listPromotionItems = data.items;
                             /* console.log("ver si esta llegando los items a este filla", this.listPromotionItems); */
+                        }else{
+                            this.hasPromotionText = null;
+                            this.listPromotionItems = [];
                         }
                     }
                 });
@@ -3012,6 +3016,7 @@ export default {
                 });
         },
         changeCustomer() {
+            this.hasPromotionText = null;
             this.form.student_id = null;
             this.students = [];
             this.form.customer_id = this.value;

@@ -164,11 +164,57 @@ export default {
                     this.$set(promotion, "quantity", 0);
                 }
             });
+
+            this.distributePoints(parseInt(this.hasPromotionText));
+
             console.log(
                 "ver pasar los item relacionados con la promocion seleccionada",
                 this.listPromotionItems
             );
             console.log("ver si tiene promocion", this.hasPromotionText);
+        },
+        distributePoints(totalPoints) {
+            let remainingPoints = totalPoints;
+            console.log("puntos iniciales", remainingPoints);
+
+            // Distribución equitativa inicial
+            remainingPoints = this.distributeEqualPoints(remainingPoints);
+            console.log("puntos restantes después de distribución igual", remainingPoints);
+
+            // Distribuir puntos restantes
+            if (remainingPoints > 0) {
+                remainingPoints = this.distributeRemainingPoints(remainingPoints);
+            }
+
+            console.log("puntos restantes finales", remainingPoints);
+        },
+        distributeEqualPoints(points) {
+            const numPromotions = this.listPromotionItems.length;
+            const pointsPerPromotion = Math.floor(points / numPromotions);
+
+            this.listPromotionItems.forEach(promotion => {
+                let pointsValue = parseInt(promotion.points_value);
+                promotion.quantity = Math.floor(pointsPerPromotion / pointsValue);
+                points -= promotion.quantity * pointsValue;
+            });
+
+            return points;
+        },
+        distributeRemainingPoints(points) {
+            const sortedPromotions = [...this.listPromotionItems].sort((a, b) => 
+                parseInt(a.points_value) - parseInt(b.points_value)
+            );
+
+            for (let promotion of sortedPromotions) {
+                let pointsValue = parseInt(promotion.points_value);
+                if (points >= pointsValue) {
+                    let additionalQuantity = Math.floor(points / pointsValue);
+                    promotion.quantity += additionalQuantity;
+                    points -= additionalQuantity * pointsValue;
+                }
+            }
+
+            return points;
         },
         close() {
             this.resetPromotions();

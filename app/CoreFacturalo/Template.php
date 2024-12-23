@@ -6,6 +6,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionDocumentCustomerDetail;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -119,17 +120,23 @@ class Template
                     $detail_points['total_document_points'] = $currentDocumentPoints;
 
                     // Calcular puntos acumulados
-                    $accumulatedPoints = $baseQuery
-                        ->whereHas('promotion_customer', function ($query) use ($document) {
-                            $query->where('customer_id', $document->customer_id);
-                        })
-                        ->get()
-                        ->sum(function ($row) {
-                            $promotion_document = $row->promotion_customer->promotion_document;
-                            return ($row->total / $promotion_document->total) * $promotion_document->points_value;
-                        });
+                    $type_promotion = PromotionDocumentCustomerDetail::where($document_type, $document->id)
+                        ->first();
+                    $accumulatedPoints = $type_promotion->promotion_customer->points;
+                    // $accumulatedPoints = $baseQuery
+                    //     ->whereHas('promotion_customer', function ($query) use ($document) {
+                    //         $query->where('customer_id', $document->customer_id);
+                    //     })
+                    //     ->get()
+                    //     ->sum(function ($row) {
+                    //         $promotion_document = $row->promotion_customer->promotion_document;
+                    //         return ($row->total / $promotion_document->total) * $promotion_document->points_value;
+                    //     });
 
-                    $detail_points['acc_points'] = $accumulatedPoints;
+                    // $detail_points['acc_points'] = $accumulatedPoints;
+                    $points_before_detail = $type_promotion->getPointBeforeDetail($type_promotion->id);
+                    $detail_points['acc_points'] = $points_before_detail + $currentDocumentPoints;
+                    // $detail_points['points_before_detail'] = $points_before_detail;
                     $detail_points['is_points'] = true;
                 } else {
                     $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])
