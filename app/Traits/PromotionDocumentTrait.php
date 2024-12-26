@@ -39,7 +39,8 @@ trait PromotionDocumentTrait
         $points_to_subtract = 0;
         $items = $document->items;
         foreach ($items as $item) {
-            if ($item->item->is_promotion) {
+        
+            if (isset($item->item->is_promotion) && $item->item->is_promotion) {
                 $item_promotion = PromotionDocumentItem::where('item_id', $item->item_id)
                     ->whereHas('promotion_document', function ($query) use ($promotion_document_id) {
                         $query->where('is_points', true);

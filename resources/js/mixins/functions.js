@@ -162,7 +162,7 @@ export const exchangeRate = {
             }
 
             let num = Number(data);
-            return isNaN(num ? 1 : num);
+            return isNaN(num) ? 1 : num;
         }
     }
 };

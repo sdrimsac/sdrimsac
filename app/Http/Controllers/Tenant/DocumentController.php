@@ -93,6 +93,7 @@ use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
+use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Summary;
@@ -675,7 +676,7 @@ class DocumentController extends Controller
         // return compact('customers', 'establishments', 'series', 'document_types_invoice', 'document_types_note',
         //                'note_credit_types', 'note_debit_types', 'currency_types', 'operation_types',
         //                'discount_types', 'charge_types', 'company', 'document_type_03_filter');
-
+        $promotions_document = PromotionDocument::where('active', true)->get();
         $payment_destinations = Cash::where('state', 1)->get()->transform(function ($cash) {
 
             return [
@@ -688,6 +689,7 @@ class DocumentController extends Controller
 
         return compact(
             'sellers',
+            'promotions_document',
             'exchange_rate_sale',
             'customers',
             'establishments',
@@ -1401,6 +1403,12 @@ class DocumentController extends Controller
                 ],
             ];
         } catch (Exception $e) {
+            Log::error(json_encode([
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]));
             DB::connection('tenant')->rollBack();
             return [
                 'success' => false,

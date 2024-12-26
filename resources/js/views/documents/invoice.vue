@@ -417,7 +417,7 @@
                                     }"
                                 >
                                     <!--<label class="control-label">Fecha de emisión</label>-->
-                                    <label class="control-label">
+                                    <label class="control-label w-100">
                                         <i
                                             class="fas fa-calendar-check red-icon fa-lg"
                                         ></i>
@@ -449,7 +449,7 @@
                                         'has-danger': errors.date_of_due
                                     }"
                                 >
-                                    <label class="control-label">
+                                    <label class="control-label w-100">
                                         <i
                                             class="fas fa-calendar-check red-icon fa-lg"
                                         ></i>
@@ -571,6 +571,66 @@
                                         v-text="errors.seller_id[0]"
                                     ></small>
                                 </div>
+                            </div>
+                            <div class="col-lg-2" v-if="configuration.promotions_by_points || configuration.is_promotion_document">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.promotion_id
+                                    }"
+                                >
+                                <label for="promotion" class="w-100 fw-bold"
+                                >Promoción</label
+                            >
+                            <div class="d-flex justify-content-center">
+                                <el-select
+                                    :disabled="isClientesVarios()"
+                                    v-model="form.promotion_id"
+                                    filterable
+                                    clearable
+                                    placeholder="Promoción"
+                                    @change="changePromotion"
+                                >
+                                    <el-option
+                                        v-for="(option,
+                                        idx) in promotions_document"
+                                        :key="idx"
+                                        :label="option.description"
+                                        :value="option.id"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-lg-2"
+                                v-if="promotionDocument && hasPromotionText"
+                            >
+                                <br />
+                                <el-checkbox
+                                    @change="receivePromotion"
+                                    v-model="form.receive_promotion"
+                                >
+                                </el-checkbox>
+                                Aplicar promoción |
+                                {{ hasPromotionText }}
+                            </div>
+                            <br />
+                            <div
+                                class="col-md-2 form-group text-center"
+                                v-if="
+                                    promotionByPoints &&
+                                        hasPromotionText &&
+                                        listPromotionItems.length > 0
+                                "
+                            >
+                                <el-button
+                                    @click="Promotion()"
+                                    type="primary"
+                                    size="small"
+                                >
+                                    Promocion
+                                </el-button>
                             </div>
                             <div class="col-lg-2" v-if="show_restriction == 1">
                                 <div
@@ -1454,13 +1514,13 @@
                                                         ></div>
                                                     </template>
                                                     {{
-                                                        row.item.presentation.hasOwnProperty(
+                                                        row.item.presentation ? row.item.presentation.hasOwnProperty(
                                                             "description"
                                                         )
                                                             ? row.item
                                                                   .presentation
                                                                   .description
-                                                            : ""
+                                                            : "" : ""
                                                     }}<br /><small>{{
                                                         row.affectation_igv_type
                                                             .description
@@ -1961,6 +2021,14 @@
                 :total="form.total"
                 @addDocumentDetraction="addDocumentDetraction"
             ></document-detraction>
+            <Promotion-Box
+            :showDialog.sync="showDialogPromotionBox"
+            :listPromotionItems="listPromotionItems"
+            :hasPromotionText="hasPromotionText"
+            @update:showDialog="showDialog = $event"
+            @submit="handleSubmit"
+        >
+        </Promotion-Box>
         </div>
     </div>
 </template>
@@ -1987,7 +2055,7 @@ import DocumentOptions from "../documents/partials/options.vue";
 import { functions, exchangeRate } from "../../mixins/functions";
 import { calculateRowItem } from "../../helpers/functions";
 import Logo from "../companies/logo.vue";
-
+const PromotionBox = () => import("../../../../modules/Restaurant/Resources/assets/js/views/pos/partials/promotion_box.vue");
 export default {
     props: ["id", "typeUser", "configuration", "documentinfo"],
     components: {
@@ -1995,11 +2063,14 @@ export default {
         DocumentFormItem,
         PersonForm,
         DocumentOptions,
-        Logo
+        Logo,
+        PromotionBox
     },
     mixins: [functions, exchangeRate],
     data() {
         return {
+            showDialogPromotionBox: false,
+            promotions_document:[],
             readonly_date_of_due: false,
             sellers: [],
             editandoDocument: false,
@@ -2076,10 +2147,19 @@ export default {
             percentage_igv: null,
             showClose: false,
             loader: false,
-            text_loader: "Espere porfavor...."
+            text_loader: "Espere porfavor....",
+            hasPromotionText: null,
+            listPromotionItems: [],
         };
     },
-
+    computed: {
+        promotionByPoints() {
+            return this.configuration.promotions_by_points;
+        },
+        promotionDocument() {
+            return this.configuration.is_promotion_document;
+        },
+    },
     async created() {
         await this.initForm();
 
@@ -2113,6 +2193,14 @@ export default {
         // await this.initForm();
 
         await this.$http.get(`/documents/tables`).then(response => {
+            this.promotions_document = response.data.promotions_document.filter(
+                    p => {
+                        if (this.configuration.promotions_by_points) {
+                            return p.is_points;
+                        }
+                        return !p.is_points;
+                    }
+                );
             this.sellers = response.data.sellers;
             this.show_restriction =
                 response.data.configuration.show_restriction;
@@ -2261,6 +2349,218 @@ export default {
     },
 
     methods: {
+        handleSubmit(updatedPromotionItems) {
+            this.listPromotionItems = updatedPromotionItems;
+            this.applySelectedPromotions();
+        },
+        applySelectedPromotions() {
+            const validItems = this.listPromotionItems.filter(
+                item => item.quantity > 0
+            );
+            validItems.forEach(item => {
+                this.form.item_promotion_id = item.id;
+
+                this.promotionPointsItem();
+            });
+            if (validItems.length === 0) {
+            }
+        },
+        Promotion() {
+            this.showDialogPromotionBox = true;
+        },
+        addFreeItem(i) {
+        
+            let affectation_igv_type_id = this.getFreeAfectation(
+                i.sale_affectation_igv_type_id
+            );
+            let item = {
+                ...i,
+                warehouse_id: null,
+                item: i,
+                item_id: i.id,
+                unit_value: 0,
+                quantity: i.quantity,
+                aux_quantity: i.quantity,
+                total_base_igv:
+                    affectation_igv_type_id == 10
+                        ? (i.sale_unit_price * i.quantity) /
+                          (1 + this.percentage_igv / 100)
+                        : i.sale_unit_price * i.quantity,
+                percentage_igv: this.percentage_igv,
+                total_igv:
+                    affectation_igv_type_id == 10 ||
+                    affectation_igv_type_id == 15
+                        ? (i.sale_unit_price *
+                              i.quantity *
+                              this.percentage_igv) /
+                          100
+                        : 0,
+                total_base_isc: 0.0,
+                percentage_isc: 0.0,
+                total_isc: 0.0,
+                total: 0,
+                total_base_other_taxes: 0.0,
+                percentage_other_taxes: 0.0,
+                total_other_taxes: 0.0,
+                total_taxes: 0,
+                total_value: i.quantity * i.sale_unit_price,
+                total_charge: 0.0,
+                total_discount: 0.0,
+                price_type_id: "02",
+                unit_price: i.sale_unit_price,
+                unit_price_value: i.sale_unit_price,
+                has_igv: i.has_igv,
+                affectation_igv_type_id: affectation_igv_type_id,
+                unit_price: i.sale_unit_price,
+                presentation: null,
+                charges: [],
+                discounts: [],
+                attributes: [],
+                affectation_igv_type: affectation_igv_type_id
+            };
+
+            this.form.items.push(item);
+            this.calculateTotal();
+        },
+        clearPromotionPointsItem() {
+            this.form.items = this.form.items.filter(i => !i.is_promotion);
+            this.calculateTotal();
+        },
+        async fetchPromotionItems() {
+            if (!this.form.customer_id) {
+                this.$toast.error("El cliente es requerido");
+                return;
+            }
+
+            const loading = this.$loading({
+                lock: true,
+                text: "Cargando..."
+            });
+            try {
+                const response = await this.$http.get(
+                    `/promotion-document/items-by-person/${this.form.customer_id}`
+                );
+                //
+                if (response.data) {
+                    let items = response.data;
+                    items = items.reduce((a, b) => a.concat(b), []);
+                    this.promotionItems = items;
+                    this.promotionItems.forEach(item => {
+                        this.addFreeItem(item);
+                    });
+                } else {
+                    this.$toast.error("No se encontraron items de promoción");
+                }
+            } catch (error) {
+                this.$toast.error("Ocurrió un error");
+            } finally {
+                loading.close();
+            }
+        },
+        receivePromotion() {
+            // console.log(this.form.items);
+            if (this.form.receive_promotion) {
+                this.fetchPromotionItems();
+            } else {
+                this.clearPromotionPointsItem();
+            }
+        },
+        getFreeAfectation(affectation_igv_type_id) {
+            if (affectation_igv_type_id == 10) {
+                return "15";
+            }
+            if (affectation_igv_type_id == 20) {
+                return "21";
+            }
+            return affectation_igv_type_id;
+        },
+        async promotionPointsItem() {
+            let item = this.listPromotionItems.find(
+                i => i.id == this.form.item_promotion_id
+            );
+            /* console.log("ver como esta llegando el item:", item); */
+
+            if (!item || item.quantity <= 0) {
+                /* console.warn("No hay cantidad válida para este ítem."); */
+                return;
+            }
+
+            if (!this.form.item_promotion_id) {
+                this.clearPromotionPointsItem();
+                this.form.receive_promotion = false;
+                return;
+            }
+
+            if (item) {
+                if (item.quantity > 0) {
+                    /* this.addFreeItem(item.item, item.quantity); */
+                    //aqui se mofico para que se agrege la cantidad seleccionado del modal box
+                    this.addFreeItem({ ...item.item, quantity: item.quantity });
+                    console.log("Quantity from modal:", item.quantity);
+                    this.form.receive_promotion = true;
+                } else {
+                    this.form.receive_promotion = false;
+                }
+            }
+        },
+        isClientesVarios() {
+            let id = this.form.customer_id;
+            if (id != null) {
+                let customer = this.customers.find(c => c.id == id);
+                if (customer && customer.number == "99999999") {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        verifyPromotionPointsCustomer() {
+            this.$http
+                .get(
+                    `/promotions-document/points-customers/${this.form.customer_id}/${this.form.promotion_id}`
+                )
+                .then(response => {
+                    if (response.status == 200) {
+                        let { data } = response;
+                        if (data.success) {
+                            this.hasPromotionText = data.message;
+                            this.listPromotionItems = data.items;
+                            /* console.log("ver si esta llegando los items a este filla", this.listPromotionItems); */
+                        }else{
+                            this.hasPromotionText = null;
+                            this.listPromotionItems = [];
+                        }
+                    }
+                });
+        },
+        verifyPromotionCustomer() {
+            this.hasPromotionText = null;
+            this.$http
+                .get(
+                    `/promotions-document/records-customers/${this.form.customer_id}/${this.form.promotion_id}`
+                )
+                .then(response => {
+                    if (response.status == 200) {
+                        let { promotions, success } = response.data;
+                        if (success) {
+                            this.hasPromotionText = promotions
+                                .map(p => p.message)
+                                .join("\n");
+                        } else {
+                            this.$toast.error(data.message);
+                        }
+                    }
+                });
+        },
+        changePromotion() {
+            console.log("this.form.promotion_id", this.form.promotion_id);
+            if (!this.form.promotion_id) return;
+            if (this.configuration.is_promotion_document) {
+                this.verifyPromotionCustomer();
+            } else if (this.promotionByPoints) {
+                this.verifyPromotionPointsCustomer();
+            }
+        },
         addMethods() {
             let {
                 yape,
@@ -2876,8 +3176,11 @@ export default {
             }
         },
         initForm() {
+            this.hasPromotionText = false;
+            this.promotionItems = [];
             this.errors = {};
             this.form = {
+                promotion_id: null,
                 id: null,
                 boxes: [],
                 orden_id: null,
@@ -3301,6 +3604,7 @@ export default {
                 if (row.affectation_igv_type_id === "40") {
                     total_exportation += parseFloat(row.total_value);
                 }
+                console.log("row.affectation_igv_type_id", row.affectation_igv_type_id);
                 if (
                     ["10", "20", "30", "40"].indexOf(
                         row.affectation_igv_type_id
@@ -3328,7 +3632,6 @@ export default {
                         total_value_partial * (row.percentage_igv / 100);
                     row.total_base_igv = total_value_partial;
                     total_value -= row.total_value;
-
                     total += parseFloat(row.total); 
                 }
                 if (
@@ -3337,12 +3640,17 @@ export default {
                     ) > -1
                 ) {
                     total_igv += parseFloat(row.total_igv);
-
                     total += parseFloat(row.total);
                 }
-                total_value += parseFloat(row.total_value);
+
+            if (!["21", "37"].includes(row.affectation_igv_type_id)) {
+                console.log("sumando total_value: ", row.total_value_without_rounding, row.affectation_igv_type_id);
+                total_value += row.total_value_without_rounding
+                    ? parseFloat(row.total_value_without_rounding)
+                    : parseFloat(row.total_value);
+            }
                 total_plastic_bag_taxes += parseFloat(
-                    row.total_plastic_bag_taxes
+                    row.total_plastic_bag_taxes || 0
                 );
             });
 
@@ -3363,6 +3671,7 @@ export default {
                 total + this.form.total_plastic_bag_taxes,
                 2
             );
+            console.log("total_plastic_bag_taxes", this.form.total_plastic_bag_taxes);
 
             if (this.enabled_discount_global) this.discountGlobal();
 
@@ -3377,10 +3686,12 @@ export default {
 
                 this.form.total_payment = this.form.total;
             } else {
+                console.log("total_r", this.form.total);
                 this.form.total_rounded = Math.abs(
                     Math.round(parseFloat(this.form.total) * 10) / 10 -
                         this.form.total
                 ).toFixed(2);
+                console.log("total_rounded", this.form.total_rounded);
                 this.form.total_payment =
                     Math.round(parseFloat(this.form.total) * 10) / 10;
             }
@@ -3388,10 +3699,7 @@ export default {
             if (this.form.boxes.length == 1) {
                 this.form.boxes[0].amount = this.form.total_payment;
             }
-            console.log(
-                "🚀 ~ calculateTotal ~ this.form.boxes.length:",
-                this.form.boxes
-            );
+            // console.log(JSON.stringify(this.form));
         },
         setTotalDefaultPayment() {
             if (this.form.payments && this.form.payments.length > 0) {
@@ -3686,6 +3994,8 @@ export default {
                 });
         },
         changeCustomer() {
+            this.hasPromotionText = null;
+            this.listPromotionItems = [];
             this.customer_addresses = [];
             let customer = _.find(this.customers, {
                 id: this.form.customer_id
@@ -3698,6 +4008,8 @@ export default {
                         address: customer.address
                     });
                 }
+                console.log("customer", customer);
+                this.changePromotion();
             }
 
             /*if(this.customer_addresses.length > 0) {

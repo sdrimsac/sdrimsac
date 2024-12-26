@@ -81,6 +81,7 @@ use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
+use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteCreditPenalty;
@@ -875,6 +876,7 @@ class SaleNoteController extends Controller
         $users = User::where('active', 1)->get();
         $user_select = User::select('id')->where('id', auth()->user()->id)->first();
         $document_type_03_filter = config('tenant.document_type_03_filter');
+        $promotions_document = PromotionDocument::where('active', 1)->get();
         $series = collect(Series::all())->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -887,6 +889,7 @@ class SaleNoteController extends Controller
         $payment_destinations = $this->getPaymentDestinations();
         // $state_t
         return compact(
+            'promotions_document',
             'categories',
             'state_types',
             'sellers',
@@ -1894,7 +1897,7 @@ class SaleNoteController extends Controller
     private function saveItemWarranty($sale_note, $items)
     {
         foreach ($items as $item) {
-            if ($item['item']['has_warranty']) {
+            if (isset($item['item']['has_warranty']) && $item['item']['has_warranty']) {
                 $warranty_start_date = Carbon::parse($sale_note->date_of_issue);
                 $warranty_end_date = $warranty_start_date->copy()->addMonths($item['item']['month_day']);
 

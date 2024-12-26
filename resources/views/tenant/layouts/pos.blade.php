@@ -107,11 +107,20 @@
                         @if ($user && $user->image)
                             @php
                                 $imagePath = public_path("storage/uploads/workers/{$user->image}");
-                                $imageData = base64_encode(file_get_contents($imagePath));
-                                $mimeType = mime_content_type($imagePath);
+                                if (file_exists($imagePath)) {
+                                    $imageData = base64_encode(file_get_contents($imagePath));
+                                    $mimeType = mime_content_type($imagePath);
                             @endphp
-                            <img src="data:{{ $mimeType }};base64, {{ $imageData }}" alt="{{ $user->image }}"
-                                style="width: 80%; height: 80%; object-fit: cover; margin: 0; transform: translateY(5px);" class="profile" alt="profile">
+                                    <img src="data:{{ $mimeType }};base64, {{ $imageData }}" alt="{{ $user->image }}"
+                                        style="width: 80%; height: 80%; object-fit: cover; margin: 0; transform: translateY(5px);" class="profile" alt="profile">
+                            @php
+                                } else {
+                            @endphp
+                                    <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
+                                        class="profile" alt="profile">
+                            @php
+                                }
+                            @endphp
                         @else
                             <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
                                 class="profile" alt="profile">

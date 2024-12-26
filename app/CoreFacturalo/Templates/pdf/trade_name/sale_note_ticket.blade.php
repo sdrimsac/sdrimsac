@@ -730,22 +730,7 @@ contain"
                     {{ $document->currency_type->symbol }}</td>
                 <td class="text-right font-bold desc">{{ number_format($document->total, 2) }}</td>
             </tr>
-            @php
-
-                $total_boxes = 0;
-                foreach ($boxes as $box) {
-                    $total_boxes += floatval($box->amount);
-                }
-
-                $difference = $total_boxes - $document->total;
-            @endphp
-            @if ($difference > 0)
-                <tr>
-                    <td colspan="4" class="text-right font-bold desc">VUELTO:
-                        {{ $document->currency_type->symbol }}</td>
-                    <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
-                </tr>
-            @endif
+            
         </tbody>
     </table>
     <table class="full-width">
@@ -767,6 +752,22 @@ contain"
         </tr>
         @endforeach
         </tr>
+        @php
+
+                $total_boxes = 0;
+                foreach ($boxes as $box) {
+                    $total_boxes += floatval($box->amount);
+                }
+
+                $difference = $total_boxes - $document->total;
+            @endphp
+            @if ($difference > 0)
+                <tr>
+                    <td colspan="4" class="text-left font-bold desc">VUELTO:
+                        {{ $document->currency_type->symbol }}</td>
+                    <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
+                </tr>
+            @endif
         @foreach ($boxes as $box)
             <tr>
                 <td colspan="4" class="text-left font-bold desc">{{ $box->method }}

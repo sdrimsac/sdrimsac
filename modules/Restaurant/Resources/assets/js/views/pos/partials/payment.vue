@@ -2989,7 +2989,7 @@ export default {
                             this.hasPromotionText = data.message;
                             this.listPromotionItems = data.items;
                             /* console.log("ver si esta llegando los items a este filla", this.listPromotionItems); */
-                        }else{
+                        } else {
                             this.hasPromotionText = null;
                             this.listPromotionItems = [];
                         }
@@ -3748,7 +3748,8 @@ export default {
                 this.form.subtotal = this.form.total;
             }
             // para calcular descuentos
-            if ( this.configuration.sale_note_credit_cash &&
+            if (
+                this.configuration.sale_note_credit_cash &&
                 this.form.document_type_id == "80"
             ) {
             } else {
@@ -3971,7 +3972,9 @@ export default {
                     total_igv += parseFloat(row.total_igv);
                     total += parseFloat(row.total);
                 }
-                total_value += parseFloat(row.total_value);
+                if (!["21", "37"].includes(row.affectation_igv_type_id)) {
+                    total_value += row.total_value;
+                }
                 total_plastic_bag_taxes += isNaN(
                     parseFloat(row.total_plastic_bag_taxes)
                 )
@@ -4428,11 +4431,9 @@ export default {
                 this.$toast.error(message);
                 return false;
             }
-        }, 
-                    
-    async clickPayment(
-            form
-        ) {
+        },
+
+        async clickPayment(form) {
             let boxes = this.currentPayments.reduce(
                 (a, b) => a + Number(b.amount),
                 0
