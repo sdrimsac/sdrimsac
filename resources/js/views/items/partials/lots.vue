@@ -1,111 +1,82 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        width="40%"
-        :visible="showDialog"
-        @open="create"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        append-to-body
-        :show-close="false"
-    >
-        <div class="form-body">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <table width="100%">
-                        <thead>
-                            <tr width="100%">
-                                <th v-if="lots.length > 0">Serie</th>
-                                <th v-if="lots.length > 0">Estado</th>
-                                <th v-if="lots.length > 0">Fecha</th>
-                                <th width="15%">
-                                    <a
-                                        href="#"
-                                        @click.prevent="clickAddLot"
-                                        class="text-center font-weight-bold text-info"
-                                        >[+ Agregar]</a
-                                    >
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(row, index) in lots_splice"
-                                :key="index"
-                                width="100%"
-                            >
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-input
-                                            @blur="
+<el-dialog  :title="titleDialog" 
+            width="60%" 
+            :visible="showDialog" 
+            @open="create" 
+            :close-on-click-modal="false" 
+            :close-on-press-escape="false" append-to-body 
+            :show-close="false">
+
+    <div class="row m-3">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light text-center">
+                    <tr>
+                        <th v-if="lots.length > 0">Serie</th>
+                        <th v-if="lots.length > 0">Estado</th>
+                        <th v-if="lots.length > 0">Fecha</th>
+                        <th ></th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <tr v-for="(row, index) in lots_splice" :key="index" class="text-center">
+                            <td>
+                                <div class="form-group mb-2 mr-2">
+                                    <el-input @blur="
                                                 duplicateSerie(
                                                     row.series,
                                                     index
                                                 )
-                                            "
-                                            v-model="row.series"
-                                        >
-                                            <i
-                                                slot="prefix"
-                                                class="el-icon-edit-outline"
-                                            ></i
-                                        ></el-input>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-select v-model="row.state">
-                                            <el-option
-                                                v-for="(option,
-                                                index) in states"
-                                                :key="index"
-                                                :value="option"
-                                                :label="option"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-date-picker
-                                            v-model="row.date"
-                                            type="date"
-                                            value-format="yyyy-MM-dd"
-                                            :clearable="false"
-                                        ></el-date-picker>
-                                    </div>
-                                </td>
-                                <td class="series-table-actions text-center">
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-danger"
-                                        @click.prevent="clickCancel(index)"
-                                    >
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </td>
-                                <br />
-                            </tr>
-                        </tbody>
-                    </table>
+                                            " v-model="row.series">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group mb-2 mr-2">
+                                    <el-select v-model="row.state">
+                                        <el-option v-for="(option,
+                                                index) in states" :key="index" :value="option" :label="option"></el-option>
+                                    </el-select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group mb-2 mr-2">
+                                    <el-date-picker v-model="row.date" type="date" value-format="yyyy-MM-dd" :clearable="false"></el-date-picker>
+                                </div>
+                            </td>
+                            <td class="series-table-actions text-center">
+                                <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickCancel(index)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
 
-                    <el-pagination
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-size="20"
-                        :total="lots.length"
-                        layout="total, prev, pager, next"
-                    >
-                    </el-pagination>
-                </div>
-            </div>
+                        </tr>
+                    </tbody>
+            </table>
         </div>
+    </div>
 
-        <div class="form-actions text-end pt-2 pb-2">
-            <el-button @click.prevent="clickCancelSubmit()">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Guardar</el-button>
+   
+    <div class="form-actions d-flex justify-content-end gap-3 pt-3">
+            <!-- Botón Cancelar -->
+            <el-button
+                class="btn-cancel"
+                icon="fas fa-times fa-lg"
+                @click.prevent="clickCancelSubmit"
+            >
+                Cancelar
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button
+                class="btn-save"
+                icon="fas fa-save fa-lg"
+                type="primary"
+                @click="submit"
+            >
+                Guardar
+            </el-button>
         </div>
-    </el-dialog>
+</el-dialog>
 </template>
 
 <script>
@@ -136,13 +107,15 @@ export default {
             this.lots_splice = this.lots.slice((val - 1) * 20, val * 20);
         },
         async duplicateSerie(data, index) {
-            let duplicates = await _.filter(this.lots, { series: data });
+            let duplicates = await _.filter(this.lots, {
+                series: data
+            });
             if (duplicates.length > 1) {
                 this.lots[index].series = null;
             }
         },
         create() {
-      
+
             if (!this.recordId) {
                 if (this.lots.length == 0) {
                     this.addMoreLots(this.stock);
@@ -155,7 +128,7 @@ export default {
                     //     this.deleteMoreLots(quantity)
                     // }
                 }
-                      this.lots_splice = this.lots.slice(0, 20);
+                this.lots_splice = this.lots.slice(0, 20);
             }
         },
         addMoreLots(number) {
@@ -184,7 +157,9 @@ export default {
                     message: "El campo serie es obligatorio"
                 };
 
-            return { success: true };
+            return {
+                success: true
+            };
         },
         async submit() {
             let val_lots = await this.validateLots();
@@ -196,9 +171,7 @@ export default {
         clickAddLot() {
             if (!this.recordId) {
                 if (this.lots.length >= this.stock)
-                    return this.$toast.error(
-                        "La cantidad de registros es superior al stock o cantidad"
-                    );
+                return this.$showSAlert("Advertencia", "La cantidad de registros es superior al stock", "error");
             }
 
             this.lots.push({

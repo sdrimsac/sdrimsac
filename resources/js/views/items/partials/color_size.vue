@@ -6,72 +6,100 @@
         @close="close"
         append-to-body
     >
-        <div class="row m-2">
-            <div class="col-12 text-end">
+        <!-- Contenedor principal -->
+        <div class="row m-3">
+            <!-- Botón Agregar -->
+            <div class="col-12 text-end mb-3">
                 <el-button
                     type="primary"
                     icon="el-icon-plus"
                     size="mini"
                     @click="clickAddColorSize"
-                ></el-button>
+                >
+                    Agregar
+                </el-button>
             </div>
+            <!-- Tabla de contenido -->
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light text-center">
                         <tr>
-                            <th>
-                                COLOR
-                            </th>
-                            <th>
-                                TALLA
-                            </th>
-                            <th>
-                                STOCK
-                            </th>
-                               <th>
-                                PRECIO
-                            </th>
+                            <th>Color</th>
+                            <th>Talla</th>
+                            <th>Stock</th>
+                            <th>P. Venta</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(row, index) in colorSizes" :key="index">
+                        <tr
+                            v-for="(row, index) in colorSizes"
+                            :key="index"
+                            class="text-center"
+                        >
                             <td>
-                                <el-input v-model="row.color"></el-input>
+                                <el-input
+                                    v-model="row.color"
+                                    placeholder="Color"
+                                ></el-input>
                             </td>
                             <td>
-                                <el-input v-model="row.size"></el-input>
+                                <el-input
+                                    v-model="row.size"
+                                    placeholder="Talla"
+                                ></el-input>
                             </td>
                             <td>
                                 <el-input
                                     type="number"
                                     v-model="row.stock"
+                                    placeholder="Stock"
                                 ></el-input>
                             </td>
-                                <td>
+                            <td>
                                 <el-input
                                     type="number"
                                     v-model="row.price"
                                     step="0.01"
+                                    placeholder="Precio"
                                 ></el-input>
                             </td>
                             <td>
-                                <el-button
-                                    type="danger"
-                                    icon="el-icon-delete"
-                                    size="mini"
-                                    @click="colorSizes.splice(index, 1)"
-                                ></el-button>
+                                <el-tooltip
+                                    content="Eliminar Producto"
+                                    placement="top"
+                                >
+                                    <el-button
+                                        type="danger"
+                                        icon="el-icon-delete"
+                                        size="mini"
+                                        @click="colorSizes.splice(index, 1)"
+                                    >
+                                    </el-button>
+                                </el-tooltip>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button icon="fas fa-times" @click="close"> Cancelar</el-button>
-            <el-button icon="fas fa-save" type="primary" @click="addColorSize"> Aceptar</el-button>
-        </span>
+
+        <!-- Footer de acciones -->
+        <div class="form-actions d-flex justify-content-end gap-3 pt-3">
+            <!-- Botón Cancelar -->
+            <el-button class="btn-cancel" icon="fas fa-times" @click="close">
+                Cancelar
+            </el-button>
+            <!-- Botón Aceptar -->
+            <el-button
+                class="btn-save"
+                icon="fas fa-save"
+                type="primary"
+                @click="addColorSize"
+            >
+                Aceptar
+            </el-button>
+        </div>
     </el-dialog>
 </template>
 
@@ -99,6 +127,7 @@ export default {
                 if (this.verifyCompleteData()) {
                     this.sortItems();
                     this.$emit("addRowColorSize", this.colorSizes);
+                    console.log(this.colorSizes);
                     this.close();
                 } else {
                     this.$toast.warning("Debe llenar todos los campos");
@@ -116,7 +145,7 @@ export default {
             return complete;
         },
         verifyStock() {
-            if(this.stock == 0){
+            if (this.stock == 0) {
                 return true;
             }
             let total = 0;
@@ -126,7 +155,8 @@ export default {
             if (total != this.stock) {
                 this.$showSAlert(
                     "warning",
-                    "El stock total debe ser igual al stock del producto", "warning"
+                    "El stock total debe ser igual al stock del producto",
+                    "warning"
                 );
                 /* this.$toast.warning(
                     "El stock total debe ser igual al stock del producto"
@@ -136,10 +166,11 @@ export default {
             return true;
         },
         clickAddColorSize() {
-            if(this.totalStock >= this.stock){
+            if (this.totalStock >= this.stock) {
                 this.$showSAlert(
                     "warning",
-                    "El stock total no puede ser mayor al stock del producto", "warning"
+                    "El stock total no puede ser mayor al stock del producto",
+                    "warning"
                 );
                 /* this.$toast.warning("El stock total no puede ser mayor al stock del producto"); */
                 return;
@@ -198,7 +229,7 @@ export default {
             this.colorSizes.forEach(item => {
                 if (item.size && item.color) {
                     item.color = item.color.toUpperCase();
-                 
+
                     if (isNaN(item.size)) {
                         item.size = item.size.toUpperCase();
                     }

@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         :title="titleDialog"
-        width="40%"
+        width="70%"
         :visible="showDialog"
         @open="create"
         :close-on-click-modal="false"
@@ -9,96 +9,105 @@
         append-to-body
         :show-close="false"
     >
-        <div class="form-body">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <table width="100%">
-                        <thead>
-                            <tr width="100%">
-                                <th v-if="lotsGroup.length > 0">Lote</th>
-                                <th v-if="lotsGroup.length > 0">Cantidad</th>
-                                <th v-if="lotsGroup.length > 0">Fecha</th>
-                                <th width="15%">
-                                    <a
-                                        href="#"
-                                        @click.prevent="clickAddLot"
-                                        class="text-center font-weight-bold text-info"
-                                        >[+ Agregar]</a
+
+    <div class="row m-3">
+            <!-- Botón Agregar -->
+            <div class="col-12 text-end mb-3">
+                <el-button
+                    class="btn-agregar"
+                    icon="el-icon-plus"
+                    size="mini"
+                    @click.prevent="clickAddLot"
+                >
+                    Agregar
+                </el-button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light text-center">
+                        <tr>
+                            <th>Lote</th>
+                            <th>Cantidad</th>
+                            <th>Fecha</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr v-for="(row, index) in lotsGroup_splice" :key="index" class="text-center">
+                                <td>
+                                    <el-input
+                                        v-model="row.code"
+                                        placeholder="Lote"
+                                        @blur="duplicateSerie(row.code, index)"
                                     >
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(row, index) in lotsGroup_splice"
-                                :key="index"
-                                width="100%"
-                            >
-                                <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-input
-                                            @blur="
-                                                duplicateSerie(row.code, index)
-                                            "
-                                            v-model="row.code"
-                                        >
-                                            <i
-                                                slot="prefix"
-                                                class="el-icon-edit-outline"
-                                            ></i
-                                        ></el-input>
-                                    </div>
+                                        <template #prefix>
+                                            <i class="el-icon-edit-outline"></i>
+                                        </template>
+                                    </el-input>
                                 </td>
                                 <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-input
-                                            v-model="row.quantity"
-                                            type="number"
-                                        ></el-input>
-                                    </div>
+                                    <el-input
+                                        v-model="row.quantity"
+                                        type="number"
+                                        placeholder="Cantidad"
+                                    ></el-input>
                                 </td>
                                 <td>
-                                    <div class="form-group mb-2 mr-2">
-                                        <el-date-picker
-                                            v-model="row.date_of_due"
-                                            type="date"
-                                            value-format="yyyy-MM-dd"
-                                            :clearable="false"
-                                        ></el-date-picker>
-                                    </div>
+                                    <el-date-picker
+                                        v-model="row.date_of_due"
+                                        type="date"
+                                        value-format="yyyy-MM-dd"
+                                        :clearable="false"
+                                        placeholder="Fecha"
+                                    ></el-date-picker>
                                 </td>
-                                <td class="Lotes-table-actions text-center">
+                                <td>
                                     <button
                                         type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-danger"
+                                        class="btn btn-danger btn-sm"
                                         @click.prevent="clickCancel(index)"
                                     >
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
-                                <br />
                             </tr>
                         </tbody>
-                    </table>
-
-                    <el-pagination
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage"
-                        :page-size="20"
-                        :total="lotsGroup.length"
-                        layout="total, prev, pager, next"
-                    >
-                    </el-pagination>
-                </div>
-            </div>
+                </table>
+    </div>
+        
+            <!-- <el-pagination
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="10"
+                :total="lotsGroup.length"
+                layout="total, prev, pager, next"
+            >
+            </el-pagination> -->
         </div>
 
-        <div class="form-actions text-end pt-2 pb-2">
-            <el-button @click.prevent="clickCancelSubmit()">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Guardar</el-button>
+        <!-- Acciones del formulario -->
+        <div class="form-actions d-flex justify-content-end gap-3 pt-3">
+            <!-- Botón Cancelar -->
+            <el-button
+                class="btn-cancel"
+                icon="fas fa-times fa-lg"
+                @click.prevent="clickCancelSubmit"
+            >
+                Cancelar
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button
+                class="btn-save"
+                icon="fas fa-save fa-lg"
+                type="primary"
+                @click="submit"
+            >
+                Guardar
+            </el-button>
         </div>
     </el-dialog>
 </template>
+
 
 <script>
 export default {
@@ -155,7 +164,7 @@ export default {
                 !this.recordId &&
                 this.lotsGroup.filter(lg => lg.code != null).length == 0
             ) {
-                this.lotsGroup = [
+                this.localLotsGroup = [
                     {
                         id: null,
                         item_id: null,

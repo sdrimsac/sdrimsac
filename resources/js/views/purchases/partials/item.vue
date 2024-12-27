@@ -1,95 +1,261 @@
 <!-- Modal de Agregar Productos Compras -->
 <template>
+    <!-- Modal de Agregar Productos Compras -->
     <el-dialog
         :title="titleDialog"
         :visible="showDialog"
         @open="create"
         @close="close"
         :close-on-click-modal="false"
-        width="80%"
+        width="70%"
     >
-        <br />
         <form
             autocomplete="off"
             @submit.prevent="clickAddItem"
             @keydown.enter.prevent
         >
             <div class="form-body">
+                <!-- Fila 1 -->
                 <div class="row">
+                    <!-- <div class="col-md-8">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.item_id }"
+                        >
+                            <label class="control-label">
+                                <i class="fas fa-box"></i> Producto/Servicios
+                                <!-- <a href="#" @click.prevent="showDialogNewItem = true">[+ Nuevo]</a> -
+                            </label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <div
+                                        class="el-input el-input-group el-input-group--append"
+                                        style="display: flex;"
+                                    >
+                                        <el-select
+                                            v-if="!barcode_lector"
+                                            v-model="form.item_id"
+                                            :loading="loading_search"
+                                            :remote-method="searchRemoteItems"
+                                            filterable
+                                            placeholder="Buscar"
+                                            remote
+                                            @change="changeItem"
+                                            style="flex: 1;"
+                                        >
+                                            <el-option
+                                                v-for="option in items"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.full_description"
+                                            ></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Agregar Nuevo Producto o Servicio"
+                                        placement="top"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary btn-sm"
+                                            @click.prevent="
+                                                showDialogNewItem = true
+                                            "
+                                            style="margin-left: 5px; height: 100%;"
+                                        >
+                                            <i class="fas fa-plus fa-xs"></i>
+                                        </button>
+                                    </el-tooltip>
+                                </div>
+                            </div>
+                        </div>
+                        <el-input
+                            ref="input_barcode"
+                            v-if="barcode_lector"
+                            v-model="input_barcode"
+                            placeholder="Buscar"
+                            @input="searchItemsDebounce"
+                        >
+                        </el-input>
+                        <el-checkbox v-model="barcode_lector">
+                            Lector de código de barras
+                        </el-checkbox>
+                    </div> -->
+
                     <div class="col-md-8">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
                         >
                             <label class="control-label">
-                                Producto/Servicio
-                                <a
-                                    href="#"
-                                    @click.prevent="showDialogNewItem = true"
-                                    >[+ Nuevo]</a
-                                >
+                                <i class="fas fa-box"></i> Producto/Servicios
                             </label>
-                            <div
-                                class="el-input el-input-group el-input-group--append"
-                            >
-                                <el-select
-                                    v-if="!barcode_lector"
-                                    v-model="form.item_id"
-                                    :loading="loading_search"
-                                    :remote-method="searchRemoteItems"
-                                    filterable
+                            <div class="row">
+                                <!-- Input principal -->
+                                <div class="col-md-11">
+                                    <div
+                                        class="el-input el-input-group el-input-group--append"
+                                        style="display: flex;"
+                                    >
+                                        <el-select
+                                            v-if="!barcode_lector"
+                                            v-model="form.item_id"
+                                            :loading="loading_search"
+                                            :remote-method="searchRemoteItems"
+                                            filterable
+                                            placeholder="Buscar"
+                                            remote
+                                            @change="changeItem"
+                                            style="flex: 1;"
+                                        >
+                                            <el-option
+                                                v-for="option in items"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.full_description"
+                                            ></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <!-- Botón de "Agregar nuevo producto" -->
+                                <div class="col-md-1">
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Agregar Nuevo Producto o Servicio"
+                                        placement="top"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary btn-sm"
+                                            @click.prevent="
+                                                showDialogNewItem = true
+                                            "
+                                            style="height: 100%;"
+                                        >
+                                            <i class="fas fa-plus fa-xs"></i>
+                                        </button>
+                                    </el-tooltip>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Input del lector de código de barras -->
+                        <div
+                            class="row"
+                            v-if="barcode_lector"
+                            style="margin-top: 10px;"
+                        >
+                            <div class="col-md-11">
+                                <el-input
+                                    ref="input_barcode"
+                                    v-model="input_barcode"
                                     placeholder="Buscar"
-                                    remote
-                                    @change="changeItem"
+                                    @input="searchItemsDebounce"
+                                    style="flex: 1;"
                                 >
-                                    <el-option
-                                        v-for="option in items"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.full_description"
-                                    ></el-option>
-                                </el-select>
-                                <el-tooltip
-                                    slot="append"
+                                </el-input>
+                            </div>
+                            <div class="col-md-1">
+                                <!-- <el-tooltip
                                     class="item"
                                     effect="dark"
-                                    content="Ver Stock del Producto"
-                                    placement="bottom"
-                                    :disabled="!form.item_id"
+                                    content="Agregar Nuevo Producto o Servicio"
+                                    placement="top"
                                 >
-                                    <div class="el-input-group__append">
-                                        <a>stock</a>
-                                        <span>
-                                            {{
-                                                parseFloat(
-                                                    selectedProductStock
-                                                ).toFixed(2)
-                                            }}</span
-                                        >
-                                    </div>
-                                </el-tooltip>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary btn-sm"
+                                        @click.prevent="
+                                            showDialogNewItem = true
+                                        "
+                                        style="height: 100%;"
+                                    >
+                                        <i class="fas fa-plus fa-xs"></i>
+                                    </button>
+                                </el-tooltip> -->
                             </div>
-                            <el-input
-                                ref="input_barcode"
-                                v-if="barcode_lector"
-                                v-model="input_barcode"
-                                placeholder="Buscar"
-                                @input="searchItemsDebounce"
+                        </div>
+                        <!-- Checkbox del lector -->
+                        <el-checkbox
+                            v-model="barcode_lector"
+                            style="margin-top: 10px;"
+                        >
+                            Lector de código de barras
+                        </el-checkbox>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <el-tooltip
+                            slot="append"
+                            class="item"
+                            effect="dark"
+                            content="Ver Stock del Producto"
+                            placement="bottom"
+                            :disabled="!form.item_id"
+                        >
+                            <div class="">
+                                <label class="control-label"
+                                    ><i class="fas fa-warehouse"></i>
+                                    Stock</label
+                                >
+                                <span>{{
+                                    parseFloat(selectedProductStock).toFixed(2)
+                                }}</span>
+                            </div>
+                        </el-tooltip>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="control-label"
+                            ><i class="fas fa-dollar-sign"></i> P. de
+                            venta</label
+                        >
+                        <el-input
+                            style="width:100%;"
+                            v-model="form.sale_unit_price"
+                        >
+                        </el-input>
+                    </div>
+                </div>
+                <!-- Fila 2 -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.warehouse_id }"
+                        >
+                            <label class="control-label"
+                                ><i class="fas fa-warehouse"></i> Almacén de
+                                destino</label
                             >
-                            </el-input>
-                            <el-checkbox v-model="barcode_lector">
-                                Lector de código de barras
-                            </el-checkbox>
+                            <el-select v-model="form.warehouse_id" filterable>
+                                <el-option
+                                    v-for="option in warehouses"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.warehouse_id"
+                                v-text="errors.warehouse_id[0]"
+                            ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div
                             class="form-group"
                             :class="{
                                 'has-danger': errors.affectation_igv_type_id
                             }"
                         >
-                            <label class="control-label">Afectación IGV</label>
+                            <label class="control-label"
+                                ><i class="fas fa-percentage"></i> Afectación
+                                IGV</label
+                            >
                             <el-select
                                 v-model="form.affectation_igv_type_id"
                                 :disabled="!change_affectation_igv_type_id"
@@ -113,389 +279,512 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.quantity }"
-                        >
-                            <label class="control-label">Cantidad</label>
-                            <el-input-number
-                                style="width:100%"
-                                v-model="form.quantity"
-                                :min="0.01"
-                                name="quantity"
-                                @input.native="onInput"
-                                @change="updateRealQuantity"
-                            ></el-input-number>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.quantity"
-                                v-text="errors.quantity[0]"
-                            ></small>
+                </div>
+
+                <!-- Fila 3 -->
+                <div
+                    class="row"
+                    style="padding: 20px; justify-content: space-between;"
+                >
+                    <!-- Columna: Datos de Compra -->
+                    <div
+                        class="col-md-6"
+                        style="background-color: rgb(106, 158, 209); border-radius: 10px; padding: 20px;"
+                    >
+                        <h5 class="text-center font-weight-bold">
+                            Datos de Compra
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.quantity }"
+                                >
+                                    <label class="control-label"
+                                        ><i class="fas fa-sort-numeric-up"></i>
+                                        Cantidad</label
+                                    >
+                                    <el-input
+                                        style="width: 100%;"
+                                        v-model="form.quantity"
+                                        name="quantity"
+                                        @input.native="onInput"
+                                        @change="updateRealQuantity"
+                                    ></el-input>
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="errors.quantity"
+                                        v-text="errors.quantity[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.unit_price }"
+                                >
+                                    <label class="control-label"
+                                        ><i class="fas fa-dollar-sign"></i>
+                                        P.Unitario</label
+                                    >
+                                    <el-input
+                                        style="width: 100%;"
+                                        v-model="form.unit_price"
+                                        @input="updatePriceTotal"
+                                    ></el-input>
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="errors.unit_price"
+                                        v-text="errors.unit_price[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.total_price
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        ><i class="fas fa-dollar-sign"></i>
+                                        Total</label
+                                    >
+                                    <el-input
+                                        style="width: 100%;"
+                                        :disabled="!insertTotalPrice"
+                                        @input="updateUnitPrice"
+                                        v-model="form.total_price"
+                                    ></el-input>
+                                    <small>
+                                        <el-checkbox v-model="insertTotalPrice"
+                                            >Manual</el-checkbox
+                                        >
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.unit_price }"
-                        >
-                            <label class="control-label"
-                                >Precio Compra Unitario</label
-                            >
-                            <el-input
-                                v-model="form.unit_price"
-                                @input="updatePriceTotal"
-                            >
-                                <template
-                                    slot="prepend"
-                                    v-if="form.item.currency_type_symbol"
-                                    >{{
-                                        form.item.currency_type_symbol
-                                    }}</template
+
+                    <!-- Columna: Embalaje -->
+                    <div
+                        class="col-md-6"
+                        style="background-color: rgb(160, 245, 175); border-radius: 10px; padding: 20px;"
+                    >
+                        <h5 class="text-center font-weight-bold">Embalaje</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="control-label"
+                                    ><i class="fas fa-box"></i> Cantidad</label
                                 >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.unit_price"
-                                v-text="errors.unit_price[0]"
-                            ></small>
+                                <el-input
+                                    controls="false"
+                                    style="width: 100%;"
+                                    @change="updateRealQuantity"
+                                    @input.native="onInput"
+                                    name="multi"
+                                    :disabled="!noIsUnid"
+                                    v-model="unids"
+                                ></el-input>
+                                <small>
+                                    <el-checkbox v-model="noIsUnid"
+                                        >No son unidades</el-checkbox
+                                    >
+                                </small>
+                            </div>
+                            <div class="col-md-4" v-if="noIsUnid">
+                                <label class="control-label"> Contenedor</label>
+                                <el-input style="width: 100%;"></el-input>
+                            </div>
+                            <div class="col-md-4" v-if="noIsUnid">
+                                <label
+                                    class="control-label text-center font-weight-bold text-dark"
+                                    ><i class="fas fa-calculator"></i>Total
+                                    Global</label
+                                >
+                                <el-input
+                                    style="width: 100%;"
+                                    readonly
+                                    v-model="form.real_quantity"
+                                ></el-input>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.unit_price }"
-                        >
-                            <label class="control-label">Costo total</label>
-                            <el-input
-                                :disabled="!insertTotalPrice"
-                                @input="updateUnitPrice"
-                                v-model="form.total_price"
+                </div>
+
+                <!-- Fila 4 -->
+                <div
+                    class="row"
+                    style="margin: 5px; display: flex; justify-content: space-between;"
+                >
+                    <!-- Tratamiento de Productos -->
+                    <div
+                        class="col-md-6"
+                        style="background-color: #f0f8ff; border-radius: 10px; padding: 2px;"
+                    >
+                        <div class="row text-center">
+                            <div class="col-md-4 font-weight-bold text-dark">
+                                <h4>Ingresar</h4>
+                            </div>
+                            <div class="col-md-4 font-weight-bold text-dark">
+                                <h4>Descargar</h4>
+                            </div>
+                            <div class="col-md-4 font-weight-bold text-dark">
+                                <h4> Importar </h4>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <!-- Botón Lotes -->
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-if="form.item && form.item.lots_enabled"
                             >
-                                <template
-                                    slot="prepend"
-                                    v-if="form.item.currency_type_symbol"
-                                    >{{
-                                        form.item.currency_type_symbol
-                                    }}</template
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.lots_enabled
+                                    }"
+                                    v-if="form.item.lots_enabled"
                                 >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                            <small>
-                                <el-checkbox v-model="insertTotalPrice"
-                                    >Precio total</el-checkbox
+                                    <el-button
+                                        class="btn btnsdr-lotes d-flex align-items-center justify-content-center gap-2"
+                                        style="background-color: #e6e6fa; margin-top:2%;"
+                                        type="primary"
+                                        icon="fas fa-sign-in-alt icon"
+                                        @click.prevent="clickLotGroupCode"
+                                    >
+                                        Lotes
+                                    </el-button>
+                                </div>
+                            </div>
+                            <!-- Icono de Excel con Tooltip -->
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.lots_enabled
+                                    }"
+                                    v-if="form.item.lots_enabled"
                                 >
-                            </small>
+                                    <div
+                                        class="d-flex align-items-center justify-content-center"
+                                    >
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Descargar Formato de Excel"
+                                            placement="top"
+                                        >
+                                            <a
+                                                href="/formats/lots_group_compras.xlsx"
+                                                class="text-success d-inline-flex align-items-center gap-1"
+                                            >
+                                                <i
+                                                    class="fas fa-file-excel fa-2x"
+                                                ></i>
+                                            </a>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón Subir Archivo -->
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.lots_enabled
+                                    }"
+                                    v-if="form.item.lots_enabled"
+                                >
+                                    <div class="d-flex justify-content-center">
+                                        <el-button
+                                            class="btn btn-subir w-50 d-flex align-items-center justify-content-center gap-2 bg-light"
+                                            icon="fas fa-upload icon"
+                                            @click.prevent="$refs.file.click()"
+                                        ></el-button>
+                                        <input
+                                            type="file"
+                                            @change="uploadExcelGroup"
+                                            style="visibility:hidden;"
+                                            ref="file"
+                                            accept=".xlsx,.xls"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tallas y Colores -->
+                        <div class="row justify-content-center">
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.has_color_size
+                                    }"
+                                    v-if="form.item.has_color_size"
+                                >
+                                    <div>
+                                        <button
+                                            class="btn btnsdr-tallas-colores"
+                                            
+                                            style="margin-top:2%;"
+                                            type="primary"
+                                            @click.prevent="clickColorSize"
+                                        >
+                                            <i class="fas fa-tshirt"></i>
+                                            Color & talla
+                                        </button>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.has_color_size"
+                                            v-text="errors.has_color_size[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.has_color_size
+                                    }"
+                                    v-if="form.item.has_color_size"
+                                >
+                                    <div>
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Descargar Formato de Excel"
+                                            placement="top"
+                                        >
+                                            <a
+                                                href="/formats/color_talla_compras.xlsx"
+                                                class="text-success d-inline-flex align-items-center gap-1"
+                                            >
+                                                <i
+                                                    class="fas fa-file-excel fa-2x"
+                                                ></i>
+                                            </a>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.has_color_size
+                                    }"
+                                    v-if="form.item.has_color_size"
+                                >
+                                    <div class="d-flex justify-content-center">
+                                        <el-button
+                                            class="btn btn-subir w-50 d-flex align-items-center justify-content-center gap-2"
+                                            icon="fas fa-upload icon"
+                                            @click.prevent="$refs.file.click()"
+                                        ></el-button>
+                                        <input
+                                            type="file"
+                                            @change="uploadExcelColorSize"
+                                            style="visibility:hidden;"
+                                            ref="file"
+                                            accept=".xlsx,.xls"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- series -->
+                        <div class="row justify-content-center">
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.lot_code }"
+                                    v-if="form.item.series_enabled"
+                                >
+                                    <div>
+                                        <el-button
+                                            class="btn btnsdr-series-colores"
+                                            icon="fas fa-sign-in-alt icon"
+                                            style="margin-top:2%;"
+                                            type="primary"
+                                            @click.prevent="clickLotcode"
+                                        >
+                                            Series
+                                        </el-button>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.has_color_size"
+                                            v-text="errors.has_color_size[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.lot_code }"
+                                    v-if="form.item.series_enabled"
+                                >
+                                    <div>
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Descargar Formato de Excel"
+                                            placement="top"
+                                        >
+                                            <a
+                                                href="/formats/series_compras.xlsx"
+                                                class="text-success d-inline-flex align-items-center gap-1"
+                                            >
+                                                <i
+                                                    class="fas fa-file-excel fa-2x"
+                                                ></i>
+                                            </a>
+                                        </el-tooltip>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-md-4 d-flex justify-content-center"
+                                v-show="form.item_id"
+                            >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.lot_code }"
+                                    v-if="form.item.series_enabled"
+                                >
+                                    <div class="d-flex justify-content-center">
+                                        <el-button
+                                            class="btn btn-subir w-50 d-flex align-items-center justify-content-center gap-2"
+                                            icon="fas fa-upload icon"
+                                            @click.prevent="$refs.file.click()"
+                                        ></el-button>
+                                        <input
+                                            type="file"
+                                            @change="uploadExcel"
+                                            style="visibility:hidden;"
+                                            ref="file"
+                                            accept=".xlsx,.xls"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <!-- Boton Cerrar y Agregar -->
                     <div class="col-md-6">
                         <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.warehouse_id }"
+                            class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
                         >
-                            <label class="control-label"
-                                >Almacén de destino</label
+                            <!-- Botón Cerrar -->
+                            <el-button
+                                class="btn-cancel btn-cancel:hover"
+                                icon="fas fa-times fa-lg"
+                                @click.prevent="close()"
                             >
-                            <el-select v-model="form.warehouse_id" filterable>
-                                <el-option
-                                    v-for="option in warehouses"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.warehouse_id"
-                                v-text="errors.warehouse_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="control-label"
-                            >Cantidad por embalaje</label
-                        >
-                        <el-input-number
-                            style="width:100%;"
-                            @change="updateRealQuantity"
-                            @input.native="onInput"
-                            name="multi"
-                            :disabled="!noIsUnid"
-                            v-model="unids"
-                        >
-                        </el-input-number>
-                        <small>
-                            <el-checkbox v-model="noIsUnid"
-                                >No son unidades</el-checkbox
+                                <span>Cerrar</span>
+                            </el-button>
+                            <!-- Botón Guardar -->
+                            <el-button
+                                class="btn-agregar btn-agregar:hover"
+                                icon="fas fa-plus fa-lg"
+                                type="primary"
+                                native-type="submit"
+                                :loading="loading_submit"
                             >
-                        </small>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="control-label"> Precio de venta</label>
-                        <el-input
-                            style="width:100%;"
-                            v-model="form.sale_unit_price"
-                        >
-                        </el-input>
-                    </div>
-                    <div class="col-md-3 " v-if="noIsUnid">
-                        <label class="control-label">Cantidad total</label>
-                        <el-input readonly v-model="form.real_quantity">
-                        </el-input>
-                    </div>
-                    <div
-                        class="col-md-3"
-                        v-if="form.item && form.item.lots_enabled"
-                    >
-                        <el-button
-                            style="margin-top:2%;"
-                            type="primary"
-                            icon="fas fa-sign-in-alt icon"
-                            @click.prevent="clickLotGroupCode"
-                        >
-                            Ingresar lotes
-                        </el-button>
-                    </div>
-                    <div class="col-md-3" v-show="form.item_id">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.lots_enabled }"
-                            v-if="form.item.lots_enabled"
-                        >
-                            <div>
-                                <div>
-                                    <label class="control-label w-100">
-                                        Subir excel
-                                        <a
-                                            href="/formats/lots_group_compras.xlsx"
-                                            >Descargar formato</a
-                                        >
-                                        <i class="fa-solid fa-download"></i>
-                                    </label>
-                                    <el-button
-                                        style="margin-top:2%;"
-                                        type="primary"
-                                        icon="el-icon-tickets"
-                                        @click.prevent="$refs.file.click()"
-                                    ></el-button>
-                                    <input
-                                        type="file"
-                                        @change="uploadExcelGroup"
-                                        style="visibility:hidden;"
-                                        ref="file"
-                                        accept=".xlsx,.xls"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-show="form.item_id" class="col-md-3">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.has_color_size }"
-                            v-if="form.item.has_color_size"
-                        >
-                            <div>
-                                <div>
-                                    <label class="control-label w-100">
-                                        <i class="fas fa-tshirt"></i>
-                                        <i class="fas fa-palette"></i>
-                                        Ingrese color & talla
-                                    </label>
-                                    <el-button
-                                        style="margin-top:2%;"
-                                        type="primary"
-                                        icon="fas fa-sign-in-alt icon"
-                                        @click.prevent="clickColorSize"
-                                    ></el-button>
-                                    <small
-                                        class="form-control-feedback"
-                                        v-if="errors.has_color_size"
-                                        v-text="errors.has_color_size[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3" v-show="form.item_id">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.has_color_size }"
-                            v-if="form.item.has_color_size"
-                        >
-                            <div>
-                                <div>
-                                    <label class="control-label w-100">
-                                        Subir excel
-                                        <a
-                                            href="/formats/color_talla_compras.xlsx"
-                                        >
-                                            Descargar formato
-                                        </a>
-                                    </label>
-                                    <el-button
-                                        style="margin-top:2%;"
-                                        type="primary"
-                                        icon="fas fa-upload icon"
-                                        @click.prevent="$refs.file.click()"
-                                    ></el-button>
-                                    <input
-                                        type="file"
-                                        @change="uploadExcelColorSize"
-                                        style="visibility:hidden;"
-                                        ref="file"
-                                        accept=".xlsx,.xls"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3" v-show="form.item_id">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.lot_code }"
-                            v-if="form.item.series_enabled"
-                        >
-                            <div>
-                                <div>
-                                    <label class="control-label w-100">
-                                        <i class="fas fa-list-ol"></i>
-                                        Ingrese series
-                                    </label>
-                                    <el-button
-                                        style="margin-top:2%;"
-                                        type="primary"
-                                        icon="fas fa-sign-in-alt icon"
-                                        @click.prevent="clickLotcode"
-                                        class="text-end"
-                                    ></el-button>
-                                    <small
-                                        class="form-control-feedback"
-                                        v-if="errors.lot_code"
-                                        v-text="errors.lot_code[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3" v-show="form.item_id">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.lot_code }"
-                            v-if="form.item.series_enabled"
-                        >
-                            <div>
-                                <div>
-                                    <label class="control-label w-100">
-                                        Subir excel
-                                        <a href="/formats/series_compras.xlsx"
-                                            >Descargar formato</a
-                                        >
-                                    </label>
-                                    <el-button
-                                        style="margin-top:2%;"
-                                        type="primary"
-                                        icon="el-icon-tickets"
-                                        @click.prevent="$refs.file.click()"
-                                    ></el-button>
-                                    <input
-                                        type="file"
-                                        @change="uploadExcel"
-                                        style="visibility:hidden;"
-                                        ref="file"
-                                        accept=".xlsx,.xls"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="col-md-12"
-                        v-if="
-                            form.item_unit_types &&
-                                form.item_unit_types.length > 0
-                        "
-                    >
-                        <div style="margin:3px" class="table-responsive">
-                            <h6 class="separator-title">
-                                Listado de Precios
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
-                                    placement="top"
-                                >
-                                    <i class="fa fa-info-circle"></i>
-                                </el-tooltip>
-                            </h6>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Unidad</th>
-                                        <th class="text-center">Descripción</th>
-                                        <th class="text-center">Factor</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(row,
-                                        index) in form.item_unit_types"
-                                        :key="index"
-                                    >
-                                        <td class="text-center">
-                                            {{ row.unit_type_id }}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ row.description }}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ row.quantity_unit }}
-                                        </td>
-                                        <td
-                                            class="series-table-actions text-end"
-                                        >
-                                            <button
-                                                type="button"
-                                                :class="
-                                                    `btn waves-effect waves-light btn-sm ${
-                                                        row.selected
-                                                            ? 'btn-primary'
-                                                            : 'btn-success'
-                                                    } `
-                                                "
-                                                @click.prevent="
-                                                    selectedPrice(row)
-                                                "
-                                            >
-                                                <i class="el-icon-check"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                <span>Agregar</span>
+                            </el-button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
-                    Cerrar</el-button
+
+            <div class="row">
+                <div
+                    class="col-md-12"
+                    v-if="
+                        form.item_unit_types && form.item_unit_types.length > 0
+                    "
                 >
-                <el-button
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                >
-                    Agregar</el-button
-                >
+                    <div style="margin:3px" class="table-responsive">
+                        <h6 class="separator-title">
+                            Listado de Precios
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
+                                placement="top"
+                            >
+                                <i class="fa fa-info-circle"></i>
+                            </el-tooltip>
+                        </h6>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Unidad</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Factor</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(row, index) in form.item_unit_types"
+                                    :key="index"
+                                >
+                                    <td class="text-center">
+                                        {{ row.unit_type_id }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ row.description }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ row.quantity_unit }}
+                                    </td>
+                                    <td class="series-table-actions text-end">
+                                        <button
+                                            type="button"
+                                            :class="
+                                                `btn waves-effect waves-light btn-sm ${
+                                                    row.selected
+                                                        ? 'btn-primary'
+                                                        : 'btn-success'
+                                                } `
+                                            "
+                                            @click.prevent="selectedPrice(row)"
+                                        >
+                                            <i class="el-icon-check"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </form>
         <item-form
@@ -531,12 +820,14 @@
         </warehouses-detail>
     </el-dialog>
 </template>
+
 <style>
 .el-select-dropdown {
     max-width: 80% !important;
     margin-right: 5% !important;
 }
 </style>
+
 <script>
 import itemForm from "../../items/form.vue";
 import { calculateRowItem } from "../../../helpers/functions";
@@ -564,6 +855,8 @@ export default {
     },
     data() {
         return {
+            input_barcode: '',
+            loading_submit: false,
             showDialogLotsGroup: false,
 
             colorSizes: [],
@@ -602,6 +895,15 @@ export default {
             lotsGroup: []
         };
     },
+    watch: {
+        barcode_lector(newVal) {
+            if (newVal) {
+                this.$nextTick(() => {
+                    this.$refs.input_barcode.focus();
+                });
+            }
+        },
+    },
     created() {
         this.inititem();
 
@@ -626,9 +928,12 @@ export default {
         },
         clickWarehouseDetail() {
             if (!this.form.item_id) {
-                return this.$toast.error("Seleccione un item");
+                // return this.$toast.error("Seleccione un item");
+                return this.$showSAlert("hola", "Seleccione un item", "error");
             }
-            let item = _.find(this.items, { id: this.form.item_id });
+            let item = _.find(this.items, {
+                id: this.form.item_id
+            });
             this.warehousesDetail = item.warehouses;
             this.showWarehousesDetail = true;
         },
@@ -897,7 +1202,9 @@ export default {
             let discount_type_id = this.form.discounts[index].discount_type_id;
             this.form.discounts[index].discount_type = _.find(
                 this.discount_types,
-                { id: discount_type_id }
+                {
+                    id: discount_type_id
+                }
             );
         },
         clickAddCharge() {
@@ -978,7 +1285,9 @@ export default {
         },
         changeItem(changing_name = false) {
             this.color_size = [];
-            this.form.item = _.find(this.items, { id: this.form.item_id });
+            this.form.item = _.find(this.items, {
+                id: this.form.item_id
+            });
             if (changing_name) {
                 this.changing_name = true;
                 this.input_barcode = this.form.item.full_description;
@@ -1009,22 +1318,41 @@ export default {
 
             // Validation for color and size
             if (this.form.item.has_color_size && this.color_size.length === 0) {
-                return this.$toast.error("Debe agregar al menos un color y talla para poder realizar la compra.");
+                // return this.$toast.error(
+                //     "Debe agregar al menos un color y talla para poder realizar la compra."
+                // );
+                return this.$showSAlert(
+                    "Alerta",
+                    "Debe agregar al menos un color y talla para poder realizar la Compra",
+                    "error"
+                );
             }
 
             // Validation for lots
             /* if (this.form.item.lots_enabled && this.lots.length === 0) {
-                return this.$toast.error("Debe agregar al menos un lote para poder realizar la compra.");
-            } */
+                    return this.$toast.error("Debe agregar al menos un lote para poder realizar la compra.");
+                } */
 
             // Validation for series
             if (this.form.item.series_enabled) {
                 if (this.lots.length > this.form.quantity) {
-                    return this.$toast.error("La cantidad de series registradas es superior al stock");
+                    // return this.$toast.error("La cantidad de series registradas es superior al stock");
+                    return this.$showSAlert(
+                        "Alerta",
+                        "La cantidad de series registradas es superior al stock",
+                        "error"
+                    );
                 }
 
                 if (this.lots.length != this.form.quantity) {
-                    return this.$toast.error("La cantidad de series registradas son diferentes al stock");
+                    // return this.$toast.error(
+                    //     "La cantidad de series registradas son diferentes al stock"
+                    // );
+                    return this.$showSAlert(
+                        "Alerta",
+                        "La cantidad de series registradas son diferentes al stock",
+                        "error"
+                    );
                 }
             }
 
@@ -1033,7 +1361,9 @@ export default {
             this.form.item.presentation = this.item_unit_type;
             this.form.affectation_igv_type = _.find(
                 this.affectation_igv_types,
-                { id: this.form.affectation_igv_type_id }
+                {
+                    id: this.form.affectation_igv_type_id
+                }
             );
             this.row = await calculateRowItem(
                 this.form,

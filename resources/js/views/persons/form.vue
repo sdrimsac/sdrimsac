@@ -307,7 +307,7 @@
                         <small class="text-danger" v-if="errors.country_id" v-text="errors.country_id[0]"></small>
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group" :class="{ 'has-danger': errors.location_id }">
                         <label class="control-label">Ubigeo</label>
                         <el-cascader :options="locations" v-model="row.location_id" :clearable="true" filterable></el-cascader>

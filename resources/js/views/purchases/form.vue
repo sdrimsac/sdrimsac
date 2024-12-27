@@ -177,6 +177,7 @@
                                     ></small>
                                 </div>
                             </div>
+
                             <div class="col-lg-2">
                                 <div
                                     class="form-group"
@@ -213,54 +214,64 @@
                             </div>
                         </template>
 
-                        <div class="col-lg-2">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.date_of_issue }"
-                            >
-                                <label class="control-label">
-                                    <i
-                                        class="fas fa-calendar-check red-icon"
-                                    ></i>
-                                    F. Emisión
-                                </label>
-                                <el-date-picker
-                                    v-model="form.date_of_issue"
-                                    type="date"
-                                    value-format="yyyy-MM-dd"
-                                    :clearable="false"
-                                    @change="changeDateOfIssue"
-                                ></el-date-picker>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.date_of_issue"
-                                    v-text="errors.date_of_issue[0]"
-                                ></small>
-                            </div>
-                        </div>
+                        <div class="col-md-4 d-flex justify-content-end">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.date_of_issue
+                                        }"
+                                    >
+                                        <label class="control-label">
+                                            <i
+                                                class="fas fa-calendar-check red-icon"
+                                            ></i>
+                                            F. Emisión
+                                        </label>
+                                        <el-date-picker
+                                            v-model="form.date_of_issue"
+                                            type="date"
+                                            value-format="yyyy-MM-dd"
+                                            :clearable="false"
+                                            @change="changeDateOfIssue"
+                                            class="responsive-date-picker"
+                                        ></el-date-picker>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.date_of_issue"
+                                            v-text="errors.date_of_issue[0]"
+                                        ></small>
+                                    </div>
+                                </div>
 
-                        <div class="col-lg-2">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.date_of_due }"
-                            >
-                                <label class="control-label">
-                                    <i
-                                        class="fas fa-calendar-check red-icon"
-                                    ></i>
-                                    F. Vencimiento
-                                </label>
-                                <el-date-picker
-                                    v-model="form.date_of_due"
-                                    type="date"
-                                    value-format="yyyy-MM-dd"
-                                    :clearable="false"
-                                ></el-date-picker>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.date_of_due"
-                                    v-text="errors.date_of_due[0]"
-                                ></small>
+                                <div class="col-lg-6">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.date_of_due
+                                        }"
+                                    >
+                                        <label class="control-label">
+                                            <i
+                                                class="fas fa-calendar-check red-icon"
+                                            ></i>
+                                            F. Vencimiento
+                                        </label>
+                                        <el-date-picker
+                                            v-model="form.date_of_due"
+                                            type="date"
+                                            value-format="yyyy-MM-dd"
+                                            :clearable="false"
+                                            class="responsive-date-picker"
+                                        ></el-date-picker>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.date_of_due"
+                                            v-text="errors.date_of_due[0]"
+                                        ></small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -740,7 +751,11 @@
                                                 <el-input-number
                                                     :min="0.01"
                                                     v-model="row.quantity"
-                                                    :disabled="row.lots.length > 0 || row.color_size.length > 0"
+                                                    :disabled="
+                                                        row.lots.length > 0 ||
+                                                            row.color_size
+                                                                .length > 0
+                                                    "
                                                     @change="
                                                         calculateItem(
                                                             index,
@@ -753,8 +768,11 @@
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
                                                 <el-input-number
-
-                                                    :disabled="row.lots.length > 0 || row.color_size.length > 0"
+                                                    :disabled="
+                                                        row.lots.length > 0 ||
+                                                            row.color_size
+                                                                .length > 0
+                                                    "
                                                     :min="0.01"
                                                     v-model="row.unit_price"
                                                     @change="
@@ -1215,6 +1233,23 @@ a.text-white {
 .btn-danger {
     border-radius: 5px;
 }
+.col-lg-6 {
+    max-width: 100%; /* Asegura que no se desborde */
+    box-sizing: border-box;
+}
+
+/* Personalizamos el tamaño del date picker */
+.responsive-date-picker {
+    width: 100%; /* Adapta el date picker al tamaño del contenedor */
+    max-width: 100%; /* Previene el desbordamiento */
+}
+
+/* Opcional: Ajustes adicionales para que sea responsive */
+@media (max-width: 768px) {
+    .col-lg-6 {
+        width: 100%;
+    }
+}
 </style>
 
 <script>
@@ -1239,6 +1274,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+            loading_submit: false,
             listApart: false,
             ordenInBox: [],
             apartPurchases: false,

@@ -12792,7 +12792,7 @@ width: 181px;
 .el-dialog__header {
   background-color: var(--header-background); /* Fondo azul profesional */
   color: var(--header-text-color); /* Texto blanco */
-  padding: 5px 10px;
+  padding: 5px 5px;
   border-radius: 12px 12px 0 0; /* Bordes redondeados superiores */
   border-bottom: 1px solid var(--border-color); /* Línea separadora */
   display: flex;
@@ -12801,16 +12801,14 @@ width: 181px;
   font-size: 1.25rem;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra leve para el encabezado */
-}
-
-.el-dialog__header * {
   color: #ffffff !important; /* Forza blanco en elementos internos */
 }
 
+
 /* --- Diálogo principal --- */
 .el-dialog {
+  /* transform: translate(-0%, 3%); */
   background: #afb1a0 !important; /* Fondo beige */
-  
   border-radius: 12px !important; /* Bordes redondeados */
   box-shadow: var(--box-shadow); /* Sombra profunda */
   font-weight: bolder; /* Texto principal en negrita */
@@ -12819,6 +12817,13 @@ width: 181px;
   font-size: 1rem;
   overflow: hidden !important;
   animation: scaleUp 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Animación más profesional */
+  margin-top: 2rem; /* Margen superior de 2rem */
+}
+
+/* Forzar el color blanco en el título del diálogo */
+.el-dialog__title {
+  color: #ffffff !important; /* Texto blanco */
+  z-index: 1000; /* Asegura que esté sobre todos los elementos */
 }
 
 /* --- Animación personalizada --- */
@@ -13129,7 +13134,140 @@ width: 181px;
   background-color: #f9f9f9; /* Cambia ligeramente el fondo al pasar el cursor */
 }
 /* ************ */
+/* Estilo común para los botones */
+.btnsdr {
+  background-color: #007bff !important; /* Azul */
+  border: none !important;
+  color: white !important; /* Texto e icono blanco */
+  border-radius: 8px !important; /* Bordes redondeados */
+  font-size: 0.9em !important; /* Texto más pequeño */
+  min-height: 40px !important; /* Botones más pequeños */
+  padding: 5px 12px !important; /* Padding más pequeño */
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important; /* Espaciado entre icono y texto */
+  transition: background-color 0.3s, color 0.3s !important; /* Transición suave */
+  width: 100%; /* Ocupa todo el ancho disponible */
+  margin-bottom: 8px; /* Espaciado entre botones */
+  box-sizing: border-box;
+}
 
+/* Hover común */
+.btnsdr:hover {
+  background-color: #0056b3 !important; /* Azul más oscuro */
+  color: #ddd !important; /* Texto blanco apagado */
+}
+
+/* Colores personalizados para cada tipo de botón */
+
+/* Subir Lotes */
+.btnsdr-lotes {
+  background-color: #6f42c1 !important; /* Morado */
+}
+
+.btnsdr-lotes:hover {
+  background-color: #5a32a3 !important;
+}
+
+/* Subir Series */
+.btnsdr-series {
+  background-color: #fd7e14 !important; /* Naranja */
+}
+
+.btnsdr-series:hover {
+  background-color: #e66a11 !important;
+}
+
+/* Subir Tallas y Colores */
+.btnsdr-tallas-colores {
+  background-color: #20c997 !important; /* Verde Claro */
+}
+
+.btnsdr-tallas-colores:hover {
+  background-color: #1aa785 !important;
+}
+
+/* Botones para la columna Subir (con íconos de upload) */
+.btnsdr-lotes-upload {
+  background-color: #6f42c1 !important; /* Morado */
+}
+
+.btnsdr-lotes-upload:hover {
+  background-color: #5a32a3 !important;
+}
+
+.btnsdr-series-upload {
+  background-color: #fd7e14 !important; /* Naranja */
+}
+
+.btnsdr-series-upload:hover {
+  background-color: #e66a11 !important;
+}
+
+.btnsdr-tallas-colores-upload {
+  background-color: #20c997 !important; /* Verde Claro */
+}
+
+.btnsdr-tallas-colores-upload:hover {
+  background-color: #1aa785 !important;
+}
+
+/* Estilo para el botón de descargar Excel */
+.btnsdr-download {
+  background-color: #28a745 !important; /* Verde Excel */
+  color: white !important;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 1.1em;
+}
+
+.btnsdr-download:hover {
+  background-color: #218838 !important;
+}
+
+/* Tooltip de Bootstrap */
+.tooltip-inner {
+  background-color: #28a745 !important; /* Verde */
+  color: white !important;
+}
+
+/* Estilo de los títulos de las columnas */
+h5 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Asegurarse de que los botones en las tres columnas se ajusten bien */
+.col-4, .col-5, .col-3 {
+  padding: 8px; /* Espaciado dentro de las columnas */
+}
+
+.btnsdr-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espacio entre los botones */
+}
+/* ***** */
+
+.btn-subir {
+  background-color: #ffc107 !important; /* Ámbar */
+  border: none !important;
+  color: white !important; /* Texto blanco */
+  border-radius: 5px !important; /* Bordes redondeados */
+  font-size: 1.1em !important; /* Tamaño del texto */
+  min-height: 50px !important; /* Altura mínima más alta */
+  padding: 10px 20px !important; /* Espaciado interno */
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important; /* Espaciado entre el icono y el texto */
+  transition: background-color 0.3s, color 0.3s !important; /* Transición suave */
+}
+
+.btn-subir:hover {
+  background-color: #e0a800 !important; /* Ámbar más oscuro al pasar el mouse */
+  color: #b1b1b1 !important; /* Texto gris (plomo) */
+}
 /* **** */
 .btn-cancel {
   background-color: #dc3545 !important; /* Rojo */
@@ -13149,6 +13287,7 @@ width: 181px;
   background-color: #c82333 !important; /* Rojo más oscuro al pasar el mouse */
   color: #b1b1b1 !important; /* Texto gris (plomo) */
 }
+
 .btn-save {
   background-color: #28a745 !important; /* Verde */
   border: none !important;
@@ -13167,6 +13306,28 @@ width: 181px;
   background-color: #218838 !important; /* Verde más oscuro al pasar el mouse */
   color: #b1b1b1 !important; /* Texto gris (plomo) */
 }
+
+.btn-agregar {
+  background-color: #007bff !important; /* Azul */
+  border: none !important;
+  color: white !important; /* Texto e icono blanco */
+  border-radius: 5px !important; /* Bordes redondeados */
+  font-size: 1.1em !important; /* Tamaño del texto */
+  min-height: 50px !important; /* Altura mínima más alta */
+  padding: 10px 20px !important; /* Espaciado interno */
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important; /* Espaciado entre el icono y el texto */
+  transition: background-color 0.3s, color 0.3s !important; /* Transición suave */
+
+}
+
+
+.btn-agregar:hover {
+  background-color: #0056b3 !important; /* Azul más oscuro al pasar el mouse */
+  color: #b1b1b1 !important; /* Texto gris (plomo) */
+}
+
 
 /* botones de titulo de modal */
 .btn_titulos_modal {
