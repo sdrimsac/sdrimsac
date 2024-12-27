@@ -80,8 +80,6 @@ class RestaurantController extends Controller
 
         $persons = Person::query();
 
-
-
         $persons = $persons
             ->where('name', 'like', '%' . $value . '%')
             ->orWhere('alias', 'like', '%' . $value . '%')

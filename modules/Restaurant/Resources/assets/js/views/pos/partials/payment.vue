@@ -2931,6 +2931,11 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
+
+                if (!this.input_person.number) {
+                    return;
+                }
+
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
@@ -2940,7 +2945,7 @@ export default {
 
                 this.customers = persons.filter(n => n.number != "88888888");
                 this.updateAllCustomers(this.customers);
-            }, 500);
+            }, 1000);
         },
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
@@ -3055,8 +3060,9 @@ export default {
                     index === self.findIndex(t => t.id === thing.id)
             );
             this.setSeries();
-            /* this.verifyPromotionCustomer(); */
+            
         },
+
         setLocalStorageIndex(key, obj) {
             localStorage.setItem(key, JSON.stringify(obj));
         },
@@ -3275,7 +3281,7 @@ export default {
                             "input"
                         )[0].value = this.clientSaleNoteNumber;
                         this.keyupCustomer();
-                    }, 800);
+                    }, 1000);
                     this.discount_amount = this.clientSaleNoteDiscount;
                     this.inputDiscountAmount();
                     this.discountTotal = true;

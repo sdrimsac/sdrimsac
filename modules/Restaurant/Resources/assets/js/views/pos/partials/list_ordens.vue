@@ -325,6 +325,7 @@
                                     class="btn btn-light mt-2"
                                     type="button"
                                     @click="payOrden()"
+                                    :disabled="cotizarConfirmado"
                                     style="max-height: 45px ; max-width: 80px;"
                                 >
                                     <i
@@ -397,6 +398,7 @@
                                     !configuration.college
                             "
                             @click="openApart"
+                            :disabled="cotizarConfirmado"
                             class="btn btn-light mt-2"
                             type="button"
                             style="max-height: 45px ; max-width: 80px;"
@@ -2374,6 +2376,7 @@
             :establishment="establishments"
             :formQtn.sync="formQtn"
             :fromPos="true"
+            @cotizacionCreada="handleCotizacionCreada"
         ></quotation-form>
 
         <credit-form
@@ -2645,6 +2648,7 @@ export default {
         ShowColorSizeProduct
     },
     props: [
+        "cotizarConfirmado",
         "formQtn",
         "users",
         "cotIdentifier",
@@ -2679,6 +2683,7 @@ export default {
 
     data() {
         return {
+            localCotizarConfirmado: this.cotizarConfirmado,
             showDigitalPay: false,
             countdown: 0,
             num_orden: 0,
@@ -2769,6 +2774,10 @@ export default {
     },
 
     watch: {
+        cotizarConfirmado() {
+            this.handleCotizarConfirmado();
+            console.log("Cotización confirmada, ver valor",);
+        },
         isHotelArea(value, __) {
             this.isHotel = value;
             this.setOptionMenu();
@@ -2901,6 +2910,17 @@ export default {
         this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
     },
     methods: {
+
+        handleCotizacionCreada(value) {
+            console.log("Cotización creada con valor:", value);
+            this.$emit('cotizarConfirmado', value);
+        },
+        
+        handleCotizarConfirmado() {
+            this.cotizarConfirmado;
+            console.log("Cotización confirmada, procesando...", this.cotizarConfirmado);
+        },
+
         openDigitalPay(){
           this.showDigitalPay = true;
         },
@@ -3515,7 +3535,10 @@ export default {
                 }
 
                 this.showQuotationForm = true;
+                /* this.localCotizarConfirmado = false;
+                this.$emit('cotizarConfirmadoChanged', this.localCotizarConfirmado); */
             }
+            
         },
         savePrint() {
             localStorage.setItem("cajaPrint", this.printing ? 1 : 0);
@@ -4216,8 +4239,15 @@ export default {
                 if (res) {
                     this.isConsignment = false;
                     this.$emit("cancelOrden");
+                    /* this.cotizarConfirmado = false; */
+                    this.localCotizarConfirmado = false;
+                    /* this.$emit("cotizarConfirmadoChanged", this.cotizarConfirmado); */
+                    this.$emit("cotizarConfirmadoChanged", this.localCotizarConfirmado);
+                    console.log("ver valor enviado en el evento", this.localCotizarConfirmado);
                 }
             } catch (e) {}
+            /* this.cotizarConfirmado = false;
+            this.$emit('cotizarConfirmadoChanged', this.cotizarConfirmado); */
         },
         addNumberPin(number) {
             if (this.pin.length >= 4) {

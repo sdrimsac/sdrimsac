@@ -55,6 +55,7 @@
                         <th class="text-white">
                             Limite de canje
                         </th>
+                        <th class="text-white">Estado</th>
                         <th class="text-white text-right"></th>
                     </tr>
 
@@ -81,6 +82,9 @@
                         <td>{{ row.total }}</td>
                         <td v-if="promotionByPoints">{{ row.points_value }}</td>
                         <td>{{ row.limit_changes }}</td>
+                        <td :class="{'text-success': row.active, 'text-danger': !row.active}">
+                            {{ row.active ? 'Activo' : 'Desactivado' }}
+                        </td>
 
                         <td class="text-right">
                             <button

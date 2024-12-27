@@ -400,6 +400,11 @@
                                     :medida_ancho="medida_ancho"
                                     :medida_grosor="medida_grosor"
                                     :categoria_madera="categoria_madera"
+                                    @cotizarConfirmado="handleCotizarConfirmado"
+                                    :cotizarConfirmado.sync="cotizarConfirmado"
+                                    @cotizarConfirmadoChanged="
+                                        handleCotizarConfirmado
+                                    "
                                 ></ListFood>
                             </div>
                         </div>
@@ -983,6 +988,11 @@
                             @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData"
                             @reloadProduct="search_items"
+                            @cotizarConfirmado="handleCotizarConfirmado"
+                            :cotizarConfirmado.sync="cotizarConfirmado"
+                            @cotizarConfirmadoChanged="
+                                handleCotizarConfirmadoRegreso
+                            "
                         ></list-orden>
                     </div>
                 </div>
@@ -1520,6 +1530,7 @@
                         :clientTableData.sync="clientTableData"
                         :categories.sync="categories"
                         @reloadProduct="search_items"
+                        ref="listOrdens"
                     ></list-orden>
                 </div>
                 <template>
@@ -1814,9 +1825,9 @@
 </template>
 
 <style>
- .Vue-Toastification__toast--default.digital-pay-toast {
-        background-color: red;
-    }
+.Vue-Toastification__toast--default.digital-pay-toast {
+    background-color: red;
+}
 .warning-color {
     background-color: #ffa407 !important;
     color: #fff !important;
@@ -1892,7 +1903,7 @@ const ConsolidatedListModal = () =>
     import("./partials/consolidated_list_modal.vue");
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 
-import  DigitalPayComponent from "./partials/digital_pay_component.vue";
+import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
 const options = {
     text: "Loading ...",
@@ -1949,6 +1960,7 @@ export default {
 
     data() {
         return {
+            cotizarConfirmado: false,
             digitalPayMessage: null,
             quality: false,
             model: false,
@@ -2247,6 +2259,21 @@ export default {
         }
     },
     methods: {
+        handleCotizarConfirmadoRegreso(newValue) {
+            this.cotizarConfirmado = newValue; // Actualiza el estado con el nuevo valor
+            /* console.log(
+                "Nuevo valor de cotizarConfirmado en el padre:",
+                this.cotizarConfirmado
+            ); */
+        },
+        handleCotizarConfirmado(newValue) {
+            this.cotizarConfirmado = newValue; // Actualiza el estado con el nuevo valor
+            /* console.log(
+                "Evento recibiendo en el index:",
+                this.cotizarConfirmado
+            );  */
+        },
+
         async limpiarcache(reload = true) {
             if ("caches" in window) {
                 caches.keys().then(function(cacheNames) {
@@ -3313,9 +3340,11 @@ export default {
             }
         },
         buscarnuevo() {
-             if(!this.isAndroid){
-            this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
-            }  
+            if (!this.isAndroid) {
+                this.$refs.input_items.$el
+                    .getElementsByTagName("input")[0]
+                    .focus();
+            }
             this.$refs.input_items.$el.getElementsByTagName("input")[0].value =
                 "";
             if (this.configuration.all_items_pos) {
@@ -3586,7 +3615,6 @@ export default {
                 listPricesDescription[type.price_default - 1];
             let price = type[currentPriceIndx];
             if (type.total == null || this.configuration.price_item_unit_type) {
-            
             } else {
                 price = Number(type.total);
             }
@@ -3680,7 +3708,6 @@ export default {
                     orden.categoriaMadera = categoriaMadera;
                 }
 
-            
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.price = categoriaMadera.price;
                 }
@@ -3697,7 +3724,7 @@ export default {
                 }
 
                 orden.original_price = orden.price;
-                if(type){
+                if (type) {
                     orden.quantity = orden.food.item.series_enabled
                         ? 0
                         : orden.quantity || 1;
@@ -5772,9 +5799,11 @@ export default {
                 await this.getFoods();
             }
             await this.calculateTotal();
-             if(!this.isAndroid){
-                this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
-            } 
+            if (!this.isAndroid) {
+                this.$refs.input_items.$el
+                    .getElementsByTagName("input")[0]
+                    .focus();
+            }
             this.total_sales_pos = 0;
             if (this.configuration.sale_note_credit_confirm) {
                 this.openCredit();
@@ -6294,11 +6323,10 @@ export default {
             e => {
                 let { message } = e;
                 this.$toast({
-                    
                     component: DigitalPayComponent,
                     toastClassName: "digital-pay-toast",
                     props: {
-                        message,
+                        message
                     },
                     position: "top-right",
                     timeout: 8000,
@@ -6312,7 +6340,7 @@ export default {
                     closeButton: "button",
                     icon: true,
                     rtl: false
-                })
+                });
 
                 this.playSound("yape_notification.mp3");
             }

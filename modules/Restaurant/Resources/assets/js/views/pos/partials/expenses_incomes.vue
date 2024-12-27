@@ -162,7 +162,8 @@ export default {
         getRecordsInput() {
             this.getRecords();
         },
-        async printEvent(url) {
+        // para la impresion del qz directo 
+        /* async printEvent(url) {
             try {
                 let config = qz.configs.create(this.printer, {
                     scaleContent: false
@@ -181,7 +182,7 @@ export default {
                     this.$toast.error(e.message);
                 });
             } catch (e) {}
-        },
+        }, */
 
         async getPrinter() {
             this.loading = true;

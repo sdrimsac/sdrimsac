@@ -933,19 +933,19 @@
                                         >
                                     </template> -->
                                     <template v-else>
-                                            <div
-                                                class="text-center"
-                                                style="width: 100%; position: relative; height: 50px;"
-                                            >
-                                                <img
-                                                    src="/status_images/stock.png"
-                                                    style="position: absolute; top: -50px; left: 50%; 
+                                        <div
+                                            class="text-center"
+                                            style="width: 100%; position: relative; height: 50px;"
+                                        >
+                                            <img
+                                                src="/status_images/stock.png"
+                                                style="position: absolute; top: -50px; left: 50%; 
                                                     transform: translate(-50%, -50%); opacity: 0.5;
                                                      pointer-events: none; 
                                                      width: 400px; height: 200px;"
-                                                    class=""
-                                                />
-                                            </div>
+                                                class=""
+                                            />
+                                        </div>
                                     </template>
                                 </div>
                             </div>
@@ -1019,9 +1019,11 @@
 import WarehousesDetail from "./warehouses.vue";
 import UnitTypeModal from "./unit_type_modal.vue";
 import ModalUnitTypeId from "./modal_unit_type_id.vue";
+import swal from "sweetalert2";
 export default {
     components: { WarehousesDetail, UnitTypeModal, ModalUnitTypeId },
     props: [
+        "cotizarConfirmado",
         "canAddItem",
         "loadingItems",
         "foods",
@@ -1042,9 +1044,9 @@ export default {
     ],
     data() {
         return {
+            localCotizarConfirmado: this.cotizarConfirmado,
             foodWithTypes: null,
             showDialogUnitType: false,
-
             showUnitTypeModal: false,
             addingType: false,
             currentIndex: null,
@@ -1171,9 +1173,48 @@ export default {
         if (this.foods.length > 0) {
             this.loading = false;
         }
-        /* ; */
     },
+    /* watch: {
+        cotizarConfirmado(newVal) {
+            this.localCotizarConfirmado = newVal;
+        },
+        cotizarConfirmado(newVal) {
+            console.log("cotizarConfirmado ha cambiado en ListFood:", newVal);
+            if (!newVal) {
+                this.configuration.sales_stock = true;
+                console.log("Sales stock restablecido a true");
+            }
+        },
+        configuration: {
+            handler(newConfig) {
+                console.log("Configuración actualizada:", newConfig);
+            },
+            deep: true
+        },
+        foods(__, _) {
+            this.updateListFoods();
+        }
+    }, */
     watch: {
+        cotizarConfirmado(newVal) {
+            // Actualiza el estado local
+            this.localCotizarConfirmado = newVal;
+
+            // Confirma si debe restablecer sales_stock
+            console.log("cotizarConfirmado ha cambiado en ListFood:", newVal);
+            if (!newVal) {
+                this.configuration.sales_stock = true;
+                console.log("Sales stock restablecido a true");
+            }
+            // Emit the event to notify the parent component
+            this.$emit("cotizarConfirmadoChanged", newVal);
+        },
+        configuration: {
+            handler(newConfig) {
+                console.log("Configuración actualizada:", newConfig);
+            },
+            deep: true // Observa cambios en todas las propiedades anidadas
+        },
         foods(__, _) {
             this.updateListFoods();
         }
@@ -1186,6 +1227,9 @@ export default {
     computed: {
         madereraItms() {
             return this.foods.filter(item => item.category === "MADERERA");
+        },
+        cotizarConfirmadoState() {
+            return this.cotizarConfirmado;
         }
     },
     methods: {
@@ -1488,7 +1532,43 @@ export default {
                     this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
                     /* this.$toast.warning("Stock insuficiente"); */
-                    this.$showSAlert("STOCK", "Stock insuficiente", "warning");
+                    /* this.$showSAlert("STOCK", "Stock insuficiente ", "warning");
+                    return; */
+                    swal.fire({
+                        title: "Stock insuficiente",
+                        text: "Stock insuficiente. ¿Desea cotizar?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        cancelButtonText: "Cancelar",
+                        confirmButtonText: "Cotizar"
+                    }).then(result => {
+                        if (result.isConfirmed) {
+                            this.configuration.sales_stock = false;
+                            swal.fire({
+                                title: "COTIZAR",
+                                text: "Cotizar",
+                                icon: "success",
+                                allowOutsideClick: false,
+                                showConfirmButton: false
+                            });
+                            this.localCotizarConfirmado = true;
+                            this.$emit(
+                                "cotizarConfirmado",
+                                this.localCotizarConfirmado
+                            );
+                            swal.close();
+                        } else {
+                            if (
+                                this.cotizarConfirmado === false &&
+                                this.configuration.sales_stock !== true
+                            ) {
+                                this.configuration.sales_stock = true;
+                            }
+                        }
+                    });
+                    this.$emit("disableButtons", true);
                     return;
                 }
             }

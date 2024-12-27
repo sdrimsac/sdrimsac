@@ -1250,8 +1250,19 @@
                                                     }"
                                                 >
                                                     <label class="control-label"
-                                                        >Ingrese Mumero de Meses
-                                                        Garantia</label
+                                                        >Meses
+                                                        Garantia 
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="Ingresa el numero de meses de garantia"
+                                                            placement="top"
+                                                        >
+                                                            <i
+                                                                class="fas fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                          </label
                                                     >
                                                     <el-input
                                                         v-model="form.month_day"

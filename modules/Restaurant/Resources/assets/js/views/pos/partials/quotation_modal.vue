@@ -376,7 +376,12 @@ export default {
                     } else {
                         this.showDialogOptions = true;
                     }
+                    this.localCotizarConfirmado = false;
+                    this.$emit('cotizarConfirmadoChanged', this.localCotizarConfirmado);
+                    /* console.log("🚀 ~ submit ~ this.localCotizarConfirmado", this.localCotizarConfirmado) */
                     this.$toast.success("Cotizacion creada con exito");
+
+                    this.$emit('cotizacionCreada', false);
                 }
             } catch (e) {
                 console.log(e);

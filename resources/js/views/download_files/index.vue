@@ -19,98 +19,278 @@
                     </h4>
                 </div>
 
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Input para mes -->
-                        <div class="col-md-2 mb-3">
-                            <el-date-picker
-                                v-model="form.month"
-                                type="month"
-                                format="yyyy-MM"
-                                value-format="yyyy-MM"
-                                placeholder="Seleccione mes"
-                            >
-                            </el-date-picker>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <el-checkbox-group
-                                v-model="form.selectedTypes"
-                                class="d-flex gap-4"
-                            >
-                                <el-checkbox label="pdf">PDF</el-checkbox>
-                                <el-checkbox label="xml">XML</el-checkbox>
-                                <el-checkbox label="cdr">CDR</el-checkbox>
-                                <el-checkbox label="sale_note"
-                                    >Notas de Venta</el-checkbox
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Input para mes -->
+                            <div class="col-md-3 mb-3">
+                                <label class="w-100"> Filtro Por Mes</label>
+                                <el-date-picker
+                                    v-model="form.month"
+                                    type="month"
+                                    format="yyyy-MM"
+                                    value-format="yyyy-MM"
+                                    placeholder="Seleccione mes"
                                 >
-                            </el-checkbox-group>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-primary" @click="search">
-                                    Buscar
-                                </button>
-                                <button
-                                    class="btn btn-primary"
-                                    @click="openDialog"
+                                </el-date-picker>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <el-checkbox-group
+                                    v-model="form.selectedTypes"
+                                    class="d-flex gap-4"
                                 >
-                                    <i class="fas fa-list"></i>Archivos
-                                    pendientes
-                                </button>
-                                <button
-                                    v-if="filesFound"
-                                    class="btn btn-success ml-2"
-                                    @click="confirmDownload"
-                                >
-                                    Descargar ZIP
-                                </button>
+                                    <el-checkbox
+                                        label="pdf"
+                                        :class="{
+                                            'text-center': true,
+                                            'bg-danger': form.selectedTypes.includes(
+                                                'pdf'
+                                            ),
+                                            'bg-white': !form.selectedTypes.includes(
+                                                'pdf'
+                                            )
+                                        }"
+                                        type="button"
+                                        border
+                                        size="large"
+                                    >
+                                        <i
+                                            :class="{
+                                                'el-tooltip': true,
+                                                far: true,
+                                                'fa-file-pdf': true,
+                                                'text-white': form.selectedTypes.includes(
+                                                    'pdf'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'pdf'
+                                                )
+                                            }"
+                                            class="fa-lg item"
+                                        ></i>
+                                        <span
+                                            :class="{
+                                                'text-white': form.selectedTypes.includes(
+                                                    'pdf'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'pdf'
+                                                )
+                                            }"
+                                        >
+                                            PDF
+                                        </span>
+                                    </el-checkbox>
+                                    <el-checkbox
+                                        label="xml"
+                                        :class="{
+                                            'text-center': true,
+                                            'bg-success': form.selectedTypes.includes(
+                                                'xml'
+                                            ),
+                                            'bg-white': !form.selectedTypes.includes(
+                                                'xml'
+                                            )
+                                        }"
+                                        type="button"
+                                        border
+                                        size="large"
+                                    >
+                                        <i
+                                            :class="{
+                                                'el-tooltip': true,
+                                                far: true,
+                                                'fa-file-alt': true, // Changed from 'fa-file-xml' to 'fa-file-alt'
+                                                'text-white': form.selectedTypes.includes(
+                                                    'xml'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'xml'
+                                                )
+                                            }"
+                                            class="fa-lg item"
+                                        ></i>
+                                        <span
+                                            :class="{
+                                                'text-white': form.selectedTypes.includes(
+                                                    'xml'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'xml'
+                                                )
+                                            }"
+                                        >
+                                            XML
+                                        </span>
+                                    </el-checkbox>
+                                    <el-checkbox
+                                        label="cdr"
+                                        :class="{
+                                            'text-center': true,
+                                            'bg-info': form.selectedTypes.includes(
+                                                'cdr'
+                                            ),
+                                            'bg-white': !form.selectedTypes.includes(
+                                                'cdr'
+                                            )
+                                        }"
+                                        type="button"
+                                        border
+                                        size="large"
+                                    >
+                                        <i
+                                            :class="{
+                                                'el-tooltip': true,
+                                                far: true,
+                                                'fa-file-alt': true,
+                                                'text-white': form.selectedTypes.includes(
+                                                    'cdr'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'cdr'
+                                                )
+                                            }"
+                                            class="fa-lg item"
+                                        ></i>
+                                        <span
+                                            :class="{
+                                                'text-white': form.selectedTypes.includes(
+                                                    'cdr'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'cdr'
+                                                )
+                                            }"
+                                        >
+                                            CDR
+                                        </span>
+                                    </el-checkbox>
+                                    <el-checkbox
+                                        label="sale_note"
+                                        :class="{
+                                            'text-center': true,
+                                            'bg-warning': form.selectedTypes.includes(
+                                                'sale_note'
+                                            ),
+                                            'bg-white': !form.selectedTypes.includes(
+                                                'sale_note'
+                                            )
+                                        }"
+                                        type="button"
+                                        border
+                                        size="large"
+                                    >
+                                        <i
+                                            :class="{
+                                                'el-tooltip': true,
+                                                far: true,
+                                                'fa-file-alt': true,
+                                                'text-white': form.selectedTypes.includes(
+                                                    'sale_note'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'sale_note'
+                                                )
+                                            }"
+                                            class="fa-lg item"
+                                        ></i>
+                                        <span
+                                            :class="{
+                                                'text-white': form.selectedTypes.includes(
+                                                    'sale_note'
+                                                ),
+                                                'text-black': !form.selectedTypes.includes(
+                                                    'sale_note'
+                                                )
+                                            }"
+                                        >
+                                            NOTAS DE VENTA
+                                        </span>
+                                    </el-checkbox>
+                                </el-checkbox-group>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Tabs section -->
-                    <div class="row" v-if="form.selectedTypes.length > 0">
-                        <div class="col-md-12">
-                            <el-tabs v-model="activeTab">
-                                <el-tab-pane
-                                    v-if="form.selectedTypes.includes('pdf')"
-                                    label="PDF"
-                                    name="pdf"
-                                >
-                                    <div class="table-responsive">
-                                        <table
-                                            class="table table-hover table-bordered"
-                                        >
-                                            <thead
-                                                class="bg-primary text-white"
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button
+                                                class="btn btn-primary"
+                                                @click="search"
                                             >
-                                                <tr class="text-white">
-                                                    <th class="text-white">
-                                                        Nombre del archivo
-                                                    </th>
-                                                    <!-- <th
+                                            <i class="fa fa-search"> </i>
+                                                Buscar
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button
+                                                v-if="filesFound"
+                                                class="btn btn-success ml-2"
+                                                @click="confirmDownload"
+                                            >
+                                                Descargar ZIP
+                                                <i class="el-icon-download"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button
+                                                class="btn btn-primary"
+                                                @click="openDialog"
+                                            >
+                                                <i class="fas fa-list"></i
+                                                >Archivos pendientes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabs section -->
+                        <div class="row" v-if="form.selectedTypes.length > 0">
+                            <div class="col-md-12">
+                                <el-tabs v-model="activeTab">
+                                    <el-tab-pane
+                                        v-if="
+                                            form.selectedTypes.includes('pdf')
+                                        "
+                                        label="PDF"
+                                        name="pdf"
+                                    >
+                                        <div class="table-responsive">
+                                            <table
+                                                class="table table-hover table-bordered"
+                                            >
+                                                <thead
+                                                    class="bg-primary text-white"
+                                                >
+                                                    <tr class="text-white">
+                                                        <th class="text-white">
+                                                            Nombre del archivo
+                                                        </th>
+                                                        <!-- <th
                                                         width="100"
                                                         class="text-white"
                                                     >
                                                         Acciones
                                                     </th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody
-                                                v-if="
-                                                    records.pdf &&
-                                                        records.pdf.length > 0
-                                                "
-                                            >
-                                                <tr
-                                                    v-for="file in records.pdf"
-                                                    :key="file"
+                                                    </tr>
+                                                </thead>
+                                                <tbody
+                                                    v-if="
+                                                        records.pdf &&
+                                                            records.pdf.length >
+                                                                0
+                                                    "
                                                 >
-                                                    <td>{{ file }}</td>
-                                                    <!-- <td class="text-center">
+                                                    <tr
+                                                        v-for="file in records.pdf"
+                                                        :key="file"
+                                                    >
+                                                        <td class="text-info">{{ file }}</td>
+                                                        <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -125,54 +305,59 @@
                                                             ></i>
                                                         </button>
                                                     </td> -->
-                                                </tr>
-                                            </tbody>
-                                            <tbody v-else>
-                                                <tr>
-                                                    <td
-                                                        colspan="2"
-                                                        class="text-center"
-                                                    >
-                                                        No hay archivos
-                                                        disponibles
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </el-tab-pane>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>
+                                                        <td
+                                                            colspan="2"
+                                                            class="text-center"
+                                                        >
+                                                            No hay archivos
+                                                            disponibles
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </el-tab-pane>
 
-                                <el-tab-pane
-                                    v-if="form.selectedTypes.includes('xml')"
-                                    label="XML"
-                                    name="xml"
-                                >
-                                    <div class="table-responsive">
-                                        <table
-                                            class="table table-hover table-bordered"
-                                        >
-                                            <thead
-                                                class="bg-primary text-white"
+                                    <el-tab-pane
+                                        v-if="
+                                            form.selectedTypes.includes('xml')
+                                        "
+                                        label="XML"
+                                        name="xml"
+                                    >
+                                        <div class="table-responsive">
+                                            <table
+                                                class="table table-hover table-bordered"
                                             >
-                                                <tr>
-                                                    <th>Nombre del archivo</th>
-                                                    <!-- <th width="100">
+                                                <thead
+                                                    class="bg-primary text-white"
+                                                >
+                                                    <tr>
+                                                        <th class="text-white">
+                                                            Nombre del archivo
+                                                        </th>
+                                                        <!-- <th width="100">
                                                         Acciones
                                                     </th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody
-                                                v-if="
-                                                    records.xml &&
-                                                        records.xml.length > 0
-                                                "
-                                            >
-                                                <tr
-                                                    v-for="file in records.xml"
-                                                    :key="file"
+                                                    </tr>
+                                                </thead>
+                                                <tbody
+                                                    v-if="
+                                                        records.xml &&
+                                                            records.xml.length >
+                                                                0
+                                                    "
                                                 >
-                                                    <td>{{ file }}</td>
-                                                    <!-- <td class="text-center">
+                                                    <tr
+                                                        v-for="file in records.xml"
+                                                        :key="file"
+                                                    >
+                                                        <td class="text-info">{{ file }}</td>
+                                                        <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -187,54 +372,59 @@
                                                             ></i>
                                                         </button>
                                                     </td> -->
-                                                </tr>
-                                            </tbody>
-                                            <tbody v-else>
-                                                <tr>
-                                                    <td
-                                                        colspan="2"
-                                                        class="text-center"
-                                                    >
-                                                        No hay archivos
-                                                        disponibles
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </el-tab-pane>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>
+                                                        <td
+                                                            colspan="2"
+                                                            class="text-center"
+                                                        >
+                                                            No hay archivos
+                                                            disponibles
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </el-tab-pane>
 
-                                <el-tab-pane
-                                    v-if="form.selectedTypes.includes('cdr')"
-                                    label="CDR"
-                                    name="cdr"
-                                >
-                                    <div class="table-responsive">
-                                        <table
-                                            class="table table-hover table-bordered"
-                                        >
-                                            <thead
-                                                class="bg-primary text-white"
+                                    <el-tab-pane
+                                        v-if="
+                                            form.selectedTypes.includes('cdr')
+                                        "
+                                        label="CDR"
+                                        name="cdr"
+                                    >
+                                        <div class="table-responsive">
+                                            <table
+                                                class="table table-hover table-bordered"
                                             >
-                                                <tr>
-                                                    <th>Nombre del archivo</th>
-                                                    <!-- <th width="100">
+                                                <thead
+                                                    class="bg-primary text-white"
+                                                >
+                                                    <tr>
+                                                        <th class="text-white">
+                                                            Nombre del archivo
+                                                        </th>
+                                                        <!-- <th width="100">
                                                         Acciones
                                                     </th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody
-                                                v-if="
-                                                    records.cdr &&
-                                                        records.cdr.length > 0
-                                                "
-                                            >
-                                                <tr
-                                                    v-for="file in records.cdr"
-                                                    :key="file"
+                                                    </tr>
+                                                </thead>
+                                                <tbody
+                                                    v-if="
+                                                        records.cdr &&
+                                                            records.cdr.length >
+                                                                0
+                                                    "
                                                 >
-                                                    <td>{{ file }}</td>
-                                                    <!-- <td class="text-center">
+                                                    <tr
+                                                        v-for="file in records.cdr"
+                                                        :key="file"
+                                                    >
+                                                        <td class="text-info">{{ file }}</td>
+                                                        <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -249,57 +439,61 @@
                                                             ></i>
                                                         </button>
                                                     </td> -->
-                                                </tr>
-                                            </tbody>
-                                            <tbody v-else>
-                                                <tr>
-                                                    <td
-                                                        colspan="2"
-                                                        class="text-center"
-                                                    >
-                                                        No hay archivos
-                                                        disponibles
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </el-tab-pane>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>
+                                                        <td
+                                                            colspan="2"
+                                                            class="text-center"
+                                                        >
+                                                            No hay archivos
+                                                            disponibles
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </el-tab-pane>
 
-                                <el-tab-pane
-                                    v-if="
-                                        form.selectedTypes.includes('sale_note')
-                                    "
-                                    label="Notas de Venta"
-                                    name="sale_note"
-                                >
-                                    <div class="table-responsive">
-                                        <table
-                                            class="table table-hover table-bordered"
-                                        >
-                                            <thead
-                                                class="bg-primary text-white"
+                                    <el-tab-pane
+                                        v-if="
+                                            form.selectedTypes.includes(
+                                                'sale_note'
+                                            )
+                                        "
+                                        label="Notas de Venta"
+                                        name="sale_note"
+                                    >
+                                        <div class="table-responsive">
+                                            <table
+                                                class="table table-hover table-bordered"
                                             >
-                                                <tr>
-                                                    <th>Nombre del archivo</th>
-                                                    <!-- <th width="100">
+                                                <thead
+                                                    class="bg-primary text-white"
+                                                >
+                                                    <tr>
+                                                        <th class="text-white">
+                                                            Nombre del archivo
+                                                        </th>
+                                                        <!-- <th width="100">
                                                         Acciones
                                                     </th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody
-                                                v-if="
-                                                    records.sale_note &&
-                                                        records.sale_note
-                                                            .length > 0
-                                                "
-                                            >
-                                                <tr
-                                                    v-for="file in records.sale_note"
-                                                    :key="file"
+                                                    </tr>
+                                                </thead>
+                                                <tbody
+                                                    v-if="
+                                                        records.sale_note &&
+                                                            records.sale_note
+                                                                .length > 0
+                                                    "
                                                 >
-                                                    <td>{{ file }}</td>
-                                                    <!-- <td class="text-center">
+                                                    <tr
+                                                        v-for="file in records.sale_note"
+                                                        :key="file"
+                                                    >
+                                                        <td class="text-info">{{ file }}</td>
+                                                        <!-- <td class="text-center">
                                                         <button
                                                             class="btn btn-link"
                                                             @click="
@@ -314,27 +508,32 @@
                                                             ></i>
                                                         </button>
                                                     </td> -->
-                                                </tr>
-                                            </tbody>
-                                            <tbody v-else>
-                                                <tr>
-                                                    <td
-                                                        colspan="2"
-                                                        class="text-center"
-                                                    >
-                                                        No hay archivos
-                                                        disponibles
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </el-tab-pane>
-                            </el-tabs>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>
+                                                        <td
+                                                            colspan="2"
+                                                            class="text-center"
+                                                        >
+                                                            No hay archivos
+                                                            disponibles
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </el-tab-pane>
+                                </el-tabs>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <list-files :showDialog.sync="showDialog" @update:showDialog="showDialog = $event" />
+
+                <list-files
+                    :showDialog.sync="showDialog"
+                    @update:showDialog="showDialog = $event"
+                />
             </div>
         </div>
     </div>
@@ -438,32 +637,36 @@ export default {
                 this.loading = false;
             }
         },
-        
+
         downloadFile(type, filename) {
-            let fileType = 'application/pdf';
-            if(type === 'xml'){
-                fileType = 'application/xml';
+            let fileType = "application/pdf";
+            if (type === "xml") {
+                fileType = "application/xml";
             }
-            if(type === 'cdr'){
-                fileType = 'application/zip';
+            if (type === "cdr") {
+                fileType = "application/zip";
             }
-            if(type === 'sale_note'){
-                fileType = 'application/pdf';
+            if (type === "sale_note") {
+                fileType = "application/pdf";
             }
-            this.$http.get(`/download-files/download-file/${type}/${filename}`, {
-                responseType: 'blob'
-            }).then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data], {
-                    type: fileType
-                }));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', filename);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-            });
+            this.$http
+                .get(`/download-files/download-file/${type}/${filename}`, {
+                    responseType: "blob"
+                })
+                .then(response => {
+                    const url = window.URL.createObjectURL(
+                        new Blob([response.data], {
+                            type: fileType
+                        })
+                    );
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", filename);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                });
         },
         async confirmDownload() {
             const result = await this.$confirm(

@@ -262,8 +262,7 @@
                         class="submit"
                         type="success"
                         v-if="
-                            resource !== 'item-color-size' &&
-                                typeUser == 'superadmin'
+                            resource !== 'item-color-size'      
                         "
                         icon="el-icon-tickets"
                         @click.prevent="clickDownload('excel')"

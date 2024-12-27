@@ -92,21 +92,6 @@ class WorkerController extends Controller
             ]
         ];
     }
-    /* public function images($worker)
-    {
-        $records = WorkersImage::where('worker_id', $worker)->get()->transform(function ($row) {
-            return [
-                'id' => $row->id,
-                'name' => $row->image,
-                'url' => asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'workers' . DIRECTORY_SEPARATOR . $row->image)
-            ];
-        });
-        return [
-            'success' => true,
-            'data' => $records
-        ];
-    } */
-
     /* public function delete_images($id)
     {
         $record = ItemImage::findOrFail($id);
@@ -274,6 +259,8 @@ class WorkerController extends Controller
         $worker->commercial_treatment = $commercial_treatment;
         if($worker->image){
             $worker->image_url = url(''). '/storage/uploads/workers/' . $worker->image;
+        } else {
+            $worker->image_url = url(''). '/status_images/user.png';
         }
         return [
             'success' => true,
@@ -389,12 +376,11 @@ class WorkerController extends Controller
         
             $datenow = date('YmdHis');
             $file_name = Str::slug($user->name) . '-' . $datenow . '.' . end($file_name_old_array);
-    
+        
             Storage::put($directory . $file_name, $file_content);
             $user->image = $file_name;
         } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            
-            $user->image = 'imagen-no-disponible.jpg';
+            $user->image = 'status_images/user.png';
         }
         $user->save();
 
