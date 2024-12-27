@@ -6359,8 +6359,12 @@ export default {
                 let area_id = e.data.area_id;
                 let isSameEstablishmentPrinter =
                     this.establishments.id == user_establishment_id_printer;
+                console.log("this.establishments.id", this.establishments.id);
+                console.log("user_establishment_id_printer", user_establishment_id_printer);
+                console.log("isSameEstablishmentPrinter", isSameEstablishmentPrinter);
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
+                console.log("isSameEstablishment", isSameEstablishment);
                 let sameAreas = this.configuration
                     .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
@@ -6403,7 +6407,9 @@ export default {
                         );
                     }
                 } else {
-                    window.open(e.data.print, "_blank");
+                    if(canPrint){
+                        window.open(e.data.print, "_blank");
+                    }
                 }
             }
         );
