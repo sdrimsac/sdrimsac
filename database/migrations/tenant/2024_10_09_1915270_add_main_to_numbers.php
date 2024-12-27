@@ -20,7 +20,7 @@ class AddMainToNumbers extends Migration
             $configuration->number_activity = null;
             $configuration->save();
         }
-        if (!NumberActivity::where('number', $number_activity)->exists()) {
+        if (!NumberActivity::where('number', $number_activity)->exists() && $number_activity != null) {
             NumberActivity::create([
                 'number' => $number_activity,
             ]);
