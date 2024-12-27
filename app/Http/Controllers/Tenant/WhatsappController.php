@@ -119,9 +119,10 @@ class WhatsappController extends Controller
     public function removeWhatsapp(Request $request)
     {
         $number = $request->number;
+        $id = $request->id;
         $number_activity = NumberActivity::where('number', $number)->first();
         if ($number_activity) {
-            EstablishmentNotificationNumber::where('number', $number->id)->delete();
+            EstablishmentNotificationNumber::where('number', $id)->delete();
             $number_activity->delete();
         } else {
             return response()->json([
@@ -137,13 +138,15 @@ class WhatsappController extends Controller
     public function saveWhatsapp(Request $request)
     {
         $number = $request->number;
+        $description = $request->description;
         $number_activity = NumberActivity::where('number', $number)->first();
         if (!$number_activity) {
             $configuration = Configuration::first();
             $number_activity = $configuration->number_activity;
             if (!$number_activity || $number_activity != $number) {
                 NumberActivity::create([
-                    'number' => $number
+                    'number' => $number,
+                    'description' => $description
                 ]);
             } else {
                 return response()->json([

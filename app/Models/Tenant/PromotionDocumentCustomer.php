@@ -30,4 +30,9 @@ class PromotionDocumentCustomer extends ModelTenant
     {
         return $this->hasMany(PromotionReceived::class);
     }
+
+    public function details()
+    {
+        return $this->hasMany(PromotionDocumentCustomerDetail::class, 'promotion_customer_id');
+    }
 }

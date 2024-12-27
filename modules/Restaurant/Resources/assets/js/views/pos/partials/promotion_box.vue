@@ -63,7 +63,9 @@
                                             Código Interno:
                                             {{ promotion.item.internal_id }}
                                         </p>
-                                        <p class="card-text text-center">
+                                        <p class="card-text text-center"
+                                            :class="{'text-danger bold': Number(promotion.points_value) > remainingPoints}"
+                                        >
                                              Puntos:
                                             {{ promotion.points_value }}
                                         </p>
@@ -82,7 +84,7 @@
                                     <div class="text-center">
                                         <label for="num">Ingrese Cantidad:</label>
                                         <br />
-                                        <el-input-number
+                                        <el-input
                                             v-model="promotion.quantity"
                                             :min="0"
                                             :max="100"
@@ -90,7 +92,9 @@
                                             :disabled="
                                                 promotion.stock <= 0
                                             "
-                                        ></el-input-number>
+                                            type="number"
+                                            class="qquantity-promotion"
+                                        ></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -114,6 +118,11 @@
         </div>
     </el-dialog>
 </template>
+<style>
+.qquantity-promotion .el-input__inner {
+    text-align: center;
+}
+</style>
 <script>
 export default {
     props: ["showDialog", "listPromotionItems", "hasPromotionText"],

@@ -2249,7 +2249,9 @@ export default {
             if (this.configuration.is_promotion_document) {
                 this.verifyPromotionCustomer();
             } else if (this.promotionByPoints) {
-                this.verifyPromotionPointsCustomer();
+                if (!this.isClientesVarios()) {
+                    this.verifyPromotionPointsCustomer();
+                }
             }
         },
         receivePromotion() {
@@ -3060,7 +3062,6 @@ export default {
                     index === self.findIndex(t => t.id === thing.id)
             );
             this.setSeries();
-            
         },
 
         setLocalStorageIndex(key, obj) {
@@ -3903,7 +3904,9 @@ export default {
         },
         // aqui hace el proceso de recalculo de los montos
         reCalculateTotal() {
-            console.log("Recalculando totales");
+            if (!this.form.items || this.form.items.length == 0) {
+                return;
+            }
             let total_discount = 0;
             let total_charge = 0;
 

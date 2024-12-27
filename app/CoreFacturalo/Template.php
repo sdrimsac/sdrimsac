@@ -123,10 +123,15 @@ class Template
 
                         $type_promotion = PromotionDocumentCustomerDetail::where($document_type, $document->id)
                             ->first();
+                        $type_promotion_id = $type_promotion->id;
+                        $count_promotion_document_customer_detail = $type_promotion->promotion_customer->details()->first()->id;
                         $accumulatedPoints = $type_promotion->promotion_customer->points;
 
                         $points_before_detail = $type_promotion->getPointBeforeDetail($type_promotion->id);
                         $detail_points['acc_points'] = $points_before_detail + $currentDocumentPoints;
+                        if($count_promotion_document_customer_detail == $type_promotion_id){
+                            $detail_points['acc_points'] = 0;
+                        }
                         $detail_points['is_points'] = true;
                     } else {
                         $baseQuery = PromotionDocumentCustomerDetail::with(['promotion_customer.promotion_document'])

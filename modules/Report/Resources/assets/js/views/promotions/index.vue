@@ -51,7 +51,8 @@ export default {
             resource: "reports/promotions",
             form: {},
             currentRow: null,
-            showDetailDialog: false
+            showDetailDialog: false,
+            customer_name: null
         };
     },
     computed: {

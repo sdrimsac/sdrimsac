@@ -108,6 +108,8 @@ class ReportPromotionController extends Controller
         $records = PromotionDocumentCustomer::query();
         $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
             $query->where('is_points', $configuration->promotions_by_points);
+        })->whereHas('customer', function ($query) use ($request) {
+            $query->where('name', 'not like', '%clientes varios%');
         });
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;

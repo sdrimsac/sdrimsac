@@ -4,11 +4,11 @@
         append-to-body
         @open="open"
         @close="close"
-        title="Productos recibidos"
+        :title="`Productos recibidos | ${customer_name}`"
         width="80%"
     >
-        <div class="row mt-2">
-            <table class="table table-bordered">
+        <div class="row m-2">
+            <table class="table table-bordered" v-loading="loading">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -19,19 +19,34 @@
                         <th>Vendedor</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <tr v-for="(received, idx) in receiveds" :key="received.id">
-                        <td>{{ idx + 1 }}</td>
-                        <td>{{ received.product }}</td>
-                        <td>{{ received.quantity }}</td>
-                        <td v-if="isPromotionPoints">-{{ received.points }}</td>
-                        <td>
-                            {{ received.date }} <br /><small>{{
-                                received.time
-                            }}</small>
-                        </td>
-                        <td>{{ received.seller }}</td>
-                    </tr>
+                    <template v-if="receiveds.length > 0">
+                        <tr
+                            v-for="(received, idx) in receiveds"
+                            :key="received.id"
+                        >
+                            <td>{{ idx + 1 }}</td>
+                            <td>{{ received.product }}</td>
+                            <td>{{ received.quantity }}</td>
+                            <td v-if="isPromotionPoints">
+                                -{{ received.points }}
+                            </td>
+                            <td>
+                                {{ received.date }} <br /><small>{{
+                                    received.time
+                                }}</small>
+                            </td>
+                            <td>{{ received.seller }}</td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                No hay productos canjeados
+                            </td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -45,11 +60,14 @@ export default {
         return {
             form: {},
             document_customer: null,
-            receiveds: []
+            receiveds: [],
+            customer_name: null,
+            loading: false
         };
     },
     methods: {
         getRecord() {
+            this.loading = true;
             this.$http
                 .get(`/reports/promotions/detail/${this.currentRow.id}`)
                 .then(({ data }) => {
@@ -58,9 +76,13 @@ export default {
                         this.document_customer = data.document_customer;
                         this.receiveds = data.receiveds;
                     }
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
         },
         open() {
+            this.customer_name = this.currentRow.customer_name;
             this.getRecord();
         },
         close() {
