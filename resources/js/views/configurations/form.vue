@@ -1187,6 +1187,23 @@
                                   ></el-switch>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4">
+                                <div class="form-group">
+                                  <label class="control-label w-100">
+                                    <i class="fas fa-bell tab-icon"></i>
+                                    Números de Notificaciones por establecimiento
+                                  </label>
+                              
+                                  <el-switch
+                                    v-model="form.configuration_establishments_numbers"
+                                    active-text="Si"
+                                    inactive-text="No"
+                                    :active-color="'#28a745'"
+                                    :inactive-color="'#6c757d'"
+                                    @change="submit('Números de Notificaciones por establecimiento', form.configuration_establishments_numbers, 'configuration_establishments_numbers', 'fileIcon')"
+                                  ></el-switch>
+                                </div>
+                              </div>
                             </div>
                           </div>
 
@@ -2006,20 +2023,22 @@
                               </div>
 
                               <!-- Números de whatsapp para enviar actividad -->
-                              <div class="col-md-2 mt-4">
+                              <div class="col-md-2 mt-4"
+                              v-if="!form.configuration_establishments_numbers"
+                              >
                                 <div class="form-group">
                                   <label class="control-label w-100">
                                     <i class="fas fa-phone tab-icon"></i>
                                     Números de whatsapp para enviar actividad
                                     <a
-                                      v-if="form.number_activity"
+                                    
                                       href="#"
                                       @click.prevent="addNumberWhatsapp"
                                     >[Agregar +]</a>
                                   </label>
                                   <el-input
-                                    @input="changeNumberActivity"
-                                    v-model="form.number_activity"
+                                    :disabled="true"
+                                    :value="999999999"
                                   ></el-input>
                                   <small>
                                     <el-tag
@@ -2032,7 +2051,16 @@
                                   </small>
                                 </div>
                               </div>
+                              <div class="col-md-2 mt-4"
+                              v-else
+                              >
+                              <label class="control-label w-100">
+                                    <i class="fas fa-phone tab-icon"></i>
+                                    Configurar números
+                                  </label>
 
+                                  <el-button type="primary" @click="configureNumbers">Configurar</el-button>
+                            </div>
                               <!-- Whatsapp en Reimpresión de Documentos -->
                               <div class="col-md-2 mt-4">
                                 <div class="form-group">
@@ -5441,6 +5469,7 @@
         </span>
       </el-dialog>
     </div>
+    <configuration-numbers :showDialog.sync="showConfigureNumbers" />
   </div>
 </template>
 
@@ -5685,8 +5714,12 @@
 
 <script>
 import Swal from "sweetalert2";
+import ConfigurationNumbers from "./configuration_numbers.vue";
 export default {
   props: ["typeUser", "isArca","canSee"],
+  components: {
+    ConfigurationNumbers
+  },
   data() {
     return {
       activeSubTab: "tab-1", // Esta es la subpestaña que se activará por defecto
@@ -5748,6 +5781,7 @@ export default {
           label: "NOCHE"
         }
       ],
+      showConfigureNumbers: false,
       modes: "modes",
       activeTab: "entorno",
       searchQueryModes: "",
@@ -5851,6 +5885,9 @@ export default {
   },
 
   methods: {
+    configureNumbers(){
+      this.showConfigureNumbers = true;
+    },
     checkPrecuentaSubmit(){
       if(this.form.imprimir_comanda_cocina){
         this.form.imprimir_precuenta_comanda = false;

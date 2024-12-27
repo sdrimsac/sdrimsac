@@ -27,7 +27,7 @@ use Modules\Restaurant\Models\Table;
 use App\Http\Resources\Tenant\BoxCollection;
 use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\Cash;
-
+use App\Models\Tenant\EstablishmentNotificationNumber;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Events\StockEvent;
 use App\Models\Tenant\Item;
@@ -382,14 +382,24 @@ class WorkshopController extends Controller
             }
             $configuration = Configuration::first();
             if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
+                $user = User::find(auth()->user()->id);
                 $user_name = auth()->user()->name;
-                $number = $configuration->number_activity;
+                // $number = $configuration->number_activity;
                 $message = "Usuario *$user_name* ha solicitado consulta para visualización en Ventas del Dìa";
                 // ()
                 $website = $this->getTenantWebsite();
                 // (new WhatsappController)->sendMessage($message, $number);
-                WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
-                $numbers = NumberActivity::all();
+                // WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+                $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
+                if ($configuration_establishments_numbers && $user->establishment_id) {
+                    $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $user->establishment_id)->get()->transform(function ($row) {
+                        return [
+                            'number' => $row->getNumber(),
+                        ];
+                    });
+                } else {
+                    $numbers = NumberActivity::all();
+                }
                 foreach ($numbers as $number) {
                     $number = $number->number;
                     // (new WhatsappController)->sendMessage($message, $number);

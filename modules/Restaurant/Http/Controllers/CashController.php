@@ -148,7 +148,7 @@ class CashController extends Controller
         // El usuario Arca Administrador hasta la fecha 06-11-2021 / 11:34am contaba con monto de s/ xxxxx y ha aceptado ingreso de cierre de caja de usuario analista xxxx S/xxx, actualizando un saldo de S/xxxx
         $message = "El usuario $user_name_principal hasta la fecha " . date('d-m-Y') . " / " . date('h:i A') . " contaba con monto de S/ $total_withouth_income y ha aceptado ingreso de cierre de caja de usuario $user_name S/ $income, actualizando un saldo de S/ $total";
         $website = $this->getTenantWebsite();
-        WhatsappSendMessageProccess::dispatch($website->id, $message, null);
+        WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $establishment_id);
 
 
         return [
@@ -2190,7 +2190,7 @@ class CashController extends Controller
             $message = "Caja pendiente de cierre del usuario: " . $user_cash->name;
             $message_for_user = "El usuario: " . $user->name . " intentó abrir una caja, pero usted tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
             if ($user_cash->telephone) {
-                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user);
+                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user,$user->establishment_id);
             }
             $message_for_all = "El usuario: " . $user->name . " intentó abrir una caja, pero el usuario: " . $user_cash->name . " tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
             (new WhatsappController)->sendMessageAll($message_for_all);
@@ -2296,7 +2296,7 @@ class CashController extends Controller
 
             $message = "usuario:$name, aperturó caja con S/ $amount en $establishment_description";
         }
-        (new WhatsappController)->sendMessageAll($message);
+        (new WhatsappController)->sendMessageAll($message,$establishment_id);
         return [
             "cash_id" => $cash->id,
             'success' => true,

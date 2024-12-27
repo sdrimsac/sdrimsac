@@ -183,6 +183,7 @@ class CashTransferController extends Controller
             $data = request()->all();
             $user_id = auth()->id();
             $soap_type_id = Company::first()->soap_type_id;
+            $user = User::find($user_id);
             $cash_principal_id = Cash::where('principal', 1)->where('user_id', $user_id)
                 ->where('state', 1)
                 ->first()->id;
@@ -213,7 +214,7 @@ class CashTransferController extends Controller
             $box->description = 'Transferencia de caja principal';
             $box->method = 'Efectivo';
             $box->save();
-            (new WhatsappController)->sendMessageOne($user_destination->telephone, $message);
+            (new WhatsappController)->sendMessageOne($user_destination->telephone, $message,$user->establishment_id);
             event(new InsertCashEvent($amount, $cash_destination_id));
             DB::connection('tenant')->commit();
             return [

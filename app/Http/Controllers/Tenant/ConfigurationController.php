@@ -15,7 +15,10 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\DetractionType;
+use App\Models\Tenant\Establishment;
+use App\Models\Tenant\EstablishmentNotificationNumber;
 use App\Models\Tenant\ExcludedUser;
+use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\User;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -31,6 +34,40 @@ class ConfigurationController extends Controller
     }
     public function app()
     {
+    }
+    public function saveNumbersEstablishments(Request $request){
+        try {
+            $data = $request->payload;
+            EstablishmentNotificationNumber::where('id','!=',null)->delete();
+            foreach($data as $row){
+                EstablishmentNotificationNumber::create([
+                    'establishment_id' => $row['establishment_id'],
+                    'number' => $row['number_id']
+                ]);
+            }   
+
+            return [
+                'success' => true,
+                'message' => 'Números guardados correctamente'
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al guardar los números: ' . $e->getMessage()
+            ];
+        }
+    }
+    public function tablesNumbersEstablishments(Request $request){
+        $establishments = Establishment::all()->transform(function($row){
+            return [
+                'id' => $row->id,
+                'description' => $row->description,
+            ];
+        });
+        $numbers = NumberActivity::all();
+        $records = EstablishmentNotificationNumber::all();
+        return compact('records','establishments','numbers');
     }
     public function etiquetas(Request $request)
     {

@@ -25,6 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'arca_type',
         'image',
         'is_arca',
         'establishment_table_id',
@@ -81,6 +82,7 @@ class User extends Authenticatable
         }
 
         return [
+            'arca_type' => $this->arca_type,
             'id' => $this->id,
 
             'email' => $this->email,
@@ -102,6 +104,9 @@ class User extends Authenticatable
             'number' => $this->number,
 
         ];
+    }
+    public function getUserTypeArca(){
+        return $this->arca_type;
     }
     static function getUserArca()
     {
@@ -142,6 +147,7 @@ class User extends Authenticatable
     public function getDataOnlyAuthUser()
     {
         return [
+            'arca_type' => $this->arca_type,
             'establishment_table_id' => $this->establishment_table_id,
             'warehouse_product_id' => $this->warehouse_product_id,
             'name' => $this->name,

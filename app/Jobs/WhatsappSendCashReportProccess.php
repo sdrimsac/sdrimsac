@@ -9,6 +9,7 @@ use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\EstablishmentNotificationNumber;
 use App\Models\Tenant\NumberActivity;
 use App\Traits\JobReportTrait;
 use Carbon\Carbon;
@@ -51,7 +52,6 @@ class WhatsappSendCashReportProccess implements ShouldQueue
         $subdomain = explode(".", $this->fqdn)[0];
         try {
             $configuration = Configuration::first();
-            $number_activity = $configuration->number_activity;
             //caja/worker/cash/print-report?cash_id=1136
             $resource = "http://" . $this->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $this->cash_id;
             
@@ -69,22 +69,31 @@ class WhatsappSendCashReportProccess implements ShouldQueue
                 [
                     'from_server' => true,
                     'sender' => $sender,
-                    'number' => $number_activity,
+                    'number' => null,
                     'resource' => $resource,
                     'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
                     'message' => "*".$company_name."*: Caja cerrada por " . $this->user_name." en ".$establishment_name,
                 ]
             );
-            if ($number_activity) {
+            // if ($number_activity) {
 
-                (new WhatsappController)->sendHistorial($request);
-            }else{
+                // (new WhatsappController)->sendHistorial($request);
+            // }else{
                 Http::get($resource);
-            }
+            // }
             
-        
-
-            $numbers = NumberActivity::all();
+            
+            $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
+            if($configuration_establishments_numbers){
+                $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()->transform(function($row){
+                    return [
+                        'number' => $row->getNumber(),
+                        'establishment_id' => $row->establishment_id
+                    ];
+                });
+            }else{
+                $numbers = NumberActivity::all();
+            }
             foreach ($numbers as $number) {
                 $request['number'] = $number->number;
                 (new WhatsappController)->sendHistorial($request);

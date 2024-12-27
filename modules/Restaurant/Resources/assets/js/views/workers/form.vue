@@ -277,6 +277,24 @@
                     </div>
                     <div
                         class="col-md-4"
+                        v-if="form.is_arca && configuration.health_network"
+                    >
+                        <label for="arca_user">
+                            Tipo de Usuario Arca >
+                        </label>
+                        <el-select v-model="form.arca_type" clearable>
+                            <el-option
+                                value="product"
+                                label="Productos"
+                            ></el-option>
+                            <el-option
+                                value="service"
+                                label="Servicios"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div
+                        class="col-md-4"
                         v-if="configuration.user_series_independientes_caja"
                     >
                         <div

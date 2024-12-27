@@ -654,8 +654,22 @@ class ItemController extends Controller
         $active = $request->active;
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
+        /** @var User $user */
+        $user = auth()->user();
+        $type = $user->getUserTypeArca();
         if (!$services) {
             $records = $records->where('unit_type_id', '!=', 'ZZ');
+        }
+        if($type){
+            $records = $records->whereHas('warehouse', function($query) use ($type){
+                $query->whereHas('establishment', function($query) use ($type){
+                    if($type == 'product'){
+                        $query->where('is_product', 1);
+                    }elseif($type == 'service'){
+                        $query->where('is_service', 1);
+                    }
+                });
+            });
         }
         switch ($request->column) {
 
@@ -665,7 +679,7 @@ class ItemController extends Controller
                 });
                 break;
 
-            /* case 'active':
+                /* case 'active':
                 $records
                     ->whereIsActive();
                 break;

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'configuration_establishments_numbers',
         'user_edit',
         'android_configuration',
         'download_all_files',
@@ -282,6 +283,7 @@ class Configuration extends ModelTenant
         'other_currency_pos',
     ];
     protected $casts = [
+        'configuration_establishments_numbers' => 'boolean',
         'user_edit' => 'boolean',
         'android_configuration' => 'boolean',
         'download_all_files' => 'boolean',
@@ -507,6 +509,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'configuration_establishments_numbers' => (bool)$this->configuration_establishments_numbers,
             'user_edit' => (bool)$this->user_edit,
             'android_configuration' => (bool)$this->android_configuration,
             'download_all_files' => (bool)$this->download_all_files,

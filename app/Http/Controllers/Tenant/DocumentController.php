@@ -1859,6 +1859,8 @@ class DocumentController extends Controller
     public function excel(Request $request)
     {
         ini_set('memory_limit', '2048M');
+        
+    
         $records = $this->getRecords($request, false, true)->get();
         $establishment = Establishment::first();
         $company = Company::active();
@@ -2085,6 +2087,18 @@ class DocumentController extends Controller
         $records = Document::query();
         if ($detraction) {
             $records = $records->whereNotNull('detraction');
+        }
+            /** @var User $user */
+            $user = auth()->user();
+            $type = $user->getUserTypeArca();
+        if($type){
+            $records = $records->whereHas('establishment', function($query) use ($type){
+                if($type == 'product'){
+                    $query->where('is_product', 1);
+                }elseif($type == 'service'){
+                    $query->where('is_service', 1);
+                }
+            });
         }
         $payment_condition_id = $request->payment_condition_id;
         if ($d_start && $d_end) {

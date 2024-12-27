@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'configuration_establishments_numbers' => (bool) $this->configuration_establishments_numbers,
             'user_edit' => (bool) $this->user_edit,
             'android_configuration' => (bool) $this->android_configuration,
             'download_all_files' => (bool) $this->download_all_files,

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\System\Configuration as Config;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Dispatch;
+use App\Models\Tenant\EstablishmentNotificationNumber;
 use App\Models\Tenant\NumberActivity;
 use App\Traits\JobReportTrait;
 use Exception;
@@ -50,25 +51,33 @@ class WhatsappController extends Controller
             WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
         }
     }
-    public function sendMessageAll($message)
+    public function sendMessageAll($message,$establishment_id = null)
     {
         $website = $this->getTenantWebsite();
         $company = Company::first();
         $name = "*" . $company->name . "*: ";
         $message = $name . $message;
         $configuration = Configuration::first();
-        $number_activity = $configuration->number_activity;
-        if ($number_activity) {
-            WhatsappSendMessageProccess::dispatch($website->id, $message, $number_activity);
-            // $this->sendMessage($message, $number_activity);
+        // $number_activity = $configuration->number_activity;
+        // if ($number_activity) {
+        //     WhatsappSendMessageProccess::dispatch($website->id, $message, $number_activity);
+        //     // $this->sendMessage($message, $number_activity);
+        // }
+        if($configuration->configuration_establishments_numbers && $establishment_id){
+            $numbers_activity = EstablishmentNotificationNumber::where('establishment_id', $establishment_id)->get()->transform(function($row){
+                return [
+                    'number' => $row->getNumber(),
+                ];
+            });
+        }else{
+            $numbers_activity = NumberActivity::all();
         }
-        $numbers_activity = NumberActivity::all();
         foreach ($numbers_activity as $key => $value) {
-            WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number);
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number, null, $establishment_id);
             // $this->sendMessage($message, $value->number);
         }
     }
-    public function sendMessageOne($number,$message)
+    public function sendMessageOne($number,$message,$establishment_id = null)
     {
         if(!$number) return;
         
@@ -76,7 +85,7 @@ class WhatsappController extends Controller
         $company = Company::first();
         $name = "*" . $company->name . "*: ";
         $message = $name . $message;
-        WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+        WhatsappSendMessageProccess::dispatch($website->id, $message, $number,null,$establishment_id);
             // $this->sendMessage($message, $number_activity);
     
     }
@@ -92,9 +101,10 @@ class WhatsappController extends Controller
     {
         $document = ($type == '80') ? SaleNote::where('external_id', $external_id)->first() : Document::where('external_id', $external_id)->first();
         if ($document) {
+            $establishment_id = $document->establishment_id;
             $number_full = $document->number_full;
             $message = "Reimpresión de documento: " . $number_full . " por el usuario " . auth()->user()->name;
-            $this->sendMessageAll($message);
+            $this->sendMessageAll($message,$establishment_id);
             return response()->json([
                 'success' => true,
                 'message' => 'Mensaje enviado'
@@ -111,6 +121,7 @@ class WhatsappController extends Controller
         $number = $request->number;
         $number_activity = NumberActivity::where('number', $number)->first();
         if ($number_activity) {
+            EstablishmentNotificationNumber::where('number', $number->id)->delete();
             $number_activity->delete();
         } else {
             return response()->json([

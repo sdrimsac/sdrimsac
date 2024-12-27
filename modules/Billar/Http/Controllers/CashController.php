@@ -1831,7 +1831,7 @@ class CashController extends Controller
             $message = "Caja pendiente de cierre del usuario: " . $user_cash->name;
             $message_for_user = "El usuario: " . $user->name . " intentó abrir una caja, pero usted tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
             if ($user_cash->telephone) {
-                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user);
+                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user,$user->establishment_id);
             }
             $message_for_all = "El usuario: " . $user->name . " intentó abrir una caja, pero el usuario: " . $user_cash->name . " tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
             (new WhatsappController)->sendMessageAll($message_for_all);

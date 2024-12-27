@@ -6,7 +6,9 @@ use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\EstablishmentNotificationNumber;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -77,28 +79,40 @@ class SendReportAccounting extends Command
                     $this->isEmpty();
                 } else {
                     $configuration = Configuration::first();
-                    $number = $configuration->number_activity;
-                    if (!$number) {
+                    $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
+                    if ($configuration_establishments_numbers) {
+                        $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()->transform(function ($row) {
+                            return [
+                                'number' => $row->getNumber(),
+                            ];
+                        });
+                    } else {
+                        $numbers = NumberActivity::all();
+                    }
+                    if ($numbers->isEmpty()) {
                         $this->notHasNumber();
                     } else {
+                        foreach ($numbers as $number) {
 
-                        $month = $range_date[0];
-                        $month = Carbon::parse($month)->format('Y-m');
-                        $hostname = config('tenant.app_url_base');
-                        $file_name =  'ReporteContable' .  Carbon::now()->format("Y-m-d") . '.xlsx';
-                        $resource = "http://$hostname/account/format/download?export=EXCEL&month=$month&type=sale";
-                        $request = new Request(
-                            [
-                                'from_server' => true,
-                                'sender' => 'sdrimsac',
-                                'number' => $number,
-                                'resource' => $resource,
-                                'file_name' => 'ReporteContable' . Carbon::now()->format("Y-m-d") . '.xlsx',
-                                'message' => 'Reporte contable del mes de ' . Carbon::parse($month)->format('m-Y')
-                            ]
-                        );
 
-                        (new WhatsappController)->sendHistorial($request);
+                            $month = $range_date[0];
+                            $month = Carbon::parse($month)->format('Y-m');
+                            $hostname = config('tenant.app_url_base');
+                            $file_name =  'ReporteContable' .  Carbon::now()->format("Y-m-d") . '.xlsx';
+                            $resource = "http://$hostname/account/format/download?export=EXCEL&month=$month&type=sale";
+                            $request = new Request(
+                                [
+                                    'from_server' => true,
+                                    'sender' => 'sdrimsac',
+                                    'number' => $number->number,
+                                    'resource' => $resource,
+                                    'file_name' => 'ReporteContable' . Carbon::now()->format("Y-m-d") . '.xlsx',
+                                    'message' => 'Reporte contable del mes de ' . Carbon::parse($month)->format('m-Y')
+                                ]
+                            );
+
+                            (new WhatsappController)->sendHistorial($request);
+                        }
 
                         $file = (new FormatController)->download(
                             new Request(

@@ -531,7 +531,7 @@ class PurchaseController extends Controller
                         $total_with_purchase = $total + $doc->total;
                         $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total_with_purchase} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total}";
                         $website = $this->getTenantWebsite();
-                        WhatsappSendMessageProccess::dispatch($website->id, $message, null);
+                        WhatsappSendMessageProccess::dispatch($website->id, $message, null,null,$doc->establishment_id);
                     }
                     // El usuario arca - administrador hasta la fecha 07-10-2024 / 09:10:55am contaba con monto de S/5 mil y ha realizado una compra el 07-10-2024 a las 15:54:13 por un monto de S/2590, quedando un saldo a favor de S/2410
 
