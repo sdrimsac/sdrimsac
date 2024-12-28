@@ -262,8 +262,7 @@
                         class="submit"
                         type="success"
                         v-if="
-                            resource !== 'item-color-size' && config.product_export     
-                        "
+                            resource !== 'item-color-size'"
                         icon="el-icon-tickets"
                         @click.prevent="clickDownload('excel')"
                         >Exportar Excel</el-button

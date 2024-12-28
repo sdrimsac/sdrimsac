@@ -402,9 +402,7 @@
                                     :categoria_madera="categoria_madera"
                                     @cotizarConfirmado="handleCotizarConfirmado"
                                     :cotizarConfirmado.sync="cotizarConfirmado"
-                                    @cotizarConfirmadoChanged="
-                                        handleCotizarConfirmado
-                                    "
+                                    @cotizarConfirmadoChanged="handleCotizarConfirmadoChanged"
                                 ></ListFood>
                             </div>
                         </div>
@@ -953,9 +951,7 @@
                             @sendOrdens="sendOrdens"
                             :isHotelArea.sync="isHotelArea"
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
-                            :clientSaleNoteDiscount.sync="
-                                clientSaleNoteDiscount
-                            "
+                            :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
                             :sellers="sellers"
                             @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
@@ -990,9 +986,7 @@
                             @reloadProduct="search_items"
                             @cotizarConfirmado="handleCotizarConfirmado"
                             :cotizarConfirmado.sync="cotizarConfirmado"
-                            @cotizarConfirmadoChanged="
-                                handleCotizarConfirmadoRegreso
-                            "
+                            @cotizarConfirmadoChanged="handleCotizarConfirmadoChanged"
                         ></list-orden>
                     </div>
                 </div>
@@ -2259,19 +2253,14 @@ export default {
         }
     },
     methods: {
-        handleCotizarConfirmadoRegreso(newValue) {
-            this.cotizarConfirmado = newValue; // Actualiza el estado con el nuevo valor
-            /* console.log(
-                "Nuevo valor de cotizarConfirmado en el padre:",
-                this.cotizarConfirmado
-            ); */
+        handleCotizarConfirmadoChanged(value) {
+            console.log("Evento regresando recibido en index:", value);
+            this.cotizarConfirmado = value;
+            /* this.$emit("cotizarConfirmadoChanged", this.cotizarConfirmado);*/
         },
-        handleCotizarConfirmado(newValue) {
-            this.cotizarConfirmado = newValue; // Actualiza el estado con el nuevo valor
-            /* console.log(
-                "Evento recibiendo en el index:",
-                this.cotizarConfirmado
-            );  */
+        handleCotizarConfirmado() {
+            this.$refs.list_orden.handleCotizarConfirmado(this.cotizarConfirmado);
+            console.log("Evento recibiendo en el index:", this.cotizarConfirmado);
         },
 
         async limpiarcache(reload = true) {
@@ -6359,12 +6348,8 @@ export default {
                 let area_id = e.data.area_id;
                 let isSameEstablishmentPrinter =
                     this.establishments.id == user_establishment_id_printer;
-                console.log("this.establishments.id", this.establishments.id);
-                console.log("user_establishment_id_printer", user_establishment_id_printer);
-                console.log("isSameEstablishmentPrinter", isSameEstablishmentPrinter);
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
-                console.log("isSameEstablishment", isSameEstablishment);
                 let sameAreas = this.configuration
                     .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
@@ -6407,9 +6392,7 @@ export default {
                         );
                     }
                 } else {
-                    if(canPrint){
-                        window.open(e.data.print, "_blank");
-                    }
+                    window.open(e.data.print, "_blank");
                 }
             }
         );

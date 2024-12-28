@@ -717,6 +717,7 @@
                                 >Correo electrónico</label
                             >
                             <el-input
+                                type="email"
                                 v-model="row.email"
                                 @input="toUpperCase('row.email')"
                             >

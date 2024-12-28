@@ -80,15 +80,18 @@
             </div>
         </div>
 
-        <div slot="footer" class="dialog-footer">
-            <span
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <div
                 v-if="form.total"
-                style="margin-right:auto;display:inline-block"
+                class="text-end"
             >
-                <h6>S/. {{ form.total.toFixed(2) }}</h6>
-            </span>
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Enviar</el-button>
+                <h4 class="fw-bold">TOTAL: S/. {{ form.total.toFixed(2) }}</h4>
+            </div>
+            
+        </div>
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <el-button @click="close" class="btn-cancel btn-cancel:hover">Cancelar</el-button>
+            <el-button class="btn-save btn-save:hover" @click="submit">Cotizar</el-button>           
         </div>
         <person-form
             :showDialog.sync="showDialogNewPerson"

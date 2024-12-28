@@ -20,12 +20,17 @@
             
             </div>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <!-- <span slot="footer" class="dialog-footer ">
+            
+            
+        </span> -->
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
             <el-button type="primary" @click="download"
             icon="el-icon-download"
+            class="btn-save btn-save:hover"
             >Descargar</el-button>
-            <el-button @click="close">Cerrar</el-button>
-        </span>
+            <el-button @click="close" class="btn-cancel btn-cancel:hover">Cerrar</el-button>            
+        </div>
     </el-dialog>
 </template>
 

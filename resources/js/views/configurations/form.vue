@@ -5501,7 +5501,7 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
-                                                            <div
+                                                            <!-- <div
                                                                 class="col-md-2 mt-4"
                                                             >
                                                                 <div
@@ -5542,7 +5542,7 @@
                                                                         "
                                                                     ></el-switch>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
                                                     </div>
 

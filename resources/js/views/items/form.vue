@@ -412,9 +412,7 @@
                                                     type="button"
                                                     v-if="form_category.add"
                                                     class="btn btn-sm btn-success btn-circle mx-1"
-                                                    @click="
-                                                        saveForm('category')
-                                                    "
+                                                    @click="saveForm('category')"
                                                 >
                                                     <i class="fas fa-save"></i>
                                                 </button>
@@ -422,9 +420,7 @@
                                                     type="button"
                                                     v-if="form_category.add"
                                                     class="btn btn-sm btn-danger btn-circle mx-1"
-                                                    @click="
-                                                        cancelForm('category')
-                                                    "
+                                                    @click="cancelForm('category')"
                                                 >
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -484,9 +480,7 @@
                                                     type="button"
                                                     v-if="!form_brand.add"
                                                     class="btn btn-sm btn-primary btn-circle mx-1"
-                                                    @click="
-                                                        activateForm('brand')
-                                                    "
+                                                    @click="activateForm('brand')"
                                                 >
                                                     <i
                                                         class="fas fa-plus-circle"
@@ -543,7 +537,6 @@
                                         ></small>
                                     </div>
                                 </div>
-
                                 <!-- Modelo -->
                                 <div class="col-12 col-lg-6 col-xl-3">
                                     <div class="form-group">
@@ -2630,22 +2623,15 @@ export default {
             form_category: false,
             form_category: {
                 add: false,
-                name: ""
+                name: "",
+                id: null
             },
             categories: [], // Lista de categorías
-            form: {
-                category_id: null // ID seleccionado
-            },
             errors: {}, // Errores de validación
             loading: false,
             allEstablishment: false,
             showDialogLots: false,
             showDialogColorSize: false,
-            // form_category: {
-            //     add: false,
-            //     name: null,
-            //     id: null
-            // },
             form_brand: {
                 add: false,
                 name: null,
@@ -2664,7 +2650,9 @@ export default {
             headers: headers_token,
             form: {
                 promotion_count: null,
-                item_price_ranges: []
+                item_price_ranges: [],
+                category_id: null,
+                brand_id: null
             },
             sale_unit_price: null,
             configuration: {},
@@ -2794,13 +2782,13 @@ export default {
         // Lógica para cerrar el formulario principal
         this.resetCategoryForm();
     },
-    resetCategoryForm() {
+    /* resetCategoryForm() {
         // Reiniciar el estado de la categoría
         this.form_category = {
             add: false,
             name: ""
         };
-    },
+    }, */
 
     methods: {
         clickDeleteUnitTypePriceRange(index, indexx) {
@@ -2876,13 +2864,13 @@ export default {
             }
 
             if (!form.name) {
-                this.$showSAlert({
-                    title: "Campo Requerido",
-                    text: `Debe ingresar un nombre para la ${
+                this.$showSAlert(
+                    "Campo Requerido",
+                     `Debe ingresar un nombre para la ${
                         type === "category" ? "categoría" : "marca"
                     }.`,
-                    type: "warning"
-                });
+                    "warning"
+                );
                 return;
             }
 
@@ -2938,58 +2926,20 @@ export default {
                         }.`,
                          "error"
                     );
-                    /* this.$showSAlert({
-                        title: "Error",
-                        text: `Ocurrió un error al guardar la ${
-                            type === "category" ? "categoría" : "marca"
-                        }.`,
-                        type: "error"
-                    }); */
                 });
         },
-
-        // Cancelar la creación (Categoría o Marca)
         cancelForm(type) {
-            this.$showSAlert(
-                 "Cancelado",
-                 `Se canceló la creación de la ${
-                    type === "category" ? "categoría" : "marca"
-                }.`,
-                 "info"
-            );
-
-            this.resetForm(type); // Reinicia el formulario correspondiente
-        },
-
-        // Reiniciar el formulario (Categoría o Marca)
-        resetForm(type) {
-            if (type === "category") {
-                console.log("Reiniciando formulario de categoría...");
-                this.form_category = {
-                    add: false,
-                    name: ""
-                };
-            } else if (type === "brand") {
-                console.log("Reiniciando formulario de marca...");
-                this.form_brand = {
-                    add: false,
-                    name: ""
-                };
+            if (type === 'category') {
+                this.form_category.add = false;
+                this.form_category.name = '';
+                this.$showSAlert('Cancelado', 'Se canceló el registro de la categoría.', 'info');
+                console.log('Cancelado', this.form_category);
+            } else if (type === 'brand') {
+                this.form_brand.add = false;
+                this.form_brand.name = '';
+                this.$showSAlert('Cancelado', 'Se canceló el registro de la categoría.', 'info');
             }
             this.$forceUpdate();
-        },
-
-        // Cerrar el formulario principal
-        cancelForm(type) {
-            this.$showSAlert(
-                 "Cancelado",
-                 `Se canceló la creación de la ${
-                    type === "category" ? "categoría" : "marca"
-                }.`,
-                 "info"
-            );
-
-            this.resetForm(type);
         },
 
         updateCommercialTreatmentItem(idx) {
@@ -3710,3 +3660,5 @@ export default {
     }
 };
 </script>
+
+
