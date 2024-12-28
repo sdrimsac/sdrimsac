@@ -1,7 +1,7 @@
 <template>
     <el-input :value="value" :maxlength="maxLength" @input="handleInput($event)" show-word-limit>
         <template v-if="buttonText">
-            <el-button  
+            <el-button  class="bg-white"
                        slot="append"
                        :loading="loading"
                        icon="el-icon-search"

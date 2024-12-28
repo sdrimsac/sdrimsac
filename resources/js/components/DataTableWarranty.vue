@@ -21,7 +21,7 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label for="value">
                             Buscar
                         </label>
@@ -36,23 +36,47 @@
                             >
                             </el-input>
                         </template>
-                    </div>
-                    <!-- <div class="col-lg-4 col-md-4">
-                        <div class="form-group">
-                            <label class="control-label w-100">Productos</label>
-                            <el-input
-                                placeholder="Ingrese nombre del producto"
-                                v-model="search.description"
-                                @input="getRecords"
-                                clearable
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                        </div>
                     </div> -->
+                    <div class="col-md-3 col-lg-3">
+                        <label for="seller_id">Productos</label>
+
+                        <el-select
+                            filterable
+                            clearable
+                            v-model="search.item_id"
+                            class="border-left rounded-left border-info w-100"
+                            popper-class="el-select-customers"
+                            placeholder="Seleccione un producto"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in items"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.description"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <label for="seller_id">Clientes</label>
+
+                        <el-select
+                            filterable
+                            clearable
+                            v-model="search.customer_id"
+                            class="border-left rounded-left border-info w-100"
+                            popper-class="el-select-customers"
+                            placeholder="Seleccione un producto"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in customers"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.name"
+                            ></el-option>
+                        </el-select>
+                    </div>
                     <!-- <div class="col-lg-4 col-md-4 ">
                         <div class="form-group">
                             <label class="control-label w-100">Clientes</label>
@@ -157,7 +181,9 @@ export default {
             cashes: [],
             search: {
                 column: null,
-                value: null
+                value: null,
+                item_id: null,
+                customer_id: null
             },
             columns: [],
             records: [],
@@ -165,11 +191,19 @@ export default {
             array_district: [],
             time: null,
             warehouses: [],
-            areas: []
+            areas: [],
+            items: [],
+            customers: []
         };
     },
     computed: {},
     created() {
+        this.$http.get(`/warranty/tables`).then(response => {
+            console.log(response);
+            this.items = response.data.items;
+            this.customers = response.data.customers;
+            console.log(this.customers);
+        });
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
@@ -345,6 +379,8 @@ export default {
                 limit: this.limit,
                 value: this.search.value,
                 column: this.search.column,
+                item_id: this.search.item_id,
+                customer_id: this.search.customer_id,
                 end_date: this.search.end_date,
                 warehouse_id: this.search.warehouse_id
             });

@@ -75,12 +75,11 @@ class WarrantyController extends Controller
         return new WarrantyCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function getRecords(Request $request)
-    {
+    { 
         $records = ItemWarranty::query();
-            /* ->with([
-                'documentItem.document',
-                'saleNoteItem.sale_note',
-            ]); */
+
+        $customer_id = $request->customer_id;
+        $item_id = $request->item_id;
 
         $column = $request->input('column');
         $value = $request->input('value');
@@ -94,6 +93,27 @@ class WarrantyController extends Controller
                 $records->where($column, 'like', "%{$value}%");
             }
         }
+        if ($customer_id) {
+            $records->where(function ($query) use ($customer_id) {
+                
+                $query->whereHas('SaleNoteItem.sale_note', function ($subQuery) use ($customer_id) {
+                    $subQuery->where('customer_id', $customer_id);
+                })
+                ->orWhereHas('DocumentItem.document', function ($subQuery) use ($customer_id) {
+                    $subQuery->where('customer_id', $customer_id);
+                });
+            });
+        }
+        if ($item_id) {
+            $records->where(function ($query) use ($item_id) {
+                $query->whereHas('SaleNoteItem', function ($subQuery) use ($item_id) {
+                    $subQuery->where('item_id', $item_id);
+                })
+                ->orWhereHas('DocumentItem', function ($subQuery) use ($item_id) {
+                    $subQuery->where('item_id', $item_id);
+                });
+            });
+        }
         return $records;
     }
     public function record($id)
@@ -104,15 +124,25 @@ class WarrantyController extends Controller
     public function columns()
     {
         return [
-            'warranty_start_date' => 'garantía_inicio',
-            'description' => 'Descripción',
-            
+            'description' => 'Descripción',  
         ];
     }
     public function tables ()
     {
-        $items = Item::where('unit_type_id', 'ZZ')->get();
-        $customers = Person::where('type', 'customer')->get();
+        $customers = $this->table('customers');
+        $items = $this->table('items');
         return compact('items', 'customers');
+    }
+
+    private function table($type)
+    {
+        switch ($type) {
+            case 'customers':
+                return Person::whereType('customers')->get();
+            case 'items':
+                return Item::all();
+            default:
+                throw new Exception("Invalid table type: {$type}");
+        }
     }
 }
