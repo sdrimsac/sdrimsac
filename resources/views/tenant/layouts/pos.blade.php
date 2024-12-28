@@ -127,7 +127,7 @@
                         @endif
                     </div>
                     <span></span>
-                    <div class="name " style="color: var(--light-text); line-height: 1;">
+                    <div class="name" style="color: var(--light-text); line-height: 1;">
                         {{ $vc_user->name }} <br>
 
                         @if ($vc_company->soap_type_id == '01')

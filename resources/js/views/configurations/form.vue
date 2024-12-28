@@ -5501,6 +5501,48 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
+                                                            <div
+                                                                class="col-md-2 mt-4"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-id-card fa-lg"
+                                                                        ></i>
+                                                                        Mostrar
+                                                                        o
+                                                                        Ocultar
+                                                                        exportacion
+                                                                        a excel
+                                                                        Productos
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="
+                                                                            form.product_export
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                        @change="
+                                                                            submit(
+                                                                                'Activar o descactivar exportacion de excel de producto',
+                                                                                form.product_export,
+                                                                                'origin',
+                                                                                'idCardIcon'
+                                                                            )
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -11362,7 +11404,7 @@ export default {
     },
     data() {
         return {
-          descriptionNumberWhatsapp: null,
+            descriptionNumberWhatsapp: null,
 
             activeSubTab: "tab-1", // Esta es la subpestaña que se activará por defecto
             searchQueryModes: "", // Input de búsqueda

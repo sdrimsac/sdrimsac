@@ -73,7 +73,36 @@
                     </div>
                 </div>
 
-                <div class="user-container d-flex" style="max-width: 200px ;max-height: 120px; margin-bottom:10px;">
+                <div class="user-container d-flex" style="max-width: 300px ;max-height: 120px; margin-bottom:10px;">
+                    <div class="name d-flex justify-content-center align-items-center" 
+                    style="width: 80px; height: 80px; overflow: hidden;">
+                        @php
+                            $config = DB::connection('tenant')->table('configurations')->first();
+                            $user = auth()->user();
+                        @endphp
+
+                        @if ($user && $user->image)
+                            @php
+                                $imagePath = public_path("storage/uploads/workers/{$user->image}");
+                                if (file_exists($imagePath)) {
+                                    $imageData = base64_encode(file_get_contents($imagePath));
+                                    $mimeType = mime_content_type($imagePath);
+                            @endphp
+                                    <img src="data:{{ $mimeType }};base64, {{ $imageData }}" alt="{{ $user->image }}"
+                                        style="width: 80%; height: 80%; object-fit: cover; margin: 0; transform: translateY(5px);" class="profile" alt="profile">
+                            @php
+                                } else {
+                            @endphp
+                                    <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
+                                        class="profile" alt="profile">
+                            @php
+                                }
+                            @endphp
+                        @else
+                            <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
+                                class="profile" alt="profile">
+                        @endif
+                    </div>
                     <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <img style="width:90%;height:90%" class="profile" alt="profile"
@@ -101,7 +130,7 @@
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
-                                            <span class="align-middle">Cerrar Sessión qqq</span>
+                                            <span class="align-middle">Cerrar Sessión</span>
                                         </a>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                             style="display: none;">

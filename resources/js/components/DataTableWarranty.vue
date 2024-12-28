@@ -37,53 +37,45 @@
                             </el-input>
                         </template>
                     </div>
-                    <div
-                        v-if="
-                            search.column == 'date_of_issue' ||
-                                search.column == 'date_of_due' ||
-                                search.column == 'date_of_payment' ||
-                                search.column == 'delivery_date' ||
-                                (search.column == 'date' &&
-                                    resource == 'purchases' &&
-                                    search.value)
-                        "
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                    >
-                        <label for="value">
-                            Hasta
-                        </label>
-                        <el-date-picker
-                            v-model="search.end_date"
-                            type="date"
-                            style="width: 100%;"
-                            placeholder="Buscar"
-                            value-format="yyyy-MM-dd"
-                            @change="getRecords"
-                        >
-                        </el-date-picker>
-                    </div>
-                    <div
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'items'"
-                    >
-                        <label for="warehouse">
-                            Almacén
-                        </label>
-                        <el-select
-                            clearable
-                            v-model="search.warehouse_id"
-                            @change="getRecords"
-                            placeholder="Seleccione el Almacén"
-                        >
-                            <el-option
-                                v-for="item in warehouses"
-                                :key="item.id"
-                                :label="item.description"
-                                :value="item.id"
+                    <!-- <div class="col-lg-4 col-md-4">
+                        <div class="form-group">
+                            <label class="control-label w-100">Productos</label>
+                            <el-input
+                                placeholder="Ingrese nombre del producto"
+                                v-model="search.description"
+                                @input="getRecords"
+                                clearable
                             >
-                            </el-option>
-                        </el-select>
-                    </div>
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-lg-4 col-md-4 ">
+                        <div class="form-group">
+                            <label class="control-label w-100">Clientes</label>
+
+                            <el-select
+                                v-model="search.customer_id"
+                                filterable
+                                remote
+                                popper-class="el-select-customers"
+                                clearable
+                                placeholder="Nombre o número de documento"
+                                :remote-method="searchRemoteCustomers"
+                                :loading="loading_search"
+                            >
+                                <el-option
+                                    v-for="option in customers"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div> -->
                     <div
                         class="col-md-3 d-flex align-items-center justify-content-center"
                     >
@@ -299,7 +291,7 @@ export default {
                             const productoMonth = producto
                                 ? producto.month_day
                                 : "N/A";
-                
+
                             const item =
                                 record.document_item?.item ||
                                 record.sale_note_item?.item ||

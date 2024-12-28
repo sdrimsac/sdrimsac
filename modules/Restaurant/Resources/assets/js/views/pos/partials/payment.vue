@@ -402,11 +402,13 @@
                                                     >WhatsApp</label
                                                 >
                                                 <el-input
-                                                    v-model="form.whatsapp"
+                                                    v-model="form.customer_telephone"
                                                     type="text"
                                                     class="w-100"
                                                     placeholder="Número de WhatsApp"
                                                     size="large"
+                                                    maxlength="9"
+                                                    show-word-limit
                                                 ></el-input>
                                             </div>
                                         </div>

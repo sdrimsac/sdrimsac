@@ -353,6 +353,7 @@ class WorkerController extends Controller
             }
         }
         
+        
 
         //actualización
         if ($id) {
@@ -380,7 +381,8 @@ class WorkerController extends Controller
             Storage::put($directory . $file_name, $file_content);
             $user->image = $file_name;
         } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            $user->image = 'status_images/user.png';
+            /* $user->image = 'user.png'; */
+            $user->image = User::DEFAULT_USER_IMAGE;
         }
         $user->save();
 

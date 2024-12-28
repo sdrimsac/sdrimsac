@@ -136,6 +136,7 @@ if ($hostname) {
                     ->group(function () {
                         Route::get('/', [WarrantyController::class, 'index'])->name('tenant.warranty.index');
                         Route::get('/columns', [WarrantyController::class, 'columns']);
+                        Route::get('/tables', [WarrantyController::class, 'tables']);
                         Route::get('/records', [WarrantyController::class, 'records']);
                         Route::get('/record/{id}', [WarrantyController::class, 'record']);
                         Route::get('/export_excel', [WarrantyController::class, 'ExportarExcel']);

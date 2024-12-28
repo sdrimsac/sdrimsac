@@ -145,7 +145,7 @@ import {
 } from "../../mixins/deletable";
 export default {
     mixins: [deletable],
-    props: ["type", "typeUser", "api_service_token", "isArca"],
+    props: ["typeUser", "user", "type", "api_service_token", "isArca"],
     components: {
         PersonsForm,
         PersonsImport,

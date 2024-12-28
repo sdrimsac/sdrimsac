@@ -12,6 +12,7 @@ use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\ItemWarranty;
+use App\Models\Tenant\Person;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -95,185 +96,6 @@ class WarrantyController extends Controller
         }
         return $records;
     }
-
-    /* public function getRecords(Request $request)
-    {
-        $records = ItemWarranty::query()
-            ->with([
-                'documentItem' => function ($query) {
-                    $query->select('id', 'document_id', 'item')
-                        ->with(['document:id,customer']);
-                },
-                'saleNoteItem' => function ($query) {
-                    $query->select('id', 'sale_note_id', 'item')
-                        ->with(['sale_note:id,customer']);
-                },
-            ]);
-
-        $column = $request->input('column');
-        $value = $request->input('value');
-
-        if ($column && $value) {
-            if ($column == 'name') {
-                $records->where(function ($query) use ($value) {
-                    // Filtro sobre la tabla 'item_warranty'
-                    $query->where(function ($query) use ($value) {
-                        // Si el item tiene un 'document_item_id', buscar en 'documents' a través de 'document_items'
-                        $query->whereHas('documentItem.document', function ($query) use ($value) {
-                            $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(customer, "$[*].name")) LIKE ?', ["%{$value}%"]);
-                        });
-                    })
-                    ->orWhere(function ($query) use ($value) {
-                        // Si el item tiene un 'sale_note_item_id', buscar en 'sale_notes' a través de 'sale_note_items'
-                        $query->whereHas('saleNoteItem.sale_note', function ($query) use ($value) {
-                            $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(customer, "$[*].name")) LIKE ?', ["%{$value}%"]);
-                        });
-                    });
-                });
-            } elseif ($column == 'description') {
-                $records->where(function ($query) use ($value) {
-                    $query->whereHas('documentItem', function ($query) use ($value) {
-                        $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(item, "$.description")) LIKE ?', ["%{$value}%"]);
-                    })
-                        ->orWhereHas('saleNoteItem', function ($query) use ($value) {
-                            $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(item, "$.description")) LIKE ?', ["%{$value}%"]);
-                        });
-                });
-            } elseif ($column == 'series') {
-                $records->where(function ($query) use ($value) {
-                    $query->whereHas('documentItem', function ($query) use ($value) {
-                        $query->where('series', 'like', "%{$value}%");
-                    })
-                        ->orWhereHas('saleNoteItem', function ($query) use ($value) {
-                            $query->where('series', 'like', "%{$value}%");
-                        });
-                });
-            } elseif ($column == 'customer') {
-                $records->where(function ($query) use ($value) {
-                    $query->whereHas('documentItem.document', function ($query) use ($value) {
-                        $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(customer, "$[*].name")) LIKE ?', ["%{$value}%"]);
-                    })
-                    ->orWhereHas('saleNoteItem.sale_note', function ($query) use ($value) {
-                        $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(customer, "$[*].name")) LIKE ?', ["%{$value}%"]);
-                    });
-                });
-            }  else {
-                $records->where($column, 'like', "%{$value}%");
-            }
-        }
-
-        return $records;
-    } */
-    /* public function searchRecords(Request $request)
-    {
-        $column = $request->input('column');
-        $value = $request->input('value');
-
-        $records = ItemWarranty::query()
-            ->with([
-                'documentItem.document',
-                'saleNoteItem.sale_note',
-            ])
-            ->get();
-
-        $filteredRecords = $records->filter(function ($record) use ($column, $value) {
-            $documentItem = $record->documentItem;
-            $saleNoteItem = $record->saleNoteItem;
-
-            $documentMatch = false;
-            $saleNoteMatch = false;
-
-            if ($documentItem) {
-                $document = $documentItem->document;
-                if ($document && $column == 'name') {
-                    $documentMatch = stripos($document->customer['name'], $value) !== false;
-                } elseif ($documentItem->item && $column == 'description') {
-                    $documentMatch = stripos($documentItem->item['description'], $value) !== false;
-                } elseif ($column == 'series') {
-                    $documentMatch = stripos($documentItem->series, $value) !== false;
-                }
-            }
-
-            if ($saleNoteItem) {
-                $saleNote = $saleNoteItem->sale_note;
-                if ($saleNote && $column == 'name') {
-                    $saleNoteMatch = stripos($saleNote->customer['name'], $value) !== false;
-                } elseif ($saleNoteItem->item && $column == 'description') {
-                    $saleNoteMatch = stripos($saleNoteItem->item['description'], $value) !== false;
-                } elseif ($column == 'series') {
-                    $saleNoteMatch = stripos($saleNoteItem->series, $value) !== false;
-                }
-            }
-
-            return $documentMatch || $saleNoteMatch;
-        });
-
-        return new WarrantyCollection($filteredRecords);
-    } */
-
-
-
-    /* public function getRecords(Request $request)
-    {
-        // Inicia la consulta principal
-        $records = ItemWarranty::query()
-            ->with([
-                'documentItem' => function ($query) {
-                    $query->select('id', 'document_id', 'item')
-                        ->with(['document:id,customer']);
-                },
-                'saleNoteItem' => function ($query) {
-                    $query->select('id', 'sale_note_id', 'item')
-                        ->with(['sale_note:id,customer']);
-                },
-            ]);
-
-        $column = $request->input('column');
-        $value = $request->input('value');
-
-        if ($column && $value) {
-            if ($column == 'name') {
-                $records->where(function ($query) use ($value) {
-                    $query->whereHas('documentItem.document', function ($query) use ($value) {
-                        $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(document_customer, "$.name")) LIKE ?', ["%{$value}%"]);
-                    })
-                        ->orWhereHas('saleNoteItem.sale_note', function ($query) use ($value) {
-                            $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(sale_note_customer, "$.name")) LIKE ?', ["%{$value}%"]);
-                        });
-                });
-            }
-            // Filtrar por la descripción del ítem en 'item' dentro del JSON
-            elseif ($column == 'description') {
-                $records->where(function ($query) use ($value) {
-                    $query->whereHas('documentItem', function ($query) use ($value) {
-                        $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(item, "$.description")) LIKE ?', ["%{$value}%"]);
-                    })
-                        ->orWhereHas('saleNoteItem', function ($query) use ($value) {
-                            $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(item, "$.description")) LIKE ?', ["%{$value}%"]);
-                        });
-                });
-            }
-            // Filtrar por la serie en la columna 'series'
-            elseif ($column == 'series') {
-                $records->where(function ($query) use ($value) {
-                    $query->whereHas('documentItem', function ($query) use ($value) {
-                        $query->where('series', 'like', "%{$value}%");
-                    })
-                        ->orWhereHas('saleNoteItem', function ($query) use ($value) {
-                            $query->where('series', 'like', "%{$value}%");
-                        });
-                });
-            }
-            // Filtro genérico por cualquier columna
-            else {
-                $records->where($column, 'like', "%{$value}%");
-            }
-        }
-
-        return $records;
-    } */
-
-
     public function record($id)
     {
         $record = new WarrantyResource(ItemWarranty::findOrFail($id));
@@ -284,9 +106,13 @@ class WarrantyController extends Controller
         return [
             'warranty_start_date' => 'garantía_inicio',
             'description' => 'Descripción',
-            'series' => 'Serie Producto',
-            'name' => 'Cliente',
-            'customer' => 'Cliente nuevo',
+            
         ];
+    }
+    public function tables ()
+    {
+        $items = Item::where('unit_type_id', 'ZZ')->get();
+        $customers = Person::where('type', 'customer')->get();
+        return compact('items', 'customers');
     }
 }

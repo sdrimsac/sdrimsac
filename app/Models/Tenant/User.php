@@ -17,6 +17,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use UsesTenantConnection;
+    const DEFAULT_USER_IMAGE = 'user.png';
 
     protected $with = ['establishment', 'area', 'worker_type', "modules"];
     /**
@@ -337,5 +338,19 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserCommission::class);
     }
-    
+    public function hasDefaultImage()
+    {
+        return $this->image === self::DEFAULT_USER_IMAGE;
+    }
+    public function getImageUrlAttribute()
+    {
+        // Verificar si es la imagen por defecto
+        if ($this->image === self::DEFAULT_USER_IMAGE) {
+            // Ruta para la imagen por defecto
+            return asset('status_images/' . self::DEFAULT_USER_IMAGE);
+        }
+
+        // Ruta para imágenes personalizadas
+        return asset('storage/uploads/workers/' . $this->image);
+    }
 }

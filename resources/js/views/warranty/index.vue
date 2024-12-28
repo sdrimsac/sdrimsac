@@ -24,9 +24,7 @@
         <div class="card mb-0">
             <div class="card-header bg-primary">
                 <h4 class="my-0 text-white">
-                    <i class="fas fa-tshirt"></i>
-                    <i class="fas fa-palette"></i>
-                    Garantia</h4>
+                   Productos Garantia</h4>
             </div>
             <div class="card-body">
                 <data-table class="table-striped" ref="datatable" :resource="resource">
