@@ -1,40 +1,30 @@
-<!-- Modulo Listado de productos -->
+<!-- Modulo Listado de productos Principal-->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>Productos</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Lista de Productos</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white">
-                        <i class="fas fa-box"></i>
-                        Listado de productos
+                <div
+                    class="card-header bg-primary d-flex align-items-center"
+                    style="padding: 15px;"
+                >
+                    <h4
+                        class="my-0 text-white d-flex align-items-center"
+                        style="font-size: 1.5rem; font-weight: bold;"
+                    >
+                        <i
+                            class="far fa-address-book"
+                            style="font-size: 2rem; margin-right: 0.5rem;"
+                        ></i>
+                        Módulo de Productos
                     </h4>
                 </div>
+               
 
                 <div class="data-table-visible-columns">
                     <el-button
                         type="primary"
-                        class
+                        class="btn_titulos_modal"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickSaleOffert()"
@@ -44,25 +34,27 @@
                         Ofertas de venta
                     </el-button>
                     <el-button
+                       
                         type="primary"
-                        class
+                        class="btn_titulos_modal"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickBonus()"
+                        v-if="config.consolidated_quotations"
                     >
                         <i class="fas fa-gift"></i>
                         Bonificaciones
                     </el-button>
                     <el-button
                         type="primary"
-                        class
+                        class="btn_titulos_modal"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickCreate()"
                     >
-                        <i class="fas fa-box fa-lg"></i>
+                        
                         <i class="fa fa-plus"></i>
-                        Nuevo Producto
+                        Nuevo 
                     </el-button>
 
                     <button
@@ -489,6 +481,7 @@ export default {
         });
     },
     methods: {
+        // realiza una peticon get a tables
         clickImportListPriceUnitType() {
             this.showImportListPriceUnitTypeDialog = true;
         },

@@ -362,6 +362,12 @@ export default {
     },
     computed: {},
     created() {
+        //realiza una peticion get para obtener los datos de la tabla
+        /* if (this.resource == "items") {
+            this.$http.get("items/tables").then(response => {
+                this.configuration = response.data;
+            });
+        } */
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
