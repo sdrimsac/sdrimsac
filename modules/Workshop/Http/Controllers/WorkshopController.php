@@ -393,7 +393,7 @@ class WorkshopController extends Controller
                 $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
                 if ($configuration_establishments_numbers && $user->establishment_id) {
                     $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $user->establishment_id)->get()->transform(function ($row) {
-                        return [
+                        return  (object)[
                             'number' => $row->getNumber(),
                         ];
                     });
@@ -401,9 +401,11 @@ class WorkshopController extends Controller
                     $numbers = NumberActivity::all();
                 }
                 foreach ($numbers as $number) {
-                    $number = $number->number;
-                    // (new WhatsappController)->sendMessage($message, $number);
-                    WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+                    if($number->number){
+                        $number = $number->number;
+                        // (new WhatsappController)->sendMessage($message, $number);
+                        WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+                    }
                 }
             }
             return compact('total_sales');

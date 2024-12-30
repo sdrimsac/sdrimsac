@@ -86,7 +86,7 @@ class WhatsappSendCashReportProccess implements ShouldQueue
             $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
             if($configuration_establishments_numbers){
                 $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()->transform(function($row){
-                    return [
+                    return  (object)[
                         'number' => $row->getNumber(),
                         'establishment_id' => $row->establishment_id
                     ];
@@ -94,9 +94,11 @@ class WhatsappSendCashReportProccess implements ShouldQueue
             }else{
                 $numbers = NumberActivity::all();
             }
-            foreach ($numbers as $number) {
-                $request['number'] = $number->number;
-                (new WhatsappController)->sendHistorial($request);
+            foreach ($numbers as $number) { 
+                if($number->number){
+                    $request['number'] = $number->number;
+                    (new WhatsappController)->sendHistorial($request);
+                }
             }
         } catch (Exception $e) {
             $message = $e->getMessage();

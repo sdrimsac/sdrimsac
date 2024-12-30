@@ -65,7 +65,7 @@ class WhatsappController extends Controller
         // }
         if($configuration->configuration_establishments_numbers && $establishment_id){
             $numbers_activity = EstablishmentNotificationNumber::where('establishment_id', $establishment_id)->get()->transform(function($row){
-                return [
+                return  (object)[
                     'number' => $row->getNumber(),
                 ];
             });
@@ -73,8 +73,10 @@ class WhatsappController extends Controller
             $numbers_activity = NumberActivity::all();
         }
         foreach ($numbers_activity as $key => $value) {
-            WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number, null, $establishment_id);
-            // $this->sendMessage($message, $value->number);
+            if($value->number){
+                WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number, null, $establishment_id);
+                // $this->sendMessage($message, $value->number);
+            }
         }
     }
     public function sendMessageOne($number,$message,$establishment_id = null)

@@ -59,7 +59,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
                 $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
                 if ($configuration_establishments_numbers && $this->establishment_id) {
                     $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $this->establishment_id)->get()->transform(function ($row) {
-                        return [
+                        return  (object)[
                             'number' => $row->getNumber(),
                         ];
                     });
@@ -83,56 +83,58 @@ class WhatsappSendMessageProccess implements ShouldQueue
             $url = "https://sdrclientes.shop/api/send-message";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
             foreach ($numbers as $number) {
-                if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
-                    $client = new Client([
-                        'verify' => false,
-                        'stream' => false,
-                        'headers' => [
-                            'User-Agent' => 'Testing 1.0'
-                        ]
-                    ]);
-
-                    try {
-                        $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
-                            'json' => [
-                                'appkey' => $api_extern_whatsapp_token,
-                                'authkey' => $api_extern_whatsapp_token2,
-                                'to' => "+51" . $number->number,
-                                'message' => $message,
+                if ($number->number) {
+                    if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+                        $client = new Client([
+                            'verify' => false,
+                            'stream' => false,
+                            'headers' => [
+                                'User-Agent' => 'Testing 1.0'
                             ]
                         ]);
-                        Log::info($response->getBody()->getContents());
-                        return  $response->getBody()->getContents();
-                    } catch (\Exception $e) {
-                        Log::alert("Error al enviar mensaje a whatsapp: " . $e->getMessage());
+
+                        try {
+                            $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
+                                'json' => [
+                                    'appkey' => $api_extern_whatsapp_token,
+                                    'authkey' => $api_extern_whatsapp_token2,
+                                    'to' => "+51" . $number->number,
+                                    'message' => $message,
+                                ]
+                            ]);
+                            Log::info($response->getBody()->getContents());
+                            return  $response->getBody()->getContents();
+                        } catch (\Exception $e) {
+                            Log::alert("Error al enviar mensaje a whatsapp: " . $e->getMessage());
+                            return [
+                                "message" => $e->getMessage(),
+                                "line" => $e->getLine(),
+                            ];
+                        }
+                    } else {
+                        $sender = 'sdrimsac';
+                        if ($this->subdomain != null && $configuration->whatsapp_client) {
+                            $url = "https://" . $this->subdomain . ".sdrclientes.shop/api/send-message";
+                            $sender = $this->subdomain;
+                        } else {
+                            $web_whatsapp = config('app.web_whatsapp');
+                            $url = "https://" . $web_whatsapp . '/api/send-message';
+                        }
+                        $response = Http::post($url, [
+                            'number' => "51" . $number->number,
+                            'sender' => $sender,
+                            'message' => $message,
+                        ]);
+
+                        $status = $response->status();
+                        $body = $response->body();
                         return [
-                            "message" => $e->getMessage(),
-                            "line" => $e->getLine(),
+                            "success" => $status == 200,
+                            "message" => $body
+
+
                         ];
                     }
-                } else {
-                    $sender = 'sdrimsac';
-                    if ($this->subdomain != null && $configuration->whatsapp_client) {
-                        $url = "https://" . $this->subdomain . ".sdrclientes.shop/api/send-message";
-                        $sender = $this->subdomain;
-                    } else {
-                        $web_whatsapp = config('app.web_whatsapp');
-                        $url = "https://" . $web_whatsapp . '/api/send-message';
-                    }
-                    $response = Http::post($url, [
-                        'number' => "51" . $number->number,
-                        'sender' => $sender,
-                        'message' => $message,
-                    ]);
-
-                    $status = $response->status();
-                    $body = $response->body();
-                    return [
-                        "success" => $status == 200,
-                        "message" => $body
-
-
-                    ];
                 }
             }
         } catch (Exception $e) {

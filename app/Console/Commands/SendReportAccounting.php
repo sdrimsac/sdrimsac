@@ -82,7 +82,7 @@ class SendReportAccounting extends Command
                     $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
                     if ($configuration_establishments_numbers) {
                         $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()->transform(function ($row) {
-                            return [
+                            return  (object)[
                                 'number' => $row->getNumber(),
                             ];
                         });
@@ -110,8 +110,11 @@ class SendReportAccounting extends Command
                                     'message' => 'Reporte contable del mes de ' . Carbon::parse($month)->format('m-Y')
                                 ]
                             );
+                            if($number->number){
+                                (new WhatsappController)->sendHistorial($request);
+                            }
 
-                            (new WhatsappController)->sendHistorial($request);
+
                         }
 
                         $file = (new FormatController)->download(

@@ -19,7 +19,10 @@ class EstablishmentNotificationNumber extends ModelTenant
 
     public function getNumber(){
         $number = NumberActivity::find($this->number);
-        return $number->number;
+        if($number){
+            return $number->number;
+        }
+        return null;
     }
     
  
