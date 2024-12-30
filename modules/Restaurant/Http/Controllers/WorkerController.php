@@ -177,6 +177,7 @@ class WorkerController extends Controller
 
         $user_type = auth()->user()->type;
         $establishment_id = auth()->user()->establishment_id;
+        $user = auth()->user();
         $status = $request->input('qty_type');
         $name = $request->input('name');
         if ($user_type == 'admin') {
@@ -188,7 +189,22 @@ class WorkerController extends Controller
             $records = $records->where('type', '<>', 'superadmin')
                 ->where('type', '<>', 'admin');
             if ($configuration->health_network) {
-                $records =  $records->where('establishment_id', $establishment_id);
+                $arca_type = User::find($user->id)->getUserTypeArca();
+                if($arca_type){
+                    if($arca_type == 'product'){
+                        $records = $records->whereHas('establishment', function($query) use ($establishment_id){
+                            $query->where('is_product', true);
+                        });
+                    }else{
+                        $records = $records->whereHas('establishment', function($query) use ($establishment_id){
+                            $query->where('is_service', true);
+                        });
+                    }
+                }else{
+                    $records =  $records->where('establishment_id', $establishment_id);
+
+                }
+
             }
         }
         if ($status !== null) {
