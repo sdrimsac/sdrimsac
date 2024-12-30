@@ -20,6 +20,7 @@ use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Http\Controllers\Tenant\SellerController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\CashController;
 use Modules\Inventory\Http\Controllers\TransferPlaceController;
@@ -35,6 +36,7 @@ if ($hostname) {
                 'register' => false,
                 'verify'   => false
             ]);
+
             Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'printTransfer']);
             Route::get('manifest-tenant.json', [ManifestController::class, 'manifest']);
 

@@ -12,6 +12,7 @@
     $has_series = (bool) \Modules\Item\Models\ItemLot::count();
     $has_lotes = (bool) \Modules\Item\Models\ItemLotsGroup::count();
     $many_establishments = \App\Models\Tenant\Establishment::count() > 1;
+    $noIsArcaProduct = $user->getUserTypeArca() !== 'product';
 @endphp
 
 <div class="menu-container flex-grow-1" style="margin-top:20px; ">
@@ -58,7 +59,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->commercial_treatments || ($config->commercial_treatment_items && !$roleService->isLogistic()))
+                    @if ($config->commercial_treatments || ($config->commercial_treatment_items && !$roleService->isLogistic()) && $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.commercial_treatment.index') }}">
@@ -67,7 +68,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($config->health_network && !$roleService->isLogistic())
+                    @if ($config->health_network && !$roleService->isLogistic() && $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
                                 href="{{ route('tenant.principal_categories.index') }}">
@@ -141,7 +142,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type == 'superadmin' || $config->provedores)
+                    @if ($user->type == 'superadmin' || $config->provedores && $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
                                 href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
@@ -504,7 +505,7 @@
                 </ul>
             </li>
         @endif
-        @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isLogistic())
+        @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isLogistic() && $noIsArcaProduct)
             <li>
                 <a href="#boxes" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'caja' && $path[1] === 'boxes' ? true : false }}"
@@ -613,7 +614,7 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
-                    @if ($user->type == 'superadmin' || $config->reporte_metodos_pago)
+                    @if ($user->type == 'superadmin' || $config->reporte_metodos_pago && $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                                 href="{{ route('reports.methods.index') }}">
@@ -744,7 +745,7 @@
                             </a>
                         </li>
                     @endif
-                    @if ($user->type == 'superadmin' || $config->kardex)
+                    @if ($user->type == 'superadmin' || $config->kardex && $noIsArcaProduct)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
                                 href="{{ route('reports.kardex.index') }}">

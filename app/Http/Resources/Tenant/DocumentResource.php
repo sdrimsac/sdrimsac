@@ -19,7 +19,7 @@ class DocumentResource extends JsonResource
      */
     public function toArray($request)
     {
-        Log::info('test');
+        // Log::info('test');
 
         $response_message = null;
         $response_type = null;
