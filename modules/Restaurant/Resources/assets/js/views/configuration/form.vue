@@ -630,7 +630,8 @@ export default {
         .post(`/${this.resource}`, this.form)
         .then(response => {
           if (response.data.success) {
-            this.$toast.success(response.data.message);
+            this.$showSAlert(response.data.message, "success");
+            /* this.$toast.success(response.data.message); */
             this.$eventHub.$emit("reloadData");
             this.close();
           } else {

@@ -1337,18 +1337,21 @@ export default {
                     .slice(0, 9);
             }
             if (field === "name") {
+                // Permitir letras (incluyendo Ñ/ñ), números, guiones, puntos y espacios
                 this.form.name = this.form.name
-                    .replace(/[^a-zA-Z0-9-\.]/g, "")
+                    .replace(/[^a-zA-ZñÑ0-9-\. ]/g, "")
                     .slice(0, 150);
 
+                // Contar caracteres especiales (- y .)
                 const specialCharCount = (this.form.name.match(/[-\.]/g) || [])
                     .length;
 
-                if (specialCharCount > 2) {
-                    this.form.name = this.form.name
-                        .replace(/[-\.]/g, "")
-                        .slice(0, this.form.name.length);
+                // Si hay más de 2 caracteres especiales, eliminarlos
+                if (specialCharCount > 4) {
+                    this.form.name = this.form.name.replace(/[-\.]/g, "");
                 }
+
+                // Convertir a mayúsculas
                 this.form.name = this.form.name?.toUpperCase();
             }
             if (field === "number") {

@@ -2620,11 +2620,13 @@ export default {
 
     data() {
         return {
-            form_category: false,
             form_category: {
                 add: false,
-                name: "",
-                id: null
+                name: ''
+            },
+            form_brand: {
+                add: false,
+                name: ''
             },
             categories: [], // Lista de categorías
             errors: {}, // Errores de validación
@@ -2826,16 +2828,14 @@ export default {
         // Activar el formulario (Categoría o Marca)
         activateForm(type) {
             if (type === "category") {
-                this.form_category.add = true; // Activa el formulario de categoría
-                this.form.category_id = null; // Limpia el valor seleccionado
+                this.$set(this.form_category, 'add', true);
                 this.$nextTick(() => {
                     if (this.$refs.categoryInput) {
                         this.$refs.categoryInput.focus(); // Coloca el cursor en el input
                     }
                 });
             } else if (type === "brand") {
-                this.form_brand.add = true; // Activa el formulario de marca
-                this.form.brand_id = null; // Limpia el valor seleccionado
+                this.$set(this.form_brand, 'add', true);
                 this.$nextTick(() => {
                     if (this.$refs.brandInput) {
                         this.$refs.brandInput.focus(); // Coloca el cursor en el input
@@ -2843,7 +2843,6 @@ export default {
                 });
             }
         },
-
         // Guardar (Categoría o Marca)
         saveForm(type) {
             let endpoint = "";
@@ -2929,17 +2928,15 @@ export default {
                 });
         },
         cancelForm(type) {
+            console.log(`Cancel form for ${type}`);
             if (type === 'category') {
-                this.form_category.add = false;
+                this.$set(this.form_category, 'add', false);
                 this.form_category.name = '';
-                this.$showSAlert('Cancelado', 'Se canceló el registro de la categoría.', 'info');
-                console.log('Cancelado', this.form_category);
             } else if (type === 'brand') {
-                this.form_brand.add = false;
+                this.$set(this.form_brand, 'add', false);
                 this.form_brand.name = '';
-                this.$showSAlert('Cancelado', 'Se canceló el registro de la categoría.', 'info');
             }
-            this.$forceUpdate();
+            console.log(`Form state after cancel:`, this.form_category, this.form_brand);
         },
 
         updateCommercialTreatmentItem(idx) {
