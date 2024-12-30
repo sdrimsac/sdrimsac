@@ -212,7 +212,7 @@
                         v-if="resource !== 'item-color-size'"
                         icon="el-icon-tickets"
                         @click.prevent="clickDownload('excel')"
-                        >Exportar Excel</el-button
+                        >ExcelExportar </el-button
                     >
                         <el-button
                         class="submit"

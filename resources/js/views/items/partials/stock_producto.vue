@@ -1,4 +1,4 @@
-<!-- Modal de Importar Productos -->
+<!-- Modal de Importar Productos Admin -->
 <template>
     <el-dialog  :title="titleDialog" 
     :visible="showDialog" 
@@ -10,18 +10,16 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div class="col-12 form-group" :class="{'has-danger': errors.warehouse_id}">
-                        <br>
+                    <div class="col-6 form-group" :class="{'has-danger': errors.warehouse_id}">
                         <label for="warehouse">
-                            
-                            Almacén
+                            <i class="fas fa-warehouse fa-lg"></i> Almacén
                         </label>
                         <el-select v-model="form.warehouse_id">
                             <el-option v-for="w in warehouses" :key="w.id" :label="w.description" :value="w.id"></el-option>
                         </el-select>
                         <small class="form-control-feedback" v-if="errors.warehouse_id" v-text="errors.warehouse_id[0]"></small>
                     </div>
-                    <div class="col-12 form-group" :class="{'has-danger': errors.file}">
+                    <div class="col-6 form-group d-flex justify-content-end" :class="{'has-danger': errors.file}">
                         <el-upload
                                 ref="upload"
                                 :headers="headers"
@@ -34,8 +32,9 @@
                                 :limit="1"
                                 :data="form"
                                 :on-success="successUpload">
-                            <el-button slot="trigger" type="primary">
-                                <i class="fas fa-file-excel fa-lg" style="color: green; margin-right: 5px;"></i>
+                            <el-button class="btnsdr-download btnsdr-download:hover"
+                            style="height: 50px;">
+                                <i class="fas fa-upload fa-lg" style="color: green; margin-right: 5px;"></i>
                                 Seleccione un archivo (xlsx)
                             </el-button>
                         </el-upload>
@@ -51,9 +50,25 @@
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
-                <el-button icon="fas fa-hourglass-half fa-lg" id=buttonProcesar type="primary" native-type="submit" :disabled="loading_submit" :loading="loading_submit"> Procesar</el-button>
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <el-button  class="btn-cancel btn-cancel:hover"
+                            @click.prevent="close()"
+                > 
+                            <i class="fas fa-times fa-lg"></i> &nbsp;
+                            Cancelar
+                </el-button>
+                <el-button class="btnsdr-procesar btnsdr-procesar:hover"
+                           id=buttonProcesar 
+                           type="primary" 
+                           native-type="submit" 
+                           :disabled="loading_submit" 
+                           :loading="loading_submit">
+                    <i
+                        class="fas fa-hourglass-half fa-lg"
+                        :class="{ 'fa-spin': loading_submit }"
+                    ></i>
+                    &nbsp; 
+                    Procesar</el-button>
             </div>
         </form>
     </el-dialog>
@@ -98,11 +113,16 @@
                 }
             },
             create() {
-                this.titleDialog = 'Importar Stock de Productos Masivamente'
+                this.titleDialog = 'Importar Stock de Productos Masivamentedsdsdsdsd'
             },
             async submit() {
                 if (!this.form.warehouse_id) {
-                    this.$toast.warning('Seleccione un almacén para poder continuar');
+                   
+                    this.$showSAlert(
+                    "IMPORTANTE",
+                    "Seleccione una ALMACE para continuar",
+                    "success"
+                );
                     return;
                 }
                 if(this.loading_submit) return;
@@ -123,14 +143,22 @@
             },
             successUpload(response, file, fileList) {
                 if (response.success) {
-                    this.$toast.success(response.message)
+                    this.$showSAlert(
+                    "IMPORTANTE",
+                    response.message,
+                    "success"
+                )
                     
                     this.$eventHub.$emit('reloadData')
                     this.$eventHub.$emit('reloadTables')
                     this.$refs.upload.clearFiles()
                     this.close()
                 } else {
-                    this.$toast.error(response.message);
+                    this.$showSAlert(
+                    "IMPORTANTE",
+                    response.message,
+                    "error"
+                );
                 }
                 this.loading= false
             },

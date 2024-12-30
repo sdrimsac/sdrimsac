@@ -12,13 +12,14 @@
             class="col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold mt-3"
         >
             <button
-                type="button"
-                class="btn btn-lg btn-info waves-effect waves-light"
-                @click="clickPrint('a4')"
+            type="button"
+            class="btn btn-lg btn-info waves-effect waves-light"
+            @click="clickPrint('a4')"
+            style="font-size: 2em;"
             >
-                <i class="fa fa-file-alt"></i>
+            <i class="fa fa-file-alt"></i>
             </button>
-            <p>Imprimir A4</p>
+            <p style="font-size: 2em;">Imprimir A4</p>
         </div>
         
 
@@ -31,24 +32,29 @@
                         <span> Cerrar</span>
                     </el-button>
                 </template>
-            <!-- Botón Listado de Compras -->
-            <el-button  class="btn-cancel btn-cancel:hover" 
-                        icon="fas fa-times fa-lg" 
-                        @click="clickFinalize">
-                <span> Listado de Compras</span>
-            </el-button>
+                <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+<!-- Botón Listado de Compras -->
+<el-button  class="btnsdr-listado btnsdr-listado:hover" 
+            icon="fas fa-list fa-lg" 
+            @click="clickFinalize"
+            style="font-size: 1.2em;">
+    <span> Listado de Compras</span>
+</el-button>
 
-            <!-- Botón Guardar -->
+            <!-- Botón Nueva Compra -->
             <el-button  class="btn-save btn-save:hover" 
-                        icon="fas fa-save fa-lg" 
-                        type="primary" 
+                        
+                        icon="fas fa-plus fa-lg"
+                        type="success" 
                         native-type="submit" 
                         @click="clickNewDocument">
                 <span> Nueva compra</span>
             </el-button>
+                </div>
+            
         </div>
         
-            <template v-if="showClose">
+            <!-- <template v-if="showClose">
                 <el-button @click="clickClose">Cerrar</el-button>
             </template>
             <template v-else>
@@ -56,7 +62,7 @@
                 <el-button type="primary" @click="clickNewDocument"
                     >Nueva compra</el-button
                 >
-            </template>
+            </template> -->
         </span>
     </el-dialog>
 </template>

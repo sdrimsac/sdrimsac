@@ -9,14 +9,14 @@
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
-                <br>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <a href="/formats/item_price_lists.xlsx" target="_new"
                             >Descargar AQUI el formato</a
                         >
                     </div>
-                    <div class="col-md-12 mt-4">
+                    
+                    <div class="col-md-4">
                         <div
                             class="form-group text-center"
                             :class="{ 'has-danger': errors.file }"

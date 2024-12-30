@@ -1,7 +1,6 @@
 <!-- Modulo Listado de productos Principal-->
 <template>
     <div>
-       
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div
@@ -19,7 +18,6 @@
                         Módulo de Productos
                     </h4>
                 </div>
-               
 
                 <div class="data-table-visible-columns">
                     <el-button
@@ -31,10 +29,9 @@
                         v-if="config.sale_offert"
                     >
                         <i class="fas fa-tag"></i>
-                        Ofertas de venta
+                        Ofertas de ventas
                     </el-button>
                     <el-button
-                       
                         type="primary"
                         class="btn_titulos_modal"
                         style="margin-right: 5px;"
@@ -52,13 +49,12 @@
                         href="javascript:void(0)"
                         @click.prevent="clickCreate()"
                     >
-                        
                         <i class="fa fa-plus"></i>
-                        Nuevo 
+                        Nuevo
                     </el-button>
 
                     <button
-                        class="btn btn-sm btn-icon btn-icon-only btn-outline-light align-top float-end"
+                        class="btn btn-icon btn-icon-only btn-outline-light align-top float-end"
                         style="margin-right: 5px;"
                         type="button"
                         data-bs-toggle="dropdown"
@@ -69,62 +65,57 @@
                     </button>
                     <div
                         class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
-                        v-if="typeUser === 'admin' || typeUser == 'superadmin'"
+                        v-if="typeUser === 'admin' || typeUser === 'superadmin'"
                     >
                         <a
-                            class="dropdown-item"
+                            class="dropdown-item text-success"
                             href="javascript:void(0)"
                             @click.prevent="clickImport()"
-                            style="color:green"
                         >
-                            <i class="fa fa-upload"></i> Importar Productos
+                            <i class="fa fa-upload me-2"></i> Importar Productos
                         </a>
                         <a
                             v-if="config.quantity_prices"
-                            class="dropdown-item"
+                            class="dropdown-item text-warning"
                             href="javascript:void(0)"
                             @click.prevent="clickImportListPriceRange()"
-                            style="color:orange"
                         >
-                            <i class="fa fa-upload"></i> Importar Precios por
-                            rango de cantidad
+                            <i class="fa fa-upload me-2"></i> Importar Precios
+                            por rango de cantidad
                         </a>
                         <a
-                            class="dropdown-item"
+                            class="dropdown-item text-primary"
                             href="javascript:void(0)"
                             @click.prevent="clickImportListPrice()"
-                            style="color:blue"
                         >
-                            <i class="fa fa-upload"></i> Importar Politica de
-                            Precios
+                            <i class="fa fa-upload me-2"></i> Importar Política
+                            de Precios
                         </a>
                         <a
                             v-if="config.quantity_prices"
-                            class="dropdown-item"
+                            class="dropdown-item text-dark"
                             href="javascript:void(0)"
                             @click.prevent="clickImportListPriceUnitType()"
-                            style="color:black"
                         >
-                            <i class="fa fa-upload"></i> Importar Precios por
-                            rango de cantidad en política de precio
+                            <i class="fa fa-upload me-2"></i> Importar Precios
+                            por rango de cantidad en política de precio
+                        </a>
+                        <a
+                            class="dropdown-item text-danger"
+                            href="javascript:void(0)"
+                            @click.prevent="clickImportStockProducto()"
+                        >
+                            <i class="fa fa-upload me-2"></i> Importar Stock de
+                            Producto
                         </a>
                         <a
                             class="dropdown-item"
                             href="javascript:void(0)"
-                            @click.prevent="clickImportStockProducto()"
-                            style="color:red"
+                            @click.prevent="clickImportPointsValue()"
+                            style="color:orange"
                         >
-                            <i class="fa fa-upload"></i> Importar stock de
-                            producto
+                            <i class="fa fa-upload"></i> Valor de puntos
                         </a>
-                        <!-- <a
-              class="dropdown-item"
-              href="javascript:void(0)"
-              @click.prevent="clickImportPointsValue()"
-              style="color:orange"
-            >
-              <i class="fa fa-upload"></i> Valor de puntos
-            </a> -->
                     </div>
                 </div>
                 <div class="data-table-visible-columns"></div>
@@ -138,74 +129,86 @@
                         class="table-striped"
                     >
                         <tr slot="heading" width="100%" class="bg-primary">
-                            <th class="text-white text-center">Acciones</th>
-                            <th class="text-white">Registro Actividad</th>
                             <th class="text-white">#</th>
-                            <th class="text-white">Cód. Interno</th>
+                            <th class="text-white">Acciones</th>
+                            <th class="text-white">Registro Actividad</th>
+                            <th class="text-white ">Cód. Interno</th>
                             <th class="text-white text-center">Unidad</th>
                             <th class="text-white text-center">Nombre</th>
-                            <th class="text-white">Descripción</th>
+                            <!-- <th class="text-white">Descripción</th> -->
                             <th class="text-white">Ubicacion</th>
                             <th class="text-left text-white">Stock</th>
-                            <th class="text-end text-white">
-                                P.Unitario (Venta)
+                            <th class="text-white">
+                                P.Venta
                             </th>
                             <!-- <th class="text-end text-white">P.Unitario (Venta) establecimiento</th> -->
                             <th
                                 v-if="typeUser != 'seller'"
                                 class="text-end text-white"
                             >
-                                P.Unitario (Compra)
+                                P.Compra
                             </th>
-                            <th class="text-center text-white">Tiene Igv</th>
+                            <!-- <th class="text-center text-white">Tiene Igv</th> -->
                             <th class="text-white text-center">Estado</th>
                         </tr>
 
-                        <tr></tr>
                         <tr
                             slot-scope="{ index, row }"
                             :class="{ disable_color: !row.active }"
                         >
+                            <td>{{ index }}</td>
                             <td class="text-start">
                                 <template>
                                     <button
-                                        class="btn p-0"
-                                        type="button"
+                                        class="btn btnsdr-acciones btnsdr-acciones:hover"
                                         data-bs-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false"
+                                        style="height: 50px; font-size: 1.2rem;"
                                     >
                                         <span
-                                            class="btn btn-primary dropdown-toggle"
                                             data-bs-toggle="tooltip"
                                             data-bs-placement="top"
                                             data-bs-delay="0"
                                             title
                                             data-bs-original-title="Item Count"
                                             aria-label="Item Count"
-                                            >Acciones</span
                                         >
+                                            Acciones
+                                        </span>
                                     </button>
                                     <div
                                         class="dropdown-menu dropdown-menu-end"
-                                        style
                                     >
+                                        <!-- Editar -->
                                         <a
                                             type="button"
                                             class="dropdown-item text-secondary"
                                             @click.prevent="clickCreate(row.id)"
                                         >
-                                            <i class="fa fa-edit fa-lg"></i>
+                                            <i
+                                                class="fa fa-edit fa-lg me-2"
+                                            ></i>
+                                            <!-- Espaciado entre icono y texto -->
                                             Editar
                                         </a>
+
+                                        <!-- Eliminar -->
                                         <a
                                             type="button"
                                             class="dropdown-item text-danger"
                                             @click.prevent="clickDelete(row.id)"
                                         >
-                                            <i class="fa fa-trash fa-lg"></i>
+                                            <i
+                                                class="fa fa-trash fa-lg me-2"
+                                            ></i>
                                             Eliminar
                                         </a>
+
+                                        <div class="dropdown-divider"></div>
+                                        <!-- Divisor entre acciones -->
+
+                                        <!-- Inhabilitar -->
                                         <a
                                             type="button"
                                             class="dropdown-item"
@@ -215,10 +218,12 @@
                                             v-if="row.active"
                                         >
                                             <i
-                                                class="fas fa-toggle-off text-warning fa-lg"
+                                                class="fas fa-toggle-off text-warning fa-lg me-2"
                                             ></i>
                                             Inhabilitar
                                         </a>
+
+                                        <!-- Habilitar -->
                                         <a
                                             type="button"
                                             class="dropdown-item"
@@ -226,7 +231,7 @@
                                             v-else
                                         >
                                             <i
-                                                class="fas fa-toggle-on text-success fa-lg"
+                                                class="fas fa-toggle-on text-success fa-lg me-2"
                                             ></i>
                                             Habilitar
                                         </a>
@@ -241,13 +246,20 @@
                                     "
                                     class="text-center"
                                 >
-                                    <span class="text-center fw-bold">{{
-                                        row.last_register.user
-                                    }}</span>
+                                    <span
+                                        class="text-center fw-bold"
+                                        style="font-family: Arial, sans-serif;"
+                                        >{{ row.last_register.user }}</span
+                                    >
                                     :
-                                    <span class="text-primary">{{
-                                        row.last_register.description
-                                    }}</span>
+                                    <br />
+                                    <span
+                                        class="text-primary"
+                                        style="font-family: Arial, sans-serif;"
+                                        >{{
+                                            row.last_register.description
+                                        }}</span
+                                    >
                                     <br />
                                     <span
                                         :class="
@@ -258,6 +270,7 @@
                                                     : ''
                                             }`
                                         "
+                                        style="font-family: Arial, sans-serif;"
                                     >
                                         {{
                                             formatDateTime(
@@ -267,11 +280,15 @@
                                     </span>
                                 </template>
                             </td>
-                            <td>{{ index }}</td>
-                            <td>{{ row.internal_id }}</td>
-                            <td>{{ row.unit_type_id }}</td>
-                            <td class="text-center">{{ row.description }}</td>
-                            <td>{{ row.second_name }}</td>
+
+                            <td class="text-center">{{ row.internal_id }}</td>
+                            <td class="text-center">{{ row.unit_type_id }}</td>
+                            <td class="text-center">
+                                {{ row.description }}
+                                <br />
+                                {{ row.second_name }}
+                            </td>
+                            <!-- <td>{{ row.second_name }}</td> -->
                             <td>{{ row.location }}</td>
                             <td>
                                 <div
@@ -347,9 +364,9 @@
                             <td v-if="typeUser != 'seller'" class="text-end">
                                 {{ row.purchase_unit_price }}
                             </td>
-                            <td class="text-center">
-                                {{ row.has_igv_description }}
-                            </td>
+                            <!-- <td class="text-center">
+                            {{ row.has_igv_description }}
+                        </td> -->
                             <td class="text-center">
                                 <button
                                     class="btn"

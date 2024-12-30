@@ -1,3 +1,4 @@
+<!-- Modal de bonificaciones -->
 <template>
     <el-dialog
         title="Bonus"
@@ -6,18 +7,19 @@
         @close="close"
         append-to-body
         v-loading="loading"
-    >
+        >
+        <br />
         <div class="table-responsive">
             <table class="table">
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Cantidad mínima</th>
-                        <th>Bonificación</th>
-                    </tr>
+            <thead>
+                <tr style="background-color: #1e5a85;  text-align: center;">
+                <th style="color: #ffffff;">Descripción</th>
+                <th style="color: #ffffff;">Cantidad mínima</th>
+                <th style="color: #ffffff;">Bonificación</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in item_unit_type" :key="index">
+                    <tr v-for="(item, index) in item_unit_type" :key="index" style="text-align: center;">
                         <td>{{ item.description }}</td>
                         <td>
                             <el-input-number
@@ -39,10 +41,14 @@
         </div>
         <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
             <el-button class="btn-cancel btn-cancel:hover" @click="close"
-                >Cancelar</el-button
+                >
+                <i class="fas fa-times fa-lg"></i> &nbsp;
+                Cancelar</el-button
             >
             <el-button class="btn-save btn-save:hover" @click="save"
-                >Guardar</el-button
+                >
+                <i class="fas fa-save fa-lg"></i> &nbsp;
+                Guardar</el-button
             >
         </div>
     </el-dialog>

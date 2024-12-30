@@ -1,4 +1,4 @@
-<!-- Ajuste de Stock Productos Item -->
+<!-- Ajuste de Stock de Productos Item -->
 <template>
     <el-dialog
         :title="titleDialog"
@@ -16,8 +16,10 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <i class="fas fa-cube"></i>
-                            <label class="control-label">Producto</label>
+                            
+                            <label class="control-label">
+                                <i class="fas fa-cube fa-lg"></i>
+                                Producto</label>
                             <el-input
                                 v-model="form.item_description"
                                 :readonly="true"
@@ -101,17 +103,23 @@
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-end mt-4">
-                <el-button @click.prevent="close()">
+
+            
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <el-button 
+                    class="btn-cancel btn-cancel:hover"
+                    @click.prevent="close()">
                     <i class="fas fa-times fa-lg"></i>
                      Cancelar</el-button>
                 <el-button
+                    class="btnsdr-actualizar btnsdr-actualizar:hover"
+                
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"
                     > 
                     <i class="fas fa-save fa-lg"></i>
-                     Aceptar</el-button
+                     Actualizar</el-button
                 >
             </div>
             <br>

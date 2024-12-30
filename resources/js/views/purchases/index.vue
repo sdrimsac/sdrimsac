@@ -55,7 +55,7 @@
                             >Nuevo</span
                         >
                     </el-button>
-                    <el-button
+                    <!-- <el-button
                         class="btn_titulos_modal"
                         href="javascript:void(0)"
                         @click.prevent="clickImport()"
@@ -65,7 +65,7 @@
                             style="color: #000; font-size: 1.25rem; font-weight: bold;"
                             >Importar</span
                         >
-                    </el-button>
+                    </el-button> -->
                 </div>
                 <!-- ********** -->
 
@@ -77,8 +77,8 @@
                     >
                         <tr slot="heading" class="bg-primary">
                             <th class="text-white text-center">#</th>
-                            <th class="text-center text-white">F. Emisión</th>
-                            <th class="text-center text-white">Usuario</th>
+                            <th class="text-center text-white">Actividad</th>
+                            <!-- <th class="text-center text-white">Usuario</th> -->
                             <th
                                 class="text-center text-white"
                                 v-if="columns.date_of_due.visible"
@@ -128,19 +128,20 @@
                                 Percepcion
                             </th>
                             <th class="text-end text-white">Total</th>
-                            <th class="text-end text-white">Acciones</th>
+                            <th class="text-white">Acciones</th>
                         </tr>
 
                         <!-- Filas de datos -->
                         <tr class="text-center" slot-scope="{ index, row }">
                             <td>{{ index }}</td>
-                            <td class="text-center">
+                            <td class="">
+                                <strong>{{ row.user_name }}</strong> : 
+                                <br />
                                 {{ row.date_of_issue }}
-                                <div>
-                                    <small>{{ row.time_of_issue }}</small>
-                                </div>
+                                <br />
+                                <small>{{ row.time_of_issue }}</small>
                             </td>
-                            <td class="text-center">{{ row.user_name }}</td>
+                            <!-- <td class="text-center">{{ row.user_name }}</td> -->
                             <td
                                 v-if="columns.date_of_due.visible"
                                 class="text-center"
@@ -288,13 +289,24 @@
                             <td class="text-end">
                                 <div class="dropdown">
                                     <button
-                                        class="btn btn-sm dropdown-toggle btn-acciones"
-                                        type="button"
+                                        class="btn btnsdr-acciones btnsdr-acciones:hover"
                                         data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
                                         aria-expanded="false"
+                                        style="height: 50px; font-size: 1.2rem;"
                                     >
-                                        Acciones
+                                        <span
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            data-bs-delay="0"
+                                            title
+                                            data-bs-original-title="Item Count"
+                                            aria-label="Item Count"
+                                        >
+                                            Acciones
+                                        </span>
                                     </button>
+                                    
                                     <div
                                         class="dropdown-menu dropdown-menu-end custom-dropdown"
                                     >
@@ -304,6 +316,7 @@
                                                 `/${resource}/edit/${row.id}`
                                             "
                                             class="dropdown-item text-edit"
+                                            style="background-color: #28a745; color: #fff;"
                                         >
                                             <i class="fa fa-edit"></i> Editar
                                         </a>
@@ -313,6 +326,7 @@
                                                 clickAnulate(row.id)
                                             "
                                             class="dropdown-item text-anular"
+                                            style="background-color: #dc3545; color: #fff;"
                                         >
                                             <i class="fa fa-ban"></i> Anular
                                         </a>
@@ -324,6 +338,7 @@
                                             "
                                             @click.prevent="clickFacturar(row)"
                                             class="dropdown-item text-facturar"
+                                            style="background-color: #17a2b8; color: #fff;"
                                         >
                                             <i class="fas fa-file-invoice"></i>
                                             Facturar
@@ -333,6 +348,7 @@
                                                 clickOptions(row.id)
                                             "
                                             class="dropdown-item text-imprimir"
+                                            style="background-color: #6c757d; color: #fff;"
                                         >
                                             <i class="fas fa-print"></i>
                                             Imprimir

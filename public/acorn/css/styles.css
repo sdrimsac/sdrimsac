@@ -3161,6 +3161,7 @@ html[data-color='light-pink'] {
     --muted: #afafaf;
     --separator: #dddddd;
     --separator-light: #f1f1f1;
+    
     --body-rgb: 59, 59, 59;
     --alternate-rgb: 124, 124, 124;
     --muted-rgb: 176, 176, 176;
@@ -13212,17 +13213,61 @@ width: 181px;
   background-color: #1aa785 !important;
 }
 
+.btnsdr-procesar {
+  background-color: #17a2b8 !important; /* Azul Procesar */
+}
+
+.btnsdr-procesar:hover {
+  background-color: #138496 !important;
+}
+
+.btnsdr-acciones {
+  background-color: #17a2b8 !important; /* Azul Procesar */
+}
+
+.btnsdr-acciones:hover {
+  background-color: #138496 !important;
+}
+.btnsdr-actualizar {
+  background-color: #17a2b8 !important; /* Azul claro */
+  border-radius: 8px !important; /* Bordes redondeados */
+}
+
+.btnsdr-actualizar:hover {
+  background-color: #138496 !important; /* Azul más oscuro al pasar el mouse */
+  border-radius: 8px !important; /* Bordes redondeados */
+}
+
+.btnsdr-agregarproducto {
+  background-color: #17a2b8 !important; /* Azul claro */
+  border-radius: 8px !important; /* Bordes redondeados */
+}
+
+.btnsdr-agregarproducto:hover {
+  background-color: #138496 !important; /* Azul más oscuro al pasar el mouse */
+  border-radius: 8px !important; /* Bordes redondeados */
+}
+
+.btnsdr-listado {
+  background-color: #6c757d !important; /* Gris */
+  border-radius: 8px !important; /* Bordes redondeados */
+}
+
+.btnsdr-listado:hover {
+  background-color: #5a6268 !important; /* Gris más oscuro al pasar el mouse */
+  border-radius: 8px !important; /* Bordes redondeados */
+}
+
 /* Estilo para el botón de descargar Excel */
 .btnsdr-download {
   background-color: #28a745 !important; /* Verde Excel */
-  color: white !important;
-  border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 1.1em;
+  border-radius: 8px !important; /* Bordes redondeados */
+  color: white !important; /* Letras blancas */
 }
 
 .btnsdr-download:hover {
   background-color: #218838 !important;
+  color: white !important; /* Letras blancas */
 }
 
 /* Tooltip de Bootstrap */
