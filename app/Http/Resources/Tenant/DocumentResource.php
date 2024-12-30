@@ -6,6 +6,7 @@ use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Controllers\DownloadController;
 use App\Models\Tenant\Establishment;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class DocumentResource extends JsonResource
 {
@@ -18,6 +19,7 @@ class DocumentResource extends JsonResource
      */
     public function toArray($request)
     {
+        Log::info('test');
 
         $response_message = null;
         $response_type = null;
