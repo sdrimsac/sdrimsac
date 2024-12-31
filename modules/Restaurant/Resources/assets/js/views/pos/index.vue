@@ -2292,22 +2292,27 @@ export default {
         }
     },
     methods: {
-        printFileWithRawBT(fileUrl) {
-            // Crear la URL del intent
-            const intentUrl = `intent:#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.url=${encodeURIComponent(
-                fileUrl
-            )};end`;
+        async printFileWithRawBT(fileUrl) {
+    try {
+        // Descargar el archivo PDF y convertirlo a Base64
+        const base64File = await fetch(fileUrl)
+            .then((response) => response.arrayBuffer())
+            .then((buffer) => btoa(String.fromCharCode(...new Uint8Array(buffer))));
 
-            try {
-                // Redirigir al intent
-                window.location.href = intentUrl;
-            } catch (error) {
-                // Manejar el error si RawBT no está instalado
-                this.$message.error(
-                    "RawBT no está instalado. Por favor, instálalo desde Google Play."
-                );
-            }
-        },
+        // Crear el Intent con el archivo en Base64
+        const intentUrl = `intent:#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.base64=${encodeURIComponent(
+            base64File
+        )};end`;
+
+        // Redirigir al Intent
+        window.location.href = intentUrl;
+    } catch (error) {
+        // Manejar errores
+        this.$message.error(
+            "No se pudo imprimir el archivo. Verifica que RawBT esté instalado y el archivo sea válido."
+        );
+    }
+},
         printOrden(url, id) {
             window.open(url, "_blank");
             this.ordenToPrint = this.ordenToPrint.filter(o => o.id != id);
