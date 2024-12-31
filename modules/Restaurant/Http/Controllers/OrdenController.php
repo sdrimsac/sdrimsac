@@ -271,10 +271,7 @@ class OrdenController extends Controller
         }
         $timestamp = Carbon::now()->format('YmdHis');
         if($configuration->android_configuration){
-            return response()->file($pdf->output(), [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="orden_'.$timestamp.'.pdf"'
-            ]);
+            return response()->download($pdf->output(), 'orden_'.$timestamp.'.pdf');
         }else{
             return $pdf->stream($timestamp.'_orden_.pdf');
         }
