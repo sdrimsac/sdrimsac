@@ -275,7 +275,7 @@ class OrdenController extends Controller
             $filePath = storage_path('app/public/' . $timestamp . '_orden_.pdf');
             $pdf->save($filePath);
 
-            return response()->download($filePath, [
+            return response()->download($filePath,$timestamp.'_orden_.pdf' ,[
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"'
             ]);
