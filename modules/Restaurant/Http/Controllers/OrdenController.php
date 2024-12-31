@@ -275,8 +275,7 @@ class OrdenController extends Controller
             $filePath = storage_path('app/public/' . $timestamp . '_orden_.pdf');
             $pdf->save($filePath);
 
-            // Enviar el archivo como descarga
-            return response()->download($filePath)->deleteFileAfterSend(true);
+            return response()->download($filePath);
         }else{
             return $pdf->stream($timestamp.'_orden_.pdf');
         }
