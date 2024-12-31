@@ -276,8 +276,8 @@ class OrdenController extends Controller
             $pdf->save($filePath);
 
             return response()->download(
-                $filePath
-                
+                $filePath,
+                $timestamp . '_orden_.pdf'
             );
         } else {
             return $pdf->stream($timestamp . '_orden_.pdf');
