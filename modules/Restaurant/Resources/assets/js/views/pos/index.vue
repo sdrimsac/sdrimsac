@@ -6399,20 +6399,19 @@ export default {
             async e => {
                 /* ; */
 
-                console.log("🚀 ~ imprimiendo ~ e:", e);
-                // let area_id = e.data.area_id;
+        
                 let user_establishment_id = e.data.user_establishment_id;
                 let user_establishment_id_printer =
                     e.data.user_establishment_id_printer;
                 let area_id = e.data.area_id;
                 let isSameEstablishmentPrinter =
                     this.establishments.id == user_establishment_id_printer;
-                console.log("this.establishments.id", this.establishments.id);
-                console.log("user_establishment_id_printer", user_establishment_id_printer);
-                console.log("isSameEstablishmentPrinter", isSameEstablishmentPrinter);
+                // console.log("this.establishments.id", this.establishments.id);
+                // console.log("user_establishment_id_printer", user_establishment_id_printer);
+                // console.log("isSameEstablishmentPrinter", isSameEstablishmentPrinter);
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
-                console.log("isSameEstablishment", isSameEstablishment);
+                // console.log("isSameEstablishment", isSameEstablishment);
                 let sameAreas = this.configuration
                     .print_direct_just_different_areas;
                 let isHotels = this.configuration.hotels;
@@ -6456,7 +6455,14 @@ export default {
                     }
                 } else {
                     if(canPrint && e.data.printing){
-                        window.open(e.data.print, "_blank");
+                        if(this.isAndroid){
+                        let a = document.createElement('a');
+                        a.href = e.data.print;
+                        a.target = '_blank';
+                        a.click();
+                        }else{
+                            window.open(e.data.print, "_blank");
+                        }
                     }
                 }
             }
