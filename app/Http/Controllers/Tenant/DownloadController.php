@@ -113,7 +113,7 @@ class DownloadController extends Controller
         file_put_contents($temp, $this->getStorage($document->filename, 'pdf'));
     
         if($android_configuration){
-            return response()->download($temp, $document->filename.'.pdf')->deleteFileAfterSend();
+            return response()->download($temp, $document->filename.'_'.round(microtime(true) * 1000).'.pdf')->deleteFileAfterSend();
         }
         /*
         $headers = [

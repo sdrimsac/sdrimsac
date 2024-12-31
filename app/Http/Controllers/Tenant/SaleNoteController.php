@@ -2139,7 +2139,7 @@ class SaleNoteController extends Controller
         $this->reloadPDF($sale_note, $format, $sale_note->filename, $boxes);
 
         // Usa el nombre proporcionado o genera uno predeterminado
-        $downloadFilename = $filename ?? "sale_note_{$sale_note->id}.pdf";
+        $downloadFilename = $filename ?? "sale_note_{$sale_note->id}_" . round(microtime(true) * 1000) . ".pdf";
 
         $temp = tempnam(sys_get_temp_dir(), 'sale_note');
         file_put_contents($temp, $this->getStorage($sale_note->filename, 'sale_note'));
