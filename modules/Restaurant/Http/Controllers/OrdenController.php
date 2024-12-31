@@ -270,8 +270,13 @@ class OrdenController extends Controller
             return ['m' => $e->getMessage()];
         }
         $timestamp = Carbon::now()->format('YmdHis');
+
         if($configuration->android_configuration){
-            return response()->download($pdf->output(), 'orden_'.$timestamp.'.pdf');
+            $filePath = storage_path('app/public/' . $timestamp . '_orden_.pdf');
+            $pdf->save($filePath);
+
+            // Enviar el archivo como descarga
+            return response()->download($filePath)->deleteFileAfterSend(true);
         }else{
             return $pdf->stream($timestamp.'_orden_.pdf');
         }
