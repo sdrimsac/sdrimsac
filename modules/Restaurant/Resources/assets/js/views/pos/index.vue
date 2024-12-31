@@ -2293,26 +2293,27 @@ export default {
     },
     methods: {
         async printFileWithRawBT(fileUrl) {
-    try {
-        // Descargar el archivo PDF y convertirlo a Base64
-        const base64File = await fetch(fileUrl)
-            .then((response) => response.arrayBuffer())
-            .then((buffer) => btoa(String.fromCharCode(...new Uint8Array(buffer))));
+            try {
+                // Descargar el archivo y convertirlo a Base64
+                const base64File = await fetch(fileUrl)
+                    .then(response => response.arrayBuffer())
+                    .then(buffer =>
+                        btoa(String.fromCharCode(...new Uint8Array(buffer)))
+                    );
 
-        // Crear el Intent con el archivo en Base64
-        const intentUrl = `intent:#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.base64=${encodeURIComponent(
-            base64File
-        )};end`;
+                // Crear la URL del Intent con el esquema rawbt:base64
+                console.log(base64File);
+                const intentUrl = `rawbt:base64,${base64File}`;
 
-        // Redirigir al Intent
-        window.location.href = intentUrl;
-    } catch (error) {
-        // Manejar errores
-        this.$message.error(
-            "No se pudo imprimir el archivo. Verifica que RawBT esté instalado y el archivo sea válido."
-        );
-    }
-},
+                // Redirigir al Intent
+                window.location.href = intentUrl;
+            } catch (error) {
+                console.error("Error al intentar imprimir con RawBT:", error);
+                alert(
+                    "No se pudo imprimir el archivo. Verifica la instalación de RawBT."
+                );
+            }
+        },
         printOrden(url, id) {
             window.open(url, "_blank");
             this.ordenToPrint = this.ordenToPrint.filter(o => o.id != id);
