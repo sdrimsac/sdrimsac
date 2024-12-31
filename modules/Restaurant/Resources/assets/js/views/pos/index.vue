@@ -91,7 +91,7 @@
                                                 size="small"
                                                 v-for="orden in ordenToPrint"
                                                 :key="orden.id"
-                                                @click="printOrden(orden.url)"
+                                                @click="printOrden(orden.url,orden.id)"
                                             >
                                                 N° {{ orden.id }}
                                             </button>
@@ -2300,8 +2300,9 @@ export default {
                 );
             }
         },
-        printOrden(url) {
+        printOrden(url,id) {
             window.open(url, "_blank");
+            this.ordenToPrint = this.ordenToPrint.filter(o => o.id != id);
         },
         printLastDocument() {
             if (!this.lastDocument) return;
