@@ -91,7 +91,12 @@
                                                 size="small"
                                                 v-for="orden in ordenToPrint"
                                                 :key="orden.id"
-                                                @click="printOrden(orden.url,orden.id)"
+                                                @click="
+                                                    printOrden(
+                                                        orden.url,
+                                                        orden.id
+                                                    )
+                                                "
                                             >
                                                 N° {{ orden.id }}
                                             </button>
@@ -2288,19 +2293,22 @@ export default {
     },
     methods: {
         printFileWithRawBT(fileUrl) {
-            const intentUrl = `intent://print/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.url=${encodeURIComponent(
+            // Crear la URL del intent
+            const intentUrl = `intent:#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.url=${encodeURIComponent(
                 fileUrl
             )};end`;
 
             try {
-                window.location.href = intentUrl; 
+                // Redirigir al intent
+                window.location.href = intentUrl;
             } catch (error) {
+                // Manejar el error si RawBT no está instalado
                 this.$message.error(
                     "RawBT no está instalado. Por favor, instálalo desde Google Play."
                 );
             }
         },
-        printOrden(url,id) {
+        printOrden(url, id) {
             window.open(url, "_blank");
             this.ordenToPrint = this.ordenToPrint.filter(o => o.id != id);
         },
