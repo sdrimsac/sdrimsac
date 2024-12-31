@@ -154,14 +154,14 @@ class PrintEvent implements ShouldBroadcast
                 $doc = Document::where('id', $id)->first();
                 $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
                 if($configuration->android_configuration){
-                    sleep(15);
+                    // sleep(15);
                 }
                 break;
             case "80":
                 $doc = SaleNote::where('id', $id)->first();
                 $documentLink = url('') . "/sale-notes/print/{$doc->external_id}/{$format}";
                 if($configuration->android_configuration){
-                    sleep(15);
+                    // sleep(15);
                 }
                 break;
             case "CO":

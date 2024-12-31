@@ -70,6 +70,19 @@
                                                 ></i>
                                             </button>
                                         </template>
+
+                                        <template v-if="isAndroid">
+                                            <button
+                                                class="btn btn-sm btn-primary"
+                                                type="button"
+                                                @click="printLastDocument"
+                                            >
+                                                <i class="fas fa-print"></i>
+                                                <template v-if="lastDocument">
+                                                    {{ lastDocument.numberPrint }}
+                                                </template>
+                                            </button>
+                                        </template>
                                     </template>
                                     <template
                                         v-if="
@@ -2134,7 +2147,8 @@ export default {
                 customer_id: null
             },
             customer_unit_type_id: null,
-            recomputeTrigger: 0
+            recomputeTrigger: 0,
+            lastDocument: null
         };
     },
     beforeDestroy() {
@@ -2259,6 +2273,37 @@ export default {
         }
     },
     methods: {
+        printLastDocument() {
+            if (!this.lastDocument) return;
+            let { external_id,document_type_id } = this.lastDocument;
+            let url = '';
+            if(document_type_id == '80'){
+                 url = `/sale-notes/print/${external_id}/ticket`;
+            }else if(document_type_id == '01' || document_type_id == '03'){
+                 url = `/print/document/${external_id}/ticket`;
+            }
+            if(url){
+                window.open(url, '_blank');
+            }
+        },
+        async getLastDocument() {
+      try {
+        this.loading = true;
+        const response = await this.$http(`/caja/worker/print_last_document`);
+
+        if (response.status == 200) {
+          const {
+            data: { result }
+          } = response;
+          this.lastDocument = result;
+          this.lastDocument.numberPrint = this.lastDocument.series + "-" + this.lastDocument.number;
+        }
+      } catch (e) {
+        this.$toast.error("No se pudo obtener el ultimo documento");
+      } finally {
+        this.loading = false;
+      }
+    },
         handleCotizarConfirmadoRegreso(newValue) {
             this.cotizarConfirmado = newValue; // Actualiza el estado con el nuevo valor
             /* console.log(
@@ -5700,6 +5745,9 @@ export default {
             });
         },
         async limpiarForm() {
+            if (this.isAndroid) {
+                this.getLastDocument();
+            }
             if (this.configuration.hotels) {
                 this.getTablesToLeave();
             }
@@ -6345,7 +6393,7 @@ export default {
                 this.playSound("yape_notification.mp3");
             }
         );
-
+        this.getLastDocument();
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {
@@ -6407,7 +6455,7 @@ export default {
                         );
                     }
                 } else {
-                    if(canPrint){
+                    if(canPrint && e.data.printing){
                         window.open(e.data.print, "_blank");
                     }
                 }
