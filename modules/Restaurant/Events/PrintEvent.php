@@ -206,7 +206,12 @@ class PrintEvent implements ShouldBroadcast
         if ($user_area) {
             $user_establishment_id = $user_area->establishment_id;
         }
+        /**@var User $current_user */
+        $current_user = auth()->user();
+        $isFromBox = $current_user->isWorkerType('caja');
         $data = array(
+            'orden_id' => $id,
+            'is_from_box' => $isFromBox,
             'document_type' => $document_type,
             'printer' => $printer,
             'printing' => $printing,
@@ -224,7 +229,7 @@ class PrintEvent implements ShouldBroadcast
 
         // Log::info(json_encode($this->data));
     }
-
+    
     /**
      * Get the channels the event should broadcast on.
      *

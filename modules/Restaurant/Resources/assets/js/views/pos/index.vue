@@ -25,6 +25,7 @@
                                     <button
                                         class="btn p-0"
                                         type="button"
+                                        id="menu-actions"
                                         data-bs-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false"
@@ -79,8 +80,20 @@
                                             >
                                                 <i class="fas fa-print"></i>
                                                 <template v-if="lastDocument">
-                                                    {{ lastDocument.numberPrint }}
+                                                    {{
+                                                        lastDocument.numberPrint
+                                                    }}
                                                 </template>
+                                            </button>
+
+                                            <button
+                                                class="btn btn-sm btn-success"
+                                                size="small"
+                                                v-for="orden in ordenToPrint"
+                                                :key="orden.id"
+                                                @click="printOrden(orden.url)"
+                                            >
+                                                N° {{ orden.id }}
                                             </button>
                                         </template>
                                     </template>
@@ -1973,6 +1986,7 @@ export default {
 
     data() {
         return {
+            ordenToPrint: [],
             cotizarConfirmado: false,
             digitalPayMessage: null,
             quality: false,
@@ -2273,37 +2287,45 @@ export default {
         }
     },
     methods: {
+        printOrden(url) {
+            window.open(url, "_blank");
+        },
         printLastDocument() {
             if (!this.lastDocument) return;
-            let { external_id,document_type_id } = this.lastDocument;
-            let url = '';
-            if(document_type_id == '80'){
-                 url = `/sale-notes/print/${external_id}/ticket`;
-            }else if(document_type_id == '01' || document_type_id == '03'){
-                 url = `/print/document/${external_id}/ticket`;
+            let { external_id, document_type_id } = this.lastDocument;
+            let url = "";
+            if (document_type_id == "80") {
+                url = `/sale-notes/print/${external_id}/ticket`;
+            } else if (document_type_id == "01" || document_type_id == "03") {
+                url = `/print/document/${external_id}/ticket`;
             }
-            if(url){
-                window.open(url, '_blank');
+            if (url) {
+                window.open(url, "_blank");
             }
         },
         async getLastDocument() {
-      try {
-        this.loading = true;
-        const response = await this.$http(`/caja/worker/print_last_document`);
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    `/caja/worker/print_last_document`
+                );
 
-        if (response.status == 200) {
-          const {
-            data: { result }
-          } = response;
-          this.lastDocument = result;
-          this.lastDocument.numberPrint = this.lastDocument.series + "-" + this.lastDocument.number;
-        }
-      } catch (e) {
-        this.$toast.error("No se pudo obtener el ultimo documento");
-      } finally {
-        this.loading = false;
-      }
-    },
+                if (response.status == 200) {
+                    const {
+                        data: { result }
+                    } = response;
+                    this.lastDocument = result;
+                    this.lastDocument.numberPrint =
+                        this.lastDocument.series +
+                        "-" +
+                        this.lastDocument.number;
+                }
+            } catch (e) {
+                this.$toast.error("No se pudo obtener el ultimo documento");
+            } finally {
+                this.loading = false;
+            }
+        },
         handleCotizarConfirmadoRegreso(newValue) {
             this.cotizarConfirmado = newValue; // Actualiza el estado con el nuevo valor
             /* console.log(
@@ -6314,6 +6336,7 @@ export default {
         Echo.channel("orden_pending").listen(
             `.orden-pending-${this.configuration.socket_channel}`,
             e => {
+                console.log("orden_pending", e);
                 let num = Number(e.amount);
                 this.ordensPending = this.ordensPending + num;
 
@@ -6399,7 +6422,7 @@ export default {
             async e => {
                 /* ; */
 
-        
+                console.log("imprimiendo", e);
                 let user_establishment_id = e.data.user_establishment_id;
                 let user_establishment_id_printer =
                     e.data.user_establishment_id_printer;
@@ -6454,13 +6477,28 @@ export default {
                         );
                     }
                 } else {
-                    if(canPrint && e.data.printing){
-                        if(this.isAndroid){
-                        let a = document.createElement('a');
-                        a.href = e.data.print;
-                        a.target = '_blank';
-                        a.click();
-                        }else{
+                    if (canPrint && e.data.printing) {
+                        if (this.isAndroid) {
+                            if (!e.data.is_from_box && e.data.orden_id) {
+                                if (this.ordenToPrint.length > 5) {
+                                    this.ordenToPrint.pop();
+                                }
+                                this.ordenToPrint.push({
+                                    id: e.data.orden_id,
+                                    url: e.data.print
+                                });
+                            }
+                            let menu_actions = document.getElementById(
+                                "menu-actions"
+                            );
+                            menu_actions.click();
+                            setTimeout(() => {
+                                let a = document.createElement("a");
+                                a.href = e.data.print;
+                                a.target = "_blank";
+                                a.click();
+                            }, 1000);
+                        } else {
                             window.open(e.data.print, "_blank");
                         }
                     }
