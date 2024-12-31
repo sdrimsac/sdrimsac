@@ -270,7 +270,11 @@ class OrdenController extends Controller
             return ['m' => $e->getMessage()];
         }
         $timestamp = Carbon::now()->format('YmdHis');
-        return $pdf->stream($timestamp.'_orden_.pdf');
+        if($configuration->android_configuration){
+            return $pdf->download($timestamp.'_orden_.pdf');
+        }else{
+            return $pdf->stream($timestamp.'_orden_.pdf');
+        }
     }
     public function printTicket2(Request $request)
     {
