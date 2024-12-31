@@ -277,11 +277,7 @@ class OrdenController extends Controller
 
             return response()->download(
                 $filePath,
-                $timestamp . '_orden_.pdf',
-                [
-                    'Content-Type' => 'application/pdf'
-                ],
-                'inline; filename="' . $timestamp . '_orden_.pdf"'
+                $timestamp . '_orden_.pdf'
             );
         } else {
             return $pdf->stream($timestamp . '_orden_.pdf');
