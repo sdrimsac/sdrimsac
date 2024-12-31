@@ -2287,6 +2287,19 @@ export default {
         }
     },
     methods: {
+        printFileWithRawBT(fileUrl) {
+            const intentUrl = `intent://print/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.url=${encodeURIComponent(
+                fileUrl
+            )};end`;
+
+            try {
+                window.location.href = intentUrl; 
+            } catch (error) {
+                this.$message.error(
+                    "RawBT no está instalado. Por favor, instálalo desde Google Play."
+                );
+            }
+        },
         printOrden(url) {
             window.open(url, "_blank");
         },
@@ -6417,6 +6430,7 @@ export default {
             }
         );
         this.getLastDocument();
+
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {
@@ -6483,21 +6497,20 @@ export default {
                                 if (this.ordenToPrint.length > 5) {
                                     this.ordenToPrint.pop();
                                 }
-                                this.ordenToPrint.push({
+                                this.ordenToPrint.unshift({
                                     id: e.data.orden_id,
                                     url: e.data.print
                                 });
+                                this.playSound();
+                                this.printFileWithRawBT(e.data.print);
                             }
-                            let menu_actions = document.getElementById(
-                                "menu-actions"
-                            );
-                            menu_actions.click();
-                            setTimeout(() => {
+
+                            if (e.data.is_from_box) {
                                 let a = document.createElement("a");
                                 a.href = e.data.print;
                                 a.target = "_blank";
                                 a.click();
-                            }, 1000);
+                            }
                         } else {
                             window.open(e.data.print, "_blank");
                         }
