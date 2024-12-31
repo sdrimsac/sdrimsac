@@ -44,7 +44,6 @@ use App\Events\MessageEvent;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class OrdenController extends Controller
 {
@@ -276,10 +275,14 @@ class OrdenController extends Controller
             $filePath = storage_path('app/public/' . $timestamp . '_orden_.pdf');
             $pdf->save($filePath);
 
-            return response()->file($filePath, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"' 
-            ]);
+            return response()->download(
+                $filePath,
+                $timestamp . '_orden_.pdf',
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"' 
+                ]
+            );
         } else {
             return $pdf->stream($timestamp . '_orden_.pdf');
         }
