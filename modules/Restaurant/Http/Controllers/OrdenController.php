@@ -66,7 +66,7 @@ class OrdenController extends Controller
             $table_old->save();
         }
         $caja_area_id = Area::getAreaCajaId();
-        
+
 
         event(new MessageEvent($message, $caja_area_id));
         return [
@@ -271,16 +271,20 @@ class OrdenController extends Controller
         }
         $timestamp = Carbon::now()->format('YmdHis');
 
-        if($configuration->android_configuration){
+        if ($configuration->android_configuration) {
             $filePath = storage_path('app/public/' . $timestamp . '_orden_.pdf');
             $pdf->save($filePath);
 
-            return response()->download($filePath,$timestamp.'_orden_.pdf' ,[
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"'
-            ]);
-        }else{
-            return $pdf->stream($timestamp.'_orden_.pdf');
+            return response()->download(
+                $filePath,
+                $timestamp . '_orden_.pdf',
+                [
+                    'Content-Type' => 'application/pdf'
+                ],
+                'inline; filename="' . $timestamp . '_orden_.pdf"'
+            );
+        } else {
+            return $pdf->stream($timestamp . '_orden_.pdf');
         }
     }
     public function printTicket2(Request $request)
@@ -528,7 +532,6 @@ class OrdenController extends Controller
             $area_pos_id = Area::getCajaAreaIdByTableId($orden->table_id);
             $area = Area::find($area_pos_id);
             $area_id = $area_pos_id;
-            
         }
 
 
