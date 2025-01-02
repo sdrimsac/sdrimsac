@@ -710,11 +710,13 @@ class Item extends ModelTenant
             $request = Request::capture();
             $description = "Nuevo Producto Creado";
             $data = $model->toArray();
+            $created_at = $created_at ?? now();
             RegisterMovementTrait::registerCreate(
                 $model,
                 $request,
                 $description,
-                $data
+                $data,
+                $created_at
             );
         });
         item::updated(function ($model) {
@@ -723,11 +725,13 @@ class Item extends ModelTenant
             $original_model = Item::find($model->id);
             $description = "Producto actualizado";
             $data = $original_model->toArray();
+            $created_at = $created_at ?? now();
             RegisterMovementTrait::registerUpdate(
                 $model,
                 $request,
                 $description,
-                $data
+                $data,
+                $created_at
             );
         });
 
@@ -736,11 +740,13 @@ class Item extends ModelTenant
                 $request = Request::capture();
                 $description = "Producto Elimindo";
                 $data = $model->toArray();
+                $created_at = $created_at ?? now();
                 RegisterMovementTrait::registerDelete(
                     $model,
                     $request,
                     $description,
-                    $data
+                    $data,
+                    $created_at
                 );
             }
 

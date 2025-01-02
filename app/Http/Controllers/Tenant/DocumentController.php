@@ -115,6 +115,8 @@ use Modules\College\Models\CollegeStudent;
 use Modules\Report\Exports\ReportDocumentStatus;
 use Modules\Restaurant\Models\Table;
 use Modules\Workshop\Models\Historial;
+use App\Models\Tenant\RegisterMovement;
+use App\Http\Resources\Tenant\RegisterMovementCollection;
 
 class DocumentController extends Controller
 {
@@ -2558,5 +2560,38 @@ class DocumentController extends Controller
             'message' => ($id) ? 'Marca editada con éxito' : 'Marca registrada con éxito',
             'data' => $brand
         ];
+    }
+    public function recordsActivity(Request $request)
+    {
+
+        $records = RegisterMovement::query();
+        $column = $request->column;
+        $value = $request->value;
+
+        if ($column && $value) {
+            switch ($column) {
+                case 'user_id':
+                    $records = $records->where('user_id', $value);
+                    break;
+                case 'date_of_issue':
+                    $records = $records->whereDate('created_at', $value);
+                    break;
+                case 'description':
+                    $records = $records->where('description', 'like', "%{$value}%");
+                    break;
+                case 'event_description':
+                    $records = $records->where('event', $value);
+                    break;
+                case 'model':
+                    $model = $this->get_model($value);
+                    if ($model) {
+                        $records = $records->where('model', $model);
+                    }
+                    break;
+            }
+        }
+
+        $records = $records->orderBy('id', 'desc');
+        return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
     }
 }

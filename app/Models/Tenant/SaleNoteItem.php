@@ -146,4 +146,5 @@ class SaleNoteItem extends ModelTenant
             ->select($db_raw)
             ->latest('id');
     }
+    
 }

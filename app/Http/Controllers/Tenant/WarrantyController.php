@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Tenant\WarrantyBoxCollection;
 use App\Http\Resources\Tenant\WarrantyCollection;
 use App\Http\Resources\Tenant\WarrantyResource;
 use App\Imports\ItemColorSizeImport;
@@ -74,6 +75,12 @@ class WarrantyController extends Controller
 
         return new WarrantyCollection($records->paginate(config('tenant.items_per_page')));
     }
+    public function records2(Request $request)
+    {
+        $records = $this->getRecordsBox($request);
+
+        return new WarrantyBoxCollection($records->paginate(10));
+    }
     public function getRecords(Request $request)
     { 
         $records = ItemWarranty::query();
@@ -116,17 +123,61 @@ class WarrantyController extends Controller
         }
         return $records;
     }
+
+    public function getRecordsBox(Request $request)
+    { 
+        $records = ItemWarranty::query();
+
+        $customer_id = $request->customer_id;
+        $item_id = $request->item_id;
+
+        $column = $request->input('column');
+        $value = $request->input('value');
+        if ($column && $value) {
+            if ($column == 'description') {
+                $records->whereHas('item', function ($query) use ($value) {
+                    $query->where('', 'like', "%{$value}%");
+                        
+                });
+            } else {
+                $records->where($column, 'like', "%{$value}%");
+            }
+        }
+        if ($customer_id) {
+            $records->where(function ($query) use ($customer_id) {
+                
+                $query->whereHas('SaleNoteItem.sale_note', function ($subQuery) use ($customer_id) {
+                    $subQuery->where('customer_id', $customer_id);
+                })
+                ->orWhereHas('DocumentItem.document', function ($subQuery) use ($customer_id) {
+                    $subQuery->where('customer_id', $customer_id);
+                });
+            });
+        }
+        if ($item_id) {
+            $records->where(function ($query) use ($item_id) {
+                $query->whereHas('SaleNoteItem', function ($subQuery) use ($item_id) {
+                    $subQuery->where('item_id', $item_id);
+                })
+                ->orWhereHas('DocumentItem', function ($subQuery) use ($item_id) {
+                    $subQuery->where('item_id', $item_id);
+                });
+            });
+        }
+        return $records;
+    }
+
     public function record($id)
     {
         $record = new WarrantyResource(ItemWarranty::findOrFail($id));
         return $record;
     }
-    public function columns()
+    /* public function columns()
     {
         return [
             'description' => 'Descripción',  
         ];
-    }
+    } */
     public function tables ()
     {
         $customers = $this->table('customers');

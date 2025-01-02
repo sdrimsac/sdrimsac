@@ -14,7 +14,7 @@ trait RegisterMovementTrait
 
     use HelperTrait;
 
-    public static function registerMovement($event, $model, $request_data, $description = null, $data = [])
+    public static function registerMovement($event, $model, $request_data, $description = null, $data = [], $created_at = null)
     {  
         
 
@@ -40,27 +40,28 @@ trait RegisterMovementTrait
              "model_id" => $id,
              "description" => $description,
              "data" => json_encode($data),
+             "created_at" => $created_at ?? now(),
          ]);
         //  event(new RegisterEvent($register));
     }
 
-    public function registerUpdate($model, $request_data, $description = null, $data = [])
+    public function registerUpdate($model, $request_data, $description = null, $data = [], $created_at = null)
     {
         $event = 'update';
-        self::registerMovement($event, $model, $request_data, $description, $data);
+        self::registerMovement($event, $model, $request_data, $description, $data, $created_at);
        
         return null;
     }//registerDelete
-    public function registerDelete($model, $request_data, $description = null, $data = [])
+    public function registerDelete($model, $request_data, $description = null, $data = [], $created_at = null)
     {
         $event = 'delete';
-        self::registerMovement($event, $model, $request_data, $description, $data);
+        self::registerMovement($event, $model, $request_data, $description, $data, $created_at);
        
     }//
-    public function registerCreate($model, $request_data, $description = null, $data = [])
+    public function registerCreate($model, $request_data, $description = null, $data = [], $created_at = null)
     {
         $event = 'create';
-        self::registerMovement($event, $model, $request_data, $description, $data);
+        self::registerMovement($event, $model, $request_data, $description, $data, $created_at);
        
     }
     public static function func_get_browser_so($userAgent)

@@ -9,6 +9,8 @@ use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\SaleNotePayment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Restaurant\Models\Orden;
+use Carbon\Carbon;
+use App\Models\Tenant\RegisterMovement;
 
 class SaleNoteCollection extends ResourceCollection
 {
@@ -103,6 +105,7 @@ class SaleNoteCollection extends ResourceCollection
                 }
             }
             return [
+                'last_register' => $this->get_last_document($row),
                 'ordens_ref' => $ordens_ref,
                 'table_number' => $table_number,
                 'credit_cash' => (bool) $row->credit_cash,
@@ -172,5 +175,31 @@ class SaleNoteCollection extends ResourceCollection
                 // 'observation' =>$row->$observation,
             ];
         });
+    }
+    function get_last_document($row){
+        $last_register_movement = RegisterMovement::where('model', SaleNote::class)
+            /* ->where('model', Item::class) */
+            ->where('model_id', $row->id)
+            ->whereHas('user', function ($query) {
+                $query->whereNull('area_id');
+            })
+            ->orderBy('id', 'desc')->first();
+        $data = [
+            'user'=>'',
+            'date_time' => '',
+            'description' => '',
+            'created_at' => ''
+        ];
+        if($last_register_movement){
+            $date_time = $last_register_movement->created_at;
+            $data = [
+                'user'=>$last_register_movement->user->name,
+                'description' =>$last_register_movement->description,
+                /* 'date_time' => $this->get_date_difference($date_time), */
+                'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')
+                
+            ];
+        }
+        return $data;
     }
 }

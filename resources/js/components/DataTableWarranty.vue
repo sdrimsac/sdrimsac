@@ -221,11 +221,11 @@ export default {
         }
     },
     async mounted() {
-        let column_resource = this.resource; // _.split(this.resource, '/')
+        /* let column_resource = this.resource; // _.split(this.resource, '/')
         await this.$http.get(`/${this.resource}/columns`).then(response => {
             this.columns = response.data;
             this.search.column = _.head(Object.keys(this.columns));
-        });
+        }); */
         if (this.resource !== "caja/cash-transfer/report") {
             await this.getRecords();
         }
@@ -264,33 +264,6 @@ export default {
                 1
             );
         },
-        /* getRecords() {
-            if (this.time) {
-                clearTimeout(this.time);
-            }
-            this.time = setTimeout(async () => {
-                let url = `/${
-                    this.resource
-                }/records?${this.getQueryParameters()}`;
-                if (this.fromAdmin) {
-                    url = `/${
-                        this.resource
-                    }/records?${this.getQueryParameters()}&fromAdmin=true`;
-                }
-                return this.$http.get(url).then(response => {
-                    if (this.resource !== "caja/cash-transfer/report") {
-                        this.records = response.data.data;
-                        this.pagination = response.data.meta;
-                        this.pagination.per_page = parseInt(
-                            response.data.meta.per_page
-                        );
-                    } else {
-                        let data = response.data;
-                        this.records = data.data;
-                    }
-                });
-            }, 350);
-        }, */
 
         getRecords() {
             if (this.time) {
@@ -378,7 +351,7 @@ export default {
                 page: this.pagination.current_page,
                 limit: this.limit,
                 value: this.search.value,
-                column: this.search.column,
+                
                 item_id: this.search.item_id,
                 customer_id: this.search.customer_id,
                 end_date: this.search.end_date,

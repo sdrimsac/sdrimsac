@@ -136,6 +136,7 @@ class ItemCollection extends ResourceCollection
             'user'=>'',
             'date_time' => '',
             'description' => '',
+            'created_at' => ''
         ];
         if($last_register_movement){
             $date_time = $last_register_movement->created_at;
@@ -143,6 +144,7 @@ class ItemCollection extends ResourceCollection
                 'user'=>$last_register_movement->user->name,
                 'description' =>$last_register_movement->description,
                 'date_time' => $this->get_date_difference($date_time),
+                'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')
                 
             ];
         }

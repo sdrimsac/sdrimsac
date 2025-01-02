@@ -15,7 +15,8 @@ class RegisterMovement extends ModelTenant
         'browser', 
         'model', 
         'model_id', 
-        'data', 
+        'data',
+        'created_at',
     ];
 
     protected $cast = [

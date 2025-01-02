@@ -70,6 +70,8 @@ use App\Services\RoleService;
 use App\Traits\JobReportTrait;
 use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
 use Illuminate\Support\Facades\Log;
+use App\Models\Tenant\RegisterMovement;
+use App\Http\Resources\Tenant\RegisterMovementCollection;
 
 class DocumentController extends Controller
 {
@@ -571,4 +573,5 @@ class DocumentController extends Controller
 
         return $records;
     }
+    
 }

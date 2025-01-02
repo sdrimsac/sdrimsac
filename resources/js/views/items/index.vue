@@ -272,11 +272,11 @@
                                         "
                                         style="font-family: Arial, sans-serif;"
                                     >
-                                        {{
+                                        <!-- {{
                                             formatDateTime(
                                                 row.last_register.date_time
                                             )
-                                        }}
+                                        }} --> {{ row.last_register.created_at }}
                                     </span>
                                 </template>
                             </td>

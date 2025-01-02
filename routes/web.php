@@ -137,9 +137,10 @@ if ($hostname) {
                 Route::prefix('warranty')
                     ->group(function () {
                         Route::get('/', [WarrantyController::class, 'index'])->name('tenant.warranty.index');
-                        Route::get('/columns', [WarrantyController::class, 'columns']);
+                        /* Route::get('/columns', [WarrantyController::class, 'columns']); */
                         Route::get('/tables', [WarrantyController::class, 'tables']);
                         Route::get('/records', [WarrantyController::class, 'records']);
+                        Route::get('/records2', [WarrantyController::class, 'records2']);
                         Route::get('/record/{id}', [WarrantyController::class, 'record']);
                         Route::get('/export_excel', [WarrantyController::class, 'ExportarExcel']);
                         Route::delete('/{id}', [WarrantyController::class, 'delete']);
@@ -526,6 +527,7 @@ if ($hostname) {
                 Route::post('documents/categories', [App\Http\Controllers\Tenant\DocumentController::class, 'storeCategories']);
                 Route::post('documents/brands', [App\Http\Controllers\Tenant\DocumentController::class, 'storeBrands']);
                 Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
+                Route::get('documents/recordsActivity', [App\Http\Controllers\Tenant\ItemController::class, 'recordsActivity']);
 
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);

@@ -4,9 +4,12 @@ namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Document;
 use App\Models\Tenant\DocumentPayment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Restaurant\Models\Orden;
+use Carbon\Carbon;
+use App\Models\Tenant\RegisterMovement;
 
 class DocumentCollection extends ResourceCollection
 {
@@ -152,6 +155,7 @@ class DocumentCollection extends ResourceCollection
 
             return [
                 /* 'seller_id' => $row->seller_id, */
+                'last_register' => $this->get_last_document($row),
                 'ordens_ref' => $ordens_ref,
                 'table_number' => $table_number,
                 'sale_note_related' => $sale_note_related,
@@ -250,5 +254,53 @@ class DocumentCollection extends ResourceCollection
         }
 
         return $dispatches;
+    }
+    function get_last_document($row){
+        $last_register_movement = RegisterMovement::where('model', Document::class)
+            /* ->where('model', Item::class) */
+            ->where('model_id', $row->id)
+            ->whereHas('user', function ($query) {
+                $query->whereNull('area_id');
+            })
+            ->orderBy('id', 'desc')->first();
+        $data = [
+            'user'=>'',
+            'date_time' => '',
+            'description' => '',
+            'created_at' => ''
+        ];
+        if($last_register_movement){
+            $date_time = $last_register_movement->created_at;
+            $data = [
+                'user'=>$last_register_movement->user->name,
+                'description' =>$last_register_movement->description,
+                'date_time' => $this->get_date_difference($date_time),
+                'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')
+                
+            ];
+        }
+        return $data;
+    }
+    function get_date_difference($created_at){
+        $currentDay = Carbon::now();
+        $created_at = Carbon::parse($created_at);
+        
+        $difference = $created_at->diff($currentDay);
+        $days = $difference->days;
+        $hours = $difference->h;
+        $minutes = $difference->i;
+        $seconds = $difference->s;
+        $is24Hours = false;
+        if($days > 0){
+            $is24Hours = true;
+        }
+        $data = [
+            'is24Hours' => $is24Hours,
+            'days' => $days,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds
+        ];
+        return $data;
     }
 }

@@ -18,7 +18,8 @@ use Modules\Restaurant\Models\Orden;
 
 class Document extends ModelTenant
 {
-    use RegisterMovementTrait, UsesTenantConnection;
+    use RegisterMovementTrait, 
+        UsesTenantConnection;
 
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;
@@ -124,7 +125,20 @@ class Document extends ModelTenant
     {
         parent::boot();
         //created
-        static::created(function ($model) {
+        /* static::created(function ($model) {
+            $type = $model->get_document_type();
+            $request = Request::capture();
+            $description = null;
+            $original_model = Document::find($model->id);
+            $description = "$type Creado";
+            $data = $original_model->toArray();
+             RegisterMovementTrait::registerCreate(
+                $model,
+                $request,
+                $description,
+                $data
+            );
+
             try {
                 $serie = $model->series;
                 $number = $model->number;
@@ -141,36 +155,74 @@ class Document extends ModelTenant
                 $message = $e->getMessage();
                 Log::error($message);
             }
+        }); */
+        static::created(function ($model) {
+            // Registro del movimiento de creación
+            $type = $model->get_document_type();
+            $request = Request::capture();
+            $description = "$type Creado";
+            $original_model = Document::find($model->id);
+            $data = $original_model->toArray();
+            $created_at = $created_at ?? now();
+            
+            RegisterMovementTrait::registerCreate(
+                $model,
+                $request,
+                $description,
+                $data,
+                $created_at
+            );
+        
+            // Verificación de duplicados y notificación
+            try {
+                $serie = $model->series;
+                $number = $model->number;
+                $soap_type_id = $model->soap_type_id;
+                $exist = $model->hasDuplicate($serie, $number, $soap_type_id);
+        
+                if ($exist) {
+                    $company = Company::first();
+                    $company_name = $company->name;
+        
+                    $message = "🚨🚨🚨⚠️⚠️⚠️ ATENCIÓN ⚠️⚠️⚠️🚨🚨🚨 \n\nSe ha detectado una duplicidad de comprobante en la empresa $company_name \n\nSerie: $serie \nNúmero: $number.";
+                    (new WhatsappController)->sendSupportMessage($message);
+                }
+            } catch (Exception $e) {
+                $message = $e->getMessage();
+                Log::error($message);
+            }
         });
-        // static::updated(function ($model) {
-        //     $type = $model->get_document_type();
-        //     $request = Request::capture();
-        //     $description = null;
-        //     $original_model = Document::find($model->id);
-        //     $description = "$type actualizado";
-        //     $data = $original_model->toArray();
-        //     RegisterMovementTrait::registerUpdate(
-        //         $model,
-        //         $request,
-        //         $description,
-        //         $data
-        //     );
-        // });
-
+        static::updated(function ($model) {
+            $type = $model->get_document_type();
+            $request = Request::capture();
+            $description = null;
+             $original_model = Document::find($model->id);
+             $description = "$type editado";
+             $data = $original_model->toArray();
+             $created_at = $created_at ?? now();
+             RegisterMovementTrait::registerUpdate(
+                 $model,
+                 $request,
+                 $description,
+                 $data,
+                $created_at
+             );
+         });
         static::deleted(
             function ($model) {
                 $type = $model->get_document_type();
                 $request = Request::capture();
                 $description = "$type eliminada";
                 $data = $model->toArray();
+                $created_at = $created_at ?? now();
                 RegisterMovementTrait::registerDelete(
                     $model,
                     $request,
                     $description,
-                    $data
+                    $data,
+                    $created_at
                 );
             }
-
         );
     }
     public function hasDuplicate($serie, $number, $soap_type_id)
@@ -541,4 +593,48 @@ class Document extends ModelTenant
     {
         return $this->belongsTo(Seller::class, 'seller_id');
     }
+    /* protected static function boot()
+    {
+        parent::boot();
+        //created
+        Document::created(function ($model) {
+            $request = Request::capture();
+            $description = "Documento creado";
+            $data = $model->toArray();
+            RegisterMovementTrait::registerCreate(
+                $model,
+                $request,
+                $description,
+                $data
+            );
+        });
+        Document::updated(function ($model) {
+            $request = Request::capture();
+            $description = null;
+            $original_model = Document::find($model->id);
+            $description = "Documento actualizado";
+            $data = $original_model->toArray();
+            RegisterMovementTrait::registerUpdate(
+                $model,
+                $request,
+                $description,
+                $data
+            );
+        });
+
+        Document::deleted(
+            function ($model) {
+                $request = Request::capture();
+                $description = "Documento Anulado";
+                $data = $model->toArray();
+                RegisterMovementTrait::registerDelete(
+                    $model,
+                    $request,
+                    $description,
+                    $data
+                );
+            }
+
+        );
+    } */
 }

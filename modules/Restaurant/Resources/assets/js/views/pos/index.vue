@@ -1852,6 +1852,10 @@
             :showDialog.sync="showDialogDetraction"
             :fromPos="true"
         ></detraction-payment>
+        <Warranty 
+        :showDialog.sync="showDialogWarranty"
+        :fromPos="true"
+         ></Warranty>
     </div>
 </template>
 
@@ -1891,6 +1895,7 @@ import { calculateRowItem } from "../../../../../../../resources/js/helpers/func
 
 import queryString from "query-string";
 // cotizaciones de modal
+const Warranty = () => import("./partials/warranty.vue");
 const QuotationListModal = () => import("./partials/quotation_list_modal.vue");
 const DispatchModal = () => import("./partials/dispatch_modal.vue");
 
@@ -1957,6 +1962,7 @@ export default {
         "areaId"
     ],
     components: {
+        Warranty,
         MonthSales,
         QuotationListModal,
         UnitTypeModal,
@@ -1991,6 +1997,7 @@ export default {
 
     data() {
         return {
+            showDialogWarranty: false,
             ordenToPrint: [],
             cotizarConfirmado: false,
             digitalPayMessage: null,
@@ -2591,6 +2598,13 @@ export default {
         },
         setMenuOptions() {
             this.optionsMenu = [
+                {
+                    id: 256,
+                    title: ["Garantia"],
+                    icon: "fa fa-guarantee",
+                    visible: true && this.configuration.warranty_product
+
+                },
                 {
                     id: 74,
                     title: ["Venta del", "mes"],
@@ -3288,6 +3302,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 256:
+                    this.showDialogWarranty = true;
+                    break;
                 case 74:
                     this.showMonthSales = true;
                     break;
