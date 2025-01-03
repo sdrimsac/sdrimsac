@@ -95,10 +95,11 @@ class ItemCollection extends ResourceCollection
                 'unit_type' => $item_unit_types,
                 'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
              
-                    return [ //
+                    return [
                         'id' => $row->id,
                         'warehouse_description' => $row->warehouse->description,
                         'stock' => number_format($row->stock, $decimal, ".", ""),
+                        'active' => (bool) $row->active,
                     ];
                 }),
                 'warehouse_prices' => collect($row->item_warehouse_prices)->transform(function ($row) use ($decimal) {

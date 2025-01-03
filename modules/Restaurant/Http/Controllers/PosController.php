@@ -78,7 +78,8 @@ class PosController extends Controller
     }
 
 
-    public function series(){
+    public function series()
+    {
         $user = auth()->user();
         $establishment = $user->establishment_id;
         $user_id = $user->id; //9
@@ -86,16 +87,15 @@ class PosController extends Controller
             $establishment = Establishment::first()->id;
         }
         $user_series = UserSerie::where('user_id', $user_id)
-        ->pluck('serie_id')->toArray();
-        
-        if(count($user_series)>0){
-            // $series = 
-            $series = Series::whereIn('id',$user_series)->get();
-        }else{
-            $series = Series::whereIn('document_type_id', ['01', '03', '80'])
-            ->where([['establishment_id', $establishment], ['contingency', false]])
-            ->get();
+            ->pluck('serie_id')->toArray();
 
+        if (count($user_series) > 0) {
+            // $series = 
+            $series = Series::whereIn('id', $user_series)->get();
+        } else {
+            $series = Series::whereIn('document_type_id', ['01', '03', '80'])
+                ->where([['establishment_id', $establishment], ['contingency', false]])
+                ->get();
         }
         return compact('series');
     }
@@ -180,34 +180,8 @@ class PosController extends Controller
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
 
-        /* $value = str_replace("'", "-", $value); */
         $value = strtoupper($value);
-
-        // $quote_count = substr_count($value, "'");
-        // if ($quote_count === 1) {
-        //     $value = str_replace("'", "-", $value);
-        // } elseif ($quote_count > 1) {
-        // }
-        // if (!preg_match('/\d{3,}/', $value) || strpos($value, "'") !== false) {
-        //     $value = trim($value); 
-        // } else {
-            // }
         $value = trim($value);
-        // Asegurarse de que no haya espacios adicionales
-        /* if (strpos($value, "'") !== false) {
-            $value = str_replace("'", "-", $value);
-        } */
-        /* if (preg_match('/^[a-zA-Z]{2}-\d+$/', $value)) {
-            $value = $value;
-        } else {
-            $value = preg_replace('/([a-zA-Z]+)(\d+)/', '$1-$2', $value);
-        } */
-        /* $value = trim($value); */
-
-        /* agregado para buscar codido interno con comillas */
-        /* $value = addslashes($value); */
-        /* $value = trim($request->value);
-        $value = str_replace("'", "\'", $value); */
         $establishment_id = auth()->user()->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
@@ -228,6 +202,11 @@ class PosController extends Controller
                 $query
                     ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
+                    })
+                    ->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                        // Filtrar solo precios activos para el almacén específico
+                        $query->where('active', 1)
+                            ->where('warehouse_id', $warehouse_id);
                     });
                 if ($brand_id) {
                     $query->whereHas('brand', function ($query) use ($brand_id) {
@@ -256,13 +235,6 @@ class PosController extends Controller
                         $query->where('unit_type_id', '<>', 'ZZ');
                     }
                 }
-
-                /* if ($model) {
-                    $query->where('model', 'LIKE', '%' . $value . '%');
-                }
-                if ($quality) {
-                    $query->where('quality', 'LIKE', '%' . $value . '%');
-                } */
             }
         );
 
@@ -317,14 +289,6 @@ class PosController extends Controller
                 });
             }
         }
-        /* if ($brand_id){
-            $foods = $foods->where('brand_id', $brand_id);
-        } */
-        /* if ($brand_id) {
-            $foods->whereHas('brand', function ($query)  use ($brand_id) {
-                $query->where('id', $brand_id);
-            });
-        } */
 
         if ($category_ins_id) {
             $foods = $foods->where('category_food_id', '<>', $category_ins_id);
@@ -362,8 +326,6 @@ class PosController extends Controller
                 return new FoodCollection($foods->paginate(100), $search_by_series);
             }
         }
-        //  return Food::all();
-        //     return new InventoryCollection($reports->paginate(config('tenant.items_per_page')));
     }
 
     public function pos()
@@ -513,17 +475,17 @@ class PosController extends Controller
                     ->chunk(50, function ($boxes) use (&$total_expenses) {
                         foreach ($boxes as $box) {
                             $amount = $box->amount;
-                        $total_expenses += $amount;
-                    }
-                });
+                            $total_expenses += $amount;
+                        }
+                    });
 
                 $incomes = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 1)->where('currency_type_id', 'USD')
                     ->chunk(50, function ($boxes) use (&$total_incomes) {
                         foreach ($boxes as $box) {
                             $amount = $box->amount;
-                        $total_incomes += $amount;
-                    }
-                });
+                            $total_incomes += $amount;
+                        }
+                    });
             }
             if ($request->with_all) {
                 $total_sales_usd  = $total_sales_usd - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
@@ -552,7 +514,6 @@ class PosController extends Controller
             $total_sales_usd  = $total_sales_usd - $total_expenses + $total_incomes;
             return   $total_sales_usd;
         }
-    
     }
     public function total_sales(Request  $request)
     {
@@ -614,17 +575,17 @@ class PosController extends Controller
                     ->chunk(50, function ($boxes) use (&$total_expenses) {
                         foreach ($boxes as $box) {
                             $amount = $box->amount;
-                        $total_expenses += $amount;
-                    }
-                });
+                            $total_expenses += $amount;
+                        }
+                    });
 
                 $incomes = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 1)->where('currency_type_id', 'PEN')
                     ->chunk(50, function ($boxes) use (&$total_incomes) {
                         foreach ($boxes as $box) {
                             $amount = $box->amount;
-                        $total_incomes += $amount;
-                    }
-                });
+                            $total_incomes += $amount;
+                        }
+                    });
             }
             if ($request->with_all) {
                 $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out + $beginning_balance;
@@ -653,7 +614,6 @@ class PosController extends Controller
             $total_sales  = $total_sales - $total_expenses + $total_incomes;
             return   $total_sales;
         }
-    
     }
     public function income()
     {

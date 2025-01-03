@@ -45,6 +45,11 @@ class DashboardController extends Controller
                     ->where('active', 1)
                     ->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
                         $query->where('warehouse_id', $warehouse_product_id);
+                    }) 
+                    ->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
+                        
+                        $query->where('active', 1)
+                            ->where('warehouse_id', $warehouse_product_id);
                     });
             });
         }

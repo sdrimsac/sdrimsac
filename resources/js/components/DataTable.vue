@@ -212,7 +212,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div
+                    <!-- <div
                         class="col-lg-3 col-md-3 col-sm-12 pb-2"
                         v-if="resource == 'items'"
                     >
@@ -234,7 +234,7 @@
                             >
                             </el-option>
                         </el-select>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div v-if="resource == 'items'" class="row"></div>
@@ -347,6 +347,7 @@ export default {
         return {
             cashes: [],
             search: {
+                warehouse_id: 1,
                 column: null,
                 value: null,
                 active: null

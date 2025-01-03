@@ -213,9 +213,14 @@
                                             type="button"
                                             class="dropdown-item"
                                             @click.prevent="
-                                                clickDisable(row.id)
+                                                clickDisableItem(row.id)
                                             "
-                                            v-if="row.active"
+                                            v-if="
+                                                row.warehouses.some(
+                                                    warehouse =>
+                                                        warehouse.active
+                                                )
+                                            "
                                         >
                                             <i
                                                 class="fas fa-toggle-off text-warning fa-lg me-2"
@@ -227,13 +232,24 @@
                                         <a
                                             type="button"
                                             class="dropdown-item"
-                                            @click.prevent="clickEnable(row.id)"
+                                            @click.prevent="
+                                                clickEnableItem(row.id)
+                                            "
                                             v-else
                                         >
                                             <i
                                                 class="fas fa-toggle-on text-success fa-lg me-2"
                                             ></i>
                                             Habilitar
+                                        </a>
+                                        <a
+                                            type="button"
+                                            class="dropdown-item text-succcess"
+                                            @click.prevent="
+                                                clickDisguise(row.id)
+                                            "
+                                        >
+                                           Anular
                                         </a>
                                     </div>
                                 </template>
@@ -276,7 +292,8 @@
                                             formatDateTime(
                                                 row.last_register.date_time
                                             )
-                                        }} --> {{ row.last_register.created_at }}
+                                        }} -->
+                                        {{ row.last_register.created_at }}
                                     </span>
                                 </template>
                             </td>
@@ -367,12 +384,14 @@
                             <!-- <td class="text-center">
                             {{ row.has_igv_description }}
                         </td> -->
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <button
                                     class="btn"
                                     :style="{
                                         color: 'white',
-                                        backgroundColor: row.active
+                                        backgroundColor: row.warehouses.some(
+                                            warehouse => warehouse.active
+                                        )
                                             ? 'green'
                                             : 'red',
                                         fontWeight: 'bold',
@@ -380,7 +399,36 @@
                                     }"
                                 >
                                     {{
-                                        row.active
+                                        row.warehouse.some(
+                                            warehouse => warehouse.active
+                                        )
+                                            ? "Habilitado"
+                                            : "Inhabilitado"
+                                    }}
+                                </button>
+                            </td> -->
+
+                            <td class="text-center">
+                                <button
+                                    class="btn"
+                                    :style="{
+                                        color: 'white',
+                                        backgroundColor:
+                                            Array.isArray(row.warehouses) &&
+                                            row.warehouses.some(
+                                                warehouse => warehouse.active
+                                            )
+                                                ? 'green'
+                                                : 'red',
+                                        fontWeight: 'bold',
+                                        width: '110px'
+                                    }"
+                                >
+                                    {{
+                                        Array.isArray(row.warehouses) &&
+                                        row.warehouses.some(
+                                            warehouse => warehouse.active
+                                        )
                                             ? "Habilitado"
                                             : "Inhabilitado"
                                     }}
@@ -451,6 +499,7 @@ import SaleOffert from "./partials/sale_offert.vue";
 import ItemsImportListPriceRangeUnitType from "./partials/import_list_price_range_unit_type.vue";
 import ItemsImportListPriceRange from "./partials/import_list_price_range.vue";
 import { deletable } from "../../mixins/deletable";
+import swal from "sweetalert2";
 
 export default {
     props: ["typeUser", "user"],
@@ -470,6 +519,7 @@ export default {
     },
     data() {
         return {
+            selectedWarehousePrice: null,
             tables: [],
             currentItem: null,
             showDialog: false,
@@ -498,6 +548,14 @@ export default {
         });
     },
     methods: {
+        selectWarehousePrice(warehousePrice) {
+            this.selectedWarehousePrice = warehousePrice;
+        },
+
+        // Método para limpiar la selección
+        clearSelection() {
+            this.selectedWarehousePrice = null;
+        },
         // realiza una peticon get a tables
         clickImportListPriceUnitType() {
             this.showImportListPriceUnitTypeDialog = true;
@@ -623,6 +681,178 @@ export default {
             }
 
             window.open(`/${this.resource}/export/barcode/print?id=${row.id}`);
+        },
+        clickDisableItem(id) {
+            this.getWarehouses().then(warehouses => {
+                swal.fire({
+                    title: "¿Desea Inhabilitar Producto?",
+                    text:
+                        "Selecciona el almacén en el que deseas inhabilitar el producto",
+                    input: "select",
+                    inputOptions: warehouses,
+                    inputPlaceholder: "Selecciona un almacén",
+                    inputValue: "1", // Establecer el almacén por defecto con id 1
+                    confirmButtonText: "Inhabilitar",
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    preConfirm: async selectedWarehouseId => {
+                        if (!selectedWarehouseId) {
+                            Swal.showValidationMessage(
+                                "Por favor, selecciona un almacén"
+                            );
+                            return false;
+                        }
+
+                        try {
+                            const response = await this.disableItemInWarehouse(
+                                id,
+                                selectedWarehouseId
+                            );
+                            if (response.success) {
+                                return response;
+                            } else {
+                                Swal.showValidationMessage(response.message);
+                                return false;
+                            }
+                        } catch (error) {
+                            Swal.showValidationMessage(`Error: ${error}`);
+                        }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Producto Inhabilitado",
+                            text: result.value.message
+                        });
+                        this.$eventHub.$emit("reloadData");
+                    }
+                });
+            });
+        },
+        clickEnableItem(id) {
+            this.getWarehouses().then(warehouses => {
+                swal.fire({
+                    title: "¿Desea Inhabilitar Producto?",
+                    text:
+                        "Selecciona el almacén en el que deseas inhabilitar el producto",
+                    input: "select",
+                    inputOptions: warehouses,
+                    inputPlaceholder: "Selecciona un almacén",
+                    inputValue: "1",
+                    confirmButtonText: "habilitar",
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true,
+                    preConfirm: async selectedWarehouseId => {
+                        if (!selectedWarehouseId) {
+                            Swal.showValidationMessage(
+                                "Por favor, selecciona un almacén"
+                            );
+                            return false;
+                        }
+
+                        try {
+                            const response = await this.enableItemInWarehouse(
+                                id,
+                                selectedWarehouseId
+                            );
+                            if (response.success) {
+                                return response;
+                            } else {
+                                Swal.showValidationMessage(response.message);
+                                return false;
+                            }
+                        } catch (error) {
+                            Swal.showValidationMessage(`Error: ${error}`);
+                        }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Producto Inhabilitado",
+                            text: result.value.message
+                        });
+                        this.$eventHub.$emit("reloadData");
+                    }
+                });
+            });
+        },
+        clickDisguise(id) {
+            swal.fire({
+                title: "ANULAR PRODUCTO?",
+                text:
+                    "Recuerda si se anula el producto ya no se podrá recuperar ni visualizar en ningún almacén",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Anular",
+            }).then(result => {
+                if (result.isConfirmed) {
+                    axios
+                        .get(`/items/disguise/${id}`)
+                        .then(response => {
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: "Anulado",
+                                    text: response.data.message,
+                                    icon: "success"
+                                });
+                                this.$eventHub.$emit("reloadData");
+                                
+                            } else {
+                                swal.fire({
+                                    title: "Error",
+                                    text: response.data.message,
+                                    icon: "error"
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            swal.fire({
+                                title: "Error",
+                                text:
+                                    "Hubo un problema al intentar realizar la acción",
+                                icon: "error"
+                            });
+                        });
+                }
+            });
+        },
+
+        getWarehouses() {
+            return fetch("/items/import/tables")
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || !Array.isArray(data.warehouses)) {
+                        throw new Error("Formato de datos incorrecto");
+                    }
+
+                    const warehouses = {};
+                    data.warehouses.forEach(warehouse => {
+                        warehouses[warehouse.id] = warehouse.description;
+                    });
+                    return warehouses;
+                })
+                .catch(error => {
+                    console.error("Error al obtener almacenes:", error);
+                    throw new Error("No se pudo cargar la lista de almacenes.");
+                });
+        },
+        disableItemInWarehouse(id, warehouseId) {
+            return fetch(`/items/disableItem/${id}/${warehouseId}`, {})
+                .then(response => response.json())
+                .catch(error => {
+                    return { success: false, message: `Error: ${error}` };
+                });
+        },
+        enableItemInWarehouse(id, warehouseId) {
+            return fetch(`/items/enableItem/${id}/${warehouseId}`, {})
+                .then(response => response.json())
+                .catch(error => {
+                    return { success: false, message: `Error: ${error}` };
+                });
         }
     }
 };

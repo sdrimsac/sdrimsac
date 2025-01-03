@@ -260,6 +260,7 @@ class Item extends ModelTenant
                     'warehouse_description' => $warehouses->warehouse->description,
                     'stock'                 => (!empty($warehouses->stock)) ? $warehouses->stock : 0,
                     'warehouse_id'          => $warehouses->warehouse_id,
+                    'active'               => (bool)$warehouses->active,
                     'checked'               => ($warehouses->warehouse_id == $warehouse->id) ? true : false,
                 ];
             }),
@@ -567,7 +568,7 @@ class Item extends ModelTenant
 
     public function warehouses()
     {
-        return $this->hasMany(ItemWarehouse::class)->with('warehouse');
+        return $this->hasMany(ItemWarehouse::class, 'item_id')->with('warehouse');
     }
     public function itemwarehouses()
     {

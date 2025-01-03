@@ -660,12 +660,12 @@ class ItemController extends Controller
         if (!$services) {
             $records = $records->where('unit_type_id', '!=', 'ZZ');
         }
-        if($type){
-            $records = $records->whereHas('warehouse', function($query) use ($type){
-                $query->whereHas('establishment', function($query) use ($type){
-                    if($type == 'product'){
+        if ($type) {
+            $records = $records->whereHas('warehouse', function ($query) use ($type) {
+                $query->whereHas('establishment', function ($query) use ($type) {
+                    if ($type == 'product') {
                         $query->where('is_product', 1);
-                    }elseif($type == 'service'){
+                    } elseif ($type == 'service') {
                         $query->where('is_service', 1);
                     }
                 });
@@ -721,19 +721,32 @@ class ItemController extends Controller
                 break;
         }
 
+        $records = $records->where('active', 1);
+
         if ($active !== null) {
-            $active = trim($active);
-            $active = ($active === 'Habilitado') ? 1 : 0;
-            $records = $records->where('active', $active);
+            $activeValue = ($active === 'Habilitado') ? 1 : 0;
+        
+            $records = $records->with(['warehouses' => function ($query) use ($warehouse_id, $activeValue) {
+                $query->where('warehouse_id', $warehouse_id)
+                      ->where('active', $activeValue);
+            }]);
         } else {
-            $records = $records->where('active', 1);
+            $records = $records->with(['warehouses' => function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id)
+                      ->where('active', 1);
+            }]);
         }
 
-        if ($warehouse_id) {
-            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
+        /* if (!$warehouse_id) {
+            $records = $records->whereHas('warehouse', function ($query) {
+                $query->where('warehouse_id', 1);
+            });
+        } else {
+            $records = $records->whereHas('warehouse', function ($query) use ($warehouse_id) {
                 $query->where('warehouse_id', $warehouse_id);
             });
-        }
+        } */
+
         if ($categoria_madera_id) {
             $records = $records->whereHas('categoria_madera', function ($query) use ($categoria_madera_id) {
                 $query->where('id', $categoria_madera_id);
@@ -746,9 +759,13 @@ class ItemController extends Controller
             });
         }
         if ($warehouse_id) {
-            // Cargar los precios por almacén para cada producto
+            $records = $records->with(['warehouses' => function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);  
+            }]);
+        }
+        if ($warehouse_id) {
             $records = $records->with(['item_warehouse_prices' => function ($query) use ($warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id);  // Filtrar precios por el almacén
+                $query->where('warehouse_id', $warehouse_id); 
             }]);
         }
 
@@ -1604,23 +1621,125 @@ class ItemController extends Controller
         ];
     }
 
-    public function disable($id)
+    public function disableItem($id, $warehouse_id = null)
     {
         try {
+            // Contar cuántos almacenes están asociados al producto
+            $warehouseCount = DB::Connection('tenant')->table('item_warehouse')
+                ->where('item_id', $id)
+                ->count();
 
-            $item = Item::findOrFail($id);
-            $item->active = 0;
-            $item->save();
+            // Si hay solo un almacén asociado y no se pasó warehouse_id, utilizar ese almacén por defecto
+            if ($warehouseCount === 1 && $warehouse_id === null) {
+                // Obtener el warehouse_id del único almacén
+                $warehouse_id = DB::Connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->value('warehouse_id');
+            }
 
-            return [
-                'success' => true,
-                'message' => 'Producto inhabilitado con éxito'
-            ];
+            // Verificar si el producto está asociado con más de un almacén
+            if ($warehouseCount === 1) {
+                // Si hay un solo almacén, proceder a inhabilitarlo
+                $updated = DB::Connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->update(['active' => false]);
+
+                if ($updated) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'El producto ha sido inhabilitado en el almacén único.'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pudo inhabilitar el producto en el almacén único.'
+                    ], 400);
+                }
+            } else if ($warehouseCount > 1) {
+                // Si hay más de un almacén, realizar la actualización en el almacén seleccionado
+                $updated = DB::Connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->update(['active' => false]);
+
+                if ($updated) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'El producto ha sido inhabilitado en el almacén seleccionado.'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pudo inhabilitar el producto en el almacén seleccionado.'
+                    ], 400);
+                }
+            }
+
+            // Si no se encontró ningún almacén, devolver un error
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron almacenes asociados al producto.'
+            ], 400);
         } catch (Exception $e) {
-
-            return  ['success' => false, 'message' => 'Error inesperado, no se pudo inhabilitar el producto'];
+            return response()->json([
+                'success' => false,
+                'message' => 'Error inesperado, no se pudo inhabilitar el producto.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
+    public function enableItem($id, $warehouse_id = null)
+    {
+        try {
+            // Contar cuántos almacenes están asociados al producto
+            $warehouseCount = DB::Connection('tenant')->table('item_warehouse')
+                ->where('item_id', $id)
+                ->count();
+
+            // Si solo hay un almacén, asignar ese almacén automáticamente
+            if ($warehouseCount === 1 && $warehouse_id === null) {
+                $warehouse_id = DB::Connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->value('warehouse_id');
+            }
+
+            // Si hay almacenes asociados, proceder con la actualización
+            if ($warehouseCount > 0) {
+                // Actualizar el producto a habilitado en el almacén seleccionado
+                $updated = DB::Connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->update(['active' => true]);
+
+                // Verificar si la actualización fue exitosa
+                if ($updated) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'El producto ha sido habilitado en el almacén seleccionado.'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pudo habilitar el producto en el almacén seleccionado.'
+                    ], 400);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron almacenes asociados al producto.'
+                ], 400);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error inesperado, no se pudo habilitar el producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function images($item)
     {
@@ -1651,6 +1770,23 @@ class ItemController extends Controller
         ];
     }
 
+    public function disable($id)
+    {
+        try {
+
+            $item = Item::findOrFail($id);
+            $item->active = 0;
+            $item->save();
+
+            return [
+                'success' => true,
+                'message' => 'Producto inhabilitado con éxito'
+            ];
+        } catch (Exception $e) {
+
+            return  ['success' => false, 'message' => 'Error inesperado, no se pudo inhabilitar el producto'];
+        }
+    }
 
     public function enable($id)
     {
@@ -1667,6 +1803,23 @@ class ItemController extends Controller
         } catch (Exception $e) {
 
             return  ['success' => false, 'message' => 'Error inesperado, no se pudo habilitar el producto'];
+        }
+    }
+    public function disguise($id)
+    {
+        try {
+
+            $item = Item::findOrFail($id);
+            $item->active = 0;
+            $item->save();
+
+            return [
+                'success' => true,
+                'message' => 'Producto anulado con éxito'
+            ];
+        } catch (Exception $e) {
+
+            return  ['success' => false, 'message' => 'Error inesperado, no se pudo anular el producto'];
         }
     }
 }
