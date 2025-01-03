@@ -4175,31 +4175,27 @@ export default {
         async enterAmount(amount = 0) {
             this.amount = amount;
 
-            let enter_amount =
-                (parseFloat(this.form.enter_amount) || 0) +
-                this.totalPayments();
-
+            let enter_amount = (parseFloat(this.form.enter_amount) || 0) + this.totalPayments();
             let differen = enter_amount - parseFloat(this.form.total);
 
-            this.form.difference = parseFloat(differen);
-
+            // Redondear a 2 decimales para evitar números extraños
+            this.form.difference = Number(differen.toFixed(2));
+            
             if (this.form.difference < 0) {
                 this.button_payment = true;
-                this.form.difference = differen;
+                this.form.difference = Number(differen.toFixed(2));
             } else if (this.form.difference >= 0) {
                 this.button_payment = false;
-                parseFloat(this.form.enter_amount) -
-                    parseFloat(this.form.total);
+                // parseFloat(this.form.enter_amount) - parseFloat(this.form.total);
             } else {
                 this.button_payment = true;
             }
+
             if (this.configuration.sale_note_credit_cash) {
                 this.button_payment = false;
             }
-            //this.form.difference = _.round(this.form.difference, 2);
 
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
-            // this.setAmountCash(amount)
         },
 
         getLocalStoragePayment(key, re_default = null) {

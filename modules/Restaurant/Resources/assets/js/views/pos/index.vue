@@ -2301,24 +2301,36 @@ export default {
     methods: {
         async printFileWithRawBT(fileUrl) {
             try {
-                // Descargar el archivo y convertirlo a Base64
-                const base64File = await fetch(fileUrl)
-                    .then(response => response.arrayBuffer())
-                    .then(buffer =>
-                        btoa(String.fromCharCode(...new Uint8Array(buffer)))
-                    );
+                const response = await fetch(fileUrl);
+                
+                // Verificar que el contenido sea PDF
+                const contentType = response.headers.get('content-type');
+                // if (!contentType || !contentType.includes('application/pdf')) {
+                //     throw new Error('El archivo no es un PDF válido');
+                // }
+                
+                const pdfBlob = await response.blob();
+                
+                // Convertir el Blob a base64 usando FileReader
+                const base64File = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        // Extraer solo la parte base64 del resultado, removiendo el data URL prefix
+                        const base64String = reader.result.split(',')[1];
+                        resolve(base64String);
+                    };
+                    reader.readAsDataURL(pdfBlob);
+                });
 
-                // Crear la URL del Intent con el esquema rawbt:base64
-                console.log(base64File);
+                // Crear la URL del Intent con el esquema rawbt
                 const intentUrl = `rawbt:base64,${base64File}`;
-
+                
                 // Redirigir al Intent
                 window.location.href = intentUrl;
+                
             } catch (error) {
                 console.error("Error al intentar imprimir con RawBT:", error);
-                alert(
-                    "No se pudo imprimir el archivo. Verifica la instalación de RawBT."
-                );
+                this.$message.error(`Error: ${error.message || 'No se pudo imprimir el archivo. Verifica la instalación de RawBT.'}`);
             }
         },
         printOrden(url, id) {
