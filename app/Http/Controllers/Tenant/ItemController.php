@@ -723,29 +723,23 @@ class ItemController extends Controller
 
         $records = $records->where('active', 1);
 
+        /* $records = $records->whereHas('warehouses', function ($query) {
+            $query->where('active', 1);
+        }); */
+
         if ($active !== null) {
-            $activeValue = ($active === 'Habilitado') ? 1 : 0;
+            $active = ($active === 'Habilitado') ? 1 : 0;
         
-            $records = $records->with(['warehouses' => function ($query) use ($warehouse_id, $activeValue) {
+            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id, $active) {
                 $query->where('warehouse_id', $warehouse_id)
-                      ->where('active', $activeValue);
-            }]);
+                      ->where('active', $active);
+            });
         } else {
-            $records = $records->with(['warehouses' => function ($query) use ($warehouse_id) {
+            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
                 $query->where('warehouse_id', $warehouse_id)
                       ->where('active', 1);
-            }]);
+            });
         }
-
-        /* if (!$warehouse_id) {
-            $records = $records->whereHas('warehouse', function ($query) {
-                $query->where('warehouse_id', 1);
-            });
-        } else {
-            $records = $records->whereHas('warehouse', function ($query) use ($warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id);
-            });
-        } */
 
         if ($categoria_madera_id) {
             $records = $records->whereHas('categoria_madera', function ($query) use ($categoria_madera_id) {

@@ -249,7 +249,7 @@
                                                 clickDisguise(row.id)
                                             "
                                         >
-                                           Anular
+                                           Desactivar
                                         </a>
                                     </div>
                                 </template>
@@ -780,14 +780,14 @@ export default {
         },
         clickDisguise(id) {
             swal.fire({
-                title: "ANULAR PRODUCTO?",
+                title: "DESACTIVAR PRODUCTO?",
                 text:
-                    "Recuerda si se anula el producto ya no se podrá recuperar ni visualizar en ningún almacén",
+                    "Recuerda si se desactiva el producto ya no se podrá recuperar ni visualizar en ningún almacén",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Anular",
+                confirmButtonText: "Desactivar",
             }).then(result => {
                 if (result.isConfirmed) {
                     axios
@@ -795,7 +795,7 @@ export default {
                         .then(response => {
                             if (response.data.success) {
                                 swal.fire({
-                                    title: "Anulado",
+                                    title: "Desactivado",
                                     text: response.data.message,
                                     icon: "success"
                                 });

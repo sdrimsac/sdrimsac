@@ -596,7 +596,6 @@
                                 <!-- Botón Restaurar -->
                                 <button
                                     type="button"
-                                    v-if="form.items.length > 0"
                                     class="btn btn-restore"
                                     @click="restoreApart"
                                     data-toggle="tooltip"
@@ -1274,6 +1273,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+            listApart: false,
             loading_submit: false,
             listApart: false,
             ordenInBox: [],
@@ -1469,6 +1469,7 @@ export default {
             if (this.ordenInBox.length > 0) {
                 this.listApart = true;
             } else {
+                /* this.listApart = false; */
                 this.$showSAlert(
                     "ALERTA",
                     "No hay compras aparcadas",
