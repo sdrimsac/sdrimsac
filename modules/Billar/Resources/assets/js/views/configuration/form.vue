@@ -1,5 +1,5 @@
 <!-- Nueva mesa -->
- <!-- Nueva Habitacion -->
+ <!-- Nueva Habacion -->
 <template>
   <el-dialog
     :title="titleDialog"

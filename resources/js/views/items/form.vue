@@ -3435,7 +3435,7 @@ export default {
                 );
                 return false;
             }
-            if (!this.form.category_id && !this.form_category.add) {
+            if (!this.form.category_id) {
                 this.$showSAlert(
                     "ALERTA",
                     "Seleccione una categoria",

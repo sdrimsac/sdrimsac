@@ -715,15 +715,15 @@ class ItemController extends Controller
 
         if ($active !== null) {
             $active = ($active === 'Habilitado') ? 1 : 0;
-        
+
             $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id, $active) {
                 $query->where('warehouse_id', $warehouse_id)
-                      ->where('active', $active);
+                    ->where('active', $active);
             });
         } else {
             $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
                 $query->where('warehouse_id', $warehouse_id)
-                      ->where('active', 1);
+                    ->where('active', 1);
             });
         }
 
@@ -740,12 +740,12 @@ class ItemController extends Controller
         }
         if ($warehouse_id) {
             $records = $records->with(['warehouses' => function ($query) use ($warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id);  
+                $query->where('warehouse_id', $warehouse_id);
             }]);
         }
         if ($warehouse_id) {
             $records = $records->with(['item_warehouse_prices' => function ($query) use ($warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id); 
+                $query->where('warehouse_id', $warehouse_id);
             }]);
         }
 
@@ -1034,266 +1034,257 @@ class ItemController extends Controller
 
     public function store(ItemRequest $request)
     {
-        $all_establishment = $request->all_establishment;
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $all_establishment = $request->all_establishment;
 
-        $id = $request->input('id');
+            $id = $request->input('id');
 
-        $item = Item::firstOrNew(['id' => $id]);
-        $item->item_type_id = '01';
-        $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
-        $item->fill($request->all());
+            $item = Item::firstOrNew(['id' => $id]);
+            $item->item_type_id = '01';
+            $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
+            $item->fill($request->all());
 
-        $temp_path = $request->input('temp_path');
-        $id = $request->input('id');
-        $food = Food::firstOrNew(['item_id' => $id]);
-        $food->fill($request->all());
-        $food->price = $request->sale_unit_price;
-        $food->category_food_id = $request->category_id;
-        $food->code = $request->internal_id;
-        if ($temp_path) {
-            $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR;
-            $file_name_old = $request->input('image');
-            $file_name_old_array = explode('.', $file_name_old);
-            $file_content = file_get_contents($temp_path);
-            $datenow = date('YmdHis');
-            $file_name = Str::slug($item->description) . '-' . $datenow . '.' . $file_name_old_array[1];
-            Storage::put($directory . $file_name, $file_content);
-            $item->image = $file_name;
-            $food->image = $file_name;
-            //--- IMAGE SIZE MEDIUM
-            $image = \Image::make($temp_path);
-            $file_name = Str::slug($item->description) . '-' . $datenow . '_medium' . '.' . $file_name_old_array[1];
-            $image->resize(512, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            Storage::put($directory . $file_name,  (string) $image->encode('jpg', 30));
-            $item->image_medium = $file_name;
-            //--- IMAGE SIZE SMALL
-            $image = \Image::make($temp_path);
-            $file_name = Str::slug($item->description) . '-' . $datenow . '_small' . '.' . $file_name_old_array[1];
-            $image->resize(256, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            Storage::put($directory . $file_name,  (string) $image->encode('jpg', 20));
-            $item->image_small = $file_name;
-        } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            $item->image = 'imagen-no-disponible.jpg';
-            $food->image = 'imagen-no-disponible.jpg';
-        }
-        $item->save();
-        $item->item_price_ranges()->delete();
-        $item_price_ranges = $request->input('item_price_ranges');
-        if ($item_price_ranges) {
-            foreach ($item_price_ranges as $item_price_range) {
-                $item->item_price_ranges()->create($item_price_range);
+            $temp_path = $request->input('temp_path');
+            $id = $request->input('id');
+            $food = Food::firstOrNew(['item_id' => $id]);
+            $food->fill($request->all());
+            $food->price = $request->sale_unit_price;
+            $food->category_food_id = $request->category_id;
+            $food->code = $request->internal_id;
+            if ($temp_path) {
+                $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR;
+                $file_name_old = $request->input('image');
+                $file_name_old_array = explode('.', $file_name_old);
+                $file_content = file_get_contents($temp_path);
+                $datenow = date('YmdHis');
+                $file_name = Str::slug($item->description) . '-' . $datenow . '.' . $file_name_old_array[1];
+                Storage::put($directory . $file_name, $file_content);
+                $item->image = $file_name;
+                $food->image = $file_name;
+                //--- IMAGE SIZE MEDIUM
+                $image = \Image::make($temp_path);
+                $file_name = Str::slug($item->description) . '-' . $datenow . '_medium' . '.' . $file_name_old_array[1];
+                $image->resize(512, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+                Storage::put($directory . $file_name,  (string) $image->encode('jpg', 30));
+                $item->image_medium = $file_name;
+                //--- IMAGE SIZE SMALL
+                $image = \Image::make($temp_path);
+                $file_name = Str::slug($item->description) . '-' . $datenow . '_small' . '.' . $file_name_old_array[1];
+                $image->resize(256, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+                Storage::put($directory . $file_name,  (string) $image->encode('jpg', 20));
+                $item->image_small = $file_name;
+            } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+                $item->image = 'imagen-no-disponible.jpg';
+                $food->image = 'imagen-no-disponible.jpg';
             }
-        }
-        $commercial_treatments = $request->input('commercial_treatments');
-        if ($commercial_treatments && $id == null) {
-            foreach ($commercial_treatments as $commercial_treatment) {
-                if ($commercial_treatment['amount'] == null) continue;
-                $item->commercial_treatments()->create($commercial_treatment);
-            }
-        }
-        ItemCategoriaMadera::where('item_id', $item->id)->delete();
-        $categoria_madera = $request->input('categoria_madera');
-        /*  */
-        if (is_array($categoria_madera) && !empty($categoria_madera)) {
-            foreach ($categoria_madera as $categoria) { // Usar un nombre diferente para la variable interna
-                if (isset($categoria['precio']) && isset($categoria['id'])) {
-                    $newCategoriaMadera = new ItemCategoriaMadera;
-                    $newCategoriaMadera->precio = $categoria['precio'];
-                    $newCategoriaMadera->categoria_madera_id = $categoria['id'];
-                    $newCategoriaMadera->item_id = $item->id;
-                    $newCategoriaMadera->save();
-                }
-            }
-            /*  */
-        }
-
-        if ($all_establishment) {
-            $warehouses = Warehouse::all()->pluck('id');
-            $stock = $item->stock;
-            $new_qty = count($warehouses) * $item->stock;
-            $id = $item->id;
-            foreach ($warehouses as $wh) {
-                $exist = ItemWarehouse::where('warehouse_id', $wh)->where('item_id', $id)->first();
-
-                if (!isset($exist)) {
-                    ItemWarehouse::create([
-                        'warehouse_id' => $wh,
-                        'stock' => $stock,
-                        'item_id' => $item->id,
-                        'created_at' => date('Y-m-d H:i:s '),
-                        'updated_at' => date('Y-m-d H:i:s '),
-                    ]);
-                    $inventory = Inventory::create([
-                        'type' => 1,
-                        'description' => 'Stock Inicial',
-                        'item_id' => $item->id,
-                        'warehouse_id' => $wh,
-                        'quantity' => $stock,
-                        'date_of_issue' => date('Y-m-d')
-                    ]);
-
-                    Kardex::create([
-                        'type' => null,
-                        'date_of_issue' => date('Y-m-d'),
-                        'item_id' => $item->id,
-                        'quantity' => $stock,
-                    ]);
-
-                    InventoryKardex::create([
-                        'date_of_issue' => date('Y-m-d '),
-                        'item_id' => $item->id,
-                        'warehouse_id' => $wh,
-                        'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
-                        'inventory_kardexable_id' => $inventory->id,
-                        'quantity' => $stock,
-                        'created_at' => date('Y-m-d H:i:s '),
-                        'updated_at' => date('Y-m-d H:i:s '),
-                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
-
-                    ]);
-                }
-            }
-            $item->stock = $new_qty;
             $item->save();
-        } else {
-            $warehouse_id = $request->warehouse_id;
-            //si es servicio crea un registro en itemwarehouse
-            if ($item->unit_type_id == 'ZZ' && $warehouse_id) {
-                $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item->id, 'warehouse_id' => $warehouse_id]);
-                $item_warehouse->stock = $item->stock;
-                $item_warehouse->save();
+            $item->item_price_ranges()->delete();
+            $item_price_ranges = $request->input('item_price_ranges');
+            if ($item_price_ranges) {
+                foreach ($item_price_ranges as $item_price_range) {
+                    $item->item_price_ranges()->create($item_price_range);
+                }
             }
-        }
-        ItemUnitTypePriceRange::whereHas('item_unit_type', function ($query) use ($item) {
-            $query->where('item_id', $item->id);
-        })->delete();
-        ItemUnitType::where('item_id', $item->id)->delete();
-        ItemWarehousePrice::where('item_id', $item->id)->delete();
-        //---------------------------------------
-        if ($request['item_unit_types'] != null) {
-            foreach ($request['item_unit_types'] as $unit) {
-                $newUnitType = new ItemUnitType;
-                $newUnitType->fill($unit);
-                $newUnitType->item_id = $item->id;
-                $newUnitType->save();
+            $commercial_treatments = $request->input('commercial_treatments');
+            if ($commercial_treatments && $id == null) {
+                foreach ($commercial_treatments as $commercial_treatment) {
+                    if ($commercial_treatment['amount'] == null) continue;
+                    $item->commercial_treatments()->create($commercial_treatment);
+                }
+            }
+            ItemCategoriaMadera::where('item_id', $item->id)->delete();
+            $categoria_madera = $request->input('categoria_madera');
+            /*  */
+            if (is_array($categoria_madera) && !empty($categoria_madera)) {
+                foreach ($categoria_madera as $categoria) { // Usar un nombre diferente para la variable interna
+                    if (isset($categoria['precio']) && isset($categoria['id'])) {
+                        $newCategoriaMadera = new ItemCategoriaMadera;
+                        $newCategoriaMadera->precio = $categoria['precio'];
+                        $newCategoriaMadera->categoria_madera_id = $categoria['id'];
+                        $newCategoriaMadera->item_id = $item->id;
+                        $newCategoriaMadera->save();
+                    }
+                }
+                /*  */
+            }
 
-                // ItemUnitTypePriceRange::where('unit_type_id', $newUnitType->id)->delete();
-                $item_unit_type_price_ranges = isset($unit['item_unit_type_price_ranges']) ? $unit['item_unit_type_price_ranges'] : [];
-                if ($item_unit_type_price_ranges) {
-                    foreach ($item_unit_type_price_ranges as $item_unit_type_price_range) {
-                        $newUnitType->item_unit_type_price_ranges()->create($item_unit_type_price_range);
+            if ($all_establishment) {
+                $warehouses = Warehouse::all()->pluck('id');
+                $stock = $item->stock;
+                $new_qty = count($warehouses) * $item->stock;
+                $id = $item->id;
+                foreach ($warehouses as $wh) {
+                    $exist = ItemWarehouse::where('warehouse_id', $wh)->where('item_id', $id)->first();
+
+                    if (!isset($exist)) {
+                        ItemWarehouse::create([
+                            'warehouse_id' => $wh,
+                            'stock' => $stock,
+                            'item_id' => $item->id,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                        ]);
+                        $inventory = Inventory::create([
+                            'type' => 1,
+                            'description' => 'Stock Inicial',
+                            'item_id' => $item->id,
+                            'warehouse_id' => $wh,
+                            'quantity' => $stock,
+                            'date_of_issue' => date('Y-m-d')
+                        ]);
+
+                        Kardex::create([
+                            'type' => null,
+                            'date_of_issue' => date('Y-m-d'),
+                            'item_id' => $item->id,
+                            'quantity' => $stock,
+                        ]);
+
+                        InventoryKardex::create([
+                            'date_of_issue' => date('Y-m-d '),
+                            'item_id' => $item->id,
+                            'warehouse_id' => $wh,
+                            'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                            'inventory_kardexable_id' => $inventory->id,
+                            'quantity' => $stock,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
+
+                        ]);
+                    }
+                }
+                $item->stock = $new_qty;
+                $item->save();
+            } else {
+                $warehouse_id = $request->warehouse_id;
+                if ($item->unit_type_id == 'ZZ' && $warehouse_id) {
+                    $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item->id, 'warehouse_id' => $warehouse_id]);
+                    $item_warehouse->stock = $item->stock;
+                    $item_warehouse->save();
+                }
+            }
+            ItemUnitTypePriceRange::whereHas('item_unit_type', function ($query) use ($item) {
+                $query->where('item_id', $item->id);
+            })->delete();
+            ItemUnitType::where('item_id', $item->id)->delete();
+            ItemWarehousePrice::where('item_id', $item->id)->delete();
+            //---------------------------------------
+            if ($request['item_unit_types'] != null) {
+                foreach ($request['item_unit_types'] as $unit) {
+                    $newUnitType = new ItemUnitType;
+                    $newUnitType->fill($unit);
+                    $newUnitType->item_id = $item->id;
+                    $newUnitType->save();
+
+                    // ItemUnitTypePriceRange::where('unit_type_id', $newUnitType->id)->delete();
+                    $item_unit_type_price_ranges = isset($unit['item_unit_type_price_ranges']) ? $unit['item_unit_type_price_ranges'] : [];
+                    if ($item_unit_type_price_ranges) {
+                        foreach ($item_unit_type_price_ranges as $item_unit_type_price_range) {
+                            $newUnitType->item_unit_type_price_ranges()->create($item_unit_type_price_range);
+                        }
                     }
                 }
             }
-        }
-        if ($request['color_sizes'] != null) {
-            foreach ($request['color_sizes'] as $color_size) {
-                $newColorSize = new ItemColorSize;
-                $newColorSize->fill($color_size);
-                $newColorSize->item_id = $item->id;
-                $newColorSize->warehouse_id = $request['warehouse_id'];
-                $newColorSize->save();
-            }
-        }
-        if ($request['warehouse_prices'] != null) {
-            foreach ($request['warehouse_prices'] as $w) {
-                if ($w["price"] != null) {
-
-                    $warehouse_price = new ItemWarehousePrice;
-                    $warehouse_price->warehouse_id = $w["warehouse_id"];
-                    $warehouse_price->item_id = $item->id;
-                    $warehouse_price->price = $w["price"];
-                    $warehouse_price->save();
+            if ($request['color_sizes'] != null) {
+                foreach ($request['color_sizes'] as $color_size) {
+                    $newColorSize = new ItemColorSize;
+                    $newColorSize->fill($color_size);
+                    $newColorSize->item_id = $item->id;
+                    $newColorSize->warehouse_id = $request['warehouse_id'];
+                    $newColorSize->save();
                 }
             }
-        }
-        $lote = null;
-        if ($request['lot_code']) {
-            $exists = ItemLotsGroup::where('code', $request['lot_code'])
-                ->where('warehouse_id', $request['warehouse_id'])
-                ->where('item_id', $item->id)
-                ->first();
-            if (!$exists) {
-                $item_group = new ItemLotsGroup;
-                $item_group->warehouse_id = $request['warehouse_id'];
-                $item_group->item_id = $item->id;
-                $item_group->date_of_due = $request['date_of_due'];
-                $item_group->code = $request['lot_code'];
-                $item_group->quantity = $request['stock'];
-                $item_group->save();
-                $lote = $item_group->id;
+            if ($request['warehouse_prices'] != null) {
+                foreach ($request['warehouse_prices'] as $w) {
+                    if ($w["price"] != null) {
+
+                        $warehouse_price = new ItemWarehousePrice;
+                        $warehouse_price->warehouse_id = $w["warehouse_id"];
+                        $warehouse_price->item_id = $item->id;
+                        $warehouse_price->price = $w["price"];
+                        $warehouse_price->save();
+                    }
+                }
             }
-        }
-        $v_lots = isset($request->lots) ? $request->lots : [];
-
-        foreach ($v_lots as $lot) {
-            $series = $lot['series'];
-            $item_id = $item->id;
-            $exists = ItemLot::where('series', $series)->where('item_id', $item_id)
-                ->where('warehouse_id', $request['warehouse_id'])
-                ->first();
-            if (!$exists) {
-                $item->lots()->create([
-                    'date' => $lot['date'],
-                    'series' => $lot['series'],
-                    'item_id' => $item->id,
-                    'warehouse_id' => $request['warehouse_id'],
-                    'has_sale' => false,
-                    'lote_id' => $lote,
-                    'state' => $lot['state'],
-                ]);
+            $lote = null;
+            if ($request['lot_code']) {
+                $exists = ItemLotsGroup::where('code', $request['lot_code'])
+                    ->where('warehouse_id', $request['warehouse_id'])
+                    ->where('item_id', $item->id)
+                    ->first();
+                if (!$exists) {
+                    $item_group = new ItemLotsGroup;
+                    $item_group->warehouse_id = $request['warehouse_id'];
+                    $item_group->item_id = $item->id;
+                    $item_group->date_of_due = $request['date_of_due'];
+                    $item_group->code = $request['lot_code'];
+                    $item_group->quantity = $request['stock'];
+                    $item_group->save();
+                    $lote = $item_group->id;
+                }
             }
-        }
-
-        //---------------------------------
-        if ($request['file']) {
-
-            // $file = $request->file('file');
-            // if ($file != null) {
-            //     $path = $file->store('public/files');
-            //     $food->image = $path;
-            // }
-        }
-        $item_id =  $item->id;
-        if ($item_id != 0) {
-            $food->item_id = $item_id;
-        }
-        $food->save();
-        //---------------------------------------
-        if (!$id) {
-            $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
-            $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
-        } else {
-            // $item->lots()->delete();
-            $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
-            $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
             $v_lots = isset($request->lots) ? $request->lots : [];
+
+            foreach ($v_lots as $lot) {
+                $series = $lot['series'];
+                $item_id = $item->id;
+                $exists = ItemLot::where('series', $series)->where('item_id', $item_id)
+                    ->where('warehouse_id', $request['warehouse_id'])
+                    ->first();
+                if (!$exists) {
+                    $item->lots()->create([
+                        'date' => $lot['date'],
+                        'series' => $lot['series'],
+                        'item_id' => $item->id,
+                        'warehouse_id' => $request['warehouse_id'],
+                        'has_sale' => false,
+                        'lote_id' => $lote,
+                        'state' => $lot['state'],
+                    ]);
+                }
+            }
+
+
+            $item_id =  $item->id;
+            if ($item_id != 0) {
+                $food->item_id = $item_id;
+            }
+            $food->save();
+            //---------------------------------------
+            if (!$id) {
+                $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+                $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
+            } else {
+                // $item->lots()>delete();
+                $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+                $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
+                $v_lots = isset($request->lots) ? $request->lots : [];
+            }
+
+
+            $item->update();
+            DB::connection('tenant')->commit();
+            return [
+                'success' => true,
+                'message' => ($id) ? 'Producto editado con éxito' : 'Producto registrado con éxito',
+                'id' => $item->id,
+                'data' => $item
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Error inesperado, no se pudo registrar el producto'
+            ];
         }
-
-        // $directory = 'public'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'items'.DIRECTORY_SEPARATOR;
-        // $multi_images = isset($request->multi_images) ? $request->multi_images:[];
-        // foreach ($multi_images as $im) {
-        //     $file_name = $im['filename'];
-        //     $file_content = file_get_contents($im['temp_path']);
-        //     Storage::put($directory.$file_name, $file_content);
-
-        //     ItemImage::create(['item_id'=> $item->id, 'image' => $file_name]);
-        // }
-
-        $item->update();
-
-        return [
-            'success' => true,
-            'message' => ($id) ? 'Producto editado con éxito' : 'Producto registrado con éxito',
-            'id' => $item->id,
-            'data' => $item
-        ];
     }
 
     public function storeBonusUnitType(Request $request)
