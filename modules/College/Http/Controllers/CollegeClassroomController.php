@@ -86,6 +86,7 @@ class CollegeClassroomController extends Controller
         $turn_id = $request->turn_id;
         $section_id = $request->section_id;
         $level_id = $request->level_id;
+        $active = $request->active;
 
         $records = CollegeClassroom::query();
         if ($degree_id) {
@@ -100,6 +101,7 @@ class CollegeClassroomController extends Controller
         if ($level_id) {
             $records = $records->where('level_id', $level_id);
         }
+        $records = $records->where('active', 1);
 
         $records = $records->orderBy('created_at', 'desc');
 
