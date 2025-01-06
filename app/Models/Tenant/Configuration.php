@@ -889,6 +889,9 @@ class Configuration extends ModelTenant
             'other_currency_pos' => (bool)$this->other_currency_pos,
         ];
     }
+    public function item_variation () {
+        return $this->belongsTo(Item::class, 'item_variation_id');
+    }
     public  function hasAffectationIgv(): ?bool
     {
         $int_affectation_igv_type_id =  intval($this->affectation_igv_type_id);

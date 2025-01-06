@@ -678,16 +678,6 @@ class ItemController extends Controller
                     $q->where('name', 'like', "%{$request->value}%");
                 });
                 break;
-
-                /* case 'active':
-                $records
-                    ->whereIsActive();
-                break;
-
-            case 'inactive':
-                $records
-                    ->whereIsNotActive();
-                break; */
             case 'description':
                 if ($request->value) {
                     if (count($textoIntoArray) === 1) {
@@ -722,10 +712,6 @@ class ItemController extends Controller
         }
 
         $records = $records->where('active', 1);
-
-        /* $records = $records->whereHas('warehouses', function ($query) {
-            $query->where('active', 1);
-        }); */
 
         if ($active !== null) {
             $active = ($active === 'Habilitado') ? 1 : 0;
@@ -765,6 +751,105 @@ class ItemController extends Controller
 
         return $records->orderBy('description', 'ASC');
     }
+    /* public function getRecords($request, $services = true)
+    {
+        $datos = $request->value;
+        $textoIntoArray =  explode(' ', $datos);
+        $warehouse_id = $request->warehouse_id;
+        $categoria_madera_id = $request->categoria_madera_id;
+        $area_id = $request->area_id;
+        $active = $request->active;
+        $records = Item::whereTypeUser()
+            ->whereNotIsSet();
+        $user = auth()->user();
+        $type = $user->getUserTypeArca();
+        if (!$services) {
+            $records = $records->where('unit_type_id', '!=', 'ZZ');
+        }
+        if($type){
+            $records = $records->whereHas('warehouse', function($query) use ($type){
+                $query->whereHas('establishment', function($query) use ($type){
+                    if($type == 'product'){
+                        $query->where('is_product', 1);
+                    }elseif($type == 'service'){
+                        $query->where('is_service', 1);
+                    }
+                });
+            });
+        }
+        switch ($request->column) {
+
+            case 'brand':
+                $records->whereHas('brand', function ($q) use ($request) {
+                    $q->where('name', 'like', "%{$request->value}%");
+                });
+                break;
+            case 'description':
+                if ($request->value) {
+                    if (count($textoIntoArray) === 1) {
+                        $records
+                            ->where('description', 'like', "%{$request->value}%")
+                            ->orWhere('internal_id', 'like', "%{$request->value}%")
+                            ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('active', 'like', "%{$request->value}%");
+                    } else {
+
+                        foreach ($textoIntoArray as $key => $value) {
+
+                            $records->where('description', 'like', '%' . $value . '%');
+                        }
+                    }
+                    $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
+                        ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
+                        ->orderBy('description', 'ASC');
+                }
+                break;
+
+            case 'category':
+                $records
+                    ->whereHas('category', function ($query) use ($request) {
+                        $query->where('name', 'like', '%' . $request->value . '%');
+                    });
+                break;
+            default:
+                $records
+                    ->where($request->column, 'like', "%{$request->value}%");
+                break;
+        }
+
+        if ($active !== null) {
+            $active = trim($active);
+            $active = ($active === 'Habilitado') ? 1 : 0;
+            $records = $records->where('active', $active);
+        } else {
+            $records = $records->where('active', 1);
+        }
+
+        if ($warehouse_id) {
+            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);
+            });
+        }
+        if ($categoria_madera_id) {
+            $records = $records->whereHas('categoria_madera', function ($query) use ($categoria_madera_id) {
+                $query->where('id', $categoria_madera_id);
+            });
+        }
+
+        if ($area_id) {
+            $records = $records->whereHas('food', function ($query) use ($area_id) {
+                $query->where('area_id', $area_id);
+            });
+        }
+        if ($warehouse_id) {
+            // Cargar los precios por almacén para cada producto
+            $records = $records->with(['item_warehouse_prices' => function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);  // Filtrar precios por el almacén
+            }]);
+        }
+
+        return $records->orderBy('description', 'ASC');
+    } */
 
 
     public function getRecordsUltima_Venta($item_id)

@@ -249,6 +249,9 @@
                                                 clickDisguise(row.id)
                                             "
                                         >
+                                        <i
+                                                class="fas fa-toggle-on fa-lg me-2"
+                                            ></i>
                                            Desactivar
                                         </a>
                                     </div>

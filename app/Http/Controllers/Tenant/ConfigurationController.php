@@ -333,7 +333,7 @@ class ConfigurationController extends Controller
 
     public function tables()
     {
-
+        $warehouses = DB::connection('tenant')->table('warehouses')->get();
         $items = new ItemCollection(Item::where('id', '<>', null)->take(15)->get());
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $item_id = Configuration::first()->item_variation_id;
@@ -348,7 +348,7 @@ class ConfigurationController extends Controller
         if ($item_id) {
             $item = Item::find($item_id);
         }
-        return compact('affectation_igv_types', 'items', 'item', 'detraction_types', 'users');
+        return compact('affectation_igv_types', 'items', 'item', 'detraction_types', 'users', 'warehouses');
     }
 
     public function visualDefaults()

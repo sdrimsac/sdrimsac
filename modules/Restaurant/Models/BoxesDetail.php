@@ -1,6 +1,8 @@
 <?php
 
 namespace Modules\Restaurant\Models;
+
+use App\Models\Tenant\Box;
 use App\Models\Tenant\ModelTenant;
 
 
@@ -26,5 +28,10 @@ class BoxesDetail extends ModelTenant
     public function item()
     {
         return $this->belongsTo(BoxesItemDetail::class, 'item_detail_id');
+    }
+
+    public function box()
+    {
+        return $this->belongsTo(Box::class, 'boxes_id');
     }
 }

@@ -1,72 +1,74 @@
 <template>
     <div>
-        <div class="card bg-light" v-loading="loading" v-if="multiRegister">
-            <div class="row">
-                <div class="col-12">
-                    <label class="label-control w-100"
-                        >Apoderado
-                        <a
-                            href="#"
-                            class="control-label font-weight-bold text-info"
-                            @click="openCreateMember"
-                        >
-                            [ + Nuevo]</a
-                        >
+        <div class="card" v-loading="loading" v-if="multiRegister">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="label-control w-100"
+                            >Apoderado
+                            <a
+                                href="#"
+                                class="control-label font-weight-bold text-info"
+                                @click="openCreateMember"
+                            >
+                                [ + Nuevo]</a
+                            >
 
-                        <a
-                            v-if="form.parent_id"
-                            href="#"
-                            class="control-label font-weight-bold text-info"
-                            @click="openCreateMember"
-                        >
-                            [ Editar]</a
-                        >
-                    </label>
+                            <a
+                                v-if="form.parent_id"
+                                href="#"
+                                class="control-label font-weight-bold text-info"
+                                @click="openCreateMember"
+                            >
+                                [ Editar]</a
+                            >
+                        </label>
 
-                    <el-select
-                        class="w-100"
-                        v-model="form.parent_id"
-                        filterable
-                        remote
-                        placeholder="Nombre o código interno"
-                        :remote-method="searchRemoteParent"
-                        :loading="loading_search_item"
-                        @change="getMember"
-                    >
-                        <el-option
-                            v-for="(parent, idx) in parents"
-                            :key="idx"
-                            :label="parent.person.name"
-                            :value="parent.id"
-                        ></el-option>
-                    </el-select>
-                </div>
-                <div class="col-md-6 col-12">
-                    <label class="label-control w-100">Estudiante</label>
-                    <el-select
-                        :disabled="!form.parent_id"
-                        v-model="form.member_id"
-                        @change="updateTotal"
-                    >
-                        <el-option
-                            v-for="(member, idx) in members"
-                            :key="idx"
-                            :label="member.person.name"
-                            :value="member.id"
+                        <el-select
+                            class="w-100"
+                            v-model="form.parent_id"
+                            filterable
+                            remote
+                            placeholder="Nombre o código interno"
+                            :remote-method="searchRemoteParent"
+                            :loading="loading_search_item"
+                            @change="getMember"
                         >
-                        </el-option>
-                    </el-select>
+                            <el-option
+                                v-for="(parent, idx) in parents"
+                                :key="idx"
+                                :label="parent.person.name"
+                                :value="parent.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="label-control w-100">Estudiante</label>
+                        <el-select
+                            :disabled="!form.parent_id"
+                            v-model="form.member_id"
+                            @change="updateTotal"
+                        >
+                            <el-option
+                                v-for="(member, idx) in members"
+                                :key="idx"
+                                :label="member.person.name"
+                                :value="member.id"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex align-items-end">
+                        <el-button
+                            :disabled="!form.member_id"
+                            type="primary"
+                            @click="addMember"
+                        >
+                            Agregar
+                        </el-button>
+                    </div>
                 </div>
-                <div class="col-md-6 col-12 d-flex align-items-end">
-                    <el-button
-                        :disabled="!form.member_id"
-                        type="primary"
-                        @click="addMember"
-                    >
-                        Agregar
-                    </el-button>
-                </div>
-            </div>
+            
             <div class="row mt-2">
                 <div class="col-12">
                     <label class="label-control w-100">Plan</label>
@@ -143,90 +145,93 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="card bg-light" v-loading="loading" v-else>
-            <div class="row">
-                <div class="col-md-6 col-12">
-                    <label class="label-control w-100"
-                        >Apoderado
-                        <a
-                            href="#"
-                            class="control-label font-weight-bold text-info"
-                            @click="openCreateMember"
-                        >
-                            [ + Nuevo]</a
-                        >
-
-                        <a
-                            v-if="form.parent_id"
-                            href="#"
-                            class="control-label font-weight-bold text-info"
-                            @click="openCreateMember"
-                        >
-                            [ Editar]</a
-                        >
-                    </label>
-
-                    <el-select
-                        class="w-100"
-                        v-model="form.parent_id"
-                        filterable
-                        remote
-                        placeholder="Nombre o código interno"
-                        :remote-method="searchRemoteParent"
-                        :loading="loading_search_item"
-                        @change="getMember"
-                    >
-                        <el-option
-                            v-for="(parent, idx) in parents"
-                            :key="idx"
-                            :label="parent.person.name"
-                            :value="parent.id"
-                        ></el-option>
-                    </el-select>
-                </div>
-                <div class="col-md-6 col-12">
-                    <label class="label-control w-100">Estudiante</label>
-                    <el-select
-                        :disabled="!form.parent_id"
-                        v-model="form.member_id"
-                        @change="updateTotal"
-                    >
-                        <el-option
-                            v-for="(member, idx) in members"
-                            :key="idx"
-                            :label="member.person.name"
-                            :value="member.id"
-                        >
-                        </el-option>
-                    </el-select>
-                </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-12">
-                    <label class="label-control w-100">Plan</label>
-                    <el-select
-                        slot="prepend"
-                        v-model="form.plan_id"
-                        @change="updateTotal"
-                    >
-                        <el-tooltip
-                            v-for="(plan, idx) in plans"
-                            :key="idx"
-                            placement="left"
-                            :disabled="!plan.validity_date"
+        </div>
+        <div class="card" v-loading="loading" v-else>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <label class="label-control w-100"
+                            >Apoderado
+                            <a
+                                href="#"
+                                class="control-label font-weight-bold text-info"
+                                @click="openCreateMember"
+                            >
+                                [ + Nuevo]</a
+                            >
+
+                            <a
+                                v-if="form.parent_id"
+                                href="#"
+                                class="control-label font-weight-bold text-info"
+                                @click="openCreateMember"
+                            >
+                                [ Editar]</a
+                            >
+                        </label>
+
+                        <el-select
+                            class="w-100"
+                            v-model="form.parent_id"
+                            filterable
+                            remote
+                            placeholder="Nombre o código interno"
+                            :remote-method="searchRemoteParent"
+                            :loading="loading_search_item"
+                            @change="getMember"
                         >
-                            <div slot="content">
-                                Vence: {{ plan.validity_date }}
-                            </div>
                             <el-option
-                                :label="
-                                    `${plan.name} ${plan.description} S/${plan.total}`
-                                "
-                                :value="plan.id"
+                                v-for="(parent, idx) in parents"
+                                :key="idx"
+                                :label="parent.person.name"
+                                :value="parent.id"
                             ></el-option>
-                        </el-tooltip>
-                    </el-select>
+                        </el-select>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <label class="label-control w-100">Estudiante</label>
+                        <el-select
+                            :disabled="!form.parent_id"
+                            v-model="form.member_id"
+                            @change="updateTotal"
+                        >
+                            <el-option
+                                v-for="(member, idx) in members"
+                                :key="idx"
+                                :label="member.person.name"
+                                :value="member.id"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label class="label-control w-100">Plan</label>
+                        <el-select
+                            slot="prepend"
+                            v-model="form.plan_id"
+                            @change="updateTotal"
+                        >
+                            <el-tooltip
+                                v-for="(plan, idx) in plans"
+                                :key="idx"
+                                placement="left"
+                                :disabled="!plan.validity_date"
+                            >
+                                <div slot="content">
+                                    Vence: {{ plan.validity_date }}
+                                </div>
+                                <el-option
+                                    :label="
+                                        `${plan.name} ${plan.description} S/${plan.total}`
+                                    "
+                                    :value="plan.id"
+                                ></el-option>
+                            </el-tooltip>
+                        </el-select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -369,7 +374,7 @@ export default {
             if (this.multiRegister) {
                 let [member] = this.selectedMembers;
                 let parent = null;
-                if(member){
+                if (member) {
                     parent = member.parent;
                 }
                 // let { parent } = member;
@@ -389,7 +394,7 @@ export default {
                 };
 
                 this.$emit("createFormRegisterMultiple", form);
-                if(parent){
+                if (parent) {
                     this.$emit("updateCustomer", parent.person);
                 }
             } else {
@@ -567,7 +572,6 @@ export default {
         },
 
         open() {
-            
             this.form = {
                 year: moment().year()
             };

@@ -64,4 +64,9 @@ class SaleNotePayment extends ModelTenant
         return $this->morphOne(PaymentFile::class, 'payment');
     }
 
+    public function sale_note()
+    {
+        return $this->belongsTo(SaleNote::class);
+    }
+
 }

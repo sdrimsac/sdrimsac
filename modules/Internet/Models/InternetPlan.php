@@ -14,7 +14,6 @@ class InternetPlan extends ModelTenant
         'capacity',
         'default_price',
         'active',
-        'item_id'
     ];
     protected $casts = [
         'active' => 'boolean',

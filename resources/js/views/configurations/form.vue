@@ -373,8 +373,8 @@
                                                                     ref="healthIcon"
                                                                     class="fas fa-pills tab-icon"
                                                                 ></i>
-                                                                Entorno Boticas
-                                                                & Hospital
+                                                                Entorno
+                                                                 Hospital
                                                             </label>
                                                             <el-switch
                                                                 v-model="
@@ -11088,7 +11088,19 @@
                                 </div>
                             </template>
                             <div class="row">
-                                <div class="col-md-6 mt-6">
+                                <div class="col-md-4 mt-4">
+                                    <div class="form-group">
+                                        <label>Seleccione Almacen</label>
+                                        <el-select v-model="warehouse" clearable>
+                                            <el-option v-for="warehouse in warehouses" 
+                                            :key="warehouse.id" 
+                                            :label="warehouse.description" 
+                                            :value="warehouse.id">
+                                            </el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mt-4">
                                     <div class="form-group">
                                         <el-button
                                             type="primary"
@@ -11113,7 +11125,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mt-6">
+                                <div class="col-md-4 mt-4">
                                     <div class="form-group">
                                         <el-button
                                             type="primary"
@@ -11432,6 +11444,8 @@ export default {
     },
     data() {
         return {
+            warehouse: null,
+            warehouses: [],
             descriptionNumberWhatsapp: null,
 
             activeSubTab: "tab-1", // Esta es la subpestaña que se activará por defecto
@@ -11958,6 +11972,7 @@ export default {
                 this.detraction_types = response.data.detraction_types;
                 this.items = response.data.items;
                 this.users = response.data.users;
+                this.warehouses = response.data.warehouses;
                 if (response.data.item) {
                     this.form.item_variation_id = response.data.item.id;
 
@@ -12014,9 +12029,12 @@ export default {
         focusTotalItem(change) {},
 
         deleteItems() {
+            
             this.loading_submitI = true;
             this.$http
-                .post(`/options/delete_items`)
+                .post(`/options/delete_items`,{
+                    warehouse: this.warehouse
+                })
                 .then(response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
@@ -12039,7 +12057,12 @@ export default {
         deleteDocuments() {
             this.loading_submit = true;
             this.$http
-                .post(`/options/delete_documents`)
+                .post(`/options/delete_documents`,
+
+                {
+                    warehouse: this.warehouse
+                }
+                )
                 .then(response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
@@ -12054,7 +12077,7 @@ export default {
                         this.$toast.error(`${error.response.data.message}`);
                     }
                 })
-                .then(() => {
+                .finally(() => {
                     this.loading_submit = false;
                 });
         },

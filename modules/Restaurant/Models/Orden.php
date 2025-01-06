@@ -143,6 +143,9 @@ class Orden extends ModelTenant
     {
         return $this->belongsTo(SaleNote::class, 'sale_note_id', 'id');
     }
+    public function table(){
+        return $this->belongsTo(Table::class);
+    }
     public function mesa()
     {
         return $this->belongsTo(Table::class, 'table_id', 'id');

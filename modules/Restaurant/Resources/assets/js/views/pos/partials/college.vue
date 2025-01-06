@@ -6,6 +6,7 @@
         @open="open"
         @close="close"
         append-to-body
+        width="60%"
     >
         <div class="d-flex justify-content-end">
             <div class="col-3 text-end">
@@ -84,69 +85,81 @@
                 </el-select>
             </div>
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>
-                        SALON
-                    </th>
-                    <th>ALUMNOS</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(classroom, idx) in classes" :key="idx">
-                    <td>{{ idx + 1 }}</td>
-                    <td>
-                        <span class="d-block">
-                            {{ classroom.degree }} {{ classroom.section }}</span
-                        >
-                        <span class="small">
-                            {{ classroom.level }} {{ classroom.turn }}
-                        </span>
-                    </td>
-                    <td>
-                        <el-button
-                            @click="viewStudents(classroom.id)"
-                            icon="el-icon-search"
-                        >
-                            {{ classroom.students.length }}/
-                            {{ classroom.places }}
-                        </el-button>
-                    </td>
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">
+                                SALON
+                            </th>
+                            <th class="text-white">ALUMNOS</th>
+                            <th class="text-white text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(classroom, idx) in classes" :key="idx">
+                            <td>{{ idx + 1 }}</td>
+                            <td>
+                                <span class="d-block">
+                                    {{ classroom.degree }}
+                                    {{ classroom.section }}</span
+                                >
+                                <span class="small">
+                                    {{ classroom.level }} {{ classroom.turn }}
+                                </span>
+                            </td>
+                            <td>
+                                <el-button
+                                    @click="viewStudents(classroom.id)"
+                                    icon="el-icon-search"
+                                >
+                                    {{ classroom.students.length }}/
+                                    {{ classroom.places }}
+                                </el-button>
+                            </td>
 
-                    <td>
-                        <div class="d-flex justify-content-end">
-                            <el-button
-                                v-if="
-                                    classroom.students.length !=
-                                        classroom.places
-                                "
-                                size="mini"
-                                type="primary"
-                                @click="clickRegister(classroom)"
-                                >Matricular</el-button
-                            >
-                            <el-button
-                                size="mini"
-                                type="primary"
-                                @click="clickCreate(classroom)"
-                                >Editar</el-button
-                            >
-                            <el-button
-                                @click="desactive(classroom)"
-                                size="mini"
-                                :type="classroom.active ? 'danger' : 'success'"
-                                >{{
-                                    classroom.active ? "Desactivar" : "Activar"
-                                }}</el-button
-                            >
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            <td>
+                                <div class="d-flex justify-content-end">
+                                    <el-button
+                                        v-if="
+                                            classroom.students.length !=
+                                                classroom.places
+                                        "
+                                        size="mini"
+                                        type="primary"
+                                        @click="clickRegister(classroom)"
+                                        >Matricular</el-button
+                                    >
+                                    <el-button
+                                        size="mini"
+                                        type="primary"
+                                        @click="clickCreate(classroom)"
+                                        >Editar</el-button
+                                    >
+                                    <el-button
+                                        @click="desactive(classroom)"
+                                        size="mini"
+                                        :type="
+                                            classroom.active
+                                                ? 'danger'
+                                                : 'success'
+                                        "
+                                        >{{
+                                            classroom.active
+                                                ? "Desactivar"
+                                                : "Activar"
+                                        }}</el-button
+                                    >
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <student-view
             :showDialog.sync="showStudentsView"
             :classroomId="recordViewStudent"

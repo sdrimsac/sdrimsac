@@ -1,95 +1,108 @@
 <template>
-    <div class="card bg-ligth" v-loading="loading">
-        <div class="row mt-2">
-            <div class="col-12">
-                <label class="label-control w-100">Plan</label>
-                <el-select v-model="form.plan_id" @change="changePlan">
-                    <el-option
-                        v-for="(plan, idx) in plans"
-                        :key="idx"
-                        :label="
-                            `${plan.name} ${plan.description} S/${plan.total}`
-                        "
-                        :value="plan.id"
+    <div>
+        <div class="card" v-loading="loading">
+            <div class="card-body">
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label class="label-control w-100">Plan</label>
+                        <el-select v-model="form.plan_id" @change="changePlan">
+                            <el-option
+                                v-for="(plan, idx) in plans"
+                                :key="idx"
+                                :label="
+                                    `${plan.name} ${plan.description} S/${plan.total}`
+                                "
+                                :value="plan.id"
+                            >
+                            </el-option>
+                        </el-select>
+                        <label v-if="paymentDay" class="mt-2 label-control"
+                            >Vencimiento:
+                            <strong>
+                                {{
+                                    `${paymentDay.split("/")[0]} de cada mes`
+                                }}</strong
+                            ></label
+                        >
+                        <label
+                            v-if="
+                                currentPlan && currentPlan.days_extension != 0
+                            "
+                            class="text-primary"
+                            style="font-weight:bold"
+                        >
+                            / Prorroga:
+                            <strong>
+                                {{ currentPlan.days_extension }} días
+                            </strong>
+                        </label>
+                    </div>
+                </div>
+                <div class="row mt-1 ">
+                    <el-checkbox-group
+                        :disabled="!form.plan_id"
+                        v-model="selectedMonths"
+                        class=" d-flex flex-wrap justify-content-center"
+                        @change="selectMonth"
                     >
-                    </el-option>
-                </el-select>
-                <label v-if="paymentDay" class="mt-2 label-control"
-                    >Vencimiento:
-                    <strong>
-                        {{ `${paymentDay.split("/")[0]} de cada mes` }}</strong
-                    ></label
+                        <el-checkbox-button
+                            class="mt-1"
+                            v-for="m in months"
+                            :disabled="m.disabled"
+                            :label="m.id"
+                            :key="m.id"
+                            >{{ m.label }}</el-checkbox-button
+                        >
+                    </el-checkbox-group>
+                </div>
+                <div
+                    v-if="penalties.length != 0"
+                    class="row p-2 d-flex justify-content-center"
                 >
-                <label
-                    v-if="currentPlan && currentPlan.days_extension != 0"
-                    class="text-primary"
-                    style="font-weight:bold"
-                >
-                    / Prorroga:
-                    <strong> {{ currentPlan.days_extension }} días </strong>
-                </label>
+                    <table class="table-sm table-bordered border-danger w-75">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th class="text-center">
+                                    Mes
+                                </th>
+                                <th class="text-center">Días de retraso</th>
+                                <th class="text-center">
+                                    Penalidad x día{{
+                                        currentPlan.penalty.type == "percentage"
+                                            ? ` ${currentPlan.penalty.percentage} %`
+                                            : ` S/ ${currentPlan.penalty.percentage}`
+                                    }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(penal, idx) in penalties" :key="idx">
+                                <td class="text-center">{{ penal.label }}</td>
+                                <td class="text-center">{{ penal.days }}</td>
+                                <td class="text-center">
+                                    {{ penal.penalty.toFixed(2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center">
+                                    <span class="bold">Total</span>
+                                </td>
+                                <td class="text-center">
+                                    {{
+                                        penalties
+                                            .reduce(
+                                                (a, b) => a + Number(b.penalty),
+                                                0
+                                            )
+                                            .toFixed(2)
+                                    }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div class="row mt-1 ">
-            <el-checkbox-group
-                :disabled="!form.plan_id"
-                v-model="selectedMonths"
-                class=" d-flex flex-wrap justify-content-center"
-                @change="selectMonth"
-            >
-                <el-checkbox-button
-                    class="mt-1"
-                    v-for="m in months"
-                    :disabled="m.disabled"
-                    :label="m.id"
-                    :key="m.id"
-                    >{{ m.label }}</el-checkbox-button
-                >
-            </el-checkbox-group>
-        </div>
-        <div
-            v-if="penalties.length != 0"
-            class="row p-2 d-flex justify-content-center"
-        >
-            <table class="table-sm table-bordered border-danger w-75">
-                <thead class="thead-dark">
-                    <tr>
-                        <th class="text-center">
-                            Mes
-                        </th>
-                        <th class="text-center">Días de retraso</th>
-                        <th class="text-center">
-                            Penalidad x día{{
-                                currentPlan.penalty.type == "percentage"
-                                    ? ` ${currentPlan.penalty.percentage} %`
-                                    : ` S/ ${currentPlan.penalty.percentage}`
-                            }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(penal, idx) in penalties" :key="idx">
-                        <td class="text-center">{{ penal.label }}</td>
-                        <td class="text-center">{{ penal.days }}</td>
-                        <td class="text-center">
-                            {{ penal.penalty.toFixed(2) }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"></td>
-                        <td class="text-center">
-                            <span class="bold">Total</span>
-                        </td>
-                        <td class="text-center">
-                            {{
-                                penalties
-                                    .reduce((a, b) => a + Number(b.penalty), 0)
-                                    .toFixed(2)
-                            }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </template>

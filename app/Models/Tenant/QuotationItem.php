@@ -44,6 +44,12 @@ class QuotationItem extends ModelTenant
         'name_product_pdf'
     ];
 
+
+    public function quotation()
+    {
+        return $this->belongsTo(Quotation::class);
+    }
+
     public function getItemAttribute($value)
     {
         return (is_null($value))?null:(object) json_decode($value);

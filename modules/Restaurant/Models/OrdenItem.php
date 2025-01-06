@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Models;
 
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\User;
 use App\Traits\HelperTrait;
@@ -132,6 +133,9 @@ class OrdenItem extends ModelTenant
                     ->delete();
             }
         }
+    }
+    public function item(){
+        return $this->belongsTo(Item::class);
     }
     public function info_item()
     {

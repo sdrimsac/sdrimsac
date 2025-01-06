@@ -69,6 +69,7 @@ class ItemsImport implements ToCollection
             $establishment_id = 1;
 
             $warehouse = Warehouse::where('establishment_id',  request('warehouse_id'))->first();
+            
             $category = CategoryItem::updateOrCreate(['name' => $category_name]);
             $area = Area::updateOrCreate(['description' => $area_description]);
 

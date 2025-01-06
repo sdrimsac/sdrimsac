@@ -9,56 +9,58 @@
         <div class="form-body" v-loading="loading">
             <el-tabs tab-position="top" v-model="tab">
                 <el-tab-pane name="parent" label="Datos del Cliente">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-md-3 col-12">
-                                <label for="number" class="control-label"
-                                    >Tipo de documento</label
-                                >
-                                <el-select
-                                    @change="closeProperty"
-                                    style="width:100%;"
-                                    v-model="form.identity_document_type_id"
-                                >
-                                    <el-option
-                                        v-for="option in identityDocuments"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.description"
+                    <div class="">
+                        <div class="">
+                            <div class="row">
+                                <div class="col-md-3 col-12">
+                                    <label for="number" class="control-label"
+                                        >Tipo de documento</label
                                     >
-                                    </el-option>
-                                </el-select>
-                            </div>
-                            <div class="col-md-3 col-12">
-                                <label for="number" class="control-label"
-                                    >Documento</label
-                                >
-                                <el-input
-                                    class="to_left"
-                                    style="width:100%;"
-                                    v-model="documentNumber"
-                                    @input="closeProperty"
-                                    :controls="false"
-                                >
-                                    <el-button
-                                        v-if="
-                                            form.identity_document_type_id ==
-                                                1 ||
+                                    <el-select
+                                        @change="closeProperty"
+                                        style="width:100%;"
+                                        v-model="form.identity_document_type_id"
+                                    >
+                                        <el-option
+                                            v-for="option in identityDocuments"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <label for="number" class="control-label"
+                                        >Documento</label
+                                    >
+                                    <el-input
+                                        class="to_left bg-white"
+                                        style="width:100%;"
+                                        v-model="documentNumber"
+                                        @input="closeProperty"
+                                        :controls="false"
+                                    >
+                                        <el-button
+                                            v-if="
                                                 form.identity_document_type_id ==
-                                                    6
-                                        "
-                                        slot="append"
-                                        :loading="loading_search"
-                                        icon="el-icon-search"
-                                        @click.prevent="searchCustomer"
-                                    ></el-button>
-                                </el-input>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <label for="number" class="control-label"
-                                    >Nombres</label
-                                >
-                                <el-input v-model="form.name"> </el-input>
+                                                    1 ||
+                                                    form.identity_document_type_id ==
+                                                        6
+                                            "
+                                            slot="append"
+                                            :loading="loading_search"
+                                            icon="el-icon-search"
+                                            @click.prevent="searchCustomer"
+                                        ></el-button>
+                                    </el-input>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="number" class="control-label"
+                                        >Nombres</label
+                                    >
+                                    <el-input v-model="form.name"> </el-input>
+                                </div>
                             </div>
                         </div>
                         <div
@@ -346,7 +348,7 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane name="children" label="Datos de los estudiantes">
-                    <div class="card">
+                    <div class="">
                         <div class="row">
                             <div class="col-md-3 col-12">
                                 <label for="number" class="control-label"
@@ -378,6 +380,7 @@
                                     :controls="false"
                                 >
                                     <el-button
+                                        class="bg-white"
                                         v-if="documentTypeChildren == '1'"
                                         slot="append"
                                         :loading="loading_search"
@@ -437,7 +440,7 @@
                                             </small>
                                         </td>
                                         <td>
-                                              <el-button
+                                            <el-button
                                                 v-if="child.edit"
                                                 type="success"
                                                 size="mini"
@@ -462,15 +465,30 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="sendData">Guardar</el-button>
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <!-- Botón Cancelar -->
+            <el-button
+                class="btn-cancel btn-cancel:hover"
+                icon="fas fa-times fa-lg"
+                @click="close"
+            >
+                <span>Cancelar</span>
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button
+                class="btn-save btn-save:hover"
+                icon="fas fa-save fa-lg"
+                type="primary"
+                @click="sendData"
+            >
+                <span>Guardar</span>
+            </el-button>
         </div>
-             <person-form
-                :external="false"
-                :recordId="currentPersonId"
-                :showDialog.sync="showDialogNewPerson"
-            ></person-form>
+        <person-form
+            :external="false"
+            :recordId="currentPersonId"
+            :showDialog.sync="showDialogNewPerson"
+        ></person-form>
     </el-dialog>
 </template>
 <style>
@@ -492,7 +510,7 @@ export default {
             tab: "parent",
             title: "Nuevo registro",
             loading: false,
-showDialogNewPerson:false,
+            showDialogNewPerson: false,
             loading_search: false,
             children: [],
             form: {},
@@ -502,7 +520,7 @@ showDialogNewPerson:false,
             documentTypeChildren: null,
             departments: [],
             provinces: [],
-            currentPersonId:null,
+            currentPersonId: null,
             form_attorney: {
                 add: false
             },
@@ -532,7 +550,7 @@ showDialogNewPerson:false,
         }
     },
     methods: {
-        editPerson(child){
+        editPerson(child) {
             this.currentPersonId = child.id;
             this.showDialogNewPerson = true;
         },
