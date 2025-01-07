@@ -309,7 +309,7 @@
                                                         </label>
                                                         <el-select
                                                             :disabled="
-                                                                configuration.college ||
+                                                                
                                                                     allEstablishment
                                                             "
                                                             @change="
@@ -761,9 +761,7 @@
                                             </el-tooltip>
                                         </label>
                                         <el-select
-                                            :disabled="
-                                                configuration.college != 0
-                                            "
+                                
                                             v-model="form.area_id"
                                             class="uniform-input"
                                         >

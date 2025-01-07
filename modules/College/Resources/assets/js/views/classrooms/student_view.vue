@@ -90,6 +90,18 @@
                                     <i class="fas fa-user-friends"></i>
                                 </el-button>
                             </el-tooltip>
+                            <el-tooltip
+                                effect="dark"
+                                content="Terminar año escolar"
+                                placement="top"
+                            >
+                                <el-button
+                                    @click="removeStudent(student)"
+                                    type="danger"
+                                >
+                                <i class="fas fa-calendar-times"></i>
+                                </el-button>
+                            </el-tooltip>
                         </div>
                     </td>
                 </tr>
@@ -162,6 +174,25 @@ export default {
         };
     },
     methods: {
+        removeStudent(student) {
+            this.$confirm(`¿Estás seguro de terminar el año escolar para ${student.name}?`, 'Confirmar', {
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                type: 'warning'
+            }).then(() => {
+                this.loading = true;
+                this.$http.post(`/college/classrooms/finish-school-year-student`, {
+                    student_id: student.id,
+                }).then(response => {
+                    this.$toast.success(response.data.message);
+                    this.open();
+                }).catch(error => {
+                    this.$toast.error(error.response.data.message);
+                }).finally(() => {
+                    this.loading = false;
+                });
+            });
+        },
         changeClassParent(student) {
             this.showChangeParent = true;
             this.student = student;

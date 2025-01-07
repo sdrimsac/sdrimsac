@@ -9,6 +9,7 @@
         width="60%"
     >
         <div class="d-flex justify-content-end">
+    
             <div class="col-3 text-end">
                 <el-button type="primary" @click="clickMultiRegister"
                     >Multi matricula</el-button

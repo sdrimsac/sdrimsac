@@ -271,31 +271,41 @@ class CollegePersonController extends Controller
     public function store(Request $request)
     {
         $exist = Person::where('number', $request->number)->first();
-        $children = $request->children;
+        $is_parent = null;
+        
         if (isset($exist->id)) {
-
-            return ["success" => false, "message" => "El cliente ya existe."];
+            $is_parent = CollegeParent::where('parent_id', $exist->id)->first();
+            if ($is_parent) {
+                return [
+                    "success" => false, 
+                    "message" => "El cliente ya existe y es pariente de algún estudiante"
+                ];
+            }
+            $person = $exist;
+        } else {
+            // Si no existe el cliente, lo creamos
+            $person = new Person;
+            $person->country_id = $request->country_id;
+            $person->name = $request->name;
+            $person->address = $request->address;
+            $person->department_id = $request->department_id;
+            $person->province_id = $request->province_id;
+            $person->district_id = $request->district_id;
+            $person->telephone = $request->phone;
+            $person->email = $request->email;
+            $person->type = 'customers';
+            $person->identity_document_type_id = $request->identity_document_type_id;
+            $person->number = $request->number;
+            $person->save();
         }
+
+        $children = $request->children;
         foreach ($children as $child) {
             $exist = Person::where('number', $child["number"])->first();
             if (isset($exist->id)) {
                 return ["success" => false, "message" => "El estudiante " . $exist->name . " ya existe."];
             }
         }
-
-        $person = new Person;
-        $person->country_id = $request->country_id;
-        $person->name = $request->name;
-        $person->address = $request->address;
-        $person->department_id = $request->department_id;
-        $person->province_id = $request->province_id;
-        $person->district_id = $request->district_id;
-        $person->telephone = $request->phone;
-        $person->email = $request->email;
-        $person->type = 'customers';
-        $person->identity_document_type_id = $request->identity_document_type_id;
-        $person->number = $request->number;
-        $person->save();
 
         $parent = new CollegeParent;
         $parent->parent_id = $person->id;

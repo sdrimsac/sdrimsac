@@ -21,6 +21,24 @@ use Modules\College\Models\CollegeTurn;
 class CollegeClassroomController extends Controller
 {
 
+    public function finishSchoolYearStudent(Request $request){
+
+        $student = CollegeStudent::find($request->student_id);
+        $student->active = 0;
+        $student->save();
+        return ['success' => true, 'message' => 'Año escolar terminado'];
+    }
+    public function finishSchoolYear(Request $request)
+    {
+        $year = $request->year;
+        $count = CollegeStudent::whereYear('created_at', '=', $year)
+            ->where('active', 1)->count();
+        CollegeStudent::whereYear('created_at', '=', $year)
+            ->where('active', 1)
+            ->update(['active' => 0]);
+        
+        return ['success' => true, 'message' => 'Año escolar terminado'];
+    }
     public function changeClassroom(Request $request)
     {
         $classroom = CollegeStudent::where('student_id', $request->student_id)
@@ -43,29 +61,29 @@ class CollegeClassroomController extends Controller
     public function students($classroom_id)
     {
 
-        $students = CollegeStudent::where('active', 1)
-            ->where('classroom_id', $classroom_id)->get()->transform(function ($row) {
+        $students = CollegeStudent::with(['member.registers.payments', 'person'])
+            ->where('active', 1)
+            ->where('classroom_id', $classroom_id)
+            ->get()
+            ->transform(function ($row) {
                 $member = $row->member;
                 $incomplete = false;
-                $registers = CollegeRegister::where('active', 1)->where('member_id', $member->id)->get();
-                foreach ($registers as $register) {
-                    $lastPayment =  CollegePayment::where('register_id', $register->id)
-                        ->latest()->first();
-                    if (isset($lastPayment)) {
-                        if ($lastPayment->type == "incomplete") {
-                            $incomplete = true;
-                            break;
-                        }
-                    } else {
-                        Log::info($register->id);
+
+                foreach ($member->registers as $register) {
+                    if (
+                        $register->active &&
+                        $register->payments->isNotEmpty() &&
+                        $register->payments->sortByDesc('created_at')->first()->type === 'incomplete'
+                    ) {
+                        $incomplete = true;
+                        break;
                     }
                 }
-                $person = $row->person;
 
                 return [
                     "id" => $row->id,
-                    "name" => $person->name,
-                    "number" => $person->number,
+                    "name" => $row->person->name,
+                    "number" => $row->person->number,
                     "member" => $member,
                     "incomplete" => $incomplete,
                 ];

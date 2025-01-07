@@ -39,7 +39,15 @@
                 <div class="card-body">
                     <div class="col-md-12 col-lg-12 col-xl-12 mb-2">
                         <div class="d-flex justify-content-end">
-                            <div class="col-3 text-end">
+                        
+                            <div class="col-6 d-flex justify-content-end">
+                                <el-tooltip :content="`Todas los alumnos matriculados en el año escolar ${year}, serán removidos de las aulas`" placement="top">
+                                <el-button
+                                    type="danger"
+                                    @click="clickFinishSchoolYear"
+                                    >Terminar año escolar {{ year }}</el-button>
+                                
+                                </el-tooltip>
                                 <el-button
                                     type="primary"
                                     @click="clickMultiRegister"
@@ -255,6 +263,7 @@
 </template>
 
 <script>
+import moment from "moment";
 const CreateForm = () => import("./form.vue");
 const CreateRegisterForm = () => import("./register_form.vue");
 const PaymentForm = () => import("../../components/payment_college.vue");
@@ -281,7 +290,8 @@ export default {
             turns: [],
             degrees: [],
             showStudentsView: false,
-            recordViewStudent: null
+            recordViewStudent: null,
+            year: null
         };
     },
     async created() {
@@ -317,6 +327,7 @@ export default {
         });
     },
     mounted() {
+        this.year = this.getYear();
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             e => {
@@ -338,6 +349,40 @@ export default {
         );
     },
     methods: {
+        getYear() {
+        let currentMonth = new Date().getMonth() + 1; // Los meses en JavaScript son 0-11, por eso sumamos 1
+        let currentYear = new Date().getFullYear();
+        if (currentMonth === 12) {
+            return currentYear;
+        } else if (currentMonth >= 1 && currentMonth <= 3) {
+            return currentYear - 1;
+        } else {
+            return currentYear;
+        }
+        },
+        clickFinishSchoolYear() {
+            this.$confirm(`¿Estás seguro de terminar el año escolar ${this.year}?`, 'Confirmar', {
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                type: 'warning'
+            }).then(() => {
+                this.loading = true;
+                this.$http.post(`/college/classrooms/finish-school-year`, {
+                    year: this.year
+                }).then(response => {
+                    this.$toast.success(response.data.message);
+                    this.getRecords();
+                }).catch(error => {
+                    this.$toast.error(error.response.data.message);
+                }).finally(() => {
+                    this.loading = false;
+                });
+            }).catch(error => {
+                this.$toast.error(error.response.data.message);
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         clickMultiRegister() {
             this.showPayment = true;
             this.multiRegister = true;
