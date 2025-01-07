@@ -66,6 +66,8 @@ Route::prefix('college')->middleware(['auth', 'redirect.module', 'locked.tenant'
     Route::post('/classrooms', [CollegeClassroomController::class, 'store']);
     Route::post('/classrooms/change', [CollegeClassroomController::class, 'changeClassroom']);
     Route::get('/classrooms/{id}', [CollegeClassroomController::class, 'students']);
+    Route::get('/classrooms/active/{id}', [CollegeClassroomController::class, 'active']);
+    
 
     Route::post('/payments', [CollegePaymentController::class, 'store']);
 

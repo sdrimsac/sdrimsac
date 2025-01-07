@@ -833,7 +833,7 @@
                                     {{ $color_size->quantity }}
                                 @endforeach
                             @endif
-                            @if (isset($row->item->second_name))
+                            @if (isset($row->item->second_name) && $configuration->warehouses_product)
                                 - {!! $row->item->second_name !!}
                             @endif
                             @if (isset($row->item->has_unit_type))

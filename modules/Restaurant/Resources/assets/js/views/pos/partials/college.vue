@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="Matriculas/Mensualidades"
+        :title="title"
         :visible="showDialog"
         v-loading="loading"
         @open="open"
@@ -85,7 +85,7 @@
                 </el-select>
             </div>
         </div>
-        <br>
+        <br />
         <div class="card">
             <div class="card-body">
                 <table class="table">
@@ -133,13 +133,13 @@
                                         @click="clickRegister(classroom)"
                                         >Matricular</el-button
                                     >
-                                    <el-button
+                                    <!-- <el-button
                                         size="mini"
                                         type="primary"
                                         @click="clickCreate(classroom)"
                                         >Editar</el-button
-                                    >
-                                    <el-button
+                                    > -->
+                                    <!-- <el-button
                                         @click="desactive(classroom)"
                                         size="mini"
                                         :type="
@@ -152,7 +152,7 @@
                                                 ? "Desactivar"
                                                 : "Activar"
                                         }}</el-button
-                                    >
+                                    > -->
                                 </div>
                             </td>
                         </tr>
@@ -226,10 +226,19 @@ export default {
             recordCreateRegisterForm: null,
             showPayment: false,
             paymentTitle: null,
-            multiRegister: false
+            multiRegister: false,
+            title: "Matriculas/Mensualidades"
         };
     },
+    mounted() {
+        // Llamar al método para establecer el título dinámico al cargar el componente
+        this.setTitle();
+    },
     methods: {
+        setTitle() {
+            const currentYear = new Date().getFullYear(); // Obtener el año actual
+            this.title = `Matriculas/Mensualidades - ${currentYear}`; // Actualizar el título
+        },
         clickMultiRegister() {
             this.showPayment = true;
             this.multiRegister = true;

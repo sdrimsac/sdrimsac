@@ -4,106 +4,115 @@
         :visible="showDialog"
         @close="close"
         @open="create"
-        :close-on-click-modal="false" 
+        :close-on-click-modal="false"
         class="rounded-dialog"
     >
         <form autocomplete="off" @submit.prevent="sendItems">
-            <div class="form-body">
-                <div class="row mt-2">
-                    <div class="col-md-3 col-lg-3 col-12">
-                        <label>Almacén</label>
-                        <el-select
-                            v-model="form.warehouse_id"
-                            placeholder="Seleccione un almacén"
-                            clearable
-                            filterable
-                            :disabled="loading_submit"
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4 col-12">
+                                <label>Almacén</label>
+                                <el-select
+                                    v-model="form.warehouse_id"
+                                    placeholder="Seleccione un almacén"
+                                    clearable
+                                    filterable
+                                    :disabled="loading_submit"
+                                >
+                                    <el-option
+                                        v-for="item in warehouses"
+                                        :key="item.id"
+                                        :label="item.description"
+                                        :value="item.id"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-8 col-12">
+                                <label>Seleccione Productos</label>
+                                <el-select
+                                    :disabled="!form.warehouse_id"
+                                    class="w-100"
+                                    v-model="form.item_id"
+                                    filterable
+                                    remote
+                                    popper-class="el-select-customers"
+                                    clearable
+                                    placeholder="Nombre o código interno"
+                                    :remote-method="searchRemoteItems"
+                                    :loading="loading_search_item"
+                                >
+                                    <el-option
+                                        v-for="option in items"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.description"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                            <div
+                                class="col-md-2 col-lg-2 col-12 d-flex align-items-end"
+                            >
+                                <el-button
+                                    class="w-100"
+                                    type="primary"
+                                    @click.prevent="addItem"
+                                    icon="fas fa-plus-circle fa-lg"
+                                >
+                                    Agregar
+                                </el-button>
+                            </div>
+                        </div>
+                        <div
+                            :key="it.id"
+                            class="row mt-2"
+                            v-for="(it, idx) in selectedItems"
                         >
-                            <el-option
-                                v-for="item in warehouses"
-                                :key="item.id"
-                                :label="item.description"
-                                :value="item.id"
-                            ></el-option>
-                        </el-select>
+                            <div class="col-md-8 col-lg-8 col-12">
+                                <el-input readonly v-model="it.description">
+                                </el-input>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-12">
+                                <el-input v-model="it.quantity"> </el-input
+                                ><br />
+                                <small>
+                                    {{ it.max_quantity_description }}
+                                </small>
+                            </div>
+                            <div class="col-md-1 col-lg-1 col-12 text-end">
+                                <el-button
+                                    class="w-100"
+                                    type="danger"
+                                    size="mini"
+                                    @click.prevent="
+                                        selectedItems.splice(idx, 1)
+                                    "
+                                >
+                                    <i class="fa fa-trash fa-lg"></i>
+                                </el-button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-8 col-lg-8 col-12">
-                        <label>Productos</label>
-                        <el-select
-                            :disabled="!form.warehouse_id"
-                            class="w-100"
-                            v-model="form.item_id"
-                            filterable
-                            remote
-                            popper-class="el-select-customers"
-                            clearable
-                            placeholder="Nombre o código interno"
-                            :remote-method="searchRemoteItems"
-                            :loading="loading_search_item"
-                        >
-                            <el-option
-                                v-for="option in items"
-                                :key="option.id"
-                                :value="option.id"
-                                :label="option.description"
-                            ></el-option>
-                        </el-select>
-                    </div>
-                    <div
-                        class="col-md-4 col-lg-4 col-12 d-flex align-items-end"
-                    >
+                    <div class="form-actions text-end pt-2 pb-2">
                         <el-button
-                            class="w-100"
-                            type="primary"
-                            @click.prevent="addItem"
-                            icon="fas fa-plus-circle fa-lg"
+                            icon="fas fa-times fa-lg"
+                            @click.prevent="close()"
                         >
-                             Agregar
-                        </el-button>
-                    </div>
-                </div>
-
-                <div
-                    :key="it.id"
-                    class="row mt-2"
-                    v-for="(it, idx) in selectedItems"
-                >
-                    <div class="col-md-8 col-lg-8 col-12">
-                        <el-input readonly v-model="it.description"> </el-input>
-                    </div>
-                    <div class="col-md-3 col-lg-3 col-12">
-                        <el-input v-model="it.quantity"> </el-input><br />
-                        <small>
-                            {{ it.max_quantity_description }}
-                        </small>
-                    </div>
-                    <div class="col-md-1 col-lg-1 col-12">
-                        <el-button
-                            class="w-100"
-                            type="danger"
-                            size="mini"
-                            @click.prevent="selectedItems.splice(idx, 1)"
-                        >
-                            <i class="fa fa-trash fa-lg"></i>
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button  icon="fas fa-times fa-lg" 
-                            @click.prevent="close()">
                             Cancelar
-                </el-button>
-                <el-button
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                >
-                <i class="fas fa-random fa-lg"></i>
-                Transformar</el-button
-                >
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            native-type="submit"
+                            :loading="loading_submit"
+                        >
+                            <i class="fas fa-random fa-lg"></i>
+                            Transformar</el-button
+                        >
+                    </div>
+                </div>
             </div>
         </form>
     </el-dialog>
@@ -111,8 +120,8 @@
 
 <style>
 .el-dialog {
-border-radius: 10px;
-overflow: hidden;
+    border-radius: 10px;
+    overflow: hidden;
 }
 </style>
 
@@ -149,27 +158,28 @@ export default {
             this.form.item_id = null;
             // this.items =
         },
-        valid(){
+        valid() {
             let pass = true;
-            let {warehouse_id} = this.form;
-            if(!warehouse_id){
-                this.$toast.error('Seleccione un almacén');
+            let { warehouse_id } = this.form;
+            if (!warehouse_id) {
+                this.$toast.error("Seleccione un almacén");
                 pass = false;
             }
-            if(this.selectedItems.length === 0){
-                this.$toast.error('Seleccione al menos un producto');
+            if (this.selectedItems.length === 0) {
+                this.$toast.error("Seleccione al menos un producto");
                 pass = false;
             }
             //revisar si todos los items tienen cantidad
-            this.selectedItems.forEach(item=>{
-                if(item.quantity === 0){
-                    this.$toast.error('Ingrese una cantidad para todos los productos');
+            this.selectedItems.forEach(item => {
+                if (item.quantity === 0) {
+                    this.$toast.error(
+                        "Ingrese una cantidad para todos los productos"
+                    );
                     pass = false;
                 }
-            })
+            });
 
             return pass;
-
         },
         searchRemoteItems(input) {
             if (input.length > 0) {
@@ -209,7 +219,7 @@ export default {
             };
         },
         async sendItems() {
-            if(!this.valid()){
+            if (!this.valid()) {
                 return;
             }
             const response = await this.$http.post(
@@ -229,7 +239,7 @@ export default {
                 } else {
                     this.$toast.error(data.message);
                 }
-            }         
+            }
         },
         async getTables() {
             const response = await this.$http(`/${this.resource}/tables`);

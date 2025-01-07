@@ -373,8 +373,7 @@
                                                                     ref="healthIcon"
                                                                     class="fas fa-pills tab-icon"
                                                                 ></i>
-                                                                Entorno
-                                                                 Hospital
+                                                                Entorno Hospital
                                                             </label>
                                                             <el-switch
                                                                 v-model="
@@ -3985,43 +3984,6 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
-                                                            <div
-                                                                class="col-md-2 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="form-group"
-                                                                >
-                                                                    <label
-                                                                        class="control-label w-100"
-                                                                    >
-                                                                        <i
-                                                                            class="el-icon-s-grid icon-tab"
-                                                                        ></i>
-                                                                        Acciones Para Almacenes de Inhabilitar o Habilitar Productos
-                                                                    </label>
-                                                                    <el-switch
-                                                                        @change="
-                                                                            submit(
-                                                                                'Notificaciones pagos digitales',
-                                                                                form.warehouses_product,
-                                                                                'digital_notifications',
-                                                                                'lockIcon'
-                                                                            )
-                                                                        "
-                                                                        v-model="
-                                                                            form.warehouses_product
-                                                                        "
-                                                                        active-text="Si"
-                                                                        inactive-text="No"
-                                                                        :active-color="
-                                                                            '#28a745'
-                                                                        "
-                                                                        :inactive-color="
-                                                                            '#6c757d'
-                                                                        "
-                                                                    ></el-switch>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div
@@ -6754,6 +6716,40 @@
                                                                 'print_pos_worker',
                                                                 'printIcon'
                                                             )
+                                                        "
+                                                    ></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        class="control-label w-100"
+                                                    >
+                                                        <i
+                                                            class="el-icon-s-grid icon-tab"
+                                                        ></i>
+                                                        Mostrar Nombre
+                                                        Secundario de producto en pdf
+                                                    </label>
+                                                    <el-switch
+                                                        @change="
+                                                            submit(
+                                                                'Notificaciones pagos digitales',
+                                                                form.warehouses_product,
+                                                                'digital_notifications',
+                                                                'lockIcon'
+                                                            )
+                                                        "
+                                                        v-model="
+                                                            form.warehouses_product
+                                                        "
+                                                        active-text="Si"
+                                                        inactive-text="No"
+                                                        :active-color="
+                                                            '#28a745'
+                                                        "
+                                                        :inactive-color="
+                                                            '#6c757d'
                                                         "
                                                     ></el-switch>
                                                 </div>
@@ -11091,11 +11087,16 @@
                                 <div class="col-md-4 mt-4">
                                     <div class="form-group">
                                         <label>Seleccione Almacen</label>
-                                        <el-select v-model="warehouse" clearable>
-                                            <el-option v-for="warehouse in warehouses" 
-                                            :key="warehouse.id" 
-                                            :label="warehouse.description" 
-                                            :value="warehouse.id">
+                                        <el-select
+                                            v-model="warehouse"
+                                            clearable
+                                        >
+                                            <el-option
+                                                v-for="warehouse in warehouses"
+                                                :key="warehouse.id"
+                                                :label="warehouse.description"
+                                                :value="warehouse.id"
+                                            >
                                             </el-option>
                                         </el-select>
                                     </div>
@@ -12029,10 +12030,9 @@ export default {
         focusTotalItem(change) {},
 
         deleteItems() {
-            
             this.loading_submitI = true;
             this.$http
-                .post(`/options/delete_items`,{
+                .post(`/options/delete_items`, {
                     warehouse: this.warehouse
                 })
                 .then(response => {
@@ -12057,11 +12057,12 @@ export default {
         deleteDocuments() {
             this.loading_submit = true;
             this.$http
-                .post(`/options/delete_documents`,
+                .post(
+                    `/options/delete_documents`,
 
-                {
-                    warehouse: this.warehouse
-                }
+                    {
+                        warehouse: this.warehouse
+                    }
                 )
                 .then(response => {
                     if (response.data.success) {

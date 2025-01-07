@@ -23,7 +23,9 @@
     $configuration = \App\Models\Tenant\Configuration::select([
         'show_logo_in_documents',
         'show_internal_code_ticket',
-        'consolidated_quotations'
+        'consolidated_quotations',
+        'comercial_name',
+        'warehouses_product',
     ])->first();
     if (!function_exists('getUnitTypeId')) {
         function getUnitTypeId($id)
@@ -110,7 +112,7 @@ contain"
     @endif
     <table class="full-width">
         <tr>
-            @if ($configuration->comercial_name)
+            @if($configuration->comercial_name)
                 <td class="text-center">
                     @if ($is_chifa_china)
                         <h1>{{ $company->trade_name }}</h1>
@@ -626,7 +628,7 @@ contain"
                         @if (isset($row->item->from_unit_type_id_desc))
                             - {!! $row->item->from_unit_type_id_desc !!}
                         @endif
-                        @if (isset($row->item->second_name) && $configuration->show_second_name_external_code)
+                        @if (isset($row->item->second_name) && $configuration->warehouses_product)
                             - {!! $row->item->second_name !!}
                         @endif
                         @if (isset($row->unit_desc))

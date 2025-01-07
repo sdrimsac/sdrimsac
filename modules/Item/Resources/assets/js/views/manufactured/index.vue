@@ -79,8 +79,8 @@
                                     class="btn waves-effect waves-light btn-sm btn-danger"
                                     @click.prevent="clickDelete(row.id)"
                                 >
-                                    Eliminar -->
-                                <!-- </button> -->
+                                    Eliminar
+                                </button> -->
                             </td>
                         </tr>
                     </data-table>

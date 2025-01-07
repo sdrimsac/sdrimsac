@@ -10,20 +10,23 @@ class ItemManufacturedItems extends ModelTenant
 {
     public $timestamps = false;
     protected $table = 'manufactured_record_items';
-    protected $fillable = [ 
+    protected $fillable = [
         'manufactured_record_id',
         'item_id',
         'quantity'
     ];
- 
-    public function manufactured_item()
+
+    /* public function manufactured_item()
     {
         return $this->hasMany(ItemManufactured::class, 'id', 'manufactured_record_id');
+    } */
+    public function manufactured_item()
+    {
+        return $this->belongsTo(ItemManufactured::class, 'manufactured_record_id', 'id');
     }
-    
+
     public function item()
     {
         return $this->hasMany(Item::class, 'id', 'item_id');
     }
-
 }
