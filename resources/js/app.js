@@ -123,38 +123,6 @@ Vue.prototype.$showSConfirm = (title, text, type = "warning") => {
     });
 };
 
-
-// Función adicional para confirmaciones
-// Vue.prototype.$showSConfirm = ({
-//     title = "¿Estás seguro?",
-//     text = "Esta acción no se puede deshacer.",
-//     type = "warning",
-//     confirmButtonText = "Sí, confirmar",
-//     cancelButtonText = "Cancelar",
-//     showCancelButton = true,
-//     allowOutsideClick = false,
-//     allowEscapeKey = false,
-//     allowEnterKey = true,
-//     customClass = {},
-//     html = null
-// } = {}) => {
-//     return Swal.fire({
-//         title: title.toUpperCase(),
-//         html: html || `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>`,
-//         icon: type,
-//         showCancelButton,
-//         confirmButtonText,
-//         cancelButtonText,
-//         customClass: {
-//             popup: "swal2-no-border",
-//             ...customClass
-//         },
-//         allowOutsideClick,
-//         allowEscapeKey,
-//         allowEnterKey
-//     });
-// };
-
 // Función adicional para alertas manuales (sin temporizador, requiere cierre manual)
 Vue.prototype.$showSManualAlert = ({
     title = "Cargando...",

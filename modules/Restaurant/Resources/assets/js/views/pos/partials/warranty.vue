@@ -47,7 +47,7 @@
                 </div>
                 <div>
                         <el-pagination
-                            @current-change="getRecords"
+                            @current-change="getWarrantyRecords"
                             layout="total, prev, pager, next"
                             :total="pagination.total"
                             :current-page.sync="pagination.current_page"

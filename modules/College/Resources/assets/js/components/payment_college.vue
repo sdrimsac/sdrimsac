@@ -108,230 +108,239 @@
                             <div class="text-center text-dark card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="align-items-start">
-                                                <label class="control-label"
-                                                    >Medios de Pago</label
-                                                >
-                                                <label
-                                                    role="button"
-                                                    class="text-primary control-label"
-                                                ></label>
-                                            </div>
-                                            <div
-                                                class="radio-tile-group2 flex-wrap"
-                                            >
-                                                <div
-                                                    class="input-container2 border rounded-sm"
-                                                >
-                                                    <input
-                                                        id="cash"
-                                                        v-model="
-                                                            method_payments
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="method_payment"
-                                                        value="01"
-                                                        @change="
-                                                            method_payment(
-                                                                'Efectivo'
-                                                            )
-                                                        "
-                                                    />
+                                        <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+                                            <div class="card bg-light">
+                                                <div class="">
                                                     <div
-                                                        class="radio-tile2"
-                                                        style="
+                                                        class="align-items-start"
+                                                    >
+                                                        <label
+                                                            class="control-label"
+                                                            >Medios de
+                                                            Pago</label
+                                                        >
+                                                        <label
+                                                            role="button"
+                                                            class="text-primary control-label"
+                                                        ></label>
+                                                    </div>
+                                                    <div
+                                                        class="radio-tile-group2 flex-wrap"
+                                                    >
+                                                        <div
+                                                            class="input-container2 border rounded-sm"
+                                                        >
+                                                            <input
+                                                                id="cash"
+                                                                v-model="
+                                                                    method_payments
+                                                                "
+                                                                class="radio-button2"
+                                                                type="radio"
+                                                                name="method_payment"
+                                                                value="01"
+                                                                @change="
+                                                                    method_payment(
+                                                                        'Efectivo'
+                                                                    )
+                                                                "
+                                                            />
+                                                            <div
+                                                                class="radio-tile2"
+                                                                style="
                                                     background-image: url('../../images/botonEfectivo.png');
                                                     background-size: contain;
                                                     background-repeat: no-repeat;
                                                     "
-                                                    >
+                                                            >
+                                                                <div
+                                                                    class="icon walk-icon"
+                                                                ></div>
+                                                                <label
+                                                                    for="cash"
+                                                                    class="radio-tile-label2"
+                                                                ></label>
+                                                            </div>
+                                                        </div>
                                                         <div
-                                                            class="icon walk-icon"
-                                                        ></div>
-                                                        <label
-                                                            for="cash"
-                                                            class="radio-tile-label2"
-                                                        ></label>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="input-container2 border rounded-sm"
-                                                >
-                                                    <input
-                                                        id="culqui"
-                                                        v-model="
-                                                            method_payments
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="method_payment"
-                                                        value="02"
-                                                        @change="
-                                                            method_payment(
-                                                                'Culqui'
-                                                            )
-                                                        "
-                                                    />
-                                                    <div
-                                                        class="radio-tile2"
-                                                        style="
+                                                            class="input-container2 border rounded-sm"
+                                                        >
+                                                            <input
+                                                                id="culqui"
+                                                                v-model="
+                                                                    method_payments
+                                                                "
+                                                                class="radio-button2"
+                                                                type="radio"
+                                                                name="method_payment"
+                                                                value="02"
+                                                                @change="
+                                                                    method_payment(
+                                                                        'Culqui'
+                                                                    )
+                                                                "
+                                                            />
+                                                            <div
+                                                                class="radio-tile2"
+                                                                style="
                                                 background-image: url('../../images/CulquiIcon.png');
                                                 background-size: contain;
                                                 background-repeat: no-repeat;
                                                 "
-                                                    >
+                                                            >
+                                                                <div
+                                                                    class="icon bike-icon"
+                                                                ></div>
+                                                                <label
+                                                                    for="Tarjeta"
+                                                                    class="radio-tile-label2"
+                                                                ></label>
+                                                            </div>
+                                                        </div>
                                                         <div
-                                                            class="icon bike-icon"
-                                                        ></div>
-                                                        <label
-                                                            for="Tarjeta"
-                                                            class="radio-tile-label2"
-                                                        ></label>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="input-container2 border rounded-sm"
-                                                >
-                                                    <input
-                                                        id="plin"
-                                                        v-model="
-                                                            method_payments
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="method_payment"
-                                                        value="05"
-                                                        @change="
-                                                            method_payment(
-                                                                'TARJETA: IZYPAY'
-                                                            )
-                                                        "
-                                                    />
-                                                    <div
-                                                        class="radio-tile2"
-                                                        style="
+                                                            class="input-container2 border rounded-sm"
+                                                        >
+                                                            <input
+                                                                id="plin"
+                                                                v-model="
+                                                                    method_payments
+                                                                "
+                                                                class="radio-button2"
+                                                                type="radio"
+                                                                name="method_payment"
+                                                                value="05"
+                                                                @change="
+                                                                    method_payment(
+                                                                        'TARJETA: IZYPAY'
+                                                                    )
+                                                                "
+                                                            />
+                                                            <div
+                                                                class="radio-tile2"
+                                                                style="
                                                 background-image: url('../../images/botonIzipay.png');
                                                 background-size: contain;
                                                 background-repeat: no-repeat;
                                                 "
-                                                    >
+                                                            >
+                                                                <div
+                                                                    class="icon bike-icon"
+                                                                ></div>
+                                                                <label
+                                                                    for="Tarjeta"
+                                                                    class="radio-tile-label2"
+                                                                ></label>
+                                                            </div>
+                                                        </div>
                                                         <div
-                                                            class="icon bike-icon"
-                                                        ></div>
-                                                        <label
-                                                            for="Tarjeta"
-                                                            class="radio-tile-label2"
-                                                        ></label>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="input-container2 border rounded-sm"
-                                                >
-                                                    <input
-                                                        id="plin"
-                                                        v-model="
-                                                            method_payments
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="method_payment"
-                                                        value="06"
-                                                        @change="
-                                                            method_payment(
-                                                                'TARJETA: NIUBIZ'
-                                                            )
-                                                        "
-                                                    />
-                                                    <div
-                                                        class="radio-tile2"
-                                                        style="
+                                                            class="input-container2 border rounded-sm"
+                                                        >
+                                                            <input
+                                                                id="plin"
+                                                                v-model="
+                                                                    method_payments
+                                                                "
+                                                                class="radio-button2"
+                                                                type="radio"
+                                                                name="method_payment"
+                                                                value="06"
+                                                                @change="
+                                                                    method_payment(
+                                                                        'TARJETA: NIUBIZ'
+                                                                    )
+                                                                "
+                                                            />
+                                                            <div
+                                                                class="radio-tile2"
+                                                                style="
                                                 background-image: url('../../images/botonNiubiz.png');
                                                 background-size: contain;
                                                 background-repeat: no-repeat;
                                                 "
-                                                    >
+                                                            >
+                                                                <div
+                                                                    class="icon bike-icon"
+                                                                ></div>
+                                                                <label
+                                                                    for="Tarjeta"
+                                                                    class="radio-tile-label2"
+                                                                ></label>
+                                                            </div>
+                                                        </div>
                                                         <div
-                                                            class="icon bike-icon"
-                                                        ></div>
-                                                        <label
-                                                            for="Tarjeta"
-                                                            class="radio-tile-label2"
-                                                        ></label>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="input-container2 border rounded-sm"
-                                                >
-                                                    <input
-                                                        id="yape"
-                                                        v-model="
-                                                            method_payments
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="method_payment"
-                                                        value="03"
-                                                        @change="
-                                                            method_payment(
-                                                                'Yape'
-                                                            )
-                                                        "
-                                                    />
-                                                    <div
-                                                        class="radio-tile2"
-                                                        style="
+                                                            class="input-container2 border rounded-sm"
+                                                        >
+                                                            <input
+                                                                id="yape"
+                                                                v-model="
+                                                                    method_payments
+                                                                "
+                                                                class="radio-button2"
+                                                                type="radio"
+                                                                name="method_payment"
+                                                                value="03"
+                                                                @change="
+                                                                    method_payment(
+                                                                        'Yape'
+                                                                    )
+                                                                "
+                                                            />
+                                                            <div
+                                                                class="radio-tile2"
+                                                                style="
                                                     background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png');
                                                     background-size: contain;
                                                     background-repeat: no-repeat;
                                                     "
-                                                    >
+                                                            >
+                                                                <div
+                                                                    class="icon bike-icon"
+                                                                ></div>
+                                                                <label
+                                                                    for="Tarjeta"
+                                                                    class="radio-tile-label2"
+                                                                ></label>
+                                                            </div>
+                                                        </div>
                                                         <div
-                                                            class="icon bike-icon"
-                                                        ></div>
-                                                        <label
-                                                            for="Tarjeta"
-                                                            class="radio-tile-label2"
-                                                        ></label>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="input-container2 border rounded-sm"
-                                                >
-                                                    <input
-                                                        id="plin"
-                                                        v-model="
-                                                            method_payments
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="method_payment"
-                                                        value="04"
-                                                        @change="
-                                                            method_payment(
-                                                                'PLIN'
-                                                            )
-                                                        "
-                                                    />
-                                                    <div
-                                                        class="radio-tile2"
-                                                        style="
+                                                            class="input-container2 border rounded-sm"
+                                                        >
+                                                            <input
+                                                                id="plin"
+                                                                v-model="
+                                                                    method_payments
+                                                                "
+                                                                class="radio-button2"
+                                                                type="radio"
+                                                                name="method_payment"
+                                                                value="04"
+                                                                @change="
+                                                                    method_payment(
+                                                                        'PLIN'
+                                                                    )
+                                                                "
+                                                            />
+                                                            <div
+                                                                class="radio-tile2"
+                                                                style="
                                                 background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png');
                                                 background-size: contain;
                                                 background-repeat: no-repeat;
                                                 "
-                                                    >
-                                                        <div
-                                                            class="icon bike-icon"
-                                                        ></div>
-                                                        <label
-                                                            for="Tarjeta"
-                                                            class="radio-tile-label2"
-                                                        ></label>
+                                                            >
+                                                                <div
+                                                                    class="icon bike-icon"
+                                                                ></div>
+                                                                <label
+                                                                    for="Tarjeta"
+                                                                    class="radio-tile-label2"
+                                                                ></label>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="row col-md-12">
                                                 <div class="row">
                                                     <label
@@ -339,75 +348,6 @@
                                                         >Emision de
                                                         comprobante</label
                                                     >
-                                                </div>
-
-                                                <div class="row">
-                                                    <div
-                                                        class="radio-tile-group2 col-lg-6 col-xl-6 d"
-                                                        style="padding-top: 12px"
-                                                    >
-                                                        <div
-                                                            class="input-container2 border rounded-sm col-lg-3"
-                                                        >
-                                                            <input
-                                                                id="imprimir"
-                                                                v-model="
-                                                                    printerOn
-                                                                "
-                                                                class="radio-button2"
-                                                                type="radio"
-                                                                name="imprimir"
-                                                                value="1"
-                                                            />
-                                                            <div
-                                                                class="radio-tile2"
-                                                            >
-                                                                <div
-                                                                    class="icon walk-icon"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-print"
-                                                                    ></i>
-                                                                </div>
-                                                                <label
-                                                                    for="cash"
-                                                                    class="radio-tile-label2"
-                                                                    >Imprimir</label
-                                                                >
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            class="input-container2 border rounded-sm col-lg-3"
-                                                        >
-                                                            <input
-                                                                id="noimprimir"
-                                                                v-model="
-                                                                    printerOn
-                                                                "
-                                                                class="radio-button2"
-                                                                type="radio"
-                                                                name="noimprimir"
-                                                                value="0"
-                                                            />
-                                                            <div
-                                                                class="radio-tile2"
-                                                            >
-                                                                <div
-                                                                    class="icon bike-icon"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-print"
-                                                                    ></i>
-                                                                </div>
-                                                                <label
-                                                                    for="Tarjeta"
-                                                                    class="radio-tile-label2"
-                                                                    >No
-                                                                    Imprimir</label
-                                                                >
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
 
@@ -479,11 +419,160 @@
                                                 </table>
                                             </div>
                                         </div>
+                                        <div class="col-xl-4 col-lg-4 col-md-12 mb-4"></div>
+                                        <div
+                                            class="col-xl-4 col-lg-4 col-md-12 mb-4"
+                                            v-if="
+                                                form_payment.payment_method_type_id ==
+                                                    '01'
+                                            "
+                                        >
+                                            <div
+                                                class=""
+                                                style=""
+                                            >
+                                                <label class="control-label"
+                                                    >Ingrese monto</label
+                                                >
+                                                <div
+                                                    class="row col-xl-12 col-12"
+                                                >
+                                                    <!-- Campo de Entrada de Monto -->
+                                                    <div class="d-flex justify-content-center">
+                                                        <el-input
+                                                            class="me-3"
+                                                            id="inputTotal"
+                                                            ref="enter_amount"
+                                                            :disabled="
+                                                                form.total == 0
+                                                            "
+                                                            v-model="
+                                                                form.enter_amount
+                                                            "
+                                                            @blur="diferen()"
+                                                            @input="
+                                                                enterAmount()
+                                                            "
+                                                            @keyup.enter.native="
+                                                                sendPayment();
+                                                                inputAmount(
+                                                                    form.enter_amount
+                                                                );
+                                                            "
+                                                        >
+                                                            <template
+                                                                slot="prepend"
+                                                                >{{
+                                                                    currencyTypeActive.symbol
+                                                                }}</template
+                                                            >
+                                                        </el-input>
+                                                        <el-button
+                                                            type="primary"
+                                                            @click="addPayment"
+                                                            >Agregar</el-button
+                                                        >
+                                                    </div>
+
+                                                    <!-- Botón Agregar -->
+                                                    <!-- <div class="col-xl-2 col-2">
+                                                        <el-button
+                                                            type="primary"
+                                                            @click="addPayment"
+                                                            >Agregar</el-button
+                                                        >
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="mb-3 d-flex justify-content-center">
+                                                <div
+                                                    class=""
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        style="padding: 14px;"
+                                                        class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                                        @click="
+                                                            setAmountCash(10)
+                                                        "
+                                                    >
+                                                        {{
+                                                            currencyTypeActive.symbol
+                                                        }}10
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class=""
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        style="padding: 14px;"
+                                                        class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                                        @click="
+                                                            setAmountCash(20)
+                                                        "
+                                                    >
+                                                        {{
+                                                            currencyTypeActive.symbol
+                                                        }}20
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class=""
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        style="padding: 14px;"
+                                                        class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                                        @click="
+                                                            setAmountCash(50)
+                                                        "
+                                                    >
+                                                        {{
+                                                            currencyTypeActive.symbol
+                                                        }}50
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class=""
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        style="padding: 14px;"
+                                                        class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                                        @click="
+                                                            setAmountCash(100)
+                                                        "
+                                                    >
+                                                        {{
+                                                            currencyTypeActive.symbol
+                                                        }}100
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class=""
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        style="padding: 14px;"
+                                                        class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                                        @click="
+                                                            setAmountCash(200)
+                                                        "
+                                                    >
+                                                        {{
+                                                            currencyTypeActive.symbol
+                                                        }}200
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <!-- <div class="col-lg-12">
                             <div class="mb-2">
                                 <div class="card bg-light">
                                     <div class="card-body">
@@ -519,11 +608,11 @@
                                             >
                                                 <div
                                                     class="
-                                            btn-group btn-group-square
-                                            m-0
-                                            flex-wrap
-                                            justify-content-around
-                                            "
+                                                        btn-group btn-group-square
+                                                        m-0
+                                                        flex-wrap
+                                                        justify-content-around
+                                                        "
                                                     role="group"
                                                     style="padding-top: 12px"
                                                 >
@@ -579,6 +668,74 @@
                                                                 >Agregar</el-button
                                                             >
                                                         </div>
+
+                                                        <div
+                                                            class="radio-tile-group2 col-lg-6 col-xl-6 d"
+                                                            style="padding-top: 12px"
+                                                        >
+                                                            <div
+                                                                class="input-container2 border rounded-sm col-lg-3"
+                                                            >
+                                                                <input
+                                                                    id="imprimir"
+                                                                    v-model="
+                                                                        printerOn
+                                                                    "
+                                                                    class="radio-button2"
+                                                                    type="radio"
+                                                                    name="imprimir"
+                                                                    value="1"
+                                                                />
+                                                                <div
+                                                                    class="radio-tile2"
+                                                                >
+                                                                    <div
+                                                                        class="icon walk-icon"
+                                                                    >
+                                                                        <i
+                                                                            class="fa fa-print"
+                                                                        ></i>
+                                                                    </div>
+                                                                    <label
+                                                                        for="cash"
+                                                                        class="radio-tile-label2"
+                                                                        >Imprimir</label
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="input-container2 border rounded-sm col-lg-3"
+                                                            >
+                                                                <input
+                                                                    id="noimprimir"
+                                                                    v-model="
+                                                                        printerOn
+                                                                    "
+                                                                    class="radio-button2"
+                                                                    type="radio"
+                                                                    name="noimprimir"
+                                                                    value="0"
+                                                                />
+                                                                <div
+                                                                    class="radio-tile2"
+                                                                >
+                                                                    <div
+                                                                        class="icon bike-icon"
+                                                                    >
+                                                                        <i
+                                                                            class="fa fa-print"
+                                                                        ></i>
+                                                                    </div>
+                                                                    <label
+                                                                        for="Tarjeta"
+                                                                        class="radio-tile-label2"
+                                                                        >No
+                                                                        Imprimir</label
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                         <div class="row col-12">
                                                             <div
                                                                 class="col-2 col-md-2 col-xl-2"
@@ -661,18 +818,7 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <!-- <div
-                                                        class="m-2 col-xl-3 col-3 "
-                                                    >
-                                                        <el-button
-                                                            type="success"
-                                                            @click="
-                                                                showSplitPayment = true
-                                                            "
-                                                            >Dividir
-                                                            pago</el-button
-                                                        >
-                                                    </div> -->
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -705,11 +851,11 @@
                                                     ></label>
                                                     <span
                                                         class="
-                            control-label
-                            font-weight-semibold
-                            text-center
-                            display-3
-                          "
+                                                            control-label
+                                                            font-weight-semibold
+                                                            text-center
+                                                            display-3
+                                                        "
                                                     >
                                                         {{
                                                             currencyTypeActive.symbol
@@ -720,6 +866,228 @@
                                                             )
                                                         }}
                                                     </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="col-lg-12">
+                            <div class="mb-2">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <!-- Total a Cobrar y Vuelto -->
+                                            <div
+                                                class="col-xl-4"
+                                                style="margin-top: 10px; padding-top: 5px"
+                                            >
+                                                <label class="control-label h1"
+                                                    >Total a cobrar:
+                                                </label>
+                                                <br />
+                                                <span
+                                                    class="control-label font-weight-semibold text-center h3"
+                                                >
+                                                    S/ {{ " " + form.total }}
+                                                </span>
+                                                <div
+                                                    class="form-group mt-3"
+                                                    :class="{
+                                                        'has-danger':
+                                                            form.difference < 0
+                                                    }"
+                                                >
+                                                    <label
+                                                        class="control-label h3"
+                                                    >
+                                                        {{
+                                                            form.difference < 0
+                                                                ? "A cuenta: "
+                                                                : "Vuelto: "
+                                                        }}
+                                                    </label>
+                                                    <span
+                                                        class="control-label font-weight-semibold h3"
+                                                    >
+                                                        {{
+                                                            currencyTypeActive.symbol
+                                                        }}
+                                                        {{
+                                                            form.difference.toFixed(
+                                                                2
+                                                            )
+                                                        }}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Sección de Pago -->
+                                            <div
+                                                class="col-xl-4"
+                                                v-if="
+                                                    form_payment.payment_method_type_id ==
+                                                        '01'
+                                                "
+                                            >
+                                                <!-- Botones de Contar Dinero -->
+                                            </div>
+                                            <!-- <div class="col-xl-4">
+                                                <div
+                                                    class="radio-tile-group2 col-lg-2 col-xl-2 d"
+                                                    style="padding-top: 12px"
+                                                >
+                                                    <div
+                                                        class="input-container2 border rounded-sm col-lg-3"
+                                                    >
+                                                        <input
+                                                            id="imprimir"
+                                                            v-model="printerOn"
+                                                            class="radio-button2"
+                                                            type="radio"
+                                                            name="imprimir"
+                                                            value="1"
+                                                        />
+                                                        <div
+                                                            class="radio-tile2"
+                                                        >
+                                                            <div
+                                                                class="icon walk-icon"
+                                                            >
+                                                                <i
+                                                                    class="fa fa-print"
+                                                                ></i>
+                                                            </div>
+                                                            <label
+                                                                for="cash"
+                                                                class="radio-tile-label2"
+                                                                >Imprimir</label
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="input-container2 border rounded-sm col-lg-3"
+                                                    >
+                                                        <input
+                                                            id="noimprimir"
+                                                            v-model="printerOn"
+                                                            class="radio-button2"
+                                                            type="radio"
+                                                            name="noimprimir"
+                                                            value="0"
+                                                        />
+                                                        <div
+                                                            class="radio-tile2"
+                                                        >
+                                                            <div
+                                                                class="icon bike-icon"
+                                                            >
+                                                                <i
+                                                                    class="fa fa-print"
+                                                                ></i>
+                                                            </div>
+                                                            <label
+                                                                for="Tarjeta"
+                                                                class="radio-tile-label2"
+                                                                >No
+                                                                Imprimir</label
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <div class="col-xl-4">
+                                                <!-- Botones de Imprimir y No Imprimir -->
+                                                <div
+                                                    class="radio-tile-group2 d-flex mb-3 "
+                                                >
+                                                    <div
+                                                        class="input-container2 border rounded-sm mx-1"
+                                                    >
+                                                        <input
+                                                            id="imprimir"
+                                                            v-model="printerOn"
+                                                            class="radio-button2"
+                                                            type="radio"
+                                                            name="imprimir"
+                                                            value="1"
+                                                        />
+                                                        <div
+                                                            class="radio-tile2"
+                                                        >
+                                                            <div
+                                                                class="icon walk-icon"
+                                                            >
+                                                                <i
+                                                                    class="fa fa-print"
+                                                                ></i>
+                                                            </div>
+                                                            <label
+                                                                for="imprimir"
+                                                                class="radio-tile-label2"
+                                                                >Imprimir</label
+                                                            >
+                                                        </div>
+                                                    </div>
+
+                                                    <div
+                                                        class="input-container2 border rounded-sm mx-1"
+                                                    >
+                                                        <input
+                                                            id="noimprimir"
+                                                            v-model="printerOn"
+                                                            class="radio-button2"
+                                                            type="radio"
+                                                            name="imprimir"
+                                                            value="0"
+                                                        />
+                                                        <div
+                                                            class="radio-tile2"
+                                                        >
+                                                            <div
+                                                                class="icon bike-icon"
+                                                            >
+                                                                <i
+                                                                    class="fa fa-print"
+                                                                ></i>
+                                                            </div>
+                                                            <label
+                                                                for="noimprimir"
+                                                                class="radio-tile-label2"
+                                                                >No
+                                                                Imprimir</label
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Botones de Pagar y Cerrar -->
+                                                <div class="d-flex mb-3">
+                                                    <button
+                                                        class="btn btn-primary btn-lg me-3"
+                                                        style="width: 48%;"
+                                                        @click="sendPayment"
+                                                        :disabled="
+                                                            button_payment
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fas fa-money-bill-alt"
+                                                        ></i>
+                                                        PAGAR
+                                                    </button>
+
+                                                    <button
+                                                        class="btn btn-dark btn-lg"
+                                                        style="width: 48%;"
+                                                        @click="back(false)"
+                                                    >
+                                                        <i
+                                                            class="fa fa-reply"
+                                                        ></i>
+                                                        Cerrar
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -853,7 +1221,7 @@
                                 ></el-option>
                             </el-select>
                         </div> -->
-                        <div class="col-md-6 col-12 d-flex align-items-end">
+                        <!-- <div class="col-md-6 col-12 d-flex align-items-end">
                             <div
                                 class="btn-group btn-group-square"
                                 role="group"
@@ -873,7 +1241,7 @@
                                     <i class="fa fa-reply"></i> Cerrar
                                 </button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

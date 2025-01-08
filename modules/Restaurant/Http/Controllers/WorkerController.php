@@ -28,7 +28,8 @@ use Workers;
 class WorkerController extends Controller
 {
     protected $all_models = [];
-    public function __construct() {
+    public function __construct()
+    {
         $this->all_models = [
             "orden" => "Modules\Restaurant\Models\Orden",
             "table" => "Modules\Restaurant\Models\Table",
@@ -171,6 +172,15 @@ class WorkerController extends Controller
             ->establishment($establishment)
             ->download('Stock_al_cerrar_caja_' . Carbon::now() . '.xlsx');
     }
+
+    public function getAuthenticatedUser()
+    {
+        $user = auth()->user(); // Obtiene el usuario autenticado
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+        ]);
+    }
     public function records(Request $request)
     {
         $configuration =  Configuration::first();
@@ -190,21 +200,19 @@ class WorkerController extends Controller
                 ->where('type', '<>', 'admin');
             if ($configuration->health_network) {
                 $arca_type = User::find($user->id)->getUserTypeArca();
-                if($arca_type){
-                    if($arca_type == 'product'){
-                        $records = $records->whereHas('establishment', function($query) use ($establishment_id){
+                if ($arca_type) {
+                    if ($arca_type == 'product') {
+                        $records = $records->whereHas('establishment', function ($query) use ($establishment_id) {
                             $query->where('is_product', true);
                         });
-                    }else{
-                        $records = $records->whereHas('establishment', function($query) use ($establishment_id){
+                    } else {
+                        $records = $records->whereHas('establishment', function ($query) use ($establishment_id) {
                             $query->where('is_service', true);
                         });
                     }
-                }else{
+                } else {
                     $records =  $records->where('establishment_id', $establishment_id);
-
                 }
-
             }
         }
         if ($status !== null) {
@@ -225,7 +233,7 @@ class WorkerController extends Controller
         $column = $request->column;
         $value = $request->value;
 
-        if($column && $value){
+        if ($column && $value) {
             switch ($column) {
                 case 'user_id':
                     $records = $records->where('user_id', $value);
@@ -241,7 +249,7 @@ class WorkerController extends Controller
                     break;
                 case 'model':
                     $model = $this->get_model($value);
-                    if($model){
+                    if ($model) {
                         $records = $records->where('model', $model);
                     }
                     break;
@@ -273,10 +281,10 @@ class WorkerController extends Controller
             $worker->series = $user_serie->serie_id;
         }
         $worker->commercial_treatment = $commercial_treatment;
-        if($worker->image){
-            $worker->image_url = url(''). '/storage/uploads/workers/' . $worker->image;
+        if ($worker->image) {
+            $worker->image_url = url('') . '/storage/uploads/workers/' . $worker->image;
         } else {
-            $worker->image_url = url(''). '/status_images/user.png';
+            $worker->image_url = url('') . '/status_images/user.png';
         }
         return [
             'success' => true,
@@ -368,8 +376,8 @@ class WorkerController extends Controller
                 $user_serie->save();
             }
         }
-        
-        
+
+
 
         //actualización
         if ($id) {
@@ -390,10 +398,10 @@ class WorkerController extends Controller
             $file_name_old = $request->input('image');
             $file_name_old_array = explode('.', $file_name_old);
             $file_content = file_get_contents($temp_path);
-        
+
             $datenow = date('YmdHis');
             $file_name = Str::slug($user->name) . '-' . $datenow . '.' . end($file_name_old_array);
-        
+
             Storage::put($directory . $file_name, $file_content);
             $user->image = $file_name;
         } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {

@@ -39,7 +39,6 @@ if ($hostname) {
 
             Route::get('/productos/printer/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'printTransfer']);
             Route::get('manifest-tenant.json', [ManifestController::class, 'manifest']);
-
             Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
             Route::get('check-documents', [TenantDocumentController::class, 'checkDocuments']);
             Route::get('purchases/print/{external_id}/{format?}', 'Tenant\PurchaseController@toPrint');
@@ -48,8 +47,6 @@ if ($hostname) {
             Route::get('search/tables', [App\Http\Controllers\Tenant\SearchController::class, 'tables']);
             Route::post('search', [App\Http\Controllers\Tenant\SearchController::class, 'store']);
             Route::post('efectivo', [App\Http\Controllers\Tenant\SearchController::class, 'efectivo']);
-            /* agrgado para cancelar traslado */
-            /* Route::post('transfers/cancel_transfer', [TransferPlaceController::class, 'cancel_transfer']); */
             Route::get('transfers/print_places/{code?}', [TransferPlaceController::class, 'print_transfer']);
             Route::get('report_cash/report/{type}', [CashController::class, 'report_cash_export']);
             /* para reporte de madera  */
@@ -221,6 +218,8 @@ if ($hostname) {
                 Route::get('whatsapp/get-sesion', [WhatsappController::class, 'getStatus']);
                 Route::post('whatsapp/init', [WhatsappController::class, 'initWhatsapp']);
                 Route::post('whatsapp/get-file', [WhatsappController::class, 'getFile']);
+                /* Route::post('whatsapp/user', [WhatsappController::class, 'user']); */
+                Route::post('caja/whatsapp/user/{id}', [WhatsappController::class, 'user']);
 
                 Route::prefix('health-global')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'index'])->name('tenant.health_global.index');

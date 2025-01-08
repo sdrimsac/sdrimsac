@@ -333,7 +333,7 @@
                                             .warehouses"
                                         :key="idx"
                                     >
-                                        <label
+                                        <label class="text-white"
                                             v-if="
                                                 info.warehouse.id !=
                                                     establishmentId
@@ -661,7 +661,8 @@
                                     v-for="(info, idx) in data.item.warehouses"
                                     :key="idx"
                                 >
-                                    <label
+                                    <label 
+                                        class="text-white"
                                         v-if="
                                             info.warehouse.id != establishmentId
                                         "

@@ -120,7 +120,8 @@ class WhatsappSendMessageProccess implements ShouldQueue
                             $web_whatsapp = config('app.web_whatsapp');
                             $url = "https://" . $web_whatsapp . '/api/send-message';
                         }
-                        $response = Http::post($url, [
+                        $response = Http::withoutVerifying()->post($url, [
+                        // $response = Http::post($url, [
                             'number' => "51" . $number->number,
                             'sender' => $sender,
                             'message' => $message,

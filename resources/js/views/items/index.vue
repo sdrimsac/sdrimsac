@@ -688,29 +688,26 @@ export default {
         clickDisableItem(id) {
             this.getWarehouses().then(warehouses => {
                 swal.fire({
-                    title: "¿Desea Inhabilitar Producto?",
-                    text:
-                        "Selecciona el almacén en el que deseas inhabilitar el producto",
+                    title: "Inhabilitar Producto", // Título más claro
+                    icon: "warning", // Agregar icono de advertencia
+                    text: "¿En qué almacén desea inhabilitar el producto?",
                     input: "select",
                     inputOptions: warehouses,
-                    inputPlaceholder: "Selecciona un almacén",
-                    inputValue: "1", // Establecer el almacén por defecto con id 1
-                    confirmButtonText: "Inhabilitar",
+                    inputPlaceholder: "Seleccionar almacén",
+                    inputValue: "1",
+                    confirmButtonText: "Si, Inhabilitar",
+                    confirmButtonColor: "#d33", // Color rojo para inhabilitar
                     showCancelButton: true,
+                    cancelButtonText: "Cancelar",
                     showLoaderOnConfirm: true,
                     preConfirm: async selectedWarehouseId => {
                         if (!selectedWarehouseId) {
-                            Swal.showValidationMessage(
-                                "Por favor, selecciona un almacén"
-                            );
+                            Swal.showValidationMessage("Debe seleccionar un almacén");
                             return false;
                         }
 
                         try {
-                            const response = await this.disableItemInWarehouse(
-                                id,
-                                selectedWarehouseId
-                            );
+                            const response = await this.disableItemInWarehouse(id, selectedWarehouseId);
                             if (response.success) {
                                 return response;
                             } else {
@@ -725,8 +722,9 @@ export default {
                 }).then(result => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: "Producto Inhabilitado",
-                            text: result.value.message
+                            title: "¡Inhabilitado!",
+                            text: result.value.message,
+                            icon: "success"
                         });
                         this.$eventHub.$emit("reloadData");
                     }
@@ -736,29 +734,26 @@ export default {
         clickEnableItem(id) {
             this.getWarehouses().then(warehouses => {
                 swal.fire({
-                    title: "¿Desea Inhabilitar Producto?",
-                    text:
-                        "Selecciona el almacén en el que deseas inhabilitar el producto",
+                    title: "Habilitar Producto", // Título diferente
+                    icon: "info", // Icono diferente
+                    text: "¿En qué almacén desea habilitar el producto?",
                     input: "select",
                     inputOptions: warehouses,
-                    inputPlaceholder: "Selecciona un almacén",
+                    inputPlaceholder: "Seleccionar almacén",
                     inputValue: "1",
-                    confirmButtonText: "habilitar",
+                    confirmButtonText: "Si, Habilitar",
+                    confirmButtonColor: "#3085d6", // Color azul para habilitar
                     showCancelButton: true,
+                    cancelButtonText: "Cancelar",
                     showLoaderOnConfirm: true,
                     preConfirm: async selectedWarehouseId => {
                         if (!selectedWarehouseId) {
-                            Swal.showValidationMessage(
-                                "Por favor, selecciona un almacén"
-                            );
+                            Swal.showValidationMessage("Debe seleccionar un almacén");
                             return false;
                         }
 
                         try {
-                            const response = await this.enableItemInWarehouse(
-                                id,
-                                selectedWarehouseId
-                            );
+                            const response = await this.enableItemInWarehouse(id, selectedWarehouseId);
                             if (response.success) {
                                 return response;
                             } else {
@@ -773,8 +768,9 @@ export default {
                 }).then(result => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: "Producto Inhabilitado",
-                            text: result.value.message
+                            title: "¡Habilitado!",
+                            text: result.value.message,
+                            icon: "success"
                         });
                         this.$eventHub.$emit("reloadData");
                     }

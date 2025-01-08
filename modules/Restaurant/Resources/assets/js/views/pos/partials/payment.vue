@@ -1035,15 +1035,6 @@
                         class="col-xl-4 col-lg-4 col-md-12 mb-4"
                         v-if="form_payment.payment_method_type_id == '01'"
                     >
-                        <!-- Título -->
-                        <!-- <div class="mb-3">
-                            <label class="control-label fw-bold"
-                                >Ingrese Monto</label
-                            >
-                        </div> -->
-
-                        <!-- Campo de entrada y botón "Agregar" -->
-
                         <label class="control-label fw-bold"
                             >Ingrese Monto</label
                         >

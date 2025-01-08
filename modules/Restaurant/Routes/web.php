@@ -46,6 +46,7 @@ Route::prefix('caja')->group(function () {
     Route::get('worker/expenses/print-box', [PosController::class, 'print_box']);
     Route::post('workers/uploads', [WorkerController::class, 'upload']);
     Route::get('workers/images/{workers}', [WorkerController::class, 'images']);
+    Route::get('workers/authenticated-user', [WorkerController::class, 'getAuthenticatedUser']);
 
     Route::get('report-boxes', 'BoxesController@report')->name('restaurant.report.boxes');
     Route::get('report-boxes/tables', 'BoxesController@tables');

@@ -16,14 +16,17 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Quotation;
 use Illuminate\Support\Facades\Storage;
 use App\Models\System\Configuration as Config;
+use App\Models\Tenant\User;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Dispatch;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\EstablishmentNotificationNumber;
 use App\Models\Tenant\NumberActivity;
 use App\Traits\JobReportTrait;
 use Exception;
 use Hyn\Tenancy\Environment;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
@@ -51,7 +54,7 @@ class WhatsappController extends Controller
             WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
         }
     }
-    public function sendMessageAll($message,$establishment_id = null)
+    public function sendMessageAll($message, $establishment_id = null)
     {
         $website = $this->getTenantWebsite();
         $company = Company::first();
@@ -63,34 +66,35 @@ class WhatsappController extends Controller
         //     WhatsappSendMessageProccess::dispatch($website->id, $message, $number_activity);
         //     // $this->sendMessage($message, $number_activity);
         // }
-        if($configuration->configuration_establishments_numbers && $establishment_id){
-            $numbers_activity = EstablishmentNotificationNumber::where('establishment_id', $establishment_id)->get()->transform(function($row){
+        if ($configuration->configuration_establishments_numbers && $establishment_id) {
+            $numbers_activity = EstablishmentNotificationNumber::where('establishment_id', $establishment_id)->get()->transform(function ($row) {
                 return  (object)[
                     'number' => $row->getNumber(),
                 ];
             });
-        }else{
+        } else {
             $numbers_activity = NumberActivity::all();
         }
         foreach ($numbers_activity as $key => $value) {
-            if($value->number){
+            if ($value->number) {
                 WhatsappSendMessageProccess::dispatch($website->id, $message, $value->number, null, $establishment_id);
                 // $this->sendMessage($message, $value->number);
             }
         }
     }
-    public function sendMessageOne($number,$message,$establishment_id = null)
+    public function sendMessageOne($number, $message, $establishment_id = null)
     {
-        if(!$number) return;
-        
+        if (!$number) return;
+
         $website = $this->getTenantWebsite();
         $company = Company::first();
         $name = "*" . $company->name . "*: ";
         $message = $name . $message;
-        WhatsappSendMessageProccess::dispatch($website->id, $message, $number,null,$establishment_id);
-            // $this->sendMessage($message, $number_activity);
-    
+        WhatsappSendMessageProccess::dispatch($website->id, $message, $number, null, $establishment_id);
+        // $this->sendMessage($message, $number_activity);
+
     }
+
     public function getNumbers()
     {
         $numbers_activity = NumberActivity::all();
@@ -106,7 +110,7 @@ class WhatsappController extends Controller
             $establishment_id = $document->establishment_id;
             $number_full = $document->number_full;
             $message = "Reimpresión de documento: " . $number_full . " por el usuario " . auth()->user()->name;
-            $this->sendMessageAll($message,$establishment_id);
+            $this->sendMessageAll($message, $establishment_id);
             return response()->json([
                 'success' => true,
                 'message' => 'Mensaje enviado'
@@ -192,10 +196,10 @@ class WhatsappController extends Controller
             ]);
             //
             try {
-        
-        
-                
-                $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
+
+
+
+                $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
                     'json' => [
                         'appkey' => $api_extern_whatsapp_token,
                         'authkey' => $api_extern_whatsapp_token2,
@@ -203,7 +207,7 @@ class WhatsappController extends Controller
                         'message' => $message,
                     ]
                 ]);
-    
+
                 return  $response->getBody()->getContents();
             } catch (\Exception $e) {
                 Log::warning($e->getMessage());
@@ -213,29 +217,29 @@ class WhatsappController extends Controller
                 ], 500);
                 exit;
             }
-        }else{
+        } else {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://".$web_whatsapp."/api/send-message";
-    
-    
-    
+            $url = "https://" . $web_whatsapp . "/api/send-message";
+
+
+
             try {
                 $response = Http::post($url, [
                     'number' => "51" . $number,
                     'sender' => 'sdrimsac',
                     'message' => $message,
                 ]);
-    
+
                 $status = $response->status();
                 $body = $response->body();
                 return [
                     "success" => $status == 200,
                     "message" => $body
-    
-    
+
+
                 ];
             } catch (\Exception $e) {
-    
+
                 return [
                     "message" => $e->getMessage(),
                     "line" => $e->getLine(),
@@ -360,6 +364,71 @@ class WhatsappController extends Controller
         $configuration = Configuration::first();
         return view('restaurant::whatsapp', ['configuration' => $configuration]);
     }
+
+    public function user(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                "success" => false,
+                "message" => "Usuario no encontrado"
+            ], 404);
+        }
+
+        $establishmentName = $user->establishment->description ?? 'Sin establecimiento';
+        $name = $user->name;
+        $number = $user->number;
+        $pin = $user->pin;
+        $telephone = $user->telephone;
+        $establishment_id = $user->establishment_id;
+
+        $message = "Hola {$name}, tu DNI es {$number} y perteneces al establecimiento {$establishmentName}. Tu código de acceso a caja es {$pin}.";
+
+        $sender = $request->sender ?? 'sdrimsac';
+        if ($sender == 'tunegociofactvillacorpnet') {
+            $sender = 'sdrimsac';
+        }
+
+        if ($sender == "sdrimsac") {
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://" . $web_whatsapp . '/api/send-message';
+        } else {
+            $url = config('app.whatsapp_url') . '/api/send-message';
+        }
+
+        $this->client = new Client([
+            'verify' => false,
+            'stream' => false,
+            'headers' => [
+                'User-Agent' => 'Testing 1.0'
+            ]
+        ]);
+
+        try {
+            
+            (new WhatsappController)->sendMessageOne($telephone, $message, $establishment_id);
+
+            return response()->json([
+                "success" => true,
+                "message" => "Mensaje enviado correctamente",
+              
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error al enviar el mensaje por WhatsApp: ', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                "success" => false,
+                "message" => "Error al enviar el mensaje por WhatsApp",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function sendwhatsapp(Request $request)
     {
         $website = $this->getTenantWebsite();
@@ -415,7 +484,7 @@ class WhatsappController extends Controller
         }
         if ($sender == "sdrimsac") {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://".$web_whatsapp. '/api/send-media';
+            $url = "https://" . $web_whatsapp . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -476,7 +545,7 @@ class WhatsappController extends Controller
         $sender = $request->sender ?? 'sdrimsac';
         if ($configuration->whatsapp_client && $sender != 'sdrimsac') {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://" . $sender . ".".$web_whatsapp. '/api/send-media';
+            $url = "https://" . $sender . "." . $web_whatsapp . '/api/send-media';
         } else {
             if ($sender == 'tunegociofactvillacorpnet') {
                 $sender = 'sdrimsac';
@@ -484,14 +553,14 @@ class WhatsappController extends Controller
 
             if ($sender == "sdrimsac" || $sender == null) {
                 $web_whatsapp = config('app.web_whatsapp');
-                $url = "https://".$web_whatsapp . '/api/send-media';
+                $url = "https://" . $web_whatsapp . '/api/send-media';
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';
             }
         }
         // $url = 'http://localhost:3800/api/send-media';
         $resource = $request->resource;
-        
+
         $sender = $sender ?? 'sdrimsac';
         $message = $request->message;
         $file_name = $request->file_name;
@@ -517,52 +586,52 @@ class WhatsappController extends Controller
         $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
         $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
 
-    if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
-        $client = new Client([
-            'verify' => false,
-            'stream' => false,
-            'headers' => [
-                'User-Agent' => 'Testing 1.0'
-            ]
-        ]);
-        //
-        try {
-            $client2 = new Client();
-            $response2 = $client2->get($resource, ['stream' => true]);
-            $pdfContent = $response2->getBody()->getContents();
-            $type = $request->type ?? '.pdf';
-            // Crear un archivo temporal
-            $tempFilePath = storage_path('app/public/temp_pdf_' . time() . $type);
-            file_put_contents($tempFilePath, $pdfContent);
-    
-            // Generar una URL para descargar el archivo temporal
-            $downloadUrl = url('storage/temp_pdf_' . time() . $type);
-            //remove domain fot the $downloadUrl
-            $downloadUrl = str_replace(url(''), '', $downloadUrl);
-            $downloadUrl = $baseUrl . $downloadUrl;
-            // $downloadUrl = $request->root() . $downloadUrl;
-            //change domain fot the $urlx
-            Log::info($downloadUrl);
-            $response = $client->post($api_extern_whatsapp_url."/api/create-message", [
-                'json' => [
-                    'appkey' => $api_extern_whatsapp_token,
-                    'authkey' => $api_extern_whatsapp_token2,
-                    'to' => "+51" . $number,
-                    'message' => $message,
-                    'file' => $downloadUrl,
+        if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+            $client = new Client([
+                'verify' => false,
+                'stream' => false,
+                'headers' => [
+                    'User-Agent' => 'Testing 1.0'
                 ]
             ]);
+            //
+            try {
+                $client2 = new Client();
+                $response2 = $client2->get($resource, ['stream' => true]);
+                $pdfContent = $response2->getBody()->getContents();
+                $type = $request->type ?? '.pdf';
+                // Crear un archivo temporal
+                $tempFilePath = storage_path('app/public/temp_pdf_' . time() . $type);
+                file_put_contents($tempFilePath, $pdfContent);
 
-            return  $response->getBody()->getContents();
-        } catch (\Exception $e) {
-            Log::warning($e->getMessage());
-            return response([
-                "message" => $e->getMessage(),
-                "line" => $e->getLine(),
-            ], 500);
-            exit;
-        }
-        }else{
+                // Generar una URL para descargar el archivo temporal
+                $downloadUrl = url('storage/temp_pdf_' . time() . $type);
+                //remove domain fot the $downloadUrl
+                $downloadUrl = str_replace(url(''), '', $downloadUrl);
+                $downloadUrl = $baseUrl . $downloadUrl;
+                // $downloadUrl = $request->root() . $downloadUrl;
+                //change domain fot the $urlx
+                Log::info($downloadUrl);
+                $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
+                    'json' => [
+                        'appkey' => $api_extern_whatsapp_token,
+                        'authkey' => $api_extern_whatsapp_token2,
+                        'to' => "+51" . $number,
+                        'message' => $message,
+                        'file' => $downloadUrl,
+                    ]
+                ]);
+
+                return  $response->getBody()->getContents();
+            } catch (\Exception $e) {
+                Log::warning($e->getMessage());
+                return response([
+                    "message" => $e->getMessage(),
+                    "line" => $e->getLine(),
+                ], 500);
+                exit;
+            }
+        } else {
             try {
                 $response = $this->client->post($url, [
                     'multipart' => [
@@ -583,10 +652,10 @@ class WhatsappController extends Controller
                             'contents' => $content_file,
                             'filename' =>   $file_name
                         ],
-    
+
                     ]
                 ]);
-    
+
                 ob_get_clean();
                 return  $response->getBody()->getContents();
             } catch (\Exception $e) {
@@ -608,7 +677,7 @@ class WhatsappController extends Controller
 
         if ($sender == "sdrimsac") {
             $web_whatsapp = config('app.web_whatsapp');
-            $url = "https://".$web_whatsapp . '/api/send-media';
+            $url = "https://" . $web_whatsapp . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }

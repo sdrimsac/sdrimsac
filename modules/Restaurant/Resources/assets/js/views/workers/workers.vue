@@ -167,6 +167,13 @@
                                         >
                                             <i class="fas fa-edit"></i>
                                         </button>
+                                        <el-button
+                                            v-if="authenticatedUser.type === 'superadmin'"
+                                            class="btn btn-outline-success btn-sm mx-1"
+                                            icon="el-icon-phone-outline"
+                                            @click="whatsapp(row.id)"
+                                        >
+                                        </el-button>
                                     </td>
 
                                     <!-- ACTIVIDAD -->
@@ -238,7 +245,7 @@
                                                         Editar
                                                     </a>
                                                 </li>
-                                                <li>
+                                                <li v-if="row.active">
                                                     <a
                                                         class="dropdown-item text-danger"
                                                         @click.prevent="
@@ -346,13 +353,15 @@ import CreateForm from "./form.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 export default {
-    props: ["establishments", "typeUser", "configuration"],
+    props: ["establishments", "configuration"],
     mixins: [deletable],
     components: {
         CreateForm
     },
     data() {
         return {
+            authenticatedUser: null,
+            typeUser: null,
             qty_types: [
                 {
                     id: 1,
@@ -385,6 +394,7 @@ export default {
         };
     },
     created() {
+        this.fetchAuthenticatedUser();
         this.initForm();
         console.log(this.configuration);
         this.$eventHub.$on("reloadData", () => {
@@ -396,6 +406,23 @@ export default {
         this.getData();
     },
     methods: {
+        async fetchAuthenticatedUser() {
+            try {
+                const response = await this.$http.get("workers/authenticated-user");
+                this.authenticatedUser = response.data.user;
+            } catch (error) {
+                console.error(
+                    "Error al obtener el usuario autenticado:",
+                    error
+                );
+            }
+        },
+        async whatsapp(id) {
+            const response = await this.$http.post(`whatsapp/user/${id}`);
+            if (response.status == 200) {
+                const { phone } = response.data;
+            }
+        },
         formatDateTime(date) {
             let days = date.days;
             let hours = date.hours;
@@ -426,39 +453,14 @@ export default {
         },
         async updatePin() {
             try {
-          let maxDigits = 6;
-          if (this.currentUser.type === 'vendedor') {
-              maxDigits = 4;
-          }
-          const pinRegex = new RegExp(`^\\d{1,${maxDigits}}$`);
-          if (!pinRegex.test(this.newPin)) {
-              this.$toast.error(
-            `El PIN debe ser un número de hasta ${maxDigits} dígitos.`
-              );
-              return;
-          }
-          this.loading = true;
-          const response = await this.$http.post("/users/update_pin", {
-              id: this.currentUser.id,
-              pin: this.newPin
-          });
-          if (response.status == 200) {
-              this.$toast.success(response.data.message);
-              this.getData();
-              this.newPin = null;
-              this.showEditPin = false;
-          }
-            } catch (e) {
-          console.log(e);
-            } finally {
-          this.loading = false;
-            }
-        },
-        /* async updatePin() {
-            try {
-                if (!/^\d{1,4}$/.test(this.newPin)) {
+                let maxDigits = 6;
+                if (this.currentUser.type === "vendedor") {
+                    maxDigits = 4;
+                }
+                const pinRegex = new RegExp(`^\\d{1,${maxDigits}}$`);
+                if (!pinRegex.test(this.newPin)) {
                     this.$toast.error(
-                        "El PIN debe ser un número de hasta 4 dígitos."
+                        `El PIN debe ser un número de hasta ${maxDigits} dígitos.`
                     );
                     return;
                 }
@@ -478,7 +480,7 @@ export default {
             } finally {
                 this.loading = false;
             }
-        }, */
+        },
         editPin(user) {
             this.showEditPin = true;
             this.currentUser = user;
@@ -540,6 +542,14 @@ export default {
             this.showDialog = true;
         },
         async clickDelete(id) {
+            const response = await this.$http.get(`${this.resource}/${id}`);
+            if (response.status == 200) {
+                const { message } = response.data;
+                this.$toast.success(message);
+                this.getData();
+            }
+        },
+        async clickActivate(id) {
             const response = await this.$http.get(`${this.resource}/${id}`);
             if (response.status == 200) {
                 const { message } = response.data;
