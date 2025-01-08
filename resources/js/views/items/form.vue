@@ -9,7 +9,6 @@
         @open="create"
         append-to-body
         top="2vh"
-        
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body p-2">
@@ -153,10 +152,7 @@
                                             </div>
                                         </div>
                                         <!-- Nombre y Servicio -->
-                                        <div
-                                            class="col-12"
-                                            
-                                        >
+                                        <div class="col-12">
                                             <div
                                                 :class="
                                                     `col-12 col-lg-12 ${
@@ -227,7 +223,7 @@
                                                 <div
                                                     class="col-md-6 px-2"
                                                     v-if="
-                                                            configuration.show_second_name_external_code
+                                                        configuration.show_second_name_external_code
                                                     "
                                                 >
                                                     <div
@@ -309,8 +305,7 @@
                                                         </label>
                                                         <el-select
                                                             :disabled="
-                                                                
-                                                                    allEstablishment
+                                                                allEstablishment
                                                             "
                                                             @change="
                                                                 changeWarehouse
@@ -396,31 +391,29 @@
                                                 Categoría</span
                                             >
                                             <div class="btn-group">
-                                                <button
-                                                    type="button"
+                                                <!-- Modificar los botones para usar los nuevos métodos -->
+                                                <!-- Para Categoría -->
+                                                <button 
+                                                    type="button" 
                                                     v-if="!form_category.add"
                                                     class="btn btn-sm btn-primary btn-circle mx-1"
-                                                    @click="
-                                                        activateForm('category')
-                                                    "
+                                                    @click="activateCategoryForm"
                                                 >
-                                                    <i
-                                                        class="fas fa-plus-circle"
-                                                    ></i>
+                                                    <i class="fas fa-plus-circle"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
+                                                <button 
+                                                    type="button" 
                                                     v-if="form_category.add"
                                                     class="btn btn-sm btn-success btn-circle mx-1"
-                                                    @click="saveForm('category')"
+                                                    @click="saveCategoryForm"
                                                 >
                                                     <i class="fas fa-save"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
+                                                <button 
+                                                    type="button" 
                                                     v-if="form_category.add"
                                                     class="btn btn-sm btn-danger btn-circle mx-1"
-                                                    @click="cancelForm('category')"
+                                                    @click="cancelCategoryForm"
                                                 >
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -476,29 +469,29 @@
                                                 Marca</span
                                             >
                                             <div class="btn-group">
-                                                <button
-                                                    type="button"
+                                                <!-- Modificar los botones para usar los nuevos métodos -->
+                                                <!-- Para Marca -->
+                                                <button 
+                                                    type="button" 
                                                     v-if="!form_brand.add"
                                                     class="btn btn-sm btn-primary btn-circle mx-1"
-                                                    @click="activateForm('brand')"
+                                                    @click="activateBrandForm"
                                                 >
-                                                    <i
-                                                        class="fas fa-plus-circle"
-                                                    ></i>
+                                                    <i class="fas fa-plus-circle"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
+                                                <button 
+                                                    type="button" 
                                                     v-if="form_brand.add"
                                                     class="btn btn-sm btn-success btn-circle mx-1"
-                                                    @click="saveForm('brand')"
+                                                    @click="saveBrandForm"
                                                 >
                                                     <i class="fas fa-save"></i>
                                                 </button>
-                                                <button
-                                                    type="button"
+                                                <button 
+                                                    type="button" 
                                                     v-if="form_brand.add"
                                                     class="btn btn-sm btn-danger btn-circle mx-1"
-                                                    @click="cancelForm('brand')"
+                                                    @click="cancelBrandForm"
                                                 >
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -761,7 +754,6 @@
                                             </el-tooltip>
                                         </label>
                                         <el-select
-                                
                                             v-model="form.area_id"
                                             class="uniform-input"
                                         >
@@ -1241,8 +1233,7 @@
                                                     }"
                                                 >
                                                     <label class="control-label"
-                                                        >Meses
-                                                        Garantia 
+                                                        >Meses Garantia
                                                         <el-tooltip
                                                             class="item"
                                                             effect="dark"
@@ -1253,8 +1244,7 @@
                                                                 class="fas fa-info-circle"
                                                             ></i>
                                                         </el-tooltip>
-                                                          </label
-                                                    >
+                                                    </label>
                                                     <el-input
                                                         v-model="form.month_day"
                                                         type="number"
@@ -2618,13 +2608,14 @@ export default {
 
     data() {
         return {
+            showCategoryForm: false,
             form_category: {
                 add: false,
-                name: ''
+                name: ""
             },
             form_brand: {
                 add: false,
-                name: ''
+                name: ""
             },
             categories: [], // Lista de categorías
             errors: {}, // Errores de validación
@@ -2825,15 +2816,17 @@ export default {
 
         // Activar el formulario (Categoría o Marca)
         activateForm(type) {
-            if (type === "category") {
-                this.$set(this.form_category, 'add', true);
+            if (type == "category") {
+                this.form_category.add = true;
+                this.showCategoryForm = true;
+                console.log("corriendo?");
                 this.$nextTick(() => {
                     if (this.$refs.categoryInput) {
                         this.$refs.categoryInput.focus(); // Coloca el cursor en el input
                     }
                 });
-            } else if (type === "brand") {
-                this.$set(this.form_brand, 'add', true);
+            } else if (type == "brand") {
+                this.form_brand.add = true;
                 this.$nextTick(() => {
                     if (this.$refs.brandInput) {
                         this.$refs.brandInput.focus(); // Coloca el cursor en el input
@@ -2863,7 +2856,7 @@ export default {
             if (!form.name) {
                 this.$showSAlert(
                     "Campo Requerido",
-                     `Debe ingresar un nombre para la ${
+                    `Debe ingresar un nombre para la ${
                         type === "category" ? "categoría" : "marca"
                     }.`,
                     "warning"
@@ -2875,11 +2868,7 @@ export default {
                 .post(endpoint, form)
                 .then(response => {
                     if (response.data.success) {
-                        this.$showSAlert(
-                             "Éxito",
-                             successMessage,
-                             "success"
-                        );
+                        this.$showSAlert("Éxito", successMessage, "success");
 
                         // Actualiza la lista (categorías o marcas)
                         list.push(response.data.data);
@@ -2888,6 +2877,7 @@ export default {
                         // Selecciona automáticamente la nueva categoría o marca
                         if (type === "category") {
                             this.form.category_id = lastElement.id;
+                            this.showCategoryForm = false;
                             this.categories = [...list];
                             this.form_category.name = "";
                             this.form_category.add = false;
@@ -2904,37 +2894,51 @@ export default {
                         this.$forceUpdate(); // Fuerza la reactividad de Vue
                         console.log(this.form.category_id);
                     } else {
-                        
                         this.$showSAlert(
-                             "Error",
-                             `No se pudo guardar la ${
+                            "Error",
+                            `No se pudo guardar la ${
                                 type === "category" ? "categoría" : "marca"
                             }.`,
-                             "error"
+                            "error"
                         );
                     }
                 })
                 .catch(error => {
                     console.error(`Error al guardar la ${type}:`, error);
                     this.$showSAlert(
-                         "Error",
-                         `Ocurrió un error al guardar la ${
+                        "Error",
+                        `Ocurrió un error al guardar la ${
                             type === "category" ? "categoría" : "marca"
                         }.`,
-                         "error"
+                        "error"
                     );
                 });
         },
         cancelForm(type) {
             console.log(`Cancel form for ${type}`);
-            if (type === 'category') {
-                this.$set(this.form_category, 'add', false);
-                this.form_category.name = '';
-            } else if (type === 'brand') {
-                this.$set(this.form_brand, 'add', false);
-                this.form_brand.name = '';
+            if (type == "category") {
+                this.showCategoryForm = false;
+                this.$nextTick(() => {
+                    this.form_category = {
+                        add: false,
+                        name: ""
+                    };
+                });
+
+                console.log(
+                    "form_category",
+                    JSON.stringify(this.form_category)
+                );
+            } else if (type == "brand") {
+                this.$nextTick(() => {
+                    this.form_brand = {
+                        add: false,
+                        name: ""
+                    };
+                });
+                console.log("form_brand", JSON.stringify(this.form_brand));
             }
-            console.log(`Form state after cancel:`, this.form_category, this.form_brand);
+            this.$forceUpdate();
         },
 
         updateCommercialTreatmentItem(idx) {
@@ -3126,6 +3130,8 @@ export default {
             // this.showAddButton = true
         },
         initForm() {
+            this.form_category.add = false;
+            this.form_brand.add = false;
             (this.loading_submit = false), (this.errors = {});
             this.form = {
                 item_price_ranges: [],
@@ -3565,10 +3571,10 @@ export default {
                         // Mostrar mensaje de éxito con SweetAlert2
                         this.$showSAlert(
                             "Éxito",
-                            
-                                response.data.message ||
+
+                            response.data.message ||
                                 "Categoría guardada correctamente.",
-                             "success"
+                            "success"
                         );
 
                         // Actualizar la lista de categorías y seleccionar la nueva
@@ -3580,9 +3586,9 @@ export default {
                     } else {
                         // Mostrar mensaje de error con SweetAlert2
                         this.$showSAlert(
-                             "Error",
-                                "No se guardaron los cambios en la categoría.",
-                             "error"
+                            "Error",
+                            "No se guardaron los cambios en la categoría.",
+                            "error"
                         );
                     }
                 })
@@ -3590,10 +3596,10 @@ export default {
                     // Manejar errores de red u otros problemas
                     console.error("Error al guardar la categoría:", error);
                     this.$showSAlert(
-                         "Error",
-                        
-                            "Ocurrió un error al guardar la categoría. Por favor, intente de nuevo.",
-                         "error"
+                        "Error",
+
+                        "Ocurrió un error al guardar la categoría. Por favor, intente de nuevo.",
+                        "error"
                     );
                 });
         },
@@ -3608,11 +3614,11 @@ export default {
                     if (response.data.success) {
                         // Mostrar mensaje de éxito con SweetAlert2
                         this.$showSAlert(
-                             "Éxito",
-                            
-                                response.data.message ||
+                            "Éxito",
+
+                            response.data.message ||
                                 "Marca guardada correctamente.",
-                             "success"
+                            "success"
                         );
 
                         // Actualizar la lista de marcas y reiniciar el formulario
@@ -3621,9 +3627,9 @@ export default {
                     } else {
                         // Mostrar mensaje de error con SweetAlert2
                         this.$showSAlert(
-                             "Error",
-                             "No se guardaron los cambios en la marca.",
-                             "error"
+                            "Error",
+                            "No se guardaron los cambios en la marca.",
+                            "error"
                         );
                     }
                 })
@@ -3631,10 +3637,10 @@ export default {
                     // Manejar errores de red u otros problemas
                     console.error("Error al guardar la marca:", error);
                     this.$showSAlert(
-                         "Error",
-                        
-                            "Ocurrió un error al guardar la marca. Por favor, intente de nuevo.",
-                         "error"
+                        "Error",
+
+                        "Ocurrió un error al guardar la marca. Por favor, intente de nuevo.",
+                        "error"
                     );
                 });
         },
@@ -3651,9 +3657,136 @@ export default {
         clickRemoveAttribute(index) {
             this.form.attributes.splice(index, 1);
         },
-        maderaUpdate() {}
-    }
+        maderaUpdate() {},
+        activateCategoryForm() {
+            // Asegurarse de que ambos estados se actualizan juntos
+            this.$nextTick(() => {
+                this.form_category.add = true;
+                this.showCategoryForm = true;
+                if (this.$refs.categoryInput) {
+                    this.$refs.categoryInput.focus();
+                }
+            });
+        },
+
+        saveCategoryForm() {
+            if (!this.form_category.name) {
+                this.$showSAlert(
+                    "Campo Requerido",
+                    "Debe ingresar un nombre para la categoría.",
+                    "warning"
+                );
+                return;
+            }
+
+            this.$http.post("/items/categories", this.form_category)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$showSAlert("Éxito", "Categoría registrada correctamente.", "success");
+                        this.categories.push(response.data.data);
+                        let lastElement = this.categories[this.categories.length - 1];
+                        this.form.category_id = lastElement.id;
+                        this.showCategoryForm = false;
+                        this.form_category.name = "";
+                        this.form_category.add = false;
+                        this.$forceUpdate();
+                    } else {
+                        this.$showSAlert("Error", "No se pudo guardar la categoría.", "error");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al guardar la categoría:", error);
+                    this.$showSAlert("Error", "Ocurrió un error al guardar la categoría.", "error");
+                });
+        },
+
+        cancelCategoryForm(event) {
+            // Prevenir la propagación del evento si existe
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // Asegurarse de que ambos estados se actualizan juntos
+            this.$nextTick(() => {
+                this.showCategoryForm = false;
+                this.form_category = {
+                    add: false,
+                    name: ""
+                };
+                // Forzar la actualización del DOM
+                this.$forceUpdate();
+            });
+        },
+
+        // Métodos para Marca
+        activateBrandForm() {
+            this.form_brand.add = true;
+            this.$nextTick(() => {
+                if (this.$refs.brandInput) {
+                    this.$refs.brandInput.focus();
+                }
+            });
+        },
+
+        saveBrandForm() {
+            if (!this.form_brand.name) {
+                this.$showSAlert(
+                    "Campo Requerido",
+                    "Debe ingresar un nombre para la marca.",
+                    "warning"
+                );
+                return;
+            }
+
+            this.$http.post("/brands", this.form_brand)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$showSAlert("Éxito", "Marca registrada correctamente.", "success");
+                        this.brands.push(response.data.data);
+                        let lastElement = this.brands[this.brands.length - 1];
+                        this.form.brand_id = lastElement.id;
+                        this.brands = [...this.brands];
+                        this.form_brand.name = "";
+                        this.form_brand.add = false;
+                        this.$forceUpdate();
+                    } else {
+                        this.$showSAlert("Error", "No se pudo guardar la marca.", "error");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al guardar la marca:", error);
+                    this.$showSAlert("Error", "Ocurrió un error al guardar la marca.", "error");
+                });
+        },
+
+        cancelBrandForm(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.$nextTick(() => {
+                this.form_brand = {
+                    add: false,
+                    name: ""
+                };
+                this.$forceUpdate();
+            });
+        }
+    },
+    watch: {
+        "form_category.add": {
+            handler(newVal, oldVal) {
+                console.trace();
+                console.log("form_category.add changed", {
+                    oldValue: oldVal,
+                    newValue: newVal,
+                    trace: new Error().stack
+                });
+            }
+        }
+    },
+    // Métodos para Categoría
+    
 };
 </script>
-
-

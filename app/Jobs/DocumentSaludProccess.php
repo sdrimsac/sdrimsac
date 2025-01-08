@@ -141,7 +141,6 @@ class DocumentSaludProccess implements ShouldQueue
             'exchange_rate_sale' => 1,
             'purchase_order' => null,
             'observacion' => null,
-            //            'establishment' => EstablishmentTransform::transform($inputs['datos_del_emisor']),
             'customer' => PersonTransform::transformSalud($document),
             'operation_type_id' => '0101',
             'total_prepayment' => 0,
@@ -162,7 +161,6 @@ class DocumentSaludProccess implements ShouldQueue
             'total_value' => Functions::valueKeyInArray($document, 'mntNeto'),
             'total' => Functions::valueKeyInArray($document, 'mntTotal'),
             'total_rounded' => $total_rounded,
-            //  'tasadefault' => $inputs['tasadefault'],
             'total_payment' => Functions::valueKeyInArray($document, 'mntTotal'),
             'has_prepayment' => false,
             'items' => self::items($inputs),
@@ -173,18 +171,10 @@ class DocumentSaludProccess implements ShouldQueue
             'prepayments' => null,
             'guides' => null,
             'related' => null,
-            // 'legends' => [
-            //     [
-            //         'code' => '1000',
-            //         'value' => Functions::valueKeyInArray($inputs, 'leyenda', 'SON: ' . NumberLetter::convertToLetter($document['mntTotal']))
-            //     ]
-            // ],
             'additional_information' => null,
             'actions' => null,
             'hotel' => [],
             'transport' => [],
-            // 'payments' => self::payments($inputs),
-            // 'data_json' => $inputs,
             'fee' => [],
             'payment_condition_id' => '01',
         ];
@@ -254,6 +244,11 @@ class DocumentSaludProccess implements ShouldQueue
                         $full_number = $series . '-' . $document_transform['number'];
                         $establishment_id = self::get_establishment_by_serie($series);
                         $document_transform['establishment_id'] = $establishment_id;
+                        $user_establishment = User::where('type', 'seller')->where('establishment_id', $establishment_id)->first();
+                        if($user_establishment){
+                            $document_transform['user_id'] = $user_establishment->id;
+                        }
+                        Log::info('document_transform: ' . json_encode($document_transform));
                         $document_validated = DocumentValidation::validationSalud($document_transform);
                         $document_input = DocumentInput::set($document_validated);
 
