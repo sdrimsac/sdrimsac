@@ -3209,7 +3209,9 @@ export default {
             this.hasExceedBank = false;
         },
         async date_of_issue() {
-            this.resetForm();
+            this.resetForm()
+            
+            console.log("this.form_variation", this.formVariation);
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
@@ -4286,17 +4288,7 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
-            // if (this.discount_amount) {
-            //     let global_discount = parseFloat(this.discount_amount);
-            //     let total = parseFloat(this.form.total);
-
-            //     if (global_discount > total) {
-            //         return this.$toast.error(
-            //             "El descuento no puede ser mayor al total"
-            //         );
-            //     }
-            // }
-            //$confirm check if form.observation is null or empty confirmation
+            
             let pass = true;
 
             if (
@@ -4338,7 +4330,6 @@ export default {
                 form.variation = true;
             }
             await this.clickPayment(form);
-
             if (this.formVariation.items.length != 0) {
                 let formVariation = this.formVariation;
                 formVariation.printerOn = false;
@@ -4362,11 +4353,14 @@ export default {
                 );
                 if (noteVariation) {
                     formVariation.series_id = noteVariation.id;
+                    this.$emit("update:variation", false);
                     await this.clickPayment(formVariation);
                     // this.$emit("clearVariation");
                 } else {
                     this.$toast.error("Sin serie en nota de venta");
                 }
+            }else{
+                console.log("no envio variation");
             }
         },
         checkPaymentsIsOk() {
@@ -4845,13 +4839,17 @@ export default {
                                                 form
                                             );
                                         }
-                                        this.$emit("limpiarForm");
+                                        if(!this.variation){
+                                            this.$emit("limpiarForm");
+                                        }
                                         this.loading_submit = false;
                                         this.$emit("removeConsignment");
 
                                         this.back(true);
                                     } else {
-                                        this.$emit("limpiarForm");
+                                        if(!this.variation){
+                                            this.$emit("limpiarForm");
+                                        }
                                         this.loading_submit = false;
                                         this.$emit("removeConsignment");
                                         this.back(true);
@@ -4883,7 +4881,9 @@ export default {
                                         );
                                     }
                                 }
-                                this.$emit("limpiarForm");
+                                if(!this.variation){
+                                    this.$emit("limpiarForm");
+                                }
                                 this.$emit("removeConsignment");
                                 this.loading_submit = false;
 
