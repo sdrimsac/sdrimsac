@@ -257,7 +257,6 @@ class DocumentCollection extends ResourceCollection
     }
     function get_last_document($row){
         $last_register_movement = RegisterMovement::where('model', Document::class)
-            /* ->where('model', Item::class) */
             ->where('model_id', $row->id)
             ->whereHas('user', function ($query) {
                 $query->whereNull('area_id');
@@ -265,6 +264,7 @@ class DocumentCollection extends ResourceCollection
             ->orderBy('id', 'desc')->first();
         $data = [
             'user'=>'',
+            'ip' => '',
             'date_time' => '',
             'description' => '',
             'created_at' => ''
@@ -273,6 +273,7 @@ class DocumentCollection extends ResourceCollection
             $date_time = $last_register_movement->created_at;
             $data = [
                 'user'=>$last_register_movement->user->name,
+                'ip' => $last_register_movement->ip,
                 'description' =>$last_register_movement->description,
                 'date_time' => $this->get_date_difference($date_time),
                 'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')

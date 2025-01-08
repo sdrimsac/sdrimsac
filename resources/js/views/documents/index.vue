@@ -504,13 +504,17 @@
                                         <div
                                             v-if="
                                                 row.last_register &&
-                                                    row.last_register.user
+                                                    row.last_register.user &&
+                                                    row.last_register.ip
                                             "
                                         >
-                                            <strong>Usuario: {{
+                                            <strong
+                                            v-if="row.last_register.ip != 'SERVIDOR'"
+                                            >Usuario: {{
                                                 row.last_register.user
                                             }}</strong
                                             >
+                                            <strong>SERVIDOR</strong>
                                             <br>
                                             <span class="text-primary">{{
                                                 row.last_register.description
