@@ -4527,8 +4527,11 @@ export default {
             if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
             }
-            form_submit.items = this.mergeItems(form_submit.items);
+            if(!this.configuration.maderera){
+                form_submit.items = this.mergeItems(form_submit.items);
+            }
             this.loading = true;
+            
 
             this.commands_fisico = "";
 
