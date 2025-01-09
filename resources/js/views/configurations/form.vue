@@ -4021,6 +4021,43 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
+                                                            <div
+                                                                class="col-md-2 mt-4"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="el-icon-s-grid icon-tab"
+                                                                        ></i>
+                                                                        Mostrar Cantidades Total De Productos En caja POS
+                                                                    </label>
+                                                                    <el-switch
+                                                                        @change="
+                                                                            submit(
+                                                                                'Mostrar Cantidades Total De Productos En caja POS',
+                                                                                form.edit_count_products,
+                                                                                'digital_notifications',
+                                                                                'lockIcon'
+                                                                            )
+                                                                        "
+                                                                        v-model="
+                                                                            form.edit_count_products
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div
@@ -6779,6 +6816,39 @@
                                                         "
                                                         v-model="
                                                             form.warehouses_product
+                                                        "
+                                                        active-text="Si"
+                                                        inactive-text="No"
+                                                        :active-color="
+                                                            '#28a745'
+                                                        "
+                                                        :inactive-color="
+                                                            '#6c757d'
+                                                        "
+                                                    ></el-switch>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-4">
+                                                <div class="form-group">
+                                                    <label
+                                                        class="control-label w-100"
+                                                    >
+                                                        <i
+                                                            class="el-icon-s-grid icon-tab"
+                                                        ></i>
+                                                        Mostrar Codigo De Origen en ticket de pdf 
+                                                    </label>
+                                                    <el-switch
+                                                        @change="
+                                                            submit(
+                                                                'Mostrar Codigo De Origen en ticket de pdf',
+                                                                form.pdf_origin_enabled,
+                                                                'digital_notifications',
+                                                                'lockIcon'
+                                                            )
+                                                        "
+                                                        v-model="
+                                                            form.pdf_origin_enabled
                                                         "
                                                         active-text="Si"
                                                         inactive-text="No"

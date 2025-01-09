@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'pdf_origin_enabled',
+        'edit_count_products',
         'edit_clients',
         'warehouses_product',
         'configuration_establishments_numbers',
@@ -285,6 +287,8 @@ class Configuration extends ModelTenant
         'other_currency_pos',
     ];
     protected $casts = [
+        'pdf_origin_enabled' => 'boolean',
+        'edit_count_products' => 'boolean',
         'edit_clients' => 'boolean',
         'warehouses_product' => 'boolean',
         'configuration_establishments_numbers' => 'boolean',
@@ -513,6 +517,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'pdf_origin_enabled' => (bool)$this->pdf_origin_enabled,
+            'edit_count_products' => (bool)$this->edit_count_products,
             'edit_clients' => (bool)$this->edit_clients,
             'warehouses_product' => $warehouse->warehouses_product,
             'configuration_establishments_numbers' => (bool)$this->configuration_establishments_numbers,

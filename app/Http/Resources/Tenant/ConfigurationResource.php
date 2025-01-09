@@ -15,6 +15,8 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'pdf_origin_enabled' => (bool) $this->pdf_origin_enabled,
+            'edit_count_products' => (bool) $this->edit_count_products,
             'edit_clients' => (bool) $this->edit_clients,
             'warehouses_product' => (bool) $this->warehouses_product,
             'configuration_establishments_numbers' => (bool) $this->configuration_establishments_numbers,

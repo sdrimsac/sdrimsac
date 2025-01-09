@@ -28,7 +28,7 @@
                             <td>{{row.date_time}}</td>
                             <td>{{row.type_transaction}}</td>
                               <td>{{row.detail}}</td>
-                            <td>{{row.number}}</td>
+                            <td> {{ row.series }} - {{row.number}}</td>
                             <td>{{row.sale_note_asoc}}</td>
                             <td>{{row.date_of_issue}}</td>
                             <td>{{row.input}}</td>

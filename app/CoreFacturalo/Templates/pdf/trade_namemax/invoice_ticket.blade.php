@@ -642,55 +642,55 @@
                 </td> -->
                     <!-- <td class="text-left desc-9 align-top">
                     @if (isset($row->name_product_pdf))
-{!! $row->name_product_pdf !!}
-@else
-@if (isset($row->item->description_internet))
-{!! $row->item->description_internet !!}
-@else
-{!! $row->item->description !!}
-@endif
-                    @if (isset($row->item->lots))
-@foreach ($row->item->lots as $lot)
-<br />{!! $lot->series !!}
-@endforeach
-@endif
-                    @if (isset($row->item->color_size))
-@foreach ($row->item->color_size as $color_size)
-<br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>
-                    {{ $color_size->quantity }}
-@endforeach
-@endif
-                    @if (isset($row->item->second_name))
-- {!! $row->item->second_name !!}
-@endif
-                    @if (isset($row->item->has_unit_type))
-- {!! $row->item->has_unit_type !!}
-@endif
-                    @if (isset($row->unit_desc))
-{!! $row->unit_desc !!}
-@endif
-@endif
+                        {!! $row->name_product_pdf !!}
+                        @else
+                        @if (isset($row->item->description_internet))
+                        {!! $row->item->description_internet !!}
+                        @else
+                        {!! $row->item->description !!}
+                        @endif
+                                            @if (isset($row->item->lots))
+                        @foreach ($row->item->lots as $lot)
+                        <br />{!! $lot->series !!}
+                        @endforeach
+                        @endif
+                                            @if (isset($row->item->color_size))
+                        @foreach ($row->item->color_size as $color_size)
+                        <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>
+                                            {{ $color_size->quantity }}
+                        @endforeach
+                        @endif
+                                            @if (isset($row->item->second_name))
+                        - {!! $row->item->second_name !!}
+                        @endif
+                                            @if (isset($row->item->has_unit_type))
+                        - {!! $row->item->has_unit_type !!}
+                        @endif
+                                            @if (isset($row->unit_desc))
+                        {!! $row->unit_desc !!}
+                        @endif
+                        @endif
 
-                    @if (!empty($row->item->presentation))
-{!! $row->item->presentation->description !!}
-@endif
+                                            @if (!empty($row->item->presentation))
+                        {!! $row->item->presentation->description !!}
+                        @endif
 
-                    @foreach ($row->additional_information as $information)
-@if ($information)
-<br />{{ $information }}
-@endif
-@endforeach
+                                            @foreach ($row->additional_information as $information)
+                        @if ($information)
+                        <br />{{ $information }}
+                        @endif
+                        @endforeach
 
-                    @if ($row->attributes)
-@foreach ($row->attributes as $attr)
-<br />{!! $attr->description !!} : {{ $attr->value }}
-@endforeach
-@endif
-                    @if ($row->discounts)
-@foreach ($row->discounts as $dtos)
-<br /><small>{{ $dtos->factor * 100 }}% {{ $dtos->description }}</small>
-@endforeach
-@endif
+                                            @if ($row->attributes)
+                        @foreach ($row->attributes as $attr)
+                        <br />{!! $attr->description !!} : {{ $attr->value }}
+                        @endforeach
+                        @endif
+                                            @if ($row->discounts)
+                        @foreach ($row->discounts as $dtos)
+                        <br /><small>{{ $dtos->factor * 100 }}% {{ $dtos->description }}</small>
+                        @endforeach
+                        @endif
 
                     {{-- @if ($row->item->is_set == 1)
                             <br>

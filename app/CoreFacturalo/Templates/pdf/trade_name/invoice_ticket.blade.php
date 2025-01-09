@@ -777,7 +777,7 @@
                             @if (isset($row->item->description_internet))
                                 {!! $row->item->description_internet !!}
                             @else
-                             @if(isset($row->item->origin))
+                             @if(isset($row->item->origin) && $configuration->pdf_origin_enabled)
                                 {{$row->item->origin}} <br>
                              @endif 
                                 {!! $row->item->description !!} <br>

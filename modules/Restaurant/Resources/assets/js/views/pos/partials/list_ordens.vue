@@ -237,11 +237,12 @@
                             class="d-flex justify-content-end"
                             v-if="configuration.other_currency_pos"
                         >
-                            <div class="col-3 text-white">
-                                <label for="currency">
+                            <!-- <div class="col-3 text-white" style="">
+                                <label for="currency" class="text-white">
                                     <small>Moneda</small>
                                 </label>
                                 <el-radio-group
+                                    style=""
                                     @change="changeCurrency"
                                     v-model="currency_id"
                                 >
@@ -254,9 +255,18 @@
                                         label="$"
                                     ></el-radio-button>
                                 </el-radio-group>
+                            </div> -->
+                            <div style="margin-top: 5px" class="justify-content-end text-end">
+                                <label for="currency" class="text-white w-100 margin-top: 10px;">
+                                    <small>Moneda</small>
+                                </label>
+                                <el-radio-group v-model="currency_id" size="small" @change="changeCurrency">
+                                <el-radio-button value="PEN" label="S/"></el-radio-button>
+                                <el-radio-button value="USD"  label="$"></el-radio-button>
+                                </el-radio-group>
                             </div>
-                            <div class="col-3 text-white">
-                                <label for="tc">T/C</label>
+                            <div class="text-white text-end" style="margin-top: 5px">
+                                <label for="tc" class="text-white w-100" >T/C</label>
                                 <el-input
                                     v-model="exchange_rate_sale"
                                     type="number"
@@ -264,6 +274,27 @@
                                     @input="calculateTotal"
                                 ></el-input>
                             </div>
+                        </div>
+                        <br>
+                        <div class="row" v-if="configuration.edit_count_products">
+                            <h6
+                                v-if="!clientTableData.table"
+                                class="text-white fw-bold"
+                                style="text-align: right"
+                            >
+                                TOTAL DE PRODUCTOS:
+                                {{ (totalUniqueProducts).toFixed(2) }}
+                            </h6>
+                        </div>
+                        <div class="row" v-if="configuration.edit_count_products">
+                            <h6
+                                v-if="!clientTableData.table"
+                                class="text-white fw-bold"
+                                style="text-align: right"
+                            >
+                                TOTAL DE CANTIDADES:
+                                {{ (totalQuantityProducts).toFixed(2) }}
+                            </h6>
                         </div>
                     </div>
                 </div>
@@ -2604,6 +2635,11 @@
 .input-new-tag1 .el-input__inner {
     height: 30px !important;
 }
+.custom-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaciado entre el texto y los botones */
+}
 </style>
 <script>
 const ConsignmentForm = () => import("./consignment_modal.vue");
@@ -2683,6 +2719,9 @@ export default {
 
     data() {
         return {
+            /* localOrden: [], */
+            /* totalUniqueProducts: 0,
+            totalQuantityProducts: 0, */
             localCotizarConfirmado: this.cotizarConfirmado,
             showDigitalPay: false,
             countdown: 0,
@@ -2810,6 +2849,14 @@ export default {
         }
     },
     computed: {
+        totalUniqueProducts() {
+            // Cantidad de productos únicos
+            return this.localOrden.length;
+        },
+        totalQuantityProducts() {
+            // Cantidad total considerando las cantidades de cada producto
+            return this.localOrden.reduce((total, item) => total + item.quantity, 0);
+        },
         canBeSaleOffert() {
             if (!this.configuration.sale_offert) return null;
             let quantityProducts = this.localOrden.length;
@@ -4593,9 +4640,17 @@ export default {
             this.totalOrden = 0.0;
             let OrdenPen = 0;
             let OrdenPenAtendidos = 0;
+
+            /* let selectedItems = []; */
+
             _.forEach(this.localOrden, value => {
                 let { item } = value.food;
                 OrdenPen += value.quantity * value.price;
+
+                /* selectedItems.push({
+                    itemName: item.name,
+                    quantity: value.quantity,
+                }); */
                 // OrdenPen =
                 //     parseFloat(OrdenPen) +
                 //     value.quantity *
@@ -4614,6 +4669,10 @@ export default {
                             values.price,
                             item.currency_type_id
                         );
+                   /* selectedItems.push({
+                    itemName: item.name, // Suponiendo que 'item' tiene un campo 'name'
+                    quantity: values.quantity,
+                }); */ 
             });
             this.totalOrdenItems = _.round(OrdenPenAtendidos, 2);
             // this.total = this.totalOrden + this.totalOrdenItems;
@@ -4623,6 +4682,7 @@ export default {
                 "🚀 ~ calculateTotal ~ this.localOrden:",
                 this.localOrden
             );
+            /* console.log("Ítems seleccionados:", selectedItems); */
         },
         deleteFood(idx) {
             this.$emit("deletedFood", idx);

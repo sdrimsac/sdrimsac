@@ -26,6 +26,7 @@
         'consolidated_quotations',
         'comercial_name',
         'warehouses_product',
+        'pdf_origin_enabled',
     ])->first();
     if (!function_exists('getUnitTypeId')) {
         function getUnitTypeId($id)
@@ -596,7 +597,7 @@ contain"
                             @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
-                                @if (isset($row->item->origin))
+                                @if (isset($row->item->origin) && $configuration->pdf_origin_enabled)/
                                 {{ $row->item->origin }} <br>
                                 @endif
                                 {{ $row->item->description }} <br>
