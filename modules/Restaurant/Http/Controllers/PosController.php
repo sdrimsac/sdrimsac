@@ -163,7 +163,6 @@ class PosController extends Controller
 
     public function foods(Request $request)
     {
-
         $configuration = Configuration::first();
         $customer_unit_type_id = $request->customer_unit_type_id;
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
@@ -304,10 +303,15 @@ class PosController extends Controller
         //         $foods = $foods->where('area_id',$area->id);
         //     }
         // }
-        if ($configuration->ord_dscp) {
+        /* if ($configuration->ord_dscp) {
             // Ordena los resultados priorizando la palabra exacta
             $foods = $foods->orderByRaw("description LIKE '{$value}%' DESC")
                 ->orderByRaw("description LIKE '%{$value}%' DESC")
+                ->orderBy('description', 'ASC');
+        } */
+        if ($configuration->ord_dscp) {
+            $foods = $foods->orderByRaw("description LIKE ? DESC", ["{$value}%"])
+                ->orderByRaw("description LIKE ? DESC", ["%{$value}%"])
                 ->orderBy('description', 'ASC');
         }
 

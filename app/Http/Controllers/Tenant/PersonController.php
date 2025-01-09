@@ -77,9 +77,9 @@ class PersonController extends Controller
         $url = config('app.api_factiliza_service_url');
         $token = config('app.api_factiliza_service_token');
         $client = new Client(['base_uri' => $url]);
-        $api= "/cee/info/".$cee; 
-        $path ="/pe/v1";
-        $response = $client->request('GET',$path. $api, [
+        $api = "/cee/info/" . $cee;
+        $path = "/pe/v1";
+        $response = $client->request('GET', $path . $api, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
                 'Accept' => 'application/json',
@@ -153,7 +153,7 @@ class PersonController extends Controller
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
 
-    public function getRecords($type, Request $request)
+    /* public function getRecords($type, Request $request)
     {
         $has_credit_line = $request->credit === 'true';
 
@@ -175,6 +175,36 @@ class PersonController extends Controller
         if ($has_credit_line) {
             $records = $records->where('has_credit_line', $has_credit_line);
         }
+        return $records;
+    } */
+
+    public function getRecords($type, Request $request)
+    {
+        $has_credit_line = $request->credit === 'true';
+
+        $user = auth()->user();
+
+        $records = Person::where('type', $type);
+        if (!$user || $user->type !== 'superadmin') {
+            
+            $records = $records->whereNotIn('name', ['CLIENTES VARIOS', 'CLIENTES VARIOS-MODIFICADO']);
+        }
+
+        if ($request->filled('column') && $request->column === 'description') {
+            $records = $records->whereHas('zone', function ($query) use ($request) {
+                $query->where('description', 'like', "%{$request->value}%");
+            })
+                ->join('client_zones', 'persons.client_zone_id', '=', 'client_zones.id')
+                ->orderBy('client_zones.description');
+        } elseif ($request->filled('column') && !empty($request->column)) {
+            $records = $records->where($request->column, 'like', "%{$request->value}%")
+                ->orderBy($request->column);
+        }
+
+        if ($has_credit_line) {
+            $records = $records->where('has_credit_line', $has_credit_line);
+        }
+
         return $records;
     }
 

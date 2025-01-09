@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>REPORTE POR PRODUCTO PARA SUBIR</strong></h3>
+        <h3 align="center" class="title"><strong>REPORTE POR PRODUCTO PARA DESCARGAR CON TODO LOS ITEMS</strong></h3>
     </div>
     <br>
     <div style="margin-top:20px; margin-bottom:15px;">
@@ -252,10 +252,10 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td> {{ $value->location }}  </td>
+                                <td> {{ $value->model }} </td>
+                                <td> {{ $value->quality }} </td>
+                                <td> {{ $value->origin }}</td>
                             </tr>
                         @endforeach
 

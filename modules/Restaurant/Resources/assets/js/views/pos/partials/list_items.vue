@@ -40,7 +40,7 @@
             <tr style="background-color: #073f68; color: #f1f1f1; text-align: left; font-weight: bold; border-bottom: 2px solid #f1f1f1;">
                 <th class="text-white" style="padding: 12px 15px;">Descripción</th>
                 <th class="text-white" style="padding: 12px 15px;">Ubicación</th>
-                <th class="text-white"style="padding: 12px 15px;">Precio</th>
+                <th class="text-white" style="padding: 12px 15px;">Precio</th>
                 <th class="text-white" style="padding: 12px 15px;">Cantidad</th>
                 <th class="text-white" style="padding: 12px 15px;">Total</th>
             </tr>

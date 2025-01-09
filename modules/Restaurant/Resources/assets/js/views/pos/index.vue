@@ -3831,7 +3831,7 @@ export default {
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.categoriaMadera = categoriaMadera;
                 }
-
+                // esta condicon afecta los precios de la madera 
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.price = categoriaMadera.price;
                 }
