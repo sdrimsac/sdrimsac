@@ -219,14 +219,14 @@ class Facturalo
                 $boxes_delete = Box::where('document_id', $inputs['documents'][0]['document_id'])->delete();
                 $documentItems = DocumentItem::where('document_id', $inputs['documents'][0]['document_id'])->get();
 
-                foreach ($documentItems as $row) {
-                    $find = ItemWarehouse::where('item_id', $row->item_id)->first();
+                // foreach ($documentItems as $row) {
+                //     $find = ItemWarehouse::where('item_id', $row->item_id)->first();
 
-                    $itemwarehouse = ItemWarehouse::findOrFail($find->id);
+                //     $itemwarehouse = ItemWarehouse::findOrFail($find->id);
 
-                    $itemwarehouse->stock = $itemwarehouse->stock + $row->quantity;
-                    $itemwarehouse->save();
-                }
+                //     $itemwarehouse->stock = $itemwarehouse->stock + $row->quantity;
+                //     $itemwarehouse->save();
+                // }
                 $configuration = Configuration::first();
                 if ($configuration->college) {
                     $payments = CollegePayment::where('document_id', $this->document->id)->get();
