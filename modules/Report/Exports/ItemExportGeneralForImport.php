@@ -25,7 +25,6 @@ class ItemExportGeneralForImport implements  FromView, ShouldAutoSize
         
         return $this;
     }
-    
 
     public function warehouse_id($warehouse_id) {
         $this->warehouse_id = $warehouse_id;

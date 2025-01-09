@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'edit_clients',
         'warehouses_product',
         'configuration_establishments_numbers',
         'user_edit',
@@ -284,6 +285,7 @@ class Configuration extends ModelTenant
         'other_currency_pos',
     ];
     protected $casts = [
+        'edit_clients' => 'boolean',
         'warehouses_product' => 'boolean',
         'configuration_establishments_numbers' => 'boolean',
         'user_edit' => 'boolean',
@@ -511,6 +513,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'edit_clients' => (bool)$this->edit_clients,
             'warehouses_product' => $warehouse->warehouses_product,
             'configuration_establishments_numbers' => (bool)$this->configuration_establishments_numbers,
             'user_edit' => (bool)$this->user_edit,

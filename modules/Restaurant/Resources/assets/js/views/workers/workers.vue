@@ -423,6 +423,12 @@ export default {
                 const { phone } = response.data;
             }
         },
+        async whatsapp(id) {
+            const response = await this.$http.post(`whatsapp/user/${id}`);
+            if (response.status == 200) {
+                const { phone } = response.data;
+            }
+        },
         formatDateTime(date) {
             let days = date.days;
             let hours = date.hours;

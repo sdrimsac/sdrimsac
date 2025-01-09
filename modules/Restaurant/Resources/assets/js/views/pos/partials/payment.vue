@@ -343,7 +343,8 @@
                                                     content="Editar Cliente"
                                                     placement="top"
                                                 >
-                                                    <el-button
+                                                    <!-- <el-button
+                                                        v-if="configuration.edit_clients"
                                                         :disabled="
                                                             !value ||
                                                                 isClientesVarios()
@@ -351,6 +352,39 @@
                                                         @click="
                                                             openDialogPerson
                                                         "
+                                                        class="fw-bold button-custom"
+                                                        type="success"
+                                                        size="small"
+                                                    >
+                                                        <i
+                                                            class="fas fa-edit fa-lg"
+                                                        ></i>
+                                                        Editar
+                                                    </el-button> -->
+                                                    <el-button
+                                                        v-if="
+                                                            configuration.edit_clients
+                                                        "
+                                                        :disabled="
+                                                            !value ||
+                                                                isClientesVarios()
+                                                        "
+                                                        @click="
+                                                            openDialogPerson
+                                                        "
+                                                        class="fw-bold button-custom"
+                                                        type="success"
+                                                        size="small"
+                                                    >
+                                                        <i
+                                                            class="fas fa-edit fa-lg"
+                                                        ></i>
+                                                        Editar
+                                                    </el-button>
+
+                                                    <el-button
+                                                        v-else
+                                                        :disabled="true"
                                                         class="fw-bold button-custom"
                                                         type="success"
                                                         size="small"
@@ -402,7 +436,9 @@
                                                     >WhatsApp</label
                                                 >
                                                 <el-input
-                                                    v-model="form.customer_telephone"
+                                                    v-model="
+                                                        form.customer_telephone
+                                                    "
                                                     type="text"
                                                     class="w-100"
                                                     placeholder="Número de WhatsApp"
@@ -1471,7 +1507,7 @@
                             </div>
 
                             <!-- Mensaje de Exceso de Monto (Bancarización) -->
-                            <div
+                            <!-- <div
                                 v-if="hasExceedBank"
                                 class="text-center text-danger"
                             >
@@ -1481,7 +1517,7 @@
                                     Ingrese en el campo "Observaciones" el
                                     número de voucher o número de operación.
                                 </span>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -1850,6 +1886,7 @@ const DocumentDetraction = () =>
     import(
         "../../../../../../../../resources/js/views/documents/partials/detraction.vue"
     );
+import Swal from "sweetalert2";
 export default {
     components: {
         PromotionBox,
@@ -2529,7 +2566,27 @@ export default {
             return false;
         },
         checkTotal(newMethod) {
-            //xd
+            
+            /* let hasExceedBank = false; */
+            /* if (hasExceedBank) {
+                Swal.fire({
+                    icon: "warning", // Icono de alerta
+                    title: "Atención",
+                    html: `
+                        <div class="text-danger">
+                            Recuerde que debido al monto deberá hacer
+                            esta operación mediante Bancarización.
+                            Ingrese en el campo "Observaciones" el
+                            número de voucher o número de operación.
+                        </div>
+                    `,
+                    confirmButtonText: "Entendido",
+                    customClass: {
+                        htmlContainer: "text-center" // Para centrar el texto
+                    }
+                });
+            } */
+
             if (newMethod == "01") {
                 let { total } = this.form;
                 if (total > 2000) {
@@ -2552,10 +2609,6 @@ export default {
             return affectation_igv_type_id;
         },
         addFreeItem(i) {
-            /* console.log("Ítem recibido:", i); */
-            /* console.log("Ítem recibido:", i);
-            console.log("Cantidad recibida:", i.quantity); */
-
             let affectation_igv_type_id = this.getFreeAfectation(
                 i.sale_affectation_igv_type_id
             );
@@ -3209,8 +3262,8 @@ export default {
             this.hasExceedBank = false;
         },
         async date_of_issue() {
-            this.resetForm()
-            
+            this.resetForm();
+
             console.log("this.form_variation", this.formVariation);
             // this.discount_amount = 0;
             // this.form.customer_id
@@ -4168,12 +4221,14 @@ export default {
         async enterAmount(amount = 0) {
             this.amount = amount;
 
-            let enter_amount = (parseFloat(this.form.enter_amount) || 0) + this.totalPayments();
+            let enter_amount =
+                (parseFloat(this.form.enter_amount) || 0) +
+                this.totalPayments();
             let differen = enter_amount - parseFloat(this.form.total);
 
             // Redondear a 2 decimales para evitar números extraños
             this.form.difference = Number(differen.toFixed(2));
-            
+
             if (this.form.difference < 0) {
                 this.button_payment = true;
                 this.form.difference = Number(differen.toFixed(2));
@@ -4288,7 +4343,6 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
-            
             let pass = true;
 
             if (
@@ -4299,15 +4353,30 @@ export default {
                     this.form.bank_account_id)
             ) {
                 try {
-                    await this.$confirm(
-                        "¿Desea continuar sin registrar la bancarización?",
-                        "Advertencia",
-                        {
-                            confirmButtonText: "Sí",
-                            cancelButtonText: "No",
-                            type: "warning"
-                        }
-                    );
+                    const result = await Swal.fire({
+                        title: 'Advertencia',
+                        /* text: '¿Desea continuar sin registrar la bancarización?', */
+                        html: `
+                        <div class="text-danger">
+                            Recuerde que debido al monto deberá hacer
+                            esta operación mediante Bancarización.
+                            Ingrese en el campo "Observaciones" el
+                            número de voucher o número de operación.
+                        </div>
+                        <p class="fw-bold">
+                            ¿Desea continuar sin registrar la bancarización?
+                        </p>
+                        `,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí',
+                        cancelButtonText: 'No',
+                        reverseButtons: true
+                    });
+
+                    if (!result.isConfirmed) {
+                        throw new Error('Cancelled');
+                    }
                 } catch (e) {
                     pass = false;
                 }
@@ -4359,7 +4428,7 @@ export default {
                 } else {
                     this.$toast.error("Sin serie en nota de venta");
                 }
-            }else{
+            } else {
                 console.log("no envio variation");
             }
         },
@@ -4839,7 +4908,7 @@ export default {
                                                 form
                                             );
                                         }
-                                        if(!this.variation){
+                                        if (!this.variation) {
                                             this.$emit("limpiarForm");
                                         }
                                         this.loading_submit = false;
@@ -4847,7 +4916,7 @@ export default {
 
                                         this.back(true);
                                     } else {
-                                        if(!this.variation){
+                                        if (!this.variation) {
                                             this.$emit("limpiarForm");
                                         }
                                         this.loading_submit = false;
@@ -4881,7 +4950,7 @@ export default {
                                         );
                                     }
                                 }
-                                if(!this.variation){
+                                if (!this.variation) {
                                     this.$emit("limpiarForm");
                                 }
                                 this.$emit("removeConsignment");
