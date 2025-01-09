@@ -56,9 +56,14 @@
                     <button class="btn btn-success" type="button">
                         {{ formattedCountdown }} restantes
                     </button>
-                    <button 
-                    v-if="configuration.digital_notifications"
-                    class="btn btn-warning" type="button" @click="openDigitalPay">Pagos Digitales</button>
+                    <button
+                        v-if="configuration.digital_notifications"
+                        class="btn btn-warning"
+                        type="button"
+                        @click="openDigitalPay"
+                    >
+                        Pagos Digitales
+                    </button>
                     <button
                         v-if="
                             configuration.sale_note_credit_confirm &&
@@ -256,17 +261,38 @@
                                     ></el-radio-button>
                                 </el-radio-group>
                             </div> -->
-                            <div style="margin-top: 5px" class="justify-content-end text-end">
-                                <label for="currency" class="text-white w-100 margin-top: 10px;">
+                            <div
+                                style="margin-top: 5px"
+                                class="justify-content-end text-end"
+                            >
+                                <label
+                                    for="currency"
+                                    class="text-white w-100 margin-top: 10px;"
+                                >
                                     <small>Moneda</small>
                                 </label>
-                                <el-radio-group v-model="currency_id" size="small" @change="changeCurrency">
-                                <el-radio-button value="PEN" label="S/"></el-radio-button>
-                                <el-radio-button value="USD"  label="$"></el-radio-button>
+                                <el-radio-group
+                                    v-model="currency_id"
+                                    size="small"
+                                    @change="changeCurrency"
+                                >
+                                    <el-radio-button
+                                        value="PEN"
+                                        label="S/"
+                                    ></el-radio-button>
+                                    <el-radio-button
+                                        value="USD"
+                                        label="$"
+                                    ></el-radio-button>
                                 </el-radio-group>
                             </div>
-                            <div class="text-white text-end" style="margin-top: 5px">
-                                <label for="tc" class="text-white w-100" >T/C</label>
+                            <div
+                                class="text-white text-end"
+                                style="margin-top: 5px"
+                            >
+                                <label for="tc" class="text-white w-100"
+                                    >T/C</label
+                                >
                                 <el-input
                                     v-model="exchange_rate_sale"
                                     type="number"
@@ -275,25 +301,31 @@
                                 ></el-input>
                             </div>
                         </div>
-                        <br>
-                        <div class="row" v-if="configuration.edit_count_products">
+                        <br />
+                        <div
+                            class="row"
+                            v-if="configuration.edit_count_products"
+                        >
                             <h6
                                 v-if="!clientTableData.table"
                                 class="text-white fw-bold"
                                 style="text-align: right"
                             >
                                 TOTAL DE PRODUCTOS:
-                                {{ (totalUniqueProducts).toFixed(2) }}
+                                {{ totalUniqueProducts }}
                             </h6>
                         </div>
-                        <div class="row" v-if="configuration.edit_count_products">
+                        <div
+                            class="row"
+                            v-if="configuration.edit_count_products"
+                        >
                             <h6
                                 v-if="!clientTableData.table"
                                 class="text-white fw-bold"
                                 style="text-align: right"
                             >
                                 TOTAL DE CANTIDADES:
-                                {{ (totalQuantityProducts).toFixed(2) }}
+                                {{ totalQuantityProducts }}
                             </h6>
                         </div>
                     </div>
@@ -1665,9 +1697,9 @@
                                                                             data-rule="currency"
                                                                             :class="{
                                                                                 'custom-bg-light': !configuration.item_set_quantity_pos,
-                                                                                'custom-bg-danger;': configuration.item_set_quantity_pos
+                                                                                'custom-bg-danger;':
+                                                                                    configuration.item_set_quantity_pos
                                                                             }"
-                                                                            
                                                                             @input="
                                                                                 verifyStock(
                                                                                     order_pend,
@@ -2813,9 +2845,16 @@ export default {
     },
 
     watch: {
+        localOrden: {
+            handler(newVal) {
+                // Aquí puedes llamar a calculateTotal u otras funciones
+                this.calculateTotal(newVal);
+            },
+            deep: true // Para observar cambios dentro de los objetos en localOrden
+        },
         cotizarConfirmado() {
             this.handleCotizarConfirmado();
-            console.log("Cotización confirmada, ver valor",);
+            console.log("Cotización confirmada, ver valor");
         },
         isHotelArea(value, __) {
             this.isHotel = value;
@@ -2853,9 +2892,22 @@ export default {
             // Cantidad de productos únicos
             return this.localOrden.length;
         },
-        totalQuantityProducts() {
+        /* totalQuantityProducts() {
             // Cantidad total considerando las cantidades de cada producto
-            return this.localOrden.reduce((total, item) => total + item.quantity, 0);
+            return this.localOrden.reduce(
+                (total, item) => total + item.quantity,
+                0
+            );
+        }, */
+
+        totalQuantityProducts() {
+            // Asegurarse de que el resultado siempre sea un número
+            return Array.isArray(this.localOrden)
+                ? this.localOrden.reduce(
+                      (total, item) => total + (Number(item.quantity) || 0), // Convertir a número
+                      0
+                  )
+                : 0; // Devuelve 0 si no es un array válido
         },
         canBeSaleOffert() {
             if (!this.configuration.sale_offert) return null;
@@ -2957,19 +3009,21 @@ export default {
         this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
     },
     methods: {
-
         handleCotizacionCreada(value) {
             console.log("Cotización creada con valor:", value);
-            this.$emit('cotizarConfirmado', value);
-        },
-        
-        handleCotizarConfirmado() {
-            this.cotizarConfirmado;
-            console.log("Cotización confirmada, procesando...", this.cotizarConfirmado);
+            this.$emit("cotizarConfirmado", value);
         },
 
-        openDigitalPay(){
-          this.showDigitalPay = true;
+        handleCotizarConfirmado() {
+            this.cotizarConfirmado;
+            console.log(
+                "Cotización confirmada, procesando...",
+                this.cotizarConfirmado
+            );
+        },
+
+        openDigitalPay() {
+            this.showDigitalPay = true;
         },
         searchExchangeRateByDate(date) {
             this.$http(`/service/exchange?date=${date}`).then(response => {
@@ -3585,7 +3639,6 @@ export default {
                 /* this.localCotizarConfirmado = false;
                 this.$emit('cotizarConfirmadoChanged', this.localCotizarConfirmado); */
             }
-            
         },
         savePrint() {
             localStorage.setItem("cajaPrint", this.printing ? 1 : 0);
@@ -3832,10 +3885,7 @@ export default {
             this.$emit("update:localOrden", ordensModified);
         },
         async getTags() {
-            if (
-                this.configuration.restaurant &&
-                !this.configuration.college
-            ) {
+            if (this.configuration.restaurant && !this.configuration.college) {
                 const response = await this.$http("../observations/records");
                 if (response.status == 200) {
                     const { data } = response;
@@ -4289,8 +4339,14 @@ export default {
                     /* this.cotizarConfirmado = false; */
                     this.localCotizarConfirmado = false;
                     /* this.$emit("cotizarConfirmadoChanged", this.cotizarConfirmado); */
-                    this.$emit("cotizarConfirmadoChanged", this.localCotizarConfirmado);
-                    console.log("ver valor enviado en el evento", this.localCotizarConfirmado);
+                    this.$emit(
+                        "cotizarConfirmadoChanged",
+                        this.localCotizarConfirmado
+                    );
+                    console.log(
+                        "ver valor enviado en el evento",
+                        this.localCotizarConfirmado
+                    );
                 }
             } catch (e) {}
             /* this.cotizarConfirmado = false;
@@ -4574,11 +4630,10 @@ export default {
             if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
             }
-            if(!this.configuration.maderera){
+            if (!this.configuration.maderera) {
                 form_submit.items = this.mergeItems(form_submit.items);
             }
             this.loading = true;
-            
 
             this.commands_fisico = "";
 
@@ -4669,10 +4724,10 @@ export default {
                             values.price,
                             item.currency_type_id
                         );
-                   /* selectedItems.push({
+                /* selectedItems.push({
                     itemName: item.name, // Suponiendo que 'item' tiene un campo 'name'
                     quantity: values.quantity,
-                }); */ 
+                }); */
             });
             this.totalOrdenItems = _.round(OrdenPenAtendidos, 2);
             // this.total = this.totalOrden + this.totalOrdenItems;
