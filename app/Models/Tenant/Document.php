@@ -608,19 +608,7 @@ class Document extends ModelTenant
                 $data
             );
         });
-        Document::updated(function ($model) {
-            $request = Request::capture();
-            $description = null;
-            $original_model = Document::find($model->id);
-            $description = "Documento actualizado";
-            $data = $original_model->toArray();
-            RegisterMovementTrait::registerUpdate(
-                $model,
-                $request,
-                $description,
-                $data
-            );
-        });
+    
 
         Document::deleted(
             function ($model) {
