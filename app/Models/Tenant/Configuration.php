@@ -523,7 +523,7 @@ class Configuration extends ModelTenant
             'pdf_origin_enabled' => (bool)$this->pdf_origin_enabled,
             'edit_count_products' => (bool)$this->edit_count_products,
             'edit_clients' => (bool)$this->edit_clients,
-            'warehouses_product' => $warehouse->warehouses_product,
+            'warehouses_product' => (bool)$this->warehouses_product,
             'configuration_establishments_numbers' => (bool)$this->configuration_establishments_numbers,
             'user_edit' => (bool)$this->user_edit,
             'android_configuration' => (bool)$this->android_configuration,
