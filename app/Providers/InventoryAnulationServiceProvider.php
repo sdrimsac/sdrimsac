@@ -31,9 +31,10 @@ class InventoryAnulationServiceProvider extends ServiceProvider
                 if($document['state_type_id'] == 11){
 
                     foreach ($document['items'] as $detail) {
-
-                        $this->updateStock($detail['item_id'], $document['establishment_id'], $detail['quantity'], false);
-                        $this->saveInventoryKardex($document, $detail['item_id'], $document['establishment_id'], -$detail['quantity'],$document['date_of_issue']);
+                        $warehouse_id = isset($detail['warehouse_id']) ? $detail['warehouse_id'] : null;
+                        
+                        $this->updateStock($detail['item_id'], $document["establishment_id"], $detail['quantity'], false,$warehouse_id);
+                        $this->saveInventoryKardex($document, $detail['item_id'], $document['establishment_id'], -$detail['quantity'],$warehouse_id,$document['date_of_issue']);
 
                     }
 

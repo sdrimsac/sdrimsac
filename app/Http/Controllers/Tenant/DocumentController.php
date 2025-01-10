@@ -788,11 +788,15 @@ class DocumentController extends Controller
         }
 
         if ($table === 'items') {
-
+            $user = auth()->user();
+            $type = $user->type;
             $establishment_id = auth()->user()->establishment_id;
             $warehouse = ModuleWarehouse::where('establishment_id', $establishment_id)->first();
-
-            $items_u = Item::whereWarehouse()->whereIsActive()->whereNotIsSet()->orderBy('description')->take(20)->get();
+            if ($type == 'admin') {
+                $items_u = Item::whereIsActive()->whereNotIsSet()->orderBy('description')->take(20)->get();
+            } else {
+                $items_u = Item::whereWarehouse()->whereIsActive()->whereNotIsSet()->orderBy('description')->take(20)->get();
+            }
             $items_s = Item::where('unit_type_id', 'ZZ')->whereIsActive()->orderBy('description')->take(10)->get();
             $items = $items_u->merge($items_s);
 
@@ -1080,7 +1084,7 @@ class DocumentController extends Controller
                 $document->seller_id = auth()->user()->id;
                 $document->save(); */
             $document = $facturalo->getDocument();
-            
+
             if ($request->receive_promotion) {
                 $this->updatePromotion($document);
             }
@@ -1861,8 +1865,8 @@ class DocumentController extends Controller
     public function excel(Request $request)
     {
         ini_set('memory_limit', '2048M');
-        
-    
+
+
         $records = $this->getRecords($request, false, true)->get();
         $establishment = Establishment::first();
         $company = Company::active();
@@ -2090,14 +2094,14 @@ class DocumentController extends Controller
         if ($detraction) {
             $records = $records->whereNotNull('detraction');
         }
-            /** @var User $user */
-            $user = auth()->user();
-            $type = $user->getUserTypeArca();
-        if($type){
-            $records = $records->whereHas('establishment', function($query) use ($type){
-                if($type == 'product'){
+        /** @var User $user */
+        $user = auth()->user();
+        $type = $user->getUserTypeArca();
+        if ($type) {
+            $records = $records->whereHas('establishment', function ($query) use ($type) {
+                if ($type == 'product') {
                     $query->where('is_product', 1);
-                }elseif($type == 'service'){
+                } elseif ($type == 'service') {
                     $query->where('is_service', 1);
                 }
             });

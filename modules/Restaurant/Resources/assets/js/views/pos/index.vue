@@ -5824,7 +5824,6 @@ export default {
             });
         },
         async limpiarForm() {
-            console.log("limpiarForm ********************");
             if (this.isAndroid) {
                 this.getLastDocument();
             }

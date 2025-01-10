@@ -103,6 +103,8 @@ class Item extends ModelTenant
     }
     public function getDataToItemModal($warehouse = null, $with_lots_has_sale = false, $extended_description = false, $series = null, $search_item_by_series = false, $aditional_data = true)
     {
+        $request = request();
+        $fromAdmin = $request->fromAdmin;
         $configuration = Configuration::first();
         if ($warehouse == null) {
             $establishment_id = auth()->user()->establishment_id;
@@ -136,7 +138,12 @@ class Item extends ModelTenant
             $ItemSize = [];
         }
         if ($with_lots_has_sale == true) {
-            $lots = $this->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)->transform(function ($row) {
+            $lots = $this->item_lots->where('has_sale', false);
+            if (!$fromAdmin) {
+                $lots = $lots->where('warehouse_id', $warehouse->id);
+            }
+
+            $lots = $lots->transform(function ($row) {
                 return [
                     'id'           => $row->id,
                     'series'       => $row->series,
@@ -179,7 +186,24 @@ class Item extends ModelTenant
         // else {
         //     
         // }
+        $warehouses = collect($this->warehouses)->transform(function ($row) use ($warehouse) {
+            return [
+                'warehouse_description' => $row->warehouse->description,
+                'stock' => $row->stock,
+                'item_id' => $row->id,
+                'warehouse_id' => $row->warehouse_id,
+                'checked' => ($row->warehouse_id == $warehouse->id) ? true : false,
+            ];
+        });
 
+        if (!$warehouses->contains('checked', true) && $warehouses->count() > 0) {
+            $warehouses = $warehouses->map(function ($item, $key) {
+                if ($key === 0) {
+                    $item['checked'] = true;
+                }
+                return $item;
+            });
+        }
         $data = [
             'month_day' => $this->month_day,
             'points_value' => $this->points_value,
@@ -255,15 +279,7 @@ class Item extends ModelTenant
                     'barcode' => $item_unit_types->barcode,
                 ];
             }),
-            'warehouses' => collect($this->warehouses)->transform(function ($warehouses) use ($warehouse) {
-                return [
-                    'warehouse_description' => $warehouses->warehouse->description,
-                    'stock'                 => (!empty($warehouses->stock)) ? $warehouses->stock : 0,
-                    'warehouse_id'          => $warehouses->warehouse_id,
-                    'active'               => (bool)$warehouses->active,
-                    'checked'               => ($warehouses->warehouse_id == $warehouse->id) ? true : false,
-                ];
-            }),
+            'warehouses' => $warehouses,
             // se listaran atributos necesarios en pdf de otra forma
             'attributes'     => $this->getAttributesAttribute($this->attributes['attributes']),
             'lots_group'     => collect($lots_grp)->transform(function ($lots_group) {
@@ -326,7 +342,7 @@ class Item extends ModelTenant
         // $data['name_product_pdf'] =$data['description'];
         return $data;
     }
-    
+
     public function item_price_ranges()
     {
         return $this->hasMany(ItemPriceRange::class);

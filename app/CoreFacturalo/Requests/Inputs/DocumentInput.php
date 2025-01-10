@@ -121,7 +121,7 @@ class DocumentInput
         $total_payment =  Functions::valueKeyInArray($inputs, 'total_payment', 0.0);
         $detraction  = self::detraction($inputs);
         $currency_type_id = Functions::valueKeyInArray($inputs, 'currency_type_id', 'PEN');
-        if($currency_type_id !== 'PEN' && !$configuration->other_currency_pos){
+        if ($currency_type_id !== 'PEN' && !$configuration->other_currency_pos) {
             $currency_type_id = 'PEN';
         }
         // if ($detraction) {
@@ -229,7 +229,7 @@ class DocumentInput
             'payment_condition_id' => key_exists('payment_condition_id', $inputs) ? $inputs['payment_condition_id'] : '01',
             'fee' => Functions::valueKeyInArray($inputs, 'fee', []),
             'payment' => Functions::valueKeyInArray($inputs, 'difference', null),
-            
+
         ];
     }
 
@@ -272,16 +272,25 @@ class DocumentInput
                         $type_desc = $unit_type->description;
                     }
                 }
-
+            
+                if (isset($row['item']['warehouses'])) {
+                    $warehouses = $row['item']['warehouses'];
+                    foreach ($warehouses as $warehouse) {
+                        if (isset($warehouse['checked']) && $warehouse['checked']) {
+                            $warehouse_id_default = $warehouse['warehouse_id'];
+                            break;
+                        }
+                    }
+                    
+                }
                 $items[] = [
                     'toWarehouse' => Functions::valueKeyInArray($row, 'toWarehouse', 0),
                     'item_id' => $item->id,
                     'item' => [
-                        
                         'college' =>   Functions::valueKeyInArray($inputs, 'college', false),
                         'description_internet' => (isset($row['item']['descriptionInternet'])) ? $row['item']['descriptionInternet'] : null,
                         'has_unit_type'  => $type_desc,
-                        'origin'=>isset($item->origin) ? $item->origin : null,
+                        'origin' => isset($item->origin) ? $item->origin : null,
                         'description' => $desc == null ? $item->description : $desc,
                         'item_type_id' => $item->item_type_id,
                         'has_warranty' => $item->has_warranty,

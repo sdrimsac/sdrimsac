@@ -1596,6 +1596,11 @@
                                                             }}
                                                         </small>
                                                     </template>
+
+                                                    <div>
+                                                        <strong>Establecimiento: {{ row.item.warehouses.find(item => item.checked).warehouse_description }}</strong>
+                                                    </div>
+
                                                 </td>
                                                 <td class="text-center">
                                                     {{ row.item.unit_type_id }}
@@ -3541,7 +3546,6 @@ export default {
             this.form.guides.splice(index, 1);
         },
         addRow(row) {
-            console.log("total agregado: ", JSON.stringify(row.total));
             if (this.recordItem) {
                 //this.form.items.$set(this.recordItem.indexi, row)
                 this.form.items[this.recordItem.indexi] = row;
@@ -3554,6 +3558,7 @@ export default {
                 this.form.fee[0].amount = this.form.total;
             }
             this.calculateFee();
+            
         },
         clickRemoveItem(index) {
             this.form.items.splice(index, 1);

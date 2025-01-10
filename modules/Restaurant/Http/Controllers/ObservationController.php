@@ -12,6 +12,13 @@ use Modules\Restaurant\Http\Resources\ObservationCollection;
 
 class ObservationController extends Controller
 {
+    public function remove($id){
+        Observation::find($id)->delete();
+        return [
+            "success" => true,
+            "message" => "Observación eliminada"
+        ];
+    }
     public function index()
     {
         $configurations = Configuration::first();

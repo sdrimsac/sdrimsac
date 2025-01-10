@@ -37,6 +37,7 @@
                     class="input-new-tag"
                     @input="search"
                     v-model="newTag"
+                    
                     placeholder="Nueva obs.."
                     size="medium"
                 >

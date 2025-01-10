@@ -56,7 +56,7 @@
 
 <script>
     export default {
-        props: ['showDialog', 'lots', 'stock','recordId'],
+        props: ['showDialog', 'lots', 'stock','recordId',"itemWarehouseId"],
         data() {
             return {
                 titleDialog: 'Series',

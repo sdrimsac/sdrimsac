@@ -147,7 +147,7 @@ export const deletable = {
         disable(url) {
             return new Promise(resolve => {
                 this.$confirm(
-                    "¿Desea inhabilitar el registro? aaaa",
+                    "¿Desea inhabilitar el registro?",
                     "Inhabilitar",
                     {
                         confirmButtonText: "Inhabilitar",

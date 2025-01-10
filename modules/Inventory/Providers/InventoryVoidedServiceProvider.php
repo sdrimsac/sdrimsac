@@ -30,11 +30,12 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                     $warehouse = $this->findWarehouse($document['establishment_id']);
 
                     foreach ($document['items'] as $detail) {
+                        $warehouse_id = isset($detail['warehouse_id']) ? $detail['warehouse_id'] : null;
                         // dd($detail['item']->presentation);
                         $presentationQuantity = (!empty($detail['item']->presentation)) ? $detail['item']->presentation->quantity_unit : 1;
 
-                        $this->createInventoryKardex($document, $detail['item_id'], $detail['quantity'] * $presentationQuantity, $warehouse->id);
-                        $this->updateStock($detail['item_id'], $detail['quantity'] * $presentationQuantity, $warehouse->id);
+                        $this->createInventoryKardex($document, $detail['item_id'], $detail['quantity'] * $presentationQuantity,  $warehouse_id ?? $warehouse->id);
+                        $this->updateStock($detail['item_id'], $detail['quantity'] * $presentationQuantity, $warehouse_id ?? $warehouse->id);
                         $this->updateDataLots($detail);
                     }
 

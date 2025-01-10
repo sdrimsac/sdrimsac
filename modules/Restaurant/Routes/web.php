@@ -143,6 +143,7 @@ Route::prefix('caja')->group(function () {
         //**OBSERVATIONS*
         Route::get('observations', 'ObservationController@index')->name('restaurant.observations');
         Route::get('observations/columns', 'ObservationController@columns');
+        Route::get('observations/remove/{id}', 'ObservationController@remove');
         Route::get('observations/records', 'ObservationController@records');
         Route::post('observations', 'ObservationController@store');
         Route::get('observations/record/{id}', 'ObservationController@record');

@@ -265,7 +265,18 @@ class DocumentController extends Controller
         $items = collect($all_items)->transform(function($row) use($warehouse){
 
                 $detail = $this->getFullDescription($row, $warehouse);
+            $warehouses = collect($row->warehouses)->transform(function($row) use($warehouse){
+                        return [
+                            'warehouse_description' => $row->warehouse->description,
+                            'stock' => $row->stock,
+                            'warehouse_id' => $row->warehouse_id,
+                            'checked' => ($row->warehouse_id == $warehouse->id) ? true : false,
+                        ];
+                    });
 
+                if(!$warehouses->contains('checked', true) && $warehouses->count() > 0) {
+                    $warehouses->first()->checked = true;
+                }
                 return [
                     'id' => $row->id,
                     'origin'=>$row->origin,
@@ -298,14 +309,7 @@ class DocumentController extends Controller
                             'price_default' => $row->price_default,
                         ];
                     }),
-                    'warehouses' => collect($row->warehouses)->transform(function($row) use($warehouse){
-                        return [
-                            'warehouse_description' => $row->warehouse->description,
-                            'stock' => $row->stock,
-                            'warehouse_id' => $row->warehouse_id,
-                            'checked' => ($row->warehouse_id == $warehouse->id) ? true : false,
-                        ];
-                    }),
+                    
                     'attributes' => $row->attributes ? $row->attributes : [],
                     'lots_group' => collect($row->lots_group)->transform(function($row){
                         return [
@@ -316,7 +320,8 @@ class DocumentController extends Controller
                             'checked'  => false
                         ];
                     }),
-                    'lots' => $row->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)->transform(function($row) {
+                    // 'lots' => $row->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)->transform(function($row) {
+                    'lots' => $row->item_lots->where('has_sale', false)->transform(function($row) {
                         return [
                             'id' => $row->id,
                             'series' => $row->series,
@@ -330,7 +335,7 @@ class DocumentController extends Controller
 
                     'lots_enabled' => (bool) $row->lots_enabled,
                     'series_enabled' => (bool) $row->series_enabled,
-
+                    'warehouses' => $warehouses,
                     'color_size' => $row->color_size->where('warehouse_id', $warehouse->id)->transform(function($row) {
                         return [
                             'id' => $row->id,

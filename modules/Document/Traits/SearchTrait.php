@@ -21,12 +21,7 @@ trait SearchTrait
         if($request->items_id){
             $items = $items->whereIn('id', $request->items_id);
         }
-                    // ->orWhereHas('category', function($query) use($request) {
-                    //     $query->where('name', 'like', '%' . $request->input . '%');
-                    // })
-                    // ->orWhereHas('brand', function($query) use($request) {
-                    //     $query->where('name', 'like', '%' . $request->input . '%');
-                    // })
+                    
                     $items =  $items->where('unit_type_id','ZZ')
                     ->whereNotIsSet()
                     ->whereIsActive()
@@ -50,13 +45,7 @@ trait SearchTrait
         if($request->items_id){
             $items = $items->whereIn('id', $request->items_id);
         }
-                    // ->orWhereHas('category', function($query) use($request) {
-                    //     $query->where('name', 'like', '%' . $request->input . '%');
-                    // })
-                    // ->orWhereHas('brand', function($query) use($request) {
-                    //     $query->where('name', 'like', '%' . $request->input . '%');
-                    // })
-                    // ->whereWarehouse()
+
                    $items = $items->whereNotIsSet()
                     ->whereIsActive()
                     ->orderBy('description')

@@ -222,7 +222,6 @@ class Facturalo
                 // foreach ($documentItems as $row) {
                 //     $find = ItemWarehouse::where('item_id', $row->item_id)->first();
                 //     $itemwarehouse = ItemWarehouse::findOrFail($find->id);
-
                 //     $itemwarehouse->stock = $itemwarehouse->stock + $row->quantity;
                 //     $itemwarehouse->save();
                 // }

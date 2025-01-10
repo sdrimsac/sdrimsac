@@ -29,7 +29,6 @@
 
                             <template
                                 v-if="!search_item_by_barcode"
-                                id="select-append"
                             >
                                 <div
                                     class="el-input el-input-group el-input-group--append"
@@ -106,7 +105,11 @@
                             <small
                                 class="badge text-primary w-100"
                                 v-if="form.item_id != null"
-                                >Ubicacion: {{ form.item.location }}<br
+                                >
+                                <strong>    Establecimiento: {{ form.item.warehouses.find(item => item.checked).warehouse_description }}</strong>
+                                <br>
+
+                                Ubicacion: {{ form.item.location }}<br
                             /></small>
 
                             <template v-if="!is_client">
@@ -708,6 +711,7 @@
             :showDialog.sync="showDialogSelectLots"
             :lots="lotsItem"
             @addRowSelectLot="addRowSelectLot"
+
         >
         </select-lots-form>
         <color-form
@@ -810,7 +814,7 @@ export default {
     },
     async created() {
         this.initForm();
-        this.$http.get(`/${this.resource}/item/tables`).then(response => {
+        this.$http.get(`/${this.resource}/item/tables?fromAdmin=1`).then(response => {
             this.all_items = response.data.items;
             this.operation_types = response.data.operation_types;
             this.all_affectation_igv_types =
@@ -832,13 +836,18 @@ export default {
         this.$eventHub.$on("selectWarehouseId", warehouse_id => {
             // console.log(warehouse_id)
             this.form.warehouse_id = warehouse_id;
+            let stock = this.form.item.warehouses.find(item => item.warehouse_id == warehouse_id).stock;
+            this.form.stock_disp = stock || 0;
         });
+    },
+    computed: {
+    
     },
     methods: {
         async searchRemoteItems(input) {
             if (input.length > 2) {
                 this.loading_search = true;
-                let parameters = `input=${input}`;
+                let parameters = `input=${input}&fromAdmin=1`;
                 await this.$http
                     .get(`/${this.resource}/search-items/?${parameters}`)
                     .then(response => {
@@ -1200,7 +1209,8 @@ export default {
                     JSON.stringify(this.form.item.color_size)
                 );
             }
-            this.form.stock_disp = this.form.item.stock;
+            let stock = this.form.item.warehouses.find(item => item.checked).stock;
+            this.form.stock_disp = stock || 0;
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
             if (this.colorSizeItem && this.colorSizeItem.length > 0) {
@@ -1491,6 +1501,10 @@ export default {
             this.showDialogLots = true;
         },
         async clickSelectLots() {
+            console.log(this.form.item.warehouses);
+            let itemWarehouseId = this.form.item.warehouses.find(item => item.checked).warehouse_id;
+            console.log("el itemWarehouseId", itemWarehouseId);
+            this.lotsItem = this.form.item.lots.filter(item => item.warehouse_id == itemWarehouseId);
             this.showDialogSelectLots = true;
         },
         addRowSelectLot(lots) {
