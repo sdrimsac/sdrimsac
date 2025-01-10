@@ -88,6 +88,15 @@ $path[0] = ($path[0] === '')?'documents':$path[0];
                     </li>
                 </ul>
             </nav>
+            {{-- <nav id="menu" class="nav-main" role="navigation">
+                <ul class="nav nav-main">
+                    <li class="">
+                        <a class="nav-link" href="{{url('historial')}}" target="_BLANK">
+                            <i class="fas fa-bug"></i><span>Registro De Clientes</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav> --}}
 
             {{-- <nav id="menu" class="nav-main" role="navigation">
                 <ul class="nav nav-main">

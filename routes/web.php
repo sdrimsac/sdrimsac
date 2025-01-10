@@ -1178,6 +1178,14 @@ if ($hostname) {
             Route::post('plans', 'System\PlanController@store');
             Route::delete('plans/{plan}', 'System\PlanController@destroy');
 
+            //historial clientes
+            Route::get('historial', 'System\HistorialController@index')->name('system.historial.index');
+            Route::get('historial/records', 'System\HistorialController@records');
+            Route::get('historial/tables', 'System\HistorialController@tables');
+            Route::get('historial/record/{plan}', 'System\HistorialController@record');
+            Route::post('historial', 'System\HistorialController@store');
+            Route::delete('historial/{plan}', 'System\HistorialController@destroy');
+
             //Users
             Route::get('users/create', 'System\UserController@create')->name('system.users.create');
             Route::get('users/record', 'System\UserController@record');

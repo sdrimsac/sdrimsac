@@ -10056,6 +10056,39 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-file-alt tab-icon"
+                                                                ></i>
+                                                                Imprimir Observaciones Separados en Comanda
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.observations_separate
+                                                                "
+                                                                active-text="Si"
+                                                                inactive-text="No"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    submit(
+                                                                        'Emitir documento con variación',
+                                                                        form.observations_separate,
+                                                                        'variation_hotel',
+                                                                        'fileAltIcon'
+                                                                    )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 

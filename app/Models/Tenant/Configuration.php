@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'observations_separate',
         'pdf_origin_enabled',
         'edit_count_products',
         'edit_clients',
@@ -287,6 +288,7 @@ class Configuration extends ModelTenant
         'other_currency_pos',
     ];
     protected $casts = [
+        'observations_separate' => 'boolean',
         'pdf_origin_enabled' => 'boolean',
         'edit_count_products' => 'boolean',
         'edit_clients' => 'boolean',
@@ -517,6 +519,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'observations_separate' => (bool)$this->observations_separate,
             'pdf_origin_enabled' => (bool)$this->pdf_origin_enabled,
             'edit_count_products' => (bool)$this->edit_count_products,
             'edit_clients' => (bool)$this->edit_clients,

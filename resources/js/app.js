@@ -292,6 +292,9 @@ Vue.component(
 // Vue.component('system-accounting-index', require('@viewsModuleAccount/system/accounting/index.vue'));
 Vue.component("system-plans-index", require("./views/system/plans/index.vue"));
 Vue.component("system-plans-form", require("./views/system/plans/form.vue"));
+
+Vue.component("system-historial-index", require("./views/system/historial/index.vue"));
+Vue.component("system-historial-form", require("./views/system/historial/form.vue"));
 //auto update
 Vue.component("system-update", require("./views/system/update/index.vue"));
 

@@ -376,7 +376,9 @@
                                 Nombre
                             </th>
 
-                            <!-- <th class="text-white text-right">Inicio Ciclo Facturacion</th> -->
+                            <th class="text-white text-center border">
+                                Inicio Ciclo Facturacion
+                            </th>
                             <!-- <th class="text-white">Plan</th> -->
                             <!-- <th class="text-white">Correo</th> -->
                             <!-- <th class="text-white text-center border">Ruc</th> -->
@@ -592,23 +594,24 @@
                             <td>{{ row.number }}</td>
                             <td>{{ row.name }}</td>
 
-                            <!-- <td>
-                            <template v-if="row.start_billing_cycle">
-                                <span></span>
-                                <span>{{
-                                            row.start_billing_cycle
-                                        }}</span>
-                            </template>
-                            <template v-else>
-                                <el-date-picker v-model="row.select_date_billing" placeholder="..." type="date" value-format="yyyy-MM-dd" @change="
-                                                setStartBillingCycle(
-                                                    $event,
-                                                    row.id
-                                                )
-                                            "></el-date-picker>
-                            </template>
-                        </td>
-                        <td>{{ row.plan }}</td> -->
+                            <td class="text-center">
+                                <template v-if="row.start_billing_cycle">
+                                    <span></span>
+                                    <span>{{ row.start_billing_cycle }}</span>
+                                </template>
+                                <template v-else>
+                                    <el-date-picker
+                                        v-model="row.select_date_billing"
+                                        placeholder="..."
+                                        type="date"
+                                        value-format="yyyy-MM-dd"
+                                        @change="
+                                            setStartBillingCycle($event, row.id)
+                                        "
+                                    ></el-date-picker>
+                                </template>
+                            </td>
+                            <!-- <td>{{ row.plan }}</td> -->
                             <!-- <td>{{ row.email }}</td> -->
                             <!-- <td>
                             <span v-if="row.soap_type == '01'" class="badge badge-default">Demo</span>

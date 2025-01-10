@@ -376,9 +376,35 @@
                                     / {{ strtoupper($row->food->item->second_name) }}
                                 @endif
                             </strong>
-                            @if ($row->observations != '-')
+                            {{-- @if ($row->observations != '-')
                                 <br>
                                 <strong>Obs: {{ $row->observations }}</strong>
+                            @endif
+                            @if ($row->observations != '-' && $configuration->observations_separate)
+                                <br>
+                                <strong>
+                                    @php
+                                        $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                    @endphp
+                                    @foreach ($observations as $index => $observation)
+                                        Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                    @endforeach
+                                </strong>
+                            @endif --}}
+                            @if ($row->observations != '-')
+                                <br>
+                                <strong>
+                                    @if ($configuration->observations_separate)
+                                        @php
+                                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                        @endphp
+                                        @foreach ($observations as $index => $observation)
+                                            Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                        @endforeach
+                                    @else
+                                        Obs: {{ e($row->observations) }}
+                                    @endif
+                                </strong>
                             @endif
 
                         </td>
@@ -420,9 +446,36 @@
                                             / {{ strtoupper($row->food->item->second_name) }}
                                         @endif
                                     </strong>
-                                    @if ($row->observations != '-')
+                                    {{-- @if ($row->observations != '-')
                                         <br>
                                         <strong>Obs: {{ $row->observations }}</strong>
+                                    @endif
+
+                                    @if ($row->observations != '-' && $configuration->observations_separate)
+                                        <br>
+                                        <strong>
+                                            @php
+                                                $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                            @endphp
+                                            @foreach ($observations as $index => $observation)
+                                                Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                            @endforeach
+                                        </strong>
+                                    @endif --}}
+                                    @if ($row->observations != '-')
+                                        <br>
+                                        <strong>
+                                            @if ($configuration->observations_separate)
+                                                @php
+                                                    $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                                @endphp
+                                                @foreach ($observations as $index => $observation)
+                                                    Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                                @endforeach
+                                            @else
+                                                Obs: {{ e($row->observations) }}
+                                            @endif
+                                        </strong>
                                     @endif
 
                                 </td>
@@ -447,6 +500,38 @@
                                     @if ($row_carry->observations != '-')
                                         <br>
                                         <strong>Obs: {{ $row_carry->observations }}</strong>
+                                    @endif
+                                    {{-- @if ($row_carry->observations != '-')
+                                        <br>
+                                        <strong>
+                                            {!! nl2br(e(str_replace('/', "\nObs1: ", 'Obs2: ' . $row_carry->observations))) !!}
+                                        </strong>
+                                    @endif
+                                    @if ($row_carry->observations != '-')
+                                        <br>
+                                        <strong>
+                                            @php
+                                                $observations = explode('/', $row_carry->observations); // Divide las observaciones por el carácter "/"
+                                            @endphp
+                                            @foreach ($observations as $index => $observation)
+                                                Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                            @endforeach
+                                        </strong>
+                                    @endif --}}
+                                    @if ($row->observations != '-')
+                                        <br>
+                                        <strong>
+                                            @if ($configuration->observations_separate)
+                                                @php
+                                                    $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                                @endphp
+                                                @foreach ($observations as $index => $observation)
+                                                    Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                                @endforeach
+                                            @else
+                                                Obs: {{ e($row->observations) }}
+                                            @endif
+                                        </strong>
                                     @endif
 
                                 </td>
@@ -489,22 +574,22 @@
         <div id="register">
             <table border="0" style="border:0px solid;width:75%">
                 <!-- Información General -->
+                <tr>
+                    <td colspan="4" class="header_title text-center" valign="top">
+                        <strong>NRO. MESA
+                            {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}</strong>
+                    </td>
+                </tr>
+
+                @if ($configuration->reference_ticket && $ordenes->ref && !$precuenta)
                     <tr>
+
                         <td colspan="4" class="header_title text-center" valign="top">
-                            <strong>NRO. MESA
-                                {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}</strong>
+                            <strong>{{ $ordenes->ref }}</strong>
                         </td>
+
                     </tr>
-
-                    @if ($configuration->reference_ticket && $ordenes->ref && !$precuenta)
-                        <tr>
-
-                            <td colspan="4" class="header_title text-center" valign="top">
-                                <strong>{{ $ordenes->ref }}</strong>
-                            </td>
-
-                        </tr>
-                    @endif
+                @endif
 
                 <tr>
                     <td colspan="4" class="header_title0 text-center" valign="top">
@@ -585,9 +670,35 @@
                                         / {{ strtoupper($row->food->item->second_name) }}
                                     @endif
                                 </strong>
-                                @if ($row->observations != '-')
+                                {{-- @if ($row->observations != '-')
                                     <br>
                                     <strong>Obs: {{ $row->observations }}</strong>
+                                @endif
+                                @if ($row->observations != '-' && $configuration->observations_separate)
+                                    <br>
+                                    <strong>
+                                        @php
+                                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                        @endphp
+                                        @foreach ($observations as $index => $observation)
+                                            Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                        @endforeach
+                                    </strong>
+                                @endif --}}
+                                @if ($row->observations != '-')
+                                    <br>
+                                    <strong>
+                                        @if ($configuration->observations_separate)
+                                            @php
+                                                $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                            @endphp
+                                            @foreach ($observations as $index => $observation)
+                                                Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                            @endforeach
+                                        @else
+                                            Obs: {{ e($row->observations) }}
+                                        @endif
+                                    </strong>
                                 @endif
                             </td>
                             <td class="celda_center description_preparacion">
