@@ -18,34 +18,101 @@
                         </div>
                     </div>
                 </div>
-                <div class="table">
-                    <thead>
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Fecha</th>
-                            <th>Acción</th>
-                            <th>Descripción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>juan</td>
-                            <td>20/01/2025</td>
-                            <td>Saluda</td>
-                            <td>para ver el registro de los clientes</td>
-                        </tr>
-                    </tbody>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr class="bg-secondary">
+                                    <th class="text-white">ACCIONES</th>
+                                    <th class="text-white">CLIENTE</th>
+                                    <th class="text-white">NEGOCIO</th>
+                                    <th class="text-white">DNI</th>
+                                    <th class="text-white">DIRECION CLIENTE</th>
+                                    <th class="text-white">
+                                        DIRECION DE ESTABLECIMIENTO
+                                    </th>
+                                    <th class="text-white">CORREO</th>
+                                    <th class="text-white">TELEFONO</th>
+                                    <th class="text-white">RUC DE NEGOCIO</th>
+                                    <th class="text-white">USUARIO SUNAT</th>
+                                    <th class="text-white">CLAVE SUNAT</th>
+                                    <th class="text-white">
+                                        USUARIO SECUNDARIO SUNAT
+                                    </th>
+                                    <th class="text-white">
+                                        CLAVE SECUNDARIO SUNAT
+                                    </th>
+                                    <th class="text-white">
+                                        CLAVE DE CERTIFICADO DIGITAL
+                                    </th>
+                                    <th class="text-white">
+                                        FECHA DE SOLICITUD CERTIFICADO DIGITAL
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(record, index) in records"
+                                    :key="index"
+                                >
+                                    <td>
+                                        <div class="dropdown">
+                                            <!-- <div
+                                                class="dropdown-menu dropdown-menu-end"
+                                            > -->
+                                                <!-- Editar -->
+                                                <button
+                                                    class="dropdown-item text-white bg-warning"
+                                                    @click.prevent="
+                                                        clickCreate(record.id)
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fa fa-edit fa-lg me-2"
+                                                    ></i>
+                                                    Editar
+                                                </button>
+                                                <!-- Eliminar -->
+                                                <!-- <button
+                                                    class="dropdown-item text-danger"
+                                                    @click.prevent="
+                                                        clickDelete(record.id)
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fa fa-trash fa-lg me-2"
+                                                    ></i>
+                                                    Eliminar
+                                                </button> -->
+                                            <!-- </div> -->
+                                        </div>
+                                    </td>
+                                    <td>{{ record.name }}</td>
+                                    <td>{{ record.business_id }}</td>
+                                    <td>{{ record.number }}</td>
+                                    <td>{{ record.direccion }}</td>
+                                    <td>{{ record.direccion_secondary }}</td>
+                                    <td>{{ record.email }}</td>
+                                    <td>{{ record.telephone }}</td>
+                                    <td>{{ record.ruc }}</td>
+                                    <td>{{ record.user }}</td>
+                                    <td>{{ record.password }}</td>
+                                    <td>{{ record.user_secondary }}</td>
+                                    <td>{{ record.password_secondary }}</td>
+                                    <td>{{ record.password_certificate }}</td>
+                                    <td>{{ record.date_certificate }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- <system-history-form :showDialog.sync="showDialog"
-                            :records="records"
-                             :recordId="recordId"></system-history-form> -->
-
         <HistoryForm
             :showDialog.sync="showDialog"
             :records="records"
             :recordId="recordId"
+            :business="business"
         ></HistoryForm>
     </div>
 </template>
@@ -57,18 +124,25 @@ export default {
     data() {
         return {
             showDialog: false,
-            resource: "history",
+            resource: "historial",
             recordId: null,
-            records: []
+            records: [],
+            business: []
         };
     },
-    /* created() {
+    created() {
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });
         this.getData();
-    }, */
+        this.getBusiness();
+    },
     methods: {
+        getBusiness() {
+            this.$http.get(`/${this.resource}/tables`).then(response => {
+                this.business = response.data.business;
+            });
+        },
         getData() {
             this.$http.get(`/${this.resource}/records`).then(response => {
                 this.records = response.data.data;
@@ -77,7 +151,7 @@ export default {
         clickCreate(recordId = null) {
             this.recordId = recordId;
             this.showDialog = true;
-        },
+        }
         /* clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")

@@ -1182,9 +1182,9 @@ if ($hostname) {
             Route::get('historial', 'System\HistorialController@index')->name('system.historial.index');
             Route::get('historial/records', 'System\HistorialController@records');
             Route::get('historial/tables', 'System\HistorialController@tables');
-            Route::get('historial/record/{plan}', 'System\HistorialController@record');
+            Route::get('historial/record/{History}', 'System\HistorialController@record');
             Route::post('historial', 'System\HistorialController@store');
-            Route::delete('historial/{plan}', 'System\HistorialController@destroy');
+            Route::delete('historial/{history}', 'System\HistorialController@destroy');
 
             //Users
             Route::get('users/create', 'System\UserController@create')->name('system.users.create');

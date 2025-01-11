@@ -106,10 +106,10 @@
                                 class="badge text-primary w-100"
                                 v-if="form.item_id != null"
                                 >
-                                <strong>    Establecimiento: {{ form.item.warehouses.find(item => item.checked).warehouse_description }}</strong>
+                                <!-- <strong>    Establecimiento: {{ getWarehouseDescription }}</strong> -->
                                 <br>
 
-                                Ubicacion: {{ form.item.location }}<br
+                                Ubicacion: {{ form.item ? form.item.location : '' }}<br
                             /></small>
 
                             <template v-if="!is_client">
@@ -814,7 +814,8 @@ export default {
     },
     async created() {
         this.initForm();
-        this.$http.get(`/${this.resource}/item/tables?fromAdmin=1`).then(response => {
+        /* this.$http.get(`/${this.resource}/item/tables?fromAdmin=1`).then(response => { */
+        this.$http.get(`/${this.resource}/item/tables`).then(response => {    
             this.all_items = response.data.items;
             this.operation_types = response.data.operation_types;
             this.all_affectation_igv_types =
@@ -834,15 +835,21 @@ export default {
         });
 
         this.$eventHub.$on("selectWarehouseId", warehouse_id => {
-            // console.log(warehouse_id)
+            /* console.log("ver si llega el id", warehouse_id) */
             this.form.warehouse_id = warehouse_id;
-            let stock = this.form.item.warehouses.find(item => item.warehouse_id == warehouse_id).stock;
-            this.form.stock_disp = stock || 0;
+            /* let stock = this.form.item.warehouses.find(item => item.warehouse_id == warehouse_id).stock;
+            this.form.stock_disp = stock || 0; */
         });
     },
-    computed: {
-    
-    },
+    /* computed: {
+        getWarehouseDescription() {
+            if (!this.form.item || !this.form.item.warehouses) {
+                return '';
+            }
+            const warehouse = this.form.item.warehouses.find(item => item.checked);
+            return warehouse ? warehouse.warehouse_description : '';
+        }
+    }, */
     methods: {
         async searchRemoteItems(input) {
             if (input.length > 2) {
@@ -854,6 +861,7 @@ export default {
                         this.items_select = response.data[0];
 
                         this.items = response.data;
+                        console.log("ver si llega datos a esta seccion", this.items);
                         this.loading_search = false;
 
                         this.enabledSearchItemsBarcode();
@@ -883,6 +891,7 @@ export default {
             this.input_item = "";
         },
         addNewItem(data) {
+            console.log("ver si llega datos a esta seccion", data);
             this.form.item_id = data.id;
             this.items.push(data);
             this.searchRemoteItems(data.description);
@@ -1209,8 +1218,9 @@ export default {
                     JSON.stringify(this.form.item.color_size)
                 );
             }
-            let stock = this.form.item.warehouses.find(item => item.checked).stock;
-            this.form.stock_disp = stock || 0;
+            this.form.stock_disp = this.form.item.stock;
+            /* let stock = this.form.item.warehouses.find(item => item.checked).stock;
+            this.form.stock_disp = stock || 0; */
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
             if (this.colorSizeItem && this.colorSizeItem.length > 0) {

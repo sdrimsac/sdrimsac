@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\System;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller; 
-use App\Models\System\Plan;
-use App\Models\System\PlanDocument;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\System\HistoryCollection;
 use App\Http\Requests\System\HistoryRequest;
+use App\Models\System\Business;
 use App\Models\System\History;
-use App\Models\System\HistoryResource;
+use App\Http\Resources\System\HistoryResource;
 
 class HistorialController extends Controller
 {
@@ -19,7 +18,7 @@ class HistorialController extends Controller
         return view('system.historial.index');
     }
 
-    
+
     public function records()
     {
         $records = History::all();
@@ -27,10 +26,15 @@ class HistorialController extends Controller
         return new HistoryCollection($records);
     }
 
+    /* public function record($id)
+    {
+        $record = new HistoryResource(History::findOrFail($id));
+
+        return $record;
+    } */
     public function record($id)
     {
-        $record = new HistoryResource(History::findOrFail($id)); 
-
+        $record = new HistoryResource(History::findOrFail($id));
         return $record;
     }
 
@@ -44,7 +48,7 @@ class HistorialController extends Controller
 
         return [
             'success' => true,
-            'message' => ($id)?'Historial editado con éxito':'Historial registrado con éxito'
+            'message' => ($id) ? 'Historial editado con éxito' : 'Historial registrado con éxito'
         ];
     }
 
@@ -58,5 +62,10 @@ class HistorialController extends Controller
             'message' => 'Historial eliminado con éxito'
         ];
     }
+    public function tables()
+    {
+        $business = Business::all();
 
+        return compact('business');
+    }
 }

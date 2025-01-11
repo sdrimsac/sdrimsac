@@ -9,9 +9,11 @@ class Business extends Model
 {
     use UsesSystemConnection;
 
-
+    protected $table = 'business';
     protected $fillable = [
+        'id',
         'description',
+        
          
     ];
     

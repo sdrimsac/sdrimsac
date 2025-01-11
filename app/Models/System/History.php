@@ -9,7 +9,7 @@ class History extends Model
 {
     use UsesSystemConnection;
 
-
+    protected $table = 'history_clients';
     protected $fillable = [
         'name',
         'number',

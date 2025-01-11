@@ -1598,7 +1598,7 @@
                                                     </template>
 
                                                     <div>
-                                                        <strong>Establecimiento: {{ row.item.warehouses.find(item => item.checked).warehouse_description }}</strong>
+                                                        <!-- <strong>Establecimiento: {{ row.item.warehouses.find(item => item.checked).warehouse_description }}</strong> -->
                                                     </div>
 
                                                 </td>
