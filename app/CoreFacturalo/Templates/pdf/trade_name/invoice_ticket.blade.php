@@ -811,12 +811,13 @@
                                     $largo = $madera->selectedLargo;
                                     $grosor = $madera->selectedGrosor;
                                     $quantity_totals += $row->quantity;
+                                    $fot_locals =$row->quantity * (($ancho * $largo * $grosor) / 12);
                                     $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
                                     //}
                                     $m_description = "${grosor}x${ancho}x${largo}";
                                 @endphp
                                 {{ $m_description }} <br />
-                                ({{ number_format($fot_totals, 2) }} PIES)
+                                ({{ number_format($fot_locals, 2) }} PIES)
                             @endif
                             @if (isset($row->item->lots))
                                 @foreach ($row->item->lots as $lot)
@@ -871,7 +872,11 @@
 
                             {{ join('-', $itemSet->getItemsSet($row->item_id)) }}
                         @endif --}}
-
+                        @if ($configuration->warehouse_pdf_item && $row->warehouse_id)
+                            <div>
+                                <strong>TDA: </strong>{{ $row->warehouse_id }}
+                            </div>
+                        @endif
                     </td>
                     <td class="text-right desc-9 align-top">
 

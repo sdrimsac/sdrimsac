@@ -7004,6 +7004,41 @@
                                                         ></el-input>
                                                     </div>
                                                 </div>
+
+
+                                                <div class="col-md-2 mt-4">
+                                                    <div class="form-group">
+                                                        <label
+                                                            class="control-label w-100"
+                                                        >
+                                                            <i
+                                                                class="fas fa-list fa-lg"
+                                                            ></i>
+                                                            Imprimir el álmacen de origen del item en el pdf
+                                                        </label>
+                                                        <el-switch
+                                                            v-model="
+                                                                form.warehouse_pdf_item
+                                                            "
+                                                            active-text="Si"
+                                                            inactive-text="No"
+                                                            :active-color="
+                                                                '#28a745'
+                                                            "
+                                                            :inactive-color="
+                                                                '#6c757d'
+                                                            "
+                                                            @change="
+                                                                submit(
+                                                                    'Imprimir el álmacen de origen del item en el pdf',
+                                                                    form.warehouse_pdf_item,
+                                                                    'warehouse_pdf_item',
+                                                                    'listIcon'
+                                                                )
+                                                            "
+                                                        ></el-switch>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </el-tab-pane>

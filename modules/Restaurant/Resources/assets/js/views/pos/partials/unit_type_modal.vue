@@ -53,12 +53,12 @@
           <div class="col-sm-3 col-12">
             <div>
               <label class="fw-bold">P. Unit.</label>
-              <br />
               <el-input
                 v-model="unit.unitPrice"
                 type="tel"
                 :min="1"
                 :max="999"
+                class="w-100"
                 autocomplete="off"
                 autocorrect="off"
                 autocapitalize="off"

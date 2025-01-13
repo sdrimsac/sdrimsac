@@ -509,13 +509,17 @@
                                             "
                                         >
                                             <strong
-                                            v-if="row.last_register.ip != 'SERVIDOR'"
-                                            >Usuario: {{
-                                                row.last_register.user
-                                            }}</strong
+                                                v-if="
+                                                    row.last_register.ip !=
+                                                        'SERVIDOR'
+                                                "
+                                                >Usuario:
+                                                {{
+                                                    row.last_register.user
+                                                }}</strong
                                             >
                                             <strong>SERVIDOR</strong>
-                                            <br>
+                                            <br />
                                             <span class="text-primary">{{
                                                 row.last_register.description
                                             }}</span>
@@ -532,7 +536,10 @@
                                                         row.last_register
                                                             .date_time
                                                     )
-                                                }} -->  {{ row.last_register.created_at }}
+                                                }} -->
+                                                {{
+                                                    row.last_register.created_at
+                                                }}
                                             </span>
                                         </div>
                                     </td>
@@ -704,7 +711,19 @@
                                                     row.state_type_id === '09'
                                             }"
                                         >
-                                            {{ row.state_type_description }}
+                                            <template
+                                                v-if="row.state_type_id == '11'"
+                                            >
+                                                <span
+                                                    v-if="row.internal_voided"
+                                                >
+                                                    Anulado Interno
+                                                </span>
+                                                <span v-else> Anulado Sunat</span>
+                                            </template>
+                                            <template v-else>
+                                                {{ row.state_type_description }}
+                                            </template>
                                         </span>
                                         <template
                                             v-if="

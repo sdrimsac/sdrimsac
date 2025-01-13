@@ -286,6 +286,7 @@ class Configuration extends ModelTenant
         'init_stock',
         'observation_translate',
         'other_currency_pos',
+        'warehouse_pdf_item',
     ];
     protected $casts = [
         'observations_separate' => 'boolean',
@@ -476,6 +477,7 @@ class Configuration extends ModelTenant
         'affectation_optional' => 'boolean',
         'affectation_optional_id' => 'boolean',
         'other_currency_pos' => 'boolean',
+        'warehouse_pdf_item' => 'boolean',
     ];
     public function scopeGetUnitPriceDispatchRelatedRecord($query)
     {
@@ -520,6 +522,7 @@ class Configuration extends ModelTenant
         $skins = [];
         return [
             'observations_separate' => (bool)$this->observations_separate,
+            'warehouse_pdf_item' => (bool)$this->warehouse_pdf_item,
             'pdf_origin_enabled' => (bool)$this->pdf_origin_enabled,
             'edit_count_products' => (bool)$this->edit_count_products,
             'edit_clients' => (bool)$this->edit_clients,

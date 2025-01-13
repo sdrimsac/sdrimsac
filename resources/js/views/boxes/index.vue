@@ -57,6 +57,7 @@
                         <td class="text-end">
                             <button type="button" class="btn waves-effect waves-light btn-sm btn-info" @click.prevent="clickCreate(row.id)">Editar</button>
                             <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickDelete(row.id)">Eliminar</button>
+                            <button type="button" class="btn waves-effect waves-light btn-sm btn-success" @click.prevent="clickPrint(row.id)">Imprimir</button>
                         </td>
                     </tr>
                 </data-table>
@@ -94,6 +95,16 @@
             this.title = 'Egresos Caja'
         },
         methods: { 
+            clickPrint(id){
+                let url = `/caja/worker/expenses/print-box?box_id=${id}`;
+                this.$http.post("/caja/re-print",{url:url}).then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                
+            },
             clickCreate(recordId = null) {
                 this.recordId = recordId
                 this.showDialog = true

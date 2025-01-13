@@ -154,6 +154,7 @@ class DocumentCollection extends ResourceCollection
             }
 
             return [
+                'internal_voided' => (bool) $row->internal_voided,
                 /* 'seller_id' => $row->seller_id, */
                 'last_register' => $this->get_last_document($row),
                 'ordens_ref' => $ordens_ref,

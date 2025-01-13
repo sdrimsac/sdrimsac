@@ -2471,28 +2471,26 @@ class DocumentController extends Controller
                     $this->deleteAllPayments($record->payments);
                     $record->state_type_id = "11";
                     $items = $record->items;
-                    foreach ($items as $it) {
-                        $lots = $it->item->lots;
-                        foreach ($lots as $lot) {
-                            ItemLot::find($lot->id)->update(["has_sale" => 0]);
-                        }
-                        $quantity = $it->quantity;
-                        if (isset($it->item->has_unit_type)) {
-                            $unit_type = ItemUnitType::where('item_id', $it->item_id)
-                                ->where('description', $it->item->has_unit_type)->first();
-                            if ($unit_type) {
+                    // foreach ($items as $it) {
+                    //     $lots = $it->item->lots;
+                    //     foreach ($lots as $lot) {
+                    //         ItemLot::find($lot->id)->update(["has_sale" => 0]);
+                    //     }
+                    //     $quantity = $it->quantity;
+                    //     if (isset($it->item->has_unit_type)) {
+                    //         $unit_type = ItemUnitType::where('item_id', $it->item_id)
+                    //             ->where('description', $it->item->has_unit_type)->first();
+                    //         if ($unit_type) {
 
-                                $quantity = $quantity * $unit_type->quantity_unit;
-                            }
-                        }
-                        // $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
-                        // $warehouse_id = ($warehouse) ? $warehouse->id : null;
-                        // ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $warehouse_id)->increment('stock', $quantity);
-                    }
+                    //             $quantity = $quantity * $unit_type->quantity_unit;
+                    //         }
+                    //     }
+                        
+                    // }
                     Box::where('document_id', $document_id)->delete();
                     $desc = "App\Models\Tenant\Document";
                     // InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
-
+                    $record->internal_voided = true;
                     $record->save();
                     if ($orden_id) {
                         $orden = Orden::find($orden_id);

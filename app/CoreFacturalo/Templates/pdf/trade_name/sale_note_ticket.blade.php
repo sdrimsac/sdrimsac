@@ -24,6 +24,7 @@
         'show_logo_in_documents',
         'show_internal_code_ticket',
         'consolidated_quotations',
+        'warehouse_pdf_item',
         'comercial_name',
         'warehouses_product',
         'pdf_origin_enabled',
@@ -113,7 +114,7 @@ contain"
     @endif
     <table class="full-width">
         <tr>
-            @if($configuration->comercial_name)
+            @if ($configuration->comercial_name)
                 <td class="text-center">
                     @if ($is_chifa_china)
                         <h1>{{ $company->trade_name }}</h1>
@@ -318,17 +319,17 @@ contain"
                     </p>
                 </td>
             </tr>
-            @if($document->quotation_id)
-            <tr>
-                <td class="align-top">
-                    <p class="desc">N° atención:</p>
-                </td>
-                <td>
-                    <p class="desc">
-                        {{ $document->quotation->num_orden}}
-                    </p>
-                </td>
-            </tr>
+            @if ($document->quotation_id)
+                <tr>
+                    <td class="align-top">
+                        <p class="desc">N° atención:</p>
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ $document->quotation->num_orden }}
+                        </p>
+                    </td>
+                </tr>
             @endif
             <tr>
                 <td class="align-top">
@@ -336,7 +337,7 @@ contain"
                 </td>
                 <td>
                     <p class="desc">
-                        {{\App\Models\Tenant\Person::getZone($document->customer_id)}}
+                        {{ \App\Models\Tenant\Person::getZone($document->customer_id) }}
                     </p>
                 </td>
             </tr>
@@ -356,23 +357,23 @@ contain"
                 </td>
             </tr>
         @endif
-        @if(count($detail_points) > 0)
-        <tr>
-            <td>
-                <p class="desc">Puntos adquiridos:</p>
-            </td>
-            <td>
-                <p class="desc">{{ $detail_points['total_document_points'] }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p class="desc">Puntos acumulados:</p>
-            </td>
-            <td>
-                <p class="desc">{{ $detail_points['acc_points'] }}</p>
-            </td>
-        </tr>
+        @if (count($detail_points) > 0)
+            <tr>
+                <td>
+                    <p class="desc">Puntos adquiridos:</p>
+                </td>
+                <td>
+                    <p class="desc">{{ $detail_points['total_document_points'] }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="desc">Puntos acumulados:</p>
+                </td>
+                <td>
+                    <p class="desc">{{ $detail_points['acc_points'] }}</p>
+                </td>
+            </tr>
         @endif
         @if (isset($detail_message['message']))
             <tr>
@@ -597,13 +598,14 @@ contain"
                             @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
-                                @if (isset($row->item->origin) && $configuration->pdf_origin_enabled)/
-                                {{ $row->item->origin }} <br>
+                                @if (isset($row->item->origin) && $configuration->pdf_origin_enabled)
+                                    /
+                                    {{ $row->item->origin }} <br>
                                 @endif
                                 {{ $row->item->description }} <br>
-                                @if (!empty($row->warranty_end_date)) 
-                                Garantía Hasta el {{ $row->warranty_end_date }}
-                                @endif 
+                                @if (!empty($row->warranty_end_date))
+                                    Garantía Hasta el {{ $row->warranty_end_date }}
+                                @endif
                             @endif
                         @endif
                         {{-- @if (isset($row->warranty))
@@ -619,12 +621,13 @@ contain"
                                 $quantity_totals += $row->quantity;
                                 //if (isset($madera->sumTotals) && $madera->sumTotals == true) {
                                 //  $quantity_totals += $row->quantity;
+                                $fot_locals = $row->quantity * (($ancho * $largo * $grosor) / 12);
                                 $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
                                 //}
                                 $m_description = "${grosor}x${ancho}x${largo}";
                             @endphp
                             {{ $m_description }} <br />
-                            ({{ number_format($fot_totals, 2) }} PIES)
+                            ({{ number_format($fot_locals, 2) }} PIES)
                         @endif
                         @if (isset($row->item->from_unit_type_id_desc))
                             - {!! $row->item->from_unit_type_id_desc !!}
@@ -662,9 +665,14 @@ contain"
                                 <br /><small>{{ $dtos->factor * 100 }}% {{ $dtos->description }}</small>
                             @endforeach
                         @endif
-                        @if(isset($row->item->is_promotion) && $row->item->is_promotion)
+                        @if (isset($row->item->is_promotion) && $row->item->is_promotion)
                             <br />
                             <small>**Promoción**</small>
+                        @endif
+                        @if ($configuration->warehouse_pdf_item && $row->warehouse_id)
+                            <div>
+                                <strong>TDA: </strong>{{ $row->warehouse_id }}
+                            </div>
                         @endif
                     </td>
                     <td class="text-right desc-9 align-top">
@@ -674,6 +682,7 @@ contain"
                 @else
                     {{ number_format($row->unit_price, 2) }}</td>
             @endif
+        
             <td class="text-right desc-9 align-top">{{ number_format($row->total, 2) }}</td>
             </tr>
             <tr>
@@ -733,7 +742,7 @@ contain"
                     {{ $document->currency_type->symbol }}</td>
                 <td class="text-right font-bold desc">{{ number_format($document->total, 2) }}</td>
             </tr>
-            
+
         </tbody>
     </table>
     <table class="full-width">
@@ -757,20 +766,20 @@ contain"
         </tr>
         @php
 
-                $total_boxes = 0;
-                foreach ($boxes as $box) {
-                    $total_boxes += floatval($box->amount);
-                }
+            $total_boxes = 0;
+            foreach ($boxes as $box) {
+                $total_boxes += floatval($box->amount);
+            }
 
-                $difference = $total_boxes - $document->total;
-            @endphp
-            @if ($difference > 0)
-                <tr>
-                    <td colspan="4" class="text-left font-bold desc">VUELTO:
-                        {{ $document->currency_type->symbol }}</td>
-                    <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
-                </tr>
-            @endif
+            $difference = $total_boxes - $document->total;
+        @endphp
+        @if ($difference > 0)
+            <tr>
+                <td colspan="4" class="text-left font-bold desc">VUELTO:
+                    {{ $document->currency_type->symbol }}</td>
+                <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
+            </tr>
+        @endif
         @foreach ($boxes as $box)
             <tr>
                 <td colspan="4" class="text-left font-bold desc">{{ $box->method }}

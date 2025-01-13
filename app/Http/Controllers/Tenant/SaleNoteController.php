@@ -2673,6 +2673,7 @@ class SaleNoteController extends Controller
             $obj->save();
             Box::where('sale_note_id', $obj->id)->delete();
             $establishment = Establishment::where('id', $obj->establishment_id)->first();
+            
             $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
 
             foreach ($obj->items as $item) {
@@ -2690,12 +2691,13 @@ class SaleNoteController extends Controller
                         $quantity = $quantity * $unit_type->quantity_unit;
                     }
                 }
-                $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $warehouse->id]])->first();
+            
+                $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $item->warehouse_id ?? $warehouse->id]])->first();
                 $it = Item::find($item->item_id);
                 $item->sale_note->inventory_kardex()->create([
                     'date_of_issue' => date('Y-m-d'),
                     'item_id' => $item->item_id,
-                    'warehouse_id' => $warehouse->id,
+                    'warehouse_id' => $wr->warehouse_id,
                     'quantity' => $quantity,
                     'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
                 ]);

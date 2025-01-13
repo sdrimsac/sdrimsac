@@ -4,8 +4,10 @@ namespace Modules\Inventory\Providers;
 
 use Modules\Order\Models\OrderNote;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\ItemUnitType;
 use Illuminate\Support\ServiceProvider;
 use Modules\Inventory\Traits\InventoryTrait;
+use Modules\Item\Models\ItemLot;
 
 class InventoryVoidedServiceProvider extends ServiceProvider
 {
@@ -30,6 +32,20 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                     $warehouse = $this->findWarehouse($document['establishment_id']);
 
                     foreach ($document['items'] as $detail) {
+                        $lots = isset($detail['item']->lots) ? $detail['item']->lots : [];
+
+                        foreach ($lots as $lot) {
+                            ItemLot::find($lot->id)->update(["has_sale" => 0]);
+                        }
+                        $quantity = $detail['quantity'];
+                        if (isset($detail['item']->has_unit_type)) {
+                            $unit_type = ItemUnitType::where('item_id', $detail['item_id'])
+                                ->where('description', $detail['item']->has_unit_type)->first();
+                            if ($unit_type) {
+
+                                $quantity = $quantity * $unit_type->quantity_unit;
+                            }
+                        }
                         $warehouse_id = isset($detail['warehouse_id']) ? $detail['warehouse_id'] : null;
                         // dd($detail['item']->presentation);
                         $presentationQuantity = (!empty($detail['item']->presentation)) ? $detail['item']->presentation->quantity_unit : 1;

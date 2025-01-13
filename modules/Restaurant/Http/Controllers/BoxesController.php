@@ -1692,7 +1692,7 @@ class BoxesController extends Controller
                     foreach ($document_items as $item) {
                         $original_item = Item::select(['barcode', 'category_id'])->find($item->item_id);
                         $description = $item->item->description;
-                        Log::info("Agregando item: " . $description . " del documento: " . $document->number);
+                        // Log::info("Agregando item: " . $description . " del documento: " . $document->number);
                         $internal_id = $item->item->internal_id;
                         $key = $description . "-" . $internal_id;
                         $price = floatval($item->unit_price);

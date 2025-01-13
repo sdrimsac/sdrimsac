@@ -59,7 +59,7 @@
             async create(){
 
                 this.warehouse_id = null
-                 console.log(this.isUpdateWarehouseId)
+                //  console.log(this.isUpdateWarehouseId)
                 
                 if(this.isUpdateWarehouseId){
                     await this.warehouses.forEach((it) => {

@@ -42,8 +42,15 @@ class SaleNoteItem extends ModelTenant
         'charges',
         'discounts',
         'inventory_kardex_id',
-        'name_product_pdf'
+        'name_product_pdf',
+        'warehouse_id'
     ];
+
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
+    }
 
     public function getItemAttribute($value)
     {

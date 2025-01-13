@@ -10,6 +10,7 @@ use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\SaleNoteItem;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Support\ServiceProvider;
 use Modules\Inventory\Traits\InventoryTrait;
 use Modules\Order\Models\OrderNote;
@@ -198,7 +199,11 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 }
             }
             if ($sale_note_item->item->is_stock == 'Si' && !$sale_note_item->sale_note->from_consignment) {
-                $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
+                if($sale_note_item->warehouse_id){
+                    $warehouse = Warehouse::find($sale_note_item->warehouse_id);
+                }else{
+                    $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
+                }
                 if (!$sale_note_item->item->is_set) {
                     $quantity = $sale_note_item->quantity;
 
@@ -211,7 +216,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         }
                     }
                     $presentationQuantity = (!empty($sale_note_item->item->presentation)) ? $sale_note_item->item->presentation->quantity_unit : 1;
-                    $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
+            
                     $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
                     if (!$sale_note_item->sale_note->order_note_id) {
                         $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
@@ -224,7 +229,6 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     foreach ($item->sets as $it) {
                         $ind_item  = $it->individual_item;
                         $presentationQuantity = $it->quantity;
-                        $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
                         // $this->createInventoryKardex($sale_note_item->sale_note, $ind_item->id , (-1 * ($sale_note_item->quantity * $presentationQuantity)), $warehouse->id);
                         $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $ind_item->id, (-1 * ($sale_note_item->quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
                         if (!$sale_note_item->sale_note->order_note_id) $this->updateStock($ind_item->id, (-1 * ($sale_note_item->quantity * $presentationQuantity)), $warehouse->id);

@@ -33,7 +33,10 @@
                                 </el-tooltip>
                             </el-input>
                         </template>
-                        <small class="badge text-primary w-100" v-if="form.item_id != null">Ubicacion: {{ form.item.location }}<br /></small>
+                        <small class="badge text-primary w-100" v-if="form.item_id != null">
+                            <strong>    Establecimiento: {{ form.item.warehouses.find(item => item.checked).warehouse_description }}</strong>
+                                <br>
+                            Ubicacion: {{ form.item.location }}<br /></small>
 
                         <template v-if="!is_client">
                             <el-checkbox class="m-t-10" v-model="search_item_by_barcode" :disabled="recordItem != null" @change="changeSearchItemBarcode">Buscar por código de barras</el-checkbox><br />
@@ -344,6 +347,8 @@ export default {
         this.$eventHub.$on("selectWarehouseId", warehouse_id => {
             // console.log(warehouse_id)
             this.form.warehouse_id = warehouse_id;
+            let stock = this.form.item.warehouses.find(item => item.warehouse_id == warehouse_id).stock;
+            this.form.stock_disp = stock || 0;
         });
     },
     methods: {
@@ -724,7 +729,8 @@ export default {
                     JSON.stringify(this.form.item.color_size)
                 );
             }
-            this.form.stock_disp = this.form.item.stock;
+            let stock = this.form.item.warehouses.find(item => item.checked).stock;
+            this.form.stock_disp = stock || 0;
             this.form.has_igv = this.form.item.has_igv;
             this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
             if (this.colorSizeItem && this.colorSizeItem.length > 0) {
@@ -902,7 +908,8 @@ export default {
                     return this.$toast.error('Debe seleccionar al menos una talla y color.');
                 } */
             }
-
+            let warehouse_id = this.form.item.warehouses.find(item => item.checked).warehouse_id;
+            console.log(this.form.item.warehouses);
             // this.row.edit = false;
             if (reset == "ok") {
                 this.initForm();
@@ -912,6 +919,8 @@ export default {
                 this.row.indexi = this.recordItem.indexi;
             }
             this.row.IdLoteSelected = IdLoteSelected;
+            this.row.warehouse_id = warehouse_id;
+            console.log("el warehouse id",this.row)
             this.row.item.lots = this.lots;
             if (item_color_size) {
                 let new_color_size = JSON.parse(
@@ -925,6 +934,7 @@ export default {
             }
 
             await this.$emit("add", JSON.parse(JSON.stringify(this.row)));
+            console.log(this.row)
 
             this.agregar_item = false;
             if (this.recordItem) {
