@@ -1185,6 +1185,7 @@ if ($hostname) {
             Route::get('historial/record/{History}', 'System\HistorialController@record');
             Route::post('historial', 'System\HistorialController@store');
             Route::delete('historial/{history}', 'System\HistorialController@destroy');
+            Route::get('historial/pdf', 'System\HistorialController@pdf');
 
             //Users
             Route::get('users/create', 'System\UserController@create')->name('system.users.create');

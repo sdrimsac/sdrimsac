@@ -84,6 +84,15 @@
                                                     ></i>
                                                     Eliminar
                                                 </button> -->
+                                                <el-button 
+                                                    @click.prevent="
+                                                        clickPdf(record.id)
+                                                    ">
+                                                    <i
+                                                        class="fa fa-file-pdf fa-lg me-2"
+                                                    ></i>
+                                                    PDF
+                                                </el-button>
                                             <!-- </div> -->
                                         </div>
                                     </td>
@@ -151,6 +160,11 @@ export default {
         clickCreate(recordId = null) {
             this.recordId = recordId;
             this.showDialog = true;
+        },
+        clickPdf() {
+            this.$http.get(`/${this.resource}/pdf`).then(response => {
+                window.open(response.data.url, "_blank");
+            });
         }
         /* clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>

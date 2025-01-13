@@ -58,10 +58,10 @@ class EtiquetasController extends Controller
                 // $template = 'template3';
                 $template = 'template8';
             }
-            if ($type == '3' && $format == '1' && $paper == '1'){
+            if ($type == '3' && $format == '1' && $paper == '1') {
                 $template = 'template9';
             }
-            if ($type == '4' && $format == '1' && $paper == '2'){
+            if ($type == '4' && $format == '1' && $paper == '2') {
                 $template = 'template10';
             }
             if ($type == '5' && $format == '1' && $paper == '2') {
@@ -98,7 +98,7 @@ class EtiquetasController extends Controller
                 $height = 20;
                 $width = 65;
             }
-            if ($template === "template14"){
+            if ($template === "template14") {
                 $height = 25;
                 $width = 100;
             }
@@ -248,11 +248,14 @@ class EtiquetasController extends Controller
                 }
                 $stock = $row->getStockByWarehouse(auth()->user()->establishment_id);
 
-                
-                $price1 = null;
+
+                /* $price1 = null;
                 if (is_array($row->item_unit_types) && isset($row->item_unit_types[0])) {
                     $price1 = $row->item_unit_types[0]['price1'] ?? null;
-                }
+                }*/
+                
+
+
                 return [
                     "id" => $row->id,
                     "descripcion" => $row->description,
@@ -263,15 +266,15 @@ class EtiquetasController extends Controller
                     "purchase" => $row->purchase_unit_price,
                     "location" => $row->location,
                     "item_unit_types" => $row->item_unit_types,
-                    "price1" => $price1,
+                    /* "price1" => $price1, */
                     'max_quantity' => $row->max_quantity
-
                 ];
             });
         return [
             "items" => $items
         ];
     }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable
