@@ -161,8 +161,8 @@ export default {
             this.recordId = recordId;
             this.showDialog = true;
         },
-        clickPdf() {
-            this.$http.get(`/${this.resource}/pdf`).then(response => {
+        clickPdf(id) {
+            this.$http.get(`/${this.resource}/pdf/${id}`).then(response => {
                 window.open(response.data.url, "_blank");
             });
         }

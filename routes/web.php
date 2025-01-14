@@ -1118,6 +1118,8 @@ if ($hostname) {
         Route::get('phone', 'System\UserController@getPhone');
         Route::get('check-documents', 'System\UserController@checkDocuments');
 
+        Route::get('historial/pdf/{history}', 'System\HistorialController@pdf');
+
         Route::middleware('auth:admin')->group(function () {
             Route::get('phpinfo', function () {
                 return phpinfo();
@@ -1185,7 +1187,7 @@ if ($hostname) {
             Route::get('historial/record/{History}', 'System\HistorialController@record');
             Route::post('historial', 'System\HistorialController@store');
             Route::delete('historial/{history}', 'System\HistorialController@destroy');
-            Route::get('historial/pdf', 'System\HistorialController@pdf');
+            
 
             //Users
             Route::get('users/create', 'System\UserController@create')->name('system.users.create');

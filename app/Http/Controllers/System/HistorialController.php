@@ -69,34 +69,43 @@ class HistorialController extends Controller
 
         return compact('business');
     }
-    /* public function pdf() */
-    /* {
+    public function pdf($id)
+    {
         // Encuentra el registro en la base de datos
-        /* $record = History::findOrFail($id); *//*
+         $record = History::findOrFail($id);
 
         // Genera el PDF usando la vista y pasa los datos necesarios
-        $pdf = \PDF::loadView('system.historial.contrato_restaurant', compact('record'))
+        $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', compact('record'))
             ->setPaper('a4', 'landscape');
 
         // Retorna el PDF al navegador para que se pueda ver/descargar
-        return $pdf->stream();
-    } */
-    /* public function pdf()
-    {
-        // Generar un PDF a partir de la vista sin necesidad de datos dinámicos
-        $pdf = \PDF::loadView('system.historial.contrato_restaurant')
-            ->setPaper('a4', 'landscape');
-
-        // Retornar el PDF para visualizarlo en el navegador
-        return $pdf->stream('contrato.pdf');
-    } */
-    public function pdf()
-    {
-        // Generar el PDF con la vista especificada
-        $pdf = PDF::loadView('system.historial.contrato_restaurant', [])
-            ->setPaper('a4', 'landscape'); // Configurar tamaño A4 y orientación horizontal
-
-        // Retornar el PDF para visualizarlo en el navegador
-        return $pdf->stream('contrato.pdf');
+        /* return $pdf->stream(); */
+        return $pdf->download('contrato.pdf');
     }
+
+    /* public function pdf($id)
+    {
+        /* $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', [
+            'record' => ['name' => 'Test', 'description' => 'Contenido de prueba']
+        ])->setPaper('a4', 'landscape'); *//*
+        $record = History::findOrFail($id);
+
+        $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', compact('record'))
+    ->setPaper('a4', 'landscape')
+    ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        /* return $pdf->stream(); *//*
+        return $pdf->download('contrato.pdf');
+    } */
+
+    /* public function pdf($id)
+    {
+        $record = History::findOrFail($id);
+
+        // Retorna la vista en lugar del PDF para depuración
+        /* return view('system.historial.contrato_restaurant_pdf', compact('record')); *//*
+        return $pdf->stream('contrato.pdf', [
+            'Content-Type' => 'application/pdf',
+        ]);
+    } */
 }
