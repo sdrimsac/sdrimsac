@@ -10124,6 +10124,40 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-file-alt tab-icon"
+                                                                ></i>
+                                                                Mostrar opción de dividir ordenes iguales
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.divided_items
+                                                                "
+                                                                active-text="Si"
+                                                                inactive-text="No"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    submit(
+                                                                        'Mostrar opción de dividir ordenes iguales',
+                                                                        form.divided_items,
+                                                                        'divided_items',
+                                                                        'fileAltIcon'
+                                                                    )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 

@@ -1399,6 +1399,12 @@
                                                 </template>
                                             </a>
                                             Por solicitar
+                                            <template v-if="configuration.divided_items">
+                                                <el-checkbox v-model="localDividedItems"
+                                                style="margin-left: 10px;"
+                                                @change="saveDividedItemsLocalStorage"
+                                                >Dividir ordenes iguales</el-checkbox>
+                                            </template>
                                         </div>
                                         <div
                                             v-show="localOrden.length > 0"
@@ -2745,12 +2751,14 @@ export default {
         "ordenId",
         "cash_id",
         "isHotelArea",
-        "user"
+        "user",
+        "divided_items"
         // "exchange_rate_sale"
     ],
 
     data() {
         return {
+    
             /* localOrden: [], */
             /* totalUniqueProducts: 0,
             totalQuantityProducts: 0, */
@@ -2840,7 +2848,8 @@ export default {
             customersSearch: [],
             loading_search: false,
             customer_search_id: null,
-            saleOfferts: []
+            saleOfferts: [],
+            localDividedItems: this.divided_items
         };
     },
 
@@ -3007,10 +3016,22 @@ export default {
         this.getLasNumOrden();
         this.getSaleOfferts();
         this.searchExchangeRateByDate(moment().format("YYYY-MM-DD"));
+        this.readDividedItemsLocalStorage();
     },
     methods: {
+        saveDividedItemsLocalStorage() {
+            this.$emit("update:divided_items", this.localDividedItems);
+
+            localStorage.setItem("divided_items", this.localDividedItems);
+        },
+        readDividedItemsLocalStorage() {
+            let divided_items = localStorage.getItem("divided_items");
+            if (divided_items) {
+                this.localDividedItems = divided_items == "true";
+                this.$emit("update:divided_items", this.localDividedItems);
+            }
+        },
         handleCotizacionCreada(value) {
-            console.log("Cotización creada con valor:", value);
             this.$emit("cotizarConfirmado", value);
         },
 
@@ -3032,10 +3053,7 @@ export default {
                     data = data.toString();
                     data = data.replace(",", ".");
                     this.exchange_rate_sale = Number(data);
-                    console.log(
-                        "el exchange_rate_sale",
-                        this.exchange_rate_sale
-                    );
+            
                 }
             });
         },
@@ -3059,7 +3077,6 @@ export default {
 
             let itemsSeleccionados = itemsOrdenados.slice(0, quantity);
 
-            console.log("Línea 45 - Items seleccionados:", itemsSeleccionados);
             // this.payOrden(offert, quantity);
             this.payOrden(offert);
         },
@@ -3100,11 +3117,7 @@ export default {
                 let orden = items[i];
 
                 let { currency_type_id: local_currency_type_id } = orden.food;
-                console.log("el currency_id ", this.currency_id);
-                console.log(
-                    "el local_currency_type_id ",
-                    local_currency_type_id
-                );
+    
                 let isLocalCurrency = this.currency_id == "S/";
 
                 if (local_currency_type_id == "PEN" && isLocalCurrency) {
@@ -4630,7 +4643,8 @@ export default {
             if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
             }
-            if (!this.configuration.maderera) {
+            if (!this.configuration.maderera && !this.divided_items) {
+
                 form_submit.items = this.mergeItems(form_submit.items);
             }
             this.loading = true;
@@ -4659,7 +4673,17 @@ export default {
             }
             const resultado = {};
             // Recorrer el arreglo original
-            items.forEach(obj => {
+            if(this.configuration.divided_items){
+                items.forEach(obj => {
+                    const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}-${obj.observation}`;
+                    if (resultado[key]) {
+                        resultado[key].quantity += Number(obj.quantity);
+                    } else {
+                        resultado[key] = { ...obj, quantity: Number(obj.quantity) };
+                    }
+                });
+            }else{
+                items.forEach(obj => {
                 const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}`;
                 if (resultado[key]) {
                     resultado[key].quantity += Number(obj.quantity);
@@ -4667,6 +4691,7 @@ export default {
                     resultado[key] = { ...obj, quantity: Number(obj.quantity) };
                 }
             });
+            }
 
             const arregloResultado = Object.values(resultado);
             return arregloResultado;
@@ -4733,10 +4758,7 @@ export default {
             // this.total = this.totalOrden + this.totalOrdenItems;
             this.total = _.round(this.totalOrden, 2);
             this.$emit("total_salcancelOrdenaes", this.total);
-            console.log(
-                "🚀 ~ calculateTotal ~ this.localOrden:",
-                this.localOrden
-            );
+        
             /* console.log("Ítems seleccionados:", selectedItems); */
         },
         deleteFood(idx) {

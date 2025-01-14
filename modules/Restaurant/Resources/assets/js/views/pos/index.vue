@@ -969,6 +969,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            :divided_items.sync="divided_items"
                             @searchFoodByCustomerUnitTypeId="
                                 searchFoodByCustomerUnitTypeId
                             "
@@ -1526,6 +1527,7 @@
                 </div>
                 <div class="row">
                     <list-orden
+                        :divided_items.sync="divided_items"
                         @searchFoodByCustomerUnitTypeId="
                             searchFoodByCustomerUnitTypeId
                         "
@@ -1997,6 +1999,7 @@ export default {
 
     data() {
         return {
+            divided_items: false,
             showDialogWarranty: false,
             ordenToPrint: [],
             cotizarConfirmado: false,
@@ -3194,7 +3197,6 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             }
-            console.log("this.currencyIdChoice dd", this.currencyIdChoice);
             this.form.currency_type_id =
                 this.currencyIdChoice == "S/" ? "PEN" : "USD";
 
@@ -3657,10 +3659,7 @@ export default {
                     this.currencyIdChoice == "PEN"
                         ? "PEN"
                         : "USD";
-                console.log(
-                    "this.currency_id ::::",
-                    JSON.stringify(this.form.currency_type_id)
-                );
+        
                 /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
                 this.is_payment = true;
             }
@@ -3785,7 +3784,8 @@ export default {
                 return;
             }
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
-            if (ordenAdded.length == 0) {
+
+            if (ordenAdded.length == 0 || this.divided_items) {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
                 if (this.clientSaleNoteNumber) {
@@ -3853,7 +3853,6 @@ export default {
                         ? 0
                         : orden.quantity || 1;
                     orden.price = this.getDefaultPrice(type);
-                    console.log("orden.price", JSON.stringify(orden.price));
                 }
                 if (
                     this.configuration.price_item_unit_type &&
@@ -3883,6 +3882,11 @@ export default {
                         ].filter(p => p > 0);
 
                         orden.prices = newPrices;
+                    }
+                }
+                if(this.configuration.divided_items){
+                    if(this.divided_items){
+                        orden.will_be_divided = true;
                     }
                 }
                 if (this.configuration.order_desc_items == true) {
@@ -4962,7 +4966,6 @@ export default {
             this.form.establishment_id = this.establishment.id;
             this.form.currency_type_id =
                 this.currency_id == "S/" ? "PEN" : "USD";
-            console.log("currency_type_id", this.currency_id);
             this.is_payment = true;
         },
         getLocalPrinter(key) {
@@ -6108,7 +6111,6 @@ export default {
         enabledSearchItemsBarcode() {
             if (this.search_item_by_barcode) {
                 if (this.items.length == 1) {
-                    console.log("item ", this.items[0]);
                     this.clickAddItem(this.items[0], 0);
                     this.filterItems();
                 }

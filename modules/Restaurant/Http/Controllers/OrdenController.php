@@ -183,7 +183,7 @@ class OrdenController extends Controller
         $diff_ordens = [];
         $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get()->groupBy(function ($elemento) use (&$diff_ordens) {
             $diff_ordens[] = $elemento->orden_id;
-            return $elemento->food_id . '-' . $elemento->price;
+            return $elemento->food_id . '-' . $elemento->price . '-' . $elemento->observations;
         })->map(function ($grupo) {
 
             $cantidadTotal = $grupo->sum('quantity');
