@@ -1141,8 +1141,8 @@ export default {
                 let endPoint = `${this.resource}/generate?stock=${
                     this.quantity
                 }&salecode=${this.sale_code}&price1=${
-                    this.product.price1
-                }&price2=${this.product.price2}&purchasecode=${
+                    this.price1
+                }&price2=${this.price2}&purchasecode=${
                     this.purchase_code
                 }&description=${encodeURIComponent(
                     this.product.descripcion
@@ -1213,8 +1213,8 @@ export default {
                 let endPoint = `${this.resource}/generate?stock=${
                     this.quantity
                 }&salecode=${this.sale_code}&price1=${
-                    this.product.price1
-                }&price2=${this.product.price2}&purchasecode=${
+                    this.price1
+                }&price2=${this.price2}&purchasecode=${
                     this.purchase_code
                 }&description=${encodeURIComponent(
                     this.product.descripcion
@@ -1455,8 +1455,9 @@ export default {
         },
         changeItem() {
             this.product = this.items.find(i => i.id == this.product_id);
-
+            console.log(this.product);
             this.generateBarcode(this.product.barras);
+            
             this.quantity = Number(this.product.stock) ?? 0;
             this.typeBarcode = this.product.tipo_barras ?? "CODE-128";
             this.purchase_type = 2;
@@ -1473,6 +1474,23 @@ export default {
             } else {
                 this.price2 = 0;
                 console.log("VER SIN ESTA LEENDO EL CONSOLE",  this.price2);
+            }
+            if(this.product.item_unit_types){
+                let unit_types = this.product.item_unit_types;
+                let first_unit_type = unit_types[0];
+                let default_price = first_unit_type.price_default;
+                let prices = [first_unit_type.price1, first_unit_type.price2, first_unit_type.price3];
+                let price_default = prices[default_price - 1];
+                this.price1 = price_default;
+                if(unit_types.length > 1){
+                    let second_unit_type = unit_types[1];
+                    let default_price_2 = second_unit_type.price_default;
+                    let prices_2 = [second_unit_type.price1, second_unit_type.price2, second_unit_type.price3];
+                    let price_default_2 = prices_2[default_price_2 - 1];
+                    this.price2 = price_default_2;
+                }
+                
+            
             }
             this.murcielagoCode = this.product.murcielagoCode;
             this.purchase_code = Number(this.product.purchase).toFixed(2);

@@ -116,7 +116,7 @@
                             {{ $purchase_code }}
                         </div>
                         <div class="font-xs text-center">
-                            S/.{{ $sale_code }}
+                            S/.{{ $price1 }}
                         </div>
                         <div class="font-xs">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -155,7 +155,7 @@
                             {{ $purchase_code }}
                         </div>
                         <div class="font-xs text-center">
-                            S/.{{ $sale_code }}
+                            S/.{{ $price1 }}
                         </div>
                         <div class="font-xs">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
