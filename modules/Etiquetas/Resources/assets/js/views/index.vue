@@ -324,7 +324,15 @@
                                 type="success"
                                 @click="changeModel(5)"
                                 plain
-                                >Modelo 5</el-button
+                                >Modelo 5
+                                </el-button
+                            >
+                            <el-button
+                                type="success"
+                                @click="changeModel(6)"
+                                plain
+                                >Modelo 6
+                                </el-button
                             >
                         </el-button-group>
                     </div>
@@ -595,17 +603,50 @@
                             class="d-flex flex-fill flex-column justify-content-center align-items-center"
                         >
                             <div>
-                                <!-- <div v-if="imageSaved" class="w150 overflow-hidden">
-                  <img
-                    style="border:none !important;"
-                    :src="imageSaved"
-                    alt="imagen"
-                    class="img-thumbnail"
-                  />
-                </div> -->
-                                <!-- <div v-else class="col-12 d-flex justify-content-center align-items-center">
-                  <el-empty :image-size="150"></el-empty>
-                </div> -->
+                            </div>
+                            <span class="text-center">
+                                {{
+                                    product.descripcion ||
+                                        "DESCRIPCION DEL PRODUCTO"
+                                }}
+                            </span>
+                            <img
+                                v-show="product_id"
+                                id="barcode"
+                                alt="barcode"
+                            />
+                            <span></span>
+                            <span
+                                :style="
+                                    `color:${
+                                        type == 'Precio venta'
+                                            ? '#E6A23C'
+                                            : '#000'
+                                    }`
+                                "
+                                class="text-center"
+                                >{{ sale_code || "N/D" }}</span
+                            >
+
+                            <div
+                                class="d-flex col-12 justify-content-between p-1"
+                            >
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    v-if="modeloSeleccionado === 'Modelo6'"
+                    class="d-flex flex-row justify-content-center"
+                >
+                    <div
+                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                    >
+                        <div
+                            class="d-flex flex-fill flex-column justify-content-center align-items-center"
+                        >
+                            <div>
                             </div>
                             <span class="text-center">
                                 {{
@@ -908,6 +949,8 @@ export default {
                     return "Modelo4";
                 case 5:
                     return "Modelo5";
+                case 6:
+                    return "Modelo6";
                 default:
                     return null;
             }
@@ -1455,8 +1498,6 @@ export default {
                     let { items } = response.data;
                     this.items = items;
 
-                    console.log("Items recibidos:", items);
-
                     this.items = this.items.map(item => {
                         /* let originalPrice1 = null */;
                         let originalPrice1 = null;
@@ -1476,7 +1517,6 @@ export default {
                                 originalPrice2 = validPrices[1];
                             }
                         }
-                        console.log("Precio original 1:", originalPrice1, "Precio original 2:", originalPrice2);
 
                         // Generar código murcielago solo si tenemos price1 y words
                         let murcielagoCode = null;
