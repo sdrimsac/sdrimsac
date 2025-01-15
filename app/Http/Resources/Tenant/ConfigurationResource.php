@@ -16,6 +16,7 @@ class ConfigurationResource extends JsonResource
     {
         return [
             'divided_items' => (bool) $this->divided_items,
+            'change_unit_type_pos' => (bool) $this->change_unit_type_pos,
             'observations_separate' => (bool) $this->observations_separate,
             'pdf_origin_enabled' => (bool) $this->pdf_origin_enabled,
             'edit_count_products' => (bool) $this->edit_count_products,

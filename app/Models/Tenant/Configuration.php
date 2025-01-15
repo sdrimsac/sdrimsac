@@ -288,8 +288,10 @@ class Configuration extends ModelTenant
         'other_currency_pos',
         'warehouse_pdf_item',
         'divided_items',
+        'change_unit_type_pos'
     ];
     protected $casts = [
+        'change_unit_type_pos' => 'boolean',
         'observations_separate' => 'boolean',
         'pdf_origin_enabled' => 'boolean',
         'edit_count_products' => 'boolean',
@@ -523,6 +525,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'change_unit_type_pos' => (bool)$this->change_unit_type_pos,
             'divided_items' => (bool)$this->divided_items,
             'observations_separate' => (bool)$this->observations_separate,
             'warehouse_pdf_item' => (bool)$this->warehouse_pdf_item,

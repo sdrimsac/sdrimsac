@@ -4058,6 +4058,44 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
+
+                                                            <div
+                                                                class="col-md-2 mt-4"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="el-icon-s-grid icon-tab"
+                                                                        ></i>
+                                                                        Cambiar politica de precio en la lista de productos
+                                                                    </label>
+                                                                    <el-switch
+                                                                        @change="
+                                                                            submit(
+                                                                                'Cambiar politica de precio en la lista de productos',
+                                                                                form.change_unit_type_pos,
+                                                                                'change_unit_type_pos',
+                                                                                'lockIcon'
+                                                                            )
+                                                                        "
+                                                                        v-model="
+                                                                            form.change_unit_type_pos
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div

@@ -1399,11 +1399,20 @@
                                                 </template>
                                             </a>
                                             Por solicitar
-                                            <template v-if="configuration.divided_items">
-                                                <el-checkbox v-model="localDividedItems"
-                                                style="margin-left: 10px;"
-                                                @change="saveDividedItemsLocalStorage"
-                                                >Dividir ordenes iguales</el-checkbox>
+                                            <template
+                                                v-if="
+                                                    configuration.divided_items
+                                                "
+                                            >
+                                                <el-checkbox
+                                                    v-model="localDividedItems"
+                                                    style="margin-left: 10px;"
+                                                    @change="
+                                                        saveDividedItemsLocalStorage
+                                                    "
+                                                    >Dividir ordenes
+                                                    iguales</el-checkbox
+                                                >
                                             </template>
                                         </div>
                                         <div
@@ -1460,11 +1469,59 @@
                                                                     class="text-primary"
                                                                 >
                                                                     <small>
-                                                                        <strong>
-                                                                            *{{
-                                                                                order_pend.type_description
-                                                                            }}
-                                                                        </strong>
+                                                                        <template
+                                                                            v-if="
+                                                                                configuration.change_unit_type_pos
+                                                                            "
+                                                                        >
+                                                                            <el-dropdown
+                                                                                @command="
+                                                                                    changeUnitType
+                                                                                "
+                                                                                size="medium"
+                                                                                type="primary"
+                                                                            >
+                                                                                <span>
+                                                                                    <strong>
+                                                                                        *{{
+                                                                                            order_pend.type_description
+                                                                                        }}
+                                                                                    </strong>
+                                                                                </span>
+                                                                                <el-dropdown-menu
+                                                                                    slot="dropdown"
+                                                                                >
+                                                                                    <el-dropdown-item
+                                                                                        v-for="(unit_type,
+                                                                                        indext) in order_pend
+                                                                                            .food
+                                                                                            .types"
+                                                                                        :key="
+                                                                                            indext
+                                                                                        "
+                                                                                        :command="{
+                                                                                            indexx,
+                                                                                            unit_type
+                                                                                        }"
+                                                                                    >
+                                                                                        <strong>
+                                                                                            {{
+                                                                                                unit_type.description
+                                                                                            }}
+                                                                                        </strong>
+                                                                                    </el-dropdown-item>
+                                                                                </el-dropdown-menu>
+                                                                            </el-dropdown>
+                                                                        </template>
+                                                                        <template
+                                                                            v-else
+                                                                        >
+                                                                            <strong>
+                                                                                *{{
+                                                                                    order_pend.type_description
+                                                                                }}
+                                                                            </strong>
+                                                                        </template>
                                                                     </small>
                                                                 </span>
                                                                 <span
@@ -2758,7 +2815,6 @@ export default {
 
     data() {
         return {
-    
             /* localOrden: [], */
             /* totalUniqueProducts: 0,
             totalQuantityProducts: 0, */
@@ -3019,6 +3075,39 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        getDefaultPrice(type) {
+            let listPricesDescription = ["price1", "price2", "price3"];
+            let currentPriceIndx =
+                listPricesDescription[type.price_default - 1];
+            let price = type[currentPriceIndx];
+            if (type.total == null || this.configuration.price_item_unit_type) {
+            } else {
+                price = Number(type.total);
+            }
+            return price;
+        },
+        changeUnitType({ indexx, unit_type }) {
+            let prices = [unit_type.price1, unit_type.price2, unit_type.price3];
+            let default_price = unit_type.price_default - 1;
+            let newPrices = [
+                prices[default_price],
+                ...prices.filter((_, index) => index !== default_price)
+            ].filter(p => p > 0);
+            let orden = this.localOrden[indexx];
+            orden.prices = newPrices;
+            orden.type_id = unit_type.id;
+            orden.type_description = unit_type.description;
+            orden.type_quantity = unit_type.quantity_unit;
+            orden.type_price_ranges = unit_type.item_unit_type_price_ranges;
+            orden.price = this.getDefaultPrice(unit_type);
+
+            console.log(indexx, unit_type);
+            console.log(this.localOrden[indexx]);
+
+            this.localOrden[indexx] = orden;
+
+            this.calculateTotal();
+        },
         saveDividedItemsLocalStorage() {
             this.$emit("update:divided_items", this.localDividedItems);
 
@@ -3053,7 +3142,6 @@ export default {
                     data = data.toString();
                     data = data.replace(",", ".");
                     this.exchange_rate_sale = Number(data);
-            
                 }
             });
         },
@@ -3117,7 +3205,7 @@ export default {
                 let orden = items[i];
 
                 let { currency_type_id: local_currency_type_id } = orden.food;
-    
+
                 let isLocalCurrency = this.currency_id == "S/";
 
                 if (local_currency_type_id == "PEN" && isLocalCurrency) {
@@ -4644,7 +4732,6 @@ export default {
                 form_submit.ref = this.clientTableData.ref;
             }
             if (!this.configuration.maderera && !this.divided_items) {
-
                 form_submit.items = this.mergeItems(form_submit.items);
             }
             this.loading = true;
@@ -4673,24 +4760,34 @@ export default {
             }
             const resultado = {};
             // Recorrer el arreglo original
-            if(this.configuration.divided_items){
+            if (this.configuration.divided_items) {
                 items.forEach(obj => {
-                    const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}-${obj.observation}`;
+                    const key = `${obj.food.id}-${Number(obj.price).toFixed(
+                        2
+                    )}-${obj.observation}`;
                     if (resultado[key]) {
                         resultado[key].quantity += Number(obj.quantity);
                     } else {
-                        resultado[key] = { ...obj, quantity: Number(obj.quantity) };
+                        resultado[key] = {
+                            ...obj,
+                            quantity: Number(obj.quantity)
+                        };
                     }
                 });
-            }else{
+            } else {
                 items.forEach(obj => {
-                const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}`;
-                if (resultado[key]) {
-                    resultado[key].quantity += Number(obj.quantity);
-                } else {
-                    resultado[key] = { ...obj, quantity: Number(obj.quantity) };
-                }
-            });
+                    const key = `${obj.food.id}-${Number(obj.price).toFixed(
+                        2
+                    )}`;
+                    if (resultado[key]) {
+                        resultado[key].quantity += Number(obj.quantity);
+                    } else {
+                        resultado[key] = {
+                            ...obj,
+                            quantity: Number(obj.quantity)
+                        };
+                    }
+                });
             }
 
             const arregloResultado = Object.values(resultado);
@@ -4722,7 +4819,6 @@ export default {
             let OrdenPenAtendidos = 0;
 
             /* let selectedItems = []; */
-
             _.forEach(this.localOrden, value => {
                 let { item } = value.food;
                 OrdenPen += value.quantity * value.price;
@@ -4758,7 +4854,7 @@ export default {
             // this.total = this.totalOrden + this.totalOrdenItems;
             this.total = _.round(this.totalOrden, 2);
             this.$emit("total_salcancelOrdenaes", this.total);
-        
+
             /* console.log("Ítems seleccionados:", selectedItems); */
         },
         deleteFood(idx) {
