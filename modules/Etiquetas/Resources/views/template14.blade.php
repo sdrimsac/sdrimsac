@@ -56,7 +56,7 @@
                         </div>
                         <div style="">
                             <span>P.C. {{ $purchase_code }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>S/.{{ $sale_code }}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>S/.{{ $price1 }}</span>
                             {{-- <span style="padding-right: 200px;">S/.{{ $sale_code }}</span>
                             
                             <span style="display: inline-block;">P.C. {{ $purchase_code }}</span> --}}
@@ -64,7 +64,7 @@
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span>P. M. {{ $price1 }}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span>P. M. {{ $price2 }}</span>
                         </div>
                     </td>
                 @endfor

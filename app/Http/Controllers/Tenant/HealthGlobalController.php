@@ -21,16 +21,17 @@ class HealthGlobalController
 
     public function report(Request $request)
     {
-
         $month = $request->month_start;
+        $year = $request->year_start;
         $type = $request->type;
-        $records = $this->getRecords($month);
+        $records = $this->getRecords($month, $year);
         $company = Company::first();
         if ($type == 'excel') {
             $export = (new HealthGlobalExport)
                 ->records($records)
                 ->company($company)
-                ->month($month);
+                ->month($month)
+                ->year($year);
             //remove all files in the folder
             $files = glob(storage_path('app/public/global_reports/*'));
             foreach ($files as $file) {
@@ -81,11 +82,53 @@ class HealthGlobalController
         return $records;
     }
 
-    function getRecords($month)
+    function getRecords($month, $year = null)
     {
         $explode_month = explode('-', $month);
+        $explode_year = explode('-', $year);
+
+        /* if (isset($explode_month[1])) {
+            $month = $explode_month[1];
+        } else {
+            $month = date('m'); 
+        } */
+
+        /* if (strpos($month, '-') !== false) {
+            $explode_month = explode('-', $month);
+            if (isset($explode_month[1])) {
+                $month = $explode_month[1];
+            } else {
+                
+                $month = '01';
+            }
+        } else {
+    
+            $month = '01'; 
+        }
+        if (strpos($year, '-') !== false) {
+            $explode_year = explode('-', $year);
+            if (isset($explode_year[1])) {
+                $year = $explode_year[1];
+            } else {
+                
+                $year = '2025';
+            }
+        } else {
+            
+            $year = '2025';
+        } */
+        
+        /* if (isset($explode_year[1])) {
+            $year = $explode_year[1];
+        } else {
+            $year = date('Y');
+        } */
+
+        /* dump($year, $month);
+        $explode_month = explode('-', $month);
+        $explode_year = explode('-', $year);*/
         $month = $explode_month[1];
-        $year = $explode_month[0];
+        $year = $explode_year[1];
 
         $establishments = Establishment::all();
 
@@ -246,7 +289,7 @@ class HealthGlobalController
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '03')
-        
+
                 ->orderBy('number', 'desc')
                 ->first();
             $has_bv_info = $first_bv || $last_bv || $bv_total || count($anulates_voided_bv) > 0;

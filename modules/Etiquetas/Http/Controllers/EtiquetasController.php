@@ -45,6 +45,7 @@ class EtiquetasController extends Controller
             $description = $request->description;
             $murcielagoCode = $request->murcielagoCode;
             $price1 = $request->price1;
+            $price2 = $request->price2;
             $format = $request->format;
             $paper = $request->paper;
             $location = $request->location;
@@ -140,6 +141,7 @@ class EtiquetasController extends Controller
                 'location',
                 'price',
                 'price1',
+                'price2',
                 'murcielagoCode',
                 'paper',
                 'barcode',
@@ -148,6 +150,7 @@ class EtiquetasController extends Controller
 
             $pdf->WriteHTML($html);
             $pdf->Output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
+            // $pdf->Stream('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
         } catch (Exception $e) {
             return response($e, 500);
         }

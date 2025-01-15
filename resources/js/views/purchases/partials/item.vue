@@ -13,7 +13,7 @@
                         >
                             <label class="control-label">
                                 <i class="fas fa-box"></i> Producto/Servicios
-                                <!-- <a href="#" @click.prevent="showDialogNewItem = true">[+ Nuevo]</a> -
+                                <a href="#" @click.prevent="showDialogNewItem = true">[+ Nuevo]</a> -
                             </label>
                             <div class="row">
                                 <div class="col-md-11">
@@ -229,7 +229,7 @@
                         </div>
                         <div class="col-md-4" v-if="noIsUnid">
                             <label class="control-label"> Contenedor</label>
-                            <el-input style="width: 100%;"></el-input>
+                            <el-input style="width: 100%;" v-model="form.max_quantity_description"></el-input>
                         </div>
                         <div class="col-md-4" v-if="noIsUnid">
                             <label class="control-label text-center font-weight-bold text-dark"><i class="fas fa-calculator"></i>Total

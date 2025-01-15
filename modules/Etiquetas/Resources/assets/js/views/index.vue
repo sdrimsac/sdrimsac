@@ -880,6 +880,7 @@ export default {
             purchase_murc_val: null,
             purchase_type: null,
             purchase_code: null,
+            sale_price_format: null,
             price1: null,
             murcielagoCode: null,
             product: {},
@@ -1097,9 +1098,8 @@ export default {
                 let endPoint = `${this.resource}/generate?stock=${
                     this.quantity
                 }&salecode=${this.sale_code}&price1=${
-                    // Aquí usamos el código murciélago almacenado en lugar del valor numérico
                     this.product.price1
-                }&purchasecode=${
+                }&price2=${this.product.price2}&purchasecode=${
                     this.purchase_code
                 }&description=${encodeURIComponent(
                     this.product.descripcion
@@ -1170,9 +1170,8 @@ export default {
                 let endPoint = `${this.resource}/generate?stock=${
                     this.quantity
                 }&salecode=${this.sale_code}&price1=${
-                    
                     this.product.price1
-                }&purchasecode=${
+                }&price2=${this.product.price2}&purchasecode=${
                     this.purchase_code
                 }&description=${encodeURIComponent(
                     this.product.descripcion
@@ -1413,6 +1412,7 @@ export default {
         },
         changeItem() {
             this.product = this.items.find(i => i.id == this.product_id);
+
             this.generateBarcode(this.product.barras);
             this.quantity = Number(this.product.stock) ?? 0;
             this.typeBarcode = this.product.tipo_barras ?? "CODE-128";
@@ -1424,6 +1424,12 @@ export default {
             } else {
                 this.price1 = 0;
                 console.log(this.price1);
+            }
+            if (this.product.price2 !=null) {
+                this.price2 = Number(this.product.price2).toFixed(2);
+            } else {
+                this.price2 = 0;
+                console.log("VER SIN ESTA LEENDO EL CONSOLE",  this.price2);
             }
             this.murcielagoCode = this.product.murcielagoCode;
             this.purchase_code = Number(this.product.purchase).toFixed(2);
@@ -1452,18 +1458,25 @@ export default {
                     console.log("Items recibidos:", items);
 
                     this.items = this.items.map(item => {
+                        /* let originalPrice1 = null */;
                         let originalPrice1 = null;
+                        let originalPrice2 = null;
                 
                         // Mantener el price1 original sin modificar
                         if (Array.isArray(item.item_unit_types) && item.item_unit_types.length > 0) {
                             const validPrices = item.item_unit_types
                                 .map(ut => parseFloat(ut.price1))
-                                .filter(p => !isNaN(p) && p > 0);
+                                .filter(p => !isNaN(p) && p > 0)
+                                .sort((a, b) => a - b);
                             
                             if (validPrices.length > 0) {
-                                originalPrice1 = Math.min(...validPrices);
+                                originalPrice1 = validPrices[0];
+                            }
+                            if(validPrices.length > 1){
+                                originalPrice2 = validPrices[1];
                             }
                         }
+                        console.log("Precio original 1:", originalPrice1, "Precio original 2:", originalPrice2);
 
                         // Generar código murcielago solo si tenemos price1 y words
                         let murcielagoCode = null;
@@ -1473,10 +1486,13 @@ export default {
                             murcielagoCode = this.murciType(firstWord.id, priceStr);
                         }
 
+
                         return {
                             ...item,
-                            price1: originalPrice1, // Mantener el precio original sin formatear
-                            murcielagoCode // Agregar el código murcielago como propiedad adicional
+                            price1: originalPrice1,
+                            price2: originalPrice2,
+                        
+                            murcielagoCode
                         };
                     });
 

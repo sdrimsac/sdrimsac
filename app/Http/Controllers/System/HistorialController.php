@@ -76,36 +76,11 @@ class HistorialController extends Controller
 
         // Genera el PDF usando la vista y pasa los datos necesarios
         $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', compact('record'))
-            ->setPaper('a4', 'landscape');
+            ->setPaper('a4', 'portrait');
 
         // Retorna el PDF al navegador para que se pueda ver/descargar
         /* return $pdf->stream(); */
-        return $pdf->download('contrato.pdf');
+        return $pdf->stream('contrato.pdf');
+        // return view('system.historial.contrato_restaurant_pdf', compact('record'));
     }
-
-    /* public function pdf($id)
-    {
-        /* $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', [
-            'record' => ['name' => 'Test', 'description' => 'Contenido de prueba']
-        ])->setPaper('a4', 'landscape'); *//*
-        $record = History::findOrFail($id);
-
-        $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', compact('record'))
-    ->setPaper('a4', 'landscape')
-    ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
-
-        /* return $pdf->stream(); *//*
-        return $pdf->download('contrato.pdf');
-    } */
-
-    /* public function pdf($id)
-    {
-        $record = History::findOrFail($id);
-
-        // Retorna la vista en lugar del PDF para depuración
-        /* return view('system.historial.contrato_restaurant_pdf', compact('record')); *//*
-        return $pdf->stream('contrato.pdf', [
-            'Content-Type' => 'application/pdf',
-        ]);
-    } */
 }

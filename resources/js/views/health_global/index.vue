@@ -20,6 +20,18 @@
                                     clearable
                                 ></el-date-picker>
                             </div>
+                            <div class="col-md-3">
+                                <label class="control-label w-100"
+                                    >AÑO</label
+                                >
+                                <el-date-picker
+                                    class="w-100"
+                                    v-model="form.year_start"
+                                    type="year"
+                                    value-format="yyyy"
+                                    clearable
+                                ></el-date-picker>
+                            </div>
                         </template>
                         <div
                             class="col-lg-7 col-md-7 col-md-7 col-sm-12"
@@ -63,43 +75,6 @@
                 </div>
             </form>
         </div>
-        <!-- <div class="card">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Rubro</th>
-                        <th>Año</th>
-                        <th>Mes</th>
-                        <th>Establecimiento</th>
-                        <th>Serie</th>
-                        <th>Numero Inicio</th>
-                        <th>Numero Final</th>
-                        <th>Documentos Anulados</th>
-                        <th>Documentos Rechazados</th>
-                        <th>Notas de Credito</th>
-                        <th>Importe Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(record, index) in records" :key="index">
-                        <td>{{ record.is_service == 1 ? 'Servicios' : 'Medicamentos' }}</td>
-                        <td>{{ record.year }}</td>
-                        <td>{{ record.month }}</td>
-                        <td>{{ record.establishment }}</td>
-                        <td>
-                            {{ record.first_ft ? record.first_ft.series : '' }}
-                        </td>
-                        <td>{{ record.rubro }}</td>
-                        <td>{{ record.rubro }}</td>
-                        <td>{{ record.rubro }}</td>
-                        <td>{{ record.rubro }}</td>
-                        <td>{{ record.rubro }}</td>
-                        <td>{{ record.rubro }}</td>
-                        <td>{{ record.rubro }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
     </div>
 </template>
 
@@ -190,7 +165,8 @@ export default {
                 type_box: null,
                 period: "month",
 
-                month_start: moment().format("YYYY-MM")
+                month_start: moment().format("YYYY-MM"),
+                year_start: moment().format("YYYY"),
             };
         },
         date_start() {
