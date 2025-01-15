@@ -33,7 +33,7 @@
                     @endphp
                     <td class="general">
 
-                        <div style="{{ $jj - 1 < $stock ? 'color:black;' : 'color:white;' }}; font-size: 10px; padding: 3px">
+                        <div style="{{ $jj - 1 < $stock ? 'color:black;' : 'color:white;' }}; font-size: 10px; padding: 3px; ">
                             <span>{{ $description }}</span>
                         </div>
                         <div>
@@ -57,9 +57,6 @@
                         <div style="">
                             <span>P.C. {{ $purchase_code }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>S/.{{ $price1 }}</span>
-                            {{-- <span style="padding-right: 200px;">S/.{{ $sale_code }}</span>
-                            
-                            <span style="display: inline-block;">P.C. {{ $purchase_code }}</span> --}}
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

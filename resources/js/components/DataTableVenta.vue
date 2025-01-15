@@ -111,6 +111,15 @@
                             @change="changeDateOfIssue"
                         ></el-date-picker>
                     </div>
+                    <div class="col-lg-4 col-md-4 ">
+                    <div class="form-group">
+                        <label class="control-label w-100">Clientes</label>
+
+                        <el-select v-model="search.customer_id" filterable remote popper-class="el-select-customers" clearable placeholder="Nombre o número de documento" :remote-method="searchRemoteCustomers" :loading="loading_search">
+                            <el-option v-for="option in customers" :key="option.id" :value="option.id" :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100"
@@ -218,7 +227,7 @@
                             v-if="records.length > 0"
                             @click.prevent="exportRecordsVentas"
                             icon="el-icon-download"
-                            :disabled="!search.d_end && !search.date_of_issue"
+                            :disabled="!search.d_end && !search.date_of_issue && !search.customer_id"
                             >Exportar</el-button
                         >
                     </div>

@@ -35,7 +35,7 @@
                             ></el-input>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
+                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label for="date_start">Fecha Emision</label>
                         <el-date-picker
                             v-model="search.date_start"
@@ -77,6 +77,29 @@
                                 :key="idx"
                                 :value="option.id"
                                 :label="option.name"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <label for="customer_id">Cliente</label>
+
+                        <el-select
+                            v-model="search.customer_id"
+                            filterable
+                            remote
+                            class="border-left rounded-left border-info"
+                            popper-class="el-select-customers"
+                            dusk="customer_id"
+                            placeholder="Escriba el nombre o número de documento del cliente"
+                            :remote-method="searchRemoteCustomers"
+                            :loading="loading_search"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="option in customers"
+                                :key="option.id"
+                                :value="option.id"
+                                :label="option.description"
                             ></el-option>
                         </el-select>
                     </div>
@@ -159,7 +182,7 @@
                             size="small"
                             v-if="records.length > 0"
                             @click="exportRecords"
-                            :disabled="!search.date_start && !search.date_end"
+                            :disabled="!search.date_start && !search.date_end && !search.customer_id"
                         >
                             <el-tooltip
                                 class="item"

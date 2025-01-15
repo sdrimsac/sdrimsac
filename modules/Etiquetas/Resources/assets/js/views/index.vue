@@ -295,62 +295,39 @@
                 <div></div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <el-button-group>
-                            <el-button
-                                type="success"
-                                @click="changeModel(1)"
+                        <el-radio-group v-model="modelType">
+                            <el-radio-button
+                                :label="1"
                                 plain
-                                >Modelo 1</el-button
+                                >Modelo1</el-radio-button
                             >
-                            <el-button
-                                type="success"
-                                @click="changeModel(2)"
+                            <el-radio-button
+                                :label="2"
                                 plain
-                                >Modelo 2</el-button
+                                >Modelo2</el-radio-button
                             >
-                            <el-button
-                                type="success"
-                                @click="changeModel(3)"
+                            <el-radio-button
+                                :label="3"
                                 plain
-                                >Modelo 3</el-button
+                                >Modelo3</el-radio-button
                             >
-                            <el-button
-                                type="success"
-                                @click="changeModel(4)"
+                            <el-radio-button
+                                :label="4"
                                 plain
-                                >Modelo 4</el-button
+                                >Modelo4</el-radio-button
                             >
-                            <el-button
-                                type="success"
-                                @click="changeModel(5)"
+                            <el-radio-button
+                                :label="5"
                                 plain
-                                >Modelo 5
-                                </el-button
+                                >Modelo5</el-radio-button
                             >
-                            <el-button
-                                type="success"
-                                @click="changeModel(6)"
+                            <el-radio-button
+                                :label="6"
                                 plain
-                                >Modelo 6
-                                </el-button
+                                >Modelo6</el-radio-button
                             >
-                        </el-button-group>
+                        </el-radio-group>
                     </div>
-                    <!-- <div class="col-3 text-center">
-            <el-button @click="changeModel(1)">Modelo 1</el-button>
-          </div>
-          <div class="col-3 text-center">
-            <el-button @click="changeModel(2)">Modelo 2</el-button>
-          </div>
-          <div class="col-3 text-center">
-            <el-button @click="changeModel(3)">Modelo 3</el-button>
-          </div>
-          <div class="col-3 text-center">
-            <el-button @click="changeModel(4)">Modelo 4</el-button>
-          </div>
-          <div class="col-3 text-center">
-            <el-button @click="changeModel(5)">Modelo 5</el-button>
-          </div>-->
                 </div>
                 <br />
                 <div
@@ -358,7 +335,7 @@
                     class="d-flex flex-row justify-content-center"
                 >
                     <div
-                        class="border d-flex flex-row align-items-center h150 w300 overflow-hidden"
+                        class="border d-flex flex-row align-items-center h150 w300 overflow-hidden bg-white"
                     >
                         <div>
                             <div v-if="imageSaved" class="w150 overflow-hidden">
@@ -424,7 +401,7 @@
                     class="d-flex flex-row justify-content-center"
                 >
                     <div
-                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white"
                     >
                         <div>
                             <div v-if="imageSaved" class="w150 overflow-hidden">
@@ -494,7 +471,7 @@
                     class="d-flex flex-row justify-content-center"
                 >
                     <div
-                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white"
                     >
                         <div
                             class="d-flex flex-fill flex-column justify-content-center align-items-center"
@@ -555,7 +532,7 @@
                     class="d-flex flex-row justify-content-center"
                 >
                     <div
-                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white"
                     >
                         <div
                             class="d-flex flex-fill flex-column justify-content-center align-items-center"
@@ -597,13 +574,12 @@
                     class="d-flex flex-row justify-content-center"
                 >
                     <div
-                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white"
                     >
                         <div
                             class="d-flex flex-fill flex-column justify-content-center align-items-center"
                         >
-                            <div>
-                            </div>
+                            <div></div>
                             <span class="text-center">
                                 {{
                                     product.descripcion ||
@@ -616,23 +592,35 @@
                                 alt="barcode"
                             />
                             <span></span>
+                        </div>
+                        <div class="d-flex col-12 justify-content-between p-1">
+                            <span>
+                                {{ purchase_code || "N/D" }}
+                            </span>
+                        </div>
+                        <div>
                             <span
                                 :style="
                                     `color:${
                                         type == 'Precio venta'
                                             ? '#E6A23C'
                                             : '#000'
-                                    }`
+                                    }; text-align: left; display: block;`
                                 "
                                 class="text-center"
-                                >{{ sale_code || "N/D" }}</span
+                                >{{ price1 || "N/D" }}</span
                             >
-
-                            <div
-                                class="d-flex col-12 justify-content-between p-1"
+                            <span
+                                :style="
+                                    `color:${
+                                        type == 'Precio venta'
+                                            ? '#E6A23C'
+                                            : '#000'
+                                    }; text-align: left; display: block;`
+                                "
+                                class="text-center"
+                                >{{ price2 || "N/D" }}</span
                             >
-                                <span></span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -641,13 +629,12 @@
                     class="d-flex flex-row justify-content-center"
                 >
                     <div
-                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white"
                     >
                         <div
                             class="d-flex flex-fill flex-column justify-content-center align-items-center"
                         >
-                            <div>
-                            </div>
+                            <div></div>
                             <span class="text-center">
                                 {{
                                     product.descripcion ||
@@ -694,7 +681,7 @@
                         style="min-height:70px"
                         @click="changePaper(1)"
                         :class="
-                            `rounded col-5 col-lg-2 col-md-2 m-2 d-flex flex-row justify-content-center align-items-center
+                            `bg-white rounded col-5 col-lg-2 col-md-2 m-2 d-flex flex-row justify-content-center align-items-center
                  ${paperType == 1 ? 'text-white bg-primary' : 'border'}
                  `
                         "
@@ -706,7 +693,7 @@
                         style="min-height:70px"
                         @click="changePaper(2)"
                         :class="
-                            `rounded col-5 col-lg-2 col-md-2 m-2 d-flex flex-row justify-content-center align-items-center
+                            `bg-white rounded col-5 col-lg-2 col-md-2 m-2 d-flex flex-row justify-content-center align-items-center
                  ${paperType == 2 ? 'text-white bg-primary' : 'border'}
                  `
                         "
@@ -1382,29 +1369,29 @@ export default {
         },
         murciType(id, value) {
             console.log("murciType recibió:", { id, value });
-            
+
             if (!value || value.length === 0) {
                 console.log("murciType: valor vacío");
                 return "";
             }
-        
+
             if (!id || !this.words) {
                 console.log("murciType: id inválido o words no disponible");
                 return "";
             }
-        
+
             let word = this.words.find(w => w.id == id);
             if (!word || !word.indice) {
                 console.log("murciType: palabra o índice no encontrado");
                 return "";
             }
-        
+
             let indice = word.indice.split("");
             let nums = value.toString().split("");
             let result = "";
-        
+
             console.log("murciType procesando:", { indice, nums });
-        
+
             for (let i = 0; i < nums.length; i++) {
                 let num = nums[i];
                 if (num === ".") {
@@ -1417,7 +1404,7 @@ export default {
                 }
                 result += indice[v];
             }
-        
+
             console.log("murciType resultado:", result);
             return result;
         },
@@ -1469,11 +1456,11 @@ export default {
                 this.price1 = 0;
                 console.log(this.price1);
             }
-            if (this.product.price2 !=null) {
+            if (this.product.price2 != null) {
                 this.price2 = Number(this.product.price2).toFixed(2);
             } else {
                 this.price2 = 0;
-                console.log("VER SIN ESTA LEENDO EL CONSOLE",  this.price2);
+                console.log("VER SIN ESTA LEENDO EL CONSOLE", this.price2);
             }
             if(this.product.item_unit_types){
                 let unit_types = this.product.item_unit_types;
@@ -1517,46 +1504,53 @@ export default {
                     this.items = items;
 
                     this.items = this.items.map(item => {
-                        /* let originalPrice1 = null */;
-                        let originalPrice1 = null;
+                        /* let originalPrice1 = null */ let originalPrice1 = null;
                         let originalPrice2 = null;
-                
+
                         // Mantener el price1 original sin modificar
-                        if (Array.isArray(item.item_unit_types) && item.item_unit_types.length > 0) {
+                        if (
+                            Array.isArray(item.item_unit_types) &&
+                            item.item_unit_types.length > 0
+                        ) {
                             const validPrices = item.item_unit_types
                                 .map(ut => parseFloat(ut.price1))
                                 .filter(p => !isNaN(p) && p > 0)
                                 .sort((a, b) => a - b);
-                            
+
                             if (validPrices.length > 0) {
                                 originalPrice1 = validPrices[0];
                             }
-                            if(validPrices.length > 1){
+                            if (validPrices.length > 1) {
                                 originalPrice2 = validPrices[1];
                             }
                         }
 
                         // Generar código murcielago solo si tenemos price1 y words
                         let murcielagoCode = null;
-                        if (originalPrice1 !== null && this.words && this.words.length > 0) {
+                        if (
+                            originalPrice1 !== null &&
+                            this.words &&
+                            this.words.length > 0
+                        ) {
                             const firstWord = this.words[0];
                             const priceStr = originalPrice1.toFixed(2);
-                            murcielagoCode = this.murciType(firstWord.id, priceStr);
+                            murcielagoCode = this.murciType(
+                                firstWord.id,
+                                priceStr
+                            );
                         }
-
 
                         return {
                             ...item,
                             price1: originalPrice1,
                             price2: originalPrice2,
-                        
+
                             murcielagoCode
                         };
                     });
 
                     console.log("Items procesados:", this.items);
                     this.loading_search = false;
-
                 } catch (e) {
                     console.error("Error en searchRemoteItems:", e);
                     if (e.response) {

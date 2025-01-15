@@ -562,6 +562,8 @@ if ($hostname) {
                         Route::get('data_table', [App\Http\Controllers\Tenant\SaleNoteController::class, 'data_table']);
                         Route::get('/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
                         Route::get('excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excelNota']);
+                        Route::get('search/customers', [App\Http\Controllers\Tenant\SaleNoteController::class, 'searchCustomers']);
+
                     });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
                 Route::get('/records-suma', [App\Http\Controllers\Tenant\DocumentController::class, 'recordsSuma']);
