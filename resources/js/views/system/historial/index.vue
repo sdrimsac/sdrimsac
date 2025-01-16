@@ -162,9 +162,7 @@ export default {
             this.showDialog = true;
         },
         clickPdf(id) {
-            this.$http.get(`/${this.resource}/pdf/${id}`).then(response => {
-                window.open(response.data.url, "_blank");
-            });
+                window.open(`/${this.resource}/pdf/${id}`, "_blank");
         }
         /* clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>

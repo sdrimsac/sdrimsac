@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DocumentController;
+use Modules\Services\Http\Controllers\ServiceController;
 use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\CommercialTreatmentController;
 use App\Http\Controllers\Tenant\CreditListController;
@@ -1198,7 +1199,9 @@ if ($hostname) {
 
             Route::get('services/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-
+            // Route::prefix('service')->group(function () {
+            //     Route::get('{type}/{number}', [ServiceController::class, 'service']);
+            // });
             Route::get('certificates/record', 'System\CertificateController@record');
             Route::post('certificates/uploads', 'System\CertificateController@uploadFile');
             Route::post('certificates/saveSoapUser', 'System\CertificateController@saveSoapUser');

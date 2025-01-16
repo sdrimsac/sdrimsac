@@ -209,10 +209,14 @@
         <div class="">
             <div class=" ">
                 @php
-                $month_parts = explode('-', $month);
+                $month = explode('-', $month);
+                $year = $month[0];
+                $month = $month[1];
+
+                /* $month_parts = explode('-', $month);
                 $year_parts = explode('-', $year);
                 $year = isset($year_parts[1]) ? $year_parts[1] : $year;
-                $month = isset($month_parts[1]) ? $month_parts[1] : $month;
+                $month = isset($month_parts[1]) ? $month_parts[1] : $month; */
                 $records_service = array_filter($records, function ($record) {
                 return $record['is_service'] == 1;
                 });

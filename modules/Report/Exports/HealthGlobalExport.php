@@ -13,6 +13,7 @@ class HealthGlobalExport implements  FromView, ShouldAutoSize
     protected $records;
     protected $month;
     protected $year;
+    protected $is_year;
     protected $company;
     public function records($records) {
         $this->records = $records;
@@ -35,9 +36,14 @@ class HealthGlobalExport implements  FromView, ShouldAutoSize
         
         return $this;
     }
+    public function isYear ($is_year) {
+        $this->is_year = $is_year;
+        return $this;
+    }
     
     public function view(): View {
-        return view('tenant.health_global.report_excel', [
+        $view  = $this->is_year ? 'tenant.health_global.report_year_excel':'tenant.health_global.report_excel';
+        return view($view, [
             'records'=> $this->records,
             'company' => $this->company,
             'month' => $this->month,

@@ -23,15 +23,20 @@ class HealthGlobalController
     {
         $month = $request->month_start;
         $year = $request->year_start;
+        $is_year = $year != null;
+   
         $type = $request->type;
         $records = $this->getRecords($month, $year);
+        if($is_year){
+            $month = $year;
+        }
         $company = Company::first();
         if ($type == 'excel') {
             $export = (new HealthGlobalExport)
                 ->records($records)
+                ->isYear($is_year)
                 ->company($company)
-                ->month($month)
-                ->year($year);
+                ->month($month);
             //remove all files in the folder
             $files = glob(storage_path('app/public/global_reports/*'));
             foreach ($files as $file) {
@@ -50,7 +55,8 @@ class HealthGlobalController
                 'data' => $url,
             ];
         } else {
-            $pdf = PDF::loadView('tenant.health_global.report_pdf', compact("records", "company", "month"))->setPaper('a4', 'landscape');
+            $view = $is_year ? 'tenant.health_global.report_year_pdf' : 'tenant.health_global.report_pdf';
+            $pdf = PDF::loadView($view, compact("records", "company", "month"))->setPaper('a4', 'landscape');
             //  $pdf->stream('Listado_Clientes' . date('YmdHis') . '.pdf');
             //save the pdf in the storage
             //remove all files in the folder
@@ -82,53 +88,17 @@ class HealthGlobalController
         return $records;
     }
 
-    function getRecords($month, $year = null)
+    function getRecords($month, $year_dyas = null)
     {
-        $explode_month = explode('-', $month);
-        $explode_year = explode('-', $year);
-
-        /* if (isset($explode_month[1])) {
-            $month = $explode_month[1];
+        if ($year_dyas) {
+            $year = $year_dyas;
+            $month = null;
         } else {
-            $month = date('m'); 
-        } */
-
-        /* if (strpos($month, '-') !== false) {
             $explode_month = explode('-', $month);
-            if (isset($explode_month[1])) {
-                $month = $explode_month[1];
-            } else {
-                
-                $month = '01';
-            }
-        } else {
-    
-            $month = '01'; 
+            $month = $explode_month[1];
+            $year = $explode_month[0];
         }
-        if (strpos($year, '-') !== false) {
-            $explode_year = explode('-', $year);
-            if (isset($explode_year[1])) {
-                $year = $explode_year[1];
-            } else {
-                
-                $year = '2025';
-            }
-        } else {
-            
-            $year = '2025';
-        } */
         
-        /* if (isset($explode_year[1])) {
-            $year = $explode_year[1];
-        } else {
-            $year = date('Y');
-        } */
-
-        /* dump($year, $month);
-        $explode_month = explode('-', $month);
-        $explode_year = explode('-', $year);*/
-        $month = $explode_month[1];
-        $year = $explode_year[1];
 
         $establishments = Establishment::all();
 
@@ -143,8 +113,12 @@ class HealthGlobalController
             $anulates_voided_ft = [];
             $anulates_voided_bv = [];
             $anulates_voided = VoidedDocument::whereHas('voided', function ($query) use ($month, $year) {
-                $query->whereMonth('date_of_issue', $month)
-                    ->whereYear('date_of_issue', $year);
+                if ($month == null) {
+                    $query->whereYear('date_of_issue', $year);
+                } else {
+                    $query->whereMonth('date_of_issue', $month)
+                        ->whereYear('date_of_issue', $year);
+                }
             })
                 ->whereHas('document', function ($query) use ($establishment) {
                     $query->where('establishment_id', $establishment->id);
@@ -159,10 +133,14 @@ class HealthGlobalController
                 if ($anulate_voided->document->document_type_id == '03')
                     $anulates_voided_bv[] = $document_full_number;
             }
-            $ft_anulate = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '01')
+            $ft_anulate = Document::select(['series', 'number'])->where('establishment_id', $establishment->id);
+            if ($month == null) {
+                $ft_anulate = $ft_anulate->whereYear('date_of_issue', $year);
+            } else {
+                $ft_anulate = $ft_anulate->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+               $ft_anulate = $ft_anulate->where('document_type_id', '01')
                 ->where('state_type_id', '11')
                 ->get();
 
@@ -174,9 +152,14 @@ class HealthGlobalController
                     $anulates_voided_ft[] = $document_full_number;
                 }
             }
-            $ft_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
+            $ft_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id);
+            if ($month == null) {
+                $ft_rejected = $ft_rejected->whereYear('date_of_issue', $year);
+            } else {
+                $ft_rejected = $ft_rejected->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $ft_rejected = $ft_rejected
                 ->where('document_type_id', '01')
                 ->where('state_type_id', '09')
                 ->get();
@@ -189,10 +172,15 @@ class HealthGlobalController
                 }
             }
             $fv_notes = Note::where('note_type', 'credit')->whereHas('affected_document', function ($query) use ($establishment, $month, $year) {
+                
                 $query->where('establishment_id', $establishment->id)
-                    ->whereMonth('date_of_issue', $month)
-                    ->where('document_type_id', '01')
-                    ->whereYear('date_of_issue', $year);
+                    ->where('document_type_id', '01');
+                if ($month == null) {
+                    $query->whereYear('date_of_issue', $year);
+                } else {
+                    $query->whereMonth('date_of_issue', $month)
+                        ->whereYear('date_of_issue', $year);
+                }
             })->get();
             foreach ($fv_notes as $note) {
                 $series = $note->document->series;
@@ -202,9 +190,14 @@ class HealthGlobalController
                     $notes_ft[] = $document_full_number;
                 }
             }
-            $bv_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
+            $bv_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id);
+            if ($month == null) {
+                $bv_rejected = $bv_rejected->whereYear('date_of_issue', $year);
+            } else {
+                $bv_rejected = $bv_rejected->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $bv_rejected = $bv_rejected
                 ->where('document_type_id', '03')
                 ->where('state_type_id', '09')
                 ->get();
@@ -218,9 +211,13 @@ class HealthGlobalController
             }
             $bv_notes = Note::where('note_type', 'credit')->whereHas('affected_document', function ($query) use ($establishment, $month, $year) {
                 $query->where('establishment_id', $establishment->id)
-                    ->whereMonth('date_of_issue', $month)
-                    ->where('document_type_id', '03')
-                    ->whereYear('date_of_issue', $year);
+                    ->where('document_type_id', '03');
+                if ($month == null) {
+                    $query->whereYear('date_of_issue', $year);
+                } else {
+                    $query->whereMonth('date_of_issue', $month)
+                        ->whereYear('date_of_issue', $year);
+                }
             })->get();
 
             foreach ($bv_notes as $note) {
@@ -234,16 +231,26 @@ class HealthGlobalController
 
             $ft_total = Document::where('establishment_id', $establishment->id)
                 ->where('state_type_id', '05')
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '01')
-                ->sum('total');
+                ->where('document_type_id', '01');
+            if ($month == null) {
+                $ft_total = $ft_total->whereYear('date_of_issue', $year);
+            } else {
+                $ft_total = $ft_total->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+
+            $ft_total = $ft_total->sum('total');
+                
             $bv_anulate = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '03')
-                ->where('state_type_id', '11')
-                ->get();
+                ->where('state_type_id', '11');
+            if ($month == null) {
+                $bv_anulate = $bv_anulate->whereYear('date_of_issue', $year);
+            } else {
+                $bv_anulate = $bv_anulate->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $bv_anulate = $bv_anulate->get();
             foreach ($bv_anulate as $bv) {
                 $series = $bv->series;
                 $number = $bv->number;
@@ -255,43 +262,58 @@ class HealthGlobalController
             //
             $bv_total = Document::where('establishment_id', $establishment->id)
                 ->whereIn('state_type_id', ['05', '03'])
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '03')
-                ->sum('total');
+                ->where('document_type_id', '03');
+            if ($month == null) {
+                $bv_total = $bv_total->whereYear('date_of_issue', $year);
+            } else {
+                $bv_total = $bv_total->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $bv_total = $bv_total->sum('total');
 
             $first_ft = Document::select(['total', 'series', 'number', 'document_type_id'])
                 ->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '01')
-                ->orderBy('number')
-                ->first();
+                ->where('document_type_id', '01');
+            if ($month == null) {
+                $first_ft = $first_ft->whereYear('date_of_issue', $year);
+            } else {
+                $first_ft = $first_ft->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $first_ft = $first_ft->orderBy('number')->first();
 
             $last_ft = Document::select(['total', 'series', 'number', 'document_type_id'])
                 ->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '01')
-                ->orderBy('number', 'desc')
-                ->first();
+                ->where('document_type_id', '01');
+            if ($month == null) {
+                $last_ft = $last_ft->whereYear('date_of_issue', $year);
+            } else {
+                $last_ft = $last_ft->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $last_ft = $last_ft->orderBy('number', 'desc')->first();
 
             $first_bv = Document::select(['total', 'series', 'number', 'document_type_id'])
                 ->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '03')
-                ->orderBy('number')
-                ->first();
+                ->where('document_type_id', '03');
+            if ($month == null) {
+                $first_bv = $first_bv->whereYear('date_of_issue', $year);
+            } else {
+                $first_bv = $first_bv->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $first_bv = $first_bv->orderBy('number')->first();
 
             $last_bv = Document::select(['total', 'series', 'number', 'document_type_id'])
                 ->where('establishment_id', $establishment->id)
-                ->whereMonth('date_of_issue', $month)
-                ->whereYear('date_of_issue', $year)
-                ->where('document_type_id', '03')
-
-                ->orderBy('number', 'desc')
-                ->first();
+                ->where('document_type_id', '03');
+            if ($month == null) {
+                $last_bv = $last_bv->whereYear('date_of_issue', $year);
+            } else {
+                $last_bv = $last_bv->whereMonth('date_of_issue', $month)
+                    ->whereYear('date_of_issue', $year);
+            }
+            $last_bv = $last_bv->orderBy('number', 'desc') ->first();
             $has_bv_info = $first_bv || $last_bv || $bv_total || count($anulates_voided_bv) > 0;
             $has_ft_info = $first_ft || $last_ft || $ft_total || count($anulates_voided_ft) > 0;
             $records[] = [

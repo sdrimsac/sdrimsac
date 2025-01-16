@@ -20,10 +20,8 @@
                                     clearable
                                 ></el-date-picker>
                             </div>
-                            <div class="col-md-3">
-                                <label class="control-label w-100"
-                                    >AÑO</label
-                                >
+                            <!-- <div class="col-md-3">
+                                <label class="control-label w-100">AÑO</label>
                                 <el-date-picker
                                     class="w-100"
                                     v-model="form.year_start"
@@ -31,10 +29,27 @@
                                     value-format="yyyy"
                                     clearable
                                 ></el-date-picker>
+                            </div> -->
+                            <div class="col-lg-2 col-md-2 pb-2">
+                                <div class="form-group">
+                                    <label class="control-label w-100"
+                                        >Año</label
+                                    >
+
+                                    <el-date-picker
+                                        v-model="form.year_start"
+                                        type="year"
+                                        style="width: 100%;"
+                                        placeholder="Buscar"
+                                        value-format="yyyy"
+                                        clearable 
+                                    >
+                                    </el-date-picker>
+                                </div>
                             </div>
                         </template>
                         <div
-                            class="col-lg-7 col-md-7 col-md-7 col-sm-12"
+                            class="col-lg-3 col-md-3 col-md-3 col-sm-12 text-center"
                             style="margin-top: 29px"
                         >
                             <!-- <el-button
@@ -115,7 +130,7 @@ export default {
     },
     created() {
         this.initForm();
-        /* this.getData();  */// Call getData to fetch data when the component is created
+        /* this.getData();  */ // Call getData to fetch data when the component is created
     },
     methods: {
         calculateSumEstablishment(item) {
@@ -166,7 +181,7 @@ export default {
                 period: "month",
 
                 month_start: moment().format("YYYY-MM"),
-                year_start: moment().format("YYYY"),
+                year_start: moment().format("YYYY")
             };
         },
         date_start() {
