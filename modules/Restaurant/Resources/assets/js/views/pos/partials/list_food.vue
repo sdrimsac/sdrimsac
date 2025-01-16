@@ -83,7 +83,7 @@
                                                         index) in foods"
                                                         :key="index"
                                                         @click="
-                                                            configuration.consolidated_quotations &&
+                                                            (configuration.consolidated_quotations || configuration.direct_unit_type) &&
                                                             data.types.length >
                                                                 0
                                                                 ? clickCommand(
@@ -382,12 +382,13 @@
                                 >
                                     <div
                                         @click="
-                                            configuration.consolidated_quotations &&
+                                            (configuration.consolidated_quotations || configuration.direct_unit_type) &&
                                             data.types.length > 0
                                                 ? clickCommand(data.types[0])
                                                 : addFood(index)
                                         "
                                     >
+                                
                                         <div>
                                             <span
                                                 :class="
@@ -701,7 +702,7 @@
                             >
                                 <div
                                     @click="
-                                        configuration.consolidated_quotations &&
+                                        (configuration.consolidated_quotations || configuration.direct_unit_type) &&
                                         data.types.length > 0
                                             ? clickCommand(data.types[0])
                                             : addFood(index)

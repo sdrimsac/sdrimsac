@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'direct_unit_type' => (bool) $this->direct_unit_type,
             'divided_items' => (bool) $this->divided_items,
             'change_unit_type_pos' => (bool) $this->change_unit_type_pos,
             'observations_separate' => (bool) $this->observations_separate,

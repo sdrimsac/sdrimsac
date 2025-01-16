@@ -1243,7 +1243,7 @@
                                                     >
                                                         <div
                                                             @click="
-                                                                configuration.consolidated_quotations &&
+                                                                (configuration.consolidated_quotations || configuration.direct_unit_type )&&
                                                                 data.types
                                                                     .length > 0
                                                                     ? clickCommand(
@@ -1259,9 +1259,11 @@
                                                                 <span
                                                                     class="lead-font-weight-700 h5"
                                                                 >
+                                                            {{ configuration.direct_unit_type }}
                                                                     {{
                                                                         data.description.toUpperCase()
                                                                     }}
+                                                                
                                                                 </span>
                                                             </div>
                                                             <div
@@ -2185,6 +2187,7 @@ export default {
     },
 
     async created() {
+    console.log("la configuracion es ", this.configuration);
         this.area_id = this.worker.area_id;
         this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");

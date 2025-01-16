@@ -288,7 +288,8 @@ class Configuration extends ModelTenant
         'other_currency_pos',
         'warehouse_pdf_item',
         'divided_items',
-        'change_unit_type_pos'
+        'change_unit_type_pos',
+        'direct_unit_type',
     ];
     protected $casts = [
         'change_unit_type_pos' => 'boolean',
@@ -482,6 +483,7 @@ class Configuration extends ModelTenant
         'other_currency_pos' => 'boolean',
         'warehouse_pdf_item' => 'boolean',
         'divided_items' => 'boolean',
+        'direct_unit_type' => 'boolean',
     ];
     public function scopeGetUnitPriceDispatchRelatedRecord($query)
     {
@@ -526,6 +528,7 @@ class Configuration extends ModelTenant
         $skins = [];
         return [
             'change_unit_type_pos' => (bool)$this->change_unit_type_pos,
+            'direct_unit_type' => (bool)$this->direct_unit_type,
             'divided_items' => (bool)$this->divided_items,
             'observations_separate' => (bool)$this->observations_separate,
             'warehouse_pdf_item' => (bool)$this->warehouse_pdf_item,
