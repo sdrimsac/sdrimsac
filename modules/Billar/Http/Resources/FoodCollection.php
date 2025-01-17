@@ -90,6 +90,8 @@ class FoodCollection extends ResourceCollection
                 $item->stock = $stock;
             }
             $configuracion = Configuration::first();
+            $color_size = [];
+            
             //si el producto no tiene el igv incluido
             if ($configuracion->hasAffectationIgv()) {
                 if (!$has_igv) {
@@ -106,6 +108,9 @@ class FoodCollection extends ResourceCollection
                 //         $price =  $price / ($igv / 100 + 1);
                 //     }
                 // }
+            }
+            if($configuracion->color_size_enabled){
+                $color_size = $item->color_size;
             }
             $categoria_madera_item = $item->categoria_madera;
             if ($configuracion->consolidated_quotations && !is_array($item_unit_types)) {
@@ -142,6 +147,7 @@ class FoodCollection extends ResourceCollection
                 'second_name' => $item->second_name,
                 'currency_type_id' => $item->currency_type_id,
                 'currency' => $item->currency_type->symbol,
+                'color_size' => $color_size
             ];
         });
     }

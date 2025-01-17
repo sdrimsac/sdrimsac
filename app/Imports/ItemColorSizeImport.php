@@ -30,9 +30,10 @@ class ItemColorSizeImport implements ToCollection
 
             $internal_id = $row[0];
             $color = strtoupper($row[1]);
-            $size = strtoupper($row[2]);
-            $stock = $row[3];
-            $price = $row[4];
+            $code = $row[2];
+            $size = strtoupper($row[3]);
+            $stock = $row[4];
+            $price = $row[5];
 
 
 
@@ -63,6 +64,7 @@ class ItemColorSizeImport implements ToCollection
                     $color_size_id = null;
                     $color_size_exits = ItemColorSize::where('item_id', $item_id)
                         ->where('color', $color)
+                        ->where('code', $code)
                         ->where('size', $size)
                         ->where('warehouse_id', $warehouse_id)
                         ->first();
@@ -72,6 +74,7 @@ class ItemColorSizeImport implements ToCollection
                             'color' => $color,
                             'size' => $size,
                             'stock' => $stock,
+                            'code' => $code,
                             'price' => $price,
                             'warehouse_id' => $warehouse_id,
                         ]);

@@ -47,6 +47,10 @@ class ItemColorSizeController extends Controller
         ];
     }
 
+    public function lastRecord($item_id){
+        $last_record = ItemColorSize::where('item_id', $item_id)->count();
+        return $last_record;
+    }
     public function records(Request $request)
     {
         $records  = ItemColorSize::query();

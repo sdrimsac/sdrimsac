@@ -32,12 +32,14 @@ class ItemsImport implements ToCollection
     use Importable;
 
     protected $data;
+    protected $errors;
 
     public function collection(Collection $rows)
     {
         //try {
         $total = count($rows);
         $registered = 0;
+        $errors = [];
         unset($rows[0]);
         foreach ($rows as $row) {
             $origin = ($row[49] ?: null);
@@ -126,7 +128,8 @@ class ItemsImport implements ToCollection
             }
             if ($internal_id != null) {
 
-                $item = Item::where('internal_id', $internal_id)->first();
+                try{
+                    $item = Item::where('internal_id', $internal_id)->first();
 
                 if ($item != null) {
                     $food = Food::where('item_id', $item->id)->first();
@@ -138,75 +141,85 @@ class ItemsImport implements ToCollection
 
                     //dd($item,"aqui...");
                     $brand = Brand::updateOrCreate(['name' => $brand_name]);
-                    $item = Item::create([
-                        'origin' => $origin,
-                        'quality' => $quality,
-                        'model' => $model,
-                        'location' => $location,
-                        'max_quantity' => $max_quantity,
-                        'max_quantity_description' => $max_quantity_description,
-                        'description' => $description,
-                        'second_name' => $second_name,
-                        'item_type_id' => $item_type_id,
-                        'internal_id' => $internal_id,
-                        'barcode' => $barcode,
-                        'item_code' => $item_code,
-                        'unit_type_id' => $unit_type_id,
-                        'currency_type_id' => $currency_type_id,
-                        'sale_unit_price' => $sale_unit_price,
-                        'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
-                        'has_igv' => $has_igv,
-                        'purchase_unit_price' => $purchase_unit_price,
-                        'purchase_affectation_igv_type_id' => $purchase_affectation_igv_type_id,
-                        'stock' => $stock,
-                        'attributes' => [],
-                        'stock_min' => $stock_min,
-                        'category_id' => $category->id,
-                        'brand_id' => $brand->id,
-                        'warehouse_id' => request('warehouse_id'),
-                        'series_enabled' => $has_series,
-                        'lots_enabled' => $lots_enabled,
-                        'has_color_size' => $has_color_size,
-                    ]);
-
-                    $food_new = Food::create([
-                        'description' => $description,
-                        'code'        => $internal_id,
-                        'price'       => $sale_unit_price,
-                        'active'      => 1,
-                        'category_food_id' => $category->id,
-                        'image'       => 'imagen-no-disponible.jpg',
-                        'area_id'     => $area->id,
-                        'item_id'     => $item->id
-                    ]);
-
-                    if ($lote_code && $lote_date) {
-                        try {
-                            $format_date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($lote_date)->format('Y-m-d');
-                            if ($format_date) {
-                                ItemLotsGroup::create([
-                                    'code' => $lote_code,
-                                    'item_id' => $item->id,
-                                    'warehouse_id' => $warehouse->id,
-                                    'quantity' => $stock,
-                                    'date_of_due' => $format_date,
-                                ]);
-                                $item->update([
-                                    'lot_code' => $lote_code,
-                                    'date_of_due' => $format_date,
-                                    'lots_enabled' => true,
-                                ]);
-                            }
-                        } catch (Exception $e) {
-                            Log::error($e->getMessage());
-                        }
-                    }
-                    if ($warehouse_id) {
-                        $item_whareouse_price = ItemWarehousePrice::create([
-                            'item_id' => $item->id,
-                            'warehouse_id' => $warehouse_id,
-                            'price' => $sale_unit_price,
+                    try{
+                        DB::connection('tenant')->beginTransaction();
+                        $item = Item::create([
+                            'origin' => $origin,
+                            'quality' => $quality,
+                            'model' => $model,
+                            'location' => $location,
+                            'max_quantity' => $max_quantity,
+                            'max_quantity_description' => $max_quantity_description,
+                            'description' => $description,
+                            'second_name' => $second_name,
+                            'item_type_id' => $item_type_id,
+                            'internal_id' => $internal_id,
+                            'barcode' => $barcode,
+                            'item_code' => $item_code,
+                            'unit_type_id' => $unit_type_id,
+                            'currency_type_id' => $currency_type_id,
+                            'sale_unit_price' => $sale_unit_price,
+                            'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
+                            'has_igv' => $has_igv,
+                            'purchase_unit_price' => $purchase_unit_price,
+                            'purchase_affectation_igv_type_id' => $purchase_affectation_igv_type_id,
+                            'stock' => $stock,
+                            'attributes' => [],
+                            'stock_min' => $stock_min,
+                            'category_id' => $category->id,
+                            'brand_id' => $brand->id,
+                            'warehouse_id' => request('warehouse_id'),
+                            'series_enabled' => $has_series,
+                            'lots_enabled' => $lots_enabled,
+                            'has_color_size' => $has_color_size,
                         ]);
+    
+                        $food_new = Food::create([
+                            'description' => $description,
+                            'code'        => $internal_id,
+                            'price'       => $sale_unit_price,
+                            'active'      => 1,
+                            'category_food_id' => $category->id,
+                            'image'       => 'imagen-no-disponible.jpg',
+                            'area_id'     => $area->id,
+                            'item_id'     => $item->id
+                        ]);
+    
+                        if ($lote_code && $lote_date) {
+                            try {
+                                $format_date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($lote_date)->format('Y-m-d');
+                                if ($format_date) {
+                                    ItemLotsGroup::create([
+                                        'code' => $lote_code,
+                                        'item_id' => $item->id,
+                                        'warehouse_id' => $warehouse->id,
+                                        'quantity' => $stock,
+                                        'date_of_due' => $format_date,
+                                    ]);
+                                    $item->update([
+                                        'lot_code' => $lote_code,
+                                        'date_of_due' => $format_date,
+                                        'lots_enabled' => true,
+                                    ]);
+                                }
+                            } catch (Exception $e) {
+                                Log::error($e->getMessage());
+                            }
+                        }
+                        if ($warehouse_id) {
+                            $item_whareouse_price = ItemWarehousePrice::create([
+                                'item_id' => $item->id,
+                                'warehouse_id' => $warehouse_id,
+                                'price' => $sale_unit_price,
+                            ]);
+                        }
+                        DB::connection('tenant')->commit();
+                    }catch(Exception $e){
+                        DB::connection('tenant')->rollBack();
+                        $this->errors[] = [
+                            'internal_id' => $internal_id,
+                            'description' => $e->getMessage(),
+                        ];
                     }
 
                     foreach ($prices as $price) {
@@ -338,15 +351,25 @@ class ItemsImport implements ToCollection
                     $registered += 1;
                 }
                 //-------------------------------------------------------------
+                }
+                catch(Exception $e){
+                    $this->errors[] = [
+                        'internal_id' => $internal_id,
+                        'description' => $e->getMessage(),
+                    ];
+                }
 
             }
         }
-        $this->data = compact('total', 'registered');
+        $this->data = compact('total', 'registered', 'errors');
     }
 
     public function getData()
     {
         return $this->data;
+    }
+    public function getErrors(){
+        return $this->errors;
     }
 
     function checkPrice($price)

@@ -1025,6 +1025,7 @@ import swal from "sweetalert2";
 export default {
     components: { WarehousesDetail, UnitTypeModal, ModalUnitTypeId },
     props: [
+        "lastQuery",
         "cotizarConfirmado",
         "canAddItem",
         "loadingItems",
@@ -1332,8 +1333,18 @@ export default {
             if (this.searchSeries && this.listFoods.length == 1) {
                 this.addFood(0, null, true);
             }
-            if (this.model && this.listFoods.length == 1) {
-                this.addFood(0, null, true);
+
+            if(this.configuration.color_size_enabled){
+                if ( this.listFoods.length == 1) {
+                    let [food] = this.listFoods;
+                    let color_size = food.color_size.find(color => color.code == this.lastQuery);
+                    
+                    if(color_size){
+                        color_size.quantity = 1;
+                        this.addFood(0, null, true, null, [color_size]);
+                    }
+                    
+                }                
             }
             if (this.quatity && this.listFoods.length == 1) {
                 this.addFood(0, null, true);
@@ -1452,7 +1463,8 @@ export default {
             index = 0,
             type = null,
             selectSerie = false,
-            categoria = null
+            categoria = null,
+            color_size = []
         ) {
             if (!this.canAddItem) {
                 this.$showSAlert(
@@ -1675,7 +1687,8 @@ export default {
                 this.selectedFood.id,
                 type,
                 selectSerie,
-                categoria
+                categoria,
+                color_size
             );
             let { item } = this.selectedFood;
             if (item.subject_to_detraction == 1) {

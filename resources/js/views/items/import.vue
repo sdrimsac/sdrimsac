@@ -115,6 +115,35 @@
                 </el-button>
             </div>
         </form>
+        <el-dialog
+            v-if="showErrors"
+            title="Errores"
+            :visible="showErrors"
+            @close="showErrors = false"
+            append-to-body
+            width="75%"
+        >
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="text-center text-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Se encontraron errores en los siguientes productos:
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>ID Interno</th>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(error, index) in generalErrors.slice(0,100)" :key="index">
+                        <td>{{ error.internal_id }}</td>
+                        <td>{{ error.description }}</td>
+                    </tr>
+                </tbody>
+            </table>    
+        </el-dialog>
     </el-dialog>
 </template>
 
@@ -130,7 +159,9 @@ export default {
             errors: {},
             form: {},
             warehouses: [],
-            loading: false
+            loading: false,
+            showErrors: false,
+            generalErrors: []
         };
     },
     async created() {
@@ -189,7 +220,13 @@ export default {
                 this.$eventHub.$emit("reloadData");
                 this.$eventHub.$emit("reloadTables");
                 this.$refs.upload.clearFiles();
-                this.close();
+                let errors = response.errors;
+                if(errors.length > 0){
+                    this.showErrors = true;
+                    this.generalErrors = errors;
+                } else {
+                    this.close();
+                }
             } else {
                 this.$showSAlert("IMPORTANTE", response.message, "error");
             }

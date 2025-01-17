@@ -131,6 +131,7 @@ if ($hostname) {
                         Route::post('/import', [ItemColorSizeController::class, 'import']);
                         Route::delete('/{id}', [ItemColorSizeController::class, 'delete']);
                         Route::post('/', [ItemColorSizeController::class, 'store']);
+                        Route::get('/last-record/{item_id}', [ItemColorSizeController::class, 'lastRecord']);
                     });
                 Route::prefix('warranty')
                     ->group(function () {

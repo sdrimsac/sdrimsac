@@ -411,6 +411,7 @@
                         >
                             <div class="col-md-12 p-1">
                                 <ListFood
+                                    :lastQuery="lastQuery"
                                     :canAddItem.sync="canAddItem"
                                     :loadingItems.sync="loadingItems"
                                     :localOrden="localOrden"
@@ -1243,7 +1244,8 @@
                                                     >
                                                         <div
                                                             @click="
-                                                                (configuration.consolidated_quotations || configuration.direct_unit_type )&&
+                                                                (configuration.consolidated_quotations ||
+                                                                    configuration.direct_unit_type) &&
                                                                 data.types
                                                                     .length > 0
                                                                     ? clickCommand(
@@ -1259,11 +1261,12 @@
                                                                 <span
                                                                     class="lead-font-weight-700 h5"
                                                                 >
-                                                            {{ configuration.direct_unit_type }}
+                                                                    {{
+                                                                        configuration.direct_unit_type
+                                                                    }}
                                                                     {{
                                                                         data.description.toUpperCase()
                                                                     }}
-                                                                
                                                                 </span>
                                                             </div>
                                                             <div
@@ -1856,10 +1859,10 @@
             :showDialog.sync="showDialogDetraction"
             :fromPos="true"
         ></detraction-payment>
-        <Warranty 
-        :showDialog.sync="showDialogWarranty"
-        :fromPos="true"
-         ></Warranty>
+        <Warranty
+            :showDialog.sync="showDialogWarranty"
+            :fromPos="true"
+        ></Warranty>
     </div>
 </template>
 
@@ -2001,6 +2004,7 @@ export default {
 
     data() {
         return {
+            lastQuery: null,
             divided_items: false,
             showDialogWarranty: false,
             ordenToPrint: [],
@@ -2187,7 +2191,7 @@ export default {
     },
 
     async created() {
-    console.log("la configuracion es ", this.configuration);
+        console.log("la configuracion es ", this.configuration);
         this.area_id = this.worker.area_id;
         this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");
@@ -2308,21 +2312,21 @@ export default {
         async printFileWithRawBT(fileUrl) {
             try {
                 const response = await fetch(fileUrl);
-                
+
                 // Verificar que el contenido sea PDF
-                const contentType = response.headers.get('content-type');
+                const contentType = response.headers.get("content-type");
                 // if (!contentType || !contentType.includes('application/pdf')) {
                 //     throw new Error('El archivo no es un PDF válido');
                 // }
-                
+
                 const pdfBlob = await response.blob();
-                
+
                 // Convertir el Blob a base64 usando FileReader
-                const base64File = await new Promise((resolve) => {
+                const base64File = await new Promise(resolve => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         // Extraer solo la parte base64 del resultado, removiendo el data URL prefix
-                        const base64String = reader.result.split(',')[1];
+                        const base64String = reader.result.split(",")[1];
                         resolve(base64String);
                     };
                     reader.readAsDataURL(pdfBlob);
@@ -2330,13 +2334,15 @@ export default {
 
                 // Crear la URL del Intent con el esquema rawbt
                 const intentUrl = `rawbt:base64,${base64File}`;
-                
+
                 // Redirigir al Intent
                 window.location.href = intentUrl;
-                
             } catch (error) {
                 console.error("Error al intentar imprimir con RawBT:", error);
-                this.$message.error(`Error: ${error.message || 'No se pudo imprimir el archivo. Verifica la instalación de RawBT.'}`);
+                this.$message.error(
+                    `Error: ${error.message ||
+                        "No se pudo imprimir el archivo. Verifica la instalación de RawBT."}`
+                );
             }
         },
         printOrden(url, id) {
@@ -2621,7 +2627,6 @@ export default {
                     title: ["Garantia"],
                     icon: "fa fa-guarantee",
                     visible: true && this.configuration.warranty_product
-
                 },
                 {
                     id: 74,
@@ -3662,7 +3667,7 @@ export default {
                     this.currencyIdChoice == "PEN"
                         ? "PEN"
                         : "USD";
-        
+
                 /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
                 this.is_payment = true;
             }
@@ -3779,7 +3784,8 @@ export default {
             food_id,
             type,
             selectSerie = false,
-            categoriaMadera = null
+            categoriaMadera = null,
+            color_size = []
         ) {
             let { food: item } = orden;
             let passDetraction = this.checkDetractionItems(item);
@@ -3795,7 +3801,7 @@ export default {
                 } else {
                     orden.series = [];
                 }
-                orden.color_size = [];
+                orden.color_size = color_size;
                 orden.lotes = [];
                 let added = false;
                 let {
@@ -3834,7 +3840,7 @@ export default {
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.categoriaMadera = categoriaMadera;
                 }
-                // esta condicon afecta los precios de la madera 
+                // esta condicon afecta los precios de la madera
                 if (categoriaMadera && categoriaMadera.price) {
                     orden.price = categoriaMadera.price;
                 }
@@ -3887,8 +3893,8 @@ export default {
                         orden.prices = newPrices;
                     }
                 }
-                if(this.configuration.divided_items){
-                    if(this.divided_items){
+                if (this.configuration.divided_items) {
+                    if (this.divided_items) {
                         orden.will_be_divided = true;
                     }
                 }
@@ -4025,7 +4031,10 @@ export default {
                         }
                         this.$refs.list_orden.changeCurrencyItems();
                     }
-                } else {
+                } 
+                
+            
+                else {
                     let {
                         food: { series }
                     } = orden;
@@ -4054,6 +4063,28 @@ export default {
                                         "La serie ya fue agregada"
                                     );
                                     return;
+                                }
+                            }
+                        }
+                        if(color_size.length > 0){
+                            let existingColorSize = this.localOrden[indexFind].color_size;
+                            
+                            for (let newColor of color_size) {
+                                let existingColor = existingColorSize.find(c => c.code === newColor.code);
+                                
+                                if (existingColor) {
+                                    if (existingColor.quantity + 1 > newColor.stock) {
+                                        this.$toast.error(`No hay suficiente stock para ${newColor.code}`);
+                                        return;
+                                    }
+                                    existingColor.quantity = Number(existingColor.quantity) + 1;
+                                } else {
+                                    if (newColor.stock < 1) {
+                                        this.$toast.error(`No hay stock disponible para ${newColor.code}`);
+                                        return;
+                                    }
+                                    newColor.quantity = 1;
+                                    existingColorSize.push(newColor);
                                 }
                             }
                         }
@@ -5631,6 +5662,9 @@ export default {
         //         })
         //     }
         getQueryParameters(form = {}) {
+            if (this.configuration.color_size_enabled) {
+                this.lastQuery = form.value;
+            }
             return queryString.stringify({
                 page: this.pagination.current_page,
                 external_id: this.barcode,

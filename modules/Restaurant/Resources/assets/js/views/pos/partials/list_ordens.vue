@@ -433,6 +433,19 @@
                             <br />Limpiar
                         </button>
                         <button
+                            v-if="isDev"
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="clgOrden()"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="fas fa-money-bill-wave fw-bold"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />Print
+                        </button>
+                        <button
                             :disabled="isSeller"
                             v-if="
                                 configuration.quotation &&
@@ -2953,6 +2966,9 @@ export default {
         }
     },
     computed: {
+        isDev() {
+            return window.location.href.includes("sdrimsac-tenant.oo");
+        },
         totalUniqueProducts() {
             // Cantidad de productos únicos
             return this.localOrden.length;
@@ -3075,6 +3091,9 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        clgOrden() {
+            console.log("el orden es", this.localOrden);
+        },
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
             let currentPriceIndx =

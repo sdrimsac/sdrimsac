@@ -4,6 +4,7 @@
         :visible="showDialog"
         @open="open"
         @close="close"
+        width="70%"
         append-to-body
     >
         <!-- Contenedor principal -->
@@ -25,6 +26,7 @@
                     <thead class="thead-light text-center">
                         <tr>
                             <th>Color</th>
+                            <th>Código</th>
                             <th>Talla</th>
                             <th>Stock</th>
                             <th>P. Venta</th>
@@ -41,6 +43,12 @@
                                 <el-input
                                     v-model="row.color"
                                     placeholder="Color"
+                                ></el-input>
+                            </td>
+                            <td>
+                                <el-input
+                                    v-model="row.code"
+                                    placeholder="Código"
                                 ></el-input>
                             </td>
                             <td>
@@ -105,11 +113,12 @@
 
 <script>
 export default {
-    props: ["showDialog", "colorSizes", "stock", "recordId"],
+    props: ["showDialog", "colorSizes", "stock", "recordId", "internalId"],
     data() {
         return {
             titleDialog: `Color - Talla`,
-            loading: false
+            loading: false,
+            lastColorSize: 0,
         };
     },
     computed: {
@@ -122,6 +131,12 @@ export default {
         }
     },
     methods: {
+        getLastColorSize() {
+            this.$http.get(`/item-color-size/last-record/${this.recordId}`).then(response => {
+                console.log(response);
+                this.lastColorSize = response.data;
+            });
+        },
         addColorSize() {
             if (this.verifyStock()) {
                 if (this.verifyCompleteData()) {
@@ -175,11 +190,14 @@ export default {
                 /* this.$toast.warning("El stock total no puede ser mayor al stock del producto"); */
                 return;
             }
+            const lastCode = !this.colorSizes.length ? this.lastColorSize + 1 : this.colorSizes.length + 1;
+            let code = `${this.internalId}-${lastCode}`;
             this.colorSizes.push({
                 color: "",
                 size: "",
                 stock: 0,
-                price: 0
+                price: 0,
+                code
             });
         },
         addMoreColorSizes() {
@@ -191,6 +209,7 @@ export default {
             }
         },
         open() {
+            this.getLastColorSize();
             if (!this.recordId) {
                 if (this.colorSizes.length == 0) {
                     this.addMoreColorSizes();

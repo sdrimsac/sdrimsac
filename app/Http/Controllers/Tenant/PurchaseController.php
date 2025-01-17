@@ -394,6 +394,7 @@ class PurchaseController extends Controller
                         foreach ($row['color_size'] as $color_size) {
                             $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
                                 ->where('warehouse_id', $row['warehouse_id'])
+                                ->where('code', $color_size['code'])
                                 ->where('color', $color_size['color'])
                                 ->where('size', $color_size['size'])
                                 ->first();
@@ -409,6 +410,7 @@ class PurchaseController extends Controller
                                     'item_id' => $row['item_id'],
                                     'warehouse_id' => $row['warehouse_id'],
                                     'color' => $color_size['color'],
+                                    'code' => $color_size['code'],
                                     'price' => $color_size['price'],
                                     'size' => $color_size['size'],
                                     'stock' => $color_size['stock'],
@@ -946,6 +948,7 @@ class PurchaseController extends Controller
                         'item_code'  => $row->item_code,
                         'full_description' => $full_description,
                         'description' => $row->description,
+                        'internal_id' => $row->internal_id,
                         'currency_type_id' => $row->currency_type_id,
                         'currency_type_symbol' => $row->currency_type['symbol'],
                         'sale_unit_price' => $row->sale_unit_price,

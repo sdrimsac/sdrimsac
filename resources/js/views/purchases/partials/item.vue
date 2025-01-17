@@ -443,7 +443,9 @@
     <lots-form :showDialog.sync="showDialogLots" :stock="form.quantity" :lots="lots" @addRowLot="addRowLot">
     </lots-form>
     <lots-group-form :showDialog.sync="showDialogLotsGroup" :stock="form.quantity" :lotsGroup.sync="lotsGroup" @addRowLot="addRowLotGroup"></lots-group-form>
-    <color-size-form :showDialog.sync="showColorSize" :stock="form.quantity" :colorSizes="color_size" @addRowColorSize="addRowColorSize" :recordId="form.item_id">
+    <color-size-form
+    :internalId="form.item.internal_id"
+    :showDialog.sync="showColorSize" :stock="form.quantity" :colorSizes="color_size" @addRowColorSize="addRowColorSize" :recordId="form.item_id">
     </color-size-form>
     <warehouses-detail :showDialog.sync="showWarehousesDetail" :warehouses="warehousesDetail">
     </warehouses-detail>

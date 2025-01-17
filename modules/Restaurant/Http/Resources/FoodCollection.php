@@ -78,8 +78,7 @@ class FoodCollection extends ResourceCollection
                     $q->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
                 })->where('quantity_unit', '>', 0);
                 if(count($item_types_descp) > 0){
-                    $item_unit_types = $item_unit_types->whereIn('description', $item_types_descp)
-                    ;
+                    $item_unit_types = $item_unit_types->whereIn('description', $item_types_descp);
                 }
                 $item_unit_types = $item_unit_types->get();
             }
@@ -102,6 +101,10 @@ class FoodCollection extends ResourceCollection
                 }
             
             }
+            $color_size = [];
+            if($configuracion->color_size_enabled){
+                $color_size = $item->color_size;
+            }
             $categoria_madera_item = $item->categoria_madera;
             if ($configuracion->consolidated_quotations && !is_array($item_unit_types)) {
                 $item_id = $item->id;
@@ -123,6 +126,7 @@ class FoodCollection extends ResourceCollection
             $weight = $item->weight;
             return [
                 'weight' => $weight,
+                'color_size' => $color_size,
                 'categoria_madera_item' => $categoria_madera_item,
                 'id'                => $row->id,
                 'description'  => $row->description,

@@ -164,6 +164,7 @@ class PosController extends Controller
     public function foods(Request $request)
     {
         $configuration = Configuration::first();
+        $color_size_enabled = $configuration->color_size_enabled;
         $customer_unit_type_id = $request->customer_unit_type_id;
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
         $category_ins_id = null;
@@ -193,11 +194,12 @@ class PosController extends Controller
         $textoIntoArray =  explode(' ', $value);
 
         $brand_id = $request->brand;
-        $model = $request->model;
-        $quality = $request->quality;
+        $model = $request->model == "true" ? true : false;
+        $quality = $request->quality == "true" ? true : false;
+
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment, $brand_id, $customer_unit_type_id) {
+            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment, $brand_id, $customer_unit_type_id, $color_size_enabled) {
                 $query
                     ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
@@ -219,6 +221,7 @@ class PosController extends Controller
                                 ->where('series', 'like', '%' . $value . '%');
                         });
                 }
+
                 $consolidated_quotations = $configuration->consolidated_quotations;
                 if ($consolidated_quotations && $customer_unit_type_id) {
                     $item_unit_types_person = UnitTypePerson::where('customer_id', $customer_unit_type_id)->pluck('description')->values();
@@ -244,6 +247,7 @@ class PosController extends Controller
         if ($value && $search_by_series == null || $search_by_series == false) {
             if (count($textoIntoArray) === 1) {
                 if ($external_id || $model || $quality) {
+
                     $foods = $foods->whereHas('item', function ($query) use ($value, $quality, $model) {
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere(function ($query) use ($value, $quality, $model) {
@@ -259,12 +263,21 @@ class PosController extends Controller
                     });
                 } else {
 
-                    $foods = $foods->where(function ($query) use ($value, $search_by_second_name) {
+                    $foods = $foods->where(function ($query) use ($value, $search_by_second_name, $color_size_enabled, $warehouse_id) {
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere('code', 'LIKE', '%' . $value . '%');
                         if ($search_by_second_name) {
                             $query->orWhereHas('item', function ($query) use ($value) {
                                 $query->where('second_name', 'LIKE', '%' . $value . '%');
+                            });
+                        }
+
+                        if ($color_size_enabled) {
+                            $query->orWhereHas('item', function ($query) use ($value,  $warehouse_id) {
+                                $query->whereHas('color_size', function ($query) use ($warehouse_id, $value) {
+                                    $query->where('warehouse_id', $warehouse_id)->where('code', 'like', '%' . $value . '%')
+                                        ->where('stock', '>', 0);
+                                });
                             });
                         }
                     });

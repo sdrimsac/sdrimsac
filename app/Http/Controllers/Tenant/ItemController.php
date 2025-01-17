@@ -1591,10 +1591,12 @@ class ItemController extends Controller
                 $import = new ItemsImport();
                 $import->import($request->file('file'), null, Excel::XLSX);
                 $data = $import->getData();
+                $errors = $import->getErrors();
                 return [
                     'success' => true,
                     'message' =>  __('app.actions.upload.success'),
-                    'data' => $data
+                    'data' => $data,
+                    'errors' => $errors
                 ];
             } catch (Exception $e) {
                 return [

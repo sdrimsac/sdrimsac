@@ -302,6 +302,7 @@ class Item extends ModelTenant
                         'size' => $row->size,
                         'stock' => $row->stock,
                         'price' => $row->price,
+                        'code' => $row->code,
                     ];
                 }),
             /* 'warranty' => ItemWarranty::where('item_id', $this->id)->first()
