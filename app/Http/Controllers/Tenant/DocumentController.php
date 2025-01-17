@@ -459,7 +459,7 @@ class DocumentController extends Controller
     public function records_ventas(Request $request)
     {
         $records = $this->getRecordsVentas($request);
-
+        
         return new DocumentVentaCollection($records->paginate(20));
     }
 
@@ -1984,10 +1984,9 @@ class DocumentController extends Controller
             ->where('series', 'like', '%' . $series . '%')
             ->where('number', 'like', '%' . $number . '%')
             ->whereDoesntHave('note')
-            ->whereDoesntHave('document_affected_note')
-            ->orderBy('id', 'desc')
-            ->orderBy('number', 'desc')
-            ->latest();
+            ->whereDoesntHave('document_affected_note');
+            // ->orderBy('id', 'desc')
+            // ->orderBy('number', 'desc');
 
         if ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
             // Convertir `d_end` al primer día y último día del mes

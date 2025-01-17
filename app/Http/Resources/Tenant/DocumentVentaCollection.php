@@ -57,10 +57,10 @@ class DocumentVentaCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
-            $establishment_description = Establishment::find($row->establishment_id)->description;
+            // $establishment_description = Establishment::find($row->establishment_id)->description;
             return [
                 'id' => $row->id,
-                'establishment_description' => $establishment_description,
+                'establishment_description' => $row->establishment_db->description,
                 'number_full' => $row->number_full,
                 'date_of_issue' => $row->date_of_issue,
                 'customer' =>$row->customer,

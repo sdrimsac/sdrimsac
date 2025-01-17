@@ -504,7 +504,10 @@ class Document extends ModelTenant
     {
         return $this->belongsTo(Establishment::class, 'establishment_id');
     }
-
+    public function establishment_db()
+    {
+        return $this->belongsTo(Establishment::class, 'establishment_id');
+    }
     public function hotel_rent()
     {
         return $this->hasOne(HotelRentDocument::class, 'document_id');
