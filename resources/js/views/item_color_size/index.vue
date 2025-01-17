@@ -43,6 +43,7 @@
                         <th class="text-white">#</th>
                         <th class="text-white">Código</th>
                         <th class="text-white">Producto</th>
+                        <th class="text-white">Código familia</th>
                         <th class="text-white">Color</th>
                         <th class="text-white">Talla</th>
                         <th class="text-white">Stock</th>
@@ -55,6 +56,7 @@
                         <td>{{ index }}</td>
                         <td>{{ row.item_internal_id }}</td>
                         <td>{{ row.item_description }}</td>
+                        <td>{{ row.code }}</td>
                         <td>{{ row.color }}</td>
                         <td>{{ row.size }}</td>
                         <td>{{ row.stock }}</td>

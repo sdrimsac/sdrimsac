@@ -17,6 +17,7 @@ class ItemColorSizeCollection extends ResourceCollection
             return [
                 'id' => $row->id,
                 'color' => $row->color,
+                'code' => $row->code,
                 'size' => $row->size,
                 'stock' => intval($row->stock),
                 'price' => $row->price,

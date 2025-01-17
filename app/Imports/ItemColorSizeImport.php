@@ -29,8 +29,8 @@ class ItemColorSizeImport implements ToCollection
 
 
             $internal_id = $row[0];
-            $color = strtoupper($row[1]);
-            $code = $row[2];
+            $code = $row[1];
+            $color = strtoupper($row[2]);
             $size = strtoupper($row[3]);
             $stock = $row[4];
             $price = $row[5];
