@@ -1279,6 +1279,7 @@ class ItemController extends Controller
                 'data' => $item
             ];
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             DB::connection('tenant')->rollBack();
             return [
                 'success' => false,
