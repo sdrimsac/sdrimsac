@@ -111,6 +111,19 @@
                             @change="changeDateOfIssue"
                         ></el-date-picker>
                     </div>
+                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                        <label class="control-label w-100"
+                            >Año</label
+                        >
+                        <el-date-picker
+                            v-model="search.year"
+                            type="year"
+                            style="width: 100%;"
+                            placeholder="Buscar"
+                            value-format="yyyy"
+                            @change="changeDateOfIssue"
+                        ></el-date-picker>
+                    </div>
                     <div class="col-lg-4 col-md-4 ">
                     <div class="form-group">
                         <label class="control-label w-100">Clientes</label>
@@ -227,7 +240,7 @@
                             v-if="records.length > 0"
                             @click.prevent="exportRecordsVentas"
                             icon="el-icon-download"
-                            :disabled="!search.d_end && !search.date_of_issue && !search.customer_id"
+                            :disabled="!search.d_end && !search.date_of_issue && !search.customer_id && !search.year"
                             >Exportar</el-button
                         >
                     </div>
@@ -418,6 +431,7 @@ export default {
                 number: null,
                 d_start: null,
                 d_end: null,
+                year: null,
                 pending_payment: false
             };
         },

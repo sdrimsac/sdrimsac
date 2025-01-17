@@ -25,17 +25,13 @@
                                     >
                                         <label class="control-label">DNI</label>
                                         <div class="d-flex align-items-center">
-                                            <el-input
+                                            <x-input-service
                                                 v-model="form.number"
-                                                :maxlength="8"
-                                                show-word-limit
-                                                class="flex-grow-1"
-                                            ></el-input>
-                                            <el-button
-                                                icon="el-icon-search"
-                                                class="ml-2"
-                                                @click.prevent="searchClients"
-                                            ></el-button>
+                                                :identity_document_type_id="
+                                                    form.document_type.dni
+                                                "
+                                                @search="searchNumber"
+                                            ></x-input-service>
                                         </div>
                                         <small
                                             class="form-control-feedback"
@@ -167,32 +163,9 @@
                             </div>
                             <br />
                             <div class="row">
-                                <!-- <div class="col-md-3">
-                                    <div
-                                        class="form-group"
-                                        :class="{ 'has-danger': errors.ruc }"
-                                    >
-                                        <label class="control-label">RUC</label>
-                                        <el-input v-model="form.ruc" :maxlength="11"
-                                                show-word-limit 
-                                                class="flex-grow-1"
-                                                ></el-input>
-                                        <el-button 
-                                        class="ml-2"
-                                        >
-                                            <i class="el-icon-search"></i>
-                                        </el-button>
-
-                                        <small
-                                            class="form-control-feedback d-block"
-                                            v-if="errors.ruc"
-                                            v-text="errors.ruc[0]"
-                                        ></small>
-                                    </div>
-                                </div> -->
                                 <div class="col-md-3">
                                     <div
-                                        :class="{ 'has-danger': errors.number }"
+                                        :class="{ 'has-danger': errors.ruc }"
                                         class="form-group"
                                     >
                                         <label class="control-label">RUC</label>
@@ -200,7 +173,7 @@
                                         <x-input-service
                                             v-model="form.ruc"
                                             :identity_document_type_id="
-                                                form.identity_document_type_id
+                                                form.document_type.ruc
                                             "
                                             @search="searchNumber"
                                         ></x-input-service>
@@ -424,7 +397,11 @@ export default {
             titleDialog: null,
             resource: "historial",
             errors: {},
-            form: {}
+            form: {},
+            documentTypes: {
+                dni: "1",
+                ruc: "6"
+            }
         };
     },
     created() {
@@ -435,7 +412,11 @@ export default {
             this.errors = {};
 
             this.form = {
-                identity_document_type_id: "6",
+                identity_document_type_id: "1",
+                document_type: {
+                    ruc: "6",
+                    dni: "1"
+                },
                 id: null,
                 name: null,
                 business_id: null,
@@ -483,10 +464,31 @@ export default {
                     });
             }
         },
-        searchNumber(data) {
-            this.form.name = data.name;
+        searchDni(data) {
+            this.form.identity_document_type_id = this.documentTypes.dni;
+            this.searchNumber(data);
         },
 
+        searchRuc(data) {
+            this.form.identity_document_type_id = this.documentTypes.ruc;
+            this.searchNumber(data);
+        },
+
+        searchNumber(data) {
+            // El tipo de documento vendrá en la respuesta del componente x-input-service
+            this.form.identity_document_type_id =
+                data.identity_document_type_id;
+            this.form.direccion_secondary = data.direccion_secondary;
+            this.form.name = data.name;
+            this.form.telephone = data.telephone;
+            this.form.email = data.email;
+            this.form.direccion = data.direccion;
+
+            this.form.direccion_secondary = data.name;
+        },
+        /* searchClients(data) {
+            
+        }, */
         submit() {
             /* this.transform(); */
 
@@ -513,7 +515,6 @@ export default {
                     this.loading_submit = false;
                 });
         },
-
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
@@ -523,7 +524,7 @@ export default {
         },
         searchSunat() {
             this.searchServiceNumber();
-        },
+        }
     }
 };
 </script>

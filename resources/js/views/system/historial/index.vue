@@ -97,7 +97,7 @@
                                         </div>
                                     </td>
                                     <td>{{ record.name }}</td>
-                                    <td>{{ record.business_id }}</td>
+                                    <td>{{ record.business_description }}</td>
                                     <td>{{ record.number }}</td>
                                     <td>{{ record.direccion }}</td>
                                     <td>{{ record.direccion_secondary }}</td>

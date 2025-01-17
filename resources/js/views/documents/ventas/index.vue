@@ -86,7 +86,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import DataTable from "../../../components/DataTableVenta.vue";
 import { deletable } from "../../../mixins/deletable";

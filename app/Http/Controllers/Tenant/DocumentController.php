@@ -358,6 +358,13 @@ class DocumentController extends Controller
             'total_pending_paid_pen' => number_format($total_pending_paid_pen, 2, ".", "")
         ];
     }
+    public function index_anulados() {
+
+        $configuration = Configuration::first();
+        $company = Company::first();
+
+        return view('tenant.documents.anulados', compact('company', 'configuration'));
+    }
 
     public function index_ventas()
     {
@@ -462,7 +469,7 @@ class DocumentController extends Controller
         
         return new DocumentVentaCollection($records->paginate(20));
     }
-
+    
     /* agregado para 50 paginacion */
     public function records(Request $request)
     {
@@ -1884,6 +1891,7 @@ class DocumentController extends Controller
         $establishment = Establishment::first();
         $d_start = $request->d_start;
         $d_end = $request->d_end;
+        $year = $request->year;
         $company = Company::active();
         return (new DocumentVenta)
             ->records($records)
@@ -1891,6 +1899,7 @@ class DocumentController extends Controller
             ->establishment($establishment)
             ->d_end($d_end)
             ->d_start($d_start)
+            // ->year($year)
             ->download('Reporte_productos_vendidos_' . Carbon::now() . '.xlsx');
     }
     public function import(Request $request)
@@ -1965,6 +1974,7 @@ class DocumentController extends Controller
     public function getRecordsVentas($request)
     {
         $d_end = $request->d_end;
+        $year = $request->year;
         $d_start = $request->d_start;
         $date_of_issue = $request->date_of_issue;
         $document_type_id = $request->document_type_id;
@@ -1988,7 +1998,15 @@ class DocumentController extends Controller
             // ->orderBy('id', 'desc')
             // ->orderBy('number', 'desc');
 
-        if ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
+
+        if ($year) {
+            // Generar las fechas de inicio y fin del año
+            $startOfYear = Carbon::createFromFormat('Y', $year)->startOfYear()->toDateString(); // 1 de enero del año
+            $endOfYear = Carbon::createFromFormat('Y', $year)->endOfYear()->toDateString();   // 31 de diciembre del año
+
+            // Filtrar los registros por el rango del año
+            $records = $records->whereBetween('date_of_issue', [$startOfYear, $endOfYear]);
+        } elseif ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
             // Convertir `d_end` al primer día y último día del mes
             $startOfMonth = Carbon::createFromFormat('Y-m', $d_end)->startOfMonth()->toDateString();
             $endOfMonth = Carbon::createFromFormat('Y-m', $d_end)->endOfMonth()->toDateString();
@@ -2001,6 +2019,18 @@ class DocumentController extends Controller
         } elseif ($date_of_issue) {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
         }
+
+        /* if ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
+            $startOfMonth = Carbon::createFromFormat('Y-m', $d_end)->startOfMonth()->toDateString();
+            $endOfMonth = Carbon::createFromFormat('Y-m', $d_end)->endOfMonth()->toDateString();
+
+            $records = $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
+        }
+        elseif ($d_start && $d_end) {
+            $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
+        } elseif ($date_of_issue) {
+            $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
+        } */ 
 
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);
@@ -2484,7 +2514,7 @@ class DocumentController extends Controller
                     //             $quantity = $quantity * $unit_type->quantity_unit;
                     //         }
                     //     }
-                        
+
                     // }
                     Box::where('document_id', $document_id)->delete();
                     $desc = "App\Models\Tenant\Document";

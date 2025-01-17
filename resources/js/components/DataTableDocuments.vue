@@ -112,6 +112,14 @@
                         </el-select>
                     </div>
                 </div>
+                <!-- <div class="col-lg-2 col-md-2 pb-2">
+                    <div class="form-group">
+                        <label class="control-label w-100">Año</label>
+
+                        <el-date-picker v-model="search.year" type="year" style="width: 100%;" placeholder="Buscar" value-format="yyyy" :picker-options="pickerOptionsDates" @change="changeEndDate">
+                        </el-date-picker>
+                    </div>
+                </div> -->
                 <div class="col-lg-2 col-md-2 col-sm-12 mt-4">
                     <div class="form-group">
                         <el-checkbox v-model="search.pending_payment">PEND. DE PAGO</el-checkbox>
@@ -305,6 +313,7 @@ export default {
                 number: null,
                 d_start: null,
                 d_end: null,
+                year: null,
                 pending_payment: false
             };
         },

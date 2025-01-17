@@ -20,6 +20,7 @@ class HistoryCollection extends ResourceCollection
                 'name' => $row->name,
                 'number' => $row->number,
                 'business_id' => $row->business_id,
+                'business_description' => $row->business ? $row->business->description : null,
                 'telephone' => $row->telephone,
                 'direccion' => $row->direccion,
                 'direccion_secondary' => $row->direccion_secondary,

@@ -22,23 +22,16 @@ class HistorialController extends Controller
 
     public function records()
     {
-        $records = History::all();
+        $records = History::with('business')->get();
 
         return new HistoryCollection($records);
     }
 
-    /* public function record($id)
-    {
-        $record = new HistoryResource(History::findOrFail($id));
-
-        return $record;
-    } */
     public function record($id)
     {
         $record = new HistoryResource(History::findOrFail($id));
         return $record;
     }
-
 
     public function store(HistoryRequest $request)
     {
@@ -69,18 +62,133 @@ class HistorialController extends Controller
 
         return compact('business');
     }
-    public function pdf($id)
+    /* public function pdf($id)
     {
-        // Encuentra el registro en la base de datos
-         $record = History::findOrFail($id);
+        $record = History::findOrFail($id);
 
-        // Genera el PDF usando la vista y pasa los datos necesarios
         $pdf = PDF::loadView('system.historial.contrato_restaurant_pdf', compact('record'))
             ->setPaper('a4', 'portrait');
 
-        // Retorna el PDF al navegador para que se pueda ver/descargar
-        /* return $pdf->stream(); */
         return $pdf->stream('contrato.pdf');
-        // return view('system.historial.contrato_restaurant_pdf', compact('record'));
+    } */
+    /* public function generatePdf($id)
+    {
+        $record = History::with('business')->findOrFail($id);
+        $business_id = $record->business_id;
+
+        $name = $record->name;
+        $number = $record->number;
+        $business = $record->business->description;
+        $telephone = $record->telephone;
+        $direccion = $record->direccion;
+        $direccion_secondary = $record->direccion_secondary;
+        $email = $record->email;
+        $ruc = $record->ruc;
+
+
+        $template_paths = [
+            1 => 'system.historial.contrato_restaurant_pdf',
+            2 => 'system.historial.contrato_hotel_pdf',
+            3 => 'system.historial.contrato_bar_pdf',
+            4 => 'system.historial.contrat_creditos_pdf',
+        ];
+
+        $template = $template_paths[$business_id] ?? 'system.historial.contrato_default_pdf';
+
+        $pdf = PDF::loadView($template, compact('record', 'name', 'number', 'business', 'telephone', 'direccion', 'direccion_secondary', 'email', 'ruc'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('contrato.pdf');
+    } */
+
+    /* public function generatePdf($id)
+    {
+        // Cargar el registro con la relación 'business'
+        $record = History::with('business')->findOrFail($id);
+
+        // Verificar que la relación 'business' existe
+        if (!$record->business) {
+            return response()->json([
+                'error' => 'El registro no tiene un negocio asociado.'
+            ], 404);
+        }
+
+        // Obtener el ID del negocio
+        $business_id = $record->business_id;
+
+        // Definir las rutas de los templates
+        $template_paths = [
+            1 => 'system.historial.contrato_restaurant_pdf',
+            2 => 'system.historial.contrato_hotel_pdf',
+            3 => 'system.historial.contrato_bar_pdf',
+            8 => 'system.historial.contrat_creditos_pdf',
+        ];
+
+        // Seleccionar el template adecuado
+        $template = $template_paths[$business_id] ?? 'system.historial.contrato_default_pdf';
+
+        // Extraer los datos necesarios del registro
+        $data = [
+            'name' => $record->name,
+            'number' => $record->number,
+            'business' => $record->business->description ?? 'Sin descripción',
+            'telephone' => $record->telephone,
+            'direccion' => $record->direccion,
+            'direccion_secondary' => $record->direccion_secondary,
+            'email' => $record->email,
+            'ruc' => $record->ruc,
+        ];
+
+        // Generar el PDF
+        $pdf = PDF::loadView($template, $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('contrato.pdf');
+    } */
+
+    public function pdf($id)
+    {
+        // Cargar el registro del cliente desde la tabla History
+        $record = History::with('business')->findOrFail($id);
+
+        // Verificar que la relación 'business' existe
+        if (!$record->business) {
+            return response()->json([
+                'error' => 'El cliente no tiene un negocio asociado.'
+            ], 404);
+        }
+
+        // Obtener el ID del negocio desde el registro del cliente
+        $business_id = $record->business_id;
+
+        // Definir las rutas de los templates
+        $template_paths = [
+            1 => 'system.historial.contrato_restaurant_pdf',
+            2 => 'system.historial.contrato_hotel_pdf',
+            3 => 'system.historial.contrato_bar_pdf',
+            8 => 'system.historial.contrato_creditos_pdf',
+        ];
+
+        // Seleccionar el template adecuado según el business_id
+        $template = $template_paths[$business_id] ?? 'system.historial.contrato_default_pdf';
+
+        // Extraer los datos necesarios del registro
+        $data = [
+            'record' => $record,
+            'name' => $record->name,
+            'number' => $record->number,
+            'business' => $record->business->description ?? 'Sin descripción',
+            'telephone' => $record->telephone,
+            'direccion' => $record->direccion,
+            'direccion_secondary' => $record->direccion_secondary,
+            'email' => $record->email,
+            'ruc' => $record->ruc,
+        ];
+
+        // Generar el PDF
+        $pdf = PDF::loadView($template, $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('contrato.pdf');
     }
 }

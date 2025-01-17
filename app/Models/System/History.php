@@ -27,17 +27,13 @@ class History extends Model
         'date_certificate',  
     ];
 
-    /* protected $casts = [
-        'establishments_unlimited' => 'boolean',
-        'establishments_limit' => 'int',
-        'sales_unlimited' => 'boolean',
-        'sales_limit' => 'float',
-        'include_sale_notes_sales_limit' => 'boolean',
-    ]; */
-
+    /* public function business()
+    {
+        return $this->hasMany(Business::class, 'business_id');
+    } */
     public function business()
     {
-        return $this->hasMany(Business::class);
+        return $this->belongsTo(Business::class, 'business_id'); // Ajusta el nombre del modelo y la clave foránea según tu base de datos.
     }
     
 }

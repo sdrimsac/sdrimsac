@@ -1200,6 +1200,9 @@ if ($hostname) {
 
             Route::get('services/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
+
+            Route::get('services/dni/{number}', 'Modules\System\ServiceController@service');
+            Route::get('service/dni/{number}', 'Modules\System\ServiceController@service');
             // Route::prefix('service')->group(function () {
             //     Route::get('{type}/{number}', [ServiceController::class, 'service']);
             // });
