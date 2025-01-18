@@ -220,10 +220,10 @@
                 <th class="border-top-bottom text-left py-2">DESCRIPCIÓN</th>
                 {{-- <th class="border-top-bottom text-center py-2" width="8%">LOTE</th>
                 <th class="border-top-bottom text-center py-2" width="8%">SERIE</th> --}}
-                <th class="border-top-bottom text-right py-2" width="12%">SUB TOTAL</th>
+                <th class="border-top-bottom text-right py-2" width="12%">V.UNIT</th>
+                <th class="border-top-bottom text-right py-2" width="8%">IGV UNIT</th>
                 <th class="border-top-bottom text-right py-2" width="12%">P.UNIT</th>
                 <th class="border-top-bottom text-right py-2" width="8%">DTO.</th>
-                <th class="border-top-bottom text-right py-2" width="8%">IGV</th>
                 <th class="border-top-bottom text-right py-2" width="12%">TOTAL</th>
             </tr>
         </thead>
@@ -311,28 +311,18 @@
 
 
                     </td>
-                    <td class="text-center align-top"> {{  number_format($row->total_value, 2) }}</td>
-                    {{-- <td class="text-center align-top">
-                                            {{-- @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')
-                                    @php
-                                        $lot_code = isset($row->item->lots_group) ? collect($row->item->lots_group)->first(function($row){ return $row->checked == true;}):null;
-                                    @endphp
-                                    {{
-                                        $itemLotGroup->getLote($lot_code ? $lot_code->id : null)
-                                    }} --}}{{--
-
-                    </td>
-                    <td class="text-center align-top">
-
-                    </td> --}}
+                    <td class="text-center align-top"> {{  number_format($row->total_value / $row->quantity, 2) }}</td>
+                    
+                    <td class="text-right aling-top"> {{ number_format($row->total_igv / $row->quantity, 2) }}</td>
+                   
                     <td class="text-right align-top">
 
                         @if (isset($row->price_unit))
                             {{ number_format($row->price_unit, 2) }}
                     </td>
-                @else
-                    {{ number_format($row->unit_price, 2) }}</td>
-                @endif
+                    @else
+                        {{ number_format($row->unit_price, 2) }}</td>
+                    @endif
 
             </td>
             <td class="text-right align-top">
@@ -348,7 +338,6 @@
                     0
                 @endif
             </td>
-            <td class="text-right aling-top"> {{ number_format($row->total_igv, 2) }}</td>
             <td class="text-right align-top">{{ number_format($row->total, 2) }}</td>
             </tr>
             <tr>

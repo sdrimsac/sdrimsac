@@ -192,10 +192,10 @@
                 @if ($configuration->image_quotation)
                     <th class="border-top-bottom text-center py-2" width="10%">IMAGEN</th>
                 @endif
-                <th class="border-top-bottom text-right py-2" width="12%">SUB TOTAL</th>
+                <th class="border-top-bottom text-right py-2" width="12%">V.UNIT</th>
+                <th class="border-top-bottom text-right py-2" width="8%">IGV UNIT</th>
                 <th class="border-top-bottom text-right py-2" width="12%">P.UNIT</th>
                 <th class="border-top-bottom text-right py-2" width="8%">DTO.</th>
-                <th class="border-top-bottom text-right py-2" width="8%">IGV</th>
                 <th class="border-top-bottom text-right py-2" width="12%">TOTAL</th>
             </tr>
         </thead>
@@ -278,7 +278,8 @@
                             @endif
                         </td>
                     @endif
-                    <td class="text-right align-top"> {{ number_format($row->total_value, 2) }} </td>
+                    <td class="text-right align-top"> {{ number_format($row->total_value / $row->quantity, 2) }} </td>
+                    <td class="text-right align-top"> {{ number_format($row->total_igv / $row->quantity, 2) }}</td>
                     <td class="text-right align-top">{{ number_format($row->unit_price, 2) }}</td>
                     <td class="text-right align-top">
                         @if ($row->discounts)
@@ -293,7 +294,7 @@
                             0
                         @endif
                     </td>
-                    <td class="text-right align-top"> {{ number_format($row->total_igv, 2) }}</td>
+                    
                     <td class="text-right align-top">{{ number_format($row->total, 2) }}</td>
                 </tr>
                 <tr>

@@ -245,7 +245,7 @@
                         </tr>
                     @endif
                 @endif
-                @if(count($detail_points) > 0)
+                @if (count($detail_points) > 0)
                     <tr>
                         <td><b>PUNTOS ADQUIRIDOS</b></td>
                         <td>:</td>
@@ -256,11 +256,11 @@
                     </tr>
                 @endif
                 @if (count($detail_message) > 0)
-                <tr>
-                    <td colspan="6" class="">
-                        <b>{{ $detail_message['message'] }}</b>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="6" class="">
+                            <b>{{ $detail_message['message'] }}</b>
+                        </td>
+                    </tr>
                 @endif
             </table>
         </div>
@@ -327,7 +327,7 @@
                 @endforeach
             </table>
         @endif
-    
+
 
         <div class="mt-2">
             <strong>Observación:</strong>
@@ -396,13 +396,14 @@
                             height="20px">UNIDAD</th>
                         <th class="border-top-bottom text-left py-2 bordes" height="20px" height="20px">DESCRIPCIÓN
                         </th>
-                        <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">SUB TOTAL
+                        <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">V.UNIT
+                            
+                        </th>
+                        <th class="border-top-bottom py-2 bordes  text-center" width="8%" height="20px">IGV UNIT
                         </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">P.UNIT
                         </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="8%" height="20px">DTO.
-                        </th>
-                        <th class="border-top-bottom py-2 bordes  text-center" width="8%" height="20px">IGV
                         </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">TOTAL
                         </th>
@@ -462,7 +463,7 @@
                                         {!! $row->unit_desc !!}
                                     @endif
                                 @endif
-                                @if(isset($row->item->is_promotion) && $row->item->is_promotion)
+                                @if (isset($row->item->is_promotion) && $row->item->is_promotion)
                                     <br />
                                     <small>**Promoción**</small>
                                 @endif
@@ -494,14 +495,14 @@
                                 @endif
                             </td>
                             <!--
-            <td class="text-center align-top bordes"  height="20px">
-                @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')
-                {{ $itemLotGroup->getLote($row->item->IdLoteSelected) }}
+                                                <td class="text-center align-top bordes"  height="20px">
+                                                    @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')
+                                                    {{ $itemLotGroup->getLote($row->item->IdLoteSelected) }}
 
-            </td>
-            <td class="text-center align-top bordes"  height="20px">
+                                                </td>
+                                                <td class="text-center align-top bordes"  height="20px">
 
-                @isset($row->item->lots)
+                                                    @isset($row->item->lots)
     @foreach ($row->item->lots as $lot)
     @if (isset($lot->has_sale) && $lot->has_sale)
     <span style="font-size: 9px">{{ $lot->series }}</span><br>
@@ -509,9 +510,13 @@
     @endforeach
 @endisset
 
-            </td>
-             -->
-             <td class="text-center align-top bordes"> {{ number_format($row->total_value, 2) }}</td>
+                                                </td>
+                                                -->
+                            <td class="text-center align-top bordes">
+                                {{ number_format($row->total_value / $row->quantity, 2) }}
+                            </td>
+                            <td class="text-center align-top bordes">
+                                {{ number_format($row->total_igv / $row->quantity, 2) }}</td>
                             <td class="text-center align-top bordes" height="20px">
 
                                 @if (isset($row->price_unit))
@@ -521,6 +526,8 @@
                                 @endif
 
                             </td>
+
+
                             <td class="text-center align-top bordes" height="20px">
                                 @if ($row->discounts)
                                     @php
@@ -534,8 +541,6 @@
                                     0
                                 @endif
                             </td>
-                            <td class="text-center align-top bordes">  {{ number_format($row->total_igv, 2) }}</td>
-                            
                             <td class="text-center align-top bordes" height="20px">
                                 {{ number_format($row->total, 2) }}</td>
                         </tr>
