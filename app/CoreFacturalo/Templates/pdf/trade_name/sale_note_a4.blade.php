@@ -77,7 +77,7 @@
                     <h6>{{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}</h6>
                 </div>
             </td>
-            <td width="30%" class="border-box py-4 px-2 text-center">
+            <td width="30%" class="border_round py-4 px-2 text-center" style="border: #000 1px solid;">
                 <h5 class="text-center">NOTA DE VENTA</h5>
                 <h3 class="text-center">{{ $tittle }}</h3>
             </td>
@@ -218,10 +218,12 @@
                 <th class="border-top-bottom text-center py-2" width="8%">CANT.</th>
                 <th class="border-top-bottom text-center py-2" width="8%">UNIDAD</th>
                 <th class="border-top-bottom text-left py-2">DESCRIPCIÓN</th>
-                <th class="border-top-bottom text-center py-2" width="8%">LOTE</th>
-                <th class="border-top-bottom text-center py-2" width="8%">SERIE</th>
+                {{-- <th class="border-top-bottom text-center py-2" width="8%">LOTE</th>
+                <th class="border-top-bottom text-center py-2" width="8%">SERIE</th> --}}
+                <th class="border-top-bottom text-right py-2" width="12%">SUB TOTAL</th>
                 <th class="border-top-bottom text-right py-2" width="12%">P.UNIT</th>
                 <th class="border-top-bottom text-right py-2" width="8%">DTO.</th>
+                <th class="border-top-bottom text-right py-2" width="8%">IGV</th>
                 <th class="border-top-bottom text-right py-2" width="12%">TOTAL</th>
             </tr>
         </thead>
@@ -309,19 +311,20 @@
 
 
                     </td>
-                    <td class="text-center align-top">
-                        {{-- @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')
-                @php
-                    $lot_code = isset($row->item->lots_group) ? collect($row->item->lots_group)->first(function($row){ return $row->checked == true;}):null;
-                @endphp
-                {{
-                    $itemLotGroup->getLote($lot_code ? $lot_code->id : null)
-                }} --}}
+                    <td class="text-center align-top"> {{  number_format($row->total_value, 2) }}</td>
+                    {{-- <td class="text-center align-top">
+                                            {{-- @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')
+                                    @php
+                                        $lot_code = isset($row->item->lots_group) ? collect($row->item->lots_group)->first(function($row){ return $row->checked == true;}):null;
+                                    @endphp
+                                    {{
+                                        $itemLotGroup->getLote($lot_code ? $lot_code->id : null)
+                                    }} --}}{{--
 
                     </td>
                     <td class="text-center align-top">
 
-                    </td>
+                    </td> --}}
                     <td class="text-right align-top">
 
                         @if (isset($row->price_unit))
@@ -329,7 +332,7 @@
                     </td>
                 @else
                     {{ number_format($row->unit_price, 2) }}</td>
-            @endif
+                @endif
 
             </td>
             <td class="text-right align-top">
@@ -345,6 +348,7 @@
                     0
                 @endif
             </td>
+            <td class="text-right aling-top"> {{ number_format($row->total_igv, 2) }}</td>
             <td class="text-right align-top">{{ number_format($row->total, 2) }}</td>
             </tr>
             <tr>

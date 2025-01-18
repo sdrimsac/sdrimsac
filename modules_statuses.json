@@ -30,5 +30,6 @@
     "ApiPeruDev": true,
     "Consignment": true,
     "Billar": true,
-    "Workshop": true
+    "Workshop": true,
+    "Dental": true
 }

@@ -396,9 +396,13 @@
                             height="20px">UNIDAD</th>
                         <th class="border-top-bottom text-left py-2 bordes" height="20px" height="20px">DESCRIPCIÓN
                         </th>
+                        <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">SUB TOTAL
+                        </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">P.UNIT
                         </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="8%" height="20px">DTO.
+                        </th>
+                        <th class="border-top-bottom py-2 bordes  text-center" width="8%" height="20px">IGV
                         </th>
                         <th class="border-top-bottom py-2 bordes  text-center" width="12%" height="20px">TOTAL
                         </th>
@@ -507,6 +511,7 @@
 
             </td>
              -->
+             <td class="text-center align-top bordes"> {{ number_format($row->total_value, 2) }}</td>
                             <td class="text-center align-top bordes" height="20px">
 
                                 @if (isset($row->price_unit))
@@ -529,6 +534,8 @@
                                     0
                                 @endif
                             </td>
+                            <td class="text-center align-top bordes">  {{ number_format($row->total_igv, 2) }}</td>
+                            
                             <td class="text-center align-top bordes" height="20px">
                                 {{ number_format($row->total, 2) }}</td>
                         </tr>
