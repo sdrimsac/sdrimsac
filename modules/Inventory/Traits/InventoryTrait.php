@@ -113,6 +113,16 @@ trait InventoryTrait
             ->get();
 
         return collect($records)->transform(function ($row) use ($warehouse_id) {
+            $lotes = $row->lots_group->where('warehouse_id', $warehouse_id)->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'code' => $row->code,
+                    'item_id' => $row->item_id,
+                    'date_of_due' => $row->date_of_due,
+                    'quantity' => $row->quantity,
+                ];
+            })->values();
+        
             return  [
                 'id' => $row->id,
                 'max_quantity_description' => $row->max_quantity_description,
@@ -123,15 +133,7 @@ trait InventoryTrait
                 'has_color_size' => (bool)$row->has_color_size,
                 'full_description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
                 'max_quantity' => $row->max_quantity,
-                'lotes' => $row->lots_group->where('warehouse_id', $warehouse_id)->transform(function ($row) {
-                    return [
-                        'id' => $row->id,
-                        'code' => $row->code,
-                        'item_id' => $row->item_id,
-                        'date_of_due' => $row->date_of_due,
-                        'quantity' => $row->quantity,
-                    ];
-                }),
+                'lotes' => $lotes,
                 'lots' => $row->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse_id)->transform(function ($row) {
                     return [
                         'id' => $row->id,
@@ -150,7 +152,7 @@ trait InventoryTrait
                         'color' => $row->color,
                         'stock' => $row->stock,
                         'price' => $row->price,
-                        
+
                     ];
                 }) : [],
                 /* 'color_size' => $row->color_size ? $row->color_size->where('warehouse_id', $warehouse_id)->transform(function ($row) {
@@ -179,7 +181,7 @@ trait InventoryTrait
                 'lots_enabled' => (bool) $row->lots_enabled,
                 'series_enabled' => (bool) $row->series_enabled,
                 'has_color_size_enabled' => (bool) $row->has_color_size_enabled,
-            
+
                 'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
                     return [
                         'id' => $row->id,
