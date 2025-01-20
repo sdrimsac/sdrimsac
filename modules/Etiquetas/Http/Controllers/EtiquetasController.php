@@ -247,7 +247,7 @@ class EtiquetasController extends Controller
     {
         $establishment_id = auth()->user()->establishment_id;
         $input = $request->input("input");
-        $items = Item::where('active', 1)->where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input) {
+        $items = Item::where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input) {
             $subquery->where("internal_id", "like", "%" . $input . "%")->orWhere("barcode", "like", "%" . $input . "%");
         })
 
@@ -274,7 +274,7 @@ class EtiquetasController extends Controller
             "items" => $items
         ];
     } */
-    public function items(Request $request)
+    /* public function items(Request $request)
     {
         $establishment_id = auth()->user()->establishment_id;
         $input = $request->input("input");
@@ -319,13 +319,62 @@ class EtiquetasController extends Controller
                 ];
             });
 
-        // Eliminar los valores nulos del resultado transformado
-        /* $filteredItems = $items->filter(); */
+
+        return [
+            "items" => $items
+        ];
+    } */
+
+    public function items(Request $request)
+    {
+        $establishment_id = auth()->user()->establishment_id;
+        $input = $request->input("input");
+
+        // Filtrar por descripción, internal_id o barcode y solo productos activos
+        $items = Item::where("active", 1) // Agregar filtro de activos
+            ->where(function ($query) use ($input) {
+                $query->where("description", "like", "%" . $input . "%")
+                    ->orWhere("internal_id", "like", "%" . $input . "%")
+                    ->orWhere("barcode", "like", "%" . $input . "%");
+            })
+            ->take(15)
+            ->get()
+            ->transform(function ($row) use ($establishment_id) {
+                // Ajustar código interno si el tipo es EAN-8
+                if ($row->internal_id != null && $row->type_barcode == "EAN-8") {
+                    $row->internal_id = substr($row->internal_id, 0, -1);
+                }
+
+                // Obtener stock por almacén
+                $stock = $row->getStockByWarehouse($establishment_id);
+
+                return [
+                    "id" => $row->id,
+                    "descripcion" => $row->description,
+                    "barras" => $row->internal_id,
+                    "tipo_barras" => $row->barcode_type,
+                    "stock" => $stock,
+                    "price" => $row->sale_unit_price,
+                    "purchase" => $row->purchase_unit_price,
+                    "location" => $row->location,
+                    "item_unit_types" => $row->item_unit_types,
+                    'max_quantity' => $row->max_quantity
+                ];
+            });
 
         return [
             "items" => $items
         ];
     }
+    public function getStockByWarehouse($warehouse_id)
+    {
+        return $this->warehouses()
+            ->where('warehouse_id', $warehouse_id)
+            ->where('active', 1) // Filtrar por almacenes activos
+            ->sum('stock'); // Sumar el stock disponible
+    }
+
+
 
 
     /**
