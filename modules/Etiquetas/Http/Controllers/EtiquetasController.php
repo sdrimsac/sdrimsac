@@ -243,11 +243,11 @@ class EtiquetasController extends Controller
 
         return compact('palabras', 'codigos', 'company_name', 'etiqueta', 'establishment');
     }
-    public function items(Request $request)
+    /* public function items(Request $request)
     {
         $establishment_id = auth()->user()->establishment_id;
         $input = $request->input("input");
-        $items = Item::where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input) {
+        $items = Item::where('active', 1)->where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input) {
             $subquery->where("internal_id", "like", "%" . $input . "%")->orWhere("barcode", "like", "%" . $input . "%");
         })
 
@@ -257,14 +257,53 @@ class EtiquetasController extends Controller
                     $row->internal_id = substr($row->internal_id, 0, -1);
                 }
                 $stock = $row->getStockByWarehouse(auth()->user()->establishment_id);
+                return [
+                    "id" => $row->id,
+                    "descripcion" => $row->description,
+                    "barras" => $row->internal_id,
+                    "tipo_barras" => $row->barcode_type,
+                    "stock" => $stock,
+                    "price" => $row->sale_unit_price,
+                    "purchase" => $row->purchase_unit_price,
+                    "location" => $row->location,
+                    "item_unit_types" => $row->item_unit_types,
+                    'max_quantity' => $row->max_quantity
+                ];
+            });
+        return [
+            "items" => $items
+        ];
+    } */
+    public function items(Request $request)
+    {
+        $establishment_id = auth()->user()->establishment_id;
+        $input = $request->input("input");
 
+        // Filtrar los items con active = 1 y buscar por descripción, internal_id o barcode
+        $items = Item::where("active", 1)
+            ->where(function ($query) use ($input) {
+                $query->where("description", "like", "%" . $input . "%")
+                    ->orWhere("internal_id", "like", "%" . $input . "%")
+                    ->orWhere("barcode", "like", "%" . $input . "%");
+            })
+            ->take(15)
+            ->get()
+            ->transform(function ($row) use ($establishment_id) {
+                // Filtrar el stock solo si el item_warehouse está en active = 1
+                $stock = $row->warehouses()
+                    ->where('warehouse_id', $establishment_id)
+                    ->where('active', 1)
+                    ->sum('stock'); // Sumar el stock válido
 
-                /* $price1 = null;
-                if (is_array($row->item_unit_types) && isset($row->item_unit_types[0])) {
-                    $price1 = $row->item_unit_types[0]['price1'] ?? null;
-                }*/
-                
+                // Evitar mostrar el item si no hay stock activo
+                if ($stock <= 0) {
+                    return null;
+                }
 
+                // Ajustar internal_id si el tipo de código de barras es EAN-8
+                if ($row->internal_id != null && $row->type_barcode == "EAN-8") {
+                    $row->internal_id = substr($row->internal_id, 0, -1);
+                }
 
                 return [
                     "id" => $row->id,
@@ -276,14 +315,18 @@ class EtiquetasController extends Controller
                     "purchase" => $row->purchase_unit_price,
                     "location" => $row->location,
                     "item_unit_types" => $row->item_unit_types,
-                    /* "price1" => $price1, */
-                    'max_quantity' => $row->max_quantity
+                    'max_quantity' => $row->max_quantity,
                 ];
             });
+
+        // Eliminar los valores nulos del resultado transformado
+        $filteredItems = $items->filter();
+
         return [
-            "items" => $items
+            "items" => $filteredItems
         ];
     }
+
 
     /**
      * Show the form for creating a new resource.
