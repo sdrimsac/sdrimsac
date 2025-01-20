@@ -320,10 +320,10 @@ class EtiquetasController extends Controller
             });
 
         // Eliminar los valores nulos del resultado transformado
-        $filteredItems = $items->filter();
+        /* $filteredItems = $items->filter(); */
 
         return [
-            "items" => $filteredItems
+            "items" => $items
         ];
     }
 
