@@ -20,12 +20,13 @@ class TariffCollection extends ResourceCollection
                 'id'           => $row->id,
                 'process'      => $row->process,
                 'category'     => $row->category,
+                'category_id'  => $row->category_id,
                 'price'        => $row->price,
                 'measure'      => $row->measure,
                 'type_concept' => $row->type_concept,
                 'state'        => $row->state,
-                'code' => $row->code,
-                'discount' => $row->discount,
+                'code'         => $row->code,
+                'discount'     => $row->discount,
             ];
         });
     }

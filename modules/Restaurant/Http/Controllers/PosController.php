@@ -652,7 +652,9 @@ class PosController extends Controller
         $establishment = Establishment::find($user->establishment_id);
         $gruop = Group::all();
         //buscar productos del establecimiento, y preguntar
-        $sellers = Seller::where('establishment_id', $user->establishment_id)->get();
+        $sellers = Seller::where('establishment_id', $user->establishment_id)
+                ->where('active', 1)
+                ->get();
         $category = Category::all();
         $subcategory = Subcategory::all();
         $company = Company::first();

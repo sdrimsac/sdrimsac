@@ -18,12 +18,13 @@ class TariffResource extends JsonResource
             'id'           => $this->id,
             'process'      => $this->process,
             'category'     => $this->category,
+            'category_id'  => $this->category_id,
             'price'        => $this->price,
             'measure'      => $this->measure,
             'type_concept' => $this->type_concept,
             'state'        => $this->state,
-            'code' => $this->code,
-            'discount' => $this->discount
+            'code'         => $this->code,
+            'discount'     => $this->discount
         ];
     }
 }

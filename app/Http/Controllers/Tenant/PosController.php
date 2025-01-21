@@ -332,7 +332,9 @@ class PosController extends Controller
         $medida_alto = ItemMedidaAlto::all();
         $medida_grosor = ItemMedidaGrosor:: all();
         $medida_ancho = ItemMedidaAncho::all();
-        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
+        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)
+            ->where('active', 1)
+            ->get();
         $products_to_due = ItemLotsGroup::where('date_of_due', '<=', Carbon::now()->addMonths(2))
             ->where('quantity', '>', 0)
             ->count();

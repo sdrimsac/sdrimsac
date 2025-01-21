@@ -1093,6 +1093,34 @@
                 </ul>
             </li>
         @endif
+        @if ($config->workshop && !$roleService->isLogistic())
+            <li>
+                <a href="#dentalUl" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
+                    {{-- <i class="icofont-billiard-ball icon-parent"></i> --}}
+                    <i class="fa fas fa-tooth icon-parent"></i>
+                    <span class="label">Dental Salud</span>
+                </a>
+                <ul id="dental" class="collapse">
+                    <li>
+                        <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
+                            href="{{ route('tenant.dental.specialties') }}">
+                            <i class=""></i>
+                            Listado de Especialidades
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
+                            href="{{ route('tenant.dental.tariffs') }}">
+                            <i class=""></i>
+                            Listado de Tarifas
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
 
         @if ($user->type == 'superadmin' || ($roleService->isArca() && $config->hotels))
 

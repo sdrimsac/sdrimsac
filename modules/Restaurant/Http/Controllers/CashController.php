@@ -1826,8 +1826,6 @@ class CashController extends Controller
                 "sum" => $sales_openpay_sum,
             ]
 
-
-
         ];
         $banks = Box::where('type', '1')
             ->whereNotNull('bank_account_id')
@@ -2638,7 +2636,6 @@ class CashController extends Controller
 
         $cash = Cash::where([['user_id', auth()->user()->id], ['state', true]])->first();
         $cash->cash_documents()->create($request->all());
-
 
         return [
             'success' => true,

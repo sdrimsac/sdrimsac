@@ -741,7 +741,7 @@
                                 </tr>
                             @else
                                 <tr>
-                                    <td colspan="7" class="text-right font-bold border_detalles">TOTAL A VENTA:
+                                    <td colspan="7" class="text-right font-bold border_detalles">TOTAL VENTA:
                                         {{ $document->currency_type->symbol }}</td>
                                     <td class="text-right font-bold border_detalles">
                                         {{ number_format($document->total, 2) }}</td>

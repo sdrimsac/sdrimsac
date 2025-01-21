@@ -15,6 +15,8 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'edit_price' => (bool) $this->edit_price,
+            'odontologia' => (bool) $this->odontologia,
             'direct_unit_type' => (bool) $this->direct_unit_type,
             'divided_items' => (bool) $this->divided_items,
             'change_unit_type_pos' => (bool) $this->change_unit_type_pos,

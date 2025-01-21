@@ -116,6 +116,7 @@ class JustAdmin
                 $internet = (bool) $config->internet;
                 $modo_billar = (bool) $config->modo_billar;
                 $workshop = (bool) $config->workshop;
+                $odontologia = (bool) $config->odontologia;
 
 
                 if ($config->toll) {
@@ -135,6 +136,9 @@ class JustAdmin
                         $redirect_to = "/caja/worker/";
                     }
                 } 
+                else if ($odontologia) {
+                    $redirect_to = "/dental/worker/";
+                }
                 else {
                     $redirect_to = "/caja/worker/";
                 }

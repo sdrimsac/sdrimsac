@@ -510,6 +510,44 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
+                                                    <div
+                                                        class="col-md-3 mb-4"
+                                                        v-if="canSee"
+                                                    >
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <!-- <i
+                                                                    ref="healthIcon"
+                                                                    class=""
+                                                                ></i> -->
+                                                                <i class="fa fas fa-tooth"></i>
+                                                                Entorno Odontología
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.odontologia
+                                                                "
+                                                                active-text="HABILITADO"
+                                                                inactive-text="DESHABILITADO"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    () =>
+                                                                        submit(
+                                                                            'Entorno Odontología',
+                                                                            form.odontologia,
+                                                                            'healthIcon'
+                                                                        )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -4121,6 +4159,43 @@
                                                                         "
                                                                         v-model="
                                                                             form.direct_unit_type
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="col-md-2 mt-4"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="el-icon-s-grid icon-tab"
+                                                                        ></i>
+                                                                        Editar Precio del select de la Politica de Precio
+                                                                    </label>
+                                                                    <el-switch
+                                                                        @change="
+                                                                            submit(
+                                                                                'editar precio de la politica del select',
+                                                                                form.edit_price,
+                                                                                'direct_unit_type',
+                                                                                'lockIcon'
+                                                                            )
+                                                                        "
+                                                                        v-model="
+                                                                            form.edit_price
                                                                         "
                                                                         active-text="Si"
                                                                         inactive-text="No"

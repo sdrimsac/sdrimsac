@@ -2,155 +2,80 @@
 
 namespace Modules\Dental\Http\Controllers;
 
-
-use Modules\Dental\Http\Resources\QuotyCollection;
+use Modules\Dental\Http\Resources\SpecialtyCollection;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Person;
 use Exception;
-use Modules\Dental\Http\Resources\QuotyResource;
-use Modules\Dental\Http\Requests\QuotyRequest;
+use Modules\Dental\Http\Resources\SpecialtyResource;
+use Modules\Dental\Http\Requests\SpecialtyRequest;
 use Modules\Dental\Models\Quoty;
 use Modules\Dental\Models\Specialty;
 
-class QuotyController extends Controller
+class SpecialtyController extends Controller
 {
     public function index()
     {
-        // $type ='vehicle';
-        return view('quotes.index');
+        return view('dental::specialties.index');
     }
-
-    public function columns()
+    public function record($id)//Selecccionar un Registro
     {
-        return [
-            'date'          => 'Fecha',
-            'patient_id'    => 'Paciente',
-
-        ];
-    }
-    public function record($id)
-    {
-        $record = new QuotyResource(Quoty::findOrFail($id));
+        $record = new SpecialtyResource(Specialty::findOrFail($id));
         return $record;
     }
-    public function patient($id)
+    /* public function records(Request $request)
     {
-        $records = new QuotyCollection(Quoty::where('patient_id', $id)->get());
-        return [
-            'data' => $records,
-            'success' => true
-        ];
-    }
-    public function tables()
+        $records = Specialty::where($request->column, 'like', "%{$request->value}%")->orderBy($request->column,'asc');
+        return new SpecialtyCollection($records->paginate(10));     
+    } */
+    public function records()
     {
+        $records = Specialty::all();
 
-        $person = Person::where('type', 'medico')->get();
-        $specialities = Specialty::all();
-        return [
-            'persons' => $person,
-            'specialities' => $specialities
-        ];
+        return new SpecialtyCollection($records);
     }
 
-    public function store(QuotyRequest $request)
+   /* public function tables()
     {
-
-        $id = $request->input('id');
-        $request['date'] = Carbon::parse($request['date']);
-        $quoty = Quoty::firstOrNew(['id' => $id]);
-        $quoty->fill($request->all());
-        try {
-            $quoty->save();
-            return [
-                'success' => true,
-                'message' => ($id) ? ' actualizado' : 'registrado'
-            ];
-        } catch (Exception $e) {
-            return [
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
-        }
+      
+     $user= User::all();
+     return compact('user');
+       
+    }*/
+    public function store(SpecialtyRequest $request) {
+       // $specialty = new Specialty(['description' => $request->input('description')]);
+       // $specialty->save();
+  //     dd($request->all());
+       $specialty = Specialty::firstOrNew(['id' => $request->id]);
+       $specialty->fill($request->all());
+       $specialty->save();
+        return response()->json([
+            "success" =>true,
+            "message" =>($request->id==null) ? "Se Registro con exito":"Se Actualizo con exito"
+            //($request->id!=null) ? "Se Registro con exito";
+        ]);
     }
-
-    public function records(Request $request)
-    {
-        //fecha
-        //doctor_id
-        //paciente_id
-        //rango
-        //estado de cita
-        //especialidad
-
-        $avance = $request['avance'];
-        $date = $request['dateField'];
-        if ($avance) {
-            $start = $request['dateRange'][0];
-            $end = $request['dateRange'][1];
-        }
-
-
-        $medic_id = $request['current_doctor'];
-        $patient_id = $request['patient_id'];
-        $state = $request['state'];
-        $speciality = $request["current_speciality"];
-
-        //  dump($request->all());
-        try {
-            if (!$avance) {
-                $date = Carbon::parse($date, 'America/Lima');
-                $records = Quoty::whereDate('date', $date);
-            } else {
-                $start = Carbon::parse($start, 'America/Lima');
-                $end = Carbon::parse($end, 'America/Lima');
-                $records = Quoty::whereBetween('date', [
-                    $start,
-                    $end
-                ]);
-            }
-            if ($patient_id) {
-                $records = $records->where('patient_id', $patient_id);
-            }
-            if ($medic_id) {
-                $records = $records->where('medic_id', $medic_id);
-            }
-            if ($state) {
-                $records = $records->where('state', $state);
-            }
-            // $records = Quoty::where($request->column, 'like', "%{$request->value}%")->orderBy($request->column); //para ordenar
-            //para ordenar
-
-            return new QuotyCollection($records->paginate(config('tenant.items_per_page')));
-        } catch (Exception $e) {
-            return [
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
-        }
+    public function show($id) {
+        $specialty = Specialty::find($id);
+        return response()->json($specialty);
     }
-
-    public function patients(Request $request)
-    {
-
-
-        $records = Person::where('type', 'patient')->where('name', 'like', "%{$request->patient}%")->orderBy('name')->get();
-
-        return [
-            'success' => true,
-            'patients' => $records
-        ];
+    public function update($id, Request $request) {
+        $specialty = Specialty::find($id);
+        $specialty->update($request->all());
+        return response()->json([
+            "success" =>true,
+            "message" =>"Se actualizo con exito"
+        ]);
     }
-
-    public function destroy($id)
-    {
-        $quoty = Quoty::findOrFail($id);
-        $quoty->save();
-
-        return [
-            'success' => true,
-            'message' => 'eliminado con éxito'
-        ];
+    public function destroy($id) {
+        $specialty = Specialty::find($id);
+        $specialty->delete();
+        return response()->json(
+            [
+                "success" =>true,
+                "message" =>"Se Elimino con exito"
+            ]
+        );
     }
 }

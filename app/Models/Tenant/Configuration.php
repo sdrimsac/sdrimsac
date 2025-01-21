@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'edit_price',
+        'odontologia',
         'observations_separate',
         'pdf_origin_enabled',
         'edit_count_products',
@@ -292,6 +294,8 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'edit_price' => 'boolean',
+        'odontologia' => 'boolean',
         'change_unit_type_pos' => 'boolean',
         'observations_separate' => 'boolean',
         'pdf_origin_enabled' => 'boolean',
@@ -527,6 +531,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'edit_price' => (bool)$this->edit_price,
+            'odontologia' => (bool)$this->odontologia,
             'change_unit_type_pos' => (bool)$this->change_unit_type_pos,
             'direct_unit_type' => (bool)$this->direct_unit_type,
             'divided_items' => (bool)$this->divided_items,

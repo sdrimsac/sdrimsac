@@ -7,52 +7,46 @@ use Modules\Dental\Http\Resources\TariffCollection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Category;
+use COM;
 use Modules\Dental\Http\Resources\TariffResource;
 use Modules\Dental\Http\Requests\TariffRequest;
 use Modules\Dental\Models\Tariff;
+use Modules\Item\Models\CategoryItem;
 
 class TariffController extends Controller
 {
     public function index()
     {
-        $tariff = Tariff::all()->toArray();
-        return array_reverse($tariff);
+        return view('dental::tariffs.index');
     }
-    public function columns()
+    /* public function columns()
     {
         return [
             'category_id'     => 'Categoria',
             'process' => 'Procedimiento',
         ];
-    }
+    } */
     public function record($id) //Selecccionar un Registro
     {
         $record = new TariffResource(Tariff::findOrFail($id));
         return $record;
     }
-    public function records(Request $request)
+    /* public function records(Request $request)
     {
 
-        if ($request->column == 'category_id' && $request->value != null) {
-            $category = Category::where('name', 'like', "%{$request->value}%")->first();
-            if ($category) {
-                $records = Tariff::where('category_id', $category->id)->orderBy($request->column, 'asc');
-                return new TariffCollection($records->paginate(20));
-            }
-        }
         $records = Tariff::where($request->column, 'like', "%{$request->value}%")->orderBy($request->column, 'asc');
         return new TariffCollection($records->paginate(20));
+    } */
+    public function records()
+    {
+        $records = Tariff::all();
+
+        return new TariffCollection($records);
     }
 
-    /* public function tables()
+    public function store(Request $request)
     {
-      
-     $user= User::all();
-     return compact('user');
-       
-    }*/
-    public function store(TariffRequest $request)
-    {
+        dump($request->all());
         $tariff = Tariff::firstOrNew(['id' => $request->id]);
         $tariff->fill($request->all());
         $tariff->save();
@@ -84,6 +78,19 @@ class TariffController extends Controller
                 "success" => true,
                 "message" => "Se Elimino con exito"
             ]
+        );
+    }
+    /* public function tables()
+    {
+        $categories = Category::all();
+        return $categories;
+    } */
+    public function tables()
+    {
+        $categories = CategoryItem::orderBy('name')->get();
+
+        return compact(
+            'categories',
         );
     }
 }

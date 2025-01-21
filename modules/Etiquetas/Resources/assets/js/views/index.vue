@@ -1504,7 +1504,7 @@ export default {
                     this.items = items;
 
                     this.items = this.items.map(item => {
-                        /* let originalPrice1 = null */ let originalPrice1 = null;
+                        let originalPrice1 = null;
                         let originalPrice2 = null;
 
                         // Mantener el price1 original sin modificar

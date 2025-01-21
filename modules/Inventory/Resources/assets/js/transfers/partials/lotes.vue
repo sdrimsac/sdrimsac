@@ -49,7 +49,7 @@
                                         v-model.number="row.selectedQuantity"
                                         maxlength="8"
                                         show-word-limit
-                                        >
+                                    >
                                     </el-input>
                                 </td>
                                 <br />
@@ -78,7 +78,9 @@ export default {
             form: {}
         };
     },
-    async created() {},
+    async created() {
+        console.log("Lotes recibido:", this.lotes);
+    },
     methods: {
         create() {},
         async submit() {

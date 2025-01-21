@@ -339,6 +339,10 @@ export default {
             let { id } = cash;
             window.open(`/get_stock_file/${id}`);
         },
+        /* openExcel(cash) {
+            let { id } = cash;
+            window.open(`/get_stock_file/${id}`);
+        }, */
         openWhastappForm(cash) {
             this.number = null;
             this.message = `Reporte de ${cash.user} ${cash.date_opening}`;

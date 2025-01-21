@@ -1887,6 +1887,7 @@
                                                                             class="fw-bold"
                                                                         >
                                                                             Precio
+                                                                            aaa
                                                                             {{
                                                                                 currency_id
                                                                             }}
@@ -1895,8 +1896,23 @@
                                                                                 v-if="
                                                                                     order_pend.prices
                                                                                 "
-                                                                            >
-                                                                                <el-select
+                                                                            > 
+                                                                              
+                                                                                <el-input v-if="isEditing && configuration.edit_price"
+                                                                                    class="custom_input text-dark"
+                                                                                    type="number"
+                                                                                    v-model.number="
+                                                                                        order_pend.price
+                                                                                    "
+                                                                                    @input="
+                                                                                        update_price(
+                                                                                            indexx
+                                                                                        )
+                                                                                    "
+                                                                                    placeholder="Editar precio"
+                                                                                ></el-input>
+                                                                                <el-select  v-else
+                                                                                    
                                                                                     v-model="
                                                                                         order_pend.price
                                                                                     "
@@ -1922,6 +1938,8 @@
                                                                                         "
                                                                                     ></el-option>
                                                                                 </el-select>
+                                                                                <el-button v-if="configuration.edit_price"
+                                                                                @click="toggleEdit">{{ isEditing ? "C" : "E" }}</el-button>
                                                                             </template>
                                                                             <template
                                                                                 v-else
@@ -2828,6 +2846,7 @@ export default {
 
     data() {
         return {
+            isEditing: false,
             /* localOrden: [], */
             /* totalUniqueProducts: 0,
             totalQuantityProducts: 0, */
@@ -3091,9 +3110,13 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        toggleEdit() {
+            this.isEditing = !this.isEditing;
+        },
         clgOrden() {
             console.log("el orden es", this.localOrden);
         },
+        // precio selecionable
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
             let currentPriceIndx =

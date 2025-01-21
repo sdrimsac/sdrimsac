@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>Lista de stock</strong></h3>
+        <h3 align="center" class="title"><strong>Lista de stock  de productos</strong></h3>
     </div>
     <br>
     <div style="margin-top:20px; margin-bottom:15px;">

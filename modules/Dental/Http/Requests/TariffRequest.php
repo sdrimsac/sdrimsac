@@ -15,11 +15,11 @@ class TariffRequest extends FormRequest
     {
         return [
                'process'            =>  'required',   
-               'category'           =>  'required',    
+               /* 'category'           =>  'required',    
                'price'              =>  'required',    
                'measure'            =>  'required',    
                'type_concept'       =>  'required',
-               'state'              =>  'required',                 
+               'state'              =>  'required',  */                
         ];
          
     }
@@ -27,11 +27,11 @@ class TariffRequest extends FormRequest
     {
         return [
             'process.required'        => 'Es obligatorio.',        
-            'category.required'       => 'Es obligatorio.', 
+            /* 'category.required'       => 'Es obligatorio.', 
             'price.required'          => 'Es obligatorio.', 
             'measure.required'        => 'Es obligatorio.', 
             'type_concept.required'   => 'Es obligatorio.', 
-            'state.required'          => 'Es obligatorio.', 
+            'state.required'          => 'Es obligatorio.',  */
         ];
     }
 

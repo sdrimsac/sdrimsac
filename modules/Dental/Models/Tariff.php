@@ -4,9 +4,7 @@ namespace Modules\Dental\Models;
 
 use App\Models\Tenant\Category;
 use App\Models\Tenant\ModelTenant;
-
-
-
+use Modules\Item\Models\CategoryItem;
 
 class Tariff extends ModelTenant
 {
@@ -15,10 +13,10 @@ class Tariff extends ModelTenant
     protected $fillable = [
         'code',
         'process',                    //procedimiento
-        'category',                   //categoria
+        'category',   
+        'category_id',                //categoria_id
         'price',
         'discount',
-
         'measure',                    //medida
         'type_concept',               //tipo_concepto
         'state'                       //estado
@@ -27,6 +25,6 @@ class Tariff extends ModelTenant
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(CategoryItem::class);
     }
 }

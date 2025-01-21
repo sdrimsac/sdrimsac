@@ -872,6 +872,18 @@ const app = new Vue({
             import(
                 "../../modules/Workshop/Resources/assets/js/views/pos/index.vue"
             ),
+        "tenant-dental-pos": () =>
+            import(
+                "../../modules/Dental/Resources/assets/js/views/pos/index.vue"
+            ),
+        "tenant-dental-specialties": () =>
+            import(
+                "../../modules/Dental/Resources/assets/js/views/specialties/index.vue"
+            ),
+        "tenant-dental-tariffs": () =>
+            import(
+                "../../modules/Dental/Resources/assets/js/views/tariffs/index.vue"
+            ),
         "items-stock": () => import("./views/items/check_stock.vue"),
 
         "tenant-quotations-index": () => import("./views/quotations/index.vue"),

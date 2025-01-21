@@ -197,16 +197,14 @@ if ($hostname) {
                 Route::get('report_product_client', [ItemController::class, 'index_product_client'])->name('reports.products-clients.index');
                 Route::get('report_product_client/records', [ItemController::class, 'items_by_clients']);
 
-
-
                 Route::get('report_cash', [CashController::class, 'index_report_cash'])->name('reports.cash.index');
                 Route::get('report_closed_cash', [CashController::class, 'index_report_closed_cash'])->name('reports.cash_closes.index');
                 Route::get('report_cash/records', [CashController::class, 'report_cash']);
                 Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
 
+                Route::get(' minimoget_stock_file/{id}', [CashController::class, 'get_stock_file']);
+
                 /* agragdo para el nuevo reporte de maderera */
-
-
 
                 Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
                 Route::post('whatsapp/reprint/{type}/{external_id}', [App\Http\Controllers\Tenant\WhatsappController::class, 'reprintDocument']);
