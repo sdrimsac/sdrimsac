@@ -243,7 +243,6 @@ class OrdenController extends Controller
         if ($configuration->text_comanda) {
             $height += 100;
         }
-
         // 
 
         try {

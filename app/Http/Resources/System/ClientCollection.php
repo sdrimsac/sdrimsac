@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\System;
 
+use App\Models\System\ClientPayment;
 use App\Models\System\TrackApiPeruServices;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\RegisterMovement;
@@ -28,7 +29,10 @@ class ClientCollection extends ResourceCollection
                 // ->whereBetween('date_of_issue',[$currentDay->firstOfMonth(),$currentDay->lastOfMonth()])
                 ->get()
                 ->count();
+            $last_payment = ClientPayment::where('client_id',$row->id)->orderBy('id','desc')->first();
+            $end_payment =$last_payment ? $last_payment->end_payment : null;
             return [
+                'end_payment' => $end_payment ? $end_payment->format('Y-m-d') : '',
                 'last_register' => $this->get_last_document($row),
                 'id' => $row->id,
                 'hostname' => $row->hostname->fqdn,

@@ -1,5 +1,7 @@
 <template>
-    <el-dialog width="70%" :title="title" :visible="showDialog" @close="close" @open="getData">
+    <el-dialog width="90%" :title="title" :visible="showDialog" @close="close" @open="getData"
+    :close-on-click-modal="false"
+    >
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12" v-if="records.length > 0">
@@ -8,22 +10,24 @@
                             <thead>
                             <tr>
                                 <th>Fecha de pago</th>
-                                <th>Método de pago</th>
+                                <th>Fecha de vencimiento</th>
+                                <!-- <th>Método de pago</th>
                                 <th>Tarjeta</th>
-                                <th>Referencia</th>
+                                <th>Referencia</th> -->
                                 <th>Monto</th>
                                 <th>Pagar</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(row, index) in records">
+                            <tr v-for="(row, index) in records" :key="index">
                                 <template v-if="row.id">
                                     <td>{{ row.date_of_payment }}</td>
-                                    <td>{{ row.payment_method_type_description }}</td>
+                                    <td>{{ row.end_payment }}</td>
+                                    <!-- <td>{{ row.payment_method_type_description }}</td>
                                     <td v-if="row.card_brand">{{ row.card_brand.description }}</td>
                                     <td v-else>-</td>
-                                    <td>{{ row.reference }}</td>
+                                    <td>{{ row.reference }}</td> -->
                                     <td  >S/ {{ row.payment }}</td>
                                     <td>
                                         <template v-if="!row.state">
@@ -38,6 +42,7 @@
                                         
                                     </td>
                                     <td class="series-table-actions text-right">
+                                        <button type="button" class="btn waves-effect waves-light btn-xs btn-success" @click.prevent="clickMessages(row.id)">Mensajes</button>
                                         <button type="button" class="btn waves-effect waves-light btn-xs btn-danger" @click.prevent="clickDelete(row.id)">Eliminar</button>
                                         <!--<el-button type="danger" icon="el-icon-delete" plain @click.prevent="clickDelete(row.id)"></el-button>-->
                                     </td>
@@ -54,29 +59,13 @@
                                         </div>
                                     </td> 
                                     <td>
-                                        <div class="form-group mb-0" :class="{'has-danger': row.errors.payment_method_type_id}">
-                                            <el-select v-model="row.payment_method_type_id" @change="changePaymentMethodType(row)">
-                                                <el-option v-for="option in payment_method_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                            </el-select>
-                                            <small class="form-control-feedback" v-if="row.errors.payment_method_type_id" v-text="row.errors.payment_method_type_id[0]"></small>
-                                        </div>
+                                        <el-date-picker v-model="row.end_payment"
+                                                            type="date"
+                                                            :clearable="false"
+                                                            format="dd/MM/yyyy"
+                                                            value-format="yyyy-MM-dd"></el-date-picker>
                                     </td>
-                                    <td v-if="has_card">
-                                        <div class="form-group mb-0" :class="{'has-danger': row.errors.card_brand_id}">
-                                            <el-select v-model="row.card_brand_id" >
-                                                <el-option v-for="option in card_brands" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                            </el-select>
-                                            <small class="form-control-feedback" v-if="row.errors.card_brand_id" v-text="row.errors.card_brand_id[0]"></small>
-                                        </div>
-                                    </td>
-                                    <td v-else> 
-                                    </td>
-                                    <td>
-                                        <div class="form-group mb-0" :class="{'has-danger': row.errors.reference}">
-                                            <el-input v-model="row.reference"></el-input>
-                                            <small class="form-control-feedback" v-if="row.errors.reference" v-text="row.errors.reference[0]"></small>
-                                        </div>
-                                    </td>
+                                    
                                     
                                     <td>
                                         <div class="form-group mb-0" :class="{'has-danger': row.errors.payment}">
@@ -103,17 +92,17 @@
                             </tbody>
                             <tfoot>
                             <tr>
-                                <td colspan="6" class="text-right">TOTAL PAGADO</td>
+                                <td colspan="3" class="text-right">TOTAL PAGADO</td>
                                 <td class="text-right">S/ {{ client.total_paid }}</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-right">TOTAL A PAGAR</td>
+                                <td colspan="3" class="text-right">TOTAL A PAGAR</td>
                                 <td class="text-right">S/ {{ client.total }}</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-right">PENDIENTE DE PAGO</td>
+                                <td colspan="3" class="text-right">PENDIENTE DE PAGO</td>
                                 <td class="text-right">S/ {{ client.total_difference }}</td>
                                 <td></td>
                             </tr>
@@ -125,7 +114,8 @@
                     <el-button type="primary" icon="el-icon-plus" @click="clickAddRow">Programar pago</el-button>
                 </div>
             </div>
-
+            <client-messages :showDialog.sync="showDialogMessages" :client_payment_id="recordId"></client-messages>
+            <payment-form :showDialog.sync="showDialogPayment"></payment-form>
         </div>
     </el-dialog>
 
@@ -134,11 +124,16 @@
 <script>
 
     import {deletable} from '../../../../mixins/deletable'
+    import ClientMessages from './client_messages.vue';
+    import PaymentForm from './payment.vue';
 
     export default {
         props: ['showDialog', 'clientId'],
         mixins: [deletable],
-
+        components: {
+            ClientMessages,
+            PaymentForm
+        },
         data() {
             return {
                 title: null,
@@ -149,7 +144,9 @@
                 card_brands: [],
                 showAddButton: true,
                 has_card: false,
-                client: {}
+                client: {},
+                showDialogMessages: false,
+                showDialogPayment: false
             }
         },
         async created() {
@@ -162,6 +159,10 @@
                 })
         },
         methods: {
+            clickMessages(client_payment_id){
+                this.showDialogMessages = true;
+                this.recordId = client_payment_id;
+            },
             changePaymentMethodType(row){
                 let payment_method_type = _.find(this.payment_method_types,{'id':row.payment_method_type_id})
                 this.has_card = (payment_method_type.has_card)? true:false
@@ -183,20 +184,23 @@
                     });
             },
             async clickCancelPayment(client_payment_id){
-                await this.$http.get(`/${this.resource}/cancel_payment/${client_payment_id}`)
-                    .then(response => { 
-                        if (response.data.success) {
-                            this.$message.success(response.data.message);
-                            this.getData(); 
-                        } else {
-                            this.$message.error(response.data.message);
-                        }
-                    });
+
+                this.showDialogPayment = true;
+                // await this.$http.get(`/${this.resource}/cancel_payment/${client_payment_id}`)
+                //     .then(response => { 
+                //         if (response.data.success) {
+                //             this.$message.success(response.data.message);
+                //             this.getData(); 
+                //         } else {
+                //             this.$message.error(response.data.message);
+                //         }
+                //     });
             },
             clickAddRow() {
                 this.records.push({
                     id: null,
                     date_of_payment: moment().format('YYYY-MM-DD'),
+                    end_payment:moment().add(1,'month').format('YYYY-MM-DD'),
                     payment_method_type_id: null,
                     card_brand_id: null,
                     reference: null,
@@ -216,11 +220,13 @@
                     this.$message.error('Elija una tarjeta.');
                     return;
                 }
+                let payment_method_type_id = this.payment_method_types.find(payment_method_type => payment_method_type.description === 'Efectivo').id;
                 let form = {
                     id: this.records[index].id,
                     client_id: this.clientId,
                     date_of_payment: this.records[index].date_of_payment,
-                    payment_method_type_id: this.records[index].payment_method_type_id,
+                    end_payment: this.records[index].end_payment,
+                    payment_method_type_id: payment_method_type_id,
                     card_brand_id: this.records[index].card_brand_id,
                     reference: this.records[index].reference,
                     payment: this.records[index].payment,

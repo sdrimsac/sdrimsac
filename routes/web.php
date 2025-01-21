@@ -1169,6 +1169,7 @@ if ($hostname) {
             Route::get('client_payments/client/{client_id}', 'System\ClientPaymentController@client');
             Route::get('client_payments/tables', 'System\ClientPaymentController@tables');
             Route::post('client_payments', 'System\ClientPaymentController@store');
+            Route::get('client_payments/record/{id}', 'System\ClientPaymentController@record');
             Route::delete('client_payments/{client_payment}', 'System\ClientPaymentController@destroy');
             Route::get('client_payments/cancel_payment/{client_payment_id}', 'System\ClientPaymentController@cancel_payment');
 

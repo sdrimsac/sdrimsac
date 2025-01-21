@@ -369,6 +369,9 @@
                                 Último Registro
                             </th>
                             <th class="text-white text-center border">
+                                Fecha de vencimiento
+                            </th>
+                            <th class="text-white text-center border">
                                 Hostname
                             </th>
                             <th class="text-white text-center border">Ruc</th>
@@ -581,6 +584,11 @@
                                             )
                                         }}</span
                                     >
+                                </template>
+                            </td>
+                            <td>
+                                <template v-if="row.end_payment">
+                                    <span>{{ row.end_payment }}</span>
                                 </template>
                             </td>
                             <td class="">

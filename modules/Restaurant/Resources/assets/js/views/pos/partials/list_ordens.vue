@@ -3113,7 +3113,11 @@ export default {
                 ...prices.filter((_, index) => index !== default_price)
             ].filter(p => p > 0);
             let orden = this.localOrden[indexx];
-            orden.prices = newPrices;
+            if(this.configuration.price_item_unit_type){
+                orden.prices = newPrices;
+            }else{
+                orden.prices = null;
+            }
             orden.type_id = unit_type.id;
             orden.type_description = unit_type.description;
             orden.type_quantity = unit_type.quantity_unit;

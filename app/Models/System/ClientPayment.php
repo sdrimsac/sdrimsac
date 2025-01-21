@@ -11,16 +11,20 @@ class ClientPayment extends Model
     protected $fillable = [
         'client_id',
         'date_of_payment',
+        'end_payment',
         'payment_method_type_id',
         'has_card',
         'card_brand_id',
         'reference',
         'payment',
         'state',
+        'message_client_before_end',
+        'message_client_after_end',
     ];
 
     protected $casts = [
         'date_of_payment' => 'date',
+        'end_payment' => 'date',
     ];
 
     public function payment_method_type()

@@ -313,6 +313,12 @@ Vue.component(
     "system-configuration-apk-url",
     require("./views/system/configuration/apk-url.vue")
 );
+
+//messages client
+Vue.component(
+    "system-configuration-messages-client",
+    require("./views/system/configuration/messages_client.vue")
+);
 Vue.component(
     "tenant-report-document-detractions-index",
     require("../../modules/Report/Resources/assets/js/views/document-detractions/index.vue")

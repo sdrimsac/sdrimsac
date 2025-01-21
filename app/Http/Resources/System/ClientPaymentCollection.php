@@ -22,6 +22,7 @@ class ClientPaymentCollection extends ResourceCollection
                 'card_brand' => $row->card_brand,
                 'reference' => $row->reference,
                 'payment' => $row->payment, 
+                'end_payment' => $row->end_payment ? $row->end_payment->format('d/m/Y') : '',
                 'state' => $row->state,
                 'state_description' => ($row->state) ? 'Pagado': (($row->date_of_payment >= date('Y-m-d')) ? 'Pendiente':'Vencido'),
             ];
