@@ -559,8 +559,9 @@
                         </div>
 
                         <!-- Column 2: Descuento -->
-                        <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="col-lg-4 col-md-4 col-sm-12" >
                             <div
+                                v-if="conf.show_discounts_payment"
                                 class="p-2"
                                 style="background-color: #e9ecef; border-radius: 5px; height: auto; min-height: 50px;"
                             >
