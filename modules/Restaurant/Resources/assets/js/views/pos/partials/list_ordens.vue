@@ -1906,8 +1906,9 @@
                                                                         <span
                                                                             class="fw-bold"
                                                                         >
+                                                                        <!-- aqui es el precio pa modificar siempre aaaa -->
                                                                             Precio
-                                                                            aaa
+                                                                            
                                                                             {{
                                                                                 currency_id
                                                                             }}

@@ -1327,7 +1327,12 @@ export default {
                     this.foodWithTypes = food;
                     this.showDialogUnitType = true;
                 } else {
-                    this.addFood(0);
+
+                    if(this.configuration.direct_unit_type && food.item.item_unit_types.length > 0){
+                        this.clickCommand(food.item.item_unit_types[0]);
+                    }else{
+                        this.addFood(0);
+                    }
                 }
             }
             if (this.searchSeries && this.listFoods.length == 1) {
