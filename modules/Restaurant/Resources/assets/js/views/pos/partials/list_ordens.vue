@@ -1393,40 +1393,60 @@
                                         </div>
 
                                         <div
-                                            v-if="configuration.restaurant"
                                             class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
                                         >
-                                            <a
-                                                class="bage bg-dark text-white"
-                                                style="margin-right: 5px"
+                                            <template
+                                                v-if="configuration.restaurant"
                                             >
+                                                <a
+                                                    class="bage bg-dark text-white"
+                                                    style="margin-right: 5px"
+                                                >
+                                                    <template
+                                                        v-if="
+                                                            localOrden.length <=
+                                                                9
+                                                        "
+                                                    >
+                                                        0{{ localOrden.length }}
+                                                    </template>
+                                                    <template v-else>
+                                                        {{ localOrden.length }}
+                                                    </template>
+                                                </a>
+                                                Por solicitar
                                                 <template
                                                     v-if="
-                                                        localOrden.length <= 9
+                                                        configuration.divided_items
                                                     "
                                                 >
-                                                    0{{ localOrden.length }}
+                                                    <el-checkbox
+                                                        v-model="
+                                                            localDividedItems
+                                                        "
+                                                        style="margin-left: 10px;"
+                                                        @change="
+                                                            saveDividedItemsLocalStorage
+                                                        "
+                                                        >Dividir ordenes
+                                                        iguales</el-checkbox
+                                                    >
                                                 </template>
-                                                <template v-else>
-                                                    {{ localOrden.length }}
-                                                </template>
-                                            </a>
-                                            Por solicitar
-                                            <template
-                                                v-if="
-                                                    configuration.divided_items
-                                                "
-                                            >
-                                                <el-checkbox
-                                                    v-model="localDividedItems"
-                                                    style="margin-left: 10px;"
-                                                    @change="
-                                                        saveDividedItemsLocalStorage
-                                                    "
-                                                    >Dividir ordenes
-                                                    iguales</el-checkbox
-                                                >
                                             </template>
+                                        </div>
+                                        <div
+                                            class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
+                                            v-if="isAppNotIgvAndHaveIgv"
+                                        >
+                                            <span class="text-danger">
+                                                <i
+                                                    class="fas fa-exclamation-triangle"
+                                                ></i>
+                                                <span>
+                                                    Esta operación es gravada,
+                                                    hay productos con IGV.
+                                                </span>
+                                            </span>
                                         </div>
                                         <div
                                             v-show="localOrden.length > 0"
@@ -1896,9 +1916,12 @@
                                                                                 v-if="
                                                                                     order_pend.prices
                                                                                 "
-                                                                            > 
-                                                                              
-                                                                                <el-input v-if="isEditing && configuration.edit_price"
+                                                                            >
+                                                                                <el-input
+                                                                                    v-if="
+                                                                                        isEditing &&
+                                                                                            configuration.edit_price
+                                                                                    "
                                                                                     class="custom_input text-dark"
                                                                                     type="number"
                                                                                     v-model.number="
@@ -1911,8 +1934,8 @@
                                                                                     "
                                                                                     placeholder="Editar precio"
                                                                                 ></el-input>
-                                                                                <el-select  v-else
-                                                                                    
+                                                                                <el-select
+                                                                                    v-else
                                                                                     v-model="
                                                                                         order_pend.price
                                                                                     "
@@ -1938,8 +1961,19 @@
                                                                                         "
                                                                                     ></el-option>
                                                                                 </el-select>
-                                                                                <el-button v-if="configuration.edit_price"
-                                                                                @click="toggleEdit">{{ isEditing ? "C" : "E" }}</el-button>
+                                                                                <el-button
+                                                                                    v-if="
+                                                                                        configuration.edit_price
+                                                                                    "
+                                                                                    @click="
+                                                                                        toggleEdit
+                                                                                    "
+                                                                                    >{{
+                                                                                        isEditing
+                                                                                            ? "C"
+                                                                                            : "E"
+                                                                                    }}</el-button
+                                                                                >
                                                                             </template>
                                                                             <template
                                                                                 v-else
@@ -2981,10 +3015,19 @@ export default {
             this.calculateTotal(newOrdens);
         },
         localOrden(newOrdens, _) {
+            console.log("localOrden", newOrdens);
             this.calculateTotal(this.ordens);
         }
     },
     computed: {
+        isAppNotIgvAndHaveIgv() {
+            return (
+                this.configuration.affectation_igv_type_id != "10" &&
+                this.localOrden.some(
+                    item => item.food.item.sale_affectation_igv_type_id == "10"
+                )
+            );
+        },
         isDev() {
             return window.location.href.includes("sdrimsac-tenant.oo");
         },
@@ -3136,9 +3179,9 @@ export default {
                 ...prices.filter((_, index) => index !== default_price)
             ].filter(p => p > 0);
             let orden = this.localOrden[indexx];
-            if(this.configuration.price_item_unit_type){
+            if (this.configuration.price_item_unit_type) {
                 orden.prices = newPrices;
-            }else{
+            } else {
                 orden.prices = null;
             }
             orden.type_id = unit_type.id;
