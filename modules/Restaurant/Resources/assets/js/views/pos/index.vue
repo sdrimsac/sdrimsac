@@ -5633,6 +5633,7 @@ export default {
                     this.ordens[0].food.item.sale_unit_price = sale_unit_price;
                 }
             }
+
         },
         getExchange() {
             let date = moment().format("YYYY-MM-DD");

@@ -4070,6 +4070,9 @@ export default {
             if (this.discount_amount) {
                 this.discountGlobal();
             }
+
+            console.log(this.form);
+
             console.log("Totales después del redondeo:", {
                 total_taxed: this.form.total_taxed,
                 total_igv: this.form.total_igv,

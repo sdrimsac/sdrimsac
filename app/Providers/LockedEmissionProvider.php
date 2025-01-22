@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\User;
@@ -51,8 +52,12 @@ class LockedEmissionProvider extends ServiceProvider
     {
 
         Document::created(function ($document) {
-
             $configuration = Configuration::first();
+
+            $total_igv = $document->total_igv;
+            if($configuration->affectation_igv_type_id != '10' && $total_igv > 0){
+                (new WhatsappController)->sendMessageAll('El documento '.$document->series.' '.$document->number.' ha sido emitido con un total de IGV de '.$total_igv.'. Por favor, verifique la información.',$document->establishment_id);
+            }
             // $quantity_documents = Document::count();
             $quantity_documents = $configuration->quantity_documents;
 

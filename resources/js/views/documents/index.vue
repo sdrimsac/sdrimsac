@@ -222,7 +222,7 @@
                                     </th>
                                     <th
                                         class="text-white text-left"
-                                        v-if="columns.igv.visible"
+                                        
                                     >
                                         T.Igv
                                     </th>
@@ -814,7 +814,7 @@
                                                 row.state_type_id === '11'
                                         }"
                                         class="text-left"
-                                        v-if="columns.igv.visible"
+                                    
                                     >
                                         {{ row.total_igv }}
                                     </td>

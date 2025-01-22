@@ -46,7 +46,6 @@ class TariffController extends Controller
 
     public function store(Request $request)
     {
-        dump($request->all());
         $tariff = Tariff::firstOrNew(['id' => $request->id]);
         $tariff->fill($request->all());
         $tariff->save();
