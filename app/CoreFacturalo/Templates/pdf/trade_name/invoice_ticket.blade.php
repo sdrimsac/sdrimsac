@@ -42,7 +42,7 @@
         function getUnitTypeId($id)
         {   
             $item_unit_types = \ App\Models\Tenant\ItemUnitType::find($id);
-            return $item_unit_types->unit_type_id;
+            return isset($item_unit_types->unit_type_id) ? $item_unit_types->unit_type_id : null;
         }
     }
 
