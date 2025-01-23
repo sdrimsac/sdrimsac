@@ -26,6 +26,7 @@ use App\Models\Tenant\ItemWarehousePrice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Modules\Item\Models\ItemLotsGroup;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ItemsImport implements ToCollection
 {
@@ -58,7 +59,7 @@ class ItemsImport implements ToCollection
             $sale_affectation_igv_type_id = $row[8];
             $affectation_igv_types_exonerated_unaffected = ['20', '21', '30', '31', '32', '33', '34', '35', '36', '37'];
             $category_name = strtoupper($row[14]);
-            if($category_name == ''){
+            if ($category_name == '') {
                 $category_name = 'OTROS';
             }
             $brand_name = strtoupper($row[15]);
@@ -71,7 +72,7 @@ class ItemsImport implements ToCollection
             $establishment_id = 1;
 
             $warehouse = Warehouse::where('establishment_id',  request('warehouse_id'))->first();
-            
+
             $category = CategoryItem::updateOrCreate(['name' => $category_name]);
             $area = Area::updateOrCreate(['description' => $area_description]);
 
@@ -128,22 +129,152 @@ class ItemsImport implements ToCollection
             }
             if ($internal_id != null) {
 
-                try{
+                try {
                     $item = Item::where('internal_id', $internal_id)->first();
 
-                if ($item != null) {
-                    $food = Food::where('item_id', $item->id)->first();
-                    //dd($food);
-                }
+                    if ($item != null) {
+                        $food = Food::where('item_id', $item->id)->first();
+                        //dd($food);
+                    }
 
-                //-------------------------------------------------------------
-                if ($item === null) {
+                    //-------------------------------------------------------------
+                    if ($item === null) {
 
-                    //dd($item,"aqui...");
-                    $brand = Brand::updateOrCreate(['name' => $brand_name]);
-                    try{
-                        DB::connection('tenant')->beginTransaction();
-                        $item = Item::create([
+                        //dd($item,"aqui...");
+                        $brand = Brand::updateOrCreate(['name' => $brand_name]);
+                        try {
+                            DB::connection('tenant')->beginTransaction();
+                            $item = Item::create([
+                                'origin' => $origin,
+                                'quality' => $quality,
+                                'model' => $model,
+                                'location' => $location,
+                                'max_quantity' => $max_quantity,
+                                'max_quantity_description' => $max_quantity_description,
+                                'description' => $description,
+                                'second_name' => $second_name,
+                                'item_type_id' => $item_type_id,
+                                'internal_id' => $internal_id,
+                                'barcode' => $barcode,
+                                'item_code' => $item_code,
+                                'unit_type_id' => $unit_type_id,
+                                'currency_type_id' => $currency_type_id,
+                                'sale_unit_price' => $sale_unit_price,
+                                'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
+                                'has_igv' => $has_igv,
+                                'purchase_unit_price' => $purchase_unit_price,
+                                'purchase_affectation_igv_type_id' => $purchase_affectation_igv_type_id,
+                                'stock' => $stock,
+                                'attributes' => [],
+                                'stock_min' => $stock_min,
+                                'category_id' => $category->id,
+                                'brand_id' => $brand->id,
+                                'warehouse_id' => request('warehouse_id'),
+                                'series_enabled' => $has_series,
+                                'lots_enabled' => $lots_enabled,
+                                'has_color_size' => $has_color_size,
+                            ]);
+
+                            $food_new = Food::create([
+                                'description' => $description,
+                                'code'        => $internal_id,
+                                'price'       => $sale_unit_price,
+                                'active'      => 1,
+                                'category_food_id' => $category->id,
+                                'image'       => 'imagen-no-disponible.jpg',
+                                'area_id'     => $area->id,
+                                'item_id'     => $item->id
+                            ]);
+
+                            if ($lote_code && $lote_date) {
+                                try {
+                                    $format_date = null;
+                                    
+                                    // Si es un número (formato Excel), usar excelToDateTimeObject
+                                    if (is_numeric($lote_date)) {
+                                        $format_date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($lote_date)->format('Y-m-d');
+                                    } 
+                                    // Si es una cadena con formato dd/mm/yyyy
+                                    else {
+                                        $format_date = Carbon::createFromFormat('d/m/Y', $lote_date)->format('Y-m-d');
+                                    }
+
+                                    if ($format_date) {
+                                        // Corregir el año si comienza con '00'
+                                        $date_parts = explode('-', $format_date);
+                                        if (substr($date_parts[0], 0, 2) === '00') {
+                                            $date_parts[0] = '20' . substr($date_parts[0], -2);
+                                            $format_date = implode('-', $date_parts);
+                                        }
+
+                                        ItemLotsGroup::create([
+                                            'code' => $lote_code,
+                                            'item_id' => $item->id,
+                                            'warehouse_id' => $warehouse->id,
+                                            'quantity' => $stock,
+                                            'date_of_due' => $format_date,
+                                        ]);
+                                        $item->update([
+                                            'lot_code' => $lote_code,
+                                            'date_of_due' => $format_date,
+                                            'lots_enabled' => true,
+                                        ]);
+                                    }
+                                } catch (Exception $e) {
+                                
+                                    Log::error($e->getMessage());
+                                    Log::error($e->getTraceAsString());
+                                    $this->errors[] = [
+                                        'internal_id' => $internal_id,
+                                        'description' => "error al crear el lote: " . $e->getMessage(),
+                                    ];
+                                }
+                            }
+                            if ($warehouse_id) {
+                                $item_whareouse_price = ItemWarehousePrice::create([
+                                    'item_id' => $item->id,
+                                    'warehouse_id' => $warehouse_id,
+                                    'price' => $sale_unit_price,
+                                ]);
+                            }
+                            DB::connection('tenant')->commit();
+                        } catch (Exception $e) {
+                            DB::connection('tenant')->rollBack();
+                            $this->errors[] = [
+                                'internal_id' => $internal_id,
+                                'description' => $e->getMessage(),
+                            ];
+                        }
+
+                        foreach ($prices as $price) {
+                            try{
+                                $this->insertPriceifExist($item->id, $price, $warehouse_id);
+                            }catch(Exception $e){
+                                Log::error($e->getMessage());
+                                Log::error($e->getTraceAsString());
+                                $this->errors[] = [
+                                    'internal_id' => $internal_id,
+                                    'description' => "error al crear el precio: " . $e->getMessage(),
+                                ];
+                            }
+
+                        }
+                        foreach ($commercial_treatments as $commercial_treatment) {
+                            try{
+                                $this->insertCommercialTreatment($item->id, $commercial_treatment);
+                            }catch(Exception $e){
+                                Log::error($e->getMessage());
+                                Log::error($e->getTraceAsString());
+                                $this->errors[] = [
+                                    'internal_id' => $internal_id,
+                                    'description' => "error al crear el tratamiento comercial: " . $e->getMessage(),
+                                ];
+                            }   
+                        }
+                        $registered += 1;
+                    } else {
+
+                        $item->update([
                             'origin' => $origin,
                             'quality' => $quality,
                             'model' => $model,
@@ -158,207 +289,117 @@ class ItemsImport implements ToCollection
                             'item_code' => $item_code,
                             'unit_type_id' => $unit_type_id,
                             'currency_type_id' => $currency_type_id,
-                            'sale_unit_price' => $sale_unit_price,
                             'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
                             'has_igv' => $has_igv,
                             'purchase_unit_price' => $purchase_unit_price,
                             'purchase_affectation_igv_type_id' => $purchase_affectation_igv_type_id,
-                            'stock' => $stock,
-                            'attributes' => [],
                             'stock_min' => $stock_min,
-                            'category_id' => $category->id,
-                            'brand_id' => $brand->id,
-                            'warehouse_id' => request('warehouse_id'),
                             'series_enabled' => $has_series,
                             'lots_enabled' => $lots_enabled,
                             'has_color_size' => $has_color_size,
                         ]);
-    
-                        $food_new = Food::create([
-                            'description' => $description,
-                            'code'        => $internal_id,
-                            'price'       => $sale_unit_price,
-                            'active'      => 1,
-                            'category_food_id' => $category->id,
-                            'image'       => 'imagen-no-disponible.jpg',
-                            'area_id'     => $area->id,
-                            'item_id'     => $item->id
-                        ]);
-    
-                        if ($lote_code && $lote_date) {
-                            try {
-                                $format_date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($lote_date)->format('Y-m-d');
-                                if ($format_date) {
-                                    ItemLotsGroup::create([
-                                        'code' => $lote_code,
-                                        'item_id' => $item->id,
-                                        'warehouse_id' => $warehouse->id,
-                                        'quantity' => $stock,
-                                        'date_of_due' => $format_date,
-                                    ]);
-                                    $item->update([
-                                        'lot_code' => $lote_code,
-                                        'date_of_due' => $format_date,
-                                        'lots_enabled' => true,
-                                    ]);
-                                }
-                            } catch (Exception $e) {
-                                Log::error($e->getMessage());
-                            }
+
+
+                        if ($food) {
+                            $food->update([
+                                'description' => $description,
+                                'code'        => $internal_id,
+                                'active'      => 1,
+                                'category_food_id' => $category->id,
+                                'image'       => 'imagen-no-disponible.jpg',
+                                'area_id'     => $area->id,
+                                'item_id'     => $item->id
+                            ]);
+                        } else {
+                            $food = Food::create([
+                                'description' => $description,
+                                'code'        => $internal_id,
+                                'price'       => $sale_unit_price,
+                                'active'      => 1,
+                                'category_food_id' => $category->id,
+                                'image'       => 'imagen-no-disponible.jpg',
+                                'area_id'     => $area->id,
+                                'item_id'     => $item->id
+                            ]);
                         }
-                        if ($warehouse_id) {
-                            $item_whareouse_price = ItemWarehousePrice::create([
-                                'item_id' => $item->id,
-                                'warehouse_id' => $warehouse_id,
+
+
+                        if ($is_main_establishment) {
+                            $item->update([
+                                'sale_unit_price' => $sale_unit_price,
+                            ]);
+
+                            $food->update([
                                 'price' => $sale_unit_price,
                             ]);
                         }
-                        DB::connection('tenant')->commit();
-                    }catch(Exception $e){
-                        DB::connection('tenant')->rollBack();
-                        $this->errors[] = [
-                            'internal_id' => $internal_id,
-                            'description' => $e->getMessage(),
-                        ];
-                    }
 
-                    foreach ($prices as $price) {
-                        $this->insertPriceifExist($item->id, $price, $warehouse_id);
-                    }
-                    foreach ($commercial_treatments as $commercial_treatment) {
-                        $this->insertCommercialTreatment($item->id, $commercial_treatment);
-                    }
-                    $registered += 1;
-                } else {
+                        if ($warehouse_id) {
+                            $item_whareouse_price = ItemWarehousePrice::updateOrCreate([
+                                'item_id' => $item->id,
+                                'warehouse_id' => $warehouse_id,
+                            ], [
+                                'price' => $sale_unit_price,
+                            ]);
+                        }
 
-                    $item->update([
-                        'origin' => $origin,
-                        'quality' => $quality,
-                        'model' => $model,
-                        'location' => $location,
-                        'max_quantity' => $max_quantity,
-                        'max_quantity_description' => $max_quantity_description,
-                        'description' => $description,
-                        'second_name' => $second_name,
-                        'item_type_id' => $item_type_id,
-                        'internal_id' => $internal_id,
-                        'barcode' => $barcode,
-                        'item_code' => $item_code,
-                        'unit_type_id' => $unit_type_id,
-                        'currency_type_id' => $currency_type_id,
-                        'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
-                        'has_igv' => $has_igv,
-                        'purchase_unit_price' => $purchase_unit_price,
-                        'purchase_affectation_igv_type_id' => $purchase_affectation_igv_type_id,
-                        'stock_min' => $stock_min,
-                        'series_enabled' => $has_series,
-                        'lots_enabled' => $lots_enabled,
-                        'has_color_size' => $has_color_size,
-                    ]);
+                        $item_whareouse = ItemWarehouse::where('item_id', $item->id)->where('warehouse_id', $warehouse_id)->first();
+                        if ($item_whareouse) {
+                            $item_whareouse->stock =  $stock;
+                            $item_whareouse->save();
+                        } else {
+                            $item_whareouse = new ItemWarehouse;
+                            $item_whareouse->item_id = $item->id;
+                            $item_whareouse->warehouse_id = $warehouse_id;
+                            $item_whareouse->stock = $stock;
+                            $item_whareouse->save();
+                        }
 
-
-                    if ($food) {
-                        $food->update([
-                            'description' => $description,
-                            'code'        => $internal_id,
-                            'active'      => 1,
-                            'category_food_id' => $category->id,
-                            'image'       => 'imagen-no-disponible.jpg',
-                            'area_id'     => $area->id,
-                            'item_id'     => $item->id
-                        ]);
-                    } else {
-                        $food = Food::create([
-                            'description' => $description,
-                            'code'        => $internal_id,
-                            'price'       => $sale_unit_price,
-                            'active'      => 1,
-                            'category_food_id' => $category->id,
-                            'image'       => 'imagen-no-disponible.jpg',
-                            'area_id'     => $area->id,
-                            'item_id'     => $item->id
-                        ]);
-                    }
-
-
-                    if ($is_main_establishment) {
-                        $item->update([
-                            'sale_unit_price' => $sale_unit_price,
-                        ]);
-
-                        $food->update([
-                            'price' => $sale_unit_price,
-                        ]);
-                    }
-
-                    if ($warehouse_id) {
-                        $item_whareouse_price = ItemWarehousePrice::updateOrCreate([
+                        $inventory = Inventory::create([
+                            'type' => 1,
+                            'description' => 'Stock Inicial',
                             'item_id' => $item->id,
                             'warehouse_id' => $warehouse_id,
-                        ], [
-                            'price' => $sale_unit_price,
+                            'quantity' => $stock,
+                            'date_of_issue' => date('Y-m-d')
                         ]);
+
+                        Kardex::create([
+                            'type' => null,
+                            'date_of_issue' => date('Y-m-d'),
+                            'item_id' => $item->id,
+                            'quantity' => $stock,
+                        ]);
+
+
+                        $inventoryId =  InventoryKardex::create([
+                            'date_of_issue' => date('Y-m-d '),
+                            'item_id' => $item->id,
+                            'warehouse_id' => $warehouse_id,
+                            'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                            'inventory_kardexable_id' => $inventory->id,
+                            'quantity' => $stock,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
+                        ]);
+                        ItemUnitType::where('item_id', $item->id)->delete();
+                        foreach ($prices as $price) {
+                            $this->insertPriceifExist($item->id, $price, $warehouse_id);
+                        }
+                        CommercialTreatmentItem::where('item_id', $item->id)->delete();
+                        foreach ($commercial_treatments as $commercial_treatment) {
+                            $this->insertCommercialTreatment($item->id, $commercial_treatment);
+                        }
+                        $registered += 1;
                     }
-
-                    $item_whareouse = ItemWarehouse::where('item_id', $item->id)->where('warehouse_id', $warehouse_id)->first();
-                    if ($item_whareouse) {
-                        $item_whareouse->stock =  $stock;
-                        $item_whareouse->save();
-                    } else {
-                        $item_whareouse = new ItemWarehouse;
-                        $item_whareouse->item_id = $item->id;
-                        $item_whareouse->warehouse_id = $warehouse_id;
-                        $item_whareouse->stock = $stock;
-                        $item_whareouse->save();
-                    }
-
-                    $inventory = Inventory::create([
-                        'type' => 1,
-                        'description' => 'Stock Inicial',
-                        'item_id' => $item->id,
-                        'warehouse_id' => $warehouse_id,
-                        'quantity' => $stock,
-                        'date_of_issue' => date('Y-m-d')
-                    ]);
-
-                    Kardex::create([
-                        'type' => null,
-                        'date_of_issue' => date('Y-m-d'),
-                        'item_id' => $item->id,
-                        'quantity' => $stock,
-                    ]);
-
-
-                    $inventoryId =  InventoryKardex::create([
-                        'date_of_issue' => date('Y-m-d '),
-                        'item_id' => $item->id,
-                        'warehouse_id' => $warehouse_id,
-                        'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
-                        'inventory_kardexable_id' => $inventory->id,
-                        'quantity' => $stock,
-                        'created_at' => date('Y-m-d H:i:s '),
-                        'updated_at' => date('Y-m-d H:i:s '),
-                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
-                    ]);
-                    ItemUnitType::where('item_id', $item->id)->delete();
-                    foreach ($prices as $price) {
-                        $this->insertPriceifExist($item->id, $price, $warehouse_id);
-                    }
-                    CommercialTreatmentItem::where('item_id', $item->id)->delete();
-                    foreach ($commercial_treatments as $commercial_treatment) {
-                        $this->insertCommercialTreatment($item->id, $commercial_treatment);
-                    }
-                    $registered += 1;
-                }
-                //-------------------------------------------------------------
-                }
-                catch(Exception $e){
+                    //-------------------------------------------------------------
+                } catch (Exception $e) {
                     $this->errors[] = [
                         'internal_id' => $internal_id,
                         'description' => $e->getMessage(),
                     ];
                 }
-
             }
         }
         $this->data = compact('total', 'registered', 'errors');
@@ -368,7 +409,8 @@ class ItemsImport implements ToCollection
     {
         return $this->data;
     }
-    public function getErrors(){
+    public function getErrors()
+    {
         return $this->errors;
     }
 
@@ -423,23 +465,15 @@ class ItemsImport implements ToCollection
                 'item_id' => $item_id,
                 'unit_type_id' => 'NIU',
                 'quantity_unit' => $price['qty'],
-                // 'price2' =>  $price['price'],
                 'price2' =>  $price2,
                 'description' => $price['desc'],
                 'price1' => 0.0,
                 'price3' => 0.0,
                 'price_default' => 2,
-                // 'warehouse_id' => $warehouse_id,
-                // 'total' => floatval($price['qty']) * floatval($price['price']),
+                'warehouse_id' => $warehouse_id,
                 'total' =>  floatval($price['price']),
             ]);
         }
     }
-    /* function insertCategoriaMadera($item_id, $price, $warehouse_id){
-        if ($this->ckeckCategoriaMadera($price)){
-            ItemCategoriaMadera::create([
 
-            ])
-        }
-    } */
 }

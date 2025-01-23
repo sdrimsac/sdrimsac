@@ -221,7 +221,7 @@ export default {
                 this.$eventHub.$emit("reloadTables");
                 this.$refs.upload.clearFiles();
                 let errors = response.errors;
-                if(errors.length > 0){
+                if(errors && errors.length > 0){
                     this.showErrors = true;
                     this.generalErrors = errors;
                 } else {

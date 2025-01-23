@@ -1472,6 +1472,9 @@
                             "
                                                     >
                                                         <div class="row">
+                                                            <h6 class="text-danger" v-if="checkIgvApp(order_pend.food.item.sale_affectation_igv_type_id)">
+                                                                PRODUCTO CON IGV
+                                                            </h6>
                                                             <h3
                                                                 class="lead font-weight-light fw-bold"
                                                             >
@@ -3154,6 +3157,10 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        checkIgvApp(igv_type_id){
+            console.log("igv_type_id", igv_type_id);
+             return this.configuration.affectation_igv_type_id !== "10" && igv_type_id == "10";
+        },
         toggleEdit() {
             this.isEditing = !this.isEditing;
         },
