@@ -55,7 +55,6 @@ class ItemResource extends JsonResource
         });
         //array_merge
         $commercial_treatments =  array_merge($commercial_treatments->toArray(), $all_commercial_treatments->toArray());
-
         return [
             'item_price_ranges' => $this->item_price_ranges,
             'subject_to_detraction' => (bool) $this->subject_to_detraction,
