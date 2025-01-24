@@ -85,6 +85,15 @@ class Template
                                 $row->unit_desc = " X " . number_format($unds, 2);
                                 $row->unit_qty = number_format($row->quantity / $unds, 2);
                                 $row->price_unit = number_format($unit_type->total, 2);
+                                try{
+                                    if($row->price_unit == 0 || $row->price_unit == null){
+                                        $price_default = $unit_type->price_default;
+                                        $price_var = "price_".$price_default;
+                                        $row->price_unit = number_format($unit_type->{$price_var}, 2);
+                                    }
+                                } catch (\Exception $e) {
+                                    Log::error($e->getMessage());
+                                }
                                 if ($config->consolidated_quotations) {
                                     $row->unit_desc = "({$row->unit_desc})";
                                 }
