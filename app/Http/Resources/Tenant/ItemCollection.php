@@ -5,9 +5,11 @@ namespace App\Http\Resources\Tenant;
 use App\Models\System\User;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Carbon\Carbon;
 use App\Models\Tenant\RegisterMovement;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Support\Facades\DB;
 
 class ItemCollection extends ResourceCollection
@@ -20,7 +22,14 @@ class ItemCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function ($row, $key) {
+        $warehouses = Warehouse::select('id', 'description')->get();
+        return $this->collection->transform(function ($row, $key) use ($warehouses) {
+
+            $item_warehouses = ItemWarehouse::select('warehouse_id')->where('item_id', $row->id)->get();
+            $warehouses_ids = $item_warehouses->pluck('warehouse_id')->toArray();
+            $is_in_all_warehouses = count($warehouses_ids) === $warehouses->count();
+            
+            
             $configuration = Configuration::first();
             $decimal = $configuration->decimal_quantity ?? 2;
             // number_format($number, 2, ',', '.')
@@ -121,6 +130,7 @@ class ItemCollection extends ResourceCollection
                 'image_url' => ($row->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->image) : asset("/logo/{$row->image}"),
                 'image_url_medium' => ($row->image_medium !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->image_medium) : asset("/logo/{$row->image_medium}"),
                 'image_url_small' => ($row->image_small !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->image_small) : asset("/logo/{$row->image_small}"),
+                'is_in_all_warehouses' => $is_in_all_warehouses,
 
             ];
         });

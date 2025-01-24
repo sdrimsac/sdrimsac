@@ -524,6 +524,100 @@ class ItemController extends Controller
             'message' => 'Se verificaron las series'
         ];
     }
+    public function addProductToWarehouses($item_id) {
+        try {
+            $item = Item::find($item_id);
+            $warehouses = Warehouse::all();
+            $created_count = 0;
+
+            foreach($warehouses as $warehouse) {
+                // Verificar si ya existe el registro
+                $exists = ItemWarehouse::where('item_id', $item->id)
+                                     ->where('warehouse_id', $warehouse->id)
+                                     ->exists();
+                
+                // Solo crear si no existe
+                if (!$exists) {
+                    ItemWarehouse::create([
+                        'item_id' => $item->id,
+                        'warehouse_id' => $warehouse->id,
+                        'stock' => 0,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                    $created_count++;
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => "Se agregó el producto a {$created_count} almacenes nuevos"
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al agregar el producto a los almacenes: ' . $e->getMessage()
+            ];
+        }
+    }
+    public function addProductsToWarehouses() {
+        try {
+            DB::connection('tenant')->beginTransaction();
+            
+            // Obtener todos los IDs de almacenes
+            $warehouse_ids = Warehouse::pluck('id')->toArray();
+            
+            // Obtener las combinaciones existentes de item_id y warehouse_id
+            $existing_combinations = ItemWarehouse::select('item_id', 'warehouse_id')
+                ->get()
+                ->map(function($item) {
+                    return $item->item_id . '-' . $item->warehouse_id;
+                })
+                ->toArray();
+            
+            // Procesar items en chunks y preparar inserciones masivas
+            Item::chunk(500, function($items) use ($warehouse_ids, $existing_combinations) {
+                $records_to_insert = [];
+                
+                foreach($items as $item) {
+                    foreach($warehouse_ids as $warehouse_id) {
+                        // Verificar si la combinación ya existe
+                        if (!in_array($item->id . '-' . $warehouse_id, $existing_combinations)) {
+                            $records_to_insert[] = [
+                                'item_id' => $item->id,
+                                'warehouse_id' => $warehouse_id,
+                                'stock' => 0,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            ];
+                        }
+                    }
+                }
+                
+                // Insertar en lotes si hay registros
+                if (!empty($records_to_insert)) {
+                    ItemWarehouse::insert($records_to_insert);
+                }
+            });
+
+            DB::connection('tenant')->commit();
+            
+            return [
+                'success' => true,
+                'message' => 'Productos agregados correctamente a todos los almacenes'
+            ];
+
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            Log::error($e->getMessage());
+            
+            return [
+                'success' => false,
+                'message' => 'Error al agregar productos a los almacenes: ' . $e->getMessage()
+            ];
+        }
+    }
     public function columns()
     {
         return [

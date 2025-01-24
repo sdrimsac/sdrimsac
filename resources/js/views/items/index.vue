@@ -1,7 +1,7 @@
 <!-- Modulo Listado de productos Principal-->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
+        <div class="container-fluid p-l-0 p-r-0" v-loading="loading">
             <div class="card mb-0">
                 <div
                     class="card-header bg-primary d-flex align-items-center"
@@ -127,6 +127,7 @@
                         @clickReport="clickReport"
                         @clickReportForImport="clickReportForImport"
                         class="table-striped"
+                        ref="dataTable"
                     >
                         <tr slot="heading" width="100%" class="bg-primary">
                             <th class="text-white">#</th>
@@ -436,6 +437,10 @@
                                             : "Inhabilitado"
                                     }}
                                 </button>
+
+                                <el-button
+                                v-if="typeUser == 'superadmin' && !row.is_in_all_warehouses"
+                                type="primary" @click.prevent="clickAddProductToWarehouses(row.id)">Agregar a todos los almacenes</el-button>
                             </td>
                         </tr>
                     </data-table>
@@ -464,6 +469,7 @@
                     :item="currentItem"
                     :config="config"
                     :user="user"
+                    :allWarehouses="warehouses"
                 ></warehouses-detail>
                 <items-import-list-price-range-unit-type
                     :showDialog.sync="showImportListPriceUnitTypeDialog"
@@ -522,6 +528,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             selectedWarehousePrice: null,
             tables: [],
             currentItem: null,
@@ -534,6 +541,7 @@ export default {
             recordId: null,
             warehousesDetail: [],
             unit_type: [],
+            warehouses: [],
             hasSerie: false,
             itemId: null,
             config: {},
@@ -549,8 +557,25 @@ export default {
         this.$http.get(`/configurations/record`).then(response => {
             this.config = response.data.data;
         });
+        this.getWarehouses();
     },
     methods: {
+        clickAddProductToWarehouses(id){
+            this.loading = true;
+            this.$http.get(`/items/warehouses/add-product/${id}`).then(response => {
+                this.$toast.success(response.data.message);
+                this.$eventHub.$emit("reloadData");
+            }).catch(error => {
+                this.$toast.error(error.response.data.message);
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getWarehouses() {
+            this.$http.get(`/warehouses/records`).then(response => {
+                this.warehouses = response.data.data;
+            });
+        },
         selectWarehousePrice(warehousePrice) {
             this.selectedWarehousePrice = warehousePrice;
         },
@@ -638,6 +663,7 @@ export default {
             this.warehousesDetail = warehouses;
             this.unit_type = unit_type;
             this.showWarehousesDetail = true;
+        
         },
         clickCreate(recordId = null) {
             this.recordId = recordId;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row ">
+        <div class="row " v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
                     <div
@@ -275,6 +275,18 @@
                         @click.prevent="clickDownloadForImport('excel')"
                         >Exportar Excel - Formato de importacion</el-button
                     >
+                <el-tooltip content="Agregar productos a los almacenes faltantes" placement="top">
+
+                    <el-button
+                    class="submit"
+                    type="primary"
+                    v-if="typeUser == 'superadmin'"
+                    icon="el-icon-tickets"
+                    @click.prevent="clickAddProductsToWarehouses"
+                    >Productos en todos los almacenes
+                    </el-button
+                    >
+                </el-tooltip>
                 </div>
             </div>
             <div class="col-md-12">
@@ -358,7 +370,8 @@ export default {
             array_district: [],
             time: null,
             warehouses: [],
-            areas: []
+            areas: [],
+            loading: false,
         };
     },
     computed: {},
@@ -396,6 +409,18 @@ export default {
         }
     },
     methods: {
+        clickAddProductsToWarehouses() {
+            this.loading = true;
+            this.$http.get(`/items/warehouses/add-products`).then(response => {
+                this.$toast.success("Productos agregados correctamente a todos los almacenes");
+                this.getRecords();
+            }).catch(error => {
+                this.loading = false;
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+    
         total_income() {
             return this.records.reduce(
                 (acc, item) => acc + Number(item.income),
@@ -438,10 +463,12 @@ export default {
             );
         },
         getRecords() {
+
             if (this.time) {
                 clearTimeout(this.time);
             }
             this.time = setTimeout(async () => {
+                this.loading = true;
                 let url = `/${
                     this.resource
                 }/records?${this.getQueryParameters()}`;
@@ -461,6 +488,10 @@ export default {
                         let data = response.data;
                         this.records = data.data;
                     }
+                }).catch(error => {
+                    this.loading = false;
+                }).finally(() => {
+                    this.loading = false;
                 });
             }, 350);
         },

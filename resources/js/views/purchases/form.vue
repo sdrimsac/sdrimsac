@@ -735,6 +735,23 @@
                                                         {{ color.size }}
                                                     </small>
                                                 </template>
+
+                                                <template
+                                                    v-if="
+                                                        row.max_quantity &&
+                                                            row.max_quantity_description
+                                                    "
+                                                >
+                                                    <br />
+                                                    <small class="text-primary">
+                                                        <strong>
+                                                            {{
+                                                                row.max_quantity_description
+                                                            }}:</strong
+                                                        >
+                                                        {{ row.max_quantity }}
+                                                    </small>
+                                                </template>
                                             </td>
                                             <td class="text-left">
                                                 {{ row.warehouse_description }}
@@ -1614,7 +1631,12 @@ export default {
             for (let i = 0; i < items.length; i++) {
                 let item = items[i];
                 if (item.real_quantity > 0) {
-                    item.quantity = item.real_quantity;
+                    if(item.max_quantity && item.max_quantity_description){
+                        item.quantity = Number(item.max_quantity) * Number(item.quantity);
+                        item.item.max_quantity = item.max_quantity;
+                    }else{
+                        item.quantity = item.real_quantity;
+                    }
                 }
             }
             this.form.items = items;

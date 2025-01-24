@@ -184,7 +184,12 @@
                                 </small>
                             @endforeach
                         @endif
-
+                        @if(isset($row->item->max_quantity) && isset($row->item->max_quantity_description))
+                            <br>
+                            <small>
+                                <strong>{{ $row->item->max_quantity_description }}:</strong> {{ $row->item->max_quantity }}
+                            </small>
+                        @endif
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif

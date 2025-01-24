@@ -336,7 +336,8 @@ class Item extends ModelTenant
             'used_points_for_exchange' => null, //total de puntos
             'factory_code' => $this->factory_code,
             'restrict_sale_cpe' => $this->restrict_sale_cpe,
-
+            'max_quantity' => $this->max_quantity,
+            'max_quantity_description' => $this->max_quantity_description,
         ];
 
         // El nombre de producto, por defecto, sera la misma descripcion.

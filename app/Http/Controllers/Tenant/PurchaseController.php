@@ -974,7 +974,8 @@ class PurchaseController extends Controller
                             ];
                         }),
                         'series_enabled' => (bool) $row->series_enabled,
-
+                        'max_quantity' => $row->max_quantity,
+                        'max_quantity_description' => $row->max_quantity_description,
                         'warehouses' => collect($row->warehouses)->transform(function ($row) {
                             return [
                                 'warehouse_id' => $row->warehouse->id,

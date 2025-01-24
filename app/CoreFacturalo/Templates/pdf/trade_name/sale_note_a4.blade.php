@@ -417,10 +417,24 @@
             <td>
                 <strong>PAGOS:</strong>
             </td>
+            @php
+                $total_payments = 0;
+                foreach ($boxes as $box) {
+                    $total_payments = $total_payments + $box->amount;
+                }
+                $difference = $document->total - $total_payments;
+            @endphp
         </tr>
+        @if ($difference > 0 && $configuration->credit_nv_show_pending && $document->credit_cash)
+            <tr>
+                <td colspan="7" class="text-left font-bold ">Saldo pendiente:
+                    {{ $document->currency_type->symbol }}</td>
+                <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
+            </tr>
+        @endif
         @foreach ($boxes as $box)
             <tr>
-                <td colspan="7" class="text-left font-bold border_detalles">{{ $box->method }} @if ($box->bank_account_operation)
+                <td colspan="7" class="text-left font-bold">{{ $box->method }} @if ($box->bank_account_operation)
                         <small>N° Op: {{ $box->bank_account_operation }}</small>
                     @endif
                     :

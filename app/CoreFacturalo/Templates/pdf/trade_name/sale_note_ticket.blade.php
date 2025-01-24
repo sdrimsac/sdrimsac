@@ -21,6 +21,7 @@
     $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
     $configuration = \App\Models\Tenant\Configuration::select([
+        'credit_nv_show_pending',
         'show_logo_in_documents',
         'show_internal_code_ticket',
         'consolidated_quotations',
@@ -779,6 +780,14 @@ contain"
                     {{ $document->currency_type->symbol }}</td>
                 <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
             </tr>
+        @else
+            @if ($configuration->credit_nv_show_pending && $document->credit_cash)
+                <tr>
+                    <td colspan="4" class="text-left font-bold desc">Saldo pendiente:
+                        {{ $document->currency_type->symbol }}</td>
+                    <td class="text-right font-bold desc">{{ number_format($document->credit_cash, 2) }}</td>
+                </tr>
+            @endif
         @endif
         @foreach ($boxes as $box)
             <tr>

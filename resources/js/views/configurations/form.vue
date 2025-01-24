@@ -7189,6 +7189,40 @@
                                                         ></el-switch>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-md-2 mt-4" v-if="form.sale_note_credit_cash">
+                                                    <div class="form-group">
+                                                        <label
+                                                            class="control-label w-100"
+                                                        >
+                                                            <i
+                                                                class="fas fa-list fa-lg"
+                                                            ></i>
+                                                            Imprimir el saldo pendiente de pago en el pdf - Notas de venta credito
+                                                        </label>
+                                                        <el-switch
+                                                            v-model="
+                                                                form.credit_nv_show_pending
+                                                            "
+                                                            active-text="Si"
+                                                            inactive-text="No"
+                                                            :active-color="
+                                                                '#28a745'
+                                                            "
+                                                            :inactive-color="
+                                                                '#6c757d'
+                                                            "
+                                                            @change="
+                                                                submit(
+                                                                    'Imprimir el saldo pendiente de pago en el pdf - Notas de venta credito',
+                                                                    form.credit_nv_show_pending,
+                                                                    'credit_nv_show_pending',
+                                                                    'listIcon'
+                                                                )
+                                                            "
+                                                        ></el-switch>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </el-tab-pane>

@@ -224,7 +224,9 @@
                             <label class="control-label"><i class="fas fa-box"></i> Cantidad</label>
                             <el-input controls="false" style="width: 100%;" @change="updateRealQuantity" @input.native="onInput" name="multi" :disabled="!noIsUnid" v-model="unids"></el-input>
                             <small>
-                                <el-checkbox v-model="noIsUnid">No son unidades</el-checkbox>
+                                <el-checkbox 
+                                @change="changeNoIsUnid"
+                                v-model="noIsUnid">No son unidades</el-checkbox>
                             </small>
                         </div>
                         <div class="col-md-4" v-if="noIsUnid">
@@ -545,6 +547,14 @@ export default {
         });
     },
     methods: {
+        changeNoIsUnid(){
+            let item = _.find(this.items, {
+                id: this.form.item_id
+            });
+            this.unids = item.max_quantity;
+            this.updateRealQuantity();
+            this.form.max_quantity_description = item.max_quantity_description;
+        },
         addRowLotGroup(lotsgroup) {
             console.log("ver los lotes recibidos", lotsgroup);
             this.lotsGroup = lotsgroup;
@@ -921,6 +931,8 @@ export default {
             this.form.total_price = this.form.unit_price * this.form.quantity;
         },
         changeItem(changing_name = false) {
+            this.noIsUnid = false;
+            this.unids = 0;
             this.color_size = [];
             this.form.item = _.find(this.items, {
                 id: this.form.item_id
@@ -1012,6 +1024,8 @@ export default {
             );
             if (this.noIsUnid) {
                 this.row.real_quantity = this.form.real_quantity;
+                this.row.max_quantity = this.unids;
+                this.row.max_quantity_description = this.form.max_quantity_description;
             }
             this.row.sale_unit_price = this.form.sale_unit_price;
             this.row.lot_code = await this.lot_code;

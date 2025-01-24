@@ -450,6 +450,8 @@ if ($hostname) {
                     Route::post('delete', [App\Http\Controllers\Tenant\ItemController::class, 'deleteSaleOffert']);
                 });
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
+                Route::get('items/warehouses/add-products', [App\Http\Controllers\Tenant\ItemController::class, 'addProductsToWarehouses']);
+                Route::get('items/warehouses/add-product/{item_id}', [App\Http\Controllers\Tenant\ItemController::class, 'addProductToWarehouses']);
                 /* Route::get('items/columns2', [App\Http\Controllers\Tenant\ItemController::class, 'columns2']); */
                 Route::get('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'bonusUnitType']);
                 Route::post('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'storeBonusUnitType']);
