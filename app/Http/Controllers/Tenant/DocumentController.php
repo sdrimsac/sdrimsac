@@ -810,6 +810,8 @@ class DocumentController extends Controller
             return collect($items)->transform(function ($row) use ($warehouse) {
                 $detail = $this->getFullDescription($row, $warehouse);
                 return [
+                    'max_quantity' => $row->max_quantity,
+                        'max_quantity_description' => $row->max_quantity_description,
                     'id' => $row->id,
                     'full_description' => $detail['full_description'],
                     'brand' => $detail['brand'],
@@ -893,7 +895,12 @@ class DocumentController extends Controller
 
 
         if ($row->unit_type_id != 'ZZ') {
-            $warehouse_stock = ($row->warehouses && $warehouse) ? number_format($row->warehouses->where('warehouse_id', $warehouse->id)->first()->stock, 2) : 0;
+            try{
+                $warehouse_stock = ($row->warehouses && $warehouse) ? number_format($row->warehouses->where('warehouse_id', $warehouse->id)->first()->stock, 2) : 0;
+            }catch(\Exception $e){
+                Log::error("Error al obtener el stock del item {$row->id} en el warehouse {$warehouse->id}: ".$e->getMessage());
+                $warehouse_stock = 0;
+            }
             $stock = ($row->warehouses && $warehouse) ? "{$warehouse_stock}" : "";
         } else {
             $stock = '';
