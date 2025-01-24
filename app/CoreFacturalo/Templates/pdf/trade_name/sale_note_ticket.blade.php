@@ -785,7 +785,7 @@ contain"
                 <tr>
                     <td colspan="4" class="text-left font-bold desc">Saldo pendiente:
                         {{ $document->currency_type->symbol }}</td>
-                    <td class="text-right font-bold desc">{{ number_format($document->credit_cash, 2) }}</td>
+                    <td class="text-right font-bold desc">{{ number_format($difference * -1, 2) }}</td>
                 </tr>
             @endif
         @endif
