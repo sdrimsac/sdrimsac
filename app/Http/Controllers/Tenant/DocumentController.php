@@ -893,13 +893,20 @@ class DocumentController extends Controller
         $brand = ($row->brand) ? "{$row->brand->name}" : "";
 
 
-
+//s
         if ($row->unit_type_id != 'ZZ') {
             try{
                 $warehouse_stock = ($row->warehouses && $warehouse) ? number_format($row->warehouses->where('warehouse_id', $warehouse->id)->first()->stock, 2) : 0;
             }catch(\Exception $e){
-                Log::error("Error al obtener el stock del item {$row->id} en el warehouse {$warehouse->id}: ".$e->getMessage());
-                $warehouse_stock = 0;
+                // Buscar el primer almacén que tenga stock del item
+                $warehouse_with_stock = $row->warehouses->where('stock', '>', 0)->first();
+                if($warehouse_with_stock) {
+                    $warehouse_stock = number_format($warehouse_with_stock->stock, 2);
+                } else {
+
+                    $warehouse_stock = 0;
+                }
+        
             }
             $stock = ($row->warehouses && $warehouse) ? "{$warehouse_stock}" : "";
         } else {
