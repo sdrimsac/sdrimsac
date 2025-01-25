@@ -1762,7 +1762,7 @@ class SaleNoteController extends Controller
 
 
                     //si el index payment_method_type_id no existe poner paid a true
-                    if (!isset($request->payments[0]['payment_method_type_id'])) {
+                    if (!isset($request->payments[0]['payment_method_type_id']) && !$bank_account_id) {
                         $paid = 1;
                     } else {
                     }

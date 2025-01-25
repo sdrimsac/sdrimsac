@@ -2518,7 +2518,8 @@ export default {
                         id: null,
                         bank_account_id: bank_account.id,
                         number_operation: this.form.reference_number,
-                        amount: this.form.total,
+                        //amount: this.form.total,
+                        amount: this.form.enter_amount,
                         method: `${bank_account.description}-${bank_account.number}`
                     }
                 ];
