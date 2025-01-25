@@ -330,12 +330,11 @@ class EtiquetasController extends Controller
         $establishment_id = auth()->user()->establishment_id;
         $input = $request->input("input");
 
-        // Get only active items with active warehouse entries and positive stock
+        // Get active items with active warehouse entries
         $items = Item::where("active", 1)
             ->whereHas('warehouses', function($query) use ($establishment_id) {
                 $query->where('warehouse_id', $establishment_id)
-                    ->where('active', 1)
-                    ->where('stock', '>', 0);
+                    ->where('active', 1);
             })
             ->where(function ($query) use ($input) {
                 $query->where("description", "like", "%" . $input . "%")
