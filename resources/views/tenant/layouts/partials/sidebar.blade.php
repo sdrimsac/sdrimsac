@@ -1093,7 +1093,7 @@
                 </ul>
             </li>
         @endif
-        @if ($config->workshop && !$roleService->isLogistic())
+        @if ($config->odontologia && !$roleService->isLogistic())
             <li>
                 <a href="#dentalUl" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "

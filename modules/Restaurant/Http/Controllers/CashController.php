@@ -509,15 +509,21 @@ class CashController extends Controller
                                 }
                             }
                         }
-                        $total += $d_it->total_value;
-                        $total_items += $d_it->total_value;
-                        $price = $d_it->unit_price;
+                        /* $total += $d_it->total_value;
+                        $total_items += $d_it->total_value; */
+
+                        $total += $d_it->total;
+                        $total_items += $d_it->total;
+
+                        /* $price = $d_it->unit_price;
                         if ($d_it->affectation_igv_type_id == '10') {
                             $price = number_format($price/1.18,2,'.','');
                             
                             
-                        }
+                        } */
                         if (array_key_exists($d_it->item_id, $items)) {
+
+                            $price = $d_it->unit_price;
 
 
                             if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
@@ -535,8 +541,8 @@ class CashController extends Controller
                                 ];
                             }
                             $items[$d_it->item_id]["count"] +=  $quantity;
-                            //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
-                            $items[$d_it->item_id]["total"] += $d_it->total_value;
+                            $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                            //$items[$d_it->item_id]["total"] += $d_it->total_value;
                         } else {
                            
                             $items[$d_it->item_id] = [
@@ -550,7 +556,7 @@ class CashController extends Controller
                                 "unit_type_name" => $unit_type_name,
                                 "unit_item" => $unit_item,
                                 "prices" => [
-                                    $price => [
+                                    $d_it->unit_price => [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
                                         "unit_type_name" => $unit_type_name,
@@ -594,14 +600,18 @@ class CashController extends Controller
                                     }
                                 }
                             }
+                            /* $total += $d_it->total;
+                            $total_items += $d_it->total; */
+
                             $total += $d_it->total;
                             $total_items += $d_it->total;
-                            $price = $d_it->unit_price;
+                            /* $price = $d_it->unit_price;
                             if ($d_it->affectation_igv_type_id == '10') {
                                 $price = number_format($price/1.18,2,'.','');
-                            }
+                            } */
                             if (array_key_exists($d_it->item_id, $items)) {
 
+                                $price = $d_it->unit_price;
     
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
@@ -622,14 +632,15 @@ class CashController extends Controller
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    "total" => $d_it->total_value,
+                                    /* "total" => $d_it->total_value, */
+                                    "total" => $d_it->total,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
                                     "max_quantity_item" => $max_quantity_item,
                                     "unit_type_name" => $unit_type_name,
                                     "unit_item" => $unit_item,
                                     "prices" => [
-                                        $price => [
+                                        $d_it->unit_price => [
                                             "count" =>  $d_it->quantity,
                                             "factor" => $factor,
                                             "unit_type_name" => $unit_type_name,
@@ -980,11 +991,16 @@ class CashController extends Controller
                                     }
                                 }
                             }
-                            $total += $d_it->total_value;
-                            $total_items += $d_it->total_value;
+                            /* $total += $d_it->total_value;
+                            $total_items += $d_it->total_value; */
+
+                            $total += $d_it->total;
+                            $total_items += $d_it->total;
+
                             if (array_key_exists($d_it->item_id, $items)) {
 
                                 $price = $d_it->unit_price;
+                                
 
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
@@ -1000,14 +1016,15 @@ class CashController extends Controller
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=  $quantity;
-                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
-                                $items[$d_it->item_id]["total"] += $d_it->total_value;
+                                $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                /* $items[$d_it->item_id]["total"] += $d_it->total_value; */
                             } else {
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    "total" => $d_it->total_value,
+                                    /* "total" => $d_it->total_value, */
+                                    "total" => $d_it->total,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
                                     "max_quantity_item" => $max_quantity_item,
@@ -1063,6 +1080,7 @@ class CashController extends Controller
                             }
                             $total += $d_it->total;
                             $total_items += $d_it->total;
+
                             if (array_key_exists($d_it->item_id, $items)) {
 
                                 $price = $d_it->unit_price;
@@ -1081,14 +1099,15 @@ class CashController extends Controller
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=  $quantity;
-                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
-                                $items[$d_it->item_id]["total"] += $d_it->total_value;
+                                $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
+                                //$items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    "total" => $d_it->total_value,
+                                    /* "total" => $d_it->total_value, */
+                                    "total" => $d_it->total,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
                                     "max_quantity_item" => $max_quantity_item,
