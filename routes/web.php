@@ -514,9 +514,11 @@ if ($hostname) {
                 Route::get('persons/{type}/records', [App\Http\Controllers\Tenant\PersonController::class, 'records']);
                 Route::get('persons/record/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'record']);
                 Route::get('customers/generate_number', [PersonController::class, 'generateNumber']);
-                //  Route::post('persons', [App\Http\Controllers\Tenant\PersonController::class, 'store']);
                 Route::delete('persons/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'destroy']);
                 Route::post('persons/import', [App\Http\Controllers\Tenant\PersonController::class, 'import']);
+                //imagen en los clientes
+                Route::post('persons/uploads', [PersonController::class, 'upload']);
+                Route::get('persons/images/{persons}', [PersonController::class, 'images']);
                 // para exportar todo los clientes del sistema
                 Route::get('persons/customers/exportclients', [App\Http\Controllers\Tenant\PersonController::class, 'exportClients']);
                 Route::get('persons/enabled/{type}/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'enabled']);

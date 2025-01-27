@@ -15,6 +15,7 @@ class Person extends ModelTenant
 {
 
     use UsesTenantConnection;
+    const DEFAULT_USER_IMAGE = 'user.png';
 
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
@@ -48,6 +49,13 @@ class Person extends ModelTenant
         'enabled',
         'seller_id',
         'client_zone_id',
+        'ref_origin',
+        'name_family',
+        'telephone_family',
+        'image',
+        'occupation',
+        'parient_id',
+
     ];
     protected $casts = [
         'has_credit_line' => 'boolean',
@@ -138,6 +146,12 @@ class Person extends ModelTenant
 
 
         $data = [
+            'parient_id' => $this->parient_id,
+            'occupation' => $this->occupation,
+            'ref_origin' => $this->ref_origin,
+            'name_family' => $this->name_family,
+            'telephone_family' => $this->telephone_family,
+            'image' => $this->image,
             'varios' => (bool) $this->varios,
             'document_type_id' => $this->document_type_id,
             'alias' => $this->alias,
@@ -275,6 +289,10 @@ class Person extends ModelTenant
     {
         return $this->belongsTo(Province::class);
     }
+    public function parient()
+    {
+        return $this->belongsTo(PersonParient::class, 'parient_id');
+    }
 
     public static function getIdClientesVariosOrCreate()
     {
@@ -332,5 +350,21 @@ class Person extends ModelTenant
     public function scopeWhereIsEnabled($query)
     {
         return $query->where('enabled', true);
+    }
+    // para las imagenes de los clientes
+    public function hasDefaultImage()
+    {
+        return $this->image === self::DEFAULT_USER_IMAGE;
+    }
+    public function getImageUrlAttribute()
+    {
+        // Verificar si es la imagen por defecto
+        if ($this->image === self::DEFAULT_USER_IMAGE) {
+            // Ruta para la imagen por defecto
+            return asset('status_images/' . self::DEFAULT_USER_IMAGE);
+        }
+
+        // Ruta para imágenes personalizadas
+        return asset('storage/uploads/persons/' . $this->image);
     }
 }

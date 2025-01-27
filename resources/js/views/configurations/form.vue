@@ -548,6 +548,44 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
+                                                    <div
+                                                        class="col-md-3 mb-4"
+                                                        v-if="canSee"
+                                                    >
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <!-- <i
+                                                                    ref="healthIcon"
+                                                                    class=""
+                                                                ></i> -->
+                                                                <i class="fa fas fa-tooth"></i>
+                                                                Entorno Alquiler de Habitaciones 
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.mod_renta
+                                                                "
+                                                                active-text="HABILITADO"
+                                                                inactive-text="DESHABILITADO"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    () =>
+                                                                        submit(
+                                                                            'Entorno Modo Renta',
+                                                                            form.mod_renta,
+                                                                            'healthIcon'
+                                                                        )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

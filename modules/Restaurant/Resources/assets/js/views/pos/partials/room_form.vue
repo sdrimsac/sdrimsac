@@ -8,6 +8,7 @@
         :close-on-click-modal="false"
         v-loading="loading"
         :element-loading-text="textLoading"
+        width="60%"
     >
         <div class="row mt-2">
             <div class="col-md-4">
@@ -94,10 +95,16 @@
         <el-collapse v-model="collap" class="mt-2">
             <el-collapse-item name="1">
                 <template slot="title">
-                    N° {{ isReserve ? "Reservas" : "Habitaciones" }}
-                    {{ rooms.length }}
+                    <div class="card-body ms-3">
+                        N° {{ isReserve ? "Reservas" : "Habitaciones" }}
+                        {{ rooms.length }}
+                    </div>
                 </template>
-                <div class="row mt-1" v-for="(room, idx) in rooms" :key="idx">
+                <div
+                    class="row mt-1 card-body"
+                    v-for="(room, idx) in rooms"
+                    :key="idx"
+                >
                     <el-divider content-position="left"
                         >{{ isReserve ? "Reserva" : "Habitación" }}
                         {{ idx + 1 }}
@@ -128,7 +135,10 @@
                                 label="Alquiler mensual"
                             ></el-checkbox>
                         </div>
-                        <div class="col-3">
+                        <div
+                            class="col-3"
+                            v-if="configuration.mod_renta === false"
+                        >
                             <el-checkbox
                                 v-if="!isReserve"
                                 @change="verifyIsReserve(room)"
@@ -137,6 +147,20 @@
                             ></el-checkbox>
                         </div>
                     </div>
+                    <!-- <div class="col-md-4">
+                        <label for="name">Tipo de Alquiler</label>
+                        <el-select
+                            v-model="room.table_type_id"
+                            @change="filterTable_types(room.table_type_id, idx)"
+                        >
+                            <el-option
+                                v-for="option in table_types"
+                                :key="option.id"
+                                :label="option.name"
+                                :value="option.id"
+                            ></el-option>
+                        </el-select>
+                    </div> -->
                     <div class="col-md-4">
                         <label for="name">Torre</label>
                         <el-select
@@ -165,20 +189,38 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-4">
-                        <label for="name">Habitación</label>
-                        <el-select
-                            @change="changeTable(room)"
-                            v-model="room.table_id"
-                        >
-                            <el-option
-                                v-for="option in tables"
-                                :key="option.id"
-                                :label="option.number"
-                                :value="option.id"
-                            ></el-option>
-                        </el-select>
-                    </div>
+                    <template v-if="configuration.mod_renta">
+                        <div class="col-md-4">
+                            <label for="name">Habitación</label>
+                            <el-select
+                                @change="changeTable(room)"
+                                v-model="room.table_id"
+                            >
+                                <el-option
+                                    v-for="option in tables"
+                                    :key="option.id"
+                                    :label="option.number"
+                                    :value="option.id"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="col-md-4">
+                            <label for="name">Habitación</label>
+                            <el-select
+                                @change="changeTable(room)"
+                                v-model="room.table_id"
+                            >
+                                <el-option
+                                    v-for="option in tables"
+                                    :key="option.id"
+                                    :label="option.number"
+                                    :value="option.id"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </template>
                     <div class="col-md-4">
                         <label for="quantity_persons">N° Personas</label>
                         <el-input-number
@@ -438,10 +480,29 @@
                 </div>
             </div>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <!-- <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Guardar</el-button>
-        </span>
+        </span> -->
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+            <!-- Botón Cancelar -->
+            <el-button
+                class="btn-cancel btn-cancel:hover"
+                icon="fas fa-times fa-lg"
+                @click="close()"
+            >
+                <span>Cancelar</span>
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button
+                class="btn-save btn-save:hover"
+                icon="fas fa-save fa-lg"
+                type="primary"
+                @click="submit"
+            >
+                <span>Guardar</span>
+            </el-button>
+        </div>
         <person-form
             :showDialog.sync="showDialogNewPerson"
             type="customers"
@@ -498,6 +559,7 @@ export default {
             rooms: [],
             form: {},
             towers: [],
+            table_types: [],
             floors: [],
             tables: [],
             all_towers: [],
@@ -620,6 +682,23 @@ export default {
         filterTables(floor_id, idx) {
             this.tables = this.all_tables.filter(t => t.floor_id == floor_id);
             this.rooms[idx].table_id = null;
+            this.calculateTotal();
+        },
+        filterTable_types(table_type_id, idx) {
+            // Filtrar las tablas considerando tanto el tipo de alquiler como el piso seleccionado
+            const room = this.rooms[idx];
+            this.tables = this.all_tables.filter(t => {
+                // Si hay un piso seleccionado, filtrar por ambos criterios
+                if (room.floor_id) {
+                    return (
+                        t.table_type_id == table_type_id &&
+                        t.floor_id == room.floor_id
+                    );
+                }
+                // Si no hay piso seleccionado, filtrar solo por tipo de alquiler
+                return t.table_type_id == table_type_id;
+            });
+            room.table_id = null;
             this.calculateTotal();
         },
         initForm() {
@@ -797,6 +876,7 @@ export default {
                 insumos,
                 towers,
                 floors,
+                table_types,
                 tables,
                 services,
                 credit_line_hotel_limit
@@ -804,6 +884,7 @@ export default {
             this.all_towers = towers;
             this.insumos = insumos;
             this.all_floors = floors;
+            this.table_types = table_types;
             this.all_tables = tables;
             this.all_services = services;
             this.credit_line_limit = credit_line_hotel_limit || 150;
@@ -956,6 +1037,7 @@ export default {
                     table_id: this.table.id,
                     floor_id: this.table.floor_id,
                     tower_id: this.table.floor.tower_id
+                    /* table_type_id: this.table.table_type_id */
                 });
 
                 if (this.isReserve) {
@@ -1007,12 +1089,16 @@ export default {
         },
         defaultTable(table) {
             let {
+                /* table_type_id, */
                 floor_id,
                 floor: { tower_id }
             } = table;
             this.towers = this.all_towers;
             this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
             this.tables = this.all_tables.filter(t => t.floor_id == floor_id);
+            /* this.table_types = this.all_tables.filter(
+                t => t.table_type_id == table_type_id
+            ); */
         },
         close() {
             this.$emit("update:showDialog", false);

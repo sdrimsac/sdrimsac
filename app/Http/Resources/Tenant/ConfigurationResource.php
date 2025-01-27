@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'mod_renta' => (bool) $this->mod_renta,
             'credit_nv_show_pending' => (bool) $this->credit_nv_show_pending,
             'edit_price' => (bool) $this->edit_price,
             'odontologia' => (bool) $this->odontologia,

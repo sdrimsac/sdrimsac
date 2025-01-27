@@ -120,19 +120,12 @@
                 </div>
             </div>
         </form>
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <!-- Render different components based on section -->
-                <odontograma v-if="section === 'odontograma'"></odontograma>
-                <div v-else-if="section === 'info'">
-                    <!-- Info section content -->
-                </div>
-                <div v-else-if="section === 'exploracion'">
-                    <!-- Exploracion section content -->
-                </div>
-                <!-- Add other sections as needed -->
-            </div>
-        </div>
+        <!-- <car-vehicle
+            :showDialog.sync="showDialogCarVehicle"
+            :vehiculoId="selectedVehiculoId"
+            :recordId="recordId"
+            @actualizar="getData"
+        ></car-vehicle> -->
     </el-dialog>
 </template>
 <script>
@@ -146,7 +139,7 @@ export default {
     },
     data() {
         return {
-            section: "info", // Set default section
+            section: "",
             resource: "dental",
         };
     },

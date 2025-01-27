@@ -518,6 +518,149 @@
                             ></small>
                         </div>
                     </div>
+                    <div class="col-md-6" v-if="configuration.mod_renta">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.occupation }"
+                        >
+                            <label class="control-label"
+                                >Ocupacion Cliente</label
+                            >
+                            <el-input
+                                type="text"
+                                v-model="form.occupation"
+                                @input="toUpperCase('occupation')"
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.occupation"
+                                v-text="errors.occupation[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6" v-if="configuration.mod_renta">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.ref_origin }"
+                        >
+                            <label class="control-label"
+                                >Referencia de Procedencia</label
+                            >
+                            <el-input
+                                type="text"
+                                v-model="form.ref_origin"
+                                @input="toUpperCase('ref_origin')"
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.ref_origin"
+                                v-text="errors.ref_origin[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6" v-if="configuration.mod_renta">
+                        <div class="form-group">
+                            <label class="control-label"
+                                >Tipo De Parentesco</label
+                            >
+                            <el-select v-model="form.parient_id" filterable>
+                                <el-option
+                                    v-for="option in parent"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6" v-if="configuration.mod_renta">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.name_family }"
+                        >
+                            <label class="control-label"
+                                >Nombre Familiar Emergencia</label
+                            >
+                            <el-input
+                                type="text"
+                                v-model="form.name_family"
+                                @input="toUpperCase('telephone_family')"
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.name_family"
+                                v-text="errors.name_family[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6" v-if="configuration.mod_renta">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.telephone_family }"
+                        >
+                            <label class="control-label"
+                                >Telefono Familiar Emergencia</label
+                            >
+                            <el-input
+                                type="text"
+                                v-model="form.telephone_family"
+                                @input="toUpperCase('telephone_family')"
+                                maxlength="9"
+                                show-word-limit
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.telephone_family"
+                                v-text="errors.telephone_family[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-2" v-if="configuration.mod_renta">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Imagen De Cliente
+                                <span class="text-danger"></span>
+                            </label>
+                            <el-upload
+                                class="avatar-uploader text-center bg-white"
+                                :data="{ type: 'workers' }"
+                                :headers="headers"
+                                :action="`/${resource}/uploads`"
+                                :show-file-list="false"
+                                :on-success="onSuccess"
+                            >
+                                <img
+                                    v-if="form.image_url"
+                                    :src="form.image_url"
+                                    class="avatar"
+                                />
+                                <i
+                                    v-else
+                                    class="el-icon-plus avatar-uploader-icon"
+                                ></i>
+                            </el-upload>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6" v-if="form.state">
@@ -708,31 +851,6 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.email }"
-                        >
-                            <label class="control-label"
-                                >Correo electrónico</label
-                            >
-                            <el-input
-                                type="email"
-                                v-model="row.email"
-                                @input="toUpperCase('row.email')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.email"
-                                v-text="errors.email[0]"
-                            ></small>
-                        </div>
-                    </div>
                 </div>
 
                 <template
@@ -915,6 +1033,8 @@ export default {
     ],
     data() {
         return {
+            headers: headers_token,
+            image_url: null,
             item_unit_type: null,
             // item_unit_types: [],
             item_unit_types_general: [],
@@ -975,6 +1095,11 @@ export default {
             this.configuration = response.data.configuration;
             this.item_unit_types_general = response.data.item_unit_types;
             this.item_unit_types = this.item_unit_types_general;
+            this.parent = response.data.parent;
+            console.log(
+                "🚀 ~ file: form.vue ~ line 153 ~ created ~ parent",
+                this.parent
+            );
         });
         if (this.fromPos) {
             this.create();
@@ -994,6 +1119,15 @@ export default {
         }
     },
     methods: {
+        onSuccess(response, file, fileList) {
+            if (response.success) {
+                this.form.image = response.data.filename;
+                this.form.image_url = response.data.temp_image;
+                this.form.temp_path = response.data.temp_path;
+            } else {
+                this.$toast.error(response.message);
+            }
+        },
         changeVarios() {
             let { document_type_id } = this.form;
             if (!document_type_id || document_type_id == "01") {
@@ -1054,7 +1188,12 @@ export default {
                 comment: null,
                 addresses: [],
                 seller_id: null,
-                item_unit_types: []
+                item_unit_types: [],
+                ref_origin: null,
+                name_family: null,
+                telephone_family: null,
+                occupation: null,
+                parient_id: null,
             };
         },
         async opened() {

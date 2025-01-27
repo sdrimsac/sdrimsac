@@ -32,10 +32,15 @@
                         <th class="text-white">#</th>
                         <th class="text-white">Nombre</th>
                         <th class="text-white text-center">Creado por Usuario</th>
-                        <th class="text-end text-white">Alias</th>
-                        <th class="text-end text-white">DNI/RUC</th>
-                        <th class="text-end text-white">Zona</th>
-                        <th class="text-end text-white">Telefonos</th>
+                        <th class="text-center text-white">Alias</th>
+                        <th class="text-center text-white">DNI/RUC</th>
+                        <th class="text-center text-white">Zona</th>
+                        <th class="text-center text-white">Telefonos</th>
+
+                        <th class="text-center text-white" v-if="configuration.mod_renta">Procedencia </th>
+                        <th class="text-center text-white" v-if="configuration.mod_renta">Nombre de Familiar</th>
+                        <th class="text-center text-white" v-if="configuration.mod_renta">Telefono  de Familiar</th>
+                        <th class="text-center text-white" v-if="configuration.mod_renta">Ocupacion</th>
                         <th class="text-end text-white">Acciones</th>
                     </tr>
 
@@ -45,10 +50,15 @@
                         <td>{{ row.name }}</td>
                         <td class="text-center">{{ row.user_name }} <br> {{ row.updated_at }}
                         </td>
-                        <td class="text-end">{{ row.alias }}</td>
-                        <td class="text-end">{{ row.number }}</td>
-                        <td class="text-end">{{ row.zone_description }}</td>
-                        <td class="text-end">{{ row.telephone }}</td>
+                        <td class="text-center">{{ row.alias }}</td>
+                        <td class="text-center">{{ row.number }}</td>
+                        <td class="text-center">{{ row.zone_description }}</td>
+                        <td class="text-center">{{ row.telephone }}</td>
+
+                        <td class="text-center" v-if="configuration.mod_renta">{{ row.ref_origin }}</td>
+                        <td class="text-center" v-if="configuration.mod_renta">{{ row.parient_description }} - {{ row.name_family }}</td>
+                        <td class="text-center" v-if="configuration.mod_renta">{{ row.telephone_family }}</td>
+                        <td class="text-center" v-if="configuration.mod_renta">{{ row.occupation }}</td>
                         <td class="text-end">
 
                             <!-- **** -->
@@ -161,12 +171,24 @@ export default {
             showImportDialog: false,
             resource: "persons",
             recordId: null,
-            showDialogPrinter: false
+            showDialogPrinter: false,
+            configuration: {},
         };
     },
-    created() {
+    async created() {
         this.title = this.type === "customers" ? "Clientes" : "Proveedores";
         //    console.log(resource+`/${this.type}`)
+
+        await this.$http.get(`/${this.resource}/tables`).then(response => {
+            
+            this.configuration = response.data.configuration;
+            
+            console.log(
+                "🚀 ~ file: form.vue ~ line 153 ~ created ~ parent",
+                this.parent
+            );
+        });
+        
     },
     methods: {
         clickZones() {

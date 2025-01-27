@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Tenant;
+use Illuminate\Support\Str;
 
 use Exception;
 use App\Models\Tenant\User;
@@ -24,6 +25,7 @@ use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\PersonParient;
 use App\Models\Tenant\UnitTypePerson;
 use App\Models\Tenant\Warehouse;
 use App\Services\RoleService;
@@ -31,6 +33,7 @@ use GuzzleHttp\Client;
 use Modules\Report\Exports\ExportPersonsImport;
 use Carbon\Carbon;
 use Modules\Vip\Models\SocialMedias;
+use Illuminate\Support\Facades\Storage;
 
 class PersonController extends Controller
 {
@@ -61,6 +64,44 @@ class PersonController extends Controller
         $api_service_token = config('configuration.api_service_token');
         return view('tenant.persons.index', compact('type', 'api_service_token', 'is_arca'));
     }
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $new_request = [
+                'file' => $request->file('file'),
+                'type' => $request->input('type'),
+            ];
+
+            return $this->upload_image($new_request);
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+    function upload_image($request)
+    {
+        $file = $request['file'];
+        $type = $request['type'];
+
+        $temp = tempnam(sys_get_temp_dir(), $type);
+        file_put_contents($temp, file_get_contents($file));
+
+        $mime = mime_content_type($temp);
+        $data = file_get_contents($temp);
+
+        return [
+            'success' => true,
+            'data' => [
+                'filename' => $file->getClientOriginalName(),
+                'temp_path' => $temp,
+                'temp_image' => 'data:' . $mime . ';base64,' . base64_encode($data)
+            ]
+        ];
+    }
+
+
     public function client_default()
     {
         $establishment_id = auth()->user()->establishment_id;
@@ -152,32 +193,6 @@ class PersonController extends Controller
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
-
-    /* public function getRecords($type, Request $request)
-    {
-        $has_credit_line = $request->credit === 'true';
-
-        $records = Person::where('type', $type);
-
-        if ($request->filled('column') && $request->column === 'description') {
-            
-            $records = $records->whereHas('zone', function ($query) use ($request) {
-                $query->where('description', 'like', "%{$request->value}%");
-            })
-                ->join('client_zones', 'persons.client_zone_id', '=', 'client_zones.id')
-                ->orderBy('client_zones.description');
-        } elseif ($request->filled('column') && !empty($request->column)) {
-
-            $records = $records->where($request->column, 'like', "%{$request->value}%")
-                ->orderBy($request->column);
-        }
-
-        if ($has_credit_line) {
-            $records = $records->where('has_credit_line', $has_credit_line);
-        }
-        return $records;
-    } */
-
     public function getRecords($type, Request $request)
     {
         $has_credit_line = $request->credit === 'true';
@@ -234,6 +249,7 @@ class PersonController extends Controller
     public function tables()
     {
         $users = User::orderBy('name')->get();
+        $parent = PersonParient::all();
         // $item_unit_types = ItemUnitType::
         $item_unit_types = ItemUnitType::pluck('description')->unique()->values();
         $countries = Country::whereActive()->orderByDescription()->get();
@@ -261,7 +277,8 @@ class PersonController extends Controller
             'locations',
             'person_types',
             'api_service_token',
-            'users'
+            'users',
+            'parent',
         );
     }
 
@@ -289,6 +306,7 @@ class PersonController extends Controller
         $user_id = auth()->id();
         $person->user_id = $user_id;
         $person->save();
+        $temp_path = $request->input('temp_path');
         UnitTypePerson::where('customer_id', $person->id)->delete();
         $item_unit_types = $request->input('item_unit_types');
         if ($request->input('item_unit_types')) {
@@ -304,6 +322,23 @@ class PersonController extends Controller
                 $person->addresses()->updateOrCreate(['id' => $row['id']], $row);
             }
         }
+        if ($temp_path) {
+            $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
+            $file_name_old = $request->input('image');
+            $file_name_old_array = explode('.', $file_name_old);
+            $file_content = file_get_contents($temp_path);
+
+            $datenow = date('YmdHis');
+            $file_name = Str::slug($person->name) . '-' . $datenow . '.' . end($file_name_old_array);
+
+            Storage::put($directory . $file_name, $file_content);
+            $person->image = $file_name;
+        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+            /* $user->image = 'user.png'; */
+            $person->image = User::DEFAULT_USER_IMAGE;
+        }
+        $person->save();
+
         return [
             'success' => true,
             'message' => ($id) ? 'Cliente editado con éxito' : 'Cliente registrado con éxito',

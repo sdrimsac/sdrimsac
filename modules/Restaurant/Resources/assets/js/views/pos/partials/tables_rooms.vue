@@ -352,13 +352,22 @@
                                 }}
                             </button>
                         </template>
+                        <button 
+                            v-if="configuration.mod_renta"
+                            type="button"
+                            class="btn btn-info btn-sm"
+                            @click="pdf(currentRoom.id)"
+                            style="margin-top:20px;"
+                        >
+                            Imprimir Contrato
+                        </button>
                         <button
                             type="button"
                             class="btn btn-success btn-sm"
                             @click="createOrden"
                             style="margin-top:20px;"
                         >
-                            Ordenar
+                            Ordenar 
                         </button>
                         <button
                             v-if="currentRoom.has_services"
@@ -1152,6 +1161,9 @@ export default {
         }
     },
     methods: {
+        pdf (id) {
+            window.open(`/caja/rooms/pdf/${id}`, '_blank');
+        },
         clickShowVariationModal() {
             this.showVariationModal = true;
         },
@@ -1555,7 +1567,6 @@ export default {
                 this.close();
             }
         },
-
         createOrden() {
             let { number, id, is_room } = this.currentTable;
             this.$emit("creatingOrden", number, id, is_room);

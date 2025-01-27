@@ -16,6 +16,13 @@ class PersonCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             return [
+                'parient_id' => $row->parient_id,
+                /* 'parient' => $row->parient ? $row->parient->description : '', */
+                'parient_description' => $row->parient ? $row->parient->description : '',
+                'image' => $row->image,
+                'telephone_family' => $row->telephone_family,
+                'name_family' => $row->name_family,
+                'ref_origin' => $row->ref_origin,
                 'document_type_id' => $row->document_type_id,
                 'alias' => $row->alias,
                 'adderss_secondary' => $row->adderss_secondary,
@@ -47,6 +54,8 @@ class PersonCollection extends ResourceCollection
                 'updated_at' => $row->updated_at ? $row->updated_at->format('Y-m-d H:i:s') : '',
                 'item_unit_types' => $row->item_unit_types->pluck('description')->values(),
                 'user_name' => $row->user ? $row->user->name : '',
+                'occupation' => $row->occupation,
+                'image_url' => ($row->image !== 'user.png') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR . $row->image) : asset("/status_images/{$row->image}"),
             ];
         });
     }

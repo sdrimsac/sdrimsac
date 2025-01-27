@@ -15,6 +15,12 @@ class PersonResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'parient_id' => $this->parient_id,
+            'occupation' => $this->occupation,
+            'ref_origin' => $this->ref_origin,
+            'name_family' => $this->name_family,
+            'telephone_family' => $this->telephone_family,
+            'image' => $this->image,
             'varios' => (bool) $this->varios,
             'alias' => $this->alias,
             'adderss_secondary' => $this->adderss_secondary,
@@ -53,6 +59,7 @@ class PersonResource extends JsonResource
             }),
             'client_zone_id' => $this->client_zone_id,
             'item_unit_types' => $this->item_unit_types->pluck('description')->values(),
+            'image_url' => ($this->image !== 'user.png') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR . $this->image) : asset("/status_images/{$this->image}"),
 
             // 'more_address' =>  $this->more_address,
         ];

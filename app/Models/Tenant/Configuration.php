@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'mod_renta',    
         'credit_nv_show_pending',
         'edit_price',
         'odontologia',
@@ -295,6 +296,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'mod_renta' => 'boolean',
         'credit_nv_show_pending' => 'boolean',
         'edit_price' => 'boolean',
         'odontologia' => 'boolean',
@@ -533,6 +535,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'mod_renta' => (bool)$this->mod_renta,
             'credit_nv_show_pending' => (bool)$this->credit_nv_show_pending,
             'edit_price' => (bool)$this->edit_price,
             'odontologia' => (bool)$this->odontologia,
