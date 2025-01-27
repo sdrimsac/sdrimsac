@@ -78,7 +78,6 @@ class PurchaseCollection extends ResourceCollection
                         'unit_type_id' => $row->item->unit_type_id,
                         'max_quantity' => $item->max_quantity,
                         'max_quantity_description' => $item->max_quantity_description,
-
                     ];
                 }),
             ];

@@ -788,12 +788,19 @@
                         </li>
                     @endif
                     {{-- @if ($user->type == 'superadmin' || $config->sale_note_venta) --}}
-                    {{-- <li>
-                        <a class="{{ $path[0] === 'notaventa' ? 'active' : '' }}"
-                            href="{{ route('tenant.notaventa.index') }}">
-                            <i class="icofont-list"></i> Reporte de Facturas y Boletas Notas Creditos Anulados
-                    </li> --}}
+                        <li>
+                            <a class="{{ $path[0] === 'purchases' ? 'active' : '' }}"
+                                href="{{ route('tenant.shopping.index') }}">
+                                <i class="icofont-list"></i> Productos Comprados
+                            </a>
+                        </li>
                     {{-- @endif --}}
+                    {{-- <li>
+                        <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                            href="{{ route('tenant.purchases.create') }}">
+                            <i class="icofont-credit-card"></i> Nueva Compras
+                        </a>
+                    </li> --}}
 
                     @if ($config->maderera && !$roleService->isLogistic())
                         <li>

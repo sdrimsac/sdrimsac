@@ -528,6 +528,9 @@ const app = new Vue({
         "tenant-purchases-index": () => import("./views/purchases/index.vue"),
         "tenant-purchases-form": () => import("./views/purchases/form.vue"),
 
+        "tenant-shopping-index": () =>
+            import("./views/purchases/shopping/index.vue"),
+
         "tenant-purchases-edit": () =>
             import("./views/purchases/form_edit.vue"),
 

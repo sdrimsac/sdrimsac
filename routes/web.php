@@ -71,9 +71,9 @@ if ($hostname) {
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
 
             Route::post('users/cambiar_contrasena', [App\Http\Controllers\Tenant\UserController::class, 'cambiarContrasena'])->name('cambiar_contrasena');
-            
 
-        
+
+
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
@@ -443,7 +443,7 @@ if ($hostname) {
 
                 //Items
                 Route::get('items', [App\Http\Controllers\Tenant\ItemController::class, 'index'])->name('tenant.items.index')->middleware(['redirect.level', 'just.admin']);
-                Route::prefix('items/sale-offert')->group(function(){
+                Route::prefix('items/sale-offert')->group(function () {
                     Route::get('get', [App\Http\Controllers\Tenant\ItemController::class, 'getSaleOffert']);
                     Route::post('save', [App\Http\Controllers\Tenant\ItemController::class, 'saveSaleOffert']);
                     Route::post('update', [App\Http\Controllers\Tenant\ItemController::class, 'updateSaleOffert']);
@@ -567,7 +567,6 @@ if ($hostname) {
                         Route::get('/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
                         Route::get('excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excelNota']);
                         Route::get('search/customers', [App\Http\Controllers\Tenant\SaleNoteController::class, 'searchCustomers']);
-
                     });
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
                 Route::get('/records-suma', [App\Http\Controllers\Tenant\DocumentController::class, 'recordsSuma']);
@@ -807,7 +806,22 @@ if ($hostname) {
                 Route::get('purchases/delete/{id}', [App\Http\Controllers\Tenant\PurchaseController::class, 'delete']);
                 Route::post('purchases/import', [App\Http\Controllers\Tenant\PurchaseController::class, 'import']);
                 Route::post('purchases/facturar', [App\Http\Controllers\Tenant\PurchaseController::class, 'updatefacturar']);
-                
+
+
+                // para ver los productos comprados
+                Route::prefix('shopping')
+                    ->group(function () {
+                        Route::get('', [App\Http\Controllers\Tenant\PurchaseController::class, 'index_shopping'])->name('tenant.shopping.index')->middleware(['just.admin']);
+                        /* Route::get('columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns']); */
+                        Route::get('/columnsShopping', [App\Http\Controllers\Tenant\PurchaseController::class, 'columnsShopping']);
+                        Route::get('records', [App\Http\Controllers\Tenant\PurchaseController::class, 'recordsShopping']);
+                        Route::get('data_table', [App\Http\Controllers\Tenant\PurchaseController::class, 'data_table']);
+                        Route::get('excel', [App\Http\Controllers\Tenant\PurchaseController::class, 'excelShopping']);
+                        /* Route::get('search/customers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchCustomers']); */
+                        Route::get('search/supliers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchSupliers']);
+                    });
+
+
 
                 Route::prefix('download-files')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'index'])->name('tenant.download_files.index');
@@ -1194,7 +1208,7 @@ if ($hostname) {
             Route::get('historial/record/{History}', 'System\HistorialController@record');
             Route::post('historial', 'System\HistorialController@store');
             Route::delete('historial/{history}', 'System\HistorialController@destroy');
-            
+
 
             //Users
             Route::get('users/create', 'System\UserController@create')->name('system.users.create');
@@ -1292,4 +1306,3 @@ if ($hostname) {
 
 // Dentro del grupo de rutas existente
 Route::post('quotations/consolidateds/anular-document', [App\Http\Controllers\Tenant\QuotationController::class, 'anularDocument']);
-

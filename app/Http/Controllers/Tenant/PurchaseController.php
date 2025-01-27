@@ -43,6 +43,8 @@ use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Template;
 use App\Exports\PurchaseExport;
+use App\Exports\PurchaseShoppingExport;
+use App\Http\Resources\Tenant\PurchaseShoppingCollection;
 use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
@@ -90,6 +92,11 @@ class PurchaseController extends Controller
         return view('tenant.purchases.index');
     }
 
+    public function index_shopping()
+    {
+        return view('tenant.purchases.shopping');
+    }
+
 
     public function create($purchase_order_id = null)
     {
@@ -103,6 +110,17 @@ class PurchaseController extends Controller
     }
 
     public function columns()
+    {
+        return [
+            'number' => 'Número',
+            'date_of_issue' => 'Fecha de emisión',
+            'date_of_due' => 'Fecha de vencimiento',
+            'date_of_payment' => 'Fecha de pago',
+            'name' => 'Nombre proveedor',
+        ];
+    }
+
+    public function columnsShopping()
     {
         return [
             'number' => 'Número',
@@ -133,12 +151,34 @@ class PurchaseController extends Controller
             ->establishment($establishment)
             ->download('ReporteKar' . Carbon::now() . '.xlsx');
     }
+    function excelShopping(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+        $records = $this->getRecordsShopping($request, false, true)->get();
+        $company = Company::first();
+        $establishment = Establishment::first();
+
+
+        return (new PurchaseShoppingExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_productos_comprados' . Carbon::now() . '.xlsx');
+    }
     public function records(Request $request)
     {
 
         $records = $this->getRecords($request);
 
         return new PurchaseCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    public function recordsShopping(Request $request)
+    {
+
+        $records = $this->getRecordsShopping($request);
+
+        return new PurchaseShoppingCollection($records->paginate(config('tenant.items_per_page')));
     }
 
     public function getRecords($request)
@@ -185,6 +225,157 @@ class PurchaseController extends Controller
         // dd($request->column,$records->get());
         return $records;
     }
+
+    public function getRecordsShopping(Request $request)
+    {
+        $records = Purchase::query();
+
+        if ($request->supplier_id) {
+            $records = $records->where('supplier_id', $request->supplier_id);
+        }
+        if ($request->state_type_id) {
+            $records = $records->where('state_type_id', $request->state_type_id);
+        }
+        if ($request->number) {
+            $records = $records->where('number', $request->number);
+        }
+        if ($request->date_end && preg_match('/^\d{4}-\d{2}$/', $request->date_end)) {
+            $startOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $request->date_end)->startOfMonth()->toDateString();
+            $endOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $request->date_end)->endOfMonth()->toDateString();
+
+            $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
+        } elseif ($request->date_start || $request->date_end) {
+            if ($request->date_start && $request->date_end) {
+                $records->whereBetween('date_of_issue', [$request->date_start, $request->date_end]);
+            } else {
+                $records->where('date_of_issue', $request->date_start ?? $request->date_end);
+            }
+        }
+        if ($request->series) {
+            $records = $records->where('series', 'like', '%' . $request->series . '%');
+        }
+        if ($request->description) {
+            $records = $records->whereHas('items', function ($query) use ($request) {
+                $query->whereHas('item', function ($subQuery) use ($request) {
+                    $subQuery->where('description', 'like', '%' . $request->description . '%');
+                });
+            });
+        }
+        if ($request->category_id) {
+            $records = $records->whereHas('items', function ($query) use ($request) {
+                $query->whereHas('relation_item', function ($q) use ($request) {
+                    $q->where('category_id', $request->category_id);
+                });
+            });
+        }
+
+        switch ($request->column) {
+            case 'name':
+                if ($request->supplier_id) {
+                    $records = $records->where('supplier_id', $request->supplier_id);
+                } else {
+                    $records = $records->whereHas('suppliers', function ($query) use ($request) {
+                        return $query->where($request->column, 'like', "%{$request->value}%");
+                    });
+                }
+                $records = $records->whereTypeUser()->latest();
+                break;
+
+            case 'date_of_payment':
+                $records = $records->whereHas('purchase_payments', function ($query) use ($request) {
+                    if ($request->end_date) {
+                        return $query->whereBetween($request->column, [$request->value, $request->end_date]);
+                    } else {
+                        return $query->where($request->column, 'like', "%{$request->value}%");
+                    }
+                });
+                if ($request->supplier_id) {
+                    $records = $records->where('supplier_id', $request->supplier_id);
+                }
+                $records = $records->whereTypeUser()->latest();
+                break;
+
+            default:
+                if ($request->end_date) {
+                    $records = $records->whereBetween($request->column, [$request->value, $request->end_date]);
+                } else {
+                    $records = $records->where($request->column, 'like', "%{$request->value}%");
+                }
+                if ($request->supplier_id) {
+                    $records = $records->where('supplier_id', $request->supplier_id);
+                }
+                $records = $records->whereTypeUser()
+                    ->orderBy('id', 'desc')
+                    ->latest();
+                break;
+        }
+
+        return $records;
+    }
+
+    public function searchSupliers(Request $request)
+    {
+        // Get document type IDs based on document type and operation type
+        $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id, $request->operation_type_id);
+        
+        $credit_list = $request->credit_list;
+
+        // Start query with suppliers filter
+        $suppliers = Person::where('type', 'suppliers')
+            ->where(function($query) use ($request) {
+                $query->where('number', 'like', "%{$request->input}%")
+                    ->orWhere('name', 'like', "%{$request->input}%")
+                    ->orWhere('alias', 'like', "%{$request->input}%");
+            })
+            ->whereIn('identity_document_type_id', $identity_document_type_id)
+            ->whereIsEnabled();
+
+        // Add credit filter if needed
+        if ($credit_list) {
+            $suppliers = $suppliers->where('has_credit_line', 1);
+        }
+
+        // Get and transform results
+        $suppliers = $suppliers->orderBy('name')
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => ($row->alias ? $row->alias . ' - ' : '') . $row->number . ' - ' . $row->name,
+                    'name' => $row->name, 
+                    'number' => $row->number,
+                    'has_credit_line' => (bool) $row->has_credit_line,
+                    'credit_line' => $row->credit_line,
+                    'identity_document_type_id' => $row->identity_document_type_id,
+                    'identity_document_type_code' => $row->identity_document_type->code,
+                    'addresses' => $row->addresses,
+                    'address' => $row->address
+                ];
+            });
+
+        return compact('suppliers');
+    }
+
+    public function getIdentityDocumentTypeId($document_type_id, $operation_type_id)
+    {
+
+        if ($operation_type_id === '0101' || $operation_type_id === '1001') {
+            if ($document_type_id == '01') {
+                $identity_document_type_id = [6];
+            } else {
+                if (config('tenant.document_type_03_filter')) {
+                    $identity_document_type_id = [1];
+                } else {
+                    $identity_document_type_id = [1, 4, 6, 7, 0];
+                }
+            }
+        } else {
+            $identity_document_type_id = [1, 4, 6, 7, 0];
+        }
+
+        return $identity_document_type_id;
+    }
+    
 
     public function tables()
     {
