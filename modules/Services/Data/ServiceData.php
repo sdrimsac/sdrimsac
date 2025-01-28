@@ -15,7 +15,8 @@ class ServiceData
     public static function exchange_rate($date = null)
     {
 
-        $exchange_rate = ExchangeRate::where('date', $date)->first();
+        $fecha = $date ??  Carbon::now()->format('y-m-d');
+        $exchange_rate = ExchangeRate::where('date', $fecha)->first();
         if ($exchange_rate) {
             return $exchange_rate->sale;
         }
