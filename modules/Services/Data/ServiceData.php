@@ -2,6 +2,7 @@
 
 namespace Modules\Services\Data;
 
+use App\Models\System\ExchangeRate;
 use GuzzleHttp\Client;
 use App\Models\Tenant\Configuration;
 use Carbon\Carbon;
@@ -12,6 +13,11 @@ class ServiceData
 {
     public static function exchange_rate($date = null)
     {
+
+        $exchange_rate = ExchangeRate::where('date', $date)->first();
+        if ($exchange_rate) {
+            return $exchange_rate->sale;
+        }
         $url_api_peru = config('app.api_peru_service_url');
         $token_api_peru = config('app.api_peru_service_token');
         $full_url_api_peru = $url_api_peru . "/tipo_de_cambio";
@@ -25,6 +31,11 @@ class ServiceData
             $body = $response2->json();
             $data = $body['data'];
             $venta = $data['venta'];
+            ExchangeRate::create([
+                'date' => $fecha,
+                'sale' => $venta,
+                'purchase' => 0,
+            ]);
             return $venta;
         }
         return 1;
