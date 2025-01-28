@@ -119,22 +119,41 @@
                     </div>
                 </div>
             </div>
+            <div class="section-content mt-4">
+                <!-- Sección: Odontograma -->
+                <odontograma
+                    v-if="section === 'odontograma'"
+                    :record-id="recordId"
+                />
+                
+                <!-- Otras secciones (ejemplo) -->
+                <div v-if="section === 'info'">
+                    <p>Información del paciente...</p>
+                </div>
+                <div v-if="section === 'exploracion'">
+                    <p>Exploración física...</p>
+                </div>
+                <div v-if="section === 'diagnostico'">
+                    <p>Exploración física...</p>
+                </div>
+                <div v-if="section === 'evolucion'">
+                    <p>Exploración física...</p>
+                </div>
+                <div v-if="section === 'tratamientos'">
+                    <p>Exploración física...</p>
+                </div>
+                <div v-if="section === 'cita'">
+                    <p>Exploración física...</p>
+                </div>
+            </div>
         </form>
-        <!-- <car-vehicle
-            :showDialog.sync="showDialogCarVehicle"
-            :vehiculoId="selectedVehiculoId"
-            :recordId="recordId"
-            @actualizar="getData"
-        ></car-vehicle> -->
     </el-dialog>
 </template>
 <script>
-/* import CarVehicle from "./car_vehicle.vue"; */
 import Odontograma from "./odontograma.vue";
 export default {
-    props: ["showDialog", "vehiculoId"],
+    props: ["showDialog", "recordId"],
     components: {
-        /* CarVehicle, */
         Odontograma
     },
     data() {

@@ -114,9 +114,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- <Form-Teeth
+                <Form-Teeth
                     ref="modalTooth"
-                    @deleteDetail="deleteDetail"
+                    
                     :line="line"
                     :ranges.sync="ranges"
                     :repaint="repaint"
@@ -125,7 +125,7 @@
                     :current_tooth.sync="current_tooth"
                     :tooth_details="tooth_details"
                     :id.sync="id"
-                ></Form-Teeth> -->
+                ></Form-Teeth>
                 <button
                     style="display: none"
                     id="lauch_modal"
@@ -139,11 +139,11 @@
     </div>
 </template>
 <script>
-/* import FormTeeth from "./formTeeth.vue"; */
+import FormTeeth from "./formTeeth.vue";
 export default {
-    /* components: {
+    components: {
         FormTeeth,
-    }, */
+    },
     data() {
         return {
             currentImage: 1,
@@ -158,6 +158,10 @@ export default {
             repaint: false,
             currentImage: null
         };
+    },
+    mounted() {
+        const modal = document.getElementById("lauch_modal");
+        /* this.getTeeth(); */
     },
     methods: {
         openImage(image) {

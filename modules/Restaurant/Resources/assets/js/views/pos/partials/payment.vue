@@ -2347,7 +2347,7 @@ export default {
         },
         selectDocumentType(id) {
             this.form.document_type_id = id;
-            this.filterSeries(); // Llama al método filterSeries cuando se cambia el valor
+            this.filterSeries();
         },
         updateDialogWidth() {
             // Cambiar el ancho según el tamaño de la pantalla
@@ -2557,15 +2557,15 @@ export default {
         },
 
         isClientesVarios() {
-            let id = this.value;
-            if (id != null) {
-                let customer = this.customers.find(c => c.id == id);
-                if (customer && customer.number == "99999999") {
-                    return true;
-                }
-            }
-
-            return false;
+            
+            if (!this.value) return false;
+            
+            const customer = this.customers.find(c => c.id === this.value);
+            
+            return !!(customer && (
+                customer.number === "99999999" || 
+                customer.name.toLowerCase().includes("Clientes Varios")
+            ));
         },
         checkTotal(newMethod) {
             

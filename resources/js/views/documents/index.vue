@@ -147,9 +147,9 @@
                                         Acciones
                                     </th>
                                     <th class="text-white">#</th>
-                                    <th class="text-white text-center">
+                                    <!-- <th class="text-white text-center">
                                         Actividad
-                                    </th>
+                                    </th> -->
                                     <!-- <th class="text-white">D. E. USUARIO</th> -->
                                     <th
                                         class="text-white"
@@ -500,7 +500,7 @@
                                     >
                                         {{ index }}
                                     </td>
-                                    <td class="text-center">
+                                    <!-- <td class="text-center">
                                         <div
                                             v-if="
                                                 row.last_register &&
@@ -531,18 +531,18 @@
                                                             .date_time.is24Hours
                                                 }"
                                             >
-                                                <!-- {{
+                                                 {{
                                                     formatDateTime(
                                                         row.last_register
                                                             .date_time
                                                     )
                                                 }} -->
-                                                {{
+                                                <!-- {{
                                                     row.last_register.created_at
                                                 }}
-                                            </span>
-                                        </div>
-                                    </td>
+                                            </span> -->
+                                        <!-- </div>
+                                    </td> -->
                                     <td
                                         :class="{
                                             'text-dark':

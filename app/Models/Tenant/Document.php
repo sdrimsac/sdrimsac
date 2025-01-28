@@ -194,7 +194,7 @@ class Document extends ModelTenant
                 Log::error($message);
             }
         });
-        static::updated(function ($model) {
+        /* static::updated(function ($model) {
             $type = $model->get_document_type();
             $request = Request::capture();
             $description = null;
@@ -225,7 +225,7 @@ class Document extends ModelTenant
                     $created_at
                 );
             }
-        );
+        ); */
     }
     public function hasDuplicate($serie, $number, $soap_type_id)
     {
