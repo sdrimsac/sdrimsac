@@ -8,6 +8,7 @@ use App\Models\Tenant\Configuration;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ServiceData
 {
@@ -18,6 +19,7 @@ class ServiceData
         if ($exchange_rate) {
             return $exchange_rate->sale;
         }
+        Log::warning('No se encontró el tipo de cambio para la fecha: ' . $date."haciendo consulta");
         $url_api_peru = config('app.api_peru_service_url');
         $token_api_peru = config('app.api_peru_service_token');
         $full_url_api_peru = $url_api_peru . "/tipo_de_cambio";
