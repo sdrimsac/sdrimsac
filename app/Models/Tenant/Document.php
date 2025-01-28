@@ -158,7 +158,7 @@ class Document extends ModelTenant
                 Log::error($message);
             }
         }); */
-        static::created(function ($model) {
+        /* static::created(function ($model) {
             // Registro del movimiento de creación
             $type = $model->get_document_type();
             $request = Request::capture();
@@ -193,7 +193,7 @@ class Document extends ModelTenant
                 $message = $e->getMessage();
                 Log::error($message);
             }
-        });
+        }); */
         /* static::updated(function ($model) {
             $type = $model->get_document_type();
             $request = Request::capture();

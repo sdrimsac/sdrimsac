@@ -156,7 +156,7 @@ class DocumentCollection extends ResourceCollection
             return [
                 'internal_voided' => (bool) $row->internal_voided,
                 /* 'seller_id' => $row->seller_id, */
-                'last_register' => $this->get_last_document($row),
+                /* 'last_register' => $this->get_last_document($row), */
                 'ordens_ref' => $ordens_ref,
                 'table_number' => $table_number,
                 'sale_note_related' => $sale_note_related,
@@ -256,7 +256,7 @@ class DocumentCollection extends ResourceCollection
 
         return $dispatches;
     }
-    function get_last_document($row){
+    /* function get_last_document($row){
         $last_register_movement = RegisterMovement::where('model', Document::class)
             ->where('model_id', $row->id)
             ->whereHas('user', function ($query) {
@@ -282,8 +282,8 @@ class DocumentCollection extends ResourceCollection
             ];
         }
         return $data;
-    }
-    function get_date_difference($created_at){
+    } */
+    /* function get_date_difference($created_at){
         $currentDay = Carbon::now();
         $created_at = Carbon::parse($created_at);
         
@@ -304,5 +304,5 @@ class DocumentCollection extends ResourceCollection
             'seconds' => $seconds
         ];
         return $data;
-    }
+    } */
 }
