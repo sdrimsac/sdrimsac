@@ -250,10 +250,23 @@
                                                 clickDisguise(row.id)
                                             "
                                         >
-                                        <i
+                                            <i
                                                 class="fas fa-toggle-on fa-lg me-2"
                                             ></i>
-                                           Desactivar
+                                            Desactivar
+                                        </a>
+                                        <a
+                                            v-if="typeUser === 'superadmin'"
+                                            type="button"
+                                            class="dropdown-item text-succcess"
+                                            @click.prevent="
+                                                clickPolitica(row.id)
+                                            "
+                                        >
+                                            <!-- <i
+                                                class="fas fa-toggle-on fa-lg me-2"
+                                            ></i> -->
+                                            Politica en Todo Almacenes
                                         </a>
                                     </div>
                                 </template>
@@ -439,8 +452,16 @@
                                 </button>
 
                                 <el-button
-                                v-if="typeUser == 'superadmin' && !row.is_in_all_warehouses"
-                                type="primary" @click.prevent="clickAddProductToWarehouses(row.id)">Agregar a todos los almacenes</el-button>
+                                    v-if="
+                                        typeUser == 'superadmin' &&
+                                            !row.is_in_all_warehouses
+                                    "
+                                    type="primary"
+                                    @click.prevent="
+                                        clickAddProductToWarehouses(row.id)
+                                    "
+                                    >Agregar a todos los almacenes</el-button
+                                >
                             </td>
                         </tr>
                     </data-table>
@@ -560,16 +581,20 @@ export default {
         this.getWarehouses();
     },
     methods: {
-        clickAddProductToWarehouses(id){
+        clickAddProductToWarehouses(id) {
             this.loading = true;
-            this.$http.get(`/items/warehouses/add-product/${id}`).then(response => {
-                this.$toast.success(response.data.message);
-                this.$eventHub.$emit("reloadData");
-            }).catch(error => {
-                this.$toast.error(error.response.data.message);
-            }).finally(() => {
-                this.loading = false;
-            });
+            this.$http
+                .get(`/items/warehouses/add-product/${id}`)
+                .then(response => {
+                    this.$toast.success(response.data.message);
+                    this.$eventHub.$emit("reloadData");
+                })
+                .catch(error => {
+                    this.$toast.error(error.response.data.message);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         getWarehouses() {
             this.$http.get(`/warehouses/records`).then(response => {
@@ -663,7 +688,6 @@ export default {
             this.warehousesDetail = warehouses;
             this.unit_type = unit_type;
             this.showWarehousesDetail = true;
-        
         },
         clickCreate(recordId = null) {
             this.recordId = recordId;
@@ -728,12 +752,17 @@ export default {
                     showLoaderOnConfirm: true,
                     preConfirm: async selectedWarehouseId => {
                         if (!selectedWarehouseId) {
-                            Swal.showValidationMessage("Debe seleccionar un almacén");
+                            Swal.showValidationMessage(
+                                "Debe seleccionar un almacén"
+                            );
                             return false;
                         }
 
                         try {
-                            const response = await this.disableItemInWarehouse(id, selectedWarehouseId);
+                            const response = await this.disableItemInWarehouse(
+                                id,
+                                selectedWarehouseId
+                            );
                             if (response.success) {
                                 return response;
                             } else {
@@ -774,12 +803,17 @@ export default {
                     showLoaderOnConfirm: true,
                     preConfirm: async selectedWarehouseId => {
                         if (!selectedWarehouseId) {
-                            Swal.showValidationMessage("Debe seleccionar un almacén");
+                            Swal.showValidationMessage(
+                                "Debe seleccionar un almacén"
+                            );
                             return false;
                         }
 
                         try {
-                            const response = await this.enableItemInWarehouse(id, selectedWarehouseId);
+                            const response = await this.enableItemInWarehouse(
+                                id,
+                                selectedWarehouseId
+                            );
                             if (response.success) {
                                 return response;
                             } else {
@@ -812,7 +846,7 @@ export default {
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Desactivar",
+                confirmButtonText: "Desactivar"
             }).then(result => {
                 if (result.isConfirmed) {
                     axios
@@ -822,10 +856,55 @@ export default {
                                 swal.fire({
                                     title: "Desactivado",
                                     text: response.data.message,
-                                    icon: "success"
+                                    icon: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false
                                 });
                                 this.$eventHub.$emit("reloadData");
-                                
+                            } else {
+                                swal.fire({
+                                    title: "Error",
+                                    text: response.data.message,
+                                    icon: "error"
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            swal.fire({
+                                title: "Error",
+                                text:
+                                    "Hubo un problema al intentar realizar la acción",
+                                icon: "error"
+                            });
+                        });
+                }
+            });
+        },
+
+        clickPolitica(id) {
+            swal.fire({
+                title: "¿ESTAS SEGURO?",
+                text:
+                    "recuerda al realizar este proceso se aplicara la politica de precios en todos los almacenes",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si"
+            }).then(result => {
+                if (result.isConfirmed) {
+                    axios
+                        .get(`/items/politica/${id}`)
+                        .then(response => {
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: "EXITO",
+                                    text: response.data.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                                this.$eventHub.$emit("reloadData");
                             } else {
                                 swal.fire({
                                     title: "Error",

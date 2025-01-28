@@ -287,6 +287,33 @@
                     </el-button
                     >
                 </el-tooltip>
+
+
+                <el-tooltip content="Agregar las politicas en todo los almacenes" placement="top">
+
+                    <el-button
+                    class="submit"
+                    type="primary"
+                    v-if="typeUser == 'superadmin'"
+                    icon="el-icon-tickets"
+                    @click.prevent="clickAddProductsToPolitica"
+                    >Politicas en todos los almacenes
+                    </el-button
+                    >
+                </el-tooltip>
+
+                <!-- <el-tooltip content="" placement="top">
+
+                    <el-button
+                    class="submit"
+                    type="primary"
+                    v-if="typeUser == 'superadmin'"
+                    icon="el-icon-tickets"
+                    @click.prevent="clickAddProductsToWarehouses"
+                    >Productos en todos los almacenes
+                    </el-button
+                    >
+                </el-tooltip> -->
                 </div>
             </div>
             <div class="col-md-12">
@@ -409,6 +436,20 @@ export default {
         }
     },
     methods: {
+        clickAddProductsToPolitica() {
+            this.loading = true;
+            this.$http.get(`/items/warehouse`).then(response => {
+                this.$showSAlert("EXITO", "Politicas agreagadas correctamente a todos los almacenes", "success");
+                /* this.$toast.success("Politicas agregadas correctamente a todos los almacenes"); */
+                this.getRecords();
+            }).catch(error => {
+                this.loading = false;
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
+
         clickAddProductsToWarehouses() {
             this.loading = true;
             this.$http.get(`/items/warehouses/add-products`).then(response => {

@@ -97,7 +97,6 @@ class QuotyController extends Controller
         $state = $request['state'];
         $speciality = $request["current_speciality"];
 
-        //  dump($request->all());
         try {
             if (!$avance) {
                 $date = Carbon::parse($date, 'America/Lima');

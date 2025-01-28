@@ -261,7 +261,7 @@ class Item extends ModelTenant
             'CatItemStatus' => $ItemStatus,
             'CatItemSize' => $ItemSize,
             'CatItemUnitBusiness' => $ItemUnitBusiness,
-            'item_unit_types'                  => $this->item_unit_types->transform(function ($item_unit_types) {
+            'item_unit_types'  => $this->item_unit_types->transform(function ($item_unit_types) {
                 if (is_array($item_unit_types)) {
                     return $item_unit_types;
                 }

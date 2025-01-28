@@ -524,18 +524,153 @@ class ItemController extends Controller
             'message' => 'Se verificaron las series'
         ];
     }
-    public function addProductToWarehouses($item_id) {
+
+    public function replicateAllPolicies()
+    {
+        try {
+            DB::connection('tenant')->beginTransaction();
+
+            $warehouse_ids = Warehouse::pluck('id')->toArray();
+
+            $existing_policies = ItemUnitType::whereNotNull('warehouse_id')
+                ->select('item_id', 'warehouse_id', 'unit_type_id')
+                ->get()
+                ->map(function ($item) {
+                    return $item->item_id . '-' . $item->warehouse_id . '-' . $item->unit_type_id;
+                })
+                ->toArray();
+                
+            $all_policies = ItemUnitType::whereNotNull('warehouse_id')->get();
+            
+            $created_count = 0;
+
+            foreach ($all_policies as $policy) {
+                foreach ($warehouse_ids as $warehouse_id) {
+                    
+                    if ($policy->warehouse_id == $warehouse_id) {
+                        continue;
+                    }
+
+                    $policy_key = $policy->item_id . '-' . $warehouse_id . '-' . $policy->unit_type_id;
+
+                    if (!in_array($policy_key, $existing_policies)) {
+                        
+                        $new_policy = new ItemUnitType();
+                        $new_policy->item_id = $policy->item_id;
+                        $new_policy->unit_type_id = $policy->unit_type_id;
+                        $new_policy->description = $policy->description;
+                        $new_policy->warehouse_id = $warehouse_id;
+                        $new_policy->quantity_unit = $policy->quantity_unit;
+                        $new_policy->price1 = $policy->price1;
+                        $new_policy->price2 = $policy->price2;
+                        $new_policy->price3 = $policy->price3;
+                        $new_policy->price_default = $policy->price_default;
+                        $new_policy->total = $policy->total;
+                        $new_policy->qty_min = $policy->qty_min;
+                        $new_policy->qty_free = $policy->qty_free;
+                        $new_policy->has_promotion = $policy->has_promotion;
+                        $new_policy->qty_max = $policy->qty_max;
+                        $new_policy->save();
+
+                        // Replicate price ranges if they exist
+                        foreach ($policy->item_unit_type_price_ranges as $range) {
+                            $new_range = $range->replicate();
+                            $new_range->item_unit_type_id = $new_policy->id;
+                            $new_range->save();
+                        }
+
+                        Log::info("Nueva política replicada al almacén {$warehouse_id} para el item {$policy->item_id}");
+                        $created_count++;
+                    }
+                }
+            }
+
+            DB::connection('tenant')->commit();
+
+            return [
+                'success' => true,
+                'message' => "Se replicaron {$created_count} políticas a otros almacenes exitosamente"
+            ];
+
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            Log::error($e->getMessage());
+
+            return [
+                'success' => false,
+                'message' => 'Error al replicar las políticas: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function addProductToPolitica($item_id)
+    {
+        try {
+
+            $policies = ItemUnitType::where('item_id', $item_id)->get();
+
+            if ($policies->count() > 0) {
+
+                $warehouses = Warehouse::all();
+                $created_count = 0;
+
+                foreach ($warehouses as $warehouse) {
+                    foreach ($policies as $policy) {
+
+                        $exists = ItemUnitType::where([
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse->id,
+                            'unit_type_id' => $policy->unit_type_id,
+                            'description' => $policy->description
+                        ])->exists();
+
+                        if (!$exists) {
+                            $new_policy = $policy->replicate();
+                            $new_policy->warehouse_id = $warehouse->id;
+                            $new_policy->save();
+
+                            foreach ($policy->item_unit_type_price_ranges as $range) {
+                                $new_range = $range->replicate();
+                                $new_range->item_unit_type_id = $new_policy->id;
+                                $new_range->save();
+                            }
+
+                            $created_count++;
+                        }
+                    }
+                }
+
+                return [
+                    'success' => true,
+                    'message' => "Se replicaron {$policies->count()} políticas en los nuevos almacenes exitosamente"
+                ];
+            }
+
+            return [
+                'success' => true,
+                'message' => 'El producto no tiene políticas de precios para replicar'
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al replicar políticas de precios: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function addProductToWarehouses($item_id)
+    {
         try {
             $item = Item::find($item_id);
             $warehouses = Warehouse::all();
             $created_count = 0;
 
-            foreach($warehouses as $warehouse) {
+            foreach ($warehouses as $warehouse) {
                 // Verificar si ya existe el registro
                 $exists = ItemWarehouse::where('item_id', $item->id)
-                                     ->where('warehouse_id', $warehouse->id)
-                                     ->exists();
-                
+                    ->where('warehouse_id', $warehouse->id)
+                    ->exists();
+
                 // Solo crear si no existe
                 if (!$exists) {
                     ItemWarehouse::create([
@@ -553,7 +688,6 @@ class ItemController extends Controller
                 'success' => true,
                 'message' => "Se agregó el producto a {$created_count} almacenes nuevos"
             ];
-
         } catch (Exception $e) {
             return [
                 'success' => false,
@@ -561,27 +695,28 @@ class ItemController extends Controller
             ];
         }
     }
-    public function addProductsToWarehouses() {
+    public function addProductsToWarehouses()
+    {
         try {
             DB::connection('tenant')->beginTransaction();
-            
+
             // Obtener todos los IDs de almacenes
             $warehouse_ids = Warehouse::pluck('id')->toArray();
-            
+
             // Obtener las combinaciones existentes de item_id y warehouse_id
             $existing_combinations = ItemWarehouse::select('item_id', 'warehouse_id')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return $item->item_id . '-' . $item->warehouse_id;
                 })
                 ->toArray();
-            
+
             // Procesar items en chunks y preparar inserciones masivas
-            Item::chunk(500, function($items) use ($warehouse_ids, $existing_combinations) {
+            Item::chunk(500, function ($items) use ($warehouse_ids, $existing_combinations) {
                 $records_to_insert = [];
-                
-                foreach($items as $item) {
-                    foreach($warehouse_ids as $warehouse_id) {
+
+                foreach ($items as $item) {
+                    foreach ($warehouse_ids as $warehouse_id) {
                         // Verificar si la combinación ya existe
                         if (!in_array($item->id . '-' . $warehouse_id, $existing_combinations)) {
                             $records_to_insert[] = [
@@ -594,7 +729,7 @@ class ItemController extends Controller
                         }
                     }
                 }
-                
+
                 // Insertar en lotes si hay registros
                 if (!empty($records_to_insert)) {
                     ItemWarehouse::insert($records_to_insert);
@@ -602,22 +737,22 @@ class ItemController extends Controller
             });
 
             DB::connection('tenant')->commit();
-            
+
             return [
                 'success' => true,
                 'message' => 'Productos agregados correctamente a todos los almacenes'
             ];
-
         } catch (Exception $e) {
             DB::connection('tenant')->rollBack();
             Log::error($e->getMessage());
-            
+
             return [
                 'success' => false,
                 'message' => 'Error al agregar productos a los almacenes: ' . $e->getMessage()
             ];
         }
     }
+
     public function columns()
     {
         return [
