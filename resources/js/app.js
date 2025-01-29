@@ -433,6 +433,11 @@ const app = new Vue({
             import(
                 "../../modules/Billar/Resources/assets/js/views/configuration/items.vue"
             ),
+
+        /* "tenant-items-index": () =>
+            import(
+                "../../modules/items/Resources/assets/js/views/configuration/items.vue"
+            ), */
         
 
         "restaurant-ordens-index": () =>
@@ -498,6 +503,7 @@ const app = new Vue({
         //
         "tenant-items-client": () => import("./views/items/items_client.vue"),
         "tenant-items-index": () => import("./views/items/index.vue"),
+        "tenant-catalog-index": () => import("./views/items/catalog/index.vue"),
         "tenant-persons-index": () => import("./views/persons/index.vue"),
 
         "tenant-users-form": () => import("./views/users/form.vue"),
@@ -538,6 +544,7 @@ const app = new Vue({
 
         "tenant-shopping-index": () =>
             import("./views/purchases/shopping/index.vue"),
+        
 
         "tenant-purchases-edit": () =>
             import("./views/purchases/form_edit.vue"),

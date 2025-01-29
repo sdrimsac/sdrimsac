@@ -147,9 +147,9 @@
                                         Acciones
                                     </th>
                                     <th class="text-white">#</th>
-                                    <!-- <th class="text-white text-center">
+                                    <th class="text-white text-center">
                                         Actividad
-                                    </th> -->
+                                    </th>
                                     <!-- <th class="text-white">D. E. USUARIO</th> -->
                                     <th
                                         class="text-white"
@@ -307,9 +307,10 @@
                                                             '11'
                                                     "
                                                 >
-                                                    <a
+                                                    <a 
+                                                        
                                                         type="button"
-                                                        class="dropdown-item"
+                                                        class="dropdown-item bg-info text-white"
                                                         @click.prevent="
                                                             clickDeleteDocument(
                                                                 row.id
@@ -499,6 +500,15 @@
                                         }"
                                     >
                                         {{ index }}
+                                    </td>
+                                    <td> 
+                                        <el-button 
+                                            type="primary" 
+                                            @click="clickView(row.id)"
+                                         
+                                         >
+                                            Ver Movimiento
+                                        </el-button>
                                     </td>
                                     <!-- <td class="text-center">
                                         <div

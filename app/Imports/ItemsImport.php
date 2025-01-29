@@ -43,6 +43,7 @@ class ItemsImport implements ToCollection
         $errors = [];
         unset($rows[0]);
         foreach ($rows as $row) {
+            $weight = ($row[50]) ? $row[50] : '0.00';
             $origin = ($row[49] ?: null);
             $quality = ($row[48] ?: null);
             $model = ($row[47] ?: null);
@@ -145,6 +146,7 @@ class ItemsImport implements ToCollection
                         try {
                             DB::connection('tenant')->beginTransaction();
                             $item = Item::create([
+                                'weight' => $weight,
                                 'origin' => $origin,
                                 'quality' => $quality,
                                 'model' => $model,
@@ -275,6 +277,7 @@ class ItemsImport implements ToCollection
                     } else {
 
                         $item->update([
+                            'weight' => $weight,
                             'origin' => $origin,
                             'quality' => $quality,
                             'model' => $model,

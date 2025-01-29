@@ -162,6 +162,20 @@
                         </el-select>
                     </div> -->
                     <div class="col-md-4">
+                        <label for="name">Tipo de Alquiler</label>
+                        <el-select
+                            v-model="room.table_type_id"
+                            @change="filterTable_types(room.table_type_id, idx)"
+                        >
+                            <el-option
+                                v-for="option in table_types"
+                                :key="option.id"
+                                :label="option.name"
+                                :value="option.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-4">
                         <label for="name">Torre</label>
                         <el-select
                             v-model="room.tower_id"
