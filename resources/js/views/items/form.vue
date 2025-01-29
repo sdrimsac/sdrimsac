@@ -3346,9 +3346,10 @@ export default {
                 return {
                     ...i,
                     selected,
-                    total: (Number(i.price2) * Number(i.quantity_unit)).toFixed(
-                        2
-                    )
+                    total: i.total,
+                    // total: (Number(i.price2) * Number(i.quantity_unit)).toFixed(
+                    //     2
+                    // )
                 };
             });
         },

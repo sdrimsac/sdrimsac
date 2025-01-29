@@ -48,6 +48,7 @@ class ItemCollection extends ResourceCollection
             } else {
                 $item_unit_types = collect($row->item_unit_types)->transform(function ($row) {
                     return [
+                        'total' => $row->total,
                         'unit_type_id' => $row->unit_type_id,
                         'description' => $row->description,
                         'quantity_unit' => $row->quantity_unit,

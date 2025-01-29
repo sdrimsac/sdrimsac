@@ -847,6 +847,38 @@ class TableRoomController extends Controller
             'message' => 'Infracción eliminada'
         ];
     }
+    public function preparePayment(Request $request){
+        $hotel_rent = HotelRent::find($request->input('hotel_rent_id'));
+        $customer_number = $hotel_rent->customer->number;
+        $infractions = $request->input('infractions');
+        $items = collect();
+        $service = $this->get_item_service();
+        $service->price = $hotel_rent->total;
+        $service->description = "Mensualidad";
+        $service->item->description = "Mensualidad";
+        $items->push([
+            'id' => 0,
+            'observation' => '',
+            'food' => $service,
+            'quantity' => 1,
+            'price' => $service->price,
+        ]);
+        foreach ($infractions as $infraction) {
+            $service = $this->get_item_service();
+            $service->price = $infraction['amount'];
+            $service->description = $infraction['description'];
+            $service->item->description = $infraction['description'];
+            $items->push([
+                'id' => 0,
+                'observation' => '',
+                'food' => $service,
+                'quantity' => 1,
+                'price' => $service->price,
+            ]);
+        }
+        return compact('items', 'customer_number');
+
+    }
     public function storeInfraction(Request $request)
     {
         HotelRentInfraction::create($request->all());
@@ -857,6 +889,29 @@ class TableRoomController extends Controller
         ];
     }
 
+    public  function getAmount($id){
+        $hotel_rent = HotelRent::find($id); 
+        $total = $hotel_rent->total;
+        return [
+            'success' => true,
+            'total' => $total
+        ];
+    }
+    public  function getInfractionsDebt($id){
+        $infractions = HotelRentInfraction::where('hotel_rent_id', $id)->where('paid', false)->get()->transform(function($row){
+            return [
+                'id' => $row->id,
+                'description' => $row->description,
+                'amount' => $row->amount,
+                'paid' => $row->paid,
+                'select' => false
+            ];
+        });
+        return [
+            'success' => true,
+            'infractions' => $infractions
+        ];
+    }
     public  function getInfractions($id)
     {
         $infractions = HotelRentInfraction::where('hotel_rent_id', $id)->get();

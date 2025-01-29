@@ -209,7 +209,7 @@
                                                         size="mini"
                                                         class="m-1"
                                                         @click="
-                                                            seeInfraction(
+                                                            openPayment(
                                                                 $event,
                                                                 table.hotel_rent_id
                                                             )
@@ -1066,6 +1066,11 @@
             :showDialog.sync="showDialogRentDocuments"
             :rentId="rentId"
         ></rent-documents>
+        <rent-payment
+            :showDialog.sync="showDialogRentPayment"
+            :rentId="rentId"
+            @paymentsOrden="paymentsOrden"
+        ></rent-payment>
         <rent-infractions
             :showDialog.sync="showDialogRentInfractions"
             :rentId="rentId"
@@ -1140,6 +1145,7 @@ const PersonForm = () =>
 const NumberPad = () => import("./partials/num_pad.vue");
 const RentDocuments = () => import("./partials/rent_documents.vue");
 const RentInfractions = () => import("./partials/rent_infractions.vue");
+const RentPayment = () => import("./partials/rent_payment.vue");
 const Tables = () => import("./partials/tables.vue");
 const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
@@ -1177,6 +1183,7 @@ export default {
     components: {
         RentInfractions,
         RentDocuments,
+        RentPayment,
         MonthSales,
         EditProduct,
         DispatchModal,
@@ -1200,6 +1207,7 @@ export default {
 
     data() {
         return {
+            showDialogRentPayment: false,
             showDialogRentDocuments: false,
             showDialogRentInfractions: false,
             cash_id: null,
@@ -1515,6 +1523,11 @@ export default {
         }
     },
     methods: {
+        openPayment($event, id){
+            $event.stopPropagation();
+            this.showDialogRentPayment = true;
+            this.rentId = id;
+        },
         seePayments($event, id) {
             $event.stopPropagation();
             this.showDialogRentDocuments = true;
@@ -2694,6 +2707,7 @@ export default {
                 this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
                 this.form.is_advance = form.is_advance;
                 this.form.hotel_rent_id = form.hotel_rent_id;
+                this.form.is_rent_payment = form.is_rent_payment;
                 this.form.hotel_customer_number = form.customer_number;
                 //this.form.caja = true;
             }

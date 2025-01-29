@@ -210,9 +210,11 @@ Route::prefix('caja')->group(function () {
             Route::get('advance-document/{id}', [TableRoomController::class, 'rentDocument']);
             Route::get('get-documents/{id}', [TableRoomController::class, 'getDocuments']);
             Route::get('get-infractions/{id}', [TableRoomController::class, 'getInfractions']);
+            Route::get('get-amount/{id}', [TableRoomController::class, 'getAmount']);
             Route::post('store-infraction', [TableRoomController::class, 'storeInfraction']);
+            Route::post('prepare-payment', [TableRoomController::class, 'preparePayment']);
             Route::delete('remove-infraction/{id}', [TableRoomController::class, 'removeInfraction']);
-
+            Route::get('get-infractions-debt/{id}', [TableRoomController::class, 'getInfractionsDebt']);
 
         });
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
