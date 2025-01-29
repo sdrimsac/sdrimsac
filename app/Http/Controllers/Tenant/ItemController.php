@@ -78,6 +78,7 @@ use App\Models\Tenant\ItemUnitTypePriceRange;
 use App\Models\Tenant\ItemWarranty;
 use App\Models\Tenant\RegisterMovement;
 use App\Models\Tenant\SaleOffertDetail;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class ItemController extends Controller
 {
@@ -544,14 +545,14 @@ class ItemController extends Controller
                     return $item->item_id . '-' . $item->warehouse_id . '-' . $item->unit_type_id;
                 })
                 ->toArray();
-                
+
             $all_policies = ItemUnitType::whereNotNull('warehouse_id')->get();
-            
+
             $created_count = 0;
 
             foreach ($all_policies as $policy) {
                 foreach ($warehouse_ids as $warehouse_id) {
-                    
+
                     if ($policy->warehouse_id == $warehouse_id) {
                         continue;
                     }
@@ -559,7 +560,7 @@ class ItemController extends Controller
                     $policy_key = $policy->item_id . '-' . $warehouse_id . '-' . $policy->unit_type_id;
 
                     if (!in_array($policy_key, $existing_policies)) {
-                        
+
                         $new_policy = new ItemUnitType();
                         $new_policy->item_id = $policy->item_id;
                         $new_policy->unit_type_id = $policy->unit_type_id;
@@ -596,7 +597,6 @@ class ItemController extends Controller
                 'success' => true,
                 'message' => "Se replicaron {$created_count} políticas a otros almacenes exitosamente"
             ];
-
         } catch (Exception $e) {
             DB::connection('tenant')->rollBack();
             Log::error($e->getMessage());
@@ -973,6 +973,30 @@ class ItemController extends Controller
         return $records->orderBy('description', 'ASC');
     }
 
+    /* public function pdf($id)
+    {
+
+        $pdf = PDF::loadView('tenant.catalog.catalog_pdf')
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('catalogo.pdf');
+    } */
+    public function pdfCatalog()
+    {
+        $items = Item::select('internal_id', 'description', 'sale_unit_price', 'image')
+            ->where('active', 1)
+            ->get();
+
+        $company = Company::first();
+
+        $pdf = PDF::loadView('tenant.items.catalog_pdf', [
+            'items' => $items,
+            'company' => $company
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->stream('catalogo.pdf');
+    }
+
 
     public function getRecords($request, $services = true)
     {
@@ -1009,13 +1033,13 @@ class ItemController extends Controller
                 });
                 break;
             case 'description':
-                if ($request->value) {
+                /* if ($request->value) {
                     if (count($textoIntoArray) === 1) {
                         /* $records
                             ->where('description', 'like', "%{$request->value}%")
                             ->orWhere('internal_id', 'like', "%{$request->value}%")
                             ->orWhere('second_name', 'like', "%{$request->value}%")
-                            ->orWhere('active', 'like', "%{$request->value}%"); */
+                            ->orWhere('active', 'like', "%{$request->value}%"); *//*
                             $records->where('description', 'like', "%{$request->value}%")
                             ->orWhere('internal_id', 'like', "%{$request->value}%")
                             ->orWhere('second_name', 'like', "%{$request->value}%")
@@ -1030,12 +1054,38 @@ class ItemController extends Controller
                         /* foreach ($textoIntoArray as $key => $value) {
 
                             $records->where('description', 'like', '%' . $value . '%');
-                        } */
+                        } *//*
                         $records->where('description', 'like', "%{$request->value}%")
                         ->orWhere('internal_id', 'like', "%{$request->value}%")
                         ->orWhere('second_name', 'like', "%{$request->value}%")
                         ->orWhere('active', 'like', "%{$request->value}%");
                     }
+                    $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
+                        ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
+                        ->orderBy('description', 'ASC');
+                }
+                break; */
+                if ($request->value) {
+                    if (count($textoIntoArray) === 1) {
+                        $records->where(function ($query) use ($textoIntoArray) {
+                            foreach ($textoIntoArray as $value) {
+                                $query->orWhere('description', 'like', '%' . $value . '%');
+                            }
+                        })
+                            ->orWhere('internal_id', 'like', "%{$request->value}%")
+                            ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('active', 'like', "%{$request->value}%");
+                    } else {
+                        $records->where(function ($query) use ($textoIntoArray) {
+                            foreach ($textoIntoArray as $value) {
+                                $query->where('description', 'like', '%' . $value . '%');
+                            }
+                        })
+                            ->orWhere('internal_id', 'like', "%{$request->value}%")
+                            ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('active', 'like', "%{$request->value}%");
+                    }
+
                     $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
                         ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
                         ->orderBy('description', 'ASC');
