@@ -3,27 +3,6 @@
         <div class="row " v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'caja/cash-transfer/report'"
-                    >
-                        <label for="value">
-                            Caja principal
-                        </label>
-                        <el-select
-                            v-model="search.cash_id"
-                            @change="getRecords"
-                            placeholder="Seleccione la caja"
-                        >
-                            <el-option
-                                v-for="item in cashes"
-                                :key="item.id"
-                                :label="`${item.user_name}-${item.description}`"
-                                :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label style="width:100%">
                             Filtrar por:
@@ -193,29 +172,6 @@
                         class="col-lg-3 col-md-3 col-sm-12 pb-2"
                         v-if="resource == 'items'"
                     >
-                        <label for="warehouse">
-                            Area de preparación
-                        </label>
-                        <el-select
-                            clearable
-                            filterable
-                            v-model="search.area_id"
-                            @change="getRecords"
-                            placeholder="Seleccione el Almacén"
-                        >
-                            <el-option
-                                v-for="item in areas"
-                                :key="item.id"
-                                :label="item.description"
-                                :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'items'"
-                    >
                         <label>Estados</label>
                         <el-select
                             v-model="search.active"
@@ -245,7 +201,7 @@
                 "
                 class="row"
             >
-                <div v-if="resource == 'caja/worker/expenses'" class="col-md-3">
+                <div class="col-md-3">
                     <el-button
                         class="submit"
                         type="danger"
@@ -253,67 +209,6 @@
                         @click.prevent="clickDownload('pdf')"
                         >Exportar PDF</el-button
                     >
-                </div>
-                <div
-                    class="col-md-6 d-flex"
-                    v-if="resource !== 'caja/cash-transfer'"
-                >
-                    <el-button
-                        class="submit"
-                        type="success"
-                        v-if="
-                            resource !== 'item-color-size'"
-                        icon="el-icon-tickets"
-                        @click.prevent="clickDownload('excel')"
-                        >Exportar Excel</el-button
-                    >
-                    <el-button
-                        class="submit"
-                        type="success"
-                        v-if="search.warehouse_id && typeUser == 'superadmin'"
-                        icon="el-icon-tickets"
-                        @click.prevent="clickDownloadForImport('excel')"
-                        >Exportar Excel - Formato de importacion</el-button
-                    >
-                <el-tooltip content="Agregar productos a los almacenes faltantes" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToWarehouses"
-                    >Productos en todos los almacenes
-                    </el-button
-                    >
-                </el-tooltip>
-
-
-                <el-tooltip content="Agregar las politicas en todo los almacenes" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToPolitica"
-                    >Politicas en todos los almacenes
-                    </el-button
-                    >
-                </el-tooltip>
-
-                <!-- <el-tooltip content="" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToWarehouses"
-                    >Productos en todos los almacenes
-                    </el-button
-                    >
-                </el-tooltip> -->
                 </div>
             </div>
             <div class="col-md-12">
@@ -403,16 +298,11 @@ export default {
     },
     computed: {},
     created() {
-        //realiza una peticion get para obtener los datos de la tabla
-        /* if (this.resource == "items") {
-            this.$http.get("items/tables").then(response => {
-                this.configuration = response.data;
-            });
-        } */
+        
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
-        if (this.resource == "caja/cash-transfer/report") {
+        /* if (this.resource == "caja/cash-transfer/report") {
             this.getCashes();
         }
         if (this.resource == "items") {
@@ -423,45 +313,20 @@ export default {
             this.$http.get(`/caja/areas/records`).then(response => {
                 this.areas = response.data.data;
             });
-        }
+        } */
     },
     async mounted() {
-        let column_resource = this.resource; // _.split(this.resource, '/')
+        /* let column_resource = this.resource; // _.split(this.resource, '/')
         await this.$http.get(`/${this.resource}/columns`).then(response => {
             this.columns = response.data;
             this.search.column = _.head(Object.keys(this.columns));
         });
         if (this.resource !== "caja/cash-transfer/report") {
             await this.getRecords();
-        }
+        } */
+        this.getRecords();
     },
     methods: {
-        clickAddProductsToPolitica() {
-            this.loading = true;
-            this.$http.get(`/items/warehouse`).then(response => {
-                this.$showSAlert("EXITO", "Politicas agreagadas correctamente a todos los almacenes", "success");
-                /* this.$toast.success("Politicas agregadas correctamente a todos los almacenes"); */
-                this.getRecords();
-            }).catch(error => {
-                this.loading = false;
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
-
-        clickAddProductsToWarehouses() {
-            this.loading = true;
-            this.$http.get(`/items/warehouses/add-products`).then(response => {
-                this.$toast.success("Productos agregados correctamente a todos los almacenes");
-                this.getRecords();
-            }).catch(error => {
-                this.loading = false;
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-    
         total_income() {
             return this.records.reduce(
                 (acc, item) => acc + Number(item.income),
@@ -473,18 +338,6 @@ export default {
                 (acc, item) => acc + Number(item.expense),
                 0
             );
-        },
-        getCashes() {
-            this.$http
-                .get(`/caja/cash-transfer/cashes-principal`)
-                .then(response => {
-                    this.cashes = response.data.cashes;
-                    let [cash] = this.cashes;
-                    if (cash) {
-                        this.search.cash_id = cash.id;
-                        this.getRecords();
-                    }
-                });
         },
         clickDownload(type) {
             this.$emit("clickReport", this.search, type);
@@ -550,10 +403,10 @@ export default {
                 value: this.search.value,
                 column: this.search.column,
                 active: this.search.active,
-                cash_id: this.search.cash_id,
+              
                 end_date: this.search.end_date,
                 warehouse_id: this.search.warehouse_id,
-                area_id: this.search.area_id
+                
             });
         },
         changeClearInput() {

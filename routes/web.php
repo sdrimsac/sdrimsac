@@ -502,6 +502,20 @@ if ($hostname) {
                 Route::get('items/export/barcode/last', [App\Http\Controllers\Tenant\ItemController::class, 'itemLast'])->name('tenant.items.last')->middleware('just.admin');
                 Route::get('items/check_all_stock', [App\Http\Controllers\Tenant\ItemController::class, 'check_all_stock'])->name('tenant.items.check_stock')->middleware('just.admin');
 
+                // rutas para crear catalogos 
+                Route::prefix('catalog')
+                ->group(function () {
+                    Route::get('', [App\Http\Controllers\Tenant\ItemController::class, 'index_catalog'])->name('tenant.catalog.index')->middleware(['just.admin']);
+                    /* Route::get('columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns']); */
+                    /* Route::get('/columnsShopping', [App\Http\Controllers\Tenant\PurchaseController::class, 'columnsShopping']); */
+                    Route::get('records', [App\Http\Controllers\Tenant\ItemController::class, 'recordsCatalog']);
+                    Route::get('data_table', [App\Http\Controllers\Tenant\ItemController::class, 'data_table']);
+                    Route::get('excel', [App\Http\Controllers\Tenant\ItemController::class, 'excelShopping']);
+                    /* Route::get('search/customers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchCustomers']); */
+                    Route::get('search/supliers', [App\Http\Controllers\Tenant\ItemController::class, 'searchSupliers']);
+                });
+
+
                 //ClientZone
                 Route::get('client_zones/records', [ClientZoneController::class, 'records']);
                 Route::post('client_zones', [ClientZoneController::class, 'store']);

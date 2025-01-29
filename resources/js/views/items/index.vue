@@ -157,7 +157,7 @@
                             slot-scope="{ index, row }"
                             :class="{ disable_color: !row.active }"
                         >
-                            <td>{{ index }}</td>
+                            <td>{{ index + 1 }}</td>
                             <td class="text-start">
                                 <template>
                                     <button

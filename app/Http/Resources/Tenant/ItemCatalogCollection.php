@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Http\Resources\Tenant;
+
+use App\Models\System\User;
+use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Carbon\Carbon;
+use App\Models\Tenant\RegisterMovement;
+use App\Models\Tenant\Warehouse;
+use Illuminate\Support\Facades\DB;
+
+class ItemCatalogCollection extends ResourceCollection
+{
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    public function toArray($request)
+    {
+        $warehouses = Warehouse::select('id', 'description')->get();
+        return $this->collection->transform(function ($row, $key) use ($warehouses) {
+
+            $item_warehouses = ItemWarehouse::select('warehouse_id')->where('item_id', $row->id)->get();
+            $warehouses_ids = $item_warehouses->pluck('warehouse_id')->toArray();
+            $is_in_all_warehouses = count($warehouses_ids) === $warehouses->count();
+            
+            
+            $configuration = Configuration::first();
+            $decimal = $configuration->decimal_quantity ?? 2;
+            // number_format($number, 2, ',', '.')
+            $has_igv_description = null;
+            $affectation_igv_types_exonerated_unaffected = ['20', '21', '30', '31', '32', '33', '34', '35', '36', '37'];
+
+            if (in_array($row->sale_affectation_igv_type_id, $affectation_igv_types_exonerated_unaffected)) {
+
+                $has_igv_description = 'No';
+            } else {
+
+                $has_igv_description = ((bool) $row->has_igv) ? 'Si' : 'No';
+            }
+            if ($row->unit_type == null) {
+                $item_unit_types = [];
+            } else {
+                $item_unit_types = collect($row->item_unit_types)->transform(function ($row) {
+                    return [
+                        'total' => $row->total,
+                        'unit_type_id' => $row->unit_type_id,
+                        'description' => $row->description,
+                        'quantity_unit' => $row->quantity_unit,
+                        'price1' => $row->price1,
+                        'price2' => $row->price2,
+                        'price3' => $row->price3,
+                        'price_default' => $row->price_default,
+                    ];
+                });
+            }
+            return [
+                //row es una instancia de Item
+
+                'last_register' => $this->get_last_document($row),
+                'has_warranty' => $row->has_warranty,
+                'month_day' => $row->month_day,
+                'has_color_size' => (bool)$row->has_color_size,
+                'max_quantity_description' => $row->max_quantity_description,
+                'id' => $row->id,
+                'unit_type_id' => $row->unit_type_id,
+                'description' => $row->description,
+                'model' => $row->model,
+                'quality' => $row->quality,
+                'origin' => $row->origin,
+                'name' => $row->name,
+                'second_name' => $row->second_name,
+                'barcode' => $row->barcode,
+                'max_quantity' => $row->max_quantity,
+                'warehouse_id' => $row->warehouse_id,
+                'internal_id' => $row->internal_id,
+                'has_series' =>  (bool)$row->series_enabled,
+                'item_code' => $row->item_code,
+                'item_code_gs1' => $row->item_code_gs1,
+                'location' => $row->location,
+                'stock' => $row->getStockByWarehouse(),
+                'stock_min' => $row->stock_min,
+                'category_id' => $row->category_id,
+                'currency_type_id' => $row->currency_type_id,
+                'currency_type_symbol' => $row->currency_type->symbol,
+                'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                'amount_sale_unit_price' => number_format($row->sale_unit_price, $decimal, ".", ""),
+                'calculate_quantity' => (bool) $row->calculate_quantity,
+                'has_igv' => (bool) $row->has_igv,
+                'active' => (bool) $row->active,
+                'has_igv_description' => $has_igv_description,
+                'sale_unit_price' =>  number_format($row->sale_unit_price, $decimal, ".", ""),
+                'purchase_unit_price' => "{$row->currency_type->symbol} " . number_format($row->purchase_unit_price, $decimal, '.', ''),
+                'created_at' => ($row->created_at) ? $row->created_at->format('Y-m-d H:i:s') : '',
+                'updated_at' => ($row->created_at) ? $row->updated_at->format('Y-m-d H:i:s') : '',
+                //  'category' => [
+                //  'description' =>$row->category->name,
+                //  ],
+                'unit_type_description' => ($row->unit_type) ? $row->unit_type->description : '',
+                'unit_type' => $item_unit_types,
+                'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
+             
+                    return [
+                        'id' => $row->id,
+                        'warehouse_description' => $row->warehouse->description,
+                        'stock' => number_format($row->stock, $decimal, ".", ""),
+                        'active' => (bool) $row->active,
+                    ];
+                }),
+                'warehouse_prices' => collect($row->item_warehouse_prices)->transform(function ($row) use ($decimal) {
+
+                    return [
+                        "id" => $row->id,
+                        "warehouse_id" => $row->warehouse_id,
+                        "price" => number_format($row->price, $decimal, ".", ""),
+                        "warehouse" => $row->getWarehouseDescription()
+                    ];
+                }),
+                /* 'categoria_madera' => ($row->categoria_madera)->transform(function ($row){
+                    return [
+                        'id' => $row->id,
+                        'categoria_madera_description' => $row->categoria_madera->description,
+                    ];
+                }), */
+                'apply_store' => (bool)$row->apply_store,
+                'image_url' => ($row->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->image) : asset("/logo/{$row->image}"),
+                'image_url_medium' => ($row->image_medium !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->image_medium) : asset("/logo/{$row->image_medium}"),
+                'image_url_small' => ($row->image_small !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $row->image_small) : asset("/logo/{$row->image_small}"),
+                'is_in_all_warehouses' => $is_in_all_warehouses,
+
+            ];
+        });
+    }
+    function get_last_document($row){
+        $last_register_movement = RegisterMovement::where('model', Item::class)
+            /* ->where('model', Item::class) */
+            ->where('model_id', $row->id)
+            ->whereHas('user', function ($query) {
+                $query->whereNull('area_id');
+            })
+            ->orderBy('id', 'desc')->first();
+        $data = [
+            'user'=>'',
+            'date_time' => '',
+            'description' => '',
+            'created_at' => ''
+        ];
+        if($last_register_movement){
+            $date_time = $last_register_movement->created_at;
+            $data = [
+                'user'=>$last_register_movement->user->name,
+                'description' =>$last_register_movement->description,
+                'date_time' => $this->get_date_difference($date_time),
+                'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')
+                
+            ];
+        }
+        return $data;
+    }
+    function get_date_difference($created_at){
+        $currentDay = Carbon::now();
+        $created_at = Carbon::parse($created_at);
+        
+        $difference = $created_at->diff($currentDay);
+        $days = $difference->days;
+        $hours = $difference->h;
+        $minutes = $difference->i;
+        $seconds = $difference->s;
+        $is24Hours = false;
+        if($days > 0){
+            $is24Hours = true;
+        }
+        $data = [
+            'is24Hours' => $is24Hours,
+            'days' => $days,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds
+        ];
+        return $data;
+    }
+}
