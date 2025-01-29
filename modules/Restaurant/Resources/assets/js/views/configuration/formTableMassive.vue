@@ -43,7 +43,7 @@
             </div>
           </div>
           <template v-if="type == 'caja/tables' || type == 'caja/rooms'">
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <div class="form-group" :class="{ 'has-danger': errors.number }">
                 <label class="control-label">
                   <i class="fas fa-hashtag mr-2"></i>
@@ -54,7 +54,7 @@
                 <el-input v-model="form.number"></el-input>
                 <small class="form-control-feedback" v-if="errors.number" v-text="errors.number[0]"></small>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-4" v-if="type == 'caja/rooms'">
               <div class="form-group" :class="{ 'has-danger': errors.tower_id }">
                 <label class="control-label">
@@ -168,7 +168,7 @@
                   getLabelText(type)
                   }}
                 </label>
-                <el-select v-model="form.area_id" :disabled="type == 'caja/rooms'">
+                <el-select v-model="form.area_id">
                   <el-option
                     v-for="(data, index) in areas"
                     :key="index"
@@ -237,39 +237,6 @@
   </el-dialog>
 </template>
 
-<script>
-export default {
-  props: [
-    "titleDialog",
-    "showDialog",
-    "type",
-    "configurations",
-    "form",
-    "errors",
-    "towers",
-    "floors",
-    "types",
-    "statusTable",
-    "areas",
-    "establishments",
-    "loading_submit"
-  ],
-  methods: {
-    close() {
-      this.$emit("close");
-    },
-    create() {
-      this.$emit("create");
-    },
-    submit() {
-      this.$emit("submit");
-    },
-    filterFloorsByTower(towerId) {
-      this.$emit("filter-floors-by-tower", towerId);
-    }
-  }
-};
-</script>
 
 <style scoped>
 .rounded-dialog .el-dialog__header {

@@ -11,6 +11,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
+use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\HotelRentItemPerson;
 use App\Models\Tenant\InventoryKardex;
@@ -48,6 +49,74 @@ use Modules\Restaurant\Events\PrintEvent;
 class TableRoomController extends Controller
 {
 
+    public function setRoomRent(Request $request)
+    {
+        // array:11 [
+        //     "quantity_persons" => 1
+        //     "checkin_date" => "2025-01-27"
+        //     "checkout_date" => "2026-01-31"
+        //     "observation" => "xdddd"
+        //     "customer_id" => 1
+        //     "sub_total" => 350
+        //     "advance" => 0
+        //     "total" => 600
+        //     "table_type_id" => 1
+        //     "advances" => "250"
+        //     "table_id" => 3
+        //   ]
+        $quantity_persons = $request->input('quantity_persons');
+        $checkin_date = $request->input('checkin_date');
+        $checkout_date = $request->input('checkout_date');
+        $observation = $request->input('observation');
+        $customer_id = $request->input('customer_id');
+        $sub_total = $request->input('sub_total');
+        $advances = $request->input('advances');
+        $table_id = $request->input('table_id');
+        $payment_status = "pending";
+        $user_id = auth()->user()->id;
+        $establishment_id = auth()->user()->establishment_id;
+        $customer = PersonInput::set($customer_id);
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $hotel_rent = HotelRent::create([
+                'customer' => $customer,
+                'customer_id' => $customer_id,
+                'table_id' => $table_id,
+                'checkin_date' => $checkin_date,
+                'checkout_date' => $checkout_date,
+                'sub_total' => $sub_total,
+                'advances' => $advances,
+                'payment_status' => $payment_status,
+                'observation' => $observation,
+                'user_id' => $user_id,
+                'establishment_id' => $establishment_id,
+                'total' => $sub_total,
+                'advance' => $advances,
+            ]);
+
+            HotelRentItem::create([
+                'hotel_rent_id' => $hotel_rent->id,
+                'table_id' => $table_id,
+                'quantity_persons' => $quantity_persons,
+                'checkin_date' => $checkin_date,
+                'checkout_date' => $checkout_date,
+                'payment_status' => $payment_status,
+                'total' => $sub_total,
+                'advance' => $advances,
+
+            ]);
+            Table::where('id', $table_id)->update(['status_table_id' => 2]);
+            DB::connection('tenant')->commit();
+            return response()->json([
+                'success' => true,
+                'rent_id' => $hotel_rent->id,
+                'message' => 'Alquiler de habitación registrado con éxito'
+            ]);
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
     public function updateInsumo(Request $request)
     {
         $id = $request->input('id');
@@ -73,7 +142,7 @@ class TableRoomController extends Controller
             ];
         }
     }
-    
+
     public function pdf($table_id)
     {
         $table = Table::select('id', 'number', 'floor_id', 'description', 'price', 'table_type_id', 'month_price')
@@ -672,7 +741,18 @@ class TableRoomController extends Controller
                     'purchase_affectation_igv_type_id' => $affectation_igv_type_id,
                 ]
             );
-            $category_food_id = CategoryItem::first()->id;
+            $category_food = CategoryItem::first();
+            $category_food_id = null;
+            if (!$category_food) {
+                $category = CategoryItem::create([
+                    'name' => 'Servicio',
+                    'user_id' => auth()->user()->id,
+                    'active' => true
+                ]);
+                $category_food_id = $category->id;
+            } else {
+                $category_food_id = $category_food->id;
+            }
             $food = Food::create([
                 'item_id' => $item->id,
                 'description' => 'Servicio',
@@ -757,6 +837,108 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación desocupada'
         ];
+    }
+    public function removeInfraction($id)
+    {
+        $infraction = HotelRentInfraction::find($id);
+        $infraction->delete();
+        return [
+            'success' => true,
+            'message' => 'Infracción eliminada'
+        ];
+    }
+    public function storeInfraction(Request $request)
+    {
+        HotelRentInfraction::create($request->all());
+        
+        return [
+            'success' => true,
+            'message' => 'Infracción creada'
+        ];
+    }
+
+    public  function getInfractions($id)
+    {
+        $infractions = HotelRentInfraction::where('hotel_rent_id', $id)->get();
+        return [
+            'success' => true,
+            'infractions' => $infractions
+        ];
+    }
+    public  function getDocuments($id)
+    {
+        $documents = HotelRentDocument::where('hotel_rent_id', $id)->get()
+            ->sortByDesc('due_date')
+            ->transform(function ($row) {
+                $document = $row->document ?? $row->sale_note;
+                $is_sale_note = $row->sale_note ? true : false;
+                $date_of_issue = $is_sale_note ? $document->date_of_issue : $document->date_of_issue;
+                $date_of_issue = !is_string($date_of_issue) ? Carbon::parse($date_of_issue)->format('Y-m-d') : $date_of_issue;
+                return [
+                    'id' => $row->id,
+                    'number' => $document->series . "-" . $document->number,
+                    'date_of_issue' => $date_of_issue,
+                    'total' => $document->total,
+                    'due_date' => $row->due_date,
+                    'pdf' => $is_sale_note ? url('') . "/sale-notes/print/{$document->external_id}/ticket" : url('') . "/print/document/{$document->external_id}/ticket"
+                ];
+            });
+        return compact('documents');
+    }
+    public  function rentDocument($id)
+    {
+        $hotel_rent = HotelRent::find($id);
+        $warranty = $hotel_rent->advance;
+        $hotel_rent_items = $hotel_rent->items;
+        $customer_number  = $hotel_rent->customer->number;
+        $hotel_rent_id = $id;
+        $items = collect();
+        foreach ($hotel_rent_items as $hotel_rent_item) {
+            $service = $this->get_item_service();
+            $service->price = $hotel_rent_item->total;
+            $concept =  "Alquiler de habitación n° " . $hotel_rent_item->table->number;
+            if ($hotel_rent_item->is_month_rent) {
+                $checkin_date = Carbon::parse($hotel_rent_item->checkin_date);
+                //$day
+
+                $checkin_date_more_one_month = $checkin_date->copy()->addMonth()->format('Y-m-d');
+                //obtener el día y el mes de la fecha de checkin, el mes en letras
+                $day = Carbon::parse($checkin_date)->format('d');
+                $month = Carbon::parse($checkin_date)->format('m');
+                $month = $this->getMonth($month);
+
+                $day_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('d');
+                $month_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('m');
+                $month_one_more_month = $this->getMonth($month_one_more_month);
+                $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
+            }
+            $service->description = $concept;
+            $service->item->description = $concept;
+
+            $items->push([
+                'id' => 0,
+                'observation' => '',
+                'food' => $service,
+                'quantity' => 1,
+                'price' => $service->price,
+            ]);
+        }
+        $service = $this->get_item_service();
+        $service->price = $warranty;
+        $service->description = "Garantía";
+        $service->item->description = "Garantía";
+        $items->push([
+            'id' => 0,
+            'observation' => '',
+            'food' => $service,
+            'quantity' => 1,
+            'price' => $service->price,
+        ]);
+        return compact(
+            'items',
+            'hotel_rent_id',
+            'customer_number'
+        );
     }
     public  function advanceDocument($id)
     {
@@ -975,7 +1157,9 @@ class TableRoomController extends Controller
             'data' => $tables
         ];
     }
-    public function tablesCloseToLeave() {}
+    public function tablesCloseToLeave()
+    {
+    }
     public function tablesToLeave()
     {
         $configuration = Configuration::first();
@@ -1024,7 +1208,21 @@ class TableRoomController extends Controller
             'data' => $tablesClean
         ];
     }
-
+    public  function getTables()
+    {
+        $configuration = Configuration::first();
+        $tables = Table::where('is_room', true)->where('enabled', true)->get();
+        if ($configuration->mod_renta) {
+            $tables = $tables->transform(function ($table) {
+                $hotel_rent = HotelRentItem::where('table_id', $table->id)->latest()->first();
+                if ($hotel_rent) {
+                    $table->hotel_rent_id = $hotel_rent->hotel_rent_id;
+                }
+                return $table;
+            });
+        }
+        return compact('tables');
+    }
     public function tables(Request $request)
     {
         $configuration = Configuration::first();
@@ -1045,13 +1243,20 @@ class TableRoomController extends Controller
         $table_types = TableType::where('active', true)->get();
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
-        $tables = Table::where('is_room', true);
+        $tables = Table::where('is_room', true)->where('enabled', true);
         $services = RoomService::where('active', true)->get();
-        if (!$is_reserve) {
 
-            $tables->where('status_table_id', 1);
-        }
         $tables = $tables->with('services')->get();
+
+        if ($configuration->mod_renta) {
+            $tables = $tables->transform(function ($table) {
+                $hotel_rent = HotelRentItem::where('table_id', $table->id)->latest()->first();
+                if ($hotel_rent) {
+                    $table->hotel_rent_id = $hotel_rent->hotel_rent_id;
+                }
+                return $table;
+            });
+        }
 
         return compact(
             'insumos',
@@ -1503,7 +1708,9 @@ class TableRoomController extends Controller
             'phone' => $row->telephone,
         ];
     }
-    function transformHotelRentItem($item) {}
+    function transformHotelRentItem($item)
+    {
+    }
     public function set_reserve_date(Request $request)
     {
         $id = $request->input('id');

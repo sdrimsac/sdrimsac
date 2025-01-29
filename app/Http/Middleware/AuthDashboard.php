@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\Configuration;
 use App\Services\RoleService;
 use Closure;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class AuthDashboard
         // $date=\Carbon\Carbon::now();
         // $date=$date->format('Y-m-d');
         // $cash=Cash::where('date_opening',$date)->first();
-
+        $configuration = Configuration::first();
         if (!$request->ajax()) {
             if (auth()->user()->type == 'admin' || auth()->user()->type == 'superadmin') {
                 $roleService = new RoleService();
@@ -46,7 +47,11 @@ class AuthDashboard
                         //     return redirect()-> route('restaurant.cash.index');
                         // }else{
                         $pos = true;
-                        return redirect()->route('restaurant.pos.dashboard');
+                        if($configuration->mod_renta){
+                            return redirect()->route('rent.pos.dashboard');
+                        }else{
+                            return redirect()->route('restaurant.pos.dashboard');
+                        }
                         //}
                     }
                 }

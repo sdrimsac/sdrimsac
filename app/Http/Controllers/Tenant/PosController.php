@@ -46,11 +46,14 @@ use Modules\Restaurant\Models\Table;
 use Modules\Services\Data\ServiceData;
 use App\Models\Tenant\CategoriaMadera;
 use App\Models\Tenant\DigitalPayment;
+use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaGrosor;
 use App\Models\Tenant\ItemMedidaAncho;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use Modules\Item\Models\Brand;
+use Modules\Restaurant\Models\Floor;
+use Modules\Restaurant\Models\TableType;
 
 class PosController extends Controller
 {
@@ -325,6 +328,91 @@ class PosController extends Controller
         }
         $date_last = \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y');
         return compact('date_last');
+    }
+    public function tables_rent(){
+        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)
+            ->where('active', 1)
+            ->get();
+
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
+        $establishment = Establishment::select('id','description')->where('id', auth()->user()->establishment_id)->first();
+        $method_payment = PaymentMethodType::where('active', 1)->orderBy('description', 'asc')->get();
+        if (!$establishment) {
+            $establishment = Establishment::first();
+        }
+        $currency_types = CurrencyType::whereActive()->get();
+        $documents_type = IdentityDocumentType::where('active', 1)->get();
+        $customers = $this->table('customers');
+        $user = User::with(['establishment', 'area', 'worker_type', 'modules'])
+        ->select('id', 'name', 'email', 'phone')
+        ->findOrFail(auth()->user()->id);
+        $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'phone' => $row->telephone
+            ];
+        });
+        $customers_variation = Person::where('number', "=", "88888888")->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'phone' => $row->telephone
+            ];
+        });
+        $items = [];
+        $company = Company::first();
+        
+        $item_default = null;
+        $config = Configuration::first();
+        if ($config->item_variation_id) {
+            $item_default = Item::where('id', $config->item_variation_id)->first();
+        }
+        $areas = Area::all();
+        $tablesClean = [];
+        $tablesLeave = [];
+        $tables = Table::where('is_room',true)->get();
+
+        if($config->mod_renta){
+            $tables = $tables->transform(function($table){
+                $hotel_rent = HotelRentItem::where('table_id', $table->id)->latest()->first();
+                if($hotel_rent){
+                    $table->hotel_rent_id = $hotel_rent->hotel_rent_id;
+                }
+                return $table;
+            });
+        }
+        $floors = Floor::all();
+        $types = TableType::all();
+
+        return compact(
+            'tablesLeave',
+            'tablesClean',
+            'sellers',
+            'areas',
+            'customers_variation',
+            'documents_type',
+            'customers',
+            'affectation_igv_types',
+            'establishment',
+            'method_payment',
+            'user',
+            'currency_types',
+            'company',
+            'customers_default',
+            'config',
+            'tables',
+            'floors',
+            'types'
+        );
     }
     public function tables()
     {   $brands = Brand::all();

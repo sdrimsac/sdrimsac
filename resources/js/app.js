@@ -169,7 +169,9 @@ const getCashId = async () => {
                 Vue.prototype.$cashId = data.cash_id;
             }
         }
-    } catch (e) {}
+    } catch (e) {
+        console.log("error getCashId", e);
+    }
 };
 const getDesarrollador = async () => {
     try {
@@ -199,7 +201,9 @@ const getAreaPrinter = async () => {
                 Vue.prototype.$areaPrinter = null;
             }
         }
-    } catch (e) {}
+    } catch (e) {
+
+    }
 };
 function limpiarcache(reload = true) {
     if ("caches" in window) {
@@ -456,6 +460,10 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/workers/workers.vue"
             ),
+            "tenant-rent-pos": () =>
+                import(
+                    "../../modules/Restaurant/Resources/assets/js/views/pos/index_rent.vue"
+                ),
         "tenant-restaurant-pos": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/pos/index.vue"

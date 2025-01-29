@@ -358,7 +358,8 @@ class DocumentController extends Controller
             'total_pending_paid_pen' => number_format($total_pending_paid_pen, 2, ".", "")
         ];
     }
-    public function index_anulados() {
+    public function index_anulados()
+    {
 
         $configuration = Configuration::first();
         $company = Company::first();
@@ -466,10 +467,10 @@ class DocumentController extends Controller
     public function records_ventas(Request $request)
     {
         $records = $this->getRecordsVentas($request);
-        
+
         return new DocumentVentaCollection($records->paginate(20));
     }
-    
+
     /* agregado para 50 paginacion */
     public function records(Request $request)
     {
@@ -811,7 +812,7 @@ class DocumentController extends Controller
                 $detail = $this->getFullDescription($row, $warehouse);
                 return [
                     'max_quantity' => $row->max_quantity,
-                        'max_quantity_description' => $row->max_quantity_description,
+                    'max_quantity_description' => $row->max_quantity_description,
                     'id' => $row->id,
                     'full_description' => $detail['full_description'],
                     'brand' => $detail['brand'],
@@ -893,20 +894,19 @@ class DocumentController extends Controller
         $brand = ($row->brand) ? "{$row->brand->name}" : "";
 
 
-//s
+        //s
         if ($row->unit_type_id != 'ZZ') {
-            try{
+            try {
                 $warehouse_stock = ($row->warehouses && $warehouse) ? number_format($row->warehouses->where('warehouse_id', $warehouse->id)->first()->stock, 2) : 0;
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 // Buscar el primer almacén que tenga stock del item
                 $warehouse_with_stock = $row->warehouses->where('stock', '>', 0)->first();
-                if($warehouse_with_stock) {
+                if ($warehouse_with_stock) {
                     $warehouse_stock = number_format($warehouse_with_stock->stock, 2);
                 } else {
 
                     $warehouse_stock = 0;
                 }
-        
             }
             $stock = ($row->warehouses && $warehouse) ? "{$warehouse_stock}" : "";
         } else {
@@ -1052,6 +1052,7 @@ class DocumentController extends Controller
     public function store(DocumentRequest $request)
     {
         DB::connection('tenant')->beginTransaction();
+        $user_type = auth()->user()->type;
         $ids = [];
         $this->restoreOrderItems($request->all());
         if (key_exists('id', $request->all())) {
@@ -1134,8 +1135,17 @@ class DocumentController extends Controller
                 }
             }
             $this->associateSaleNoteToDocument($request, $document->id);
+            if ($user_type == 'superadmin' || $user_type == 'admin') {
+                $cash_box = Box::where('document_id', $document->id)->first();
+                $cash_id_tmp = null;
+                if ($cash_box) {
+                    $cash_id_tmp = $cash_box->cash_id;
+                    $request->merge(['cash_id' => $cash_id_tmp]);
+                }
+            }
             Box::where('document_id', $document->id)->delete();
             // $Payments = DocumentPayment::where('document_id', $document->id)->first();
+
             if ($request->cash_id == null && $document_id == null) {
                 $user_id = auth()->user()->id;
                 /* $user_id->seller_id = auth()->user()->id; */
@@ -1307,50 +1317,17 @@ class DocumentController extends Controller
                 CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
             }
             $vacate = $request->vacate;
-            if ($request->hotel_rent_item_ids) {
-                $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-                foreach ($hotel_rent_items as $item) {
-                    $item->payment_status = "Pagado";
-                    if ($vacate) {
-                        $table = Table::where('id', $item->table_id)->first();
-                        $table->status_table_id = 5;
-                        $table->sendMessageDesocupied();
-                        $table->save();
-                    } else {
-                        $item->total = 0;
-                        $item->advances = 0;
-                        $id_to_document = $item->hotel_rent_id;
-                        HotelRentDocument::create([
-                            'hotel_rent_id' => $id_to_document,
-                            'document_id' => $document->id,
-                            'is_advance' => false,
-                        ]);
-                    }
-                    $item->save();
-                }
+            if ($configuration->mod_renta && $request->hotel_rent_id) {
+                HotelRentDocument::create([
+                    'hotel_rent_id' => $request->hotel_rent_id,
+                    'document_id' => $document->id,
+                    'is_advance' => false,
+                    'due_date' => $request->due_date,
+                ]);
             }
-            if ($request->hotel_rent_id) {
-                $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
-                $hotel_rent_items = $hotel_rent->items;
-
-                if ($request->is_advance) {
-                    HotelRentDocument::create([
-                        'hotel_rent_id' => $hotel_rent->id,
-                        'document_id' => $document->id,
-                        'is_advance' => true,
-                    ]);
-
-                    foreach ($hotel_rent_items as $item) {
-                        $advance = $item->advances;
-                        $advance = floatval($advance);
-                        $price = $item->getPrice();
-                        if ($advance == $price) {
-                            $item->payment_status = "Pagado";
-                            $item->advances = 0;
-                            $item->save();
-                        }
-                    }
-                } else {
+            if ($configuration->hotels) {
+                if ($request->hotel_rent_item_ids) {
+                    $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
                     foreach ($hotel_rent_items as $item) {
                         $item->payment_status = "Pagado";
                         if ($vacate) {
@@ -1368,14 +1345,57 @@ class DocumentController extends Controller
                                 'is_advance' => false,
                             ]);
                         }
-                        $item->checkout_date = date('Y-m-d');
-                        $item->checkout_time = date('H:i:s');
                         $item->save();
                     }
-                    $hotel_rent->payment_status = "Pagado";
-                    $hotel_rent->document_id = $document->id;
-                    $hotel_rent->paid = 1;
-                    $hotel_rent->save();
+                }
+                if ($request->hotel_rent_id) {
+                    $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
+                    $hotel_rent_items = $hotel_rent->items;
+
+                    if ($request->is_advance) {
+                        HotelRentDocument::create([
+                            'hotel_rent_id' => $hotel_rent->id,
+                            'document_id' => $document->id,
+                            'is_advance' => true,
+                        ]);
+
+                        foreach ($hotel_rent_items as $item) {
+                            $advance = $item->advances;
+                            $advance = floatval($advance);
+                            $price = $item->getPrice();
+                            if ($advance == $price) {
+                                $item->payment_status = "Pagado";
+                                $item->advances = 0;
+                                $item->save();
+                            }
+                        }
+                    } else {
+                        foreach ($hotel_rent_items as $item) {
+                            $item->payment_status = "Pagado";
+                            if ($vacate) {
+                                $table = Table::where('id', $item->table_id)->first();
+                                $table->status_table_id = 5;
+                                $table->sendMessageDesocupied();
+                                $table->save();
+                            } else {
+                                $item->total = 0;
+                                $item->advances = 0;
+                                $id_to_document = $item->hotel_rent_id;
+                                HotelRentDocument::create([
+                                    'hotel_rent_id' => $id_to_document,
+                                    'document_id' => $document->id,
+                                    'is_advance' => false,
+                                ]);
+                            }
+                            $item->checkout_date = date('Y-m-d');
+                            $item->checkout_time = date('H:i:s');
+                            $item->save();
+                        }
+                        $hotel_rent->payment_status = "Pagado";
+                        $hotel_rent->document_id = $document->id;
+                        $hotel_rent->paid = 1;
+                        $hotel_rent->save();
+                    }
                 }
             }
             if (count($ids) != 0) {
@@ -2009,8 +2029,8 @@ class DocumentController extends Controller
             ->where('number', 'like', '%' . $number . '%')
             ->whereDoesntHave('note')
             ->whereDoesntHave('document_affected_note');
-            // ->orderBy('id', 'desc')
-            // ->orderBy('number', 'desc');
+        // ->orderBy('id', 'desc')
+        // ->orderBy('number', 'desc');
 
 
         if ($year) {
@@ -2044,7 +2064,7 @@ class DocumentController extends Controller
             $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
         } elseif ($date_of_issue) {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
-        } */ 
+        } */
 
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);

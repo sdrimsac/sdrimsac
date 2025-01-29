@@ -7,6 +7,7 @@ namespace App\Models\Tenant;
 class HotelRent extends ModelTenant
 {
     protected $fillable = [
+        'advance',
         'discount_pack',
         'is_pack',
         'customer_id',

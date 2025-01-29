@@ -248,8 +248,9 @@ export default {
                         route = "workshop/worker/dashboard-pos";
                     } else if (this.config.modo_billar) {
                         route = "billar/worker/dashboard-pos";
-                    }
-                     else {
+                    } else if (this.config.mod_renta) {
+                        route = "caja/worker/rent-pos";
+                    } else {
                         route = "caja/worker/dashboard-pos";
                     }
                 } else if (response.data.waiter == true) {

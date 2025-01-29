@@ -13,6 +13,7 @@ class HotelRentDocument extends ModelTenant
         'document_id',
         'hotel_rent_id',
         'is_advance',
+        'due_date',
     ];
 
     protected $casts = [

@@ -2309,6 +2309,7 @@ export default {
         }
     },
     methods: {
+        
         async printFileWithRawBT(fileUrl) {
             try {
                 const response = await fetch(fileUrl);
@@ -4817,6 +4818,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
+                due_date: null,
                 receive_promotion: false,
                 promotion_id: null,
                 reference_number: null,

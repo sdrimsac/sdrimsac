@@ -43,15 +43,16 @@
         </div>-->
                 <div class="data-table-visible-columns">
                     <el-button
-                        v-if="resource == 'caja/rooms'"
+                        v-if="resource == 'caja/rooms' && !isRenta"
                         class="custom-button"
                         @click.prevent="clickSeeInsumos"
+                    
                     >
                         <i class="fas fa-boxes"></i>
                         <span>Insumos</span>
                     </el-button>
                     <el-button
-                        v-if="resource == 'caja/rooms'"
+                        v-if="resource == 'caja/rooms' && !isRenta"
                         class="custom-button"
                         @click.prevent="clickSeePromotions"
                     >
@@ -422,7 +423,6 @@ export default {
         };
     },
     created() {
-        console.log(this.type);
         if (this.type == "caja/tables" || this.type == "caja/rooms") {
             this.getTables();
         }
@@ -431,6 +431,12 @@ export default {
             this.getData();
             //   this.recordId =null
         });
+    },
+    computed: {
+        isRenta(){
+            console.log(this.configurations);
+            return this.configurations.mod_renta;
+        }
     },
     methods: {
         clickRemove(id){

@@ -117,6 +117,7 @@ class JustAdmin
                 $modo_billar = (bool) $config->modo_billar;
                 $workshop = (bool) $config->workshop;
                 $odontologia = (bool) $config->odontologia;
+                $rent = (bool) $config->mod_renta;
 
 
                 if ($config->toll) {
@@ -148,7 +149,11 @@ class JustAdmin
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
                 } else if (str_contains($description_type, 'CAJ') || str_contains($description_type, 'VEN') || str_contains($description_type, 'ANALISTA')) {
-                    $redirect_to .= 'dashboard-pos';
+                    if($rent){
+                        $redirect_to .= 'rent-pos';
+                    }else{
+                        $redirect_to .= 'dashboard-pos';
+                    }
                 } else if ($description_type == 'LIMPIEZA') {
                     $redirect_to .= 'cleaner';
                 } else if ($description_type == 'MANTENIMIENTO') {

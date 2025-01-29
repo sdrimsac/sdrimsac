@@ -1340,72 +1340,29 @@ class SaleNoteController extends Controller
                         }
                     }
                 }
+                $promotion_sale = $request->promotion_sale ?? false;
 
                 if ($request->is_pay_credit_list) {
                     SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
                 }
 
                 $vacate = $request->vacate;
-                if ($request->hotel_rent_item_ids) {
-                    $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-
-                    foreach ($hotel_rent_items as $item) {
-                        $item->payment_status = "Pagado";
-                        $id_to_document = $item->hotel_rent_id;
-                        $item->sale_note_id = $this->sale_note->id;
-                        $item->checkout_date = date('Y-m-d');
-                        $item->checkout_time = date('H:i:s');
-                        if ($vacate) {
-                            $table = Table::where('id', $item->table_id)->first();
-                            $table->status_table_id = 5;
-                            $table->sendMessageDesocupied();
-                            $table->save();
-                        } else {
-                            HotelRentDocument::create([
-                                'hotel_rent_id' => $id_to_document,
-                                'sale_note_id' => $this->sale_note->id,
-                                'is_advance' => false,
-                            ]);
-                            $item->total = 0;
-                            $item->advances = 0;
-                        }
-                        $item->save();
-                    }
-                }
-                if ($request->is_list_credit) {
-                    CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
-                }
-                $promotion_sale = $request->promotion_sale ?? false;
-                if ($request->hotel_rent_id && !$promotion_sale) {
-                    $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
-                    $hotel_rent_items = $hotel_rent->items;
-                    if ($request->is_advance) {
-
-                        HotelRentDocument::create([
-                            'hotel_rent_id' => $hotel_rent->id,
-                            'sale_note_id' => $this->sale_note->id,
-                            'is_advance' => true,
-                        ]);
-                        foreach ($hotel_rent_items as $item) {
-                            $advance = $item->advances;
-                            $advance = floatval($advance);
-                            $price = $item->getPrice();
-                            if ($advance == $price) {
-                                $item->payment_status = "Pagado";
-                                $item->advances = 0;
-                                $item->save();
-                            }
-                        }
-                    } else {
+                if($configuration->hotels){
+                    if ($request->hotel_rent_item_ids) {
+                        $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
+    
                         foreach ($hotel_rent_items as $item) {
                             $item->payment_status = "Pagado";
+                            $id_to_document = $item->hotel_rent_id;
+                            $item->sale_note_id = $this->sale_note->id;
+                            $item->checkout_date = date('Y-m-d');
+                            $item->checkout_time = date('H:i:s');
                             if ($vacate) {
                                 $table = Table::where('id', $item->table_id)->first();
                                 $table->status_table_id = 5;
                                 $table->sendMessageDesocupied();
                                 $table->save();
                             } else {
-                                $id_to_document = $item->hotel_rent_id;
                                 HotelRentDocument::create([
                                     'hotel_rent_id' => $id_to_document,
                                     'sale_note_id' => $this->sale_note->id,
@@ -1414,19 +1371,73 @@ class SaleNoteController extends Controller
                                 $item->total = 0;
                                 $item->advances = 0;
                             }
-
-                            $item->checkout_date = date('Y-m-d');
-                            $item->checkout_time = date('H:i:s');
                             $item->save();
                         }
-                        $hotel_rent->payment_status = "Pagado";
-                        $hotel_rent->sale_note_id = $this->sale_note->id;
-
-                        $hotel_rent->paid = 1;
-                        $hotel_rent->save();
+                    }
+                
+                    if ($request->hotel_rent_id && !$promotion_sale) {
+                        $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
+                        $hotel_rent_items = $hotel_rent->items;
+                        if ($request->is_advance) {
+    
+                            HotelRentDocument::create([
+                                'hotel_rent_id' => $hotel_rent->id,
+                                'sale_note_id' => $this->sale_note->id,
+                                'is_advance' => true,
+                            ]);
+                            foreach ($hotel_rent_items as $item) {
+                                $advance = $item->advances;
+                                $advance = floatval($advance);
+                                $price = $item->getPrice();
+                                if ($advance == $price) {
+                                    $item->payment_status = "Pagado";
+                                    $item->advances = 0;
+                                    $item->save();
+                                }
+                            }
+                        } else {
+                            foreach ($hotel_rent_items as $item) {
+                                $item->payment_status = "Pagado";
+                                if ($vacate) {
+                                    $table = Table::where('id', $item->table_id)->first();
+                                    $table->status_table_id = 5;
+                                    $table->sendMessageDesocupied();
+                                    $table->save();
+                                } else {
+                                    $id_to_document = $item->hotel_rent_id;
+                                    HotelRentDocument::create([
+                                        'hotel_rent_id' => $id_to_document,
+                                        'sale_note_id' => $this->sale_note->id,
+                                        'is_advance' => false,
+                                    ]);
+                                    $item->total = 0;
+                                    $item->advances = 0;
+                                }
+    
+                                $item->checkout_date = date('Y-m-d');
+                                $item->checkout_time = date('H:i:s');
+                                $item->save();
+                            }
+                            $hotel_rent->payment_status = "Pagado";
+                            $hotel_rent->sale_note_id = $this->sale_note->id;
+    
+                            $hotel_rent->paid = 1;
+                            $hotel_rent->save();
+                        }
                     }
                 }
+                if($configuration->mod_renta && $request->hotel_rent_id){
+                    HotelRentDocument::create([
+                        'hotel_rent_id' => $request->hotel_rent_id,
+                        'sale_note_id' => $this->sale_note->id,
+                        'is_advance' => false,
+                        'due_date' => $request->due_date,
+                    ]);
+                }
 
+                if ($request->is_list_credit) {
+                    CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
+                }
                 $user_id = auth()->user()->id;
                 $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
                 if (!$cash) {

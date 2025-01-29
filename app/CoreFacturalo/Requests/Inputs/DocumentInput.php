@@ -130,6 +130,7 @@ class DocumentInput
         // }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'due_date' => Functions::valueKeyInArray($inputs, 'due_date', null),
             'vehiculo_id' => Functions::valueKeyInArray($inputs, 'vehiculo_id'),
             'promotion_id' => Functions::valueKeyInArray($inputs, 'promotion_id'),
             'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),

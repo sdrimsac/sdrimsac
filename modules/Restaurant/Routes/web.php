@@ -16,6 +16,7 @@ use App\Events\MessageEvent;
 use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\HotelRent;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\BoxesController;
 use Modules\Restaurant\Http\Controllers\BoxesDetailController;
@@ -203,7 +204,17 @@ Route::prefix('caja')->group(function () {
         Route::delete('rooms/insumos/record/{id}', 'TableRoomController@deleteInsumo');
         Route::post('rooms/insumos/record/update', 'TableRoomController@updateInsumo');
         Route::get('rooms/pdf/{rooms}', 'TableRoomController@pdf');
+        Route::prefix('rent')->group(function () {
+            Route::post('set-room-rent', [TableRoomController::class, 'setRoomRent']);
+            Route::get('get-tables', [TableRoomController::class, 'getTables']);
+            Route::get('advance-document/{id}', [TableRoomController::class, 'rentDocument']);
+            Route::get('get-documents/{id}', [TableRoomController::class, 'getDocuments']);
+            Route::get('get-infractions/{id}', [TableRoomController::class, 'getInfractions']);
+            Route::post('store-infraction', [TableRoomController::class, 'storeInfraction']);
+            Route::delete('remove-infraction/{id}', [TableRoomController::class, 'removeInfraction']);
 
+
+        });
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');
         Route::get('rooms/tables_to_leave', 'TableRoomController@tablesToLeave');
@@ -311,6 +322,7 @@ Route::prefix('caja')->group(function () {
             Route::get('tables', 'CleanerController@tables');
             //Mantenimiento
             Route::get('maintenance', 'MaintenanceController@index')->name('restaurant.maintenance.index')->middleware('just.worker');;
+            Route::get('rent-pos', 'DashboardController@rentPos')->name('restaurant.rent.pos.dashboard')->middleware('just.worker');;
 
             Route::get('totales_sales', 'PosController@total_sales');
             Route::get('totales_sales_usd', 'PosController@total_sales_usd');
@@ -328,6 +340,8 @@ Route::prefix('caja')->group(function () {
             Route::delete('expenses/{id}', [PosController::class, 'destroy']);
             Route::get('expenses/columns', [PosController::class, 'columns']);
             Route::get('expenses/tables', [PosController::class, 'tables']);
+
+        
 
             //Ingresos
             Route::get('incomes', [IncomesController::class, 'incomes'])->name('restaurant.incomes.index')->middleware('just.worker');;

@@ -1010,14 +1010,16 @@
             </li>
         @endif
 
-        @if ($config->hotels && !$roleService->isLogistic())
+        @if (($config->hotels || $config->mod_renta) && !$roleService->isLogistic())
             <li>
                 <a href="#hotelUl" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "
                     class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
                     data-clicked="{{ $path[0] === 'tasks' ? true : false }}">
                     <i class="icofont-hotel icon-parent"></i>
-                    <span class="label">Hotel</span>
+                    <span class="label">
+                        {{ $config->mod_renta ? 'Renta' : 'Hotel' }}
+                    </span>
                 </a>
                 <ul id="hotelUl" class="collapse">
                     <li>
