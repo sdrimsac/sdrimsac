@@ -1017,8 +1017,10 @@ class ItemController extends Controller
                             ->orWhere('second_name', 'like', "%{$request->value}%")
                             ->orWhere('active', 'like', "%{$request->value}%"); */
                             $records->where('description', 'like', "%{$request->value}%")
+                            ->orWhere('internal_id', 'like', "%{$request->value}%")
+                            ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('active', 'like', "%{$request->value}%")
                             ->orWhere(function ($query) use ($textoIntoArray) {
-                                // También buscamos cada palabra individualmente
                                 foreach ($textoIntoArray as $value) {
                                     $query->where('description', 'like', '%' . $value . '%');
                                 }
