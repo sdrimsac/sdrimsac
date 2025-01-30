@@ -4639,7 +4639,7 @@ export default {
             //     date_of_payment: form.date_of_issue,
             //     payment: this.form.enter_amount,
             // }
-            form.cash_id = this.cash_id;
+            form.cash_id = this.cash_id || this.$cashId;
             if (this.form.payment_condition_id == "01") {
                 form.boxes = this.currentPayments;
                 if (this.form_payment.is_bank) {
@@ -5062,12 +5062,13 @@ export default {
             const response = await this.$http.delete(
                 `/caja/rooms/hotel/rents/${id}`
             );
+            this.$emit("updateTables");
         },
         back(val = false) {
             // this.$emit()
             this.form.original_total = undefined;
-            let { is_advance, hotel_rent_id } = this.form;
-            if (is_advance && hotel_rent_id && !val) {
+            let { is_advance, hotel_rent_id, is_rent_payment } = this.form;
+            if (is_advance && hotel_rent_id && !val && !is_rent_payment) {
                 this.$emit("limpiarForm");
                 this.deleteHotelRentItem(hotel_rent_id);
             }

@@ -104,7 +104,7 @@
 
     <h3>CUARTO</h3>
     <p>
-        El monto pactado de común acuerdo, es de S/. 200 (Nuevos soles) mensuales, que se pagarán en
+        El monto pactado de común acuerdo, es de S/. {{ $hotel_rent_item ? $hotel_rent_item['total'] : 'N/A' }} (Nuevos soles) mensuales, que se pagarán en
         forma
         adelantada. El primer pago se realiza a
         la firma del presente contrato y EL ARRENDADOR declara recibir a su entera satisfacción, entregando a EL
@@ -115,7 +115,7 @@
     <p>
         <strong>EL ARRENDATARIO</strong> entrega y <strong>EL ARRENDADOR</strong> recibe a su entera satisfacción a la
         suscripción del presente contrato,
-        el importe de S/ 200 Soles, por concepto de garantía, que cubrirá cualquier daño al área en alquiler
+        el importe de S/ {{ $hotel_rent_item ? $hotel_rent_item['total'] : 'N/A' }} Soles, por concepto de garantía, que cubrirá cualquier daño al área en alquiler
         materia de arriendo y que ocasione <strong>EL ARRENDATARIO</strong>, sólo por el valor justificado del perjuicio
         y hasta por su
         importe total, de ser necesario y sustentado. En caso de entregar <strong>EL ARRENDATARIO</strong> a <strong>EL

@@ -78,6 +78,7 @@ use App\Models\Tenant\CreditList;
 use App\Models\Tenant\HistoryPayment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
+use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
@@ -154,14 +155,14 @@ class SaleNoteController extends Controller
     {
 
         SaleNote::where('credit_cash', true)->whereDoesntHave('credit_payments')->where('state_type_id', '<>', '11')->where('paid', 0)->chunk(100, function ($sale_notes) {
-                foreach ($sale_notes as $sale_note) {
-                    $boxes = Box::where('sale_note_id', $sale_note->id)->sum('amount');
-                    if ($boxes >= $sale_note->total) {
-                        $sale_note->paid = 1;
-                        $sale_note->save();
-                    }
+            foreach ($sale_notes as $sale_note) {
+                $boxes = Box::where('sale_note_id', $sale_note->id)->sum('amount');
+                if ($boxes >= $sale_note->total) {
+                    $sale_note->paid = 1;
+                    $sale_note->save();
                 }
-            });
+            }
+        });
 
         return [
             'success' => true,
@@ -1347,10 +1348,10 @@ class SaleNoteController extends Controller
                 }
 
                 $vacate = $request->vacate;
-                if($configuration->hotels){
+                if ($configuration->hotels) {
                     if ($request->hotel_rent_item_ids) {
                         $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-    
+
                         foreach ($hotel_rent_items as $item) {
                             $item->payment_status = "Pagado";
                             $id_to_document = $item->hotel_rent_id;
@@ -1374,12 +1375,12 @@ class SaleNoteController extends Controller
                             $item->save();
                         }
                     }
-                
+
                     if ($request->hotel_rent_id && !$promotion_sale) {
                         $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
                         $hotel_rent_items = $hotel_rent->items;
                         if ($request->is_advance) {
-    
+
                             HotelRentDocument::create([
                                 'hotel_rent_id' => $hotel_rent->id,
                                 'sale_note_id' => $this->sale_note->id,
@@ -1413,26 +1414,36 @@ class SaleNoteController extends Controller
                                     $item->total = 0;
                                     $item->advances = 0;
                                 }
-    
+
                                 $item->checkout_date = date('Y-m-d');
                                 $item->checkout_time = date('H:i:s');
                                 $item->save();
                             }
                             $hotel_rent->payment_status = "Pagado";
                             $hotel_rent->sale_note_id = $this->sale_note->id;
-    
+
                             $hotel_rent->paid = 1;
                             $hotel_rent->save();
                         }
                     }
                 }
-                if($configuration->mod_renta && $request->hotel_rent_id){
-                    HotelRentDocument::create([
+                if ($configuration->mod_renta && $request->hotel_rent_id) {
+                    $hotel_rent_document = HotelRentDocument::create([
                         'hotel_rent_id' => $request->hotel_rent_id,
                         'sale_note_id' => $this->sale_note->id,
                         'is_advance' => false,
                         'due_date' => $request->due_date,
                     ]);
+
+                    foreach ($data['items'] as $row) {
+                        $infraction_id = isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null;
+                        $infraction = HotelRentInfraction::find($infraction_id);
+                        if ($infraction) {
+                            $infraction->paid = true;
+                            $infraction->hotel_rent_document_id = $hotel_rent_document->id;
+                            $infraction->save();
+                        }
+                    }
                 }
 
                 if ($request->is_list_credit) {
@@ -1492,6 +1503,7 @@ class SaleNoteController extends Controller
                             $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
                         }
                     }
+
                     // $item = Item::find($item_id);
                     //  $item->stock = $item->stock - $row['quantity'];
                     // $item->save();
@@ -1748,8 +1760,8 @@ class SaleNoteController extends Controller
                     // if($configuration->android_configuration){
                     //     sleep(5);
                     // }
-            
-                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
+
+                    event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 if (count($request->payments) > 0) {
                     $total_payment = 0;
@@ -1863,7 +1875,7 @@ class SaleNoteController extends Controller
                 $message = "Se ha generado un documento con variación para la habitación " . $room . " por S/" . $total_variation . " Total Original: S/" . $total_original . "" . ($is_discount ? " (Descuento)" : " (Recargo)");
                 (new WhatsappController)->sendMessageAll($message);
             }
-        
+
             if ($this->sale_note->creditPayments) {
                 $this->sale_note->calculatePenalties();
             }
@@ -2684,7 +2696,7 @@ class SaleNoteController extends Controller
             $obj->save();
             Box::where('sale_note_id', $obj->id)->delete();
             $establishment = Establishment::where('id', $obj->establishment_id)->first();
-            
+
             $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
 
             foreach ($obj->items as $item) {
@@ -2702,7 +2714,7 @@ class SaleNoteController extends Controller
                         $quantity = $quantity * $unit_type->quantity_unit;
                     }
                 }
-            
+
                 $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $item->warehouse_id ?? $warehouse->id]])->first();
                 $it = Item::find($item->item_id);
                 $item->sale_note->inventory_kardex()->create([

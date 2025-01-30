@@ -47,6 +47,7 @@ use Modules\Services\Data\ServiceData;
 use App\Models\Tenant\CategoriaMadera;
 use App\Models\Tenant\DigitalPayment;
 use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaGrosor;
 use App\Models\Tenant\ItemMedidaAncho;
@@ -379,16 +380,44 @@ class PosController extends Controller
         $areas = Area::all();
         $tablesClean = [];
         $tablesLeave = [];
-        $tables = Table::where('is_room',true)->get();
+        $tables = Table::where('is_room',true);
 
-        if($config->mod_renta){
-            $tables = $tables->transform(function($table){
-                $hotel_rent = HotelRentItem::where('table_id', $table->id)->latest()->first();
-                if($hotel_rent){
-                    $table->hotel_rent_id = $hotel_rent->hotel_rent_id;
+        if($config->mod_renta) {
+            $tables = $tables->with(['hotel_rent_items' => function($query) {
+                $query->latest()
+                      ->with(['hotel_rent' => function($query) {
+                          $query
+                          ->with(['documents' => function($query) {
+                            $query->latest('due_date');
+                        }]);
+                      }]);
+            }])->get();
+        
+            $tables = $tables->transform(function($table) {
+                $t_return = [
+                    'id' => $table->id,
+                    'number' => $table->number,
+                    'rent_month' => $table->rent_month,
+                    'status_table_id' => $table->status_table_id,
+                    'is_cleaning' => $table->is_cleaning,
+                    'floor_id' => $table->floor_id,
+            
+                
+                ];
+                if($latestRentItem = $table->hotel_rent_items->first()) {
+                    $table->hotel_rent_id = $latestRentItem->hotel_rent_id;
+                    $t_return['hotel_rent_id'] = $latestRentItem->hotel_rent_id;
+                    if($latestDocument = $latestRentItem->hotel_rent->documents->first()) {
+                        $table->due_date = $latestDocument->due_date;
+                        $t_return['due_date'] = Carbon::parse($latestDocument->due_date)->format('d/m/Y');
+                    }
                 }
-                return $table;
+
+                return $t_return;
+                
             });
+        } else {
+            $tables = $tables->get();
         }
         $floors = Floor::all();
         $types = TableType::all();

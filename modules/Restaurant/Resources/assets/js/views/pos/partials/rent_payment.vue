@@ -102,6 +102,7 @@ export default {
                     customer_number,
 
                 });
+                this.close();
                 
             }).catch(error => {
                 this.$toast.error("Error al preparar el pago");

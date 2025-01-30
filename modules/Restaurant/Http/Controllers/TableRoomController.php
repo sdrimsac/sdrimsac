@@ -143,22 +143,12 @@ class TableRoomController extends Controller
         }
     }
 
-    public function pdf($table_id)
+    public function pdf($hotel_rent_id)
     {
-        $table = Table::select('id', 'number', 'floor_id', 'description', 'price', 'table_type_id', 'month_price')
-            ->find($table_id);
-        if (!$table) {
-            return [
-                'success' => false,
-                'message' => 'No se encontró la tabla'
-            ];
-        }
-
-        $hotel_rent_item = HotelRentItem::where('table_id', $table_id)
-            ->select('id', 'hotel_rent_id', 'quantity_persons', 'checkin_date', 'checkin_time', 'checkout_date_estimated', 'duration', 'total', 'discount_instead_services', 'is_month_rent')
-            ->orderBy('checkin_date', 'desc')
-            ->orderBy('checkin_time', 'desc')
+        $hotel_rent = HotelRent::where('id', $hotel_rent_id)
             ->first();
+
+        $hotel_rent_item = HotelRentItem::where('hotel_rent_id', $hotel_rent_id)->first();
 
         if (!$hotel_rent_item) {
             return [
@@ -166,10 +156,14 @@ class TableRoomController extends Controller
                 'message' => 'No se encontraron datos'
             ];
         }
+        $table = $hotel_rent_item->table;
+        if (!$table) {
+            return [
+                'success' => false,
+                'message' => 'No se encontró la tabla'
+            ];
+        }
 
-        $hotel_rent = HotelRent::where('id', $hotel_rent_item->hotel_rent_id)
-            ->select('customer')
-            ->first();
 
         if (!$hotel_rent) {
             return [
@@ -184,9 +178,6 @@ class TableRoomController extends Controller
             $customer_data = json_decode($hotel_rent->customer);
         }
 
-        $table = Table::with(['floor', 'type'])
-            ->select('id', 'number', 'floor_id', 'description', 'price', 'table_type_id', 'month_price')
-            ->find($table_id);
 
         $data = [
             'table' => [
@@ -209,6 +200,7 @@ class TableRoomController extends Controller
                 'checkout_date_estimated' => $hotel_rent_item->checkout_date_estimated,
             ],
             'hotel_rent' => [
+                
                 'customer' => [
                     'name' => $customer_data->name ?? '',
                     'number' => $customer_data->number ?? '',
@@ -847,7 +839,8 @@ class TableRoomController extends Controller
             'message' => 'Infracción eliminada'
         ];
     }
-    public function preparePayment(Request $request){
+    public function preparePayment(Request $request)
+    {
         $hotel_rent = HotelRent::find($request->input('hotel_rent_id'));
         $customer_number = $hotel_rent->customer->number;
         $infractions = $request->input('infractions');
@@ -868,6 +861,7 @@ class TableRoomController extends Controller
             $service->price = $infraction['amount'];
             $service->description = $infraction['description'];
             $service->item->description = $infraction['description'];
+            $service->item->infraction_id = $infraction['id'];
             $items->push([
                 'id' => 0,
                 'observation' => '',
@@ -877,28 +871,30 @@ class TableRoomController extends Controller
             ]);
         }
         return compact('items', 'customer_number');
-
     }
     public function storeInfraction(Request $request)
     {
         HotelRentInfraction::create($request->all());
-        
+
         return [
             'success' => true,
             'message' => 'Infracción creada'
         ];
     }
 
-    public  function getAmount($id){
-        $hotel_rent = HotelRent::find($id); 
+    public  function getAmount($id)
+    {
+        $hotel_rent = HotelRent::find($id);
         $total = $hotel_rent->total;
         return [
             'success' => true,
             'total' => $total
         ];
     }
-    public  function getInfractionsDebt($id){
-        $infractions = HotelRentInfraction::where('hotel_rent_id', $id)->where('paid', false)->get()->transform(function($row){
+
+    public  function getInfractionsDebt($id)
+    {
+        $infractions = HotelRentInfraction::where('hotel_rent_id', $id)->where('paid', false)->orderBy('id', 'desc')->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
                 'description' => $row->description,
@@ -914,7 +910,9 @@ class TableRoomController extends Controller
     }
     public  function getInfractions($id)
     {
-        $infractions = HotelRentInfraction::where('hotel_rent_id', $id)->get();
+        $infractions = HotelRentInfraction::where('hotel_rent_id', $id)
+            ->orderBy('id', 'desc')
+            ->get();
         return [
             'success' => true,
             'infractions' => $infractions
@@ -922,8 +920,7 @@ class TableRoomController extends Controller
     }
     public  function getDocuments($id)
     {
-        $documents = HotelRentDocument::where('hotel_rent_id', $id)->get()
-            ->sortByDesc('due_date')
+        $documents = HotelRentDocument::where('hotel_rent_id', $id)->orderBy('due_date', 'desc')->get()
             ->transform(function ($row) {
                 $document = $row->document ?? $row->sale_note;
                 $is_sale_note = $row->sale_note ? true : false;
@@ -1272,6 +1269,11 @@ class TableRoomController extends Controller
                 $hotel_rent = HotelRentItem::where('table_id', $table->id)->latest()->first();
                 if ($hotel_rent) {
                     $table->hotel_rent_id = $hotel_rent->hotel_rent_id;
+                    // Obtener la fecha de vencimiento
+                    $due_date = HotelRentDocument::where('hotel_rent_id', $hotel_rent->hotel_rent_id)
+                        ->orderBy('due_date', 'desc')
+                        ->value('due_date');
+                    $table->due_date = $due_date;
                 }
                 return $table;
             });
@@ -2060,5 +2062,40 @@ class TableRoomController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getDueDate($hotel_rent_id)
+    {
+        $due_date = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)
+            ->orderBy('due_date', 'desc')
+            ->value('due_date');
+        
+        return [
+            'success' => true,
+            'due_date' => $due_date
+        ];
+    }
+
+    public function getInfo($id)
+    {
+        $hotel_rent = HotelRent::find($id);
+        $customer = $hotel_rent->customer;
+        $customer_number = $customer->number;
+        $customer_name = $customer->name;
+        $hotel_rent_item = $hotel_rent->items->first();
+        $table = $hotel_rent_item->table->getTableFullNameDescription();
+        
+        $due_date = HotelRentDocument::where('hotel_rent_id', $id)
+            ->orderBy('due_date', 'desc')
+            ->value('due_date');
+
+        return [
+            'success' => true,
+            'customer_number' => $customer_number,
+            'customer_name' => $customer_name,
+            'table' => $table,
+            'checkin_date' => $hotel_rent_item->checkin_date,
+            'due_date' => $due_date
+        ];
     }
 }

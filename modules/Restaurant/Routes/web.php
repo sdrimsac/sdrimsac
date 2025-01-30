@@ -215,6 +215,7 @@ Route::prefix('caja')->group(function () {
             Route::post('prepare-payment', [TableRoomController::class, 'preparePayment']);
             Route::delete('remove-infraction/{id}', [TableRoomController::class, 'removeInfraction']);
             Route::get('get-infractions-debt/{id}', [TableRoomController::class, 'getInfractionsDebt']);
+            Route::get('get-info/{id}', [TableRoomController::class, 'getInfo']);
 
         });
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');

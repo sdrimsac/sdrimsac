@@ -117,6 +117,7 @@ use Modules\Restaurant\Models\Table;
 use Modules\Workshop\Models\Historial;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
+use App\Models\Tenant\HotelRentInfraction;
 
 class DocumentController extends Controller
 {
@@ -1318,12 +1319,21 @@ class DocumentController extends Controller
             }
             $vacate = $request->vacate;
             if ($configuration->mod_renta && $request->hotel_rent_id) {
-                HotelRentDocument::create([
+                $hotel_rent_document = HotelRentDocument::create([
                     'hotel_rent_id' => $request->hotel_rent_id,
                     'document_id' => $document->id,
                     'is_advance' => false,
                     'due_date' => $request->due_date,
                 ]);
+                foreach ($request->items as $row) {
+                    $infraction_id = isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null;
+                    $infraction = HotelRentInfraction::find($infraction_id);
+                    if($infraction){
+                        $infraction->paid = true;
+                        $infraction->hotel_rent_document_id = $hotel_rent_document->id;
+                        $infraction->save();
+                    }
+                }
             }
             if ($configuration->hotels) {
                 if ($request->hotel_rent_item_ids) {

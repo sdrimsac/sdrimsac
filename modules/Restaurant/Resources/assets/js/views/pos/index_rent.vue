@@ -119,7 +119,7 @@
                                         class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
                                         :key="idx"
                                         @click="selectTable(table)"
-                                        style="max-height: 175px;    max-width: 145px;"
+                                        style="height: 175px;    max-width: 145px;"
                                     >
                                         <template>
                                             <div
@@ -145,9 +145,25 @@
                                                                 2
                                                         "
                                                     >
-                                                        <i
-                                                            class="fas fa-bed"
-                                                        ></i>
+                                                        <template
+                                                            v-if="
+                                                                table.due_date
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="text-white"
+                                                                style="font-size: 20px;font-weight: bold;"
+                                                            >
+                                                                {{
+                                                                    table.due_date
+                                                                }}
+                                                            </div>
+                                                        </template>
+                                                        <template v-else>
+                                                            <i
+                                                                class="fas fa-bed"
+                                                            ></i>
+                                                        </template>
                                                     </template>
                                                     <template
                                                         v-else-if="
@@ -215,7 +231,7 @@
                                                             )
                                                         "
                                                     >
-                                                    <svg
+                                                        <svg
                                                             width="20px"
                                                             height="20px"
                                                             viewBox="0 0 24 24"
@@ -250,8 +266,7 @@
                                                                 stroke-linecap="round"
                                                                 stroke-linejoin="round"
                                                             />
-                                                        </svg> 
-                                                     </el-button
+                                                        </svg> </el-button
                                                 ></el-tooltip>
                                             </div>
                                             <div
@@ -313,7 +328,7 @@
                                                             )
                                                         "
                                                     >
-                                                    <svg
+                                                        <svg
                                                             width="20px"
                                                             height="20px"
                                                             viewBox="0 0 24 24"
@@ -348,8 +363,7 @@
                                                                 stroke="#000000"
                                                                 stroke-width="2"
                                                             />
-                                                        </svg>
-                                                    </el-button
+                                                        </svg> </el-button
                                                 ></el-tooltip>
                                             </div>
                                         </template>
@@ -882,6 +896,7 @@
 
         <template>
             <payment-form
+                @updateTables="updateTables"
                 :user="user"
                 :currencyIdChoice.sync="currencyIdChoice"
                 @clearVariation="clearVariation"
@@ -1066,6 +1081,15 @@
             :showDialog.sync="showDialogRentDocuments"
             :rentId="rentId"
         ></rent-documents>
+        <expenses-incomes
+            v-if="configuration.show_expenses_incomes_caja"
+            :showDialog.sync="showExpensesIncomes"
+            :company="company"
+            :cash_id="cashId"
+            :establishments="establishments"
+            @checkCashAvailable="checkCashAvailable"
+            :fromPos="true"
+        ></expenses-incomes>
         <rent-payment
             :showDialog.sync="showDialogRentPayment"
             :rentId="rentId"
@@ -1075,6 +1099,7 @@
             :showDialog.sync="showDialogRentInfractions"
             :rentId="rentId"
         ></rent-infractions>
+        <rent-info :showDialog.sync="showRentInfo" :rentId="rentId"></rent-info>
         <close-cash
             v-if="showDialogClose"
             :recordId.sync="cash_id"
@@ -1146,6 +1171,7 @@ const NumberPad = () => import("./partials/num_pad.vue");
 const RentDocuments = () => import("./partials/rent_documents.vue");
 const RentInfractions = () => import("./partials/rent_infractions.vue");
 const RentPayment = () => import("./partials/rent_payment.vue");
+const RentInfo = () => import("./partials/rent_info.vue");
 const Tables = () => import("./partials/tables.vue");
 const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
@@ -1155,7 +1181,7 @@ const CloseCash = () => import("../cash/closecash.vue");
 const EditProduct = () => import("./partials/edit_product.vue");
 const ListOrden = () => import("./partials/list_ordens.vue");
 const ListFoodMobiles = () => import("./partials/list_food_mobiles.vue");
-
+const ExpensesIncomes = () => import("./partials/expenses_incomes.vue");
 const MonthSales = () => import("./partials/month_sales.vue");
 const RoomRentForm = () => import("./partials/room_rent_form.vue");
 
@@ -1181,6 +1207,7 @@ export default {
         "areaId"
     ],
     components: {
+        ExpensesIncomes,
         RentInfractions,
         RentDocuments,
         RentPayment,
@@ -1201,12 +1228,15 @@ export default {
         TablesRooms,
         RoomRentForm,
         CashForm,
-        CloseCash
+        CloseCash,
+        RentInfo
     },
     mixins: [functions, exchangeRate],
 
     data() {
         return {
+            showRentInfo: false,
+            showExpensesIncomes: false,
             showDialogRentPayment: false,
             showDialogRentDocuments: false,
             showDialogRentInfractions: false,
@@ -1401,7 +1431,8 @@ export default {
             currentFloorId: null,
             currentTable: null,
             rentId: null,
-            boxOperation: "Abrir"
+            boxOperation: "Abrir",
+            cashAvailable: 0
         };
     },
     beforeDestroy() {
@@ -1523,7 +1554,22 @@ export default {
         }
     },
     methods: {
-        openPayment($event, id){
+        checkCashAvailable() {
+            this.$http
+                .get("/caja/worker/cash_available/" + this.cash_id)
+                .then(response => {
+                    let data = response.data;
+                    this.cashAvailable = data.cash_available;
+                    // this.cashAvailable = response.data.data;
+                })
+                .catch(error => {
+                    console.log(
+                        "🚀 ~ checkCashAvailable ~ error:",
+                        error.response
+                    );
+                });
+        },
+        openPayment($event, id) {
             $event.stopPropagation();
             this.showDialogRentPayment = true;
             this.rentId = id;
@@ -1548,7 +1594,7 @@ export default {
         },
         updateTables() {
             this.$http.get(`/caja/rent/get-tables`).then(response => {
-                this.tables = response.data;
+                this.tables = response.data.tables;
             });
         },
         async finishRegister(id, paymentVariation = null) {
@@ -1599,8 +1645,13 @@ export default {
             );
         },
         selectTable(table) {
-            this.currentTable = table;
-            this.showRoomRentForm = true;
+            if (table.status_table_id == 1) {
+                this.currentTable = table;
+                this.showRoomRentForm = true;
+            } else {
+                this.showRentInfo = true;
+                this.rentId = table.hotel_rent_id;
+            }
         },
         selectFloor(floor) {
             this.currentFloorId = floor.id;
@@ -1925,12 +1976,6 @@ export default {
                     icon: "fas fa-cash-register",
                     visible: true && !this.isSeller
                 },
-                {
-                    id: 74,
-                    title: ["Venta del", "mes"],
-                    icon: "fas fa-history ",
-                    visible: true && this.establishments.is_product
-                },
 
                 {
                     id: 1,
@@ -1966,6 +2011,13 @@ export default {
                     visible: true && !this.isSeller
                 }
             ];
+            if (this.configuration.show_expenses_incomes_caja) {
+                this.optionsMenu.push({
+                    id: 77,
+                    title: ["Ingresos/", "/Gastos"],
+                    icon: "fas fa-money-bill-wave-alt"
+                });
+            }
         },
         formatDescriptionType(type) {
             let price = this.getDefaultPrice(type);
@@ -2489,6 +2541,13 @@ export default {
         },
         async trigerFunction(id) {
             switch (id) {
+                case 77:
+                    if (!this.$cashId) {
+                        this.$toast.error("Abra una caja");
+                    } else {
+                        this.showExpensesIncomes = true;
+                    }
+                    break;
                 case 66:
                     if (this.cash_id) {
                         this.showDialogClose = true;
@@ -3248,7 +3307,6 @@ export default {
                         } else {
                             this.localOrden.unshift(itemAwait);
                         }
-                        this.$refs.list_orden.changeCurrencyItems();
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
@@ -3261,14 +3319,12 @@ export default {
                         } else {
                             this.localOrden.unshift(orden);
                         }
-                        this.$refs.list_orden.changeCurrencyItems();
                     }
                 }
 
                 // this.localOrden = [...this.localOrden];
                 //this.localOrden = this.changeCurrencyItems();
             }
-            this.$refs.ordenRef.calculateTotal();
         },
 
         total_sales(val) {
@@ -4871,12 +4927,8 @@ export default {
             if (this.isAndroid) {
                 this.getLastDocument();
             }
-            if (this.configuration.hotels) {
-                this.getTablesToLeave();
-            }
-            if (this.$refs.list_orden) {
-                this.$refs.list_orden.commercialTreatmentId = null;
-            }
+
+    
             this.formVariation = {
                 afectar_caja: true,
                 orden_id: null,
@@ -4966,19 +5018,11 @@ export default {
                 this.initFormItem();
                 await this.initForm(this.customer_default.id);
             }
-            if (!this.configuration.all_items_pos) {
-                await this.getFoods();
-            }
+
             await this.calculateTotal();
-            if (!this.isAndroid) {
-                this.$refs.input_items.$el
-                    .getElementsByTagName("input")[0]
-                    .focus();
-            }
+    
             this.total_sales_pos = 0;
-            if (this.configuration.sale_note_credit_confirm) {
-                this.openCredit();
-            }
+    
             this.getExchange();
         },
         typesearch() {
