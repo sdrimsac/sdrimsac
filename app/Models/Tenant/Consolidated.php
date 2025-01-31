@@ -2,6 +2,8 @@
 
 namespace App\Models\Tenant;
 
+use Modules\Dispatch\Models\Driver;
+use Modules\Dispatch\Models\Transport;
 
 class Consolidated extends ModelTenant
 
@@ -12,9 +14,22 @@ class Consolidated extends ModelTenant
         "user_id",
         "establishment_id",
         "date_of_issue",
-        "weight"
+        "weight",
+        "transport_id",
+        "driver_id"
 
     ];
+
+    public function transport()
+    {
+        return $this->belongsTo(Transport::class);
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
+    }
+
 
     public function user()
     {

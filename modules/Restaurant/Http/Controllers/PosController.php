@@ -222,7 +222,7 @@ class PosController extends Controller
                         });
                 }
 
-                $consolidated_quotations = $configuration->consolidated_quotations;
+                $consolidated_quotations = $configuration->consolidated_quotations && !$configuration->consolidated_quotation_details;
                 if ($consolidated_quotations && $customer_unit_type_id) {
                     $item_unit_types_person = UnitTypePerson::where('customer_id', $customer_unit_type_id)->pluck('description')->values();
                     $query->whereHas('item_unit_types', function ($query) use ($item_unit_types_person) {

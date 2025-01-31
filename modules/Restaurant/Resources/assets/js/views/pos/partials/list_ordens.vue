@@ -2721,6 +2721,7 @@
             :fromPos="true"
         ></consignment-form>
         <consolidated-modal
+            :configuration="configuration"
             :showDialog.sync="showConsolidated"
         ></consolidated-modal>
         <credit-list-modal

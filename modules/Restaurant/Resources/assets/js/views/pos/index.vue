@@ -1261,9 +1261,7 @@
                                                                 <span
                                                                     class="lead-font-weight-700 h5"
                                                                 >
-                                                                    {{
-                                                                        configuration.direct_unit_type
-                                                                    }}
+                                                                
                                                                     {{
                                                                         data.description.toUpperCase()
                                                                     }}
@@ -1829,6 +1827,7 @@
             @cancelOrden="cancelOrden"
             :showDialog.sync="showConsolidatedList"
             @insertOrdenQuotation="insertOrdenQuotation"
+            :configuration="configuration"
         ></consolidated-list-modal>
         <quotation-list-modal
             :showDialog.sync="showQuotationListDialog"
@@ -2296,7 +2295,7 @@ export default {
             return this.configuration.android_configuration;
         },
         isSellerConsolidated() {
-            return this.isSeller && this.configuration.consolidated_quotations;
+            return this.isSeller && this.configuration.consolidated_quotations && !this.configuration.consolidated_quotation_details;
         },
         canAddItem() {
             if (this.isSeller && this.configuration.consolidated_quotations) {

@@ -4246,6 +4246,44 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
+                                                            <div
+                                                                class="col-md-2 mt-4"
+                                                                v-if="form.consolidated_quotations"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="el-icon-s-grid icon-tab"
+                                                                        ></i>
+                                                                            Distribuidora v2
+                                                                    </label>
+                                                                    <el-switch
+                                                                        @change="
+                                                                            submit(
+                                                                                'Detalles en distribuidora',
+                                                                                form.consolidated_quotation_details,
+                                                                                'consolidated_quotations',
+                                                                                'lockIcon'
+                                                                            )
+                                                                        "
+                                                                        v-model="
+                                                                            form.consolidated_quotation_details
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div

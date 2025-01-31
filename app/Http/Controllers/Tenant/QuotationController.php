@@ -56,6 +56,8 @@ use App\Models\Tenant\UnitTypePerson;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
 use LDAP\Result;
+use Modules\Dispatch\Models\Driver;
+use Modules\Dispatch\Models\Transport;
 use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\Orden;
@@ -394,7 +396,7 @@ class QuotationController extends Controller
     {
 
         try {
-            DB::beginTransaction();
+            DB::connection('tenant')->beginTransaction();
             $company = Company::first();
             $document_id = $request->document_id;
             $sale_note_id = $request->sale_note_id;
@@ -424,14 +426,14 @@ class QuotationController extends Controller
             $cajas->soap_type_id = $company->soap_type_id;
             $cajas->establishment_id = auth()->user()->establishment_id;
             $cajas->save();
-            DB::commit();
+            DB::connection('tenant')->commit();
 
             return [
                 'success' => true,
                 'message' => 'Documento pagado correctamente'
             ];
         } catch (Exception $e) {
-            DB::rollBack();
+            DB::connection('tenant')->rollBack();
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -471,23 +473,25 @@ class QuotationController extends Controller
                 $document = $saleNote;
             }
 
-            $paid = $document->boxes()->sum('amount');
             $total = $document->total;
-            $balance = $total - $paid;
+            $total_paid = $document->boxes()->sum('amount');
+            $paid = $total_paid >= $total ? true : false;
+            $balance = $total - $total_paid;
             $pdf = $document_id ? '/print/document/' . $document->external_id . '/ticket' : '/sale-note/print/' . $document->external_id . '/ticket';
-
+            $total = number_format($total - $total_paid, 2, '.', '');
             $documents[] = [
                 'quotation_full_number' => $quotation->number_full,
                 'quotation_id' => $quotation->id,
                 'document_id' => $document_id,
                 'sale_note_id' => $sale_note_id,
                 'full_number' => $document->number_full,
-                'total' => $document->total,
+                'total' => $total,
                 'date_of_issue' => $document->date_of_issue,
                 'time_of_issue' => $document->time_of_issue,
                 'customer_id' => $document->customer_id,
                 'customer_name' => $document->customer->name,
-                'paid' => $balance > 0 ? false : true,
+                'paid' => $paid,
+                'balance' => $balance,
                 'pdf' => $pdf,
                 'state_type_id' => $document->state_type_id
             ];
@@ -536,6 +540,114 @@ class QuotationController extends Controller
             'to_print' => $to_print,
             'has_print' => $has_print
         ];
+    }
+    public function consolidatedsExportDocumentsDetail($id)
+    {
+        $consolidated = Consolidated::find($id);
+        $quotations = $consolidated->quotations;
+        $consolidated_info = [
+            'vehicle_brand' => optional($consolidated->transport)->brand ?? '',
+            'plate_number' => optional($consolidated->transport)->plate_number ?? '',
+            'driver_name' => optional($consolidated->driver)->name ?? '',
+            'count_01' => 0,
+            'count_03' => 0,
+            'count_80' => 0,
+            'count_document' => 0,
+            'total' => 0,
+            'count_diff_customer' => 0,
+        ];
+        $temp_customer_id = [];
+        $groupedQuotations = $quotations->groupBy(function ($quotation) {
+            return $quotation->user_id;
+        })->map(function ($group) {
+            return $group->groupBy(function ($quotation) {
+                $customer = Person::find($quotation->customer_id);
+                return $customer ? $customer->client_zone_id : null;
+            });
+        });
+        $registers = [];
+
+        foreach ($groupedQuotations as $userId => $groupedQuotation) {
+            $user = User::find($userId);
+            $user_name = $user->name;
+            $registers[$user_name] = [];
+
+            foreach ($groupedQuotation as $zoneId => $quotations) {
+                $zone_name = "-";
+                if ($zoneId) {
+                    $zone = ClientZone::find($zoneId);
+                    $zone_name = $zone ? $zone->description : "-";
+                }
+                $registers[$user_name][$zone_name] = [];
+                //ordenar $quotations por num_orden
+                $quotations = $quotations->sortBy('num_orden');
+                foreach ($quotations as $quotation) {
+                    $document = Document::where('quotation_id', $quotation->id)
+                        ->latest()
+                        ->first();
+                    $saleNote = SaleNote::where('quotation_id', $quotation->id)
+                        ->latest()
+                        ->first();
+
+                    if ($document && $saleNote) {
+                        if ($document->created_at > $saleNote->created_at) {
+                            $selectedDocument = $document;
+
+                        } else {
+                            $selectedDocument = $saleNote;
+                        }
+                    } elseif ($document) {
+                        $selectedDocument = $document;
+                    } elseif ($saleNote) {
+                        $selectedDocument = $saleNote;
+                    } else {
+                        $selectedDocument = null;
+                    }
+                    $total_weight = 0;
+                    foreach ($selectedDocument->quotation->items as $item) {
+                        if (isset($item->item->weight)) {
+                            $total_weight += $item->item->weight * $item->quantity;
+                        }
+
+                    }
+
+                    if ($selectedDocument) {
+                        if(!in_array($selectedDocument->customer_id, $temp_customer_id)){
+                            $consolidated_info['count_diff_customer']++;
+                            $temp_customer_id[] = $selectedDocument->customer_id;
+                        }
+                        $consolidated_info['count_document']++;
+                        $consolidated_info['total'] += $selectedDocument->total;
+                        if($selectedDocument->document_type_id == '01'){
+                            $consolidated_info['count_01']++;
+                        }elseif($selectedDocument->document_type_id == '03'){
+                            $consolidated_info['count_03']++;
+                        }elseif($selectedDocument->document_type_id == '80'){
+                            $consolidated_info['count_80']++;
+                        }
+                        $register = [
+                            'customer_address' => $selectedDocument->customer->address,
+                            'customer_name' => $selectedDocument->customer->name,
+                            'document_id' => $selectedDocument->id,
+                            'number_full' => $selectedDocument->number_full,
+                            'total' => $selectedDocument->total,
+                            'zone' => $zone_name,
+                            'num_orden' => $quotation->num_orden,
+                            'state_type_id' => $selectedDocument->state_type_id,
+                            'total_weight' => $total_weight,
+                        ];
+                        $registers[$user_name][$zone_name][] = $register;
+                    }
+                }
+            }
+        }
+
+        return (new ConsolidatedExportDocument())
+            ->records($registers)
+            ->detail(true)
+            ->consolidatedInfo($consolidated_info)
+            ->company(Company::active())
+            ->download("Reparto_documentos_{$consolidated->id}_{$consolidated->date_of_issue}.xlsx");
     }
     public function consolidatedsExportDocuments($id)
     {
@@ -617,7 +729,7 @@ class QuotationController extends Controller
         $count = $quotations->count();
         // Agrupar las cotizaciones por zonas
         $groupedQuotations = $quotations->groupBy(function ($quotation) {
-            return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
+            return optional($quotation->person->zone)->description ?? '-'; // O el atributo que desees usar para agrupar
         });
 
         // Ejemplo de cómo podrías iterar sobre las cotizaciones agrupadas
@@ -703,7 +815,7 @@ class QuotationController extends Controller
 
         // Agrupar las cotizaciones por zonas
         $groupedQuotations = $quotations->groupBy(function ($quotation) {
-            return $quotation->person->zone->description; // O el atributo que desees usar para agrupar
+            return optional($quotation->person->zone)->description ?? '-'; // O el atributo que desees usar para agrupar
         });
 
         // Ejemplo de cómo podrías iterar sobre las cotizaciones agrupadas
@@ -780,10 +892,13 @@ class QuotationController extends Controller
                 ];
             });
         $zones = ClientZone::all();
-
+        $transports = Transport::where('is_active', true)->get();
+        $drivers = Driver::where('is_active', true)->get();
         return [
             'sellers' => $sellers,
-            'zones' => $zones
+            'zones' => $zones,
+            'transports' => $transports,
+            'drivers' => $drivers
         ];
     }
     public function consolidated(Request $request)
@@ -796,6 +911,8 @@ class QuotationController extends Controller
         $consolidated->establishment_id = auth()->user()->establishment_id;
         $consolidated->date_of_issue = date('Y-m-d');
         $consolidated->weight = $weight;
+        $consolidated->transport_id = $request->transport_id;
+        $consolidated->driver_id = $request->driver_id;
         $consolidated->save();
         Quotation::where('consolidated', false)
             ->whereNotIn('id', $excludes)

@@ -25,7 +25,53 @@
             </div>
         </template>
         <div class="row m-2">
-            <div class="col-12 text-end">
+            <div class="col-4">
+                <label
+                    >Vehículo
+                    <a href="#" @click.prevent="showDialogTransportForm = true"
+                        >[+ Nuevo]</a
+                    >
+                </label>
+                <el-select
+                    v-model="form.transport_id"
+                    clearable
+                    placeholder="Seleccionar vehículo"
+                >
+                    <el-option
+                        v-for="(option, idx) in transports"
+                        :key="idx"
+                        :label="
+                            option.plate_number +
+                                ' - ' +
+                                option.model +
+                                ' - ' +
+                                option.brand
+                        "
+                        :value="option.id"
+                    ></el-option>
+                </el-select>
+            </div>
+            <div class="col-4">
+                <label
+                    >Conductor
+                    <a href="#" @click.prevent="showDialogDriverForm = true"
+                        >[+ Nuevo]</a
+                    >
+                </label>
+                <el-select
+                    v-model="form.driver_id"
+                    @change="changeDriver"
+                    clearable
+                >
+                    <el-option
+                        v-for="option in drivers"
+                        :key="option.id"
+                        :label="option.number + ' - ' + option.name"
+                        :value="option.id"
+                    ></el-option>
+                </el-select>
+            </div>
+            <div class="col-4 text-end mt-3">
                 <el-button
                     type="primary"
                     @click="consolidate"
@@ -169,14 +215,32 @@
                 </tbody>
             </table>
         </div>
+        <driver-form
+            :showDialog.sync="showDialogDriverForm"
+            @success="successDriver"
+        ></driver-form>
+        <transport-form
+            :showDialog.sync="showDialogTransportForm"
+            @success="successTransport"
+        ></transport-form>
     </el-dialog>
 </template>
 
 <script>
+import DriverForm from "../../../../../../../../resources/js/views/dispatches/drivers/form.vue";
+import TransportForm from "../../../../../../../../resources/js/views/dispatches/transports/form.vue";
 export default {
+    components: {
+        DriverForm,
+        TransportForm
+    },
     props: ["showDialog"],
     data() {
         return {
+            showDialogTransportForm: false,
+            showDialogDriverForm: false,
+            transports: [],
+            drivers: [],
             resource: "quotations",
             records: [],
             all_records: [],
@@ -191,7 +255,9 @@ export default {
                 zone_id: null,
                 date_of_issue: null,
                 customer_id: null,
-                seller_id: null
+                seller_id: null,
+                transport_id: null,
+                driver_id: null
             },
             customers: [],
             input_person: {
@@ -213,6 +279,21 @@ export default {
         }
     },
     methods: {
+        async successDriver(id) {
+            this.form.driver_id = id;
+            await this.$http.get(`/drivers/get_options`).then(response => {
+                this.drivers = response.data;
+            });
+        },
+        async successTransport(id) {
+            this.form.transport_id = id;
+            await this.$http.get(`/transports/get_options`).then(response => {
+                this.transports = response.data;
+            });
+        },
+        changeDriver() {
+            console.log(this.form.driver_id);
+        },
         filterRecords() {
             this.records = this.all_records.filter(record => {
                 let {
@@ -236,6 +317,8 @@ export default {
             this.$http.get("/quotations/consolidated/tables").then(response => {
                 this.zones = response.data.zones;
                 this.sellers = response.data.sellers;
+                this.transports = response.data.transports;
+                this.drivers = response.data.drivers;
             });
         },
         async searchRemoteCustomers(input) {
@@ -263,7 +346,12 @@ export default {
                 this.loading = true;
                 const response = await this.$http.post(
                     `/${this.resource}/consolidated`,
-                    { excludes, weight: this.weight_total }
+                    {
+                        excludes,
+                        weight: this.weight_total,
+                        transport_id: this.form.transport_id,
+                        driver_id: this.form.driver_id
+                    }
                 );
                 if (response.data.success) {
                     this.$message.success(response.data.message);
@@ -293,7 +381,9 @@ export default {
                 zone_id: null,
                 date_of_issue: null,
                 customer_id: null,
-                seller_id: null
+                seller_id: null,
+                transport_id: null,
+                driver_id: null
             };
             this.checkAll = false;
             this.excludes = [];

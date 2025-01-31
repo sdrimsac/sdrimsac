@@ -926,7 +926,7 @@
                         ></el-checkbox>
                     </div>
                 </div>
-                <div class="row" v-if="configuration.consolidated_quotations">
+                <div class="row" v-if="configuration.consolidated_quotations && !configuration.consolidated_quotation_details">
                     <div class="col-8 col-lg-8 col-xl-8">
                         <div class="form-group">
                             <label class="control-label"

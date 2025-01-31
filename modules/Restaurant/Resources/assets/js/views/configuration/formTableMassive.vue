@@ -221,6 +221,15 @@
                 <el-input-number class="w-100" v-model="form.finalNumberTable"></el-input-number>
               </div>
             </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label w-100">
+                  <i class="fas fa-list-ol mr-2"></i>
+                  Prefijo
+                </label>
+                <el-input class="w-100" v-model="form.prefix"></el-input>
+              </div>
+            </div>
           </template>
         </div>
       </div>
@@ -307,7 +316,8 @@ export default {
         description: null,
         printer: null,
         copies: null,
-        active: 1
+        active: 1,
+        prefix: null
       };
     },
 
@@ -385,10 +395,10 @@ export default {
       return pass;
     },
     createNumbers() {
-      let { initNumberTable, finalNumberTable } = this.form;
+      let { initNumberTable, finalNumberTable, prefix } = this.form;
       let numbers = [];
       for (let i = initNumberTable; i <= finalNumberTable; i++) {
-        numbers.push(i);
+        numbers.push(`${prefix || ""} ${i}`);
       }
       return numbers;
     },

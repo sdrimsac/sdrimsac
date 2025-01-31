@@ -868,6 +868,7 @@ if ($hostname) {
                 Route::get('quotations/consolidateds/{id}/export', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExport']);
                 Route::get('quotations/consolidateds/{id}/export-delivery', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExportDelivery']);
                 Route::get('quotations/consolidateds/{id}/export-documents', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExportDocuments']);
+                Route::get('quotations/consolidateds/{id}/export-documents-detail', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsExportDocumentsDetail']);
                 Route::get('quotations/consolidateds/{id}/print', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsPrint']);
                 Route::get('quotations/consolidateds/{id}/liquidate', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsLiquidate']);
                 Route::post('quotations/consolidateds/edit-document', [App\Http\Controllers\Tenant\QuotationController::class, 'consolidatedsEditDocument']);

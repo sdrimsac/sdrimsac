@@ -62,6 +62,21 @@
                         </td>
                         <td>
                             <el-tooltip
+                            v-if="configuration && configuration.consolidated_quotation_details"
+                                content="Reporte documentos de pago por vendedor detalle"
+                                placement="top"
+                                effect="dark"
+                            >
+                                <el-button
+                                    type="primary"
+                                    size="mini"
+                                    @click="clickExportDocumentsDetail(record)"
+                                >
+                                    <i class="el-icon-document"></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                v-else
                                 content="Reporte documentos de pago por vendedor"
                                 placement="top"
                                 effect="dark"
@@ -74,6 +89,7 @@
                                     <i class="el-icon-document"></i>
                                 </el-button>
                             </el-tooltip>
+                            
                             <el-tooltip
                                 content="Exportar"
                                 placement="top"
@@ -151,6 +167,7 @@
             </el-pagination>
         </div>
         <ConsolidatedPayment
+            :configuration="configuration"
             @cancelOrden="cancelOrden"
             :showDialog.sync="showDialogPayment"
             :record="recordPayment"
@@ -166,7 +183,7 @@ export default {
     components: {
         ConsolidatedPayment
     },
-    props: ["showDialog"],
+    props: ["showDialog", "configuration"],
     data() {
         return {
             showDialogPayment: false,
@@ -207,6 +224,11 @@ export default {
         clickExportDocuments(record) {
             window.open(
                 `/${this.resource}/consolidateds/${record.id}/export-documents`
+            );
+        },
+        clickExportDocumentsDetail(record) {
+            window.open(
+                `/${this.resource}/consolidateds/${record.id}/export-documents-detail`
             );
         },
         clickReport() {
