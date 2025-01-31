@@ -40,8 +40,8 @@
     $stablishment = \App\Models\Tenant\Establishment::find($document->establishment_id);
     if (!function_exists('getUnitTypeId')) {
         function getUnitTypeId($id)
-        {   
-            $item_unit_types = \ App\Models\Tenant\ItemUnitType::find($id);
+        {
+            $item_unit_types = \App\Models\Tenant\ItemUnitType::find($id);
             return isset($item_unit_types->unit_type_id) ? $item_unit_types->unit_type_id : null;
         }
     }
@@ -51,6 +51,24 @@
         {
             $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
             return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
+        }
+    }
+    $quotation_id = $document->quotation_id;
+    $infor_consolidated = null;
+    if ($quotation_id) {
+        $quotation = \App\Models\Tenant\Quotation::find($quotation_id);
+        $consolidated_id = $quotation->consolidated_id;
+        if ($consolidated_id) {
+            $consolidated = \App\Models\Tenant\Consolidated::find($consolidated_id);
+            if ($consolidated) {
+                $transport = $consolidated->transport;
+                $driver = $consolidated->driver;
+                $infor_consolidated = [
+                    'plate_number' => $transport ? $transport->plate_number : null,
+                    'brand' => $transport ? $transport->brand : null,
+                    'driver' => $driver ? $driver->name : null,
+                ];
+            }
         }
     }
 @endphp
@@ -129,7 +147,7 @@
     @endif
     <table class="full-width" style="margin-left:15px;margin-right:15px;">
         <tr>
-            @if($configuration->comercial_name)
+            @if ($configuration->comercial_name)
                 <td class="text-center">
                     @if ($is_chifa_china)
                         <h1>{{ $company->trade_name }}</h1>
@@ -311,6 +329,39 @@
 
             </tr>
         @endisset
+        @isset($infor_consolidated)
+        <tr>
+            @if($infor_consolidated['plate_number'])
+            <td>
+                <p class="desc">Transporte:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $infor_consolidated['plate_number'] }}</p>
+            </td>
+            @endif
+
+        </tr>
+        <tr>
+            @if($infor_consolidated['brand'])   
+            <td>
+                <p class="desc">Marca:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $infor_consolidated['brand'] }}</p>
+            </td>
+            @endif
+        </tr>
+        <tr>
+            @if($infor_consolidated['driver'])
+            <td>
+                <p class="desc">Conductor:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $infor_consolidated['driver'] }}</p>
+            </td>
+            @endif
+        </tr>
+    @endisset
         @isset($customer->sum_coins)
             <tr>
                 <td>
@@ -372,59 +423,59 @@
         @endif
 
         @if ($configuration->consolidated_quotations)
-        <tr>
-            <td class="align-top">
-                <p class="desc">Vendedor:</p>
-            </td>
-            <td>
-                <p class="desc">
-                    @if (!$document->quotation_id)
-                        {{ $document->user->name }}
-                    @else
-                        {{ $document->quotation->user->name }}
-                    @endif
-                </p>
-            </td>
-        </tr>
-        @if($document->quotation_id)
-        <tr>
-            <td class="align-top">
-                <p class="desc">N° atención:</p>
-            </td>
-            <td>
-                <p class="desc">
-                    {{ $document->quotation->num_orden}}
-                </p>
-            </td>
-        </tr>
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Vendedor:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        @if (!$document->quotation_id)
+                            {{ $document->user->name }}
+                        @else
+                            {{ $document->quotation->user->name }}
+                        @endif
+                    </p>
+                </td>
+            </tr>
+            @if ($document->quotation_id)
+                <tr>
+                    <td class="align-top">
+                        <p class="desc">N° atención:</p>
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ $document->quotation->num_orden }}
+                        </p>
+                    </td>
+                </tr>
+            @endif
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Zona:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        {{ \App\Models\Tenant\Person::getZone($document->customer_id) }}
+                    </p>
+                </td>
+            </tr>
+        @else
+            <tr>
+                <td class="align-top">
+                    <p class="desc">Vendedor:</p>
+                </td>
+                <td>
+                    <p class="desc">
+                        @if ($seller)
+                            {{ $seller->name }}
+                        @else
+                            {{ $document->user->name }}
+                        @endif
+                    </p>
+                </td>
+            </tr>
         @endif
-        <tr>
-            <td class="align-top">
-                <p class="desc">Zona:</p>
-            </td>
-            <td>
-                <p class="desc">
-                    {{\App\Models\Tenant\Person::getZone($document->customer_id)}}
-                </p>
-            </td>
-        </tr>
-    @else
-        <tr>
-            <td class="align-top">
-                <p class="desc">Vendedor:</p>
-            </td>
-            <td>
-                <p class="desc">
-                    @if ($seller)
-                        {{ $seller->name }}
-                    @else
-                        {{ $document->user->name }}
-                    @endif
-                </p>
-            </td>
-        </tr>
-        @endif
-        @if(count($detail_points) > 0)
+        @if (count($detail_points) > 0)
             <tr>
                 <td>
                     <p class="desc">Puntos adquiridos:</p>
@@ -570,18 +621,20 @@
                 @endisset
             </td>
         </tr>
-            @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+        @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
             <tr>
                 <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
-                            <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                            <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span
+                                    class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                            <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span
+                                    class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            @endif
+        @endif
         @if ($document->comercial_treatment)
             <tr>
                 <td colspan="2" class="align-top">
@@ -759,10 +812,10 @@
                     </td>
 
                     <td class="text-center desc-9 align-top">
-                        @if(isset($row->item->from_unit_type_id))
-                        {{ getUnitTypeId($row->item->from_unit_type_id) }}
+                        @if (isset($row->item->from_unit_type_id))
+                            {{ getUnitTypeId($row->item->from_unit_type_id) }}
                         @else
-                        {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
+                            {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                         @endif
                     </td>
                     <td class="text-left desc-9 align-top">
@@ -777,12 +830,12 @@
                             @if (isset($row->item->description_internet))
                                 {!! $row->item->description_internet !!}
                             @else
-                             @if(isset($row->item->origin) && $configuration->pdf_origin_enabled)
-                                {{$row->item->origin}} <br>
-                             @endif 
+                                @if (isset($row->item->origin) && $configuration->pdf_origin_enabled)
+                                    {{ $row->item->origin }} <br>
+                                @endif
                                 {!! $row->item->description !!} <br>
-                                @if (!empty($row->warranty_end_date)) 
-                                Garantía Hasta el {{ $row->warranty_end_date }}
+                                @if (!empty($row->warranty_end_date))
+                                    Garantía Hasta el {{ $row->warranty_end_date }}
                                 @endif
                                 {{-- @if (isset($row->item->month_day))
                                     tiene {{ $row->item->month_day }} meses garantía
@@ -811,7 +864,7 @@
                                     $largo = $madera->selectedLargo;
                                     $grosor = $madera->selectedGrosor;
                                     $quantity_totals += $row->quantity;
-                                    $fot_locals =$row->quantity * (($ancho * $largo * $grosor) / 12);
+                                    $fot_locals = $row->quantity * (($ancho * $largo * $grosor) / 12);
                                     $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
                                     //}
                                     $m_description = "${grosor}x${ancho}x${largo}";
@@ -824,7 +877,7 @@
                                     <br />{!! $lot->series !!}
                                 @endforeach
                             @endif
-                            @if(isset($row->item->is_promotion) && $row->item->is_promotion)
+                            @if (isset($row->item->is_promotion) && $row->item->is_promotion)
                                 <br />
                                 <small>**Promoción**</small>
                             @endif

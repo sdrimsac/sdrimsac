@@ -25,7 +25,8 @@
             </div>
         </template>
         <div class="row m-2">
-            <div class="col-4">
+            <template v-if="configuration && configuration.consolidated_quotation_details">
+                <div class="col-4">
                 <label
                     >Vehículo
                     <a href="#" @click.prevent="showDialogTransportForm = true"
@@ -71,6 +72,7 @@
                     ></el-option>
                 </el-select>
             </div>
+            </template>
             <div class="col-4 text-end mt-3">
                 <el-button
                     type="primary"
@@ -234,7 +236,7 @@ export default {
         DriverForm,
         TransportForm
     },
-    props: ["showDialog"],
+    props: ["showDialog", "configuration"],
     data() {
         return {
             showDialogTransportForm: false,

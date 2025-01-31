@@ -47,6 +47,25 @@
             return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
+
+    $quotation_id = $document->quotation_id;
+    $infor_consolidated = null;
+    if ($quotation_id) {
+        $quotation = \App\Models\Tenant\Quotation::find($quotation_id);
+        $consolidated_id = $quotation->consolidated_id;
+        if ($consolidated_id) {
+            $consolidated = \App\Models\Tenant\Consolidated::find($consolidated_id);
+            if ($consolidated) {
+                $transport = $consolidated->transport;
+                $driver = $consolidated->driver;
+                $infor_consolidated = [
+                    'plate_number' => $transport ? $transport->plate_number : null,
+                    'brand' => $transport ? $transport->brand : null,
+                    'driver' => $driver ? $driver->name : null,
+                ];
+            }
+        }
+    }
 @endphp
 <html>
 
@@ -248,6 +267,39 @@ contain"
 
             </tr>
         @endisset
+        @isset($infor_consolidated)
+        <tr>
+            @if($infor_consolidated['plate_number'])
+            <td>
+                <p class="desc">Transporte:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $infor_consolidated['plate_number'] }}</p>
+            </td>
+            @endif
+
+        </tr>
+        <tr>
+            @if($infor_consolidated['brand'])   
+            <td>
+                <p class="desc">Marca:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $infor_consolidated['brand'] }}</p>
+            </td>
+            @endif
+        </tr>
+        <tr>
+            @if($infor_consolidated['driver'])
+            <td>
+                <p class="desc">Conductor:</p>
+            </td>
+            <td>
+                <p class="desc">{{ $infor_consolidated['driver'] }}</p>
+            </td>
+            @endif
+        </tr>
+    @endisset
         @isset($customer->sum_coins)
             <tr>
                 <td>
