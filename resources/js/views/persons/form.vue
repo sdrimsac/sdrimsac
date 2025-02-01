@@ -1034,7 +1034,6 @@ export default {
     data() {
         return {
             headers: headers_token,
-            image_url: null,
             item_unit_type: null,
             // item_unit_types: [],
             item_unit_types_general: [],
@@ -1121,9 +1120,14 @@ export default {
     methods: {
         onSuccess(response, file, fileList) {
             if (response.success) {
-                this.form.image = response.data.filename;
-                this.form.image_url = response.data.temp_image;
-                this.form.temp_path = response.data.temp_path;
+                this.$nextTick(() => {
+                    this.form = {
+                        ...this.form,
+                        image: response.data.filename,
+                        image_url: response.data.temp_image,
+                        temp_path: response.data.temp_path
+                    };
+                });
             } else {
                 this.$toast.error(response.message);
             }
@@ -1194,6 +1198,9 @@ export default {
                 telephone_family: null,
                 occupation: null,
                 parient_id: null,
+                image: null,
+                image_url: null,
+                temp_path: null
             };
         },
         async opened() {
@@ -1504,4 +1511,5 @@ export default {
         }
     }
 };
+
 </script>

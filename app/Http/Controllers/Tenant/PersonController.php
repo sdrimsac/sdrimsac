@@ -322,20 +322,38 @@ class PersonController extends Controller
                 $person->addresses()->updateOrCreate(['id' => $row['id']], $row);
             }
         }
+        /* if ($temp_path) {
+            $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
+            $file_name_old = $request->input('image');
+            $extension = 'jpg';
+            
+            if ($file_name_old) {
+                $file_name_old_array = explode('.', $file_name_old);
+                $extension = end($file_name_old_array) ?: 'jpg';
+            }
+            
+            $file_content = file_get_contents($temp_path);
+            $datenow = date('YmdHis');
+            $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
+
+            Storage::put($directory . $file_name, $file_content);
+            $person->image = $file_name;
+        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+            $person->image = User::DEFAULT_USER_IMAGE;
+        } */
         if ($temp_path) {
             $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
             $file_name_old = $request->input('image');
             $file_name_old_array = explode('.', $file_name_old);
             $file_content = file_get_contents($temp_path);
-
             $datenow = date('YmdHis');
-            $file_name = Str::slug($person->name) . '-' . $datenow . '.' . end($file_name_old_array);
-
+            $file_name = Str::slug($person->description) . '-' . $datenow . '.' . $file_name_old_array[1];
             Storage::put($directory . $file_name, $file_content);
-            $person->image = $file_name;
-        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            /* $user->image = 'user.png'; */
-            $person->image = User::DEFAULT_USER_IMAGE;
+            
+           
+        } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+            $person->image = 'imagen-no-disponible.jpg';
+            $person->image = 'imagen-no-disponible.jpg';
         }
         $person->save();
 

@@ -55,11 +55,17 @@
                                 <el-input
                                     v-model="search.description"
                                     placeholder="Buscar producto"
-                                    @input="getRecords"
                                     clearable
                                 ></el-input>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                                <!-- <el-button
+                                    class="submit"
+                                    type="danger"
+                                    icon="el-icon-tickets"
+                                    @click.prevent="exportRecords"
+                                    >Exportar PDF</el-button
+                                > -->
                                 <div class="text-end mb-3">
                                     <el-button type="primary" @click="printPDF">
                                         <i class="fas fa-print"></i> Generar PDF
@@ -119,12 +125,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr
-                                                v-for="(row, index) in records"
-                                                :row="row"
-                                                :index="customIndex(index)"
-                                                :key="index"
-                                            >
+                                            <tr v-for="(row, index) in records" :row="row" :index="customIndex(index)" :key="index">
                                                 <td>
                                                     {{ row.internal_id }}
                                                 </td>
@@ -133,10 +134,14 @@
                                                 </td>
                                                 <td>
                                                     S/.
-                                                    {{ row.sale_unit_price }}
+                                                    {{
+                                                        row.sale_unit_price
+                                                    }}
                                                 </td>
                                                 <td>
-                                                    <el-checkbox>
+                                                    <el-checkbox
+                                                       
+                                                    >
                                                         <template slot="label">
                                                             <span
                                                                 >Seleccionar</span
@@ -355,8 +360,6 @@ export default {
     }, */
     data() {
         return {
-            originalContents: "",
-            printState: false,
             cashId: null,
             resource: "catalog",
             saleNotesNewId: null,
@@ -376,28 +379,19 @@ export default {
             pagination: {
                 current_page: 1,
                 total: 0,
-                per_page: 20,
+                per_page: 20, // Asegúrate que sea número, no string
                 from: 1
             },
             records: [],
             loading: false,
-            time: null
+            time: null,
         };
     },
-    watch: {
-        "search.category_id": {
-            handler(newVal) {
-                this.pagination.current_page = 1; // Reset pagination cuando cambia la categoría
-                this.getRecords();
-            }
-        },
-        "search.description": {
-            handler(newVal) {
-                this.pagination.current_page = 1; // Reset pagination cuando cambia la búsqueda
-                this.getRecords();
-            }
+    /* watch: {
+        "form.category_id"(newVal, oldVal) {
+            this.getRecords();
         }
-    },
+    }, */
     created() {},
     async mounted() {
         await this.$http.get(`/${this.resource}/tables`).then(response => {
@@ -406,79 +400,44 @@ export default {
         this.getRecords();
     },
     methods: {
-        /* printPDF() {
+        printPDF() {
             let printContents = this.$refs.printSection.innerHTML;
             let originalContents = document.body.innerHTML;
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
-        }, */
-        printPDF() {
-            let printContents = this.$refs.printSection.innerHTML;
-            let originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-
-            setTimeout(() => {
-                window.print();
-                document.body.innerHTML = originalContents;
-                this.$nextTick(() => {
-                    document.location.reload();
-                });
-            }, 300);
         },
-        /* printPDF() {
-            // Guardamos el contenido original antes de modificarlo
-            this.originalContents = this.$refs.printSection.innerHTML;
-
-            // Preparamos el contenido para la impresión
-            let printContents = this.$refs.printSection.innerHTML;
-            document.body.innerHTML = printContents;
-
-            // Cambiamos el estado a 'imprimiendo'
-            this.printState = true;
-
-            // Imprimimos y restauramos el contenido
-            setTimeout(() => {
-                window.print();
-                document.body.innerHTML = this.originalContents;
-                this.printState = false; // Cambiamos el estado a 'no imprimiendo'
-            }, 300);
-        }, */
         getRecords() {
             if (this.time) {
                 clearTimeout(this.time);
             }
             this.time = setTimeout(async () => {
                 this.loading = true;
-                let url = `/${
-                    this.resource
-                }/records?${this.getQueryParameters()}`;
-
+                let url = `/${this.resource}/records?${this.getQueryParameters()}`;
+                
                 return this.$http
                     .get(url)
                     .then(response => {
                         if (response.data) {
                             this.records = response.data.data;
+                            // Actualizar correctamente la paginación
                             this.pagination = {
-                                current_page: parseInt(
-                                    response.data.meta.current_page
-                                ),
+                                current_page: parseInt(response.data.meta.current_page),
                                 total: parseInt(response.data.meta.total),
-                                per_page: parseInt(response.data.meta.per_page),
+                                per_page: parseInt(response.data.meta.per_page), // Convertir a número
                                 from: parseInt(response.data.meta.from)
                             };
+                            this.loading = false;
                         }
                     })
                     .catch(error => {
-                        console.error("Error al cargar los registros:", error);
-                    })
-                    .finally(() => {
+                        console.error(error);
                         this.loading = false;
                     });
             }, 350);
         },
         customIndex(index) {
+            
             return (
                 this.pagination.per_page * (this.pagination.current_page - 1) +
                 index +
@@ -486,12 +445,20 @@ export default {
             );
         },
         getQueryParameters() {
+            if (
+                this.search.value &&
+                typeof this.search.value == "object"
+            ) {
+                this.search.value = this.search.value.join(",");
+            }
             return queryString.stringify({
                 page: this.pagination.current_page,
-                per_page: this.pagination.per_page,
-                category_id: this.search.category_id || "",
-                description: this.search.description || "",
-                warehouse_id: this.search.warehouse_id
+                limit: this.limit,
+                value: this.search.value,
+                active: this.search.active,
+                category_id: this.search.category_id,
+                warehouse_id: this.search.warehouse_id,
+                
             });
         },
         changeClearInput() {
