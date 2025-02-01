@@ -350,12 +350,20 @@ class PersonController extends Controller
             }
 
             $file_name_old = $request->input('image');
+            $extension = 'jpg';
+            
+            if ($file_name_old) {
             $file_name_old_array = explode('.', $file_name_old);
+            $extension = end($file_name_old_array) ?: 'jpg';
+            }
+            
             $file_content = file_get_contents($temp_path);
             $datenow = date('YmdHis');
-            $file_name = Str::slug($person->description) . '-' . $datenow . '.' . $file_name_old_array[1];
+            $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
+
             Storage::put($directory . $file_name, $file_content);
-            
+            $person->image = $file_name;
+
         } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
             $person->image = Person::DEFAULT_USER_IMAGE;
         }
