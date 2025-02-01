@@ -883,20 +883,22 @@ class ItemController extends Controller
         }
         return $categories_array;
     }
+
+
     public function getRecordsCatalog($request, $services = true)
     {
-        $datos = $request->value;
-        $textoIntoArray =  explode(' ', $datos);
-        $warehouse_id = $request->warehouse_id;
-        $active = $request->active;
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
+
         /** @var User $user */
         $user = auth()->user();
         $type = $user->getUserTypeArca();
+        
+        // Base filters
         if (!$services) {
             $records = $records->where('unit_type_id', '!=', 'ZZ');
         }
+        
         if ($type) {
             $records = $records->whereHas('warehouse', function ($query) use ($type) {
                 $query->whereHas('establishment', function ($query) use ($type) {
@@ -908,94 +910,40 @@ class ItemController extends Controller
                 });
             });
         }
-        /* switch ($request->column) {
 
-            case 'brand':
-                $records->whereHas('brand', function ($q) use ($request) {
-                    $q->where('name', 'like', "%{$request->value}%");
-                });
-                break;
-            case 'description':
-                if ($request->value) {
-                    if (count($textoIntoArray) === 1) {
-                        
-                            $records->where('description', 'like', "%{$request->value}%")
-                            ->orWhere(function ($query) use ($textoIntoArray) {
-                                foreach ($textoIntoArray as $value) {
-                                    $query->where('description', 'like', '%' . $value . '%');
-                                }
-                            });
-                    } else {
-                        $records->where('description', 'like', "%{$request->value}%")
-                        ->orWhere('internal_id', 'like', "%{$request->value}%")
-                        ->orWhere('second_name', 'like', "%{$request->value}%")
-                        ->orWhere('active', 'like', "%{$request->value}%");
-                    }
-                    $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
-                        ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
-                        ->orderBy('description', 'ASC');
-                }
-                break;
+        // Filter by category_id if provided in request
+        if ($request->category_id) {
+            $records = $records->where('category_id', $request->category_id);
+        }
 
-            case 'category':
-                $records
-                    ->whereHas('category', function ($query) use ($request) {
-                        $query->where('name', 'like', '%' . $request->value . '%');
-                    });
-                break;
-            default:
-                $records
-                    ->where($request->column, 'like', "%{$request->value}%");
-                break;
-        } */
-
-        $records = $records->where('active', 1);
-
-        if ($active !== null) {
-            $active = ($active === 'Habilitado') ? 1 : 0;
-
-            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id, $active) {
-                $query->where('warehouse_id', $warehouse_id)
-                    ->where('active', $active);
-            });
-        } else {
-            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id)
-                    ->where('active', 1);
+        // Filter by description if provided
+        if ($request->description) {
+            $search = $request->description;
+            $records->where(function($query) use ($search) {
+                $query->where('description', 'like', "%{$search}%")
+                      ->orWhere('internal_id', 'like', "%{$search}%");
             });
         }
-        if ($warehouse_id) {
-            $records = $records->with(['warehouses' => function ($query) use ($warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id);
-            }]);
+        // Apply warehouse filter only if warehouse_id is provided
+        if ($request->warehouse_id) {
+            if ($request->active !== null) {
+                $active = ($request->active === 'Habilitado') ? 1 : 0;
+                
+                $records = $records->whereHas('warehouses', function ($query) use ($request, $active) {
+                    $query->where('warehouse_id', $request->warehouse_id)
+                        ->where('active', $active);
+                });
+            } else {
+                $records = $records->whereHas('warehouses', function ($query) use ($request) {
+                    $query->where('warehouse_id', $request->warehouse_id)
+                        ->where('active', 1);
+                });
+            }
         }
 
         return $records->orderBy('description', 'ASC');
     }
 
-    /* public function pdf($id)
-    {
-
-        $pdf = PDF::loadView('tenant.catalog.catalog_pdf')
-            ->setPaper('a4', 'portrait');
-
-        return $pdf->stream('catalogo.pdf');
-    } */
-    public function pdfCatalog()
-    {
-        $items = Item::select('internal_id', 'description', 'sale_unit_price', 'image')
-            ->where('active', 1)
-            ->get();
-
-        $company = Company::first();
-
-        $pdf = PDF::loadView('tenant.items.catalog_pdf', [
-            'items' => $items,
-            'company' => $company
-        ])->setPaper('a4', 'portrait');
-
-        return $pdf->stream('catalogo.pdf');
-    }
 
 
     public function getRecords($request, $services = true)

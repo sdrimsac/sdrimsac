@@ -506,15 +506,11 @@ if ($hostname) {
                 Route::prefix('catalog')
                 ->group(function () {
                     Route::get('', [App\Http\Controllers\Tenant\ItemController::class, 'index_catalog'])->name('tenant.catalog.index')->middleware(['just.admin']);
-                    /* Route::get('columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns']); */
-                    /* Route::get('/columnsShopping', [App\Http\Controllers\Tenant\PurchaseController::class, 'columnsShopping']); */
                     Route::get('records', [App\Http\Controllers\Tenant\ItemController::class, 'recordsCatalog']);
-                    Route::get('data_table', [App\Http\Controllers\Tenant\ItemController::class, 'data_table']);
-                    Route::get('excel', [App\Http\Controllers\Tenant\ItemController::class, 'excelShopping']);
+                    Route::get('tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
                     /* Route::get('search/customers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchCustomers']); */
-                    Route::get('search/supliers', [App\Http\Controllers\Tenant\ItemController::class, 'searchSupliers']);
+                    /* Route::get('search/supliers', [App\Http\Controllers\Tenant\ItemController::class, 'searchSupliers']); */
                 });
-
 
                 //ClientZone
                 Route::get('client_zones/records', [ClientZoneController::class, 'records']);

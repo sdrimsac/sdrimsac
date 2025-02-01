@@ -169,7 +169,7 @@ trait InventoryTrait
     }
 
     public function optionsItemFull()
-    {
+    {   
         $records = Item::where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet()
             ->take(25)
             ->get();
@@ -182,6 +182,15 @@ trait InventoryTrait
                 'series_enabled' => (bool) $row->series_enabled,
                 'has_color_size_enabled' => (bool) $row->has_color_size_enabled,
 
+                'warehouse' => collect($row->warehouses)->transform(function ($row) {
+                    $decimal = 2; // Define the decimal places here
+                    return [
+                        'id' => $row->id,
+                        'warehouse_description' => $row->warehouse->description,
+                        'stock' => number_format($row->stock, $decimal, ".", ""),
+                        'active' => (bool) $row->active,
+                    ];
+                }),
                 'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
                     return [
                         'id' => $row->id,

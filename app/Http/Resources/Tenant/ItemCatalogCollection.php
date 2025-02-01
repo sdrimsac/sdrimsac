@@ -43,30 +43,8 @@ class ItemCatalogCollection extends ResourceCollection
 
                 $has_igv_description = ((bool) $row->has_igv) ? 'Si' : 'No';
             }
-            if ($row->unit_type == null) {
-                $item_unit_types = [];
-            } else {
-                $item_unit_types = collect($row->item_unit_types)->transform(function ($row) {
-                    return [
-                        'total' => $row->total,
-                        'unit_type_id' => $row->unit_type_id,
-                        'description' => $row->description,
-                        'quantity_unit' => $row->quantity_unit,
-                        'price1' => $row->price1,
-                        'price2' => $row->price2,
-                        'price3' => $row->price3,
-                        'price_default' => $row->price_default,
-                    ];
-                });
-            }
             return [
                 //row es una instancia de Item
-
-                'last_register' => $this->get_last_document($row),
-                'has_warranty' => $row->has_warranty,
-                'month_day' => $row->month_day,
-                'has_color_size' => (bool)$row->has_color_size,
-                'max_quantity_description' => $row->max_quantity_description,
                 'id' => $row->id,
                 'unit_type_id' => $row->unit_type_id,
                 'description' => $row->description,
@@ -95,15 +73,14 @@ class ItemCatalogCollection extends ResourceCollection
                 'active' => (bool) $row->active,
                 'has_igv_description' => $has_igv_description,
                 'sale_unit_price' =>  number_format($row->sale_unit_price, $decimal, ".", ""),
-                'purchase_unit_price' => "{$row->currency_type->symbol} " . number_format($row->purchase_unit_price, $decimal, '.', ''),
                 'created_at' => ($row->created_at) ? $row->created_at->format('Y-m-d H:i:s') : '',
                 'updated_at' => ($row->created_at) ? $row->updated_at->format('Y-m-d H:i:s') : '',
                 //  'category' => [
                 //  'description' =>$row->category->name,
                 //  ],
-                'unit_type_description' => ($row->unit_type) ? $row->unit_type->description : '',
-                'unit_type' => $item_unit_types,
-                'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
+      
+                
+               /*  'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
              
                     return [
                         'id' => $row->id,
@@ -111,8 +88,8 @@ class ItemCatalogCollection extends ResourceCollection
                         'stock' => number_format($row->stock, $decimal, ".", ""),
                         'active' => (bool) $row->active,
                     ];
-                }),
-                'warehouse_prices' => collect($row->item_warehouse_prices)->transform(function ($row) use ($decimal) {
+                }), */
+                /* 'warehouse_prices' => collect($row->item_warehouse_prices)->transform(function ($row) use ($decimal) {
 
                     return [
                         "id" => $row->id,
@@ -120,7 +97,7 @@ class ItemCatalogCollection extends ResourceCollection
                         "price" => number_format($row->price, $decimal, ".", ""),
                         "warehouse" => $row->getWarehouseDescription()
                     ];
-                }),
+                }), */
                 /* 'categoria_madera' => ($row->categoria_madera)->transform(function ($row){
                     return [
                         'id' => $row->id,
@@ -135,53 +112,5 @@ class ItemCatalogCollection extends ResourceCollection
 
             ];
         });
-    }
-    function get_last_document($row){
-        $last_register_movement = RegisterMovement::where('model', Item::class)
-            /* ->where('model', Item::class) */
-            ->where('model_id', $row->id)
-            ->whereHas('user', function ($query) {
-                $query->whereNull('area_id');
-            })
-            ->orderBy('id', 'desc')->first();
-        $data = [
-            'user'=>'',
-            'date_time' => '',
-            'description' => '',
-            'created_at' => ''
-        ];
-        if($last_register_movement){
-            $date_time = $last_register_movement->created_at;
-            $data = [
-                'user'=>$last_register_movement->user->name,
-                'description' =>$last_register_movement->description,
-                'date_time' => $this->get_date_difference($date_time),
-                'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')
-                
-            ];
-        }
-        return $data;
-    }
-    function get_date_difference($created_at){
-        $currentDay = Carbon::now();
-        $created_at = Carbon::parse($created_at);
-        
-        $difference = $created_at->diff($currentDay);
-        $days = $difference->days;
-        $hours = $difference->h;
-        $minutes = $difference->i;
-        $seconds = $difference->s;
-        $is24Hours = false;
-        if($days > 0){
-            $is24Hours = true;
-        }
-        $data = [
-            'is24Hours' => $is24Hours,
-            'days' => $days,
-            'hours' => $hours,
-            'minutes' => $minutes,
-            'seconds' => $seconds
-        ];
-        return $data;
     }
 }

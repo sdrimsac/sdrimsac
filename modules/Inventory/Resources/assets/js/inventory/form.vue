@@ -4,9 +4,8 @@
         :visible="showDialog"
         @close="close"
         @open="create"
-        :close-on-click-modal="false" 
+        :close-on-click-modal="false"
         class="rounded-dialog"
-
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -16,9 +15,7 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
                         >
-                            <label class="control-label">
-                                
-                                Producto</label>
+                            <label class="control-label"> Producto</label>
                             <el-select
                                 v-model="form.item_id"
                                 class="w-100"
@@ -189,6 +186,32 @@
                             ></small>
                         </div>
                     </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Stock en almacenes</label>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Almacén</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="warehouse in selectedWarehouses"
+                                        :key="warehouse.id"
+                                    >
+                                        <td>
+                                            {{
+                                                warehouse.warehouse_description
+                                            }}
+                                        </td>
+                                        <td>{{ warehouse.stock }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
@@ -227,8 +250,8 @@
 
 <style>
 .el-dialog {
-border-radius: 10px;
-overflow: hidden;
+    border-radius: 10px;
+    overflow: hidden;
 }
 </style>
 
@@ -259,6 +282,12 @@ export default {
     created() {
         this.initForm();
     },
+    computed: {
+        selectedWarehouses() {
+            return this.item && this.item.warehouse ? this.item.warehouse : [];
+        }
+    },
+
     methods: {
         clickColorSize() {
             this.showDialogColorSizeInput = true;
@@ -331,8 +360,8 @@ export default {
             this.form = {
                 id: null,
                 item_id: null,
-                warehouse_id: null,
-                inventory_transaction_id: null,
+                warehouse_id: 1,
+                inventory_transaction_id: "02",
                 quantity: 0,
                 type: this.type,
                 lot_code: null,
@@ -343,7 +372,7 @@ export default {
             };
         },
         async create() {
-            console.log("🚀 ~ create ~ this.type:", this.type)
+            console.log("🚀 ~ create ~ this.type:", this.type);
             this.titleDialog =
                 this.type == "input"
                     ? "Ingreso de producto al almacén"
@@ -406,13 +435,13 @@ export default {
                     }
                 }
 
-                // 
+                //
                 // return
             }
 
             this.loading_submit = true;
             this.form.type = this.type;
-            // 
+            //
             await this.$http
                 .post(`/${this.resource}/transaction`, this.form)
                 .then(response => {

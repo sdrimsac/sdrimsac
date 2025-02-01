@@ -643,7 +643,7 @@
                             </label>
                             <el-upload
                                 class="avatar-uploader text-center bg-white"
-                                :data="{ type: 'workers' }"
+                                :data="{ type: 'persons' }"
                                 :headers="headers"
                                 :action="`/${resource}/uploads`"
                                 :show-file-list="false"
