@@ -322,29 +322,7 @@ class PersonController extends Controller
                 $person->addresses()->updateOrCreate(['id' => $row['id']], $row);
             }
         }
-        /* if ($temp_path) {
-            $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
-            $file_name_old = $request->input('image');
-            $extension = 'jpg';
-            
-            if ($file_name_old) {
-                $file_name_old_array = explode('.', $file_name_old);
-                $extension = end($file_name_old_array) ?: 'jpg';
-            }
-            
-            if (file_exists($temp_path) && is_readable($temp_path)) {
-                $file_content = file_get_contents($temp_path);
-                $datenow = date('YmdHis');
-                $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
-
-                Storage::put($directory . $file_name, $file_content);
-                $person->image = $file_name;
-            } else {
-                throw new Exception('Cannot access temporary file: ' . $temp_path);
-            }
-        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            $person->image = User::DEFAULT_USER_IMAGE;
-        } */
+    
         if ($temp_path) {
             $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
             
@@ -361,11 +339,19 @@ class PersonController extends Controller
             $extension = end($file_name_old_array) ?: 'jpg';
             }
             
-            $file_content = file_get_contents($temp_path);
-            $datenow = date('YmdHis');
-            $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
+            if (file_exists($temp_path) && is_readable($temp_path)) {
+                $file_content = file_get_contents($temp_path);
+                $datenow = date('YmdHis');
+                $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
 
-            Storage::put($directory . $file_name, $file_content);
+                if ($file_content !== false) {
+                    Storage::put($directory . $file_name, $file_content);
+                } else {
+                    throw new \Exception('Could not read temporary file');
+                }
+            } else {
+                throw new \Exception('Temporary file not accessible');
+            }
             $person->image = $file_name;
 
         } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
