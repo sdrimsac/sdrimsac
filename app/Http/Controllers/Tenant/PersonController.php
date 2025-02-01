@@ -343,6 +343,12 @@ class PersonController extends Controller
         } */
         if ($temp_path) {
             $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
+            
+            // Check if directory exists and create it if not
+            if (!Storage::exists($directory)) {
+            Storage::makeDirectory($directory);
+            }
+
             $file_name_old = $request->input('image');
             $file_name_old_array = explode('.', $file_name_old);
             $file_content = file_get_contents($temp_path);
@@ -350,10 +356,8 @@ class PersonController extends Controller
             $file_name = Str::slug($person->description) . '-' . $datenow . '.' . $file_name_old_array[1];
             Storage::put($directory . $file_name, $file_content);
             
-           
-        } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            $person->image = 'imagen-no-disponible.jpg';
-            $person->image = 'imagen-no-disponible.jpg';
+        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+            $person->image = Person::DEFAULT_USER_IMAGE;
         }
         $person->save();
 
