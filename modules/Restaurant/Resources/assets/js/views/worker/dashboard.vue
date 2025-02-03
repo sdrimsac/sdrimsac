@@ -190,6 +190,7 @@
     </ListOrden>-->
     <template v-if="currentTable && show == 'create'">
       <detail-orden
+        :divided_items.sync="divided_items"
         @changeOrdenEvent="changeOrdenEvent"
         :changingOrden.sync="changingOrden"
         ref="detailRef"
@@ -272,6 +273,7 @@ export default {
   ],
   data() {
     return {
+      divided_items: false,
       ordenToChange: null,
       hasSelectedTableToChange: false,
       hasSelectedOrdenToChange: false,

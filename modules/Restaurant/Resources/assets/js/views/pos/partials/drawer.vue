@@ -24,7 +24,7 @@
                             {{ localOrden.length }}
                         </template>
                     </a>
-                    Ordenes Pendiente
+                    Ordenes Pendiente aaaaaaaaaaa
                 </p>
             </h5>
             <button

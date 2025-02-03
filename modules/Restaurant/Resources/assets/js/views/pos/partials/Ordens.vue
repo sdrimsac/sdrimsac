@@ -11,7 +11,7 @@
                                 {{localOrden.length}}
                             </template>
                         </a>
-                              Ordenes Pendiente</p>
+                              Ordenes Pendiente </p>
                           </h5>
                           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
@@ -21,11 +21,11 @@
                                     <div class="btn-group check-all-container mt-n1" v-if="localOrden.length>0">
                                     <div class="btn btn-sm btn-primary" @click="sendOrden()">
                                              <!-- <input type="checkbox" class="form-check-input" id="checkAll" v-model="AllSelected"  > -->
-                                            <i class="icofont-checked"></i>   Enviar Pedido - Cobrar
+                                            <i class="icofont-checked"></i>   Enviar Pedido - Cobrar   aaaa
                                      </div>
                                        <div class="btn btn-sm btn-danger"  data-bs-dismiss="offcanvas" aria-label="Close" @click="close()">
                                              <!-- <input type="checkbox" class="form-check-input" id="checkAll" v-model="AllSelected"  > -->
-                                         <i class="icofont-close-line"></i>   Cancelar
+                                         <i class="icofont-close-line"></i>   Cancelar  aaaa
                                      </div>
 
                                     </div>

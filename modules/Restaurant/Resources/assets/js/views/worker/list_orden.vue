@@ -213,7 +213,7 @@
 import VueResponsiveImage from "vue-responsive-image";
 
 export default {
-    props: ["configuration", "area_id"],
+    props: ["configuration", "area_id", "divided_items"],
     components: {
         VueResponsiveImage
     },

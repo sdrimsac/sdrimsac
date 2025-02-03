@@ -39,6 +39,17 @@
                 :referencia="referenciaInput"
             ></Pinform>
         </template>
+        <div>
+            <template v-if="configuration.divided_items">
+                <el-checkbox
+                    v-model="localDividedItems"
+                    style="margin-left: 10px;"
+                    @change="saveDividedItemsLocalStorage"
+                    >Dividir ordenes iguales</el-checkbox
+                >
+            </template>
+        </div>
+        <br>
         <div id="ordens " class="border-dark rounded-top">
             <div class="bg-primary rounded-top p-2">
                 <span class="el-dialog__title text-white"
@@ -679,6 +690,7 @@
 <script>
 import Pinform from "./paid.vue";
 import ObservationForm from "../partials/observation_form.vue";
+import swal from "sweetalert2";
 export default {
     props: [
         "localOrden",
@@ -687,18 +699,21 @@ export default {
         "ordens",
         "ordenSelectedId",
         "referencia",
-        "table"
+        "table",
+        "divided_items"
     ],
     async created() {
         this.referenciaInput = this.referencia;
         await this.getTags();
     },
     components: {
+        swal,
         Pinform,
         ObservationForm
     },
     data() {
         return {
+            localDividedItems: this.divided_items,
             deleteGeneralOrden: false,
             ordenIdToDelete: null,
             deleteOrdenLoading: false,
@@ -732,6 +747,18 @@ export default {
     },
     mounted() {},
     methods: {
+        saveDividedItemsLocalStorage() {
+            this.$emit("update:divided_items", this.localDividedItems);
+
+            localStorage.setItem("divided_items", this.localDividedItems);
+        },
+        readDividedItemsLocalStorage() {
+            let divided_items = localStorage.getItem("divided_items");
+            if (divided_items) {
+                this.localDividedItems = divided_items == "true";
+                this.$emit("update:divided_items", this.localDividedItems);
+            }
+        },
         async printTicketPos() {
             let id = this.ordens[0].orden_id;
             try {
@@ -1176,16 +1203,16 @@ export default {
                 this.cancelGeneralOrdenPin();
             } else {
                 try {
-                    let res = await this.$confirm(
-                        "Desea cancelar toda la orden?",
-                        "Cancelar",
-                        {
-                            confirmButtonText: "Ok",
-                            cancelButtonText: "Cancelar",
-                            type: "warning"
-                        }
-                    );
-                    if (res) {
+                    const result = await swal.fire({
+                        title: "Desea cancelar toda la orden?",
+                        text: "Esta acción no se puede revertir",
+                        icon: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: "Cancelar",
+                        confirmButtonText: "Ok"
+                    });
+
+                    if (result.isConfirmed) {
                         this.loading = true;
                         let form = {
                             id: this.ordens[0].orden_id

@@ -839,8 +839,42 @@ class ItemController extends Controller
     }
     public function recordsCatalog(Request $request)
     {
-        $records = $this->getRecordsCatalog($request);
-        return new ItemCatalogCollection($records->paginate(config('tenant.items_per_page')));
+        $enableCatalog = $request->input('enable_catalog', false);
+        if ($enableCatalog) {
+            // Get only the needed fields using the ItemCatalogCollection
+            $records = Item::select(
+            'internal_id',
+            'description', 
+            'sale_unit_price',
+            'category_id',
+            'image',
+            )
+            ->with(['category:id,name'])
+            ->whereTypeUser()
+            ->whereNotIsSet()
+            ->where('active', 1)
+            ->get();
+
+            $transformedItems = (new ItemCatalogCollection($records))->collection->groupBy('category.name');
+
+            // Format response
+            $categorized_items = [];
+            foreach($transformedItems as $category_name => $items) {
+            $categorized_items[] = [
+                'category' => $category_name,
+                'items' => $items
+            ];
+            }
+
+            return response()->json([
+            'success' => true,
+            'data' => $categorized_items
+            ]);
+
+        } else {
+            $records = $this->getRecordsCatalog($request);
+            return new ItemCatalogCollection($records->paginate(config('tenant.items_per_page')));
+        }
     }
 
     public function recordsUltima_Venta(Request $request, $id)
@@ -884,6 +918,18 @@ class ItemController extends Controller
         return $categories_array;
     }
 
+    public function storeCatalog(Request $request) 
+    {
+        $products = $request->input('products', []);
+        
+        $items = Item::whereTypeUser()
+            ->whereNotIsSet()
+            ->where('active', 1)
+            ->whereNotIn('id', $products)
+            ->get();
+
+        return new ItemCatalogCollection($items);
+    }
 
     public function getRecordsCatalog($request, $services = true)
     {
@@ -893,12 +939,12 @@ class ItemController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $type = $user->getUserTypeArca();
-        
+
         // Base filters
         if (!$services) {
             $records = $records->where('unit_type_id', '!=', 'ZZ');
         }
-        
+
         if ($type) {
             $records = $records->whereHas('warehouse', function ($query) use ($type) {
                 $query->whereHas('establishment', function ($query) use ($type) {
@@ -919,16 +965,16 @@ class ItemController extends Controller
         // Filter by description if provided
         if ($request->description) {
             $search = $request->description;
-            $records->where(function($query) use ($search) {
+            $records->where(function ($query) use ($search) {
                 $query->where('description', 'like', "%{$search}%")
-                      ->orWhere('internal_id', 'like', "%{$search}%");
+                    ->orWhere('internal_id', 'like', "%{$search}%");
             });
         }
         // Apply warehouse filter only if warehouse_id is provided
         if ($request->warehouse_id) {
             if ($request->active !== null) {
                 $active = ($request->active === 'Habilitado') ? 1 : 0;
-                
+
                 $records = $records->whereHas('warehouses', function ($query) use ($request, $active) {
                     $query->where('warehouse_id', $request->warehouse_id)
                         ->where('active', $active);

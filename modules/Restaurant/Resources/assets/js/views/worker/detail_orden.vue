@@ -376,6 +376,7 @@
             <!-- fin de sidebar -->
             <div class="col-sm-6 col-md-7 col-lg-6 col-xl-4 p-1">
                 <current-orden
+                    :divided_items.sync="divided_items"
                     :table="table"
                     ref="ordenRef"
                     :referencia.sync="currentRef"
@@ -424,7 +425,7 @@ export default {
         "foods",
         "configuration",
         "tables_row_select",
-        "changingOrden"
+        "changingOrden",
     ],
     created() {
         this.ordens = this.table.orden;
@@ -436,6 +437,7 @@ export default {
     },
     data() {
         return {
+            divided_items: false,
             allFalse: true,
             currentFood: {},
             input_item: "",
@@ -646,9 +648,10 @@ export default {
             }
             return price;
         },
+        // aqui estaba el metodo insertOrden
         insertOrden(orden, food_id, type) {
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
-            if (ordenAdded.length == 0) {
+            if (ordenAdded.length == 0 || this.divided_items) {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
                 orden.series = [];
@@ -657,6 +660,11 @@ export default {
                 orden.type_description = type ? type.description : null;
                 orden.type_quantity = type ? Number(type.quantity_unit) : 0;
                 //si es el primer registro del prod en la lista
+                if (this.configuration.divided_items) {
+                    if (this.divided_items) {
+                        orden.will_be_divided = true;
+                    }
+                }
                 if (type) {
                     // orden.quantity = Number(type.quantity_unit);
                     orden.quantity = 1;
@@ -688,6 +696,11 @@ export default {
                         orden.type_quantity = type
                             ? Number(type.quantity_unit)
                             : 0;
+                        if (this.configuration.divided_items) {
+                            if (this.divided_items) {
+                                orden.will_be_divided = true;
+                            }
+                        }
                         this.localOrden.push(orden);
                     }
 
@@ -702,6 +715,11 @@ export default {
                             Number(this.localOrden[indexFind].quantity) + 1;
                     } else {
                         this.localOrden.push(orden);
+                    }
+                    if (this.configuration.divided_items) {
+                        if (this.divided_items) {
+                            orden.will_be_divided = true;
+                        }
                     }
                 }
 
