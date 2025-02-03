@@ -406,13 +406,13 @@ class WhatsappController extends Controller
         ]);
 
         try {
-            
+
             (new WhatsappController)->sendMessageOne($telephone, $message, $establishment_id);
 
             return response()->json([
                 "success" => true,
                 "message" => "Mensaje enviado correctamente",
-              
+
             ]);
         } catch (\Exception $e) {
             Log::error('Error al enviar el mensaje por WhatsApp: ', [

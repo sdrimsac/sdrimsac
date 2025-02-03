@@ -3831,7 +3831,7 @@ export default {
         openQuotation() {
             this.quotationDirect = false;
             if (this.localOrden.length > 0) {
-                if (this.isSellerConsolidated) {
+                if (this.isSellerConsolidated && !this.configuration.consolidated_quotation_details) {
                     this.quotationDirect = true;
                 }
 

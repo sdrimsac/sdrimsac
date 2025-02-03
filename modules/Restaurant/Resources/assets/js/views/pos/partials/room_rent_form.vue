@@ -124,6 +124,47 @@
                 </el-input>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-3">
+                        <label for="name"
+                            >Agregar huespedes
+                            <a href="#" @click.prevent="createClient(null)">
+                                [ + Nuevo ]
+                            </a>
+                        </label>
+                        <el-select
+                            class="col-md-6"
+                            ref="select_guess"
+                            v-model="room.guess_id"
+                            filterable
+                            clearable
+                            size="small"
+                            placeholder="Cliente"
+                            :disabled="loading"
+                            @keyup.native="keyupCustomer"
+                        >
+                            <el-option
+                                v-for="(option, idx) in customers"
+                                :key="idx"
+                                :label="option.description"
+                                :value="option.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div
+                        class="col-md-3 d-flex"
+                        :class="
+                            `${
+                            
+                                ' align-items-end'
+                            }`
+                        "
+                    >
+                        <el-button @click="addGuess()" type="primary">
+                            Agregar Huesped
+                        </el-button>
+                    </div>
+        </div>
         <div class="row mt-2">
             <div class="col-12">
                 <label for="observation">Observación</label>
@@ -232,10 +273,12 @@ export default {
             time: null,
             loading: false,
             showDialogNewPerson: false,
-            idxRoom: null
+            idxRoom: null,
+            room: {}
         };
     },
     methods: {
+    
         updatePrice() {
             let [type] = this.types.filter(
                 t => t.id == this.form.table_type_id
@@ -390,11 +433,7 @@ export default {
             // this.tables = tables;
         },
         createClient(idx = null) {
-            this.idxRoom = idx;
-            this.value = null;
-            if (idx == null) {
-                this.form.customer_id = null;
-            }
+        
             this.showDialogNewPerson = true;
         },
         async updateAllCustomers(personsFromServer) {

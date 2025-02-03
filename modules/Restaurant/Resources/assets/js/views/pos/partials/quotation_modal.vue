@@ -9,7 +9,7 @@
     >
         <div class="m-2">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-12">
                     <label>
                         Cliente
                         <a href="#" @click.prevent="showDialogNewPerson = true"
@@ -35,7 +35,7 @@
                         ></el-option>
                     </el-select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-12">
                     <label>Fecha de emisión</label>
                     <el-date-picker
                         class="w-100"
@@ -46,7 +46,7 @@
                     >
                     </el-date-picker>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-12">
                     <label>Vencimiento</label>
                     <el-date-picker class="w-100" v-model="form.date_of_due">
                     </el-date-picker>

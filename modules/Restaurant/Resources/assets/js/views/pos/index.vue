@@ -2298,7 +2298,7 @@ export default {
             return this.isSeller && this.configuration.consolidated_quotations && !this.configuration.consolidated_quotation_details;
         },
         canAddItem() {
-            if (this.isSeller && this.configuration.consolidated_quotations) {
+            if (this.isSeller && this.configuration.consolidated_quotations && !this.configuration.consolidated_quotation_details) {
                 return !(
                     this.customer_unit_type_id == null ||
                     this.customer_unit_type_id == ""
