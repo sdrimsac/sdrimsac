@@ -289,6 +289,14 @@ class PersonController extends Controller
         return $record;
     }
 
+    function isClientesVarios($person){
+        $name = $person->name;
+        $number = $person->number;
+
+        return (str_contains(strtolower($name), 'clientes varios') || $number == '99999999');
+
+    }
+
     public function store(PersonRequest $request)
     {
 
@@ -302,9 +310,19 @@ class PersonController extends Controller
         }
         $id = $request->input('id');
         $person = Person::firstOrNew(['id' => $id]);
+        if($id){
+            $is_clientes_varios = $this->isClientesVarios($person);
+            if($is_clientes_varios){
+                return [
+                    'success' => false,
+                    'message' => 'El cliente no puede ser editado',
+                ];
+            }
+        }
         $person->fill($request->all());
         $user_id = auth()->id();
         $person->user_id = $user_id;
+
         $person->save();
         $temp_path = $request->input('temp_path');
         UnitTypePerson::where('customer_id', $person->id)->delete();
