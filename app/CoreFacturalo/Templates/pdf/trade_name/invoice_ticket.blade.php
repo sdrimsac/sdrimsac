@@ -1074,6 +1074,16 @@
             <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
         </tr>
         @endforeach --}}
+        @php
+
+        $total_boxes = 0;
+        foreach ($boxes as $box) {
+            $total_boxes += floatval($box->amount);
+        }
+
+        $difference = $total_boxes - $document->total;
+    @endphp
+
             @if ($document->payment_condition_id == '01')
         <tr>
             <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}
@@ -1083,7 +1093,13 @@
         @endif
         {{-- @endif --}}
         </tr>
-
+        @if ($difference < 0 && $configuration->consolidated_quotation_details)
+        <tr>
+            <td colspan="4" class="text-left font-bold desc"> SALDO PENDIENTE: {{ $document->currency_type->symbol }}
+            </td>
+            <td class="text-left font-bold desc">{{ number_format(abs($difference), 2, '.', '') }}</td>
+        </tr>
+        @endif
         <tr>
             <td colspan="4" class="text-left font-bold desc"><b>FORMA DE PAGO</b></td>
             <td class="text-left font-bold desc">{{ mb_strtoupper($document->payment_condition->name) }}</td>

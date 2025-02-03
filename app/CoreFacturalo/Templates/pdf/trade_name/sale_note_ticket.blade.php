@@ -833,7 +833,7 @@ contain"
                 <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
             </tr>
         @else
-            @if ($configuration->credit_nv_show_pending && $document->credit_cash)
+            @if ($configuration->credit_nv_show_pending && $document->credit_cash ||$configuration->consolidated_quotation_details )
                 <tr>
                     <td colspan="4" class="text-left font-bold desc">Saldo pendiente:
                         {{ $document->currency_type->symbol }}</td>

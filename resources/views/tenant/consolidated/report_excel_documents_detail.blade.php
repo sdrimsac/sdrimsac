@@ -11,9 +11,17 @@
 </head>
 
 <body>
-
+    @php
+    $zone = '';
+    foreach ($records as $user_name => $zones) {
+        foreach ($zones as $zone_name => $_) {
+            $zone = $zone_name;
+        }
+    }
+    @endphp
     <div style="margin-top:20px; margin-bottom:15px;">
         <table>
+
             <tr>
                 <td colspan="5">
                     <h3 align="center" class="title"><strong>Consolidado de documentos</strong></h3>
@@ -21,15 +29,18 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <p><b>Empresa: </b><strong>{{ $company->name }}</strong></p>
+                    <p><b>Empresa: </b><strong>{{ $company->trade_name }}</strong></p>
                 </td>
                 <td colspan="1">
                     <p><strong>Fecha: {{ date('d-m-Y') }} </strong></p>
                 </td>
             </tr>
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     <p><strong>Ruc: {{ $company->number }} </strong></p>
+                </td>
+                <td colspan="1">
+                    <p><strong>Zona: {{ $zone }} </strong></p>
                 </td>
             </tr>
             <tr>
@@ -53,9 +64,11 @@
     @php
         $total_weight = 0;
         $total_documents;
+        $total_paid = 0;
     @endphp
     @if (!empty($records))
         @foreach ($records as $user_name => $zones)
+
             <table>
                 <thead>
                     <tr>
@@ -84,9 +97,13 @@
                         @foreach ($documents as $idx => $document)
                             @php
                                 $total_weight += $document['total_weight'];
+                                if($document['paid']){
+                                    $total_paid += 1;
+                                }
                             @endphp
                             <tr>
                                 <td
+
                                     style="text-align: left; padding: 8px; border: 1px solid #ddd; {{ $document['state_type_id'] == '11' ? 'color: red;' : '' }}">
                                     {{ $document['num_orden'] }}
                                 </td>
@@ -180,7 +197,7 @@
                             <strong>CONTADO</strong>
                         </td>
                         <td>
-                            <strong>{{ $consolidated_info['count_03'] }}</strong>
+                            <strong>{{ $total_paid }}</strong>
                         </td>
                         <td></td>
                     </tr>

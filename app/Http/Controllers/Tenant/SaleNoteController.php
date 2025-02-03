@@ -1280,7 +1280,9 @@ class SaleNoteController extends Controller
                     if (!$document) {
                         $document = SaleNote::where('quotation_id', $quotation_id)->first();
                         $new_request = new Request();
-                        (new SaleNoteController)->anulate($new_request, $document->id);
+                        if ($document) {
+                            (new SaleNoteController)->anulate($new_request, $document->id);
+                        }
                     }
                 }
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);

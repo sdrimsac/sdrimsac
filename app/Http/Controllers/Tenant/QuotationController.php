@@ -616,6 +616,8 @@ class QuotationController extends Controller
                             $consolidated_info['count_diff_customer']++;
                             $temp_customer_id[] = $selectedDocument->customer_id;
                         }
+                        $payed = $selectedDocument->boxes()->sum('amount');
+                        $paid = $payed >= $selectedDocument->total ? true : false;
                         $consolidated_info['count_document']++;
                         $consolidated_info['total'] += $selectedDocument->total;
                         if($selectedDocument->document_type_id == '01'){
@@ -635,6 +637,7 @@ class QuotationController extends Controller
                             'num_orden' => $quotation->num_orden,
                             'state_type_id' => $selectedDocument->state_type_id,
                             'total_weight' => $total_weight,
+                            'paid' => $paid,
                         ];
                         $registers[$user_name][$zone_name][] = $register;
                     }
