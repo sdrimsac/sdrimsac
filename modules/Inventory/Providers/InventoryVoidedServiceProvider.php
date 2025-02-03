@@ -2,6 +2,8 @@
 
 namespace Modules\Inventory\Providers;
 
+use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Company;
 use Modules\Order\Models\OrderNote;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\ItemUnitType;
@@ -30,7 +32,13 @@ class InventoryVoidedServiceProvider extends ServiceProvider
             if($document['document_type_id'] == '01' || $document['document_type_id'] == '03'){
                 if(in_array($document['state_type_id'], [ '09', '11' ], true)){
                     $warehouse = $this->findWarehouse($document['establishment_id']);
+                    if($document['state_type_id'] == '09'){
+                        $company = Company::first();
+                        $company_name = $company->name;
+                        $message = "El documento con serie {$document['series']} y número {$document['number']} de la empresa {$company_name} ha sido rechazado";
+                        (new WhatsappController)->sendMessageAllSupprot($message);
 
+                    }
                     foreach ($document['items'] as $detail) {
                         $lots = isset($detail['item']->lots) ? $detail['item']->lots : [];
 
