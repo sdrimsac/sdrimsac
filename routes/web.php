@@ -1142,6 +1142,8 @@ if ($hostname) {
                 Route::post('incomebox', [App\Http\Controllers\Tenant\BoxController::class, 'store']);
                 Route::get('incomebox/records', [App\Http\Controllers\Tenant\BoxController::class, 'records2']);
                 Route::delete('incomebox/{boxes}', [App\Http\Controllers\Tenant\BoxController::class, 'destroy']);
+
+                Route::get('sale-notes/credit-cash/export', [App\Http\Controllers\Tenant\SaleNoteController::class, 'export_credit_cash']);
             });
         }
     );

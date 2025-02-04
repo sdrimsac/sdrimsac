@@ -17,8 +17,8 @@
             >
             </el-pagination>
         </div>
-        <div class="row m-2 table-responsive">
-            <div class="col-12">
+        <div class="row mt-1">
+            <div class="col-4">
                 <el-input
                     placeholder="Buscar"
                     v-model="search"
@@ -28,6 +28,34 @@
                     @input="getRecordsTimer"
                 ></el-input>
             </div>
+            <div class="col-4">
+                <el-date-picker
+
+                    v-model="date_start"
+                    type="date"
+                    placeholder="Fecha inicio"
+                    @change="getRecords"
+                    value-format="yyyy-MM-dd"
+                    class="w-100"
+                ></el-date-picker>
+            </div>
+            <div class="col-4">
+                <el-date-picker
+                    class="w-100"
+                    v-model="date_end"
+                    type="date"
+                    placeholder="Fecha fin"
+                    @change="getRecords"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
+            </div>
+            <div class="col-6" v-if="records.length">
+                <el-button type="primary" @click="exportExcel"
+                    >Exportar Excel</el-button
+                >
+            </div>
+        </div>
+        <div class="row m-2 table-responsive">
             <table class="table">
                 <thead>
                     <tr>
@@ -79,7 +107,7 @@
 <script>
 import SaleNotePayments from "../../../../../../../../resources/js/views/sale_notes/partials/payments.vue";
 export default {
-    props: ["showDialog","configuration"],
+    props: ["showDialog", "configuration"],
     components: {
         SaleNotePayments
     },
@@ -92,10 +120,15 @@ export default {
             pagination: {},
             loading: false,
             timer: null,
-            search:"",
+            search: "",
+            date_start: null,
+            date_end: null
         };
     },
     methods: {
+        exportExcel() {
+            window.open(`/${this.resource}/export`, "_blank");
+        },
         getRecordsTimer() {
             console.log("object");
             clearTimeout(this.timer);
@@ -104,8 +137,6 @@ export default {
             }, 500);
         },
         open() {
-
-
             console.log("open");
             this.getRecords();
         },
@@ -118,8 +149,12 @@ export default {
             this.$emit("update:showDialog", false);
         },
         async getRecords() {
-            let search = this.search||"";
-            const response = await this.$http(`/${this.resource}/records?value=${search}&page=${this.pagination.current_page||1}`);
+            let search = this.search || "";
+            const response = await this.$http(
+                `/${this.resource}/records?value=${search}&page=${this
+                    .pagination.current_page || 1}&date_start=${this
+                    .date_start || ""}&date_end=${this.date_end || ""}`
+            );
             let data = response.data;
             this.records = data.data;
             this.pagination = response.data.meta;

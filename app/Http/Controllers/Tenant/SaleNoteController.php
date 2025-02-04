@@ -101,6 +101,7 @@ use Modules\Restaurant\Models\Table;
 use Modules\Workshop\Models\Historial;
 use Modules\Workshop\Http\Controllers\VehiculoController;
 use Mpdf\Mpdf;
+use App\Exports\SaleNoteCreditCashExport;
 
 class SaleNoteController extends Controller
 {
@@ -412,11 +413,62 @@ class SaleNoteController extends Controller
             'dscto_global' => $dscto_global,
         ], 200);
     }
+    public function export_credit_cash(Request $request)
+    {
+        $date_start = $request->date_start;
+        $value = $request->value;
+        $date_end = $request->date_end;
+        $records = SaleNote::query()
+        ->with([
+            'customer:id,name,number,alias',
+
+            'state_type:id,description',
+            'documents', // Quitamos la selección específica de campos
+            'user:id,name',
+            'boxes:id,sale_note_id,amount'
+        ])
+        ->where('credit_cash', true)
+        ->where('state_type_id', '<>', '11')
+        ->whereDoesntHave('credit_payments')
+        ->where('paid', 0)
+        ->select('sale_notes.*')
+        ->distinct();
+        if ($value) {
+            $records->where(function ($query) use ($value) {
+                $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
+
+                $query->whereHas('customer', function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', $searchTerm)
+                        ->orWhere('alias', 'like', $searchTerm)
+                        ->orWhere('number', 'like', $searchTerm);
+                })
+                    ->orWhere('sale_notes.number', 'like', $searchTerm);
+            });
+        }
+        if ($date_start) {
+            $records->where('date_of_issue', '>=', $date_start);
+        }
+        if ($date_end) {
+            $records->where('date_of_issue', '<=', $date_end);
+        }
+        
+        $records = $records->get();
+            
+
+
+        $company = Company::active();
+        
+        return (new SaleNoteCreditCashExport(collect($records)))
+            ->company($company)
+            ->download('Reporte_Creditos_Caja_' . Carbon::now() . '.xlsx');
+    }   
     public function credit_cash_records(Request $request)
     {
         $value = $request->value;
-
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
         $records = SaleNote::query()
+
             ->with([
                 'customer:id,name,number,alias',
                 'state_type:id,description',
@@ -444,6 +496,13 @@ class SaleNoteController extends Controller
                     ->orWhere('sale_notes.number', 'like', $searchTerm);
             });
         }
+        if ($date_start) {
+            $records->where('date_of_issue', '>=', $date_start);
+        }
+        if ($date_end) {
+            $records->where('date_of_issue', '<=', $date_end);
+        }
+
 
         // Ordenar y paginar
         return new SaleNoteLiteCollection(
