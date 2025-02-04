@@ -7,7 +7,24 @@
     $accounts = \App\Models\Tenant\BankAccount::all();
     $configuration = \App\Models\Tenant\Configuration::first();
     $tittle = $document->prefix . '-' . str_pad($document->id, 8, '0', STR_PAD_LEFT);
+    if (!function_exists('getUnitTypeId')) {
+        function getUnitTypeId($id)
+        {
+            $item_unit_types = \App\Models\Tenant\ItemUnitType::find($id);
+            // $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
+            // return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
+            return isset($item_unit_types->unit_type->symbol) ? $item_unit_types->unit_type->symbol : null;
+        }
+    }
 
+
+    if (!function_exists('getUnitType')) {
+        function getUnitType($id)
+        {
+            $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
+        }
+    }
 @endphp
 <html>
 
@@ -346,7 +363,13 @@
                             {{ number_format($row->quantity, 0) }}
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">{{ $row->item->unit_type_id }}</td>
+                    <td class="text-center desc-9 align-top">
+                        @if (isset($row->item->from_unit_type_id))
+                            {{ getUnitTypeId($row->item->from_unit_type_id) }}
+                        @else
+                            {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
+                        @endif
+                    </td>
                     <td class="text-left desc-9 align-top">
                         @if ($configuration->show_internal_code_ticket)
                             @if (isset($row->item->internal_id))
