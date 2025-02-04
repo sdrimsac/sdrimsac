@@ -16,6 +16,13 @@
             return isset($item_unit_types->unit_type->symbol) ? $item_unit_types->unit_type->symbol : null;
         }
     }
+    if (!function_exists('getUnitTypeIdLocal')) {
+        function getUnitTypeIdLocal($id,$unit_types)
+        {
+            $unit_type = $unit_types->firstWhere('id', $id);
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
+        }
+    }
 
 
     if (!function_exists('getUnitType')) {
@@ -365,7 +372,7 @@
                     </td>
                     <td class="text-center desc-9 align-top">
                         @if (isset($row->item->from_unit_type_id))
-                            {{ getUnitTypeId($row->item->from_unit_type_id) }}
+                            {{ getUnitTypeIdLocal($row->item->from_unit_type_id,$row->item->item_unit_types) }}
                         @else
                             {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
                         @endif
