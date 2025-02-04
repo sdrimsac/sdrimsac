@@ -36,9 +36,10 @@
             $item_unit_types = \App\Models\Tenant\ItemUnitType::find($id);
             // $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
             // return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
-            return isset($item_unit_types->unit_type_id) ? $item_unit_types->unit_type_id : null;
+            return isset($item_unit_types->unit_type->symbol) ? $item_unit_types->unit_type->symbol : null;
         }
     }
+
 
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
