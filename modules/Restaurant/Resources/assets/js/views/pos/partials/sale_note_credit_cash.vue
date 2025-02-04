@@ -127,8 +127,9 @@ export default {
     },
     methods: {
         exportExcel() {
-            window.open(`/${this.resource}/export`, "_blank");
+            window.open(`/${this.resource}/export?date_start=${this.date_start || ""}&date_end=${this.date_end || ""}&value=${this.search || ""}`, "_blank");
         },
+
         getRecordsTimer() {
             console.log("object");
             clearTimeout(this.timer);
