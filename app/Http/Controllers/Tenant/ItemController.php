@@ -837,11 +837,10 @@ class ItemController extends Controller
         $records = $this->getRecords($request);
         return new ItemCollection($records->paginate(config('tenant.items_per_page')));
     }
-    public function recordsCatalog(Request $request)
+    /* public function recordsCatalog(Request $request)
     {
         $enableCatalog = $request->input('enable_catalog', false);
         if ($enableCatalog) {
-            // Get only the needed fields using the ItemCatalogCollection
             $records = Item::select(
             'internal_id',
             'description', 
@@ -857,7 +856,6 @@ class ItemController extends Controller
 
             $transformedItems = (new ItemCatalogCollection($records))->collection->groupBy('category.name');
 
-            // Format response
             $categorized_items = [];
             foreach($transformedItems as $category_name => $items) {
             $categorized_items[] = [
@@ -875,6 +873,14 @@ class ItemController extends Controller
             $records = $this->getRecordsCatalog($request);
             return new ItemCatalogCollection($records->paginate(config('tenant.items_per_page')));
         }
+    } */
+
+    public function recordsCatalog(Request $request)
+    {
+        $records = $this->getRecordsCatalog($request);
+
+        return new ItemCatalogCollection($records->paginate(config('tenant.items_per_page')));
+  
     }
 
     public function recordsUltima_Venta(Request $request, $id)
@@ -918,14 +924,33 @@ class ItemController extends Controller
         return $categories_array;
     }
 
-    public function storeCatalog(Request $request) 
+    public function storeCatalog(Request $request)
     {
-        $products = $request->input('products', []);
-        
+        $products = $request->input('products');
+
+        if (!empty($products)) {
+            DB::connection('tenant')->table('item_catalog')->truncate();
+
+            $inserts = array_map(function ($product_id) {
+                return [
+                    'id_item_catalog' => $product_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }, $products);
+
+            DB::connection('tenant')->table('item_catalog')->insert($inserts);
+        }
+
+        // Get items not in catalog
+        $catalog_ids = DB::connection('tenant')->table('item_catalog')
+            ->pluck('id_item_catalog')
+            ->toArray();
+
         $items = Item::whereTypeUser()
             ->whereNotIsSet()
             ->where('active', 1)
-            ->whereNotIn('id', $products)
+            ->whereNotIn('id', $catalog_ids)
             ->get();
 
         return new ItemCatalogCollection($items);
@@ -940,7 +965,6 @@ class ItemController extends Controller
         $user = auth()->user();
         $type = $user->getUserTypeArca();
 
-        // Base filters
         if (!$services) {
             $records = $records->where('unit_type_id', '!=', 'ZZ');
         }
@@ -957,12 +981,10 @@ class ItemController extends Controller
             });
         }
 
-        // Filter by category_id if provided in request
         if ($request->category_id) {
             $records = $records->where('category_id', $request->category_id);
         }
 
-        // Filter by description if provided
         if ($request->description) {
             $search = $request->description;
             $records->where(function ($query) use ($search) {
@@ -970,7 +992,7 @@ class ItemController extends Controller
                     ->orWhere('internal_id', 'like', "%{$search}%");
             });
         }
-        // Apply warehouse filter only if warehouse_id is provided
+
         if ($request->warehouse_id) {
             if ($request->active !== null) {
                 $active = ($request->active === 'Habilitado') ? 1 : 0;
@@ -988,9 +1010,19 @@ class ItemController extends Controller
         }
 
         return $records->orderBy('description', 'ASC');
+
     }
 
-
+    public function getRecordsInfo(Request $request)
+    { 
+        $catalog_ids = DB::connection('tenant')->table('item_catalog')
+            ->select('id_item_catalog')
+            ->get()
+            ->pluck('id_item_catalog')
+            ->toArray();
+        
+        return $catalog_ids;
+    }
 
     public function getRecords($request, $services = true)
     {
@@ -1268,7 +1300,9 @@ class ItemController extends Controller
     }
 
     public function tables()
-    {
+    {   
+        $company = Company::active();
+        $establishment = Establishment::first();
         $categoria_madera = CategoriaMadera::all();
         $unit_types = UnitType::whereActive()->orderByDescription()->get();
         $currency_types = CurrencyType::whereActive()->orderByDescription()->get();
@@ -1309,6 +1343,8 @@ class ItemController extends Controller
             'categories',
             'brands',
             'configuration',
+            'company',
+            'establishment'
         );
     }
 

@@ -352,7 +352,7 @@
                                 }}
                             </button>
                         </template>
-                        <button 
+                        <!-- <button 
                             v-if="configuration.mod_renta"
                             type="button"
                             class="btn btn-info btn-sm"
@@ -360,7 +360,7 @@
                             style="margin-top:20px;"
                         >
                             Imprimir Contrato
-                        </button>
+                        </button> -->
                         <button
                             type="button"
                             class="btn btn-success btn-sm"

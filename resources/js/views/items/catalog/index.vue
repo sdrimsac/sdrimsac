@@ -48,12 +48,7 @@
                                 ></el-input>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
-                                <!-- <div class="text-end mb-3"> -->
-                                <!-- <el-button type="primary" @click="list_product">
-                                    <i class="fas fa-print"></i> todo los
-                                    productos
-                                </el-button> -->
-                                <el-button
+                                <!-- <el-button
                                     @click="toggleCatalog"
                                     :type="
                                         isCatalogEnabled ? 'danger' : 'success'
@@ -63,8 +58,11 @@
                                             ? "Desactivar Catálogo completo"
                                             : "Activar Catálogo completo"
                                     }}</el-button
+                                > -->
+                                <el-button
+                                    type="succces"
+                                    @click="sendToCatalog"
                                 >
-                                <el-button @click="sendToCatalog">
                                     armar catalogo
                                 </el-button>
                                 <!-- </div> -->
@@ -72,7 +70,7 @@
                             <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                                 <!-- <div class="text-end mb-3"> -->
                                 <div class="text-end mb-3">
-                                    <el-button type="primary" @click="printPDF">
+                                    <el-button type="danger" @click="printPDF">
                                         <i class="fas fa-print"></i> Generar PDF
                                     </el-button>
                                 </div>
@@ -195,7 +193,7 @@
                             <div class="col-md-6">
                                 <div
                                     class="scrollable-content"
-                                    style="height: 1200px; overflow-y: auto;"
+                                    style="height: 1000px; overflow-y: auto;"
                                     ref="printSection"
                                 >
                                     <div class="pdf-preview">
@@ -219,12 +217,18 @@
                                             >
                                                 <h1>Catálogo de Productos</h1>
                                                 <img
-                                                    src="logo/logo.png"
+                                                    :src="
+                                                        '/storage/uploads/logos/' +
+                                                            company.logo
+                                                    "
                                                     alt="Logo"
                                                     class="my-4"
                                                     style="max-width: 200px;"
+                                                    v-if="company.logo"
                                                 />
-                                                <h3>demo</h3>
+                                                <h3>
+                                                    {{ company.trade_name }}
+                                                </h3>
                                                 <p class="mt-3">
                                                     {{
                                                         new Date().toLocaleDateString()
@@ -235,181 +239,92 @@
                                                     style="height: 400px;"
                                                 ></div>
                                                 <h4>Contacto:</h4>
-                                                <p>Teléfono: (01) 123-4567</p>
-                                                <p>Email: info@empresa.com</p>
                                                 <p>
-                                                    Dirección: Av. Principal 123
+                                                    Teléfono:
+                                                    {{
+                                                        establishment.telephone
+                                                    }}
+                                                </p>
+                                                <p>
+                                                    Email:
+                                                    {{ establishment.email }}
+                                                </p>
+                                                <p>
+                                                    Dirección:
+                                                    {{ establishment.address }}
                                                 </p>
                                             </div>
                                         </div>
 
                                         <!-- Página de productos -->
-                                        <template v-if="enableCatalog">
-                                            <div>
-                                                <div
-                                                    v-for="(chunk,
-                                                    chunkIndex) in Math.ceil(
-                                                        records.length / 9
-                                                    )"
-                                                    :key="chunkIndex"
-                                                    class="pdf-page products-page"
-                                                    :style="{
-                                                        minHeight: '1000px',
-                                                        padding: '20px',
-                                                        backgroundImage: `url(${images[1].url})`,
-                                                        backgroundSize: 'cover',
-                                                        backgroundPosition:
-                                                            'center',
-                                                        backgroundRepeat:
-                                                            'no-repeat',
-                                                        position: 'relative'
-                                                    }"
-                                                >
-                                                    <div class="row g-3">
-                                                        <div
-                                                            v-for="(product,
-                                                            index) in records.slice(
-                                                                chunkIndex * 9,
-                                                                (chunkIndex +
-                                                                    1) *
-                                                                    9
-                                                            )"
-                                                            :key="index"
-                                                            class="col-4"
-                                                            style="height: 300px; margin-bottom: 15px;"
-                                                        >
+                                        <div>
+                                            <template v-for="(category, catIndex) in categories">
+                                                <template v-if="items.filter(item => item.category_id === category.id).length > 0">
+                                                    <div
+                                                        v-for="(chunk, chunkIndex) in Math.ceil(
+                                                            items.filter(item => item.category_id === category.id).length / 9
+                                                        )"
+                                                        :key="`${catIndex}-${chunkIndex}`"
+                                                        class="pdf-page products-page"
+                                                        :style="{
+                                                            minHeight: '1000px',
+                                                            padding: '20px',
+                                                            backgroundImage: `url(${images[1].url})`,
+                                                            backgroundSize: 'cover',
+                                                            backgroundPosition: 'center',
+                                                            backgroundRepeat: 'no-repeat',
+                                                            position: 'relative'
+                                                        }"
+                                                    >
+                                                        <h6 class="category-title mb-3 text-center">{{ category.name }}</h6>
+                                                        <div class="row g-2">
                                                             <div
-                                                                class="card"
-                                                                style="width: 180px; height: 280px;"
+                                                                v-for="(product, index) in items
+                                                                    .filter(item => item.category_id === category.id)
+                                                                    .slice(chunkIndex * 9, (chunkIndex + 1) * 9)"
+                                                                :key="index"
+                                                                class="col-4"
+                                                                style="height: 280px; margin-bottom: 10px; padding: 0 5px;"
                                                             >
-                                                                <img
-                                                                    :src="
-                                                                        product.image_url
-                                                                    "
-                                                                    class="card-img-top"
-                                                                    alt="Producto"
-                                                                    style="height: 150px; object-fit: contain; padding: 5px;"
-                                                                />
                                                                 <div
-                                                                    class="card-body p-2"
+                                                                    class="card mx-auto"
+                                                                    style="width: 170px; height: 270px;"
                                                                 >
-                                                                    <h6
-                                                                        class="card-title mb-1 fw-bold"
-                                                                        style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                                                                    >
-                                                                        {{
-                                                                            product.internal_id
-                                                                        }}
-                                                                    </h6>
-                                                                    <p
-                                                                        class="card-text mb-1 fw-bold"
-                                                                        style="font-size: 11px; height: 45px; overflow: hidden;"
-                                                                    >
-                                                                        {{
-                                                                            product.description
-                                                                        }}
-                                                                    </p>
-                                                                    <p
-                                                                        class="card-text mb-0"
-                                                                        style="font-size: 16px; margin-top: 8px;"
-                                                                    >
-                                                                        <strong
-                                                                            style="color: #000000;"
+                                                                    <img
+                                                                        :src="product.image_url"
+                                                                        class="card-img-top"
+                                                                        alt="Producto"
+                                                                        style="height: 140px; object-fit: contain; padding: 5px;"
+                                                                    />
+                                                                    <div class="card-body p-2">
+                                                                        <h6
+                                                                            class="card-title mb-1 fw-bold"
+                                                                            style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
                                                                         >
-                                                                            S/.
-                                                                            {{
-                                                                                product.sale_unit_price
-                                                                            }}
-                                                                        </strong>
-                                                                    </p>
+                                                                            {{ product.internal_id }}
+                                                                        </h6>
+                                                                        <p
+                                                                            class="card-text mb-1 fw-bold"
+                                                                            style="font-size: 11px; height: 40px; overflow: hidden;"
+                                                                        >
+                                                                            {{ product.description }}
+                                                                        </p>
+                                                                        <p
+                                                                            class="card-text mb-0"
+                                                                            style="font-size: 16px; margin-top: 5px;"
+                                                                        >
+                                                                            <strong style="color: #000000;">
+                                                                                S/. {{ product.sale_unit_price }}
+                                                                            </strong>
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </template>
-                                        <template v-else>
-                                            <div
-                                                v-for="(chunk,
-                                                chunkIndex) in Math.ceil(
-                                                    records.length / 9
-                                                )"
-                                                :key="chunkIndex"
-                                                class="pdf-page products-page"
-                                                :style="{
-                                                    minHeight: '1000px',
-                                                    padding: '20px',
-                                                    backgroundImage: `url(${images[1].url})`,
-                                                    backgroundSize: 'cover',
-                                                    backgroundPosition:
-                                                        'center',
-                                                    backgroundRepeat:
-                                                        'no-repeat',
-                                                    position: 'relative'
-                                                }"
-                                            >
-                                                <div class="row g-3">
-                                                    <div
-                                                        v-for="(product,
-                                                        index) in records.slice(
-                                                            chunkIndex * 9,
-                                                            (chunkIndex + 1) * 9
-                                                        )"
-                                                        :key="index"
-                                                        class="col-4"
-                                                        style="height: 300px; margin-bottom: 15px;"
-                                                    >
-                                                        <div
-                                                            class="card"
-                                                            style="width: 180px; height: 280px;"
-                                                        >
-                                                            <img
-                                                                :src="
-                                                                    product.image_url
-                                                                "
-                                                                class="card-img-top"
-                                                                alt="Producto"
-                                                                style="height: 150px; object-fit: contain; padding: 5px;"
-                                                            />
-                                                            <div
-                                                                class="card-body p-2"
-                                                            >
-                                                                <h6
-                                                                    class="card-title mb-1 fw-bold"
-                                                                    style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                                                                >
-                                                                    {{
-                                                                        product.internal_id
-                                                                    }}
-                                                                </h6>
-                                                                <p
-                                                                    class="card-text mb-1 fw-bold"
-                                                                    style="font-size: 11px; height: 45px; overflow: hidden;"
-                                                                >
-                                                                    {{
-                                                                        product.description
-                                                                    }}
-                                                                </p>
-                                                                <p
-                                                                    class="card-text mb-0"
-                                                                    style="font-size: 16px; margin-top: 8px;"
-                                                                >
-                                                                    <strong
-                                                                        style="color: #000000;"
-                                                                    >
-                                                                        S/.
-                                                                        {{
-                                                                            product.sale_unit_price
-                                                                        }}
-                                                                    </strong>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </template>
+                                                </template>
+                                            </template>
+                                        </div>
 
                                         <!-- Página final (contraportada) -->
                                         <div
@@ -431,10 +346,14 @@
                                             >
                                                 <div style="margin-top: 100px;">
                                                     <img
-                                                        src="logo/logo.png"
+                                                        :src="
+                                                            '/storage/uploads/logos/' +
+                                                                company.logo
+                                                        "
                                                         alt="Logo"
-                                                        class="my-4 mx-auto"
+                                                        class="my-4"
                                                         style="max-width: 200px;"
+                                                        v-if="company.logo"
                                                     />
                                                     <h3>
                                                         TODO LOS DERECHOS
@@ -450,16 +369,38 @@
                                                     class="contact-info mt-auto"
                                                 >
                                                     <h4>Contacto:</h4>
-                                                    <p>
-                                                        Teléfono: (01) 123-4567
-                                                    </p>
-                                                    <p>
-                                                        Email: info@empresa.com
-                                                    </p>
-                                                    <p>
-                                                        Dirección: Av. Principal
-                                                        123
-                                                    </p>
+                                                    <template
+                                                        v-if="establishment"
+                                                    >
+                                                        <p>
+                                                            Teléfono:
+                                                            {{
+                                                                establishment.telephone ||
+                                                                    "No disponible"
+                                                            }}
+                                                        </p>
+                                                        <p>
+                                                            Email:
+                                                            {{
+                                                                establishment.email ||
+                                                                    "No disponible"
+                                                            }}
+                                                        </p>
+                                                        <p>
+                                                            Dirección:
+                                                            {{
+                                                                establishment.address ||
+                                                                    "No disponible"
+                                                            }}
+                                                        </p>
+                                                    </template>
+                                                    <template v-else>
+                                                        <p>
+                                                            Información de
+                                                            contacto no
+                                                            disponible
+                                                        </p>
+                                                    </template>
                                                 </div>
                                             </div>
                                         </div>
@@ -492,21 +433,19 @@
 }
 </style>
 <script>
-/* import DataTable from "../../../components/DataTableCatalogos.vue"; */
 import queryString from "query-string";
 export default {
-    props: [
-        "just_sale_notes",
-        "soapCompany",
-        "company",
-        "configuration",
-        "user_type"
-    ],
+    props: ["just_sale_notes", "soapCompany", "configuration", "user_type"],
     /* components: {
         DataTable
     }, */
     data() {
         return {
+            establishment: {
+                telephone: "",
+                email: "",
+                address: ""
+            }, // Inicialización con estructura
             selectedProducts: [],
             headers: headers_token,
             images: [
@@ -515,7 +454,7 @@ export default {
                 { column: "image_footer", url: null }
             ],
             isCatalogEnabled: false,
-            enableCatalog: false,
+            /* enableCatalog: false, */
             originalContents: "",
             printState: false,
             cashId: null,
@@ -527,6 +466,7 @@ export default {
             editSale: false,
             showDialogOptions: false,
             categories: [],
+            company: {},
             search: {
                 category_id: null,
                 warehouse_id: 1,
@@ -542,7 +482,8 @@ export default {
             },
             records: [],
             loading: false,
-            time: null
+            time: null,
+            items: []
         };
     },
     watch: {
@@ -564,31 +505,51 @@ export default {
     }, */
     created() {},
     async mounted() {
-        await this.$http.get(`/${this.resource}/tables`).then(response => {
+        try {
+            const response = await this.$http.get(`/${this.resource}/tables`);
+            console.log("Respuesta completa:", response.data); // Debugging
+
             this.categories = response.data.categories;
-        });
+            this.company = response.data.company;
+
+            // Verificación y asignación segura
+            if (response.data.establishment) {
+                this.establishment = response.data.establishment;
+            } else {
+            }
+        } catch (error) {
+            this.$message.error("Error al cargar datos del establecimiento");
+        }
+
+        // ...resto del mounted
+        this.catalog();
         this.getRecords();
         this.fetchImages();
+        this.listCatalog();
     },
     methods: {
         async sendToCatalog() {
-            if (this.selectedProducts.length === 0) {
-                this.$showSAlert("ALERTA", "Debes seleccionar al menos un producto.", "error");
+            /* if (this.selectedProducts.length === 0) {
+                this.$showSAlert(
+                    "ALERTA",
+                    "Debes seleccionar al menos un producto.",
+                    "error"
+                );
                 return;
-            }
-            console.log("Productos seleccionados:", this.selectedProducts);
-            
-            try {
+            } */
 
-                const response = await this.$http.post("catalog/storeCatalog", {
-                    products: this.selectedProducts // Cambiado de 'records' a 'products' para mayor claridad
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
+            try {
+                const response = await this.$http.post(
+                    "catalog/storeCatalog",
+                    {
+                        products: this.selectedProducts
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
                     }
-                });
-                
-                console.log("Respuesta del servidor:", response.data);
+                );
 
                 if (response.data) {
                     this.$message.success("Catálogo armado con éxito");
@@ -596,8 +557,17 @@ export default {
                     this.selectedProducts = [];
                 }
             } catch (error) {
-                console.error("Error completo:", error);
                 this.$message.error("Error al armar el catálogo");
+            }
+        },
+        async listCatalog() {
+            try {
+                const response = await this.$http.post("catalog/storeCatalog");
+                if (response.data) {
+                    this.items = response.data.data;
+                }
+            } catch (error) {
+                console.error("Error al cargar los registros:", error);
             }
         },
         async fetchImages() {
@@ -621,7 +591,6 @@ export default {
                     ];
                 }
             } catch (error) {
-                console.error("Error al obtener imágenes:", error);
                 // Optionally show an error message to the user
                 this.$message.error("Error al cargar las imágenes");
             }
@@ -638,42 +607,14 @@ export default {
             }
             return true;
         },
-        async toggleCatalog() {
-            this.isCatalogEnabled = !this.isCatalogEnabled;
-
-            try {
-                const response = await this.$http.get("catalog/records", {
-                    params: { enable_catalog: this.isCatalogEnabled ? 1 : 0 }
-                });
-
-                if (this.isCatalogEnabled) {
-                    // Handle multiple data entries
-                    let allItems = [];
-                    if (Array.isArray(response.data.data)) {
-                        response.data.data.forEach(entry => {
-                            if (entry.items && Array.isArray(entry.items)) {
-                                allItems = [...allItems, ...entry.items];
-                            }
-                        });
-                    }
-                    this.records = allItems;
-                } else {
-                    this.records = response.data.data;
-                }
-
-                console.log("Respuesta del servidor:", response.data);
-            } catch (error) {
-                console.error("Error al enviar la solicitud:", error);
-                this.$message.error("Error al cargar los datos del catálogo");
-            }
+        catalog() {
+            this.$http
+                .get("catalog/getRecordsInfo")
+                .then(response => {
+                    this.selectedProducts = response.data;
+                })
+                .catch(error => {});
         },
-        /* printPDF() {
-            let printContents = this.$refs.printSection.innerHTML;
-            let originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-        }, */
         printPDF() {
             let printContents = this.$refs.printSection.innerHTML;
             let originalContents = document.body.innerHTML;
@@ -688,24 +629,6 @@ export default {
                 });
             }, 300);
         },
-        /* printPDF() {
-            // Guardamos el contenido original antes de modificarlo
-            this.originalContents = this.$refs.printSection.innerHTML;
-
-            // Preparamos el contenido para la impresión
-            let printContents = this.$refs.printSection.innerHTML;
-            document.body.innerHTML = printContents;
-
-            // Cambiamos el estado a 'imprimiendo'
-            this.printState = true;
-
-            // Imprimimos y restauramos el contenido
-            setTimeout(() => {
-                window.print();
-                document.body.innerHTML = this.originalContents;
-                this.printState = false; // Cambiamos el estado a 'no imprimiendo'
-            }, 300);
-        }, */
         getRecords() {
             if (this.time) {
                 clearTimeout(this.time);

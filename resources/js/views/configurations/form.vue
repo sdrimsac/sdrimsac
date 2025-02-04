@@ -1264,6 +1264,50 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-3 mb-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <!-- <i
+                                                                    ref="androidIcon"
+                                                                    class="fas fa-mobile-alt tab-icon"
+                                                                ></i> -->
+                                                                Habilitar Catalogo
+                                                                <el-tooltip
+                                                                    class="item"
+                                                                    effect="dark"
+                                                                    content="Habilitar Catalogo para poder generar el catalogo"
+                                                                    placement="top-start"
+                                                                >
+                                                                    <i
+                                                                        class="fa fa-info-circle"
+                                                                    ></i>
+                                                                </el-tooltip>
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.catalog
+                                                                "
+                                                                active-text="HABILITADO"
+                                                                inactive-text="DESHABILITADO"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    () =>
+                                                                        submit(
+                                                                            'Habilitar Catalogo',
+                                                                            form.catalog,
+                                                                            'androidIcon'
+                                                                        )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

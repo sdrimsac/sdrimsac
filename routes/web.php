@@ -509,7 +509,9 @@ if ($hostname) {
                     Route::get('', [App\Http\Controllers\Tenant\ItemController::class, 'index_catalog'])->name('tenant.catalog.index')->middleware(['just.admin']);
                     Route::get('records', [App\Http\Controllers\Tenant\ItemController::class, 'recordsCatalog']);
                     Route::get('tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
+                    /* Route::post('storeCatalog', [App\Http\Controllers\Tenant\ItemController::class, 'storeCatalog']); */
                     Route::post('storeCatalog', [App\Http\Controllers\Tenant\ItemController::class, 'storeCatalog']);
+                    Route::get('getRecordsInfo', [App\Http\Controllers\Tenant\ItemController::class, 'getRecordsInfo']);
                     /* Route::get('search/customers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchCustomers']); */
                     /* Route::get('search/supliers', [App\Http\Controllers\Tenant\ItemController::class, 'searchSupliers']); */
                     Route::post('upload', [App\Http\Controllers\Tenant\CatalogoController::class, 'uploadImage']);

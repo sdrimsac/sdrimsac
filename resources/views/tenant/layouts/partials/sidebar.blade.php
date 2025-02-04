@@ -371,14 +371,14 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- @if ($config->tipo_transacciones_inventario) --}}
+                        @if ($config->catalog)
                             <li>
                                 <a class="{{ $path[0] === 'catalog' ? 'active' : '' }}"
                                     href="{{ route('tenant.catalog.index') }}">
                                     <i class="icofont-id-card"></i> Crear Catalogo
                                 </a>
                             </li>
-                        {{-- @endif --}}
+                        @endif
                         @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica)
                             <li>
                                 <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}"
