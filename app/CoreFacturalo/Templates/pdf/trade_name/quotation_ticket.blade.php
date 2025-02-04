@@ -17,9 +17,8 @@
         }
     }
     if (!function_exists('getUnitTypeIdLocal')) {
-        function getUnitTypeIdLocal($id,$unit_types)
-        {
-            $unit_type = $unit_types->firstWhere('id', $id);
+        function getUnitTypeIdLocal($id, $unit_types) {
+            $unit_type = collect($unit_types)->firstWhere('id', $id);
             return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
