@@ -59,6 +59,12 @@
                                             : "Activar Catálogo completo"
                                     }}</el-button
                                 > -->
+                                <!-- <el-button
+                                    type="succces"
+                                    @click="sendToCatalog"
+                                >
+                                    Filtro por categoría
+                                </el-button> -->
                                 <el-button
                                     type="succces"
                                     @click="sendToCatalog"
@@ -259,10 +265,10 @@
                                         <!-- Página de productos -->
                                         <div>
                                             <template v-for="(category, catIndex) in categories">
-                                                <template v-if="items.filter(item => item.category_id === category.id).length > 0">
+                                                <template v-if="filteredItems.filter(item => item.category_id === category.id).length > 0">
                                                     <div
                                                         v-for="(chunk, chunkIndex) in Math.ceil(
-                                                            items.filter(item => item.category_id === category.id).length / 9
+                                                            filteredItems.filter(item => item.category_id === category.id).length / 9
                                                         )"
                                                         :key="`${catIndex}-${chunkIndex}`"
                                                         class="pdf-page products-page"
@@ -279,7 +285,7 @@
                                                         <h6 class="category-title mb-3 text-center">{{ category.name }}</h6>
                                                         <div class="row g-2">
                                                             <div
-                                                                v-for="(product, index) in items
+                                                                v-for="(product, index) in filteredItems
                                                                     .filter(item => item.category_id === category.id)
                                                                     .slice(chunkIndex * 9, (chunkIndex + 1) * 9)"
                                                                 :key="index"
@@ -483,19 +489,31 @@ export default {
             records: [],
             loading: false,
             time: null,
-            items: []
+            items: [],
+            filteredItems: [] // Add this new property
         };
     },
     watch: {
+        // Eliminar los watchers duplicados y unificarlos en uno solo
         "search.category_id": {
-            handler(newVal) {
-                this.pagination.current_page = 1; // Reset pagination cuando cambia la categoría
-                this.getRecords();
-            }
+            async handler(newVal) {
+                this.pagination.current_page = 1;
+                
+                // Ejecutar ambas peticiones de forma independiente
+                try {
+                    await Promise.all([
+                        this.getRecords(), // Actualiza la tabla de records
+                        this.updateFilteredItems(newVal) // Actualiza los items del catálogo
+                    ]);
+                } catch (error) {
+                    console.error("Error al aplicar filtros:", error);
+                }
+            },
+            immediate: true
         },
         "search.description": {
             handler(newVal) {
-                this.pagination.current_page = 1; // Reset pagination cuando cambia la búsqueda
+                this.pagination.current_page = 1;
                 this.getRecords();
             }
         }
@@ -528,21 +546,29 @@ export default {
         this.listCatalog();
     },
     methods: {
-        async sendToCatalog() {
-            /* if (this.selectedProducts.length === 0) {
-                this.$showSAlert(
-                    "ALERTA",
-                    "Debes seleccionar al menos un producto.",
-                    "error"
-                );
-                return;
-            } */
+        // Nuevo método para actualizar items filtrados
+        async updateFilteredItems(categoryId) {
+            try {
+                const params = categoryId ? { category_id: categoryId } : {};
+                const response = await this.$http.post("catalog/storeCatalog", params);
+                
+                if (response.data) {
+                    this.items = response.data.data;
+                    this.filteredItems = this.items;
+                }
+            } catch (error) {
+                console.error("Error al actualizar items filtrados:", error);
+                this.$message.error("Error al actualizar items del catálogo");
+            }
+        },
 
+        async sendToCatalog() {
             try {
                 const response = await this.$http.post(
                     "catalog/storeCatalog",
                     {
-                        products: this.selectedProducts
+                        products: this.selectedProducts,
+                        category_id: this.search.category_id || null
                     },
                     {
                         headers: {
@@ -555,6 +581,12 @@ export default {
                     this.$message.success("Catálogo armado con éxito");
                     this.enableCatalog = true;
                     this.selectedProducts = [];
+                    
+                    // Actualizar ambas listas
+                    await Promise.all([
+                        this.getRecords(),
+                        this.updateFilteredItems()
+                    ]);
                 }
             } catch (error) {
                 this.$message.error("Error al armar el catálogo");
@@ -629,38 +661,36 @@ export default {
                 });
             }, 300);
         },
-        getRecords() {
+        async getRecords() {
             if (this.time) {
                 clearTimeout(this.time);
             }
-            this.time = setTimeout(async () => {
-                this.loading = true;
-                let url = `/${
-                    this.resource
-                }/records?${this.getQueryParameters()}`;
-
-                return this.$http
-                    .get(url)
-                    .then(response => {
+            
+            return new Promise((resolve) => {
+                this.time = setTimeout(async () => {
+                    this.loading = true;
+                    try {
+                        // Asegurarse de que category_id se incluya en los parámetros
+                        const url = `/${this.resource}/records?${this.getQueryParameters()}`;
+                        const response = await this.$http.get(url);
+                        
                         if (response.data) {
                             this.records = response.data.data;
                             this.pagination = {
-                                current_page: parseInt(
-                                    response.data.meta.current_page
-                                ),
+                                current_page: parseInt(response.data.meta.current_page),
                                 total: parseInt(response.data.meta.total),
                                 per_page: parseInt(response.data.meta.per_page),
                                 from: parseInt(response.data.meta.from)
                             };
                         }
-                    })
-                    .catch(error => {
+                    } catch (error) {
                         console.error("Error al cargar los registros:", error);
-                    })
-                    .finally(() => {
+                    } finally {
                         this.loading = false;
-                    });
-            }, 350);
+                        resolve();
+                    }
+                }, 350);
+            });
         },
         customIndex(index) {
             return (
@@ -670,6 +700,7 @@ export default {
             );
         },
         getQueryParameters() {
+            // Asegurarse de que category_id siempre se incluya en los parámetros
             return queryString.stringify({
                 page: this.pagination.current_page,
                 per_page: this.pagination.per_page,

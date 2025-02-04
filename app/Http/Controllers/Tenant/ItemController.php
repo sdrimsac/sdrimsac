@@ -927,13 +927,14 @@ class ItemController extends Controller
     public function storeCatalog(Request $request)
     {
         $products = $request->input('products');
+        $category_id = $request->input('category_id');
 
         if (!empty($products)) {
             DB::connection('tenant')->table('item_catalog')->truncate();
 
             $inserts = array_map(function ($product_id) {
                 return [
-                    'id_item_catalog' => $product_id,
+                    'id_item_catalog' => $product_id, 
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
@@ -950,10 +951,14 @@ class ItemController extends Controller
         $items = Item::whereTypeUser()
             ->whereNotIsSet()
             ->where('active', 1)
-            ->whereNotIn('id', $catalog_ids)
-            ->get();
+            ->whereNotIn('id', $catalog_ids);
 
-        return new ItemCatalogCollection($items);
+        // Add category filter if category_id is provided
+        if ($category_id) {
+            $items = $items->where('category_id', $category_id);
+        }
+
+        return new ItemCatalogCollection($items->get());
     }
 
     public function getRecordsCatalog($request, $services = true)
