@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\CommercialTreatment;
 use App\Models\Tenant\CommercialTreatmentItem;
 use App\Models\Tenant\Establishment;
@@ -43,12 +44,13 @@ class ItemsImport implements ToCollection
         $errors = [];
         unset($rows[0]);
         foreach ($rows as $row) {
-            $weight = ($row[50]) ? $row[50] : '0.00';
-            $origin = ($row[49] ?: null);
-            $quality = ($row[48] ?: null);
-            $model = ($row[47] ?: null);
-            $location = ($row[46] ?: null);
+            $weight = ($row[54]) ? $row[54] : '0.00';
+            $origin = ($row[53] ?: null);
+            $quality = ($row[52] ?: null);
+            $model = ($row[51] ?: null);
+            $location = ($row[50] ?: null);
             $description = $row[0];
+
             $second_name = $row[1];
             $item_type_id = '01';
             $internal_id = $row[2];
@@ -65,10 +67,11 @@ class ItemsImport implements ToCollection
             }
             $brand_name = strtoupper($row[15]);
             $area_description = strtoupper($row[16]);
-            $max_quantity = $row[32];
-            $max_quantity_description = $row[33];
-            $lote_code = ($row[34]) ?: null;
-            $lote_date = ($row[35]) ?: null;
+            $max_quantity = $row[36];
+            $max_quantity_description = $row[37];
+            $lote_code = ($row[38]) ?: null;
+            $lote_date = ($row[39]) ?: null;
+
 
             $establishment_id = 1;
 
@@ -93,7 +96,7 @@ class ItemsImport implements ToCollection
             $prices = [];
             $commercial_treatments = [];
             for ($i = 1; $i <= 5; $i++) {
-                $descIndex = 36 + (($i - 1) * 2);
+                $descIndex = 40 + (($i - 1) * 2);
                 $priceIndex = $descIndex + 1;
                 if (empty($row[$descIndex])) {
                     continue;
@@ -106,14 +109,18 @@ class ItemsImport implements ToCollection
             //30 31
 
             for ($i = 1; $i <= 4; $i++) {
-                $descIndex = 20 + (($i - 1) * 3);
-                $qtyIndex = $descIndex + 1;
-                $priceIndex = $descIndex + 2;
+                $descIndex = 20 + (($i - 1) * 4);
+                $unitType =$descIndex + 1;
+                $qtyIndex = $descIndex + 2;
+                $priceIndex = $descIndex + 3;
+
+
 
                 if (empty($row[$descIndex])) {
                 }
 
                 $prices["price_$i"] = [
+                    'unit_type_id' => $row[$unitType],
                     'desc' => $row[$descIndex],
                     'qty' => $row[$qtyIndex],
                     'price' => $row[$priceIndex],
@@ -461,12 +468,13 @@ class ItemsImport implements ToCollection
     function insertPriceifExist($item_id, $price, $warehouse_id)
     {
         if ($this->checkPrice($price)) {
+            $unit_type = UnitType::find($price['unit_type_id']);
             $price_2 = $price['price'];
             $qty = $price['qty'];
             $price2 = floatval($price_2) / floatval($qty);
             ItemUnitType::create([
                 'item_id' => $item_id,
-                'unit_type_id' => 'NIU',
+                'unit_type_id' => $unit_type->id,
                 'quantity_unit' => $price['qty'],
                 'price2' =>  $price2,
                 'description' => $price['desc'],
