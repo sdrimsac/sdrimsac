@@ -358,7 +358,6 @@ class PersonController extends Controller
                 $file_name_old_array = explode('.', $file_name_old);
                 $extension = end($file_name_old_array) ?: 'jpg';
                 }
-                $temp_path = strtolower($temp_path);
                 // Log::info($temp_path);
                 if (file_exists($temp_path)) {
                     
@@ -397,9 +396,7 @@ class PersonController extends Controller
     
                 $temp_path = $request->input('temp_path_extra1');
                 // Verificar si existe el archivo (insensible a mayúsculas/minúsculas)
-                if (!file_exists($temp_path)) {
-                    $temp_path = strtolower($temp_path);
-                }
+            
                 
                 if (file_exists($temp_path)) {
                     $file_content = file_get_contents($temp_path);
@@ -431,9 +428,7 @@ class PersonController extends Controller
                 
                 $temp_path = $request->input('temp_path_extra2');
                 // Verificar si existe el archivo (insensible a mayúsculas/minúsculas)
-                if (!file_exists($temp_path)) {
-                    $temp_path = strtolower($temp_path);
-                }
+        
                 
                 if (file_exists($temp_path)) {
                     $file_content = file_get_contents($temp_path);
