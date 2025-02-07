@@ -32,6 +32,7 @@ use App\Services\RoleService;
 use GuzzleHttp\Client;
 use Modules\Report\Exports\ExportPersonsImport;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Modules\Vip\Models\SocialMedias;
 use Illuminate\Support\Facades\Storage;
 
@@ -358,6 +359,7 @@ class PersonController extends Controller
                 $extension = end($file_name_old_array) ?: 'jpg';
                 }
                 $temp_path = strtolower($temp_path);
+                // Log::info($temp_path);
                 if (file_exists($temp_path)) {
                     
                     // Asegurar permisos de lectura para el archivo temporal
@@ -377,7 +379,7 @@ class PersonController extends Controller
                         throw new \Exception('Archivo temporal no accesible - Verificar permisos');
                     }
                 } else {
-                    throw new \Exception('Archivo temporal no existe');
+                    throw new \Exception('Archivo temporal no existe' . $temp_path);
                 }
                 $person->image = $file_name;
     
