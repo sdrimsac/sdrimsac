@@ -2237,7 +2237,12 @@ class TableRoomController extends Controller
         $customer = TenantPerson::find($hotel_rent->customer_id);
         $customer_number = $customer->number;
         $customer_name = $customer->name;
-        $customer_img = asset('storage/uploads/persons/' . $customer->image);
+        $customer_img = $customer->image;
+        if($customer_img == "USER.PNG"){
+            $customer_img = asset('status_images/user.png');
+        }else{
+            $customer_img = asset('storage/uploads/persons/' . $customer->image);
+        }
         $hotel_rent_item = $hotel_rent->items->first();
         $table = $hotel_rent_item->table->getTableFullNameDescription();
         $guesses = $hotel_rent_item->persons->transform(function ($row) {
