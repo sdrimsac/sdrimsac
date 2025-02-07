@@ -358,18 +358,26 @@ class PersonController extends Controller
                 $extension = end($file_name_old_array) ?: 'jpg';
                 }
                 $temp_path = strtolower($temp_path);
-                if (file_exists($temp_path) && is_readable($temp_path)) {
-                    $file_content = file_get_contents($temp_path);
-                    $datenow = date('YmdHis');
-                    $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
+                if (file_exists($temp_path)) {
+                    
+                    // Asegurar permisos de lectura para el archivo temporal
+                    chmod($temp_path, 0644);
+                    
+                    if (is_readable($temp_path)) {
+                        $file_content = file_get_contents($temp_path);
+                        $datenow = date('YmdHis');
+                        $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
     
-                    if ($file_content !== false) {
-                        Storage::put($directory . $file_name, $file_content);
+                        if ($file_content !== false) {
+                            Storage::put($directory . $file_name, $file_content);
+                        } else {
+                            throw new \Exception('No se pudo leer el archivo temporal');
+                        }
                     } else {
-                        throw new \Exception('Could not read temporary file');
+                        throw new \Exception('Archivo temporal no accesible - Verificar permisos');
                     }
                 } else {
-                    throw new \Exception('Temporary file not accessible');
+                    throw new \Exception('Archivo temporal no existe');
                 }
                 $person->image = $file_name;
     
