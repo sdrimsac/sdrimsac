@@ -357,7 +357,7 @@ class PersonController extends Controller
                 $file_name_old_array = explode('.', $file_name_old);
                 $extension = end($file_name_old_array) ?: 'jpg';
                 }
-                
+                $temp_path = strtolower($temp_path);
                 if (file_exists($temp_path) && is_readable($temp_path)) {
                     $file_content = file_get_contents($temp_path);
                     $datenow = date('YmdHis');
@@ -385,27 +385,28 @@ class PersonController extends Controller
                     Storage::makeDirectory($directory);
                 }
     
-                $file_name_old = $request->input('image_extra1');
-                $extension = 'jpg';
-                
-                if ($file_name_old) {
-                    $file_name_old_array = explode('.', $file_name_old);
-                    $extension = end($file_name_old_array) ?: 'jpg';
+                $temp_path = $request->input('temp_path_extra1');
+                // Verificar si existe el archivo (insensible a mayúsculas/minúsculas)
+                if (!file_exists($temp_path)) {
+                    $temp_path = strtolower($temp_path);
                 }
                 
-                $file_content = file_get_contents($request->input('temp_path_extra1'));
-                $datenow = date('YmdHis');
-                $file_name = Str::slug($person->name) . '-extra1-' . $datenow . '.' . $extension;
-                
-                Storage::put($directory . $file_name, $file_content);
-                $person->image_extra1 = $file_name;
+                if (file_exists($temp_path)) {
+                    $file_content = file_get_contents($temp_path);
+                    $datenow = date('YmdHis');
+                    $file_name = Str::slug($person->name) . '-extra1-' . $datenow . '.' . $extension;
+                    
+                    Storage::put($directory . $file_name, $file_content);
+                    $person->image_extra1 = $file_name;
+                } else {
+                    throw new Exception('No se puede encontrar el archivo temporal');
+                }
             }
     
             // Guardar imagen adicional 2
             if ($request->input('temp_path_extra2')) {
                 $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
                 
-    
                 if (!Storage::exists($directory)) {
                     Storage::makeDirectory($directory);
                 }
@@ -418,12 +419,22 @@ class PersonController extends Controller
                     $extension = end($file_name_old_array) ?: 'jpg';
                 }
                 
-                $file_content = file_get_contents($request->input('temp_path_extra2'));
-                $datenow = date('YmdHis');
-                $file_name = Str::slug($person->name) . '-extra2-' . $datenow . '.' . $extension;
+                $temp_path = $request->input('temp_path_extra2');
+                // Verificar si existe el archivo (insensible a mayúsculas/minúsculas)
+                if (!file_exists($temp_path)) {
+                    $temp_path = strtolower($temp_path);
+                }
                 
-                Storage::put($directory . $file_name, $file_content);
-                $person->image_extra2 = $file_name;
+                if (file_exists($temp_path)) {
+                    $file_content = file_get_contents($temp_path);
+                    $datenow = date('YmdHis');
+                    $file_name = Str::slug($person->name) . '-extra2-' . $datenow . '.' . $extension;
+                    
+                    Storage::put($directory . $file_name, $file_content);
+                    $person->image_extra2 = $file_name;
+                } else {
+                    throw new Exception('No se puede encontrar el archivo temporal');
+                }
             }
         } catch (Exception $e) {
             return [
