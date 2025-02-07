@@ -202,7 +202,7 @@ class TableRoomController extends Controller
                 'price' => $table->price,
                 'month_price' => $table->month_price,
                 'table_type_id' => $table->table_type_id,
-                'type' => $table->type->name
+                'type' => optional($table->type)->name ?? ''
             ],
             'hotel_rent_item' => [
                 'quantity_persons' => $hotel_rent_item->quantity_persons,
