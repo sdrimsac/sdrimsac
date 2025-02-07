@@ -868,7 +868,7 @@ class QuotationController extends Controller
     }
     public function consolidateds(Request $request)
     {
-        $records = Consolidated::query();
+        $records = Consolidated::whereHas('quotations');
         $date = $request->date;
         $number = $request->number;
         if ($date) {
