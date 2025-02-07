@@ -256,7 +256,6 @@
                                             Desactivar
                                         </a>
                                         <a
-                                            v-if="typeUser === 'superadmin'"
                                             type="button"
                                             class="dropdown-item text-succcess"
                                             @click.prevent="
