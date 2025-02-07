@@ -11,7 +11,7 @@
                 <div class="col-12 mb-3">
                     <h5 class="text-primary">
                         <i class="fas fa-info-circle"></i> Detalles de la Renta
-                        <el-button 
+                        <el-button
                             type="primary"
                             size="mini"
                             class="float-right"
@@ -25,19 +25,21 @@
                 <div v-if="info.due_date" class="col-12 mb-3">
                     <div class="due-date-alert">
                         <i class="fas fa-calendar-alt"></i>
-                        Fecha de Vencimiento: 
-                        <span class="due-date">{{ formatDate(info.due_date) }}</span>
+                        Fecha de Vencimiento:
+                        <span class="due-date">{{
+                            formatDate(info.due_date)
+                        }}</span>
                         <span class="days-left" v-if="daysLeft !== null">
                             ({{ daysLeft }} días restantes)
                         </span>
                     </div>
                 </div>
                 <div class="col-12 table-responsive">
-                    <div class="row">   
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Cliente:</label>
-                                <el-input 
+                                <el-input
                                     v-model="info.customer_name"
                                     readonly
                                     size="small"
@@ -45,7 +47,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Documento:</label>
-                                <el-input 
+                                <el-input
                                     v-model="info.customer_number"
                                     readonly
                                     size="small"
@@ -55,7 +57,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Habitación:</label>
-                                <el-input 
+                                <el-input
                                     v-model="info.table"
                                     readonly
                                     size="small"
@@ -63,12 +65,38 @@
                             </div>
                             <div class="form-group">
                                 <label>Fecha de ingreso:</label>
-                                <el-input 
+                                <el-input
                                     v-model="formattedDate"
                                     readonly
                                     size="small"
                                 ></el-input>
                             </div>
+                        </div>
+                    </div>
+                    <div
+                        class="row"
+                        v-if="info.guesses && info.guesses.length > 0"
+                    >
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-user-friends"></i> Habitantes
+                            </h5>
+                        </div>
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Documento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="guess in info.guesses" :key="guess.id">
+                                        <td>{{ guess.name }}</td>
+                                        <td>{{ guess.number }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -96,20 +124,21 @@ export default {
             if (!this.info.due_date) return null;
             const today = moment();
             const dueDate = moment(this.info.due_date);
-            return dueDate.diff(today, 'days');
+            return dueDate.diff(today, "days");
         }
     },
     methods: {
         openContract() {
-            window.open(`/caja/rooms/pdf/${this.rentId}`, '_blank');
+            window.open(`/caja/rooms/pdf/${this.rentId}`, "_blank");
         },
         formatDate(date) {
-            if (!date) return '';
-            return moment(date).format('DD/MM/YYYY');
+            if (!date) return "";
+            return moment(date).format("DD/MM/YYYY");
         },
         getInfo() {
             this.loading = true;
-            this.$http.get(`/caja/rent/get-info/${this.rentId}`)
+            this.$http
+                .get(`/caja/rent/get-info/${this.rentId}`)
                 .then(response => {
                     if (response.data.success) {
                         this.info = response.data;

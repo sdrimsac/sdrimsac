@@ -5,6 +5,7 @@ namespace App\CoreFacturalo;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionDocumentCustomerDetail;
@@ -37,10 +38,16 @@ class Template
 
         view()->addLocation(__DIR__ . '/Templates');
         //check if $document is a object
+        $is_sale_note = $document->document_type_id == '80';
+
+        $period_rent = null;
         $configuration = Configuration::first();
+        
+
         if (is_object($document)) {
             $text = null;
             $student_name = null;
+
             $class = null;
             $config = Configuration::first();
             $students = [];
@@ -207,9 +214,23 @@ class Template
                         }
                     }
                 }
+                if($configuration->mod_renta){
+                    $footer_text = $period_rent;
+                }
+
+                if($configuration->mod_renta){
+                    $field = $is_sale_note ? 'sale_note_id' : 'document_id';
+                    $hotel_rent_document = HotelRentDocument::where($field, $document->id)->first();
+                    $hotel_rent = $hotel_rent_document->hotel_rent;
+                    $period_rent = " Pagos: ". $hotel_rent->period(). " de cada mes.";
+                    
+
+                        $document->observation .= $period_rent;
+                }
             }
             return view($view, compact('company', 'detail_points', 'detail_message', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name', 'students', 'footer_text'))->render();
         }
+
 
 
         return view($view, compact('company', 'document'))->render();

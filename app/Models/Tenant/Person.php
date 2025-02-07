@@ -20,12 +20,15 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
     protected $fillable = [
+        'image_extra1',
+        'image_extra2',
         'user_id',
         'adderss_secondary',
         'varios',
         'document_type_id',
         'alias',
         'has_credit_line',
+
         'credit_line',
         'sex',
         'type',
@@ -55,7 +58,8 @@ class Person extends ModelTenant
         'image',
         'occupation',
         'parient_id',
-
+        'image_extra1',
+        'image_extra2',
     ];
     protected $casts = [
         'has_credit_line' => 'boolean',

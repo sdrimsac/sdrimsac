@@ -102,6 +102,8 @@ use Modules\Workshop\Models\Historial;
 use Modules\Workshop\Http\Controllers\VehiculoController;
 use Mpdf\Mpdf;
 use App\Exports\SaleNoteCreditCashExport;
+use App\Models\Tenant\HotelRentPenalty;
+use App\Models\Tenant\HotelRentPayment;
 
 class SaleNoteController extends Controller
 {
@@ -419,20 +421,20 @@ class SaleNoteController extends Controller
         $value = $request->value;
         $date_end = $request->date_end;
         $records = SaleNote::query()
-        ->with([
-            'customer:id,name,number,alias',
+            ->with([
+                'customer:id,name,number,alias',
 
-            'state_type:id,description',
-            'documents', // Quitamos la selección específica de campos
-            'user:id,name',
-            'boxes:id,sale_note_id,amount'
-        ])
-        ->where('credit_cash', true)
-        ->where('state_type_id', '<>', '11')
-        ->whereDoesntHave('credit_payments')
-        ->where('paid', 0)
-        ->select('sale_notes.*')
-        ->distinct();
+                'state_type:id,description',
+                'documents', // Quitamos la selección específica de campos
+                'user:id,name',
+                'boxes:id,sale_note_id,amount'
+            ])
+            ->where('credit_cash', true)
+            ->where('state_type_id', '<>', '11')
+            ->whereDoesntHave('credit_payments')
+            ->where('paid', 0)
+            ->select('sale_notes.*')
+            ->distinct();
         if ($value) {
             $records->where(function ($query) use ($value) {
                 $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
@@ -451,17 +453,17 @@ class SaleNoteController extends Controller
         if ($date_end) {
             $records->where('date_of_issue', '<=', $date_end);
         }
-        
+
         $records = $records->get();
-            
+
 
 
         $company = Company::active();
-        
+
         return (new SaleNoteCreditCashExport(collect($records)))
             ->company($company)
             ->download('Reporte_Creditos_Caja_' . Carbon::now() . '.xlsx');
-    }   
+    }
     public function credit_cash_records(Request $request)
     {
         $value = $request->value;
@@ -1497,6 +1499,7 @@ class SaleNoteController extends Controller
                     ]);
 
                     foreach ($data['items'] as $row) {
+                        $total = $row['total'];
                         $infraction_id = isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null;
                         $infraction = HotelRentInfraction::find($infraction_id);
                         if ($infraction) {
@@ -1504,12 +1507,32 @@ class SaleNoteController extends Controller
                             $infraction->hotel_rent_document_id = $hotel_rent_document->id;
                             $infraction->save();
                         }
+                        $penalty_id = isset($row['item']['penalty_id']) ? $row['item']['penalty_id'] : null;
+                        $penalty = HotelRentPenalty::find($penalty_id);
+                        if ($penalty) {
+                            $penalty->status = "paid";
+                            $penalty->save();
+                        }
+                        $hotel_rent_payment_id = isset($row['item']['hotel_rent_payment_id']) ? $row['item']['hotel_rent_payment_id'] : null;
+                        if ($hotel_rent_payment_id) {
+                            $hotel_rent_payment = HotelRentPayment::find($hotel_rent_payment_id);
+                            if ($hotel_rent_payment) {
+                                if($total == $hotel_rent_payment->amount){
+                                    $hotel_rent_payment->is_paid = true;
+                                    $hotel_rent_payment->save();
+                                }else{
+                                    $hotel_rent_payment->amount -= $total;
+                                    $hotel_rent_payment->save();
+                                }
+                            }
+                        }
                     }
                 }
 
                 if ($request->is_list_credit) {
                     CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
                 }
+
                 $user_id = auth()->user()->id;
                 $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
                 if (!$cash) {

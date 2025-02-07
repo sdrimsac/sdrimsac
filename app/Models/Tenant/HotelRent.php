@@ -77,4 +77,12 @@ class HotelRent extends ModelTenant
     {
         return $this->items->first();
     }
+
+    public function period()
+    {
+        $date_payment = $this->items->first()->date_payment;
+        return date('d', strtotime($date_payment));
+    }
+
+    
 }

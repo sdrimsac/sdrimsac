@@ -118,6 +118,8 @@ use Modules\Workshop\Models\Historial;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Models\Tenant\HotelRentInfraction;
+use App\Models\Tenant\HotelRentPayment;
+use App\Models\Tenant\HotelRentPenalty;
 
 class DocumentController extends Controller
 {
@@ -1065,7 +1067,9 @@ class DocumentController extends Controller
         }
 
         try {
-            $consolidated_quotations = Configuration::first()->consolidated_quotations;
+            $configuration = Configuration::first();
+
+            $consolidated_quotations = $configuration->consolidated_quotations;
             $quotation_id = isset($request->quotation_id) ? $request->quotation_id : null;
             if ($consolidated_quotations && $quotation_id) {
                 $document = Document::where('quotation_id', $quotation_id)
@@ -1101,12 +1105,53 @@ class DocumentController extends Controller
             }
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
+            $document = $facturalo->getDocument();
 
+            if ($configuration->mod_renta && $request->hotel_rent_id) {
+                $hotel_rent_document = HotelRentDocument::create([
+                    'hotel_rent_id' => $request->hotel_rent_id,
+                    'document_id' => $document->id,
+                    'is_advance' => false,
+                    'due_date' => $request->due_date,
+                ]);
+                foreach ($request->items as $row) {
+                    $total = $row['total'];
+                    $infraction_id = isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null;
+                    $infraction = HotelRentInfraction::find($infraction_id);
+                    if($infraction){
+                        $infraction->paid = true;
+                        $infraction->hotel_rent_document_id = $hotel_rent_document->id;
+                        $infraction->save();
+                    }
+                    $penalty_id = isset($row['item']['penalty_id']) ? $row['item']['penalty_id'] : null;
+                    $penalty = HotelRentPenalty::find($penalty_id);
+                    if($penalty){
+                        $penalty->status = "paid";
+                        // $penalty->hotel_rent_document_id = $hotel_rent_document->id;
+                        $penalty->save();
+                    }
+                    $hotel_rent_payment_id = isset($row['item']['hotel_rent_payment_id']) ? $row['item']['hotel_rent_payment_id'] : null;
+                    if ($hotel_rent_payment_id) {
+                        $hotel_rent_payment = HotelRentPayment::find($hotel_rent_payment_id);
+                        if ($hotel_rent_payment) {
+                            if($total == $hotel_rent_payment->amount){
+                                $hotel_rent_payment->is_paid = true;
+                                $hotel_rent_payment->save();
+                            }else{
+                                $hotel_rent_payment->amount -= $total;
+                                $hotel_rent_payment->save();
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
             /* $document = $facturalo->getDocumnet(); */
             /* $document = $facturalo->getDocument();
                 $document->seller_id = auth()->user()->id;
                 $document->save(); */
-            $document = $facturalo->getDocument();
 
             if ($request->receive_promotion) {
                 $this->updatePromotion($document);
@@ -1174,7 +1219,6 @@ class DocumentController extends Controller
             $company = Company::first();
             //&& $request->afectar_caja === true
             $establishment = Establishment::where('id', $document->establishment_id)->first();
-            $configuration = Configuration::first();
 
             if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
                 if ($request->boxes) {
@@ -1318,23 +1362,7 @@ class DocumentController extends Controller
                 CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
             }
             $vacate = $request->vacate;
-            if ($configuration->mod_renta && $request->hotel_rent_id) {
-                $hotel_rent_document = HotelRentDocument::create([
-                    'hotel_rent_id' => $request->hotel_rent_id,
-                    'document_id' => $document->id,
-                    'is_advance' => false,
-                    'due_date' => $request->due_date,
-                ]);
-                foreach ($request->items as $row) {
-                    $infraction_id = isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null;
-                    $infraction = HotelRentInfraction::find($infraction_id);
-                    if($infraction){
-                        $infraction->paid = true;
-                        $infraction->hotel_rent_document_id = $hotel_rent_document->id;
-                        $infraction->save();
-                    }
-                }
-            }
+        
             if ($configuration->hotels) {
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();

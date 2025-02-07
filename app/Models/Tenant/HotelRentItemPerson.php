@@ -12,4 +12,10 @@ class HotelRentItemPerson extends ModelTenant
         'hotel_rent_item_id',
         'person_id',
     ];
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class);
+    }
 }
+

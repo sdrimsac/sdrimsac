@@ -59,7 +59,9 @@ class ClientZoneController extends Controller
         return [
             'success' => true,
             'message' => ($id) ? 'Actualizado con éxito' : 'Registrado con éxito',
-            'data'    => $zone
+            'data'    => $zone,
+            'zones'   => ClientZone::all(),
+            'id'      => $zone->id
         ];
     }
 

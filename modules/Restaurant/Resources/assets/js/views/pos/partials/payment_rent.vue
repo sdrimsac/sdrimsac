@@ -454,7 +454,7 @@
                                     <div
                                         class="col-12 col-md-12 col-lg-12 d-flex align-items-center justify-content-start flex-wrap pt-0 pb-0"
                                     >
-                                    <div
+                                    <!-- <div
                                             class="col-4 "
                                             
                                         >
@@ -472,7 +472,7 @@
                                                 >
                                                 </el-date-picker>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <!-- Observaciones -->
                                         <div class="col-8">
                                             <div class="form-group">
@@ -4346,11 +4346,11 @@ export default {
         },
         async sendPayment($event, form = null) {
             let pass = true;
-            let { due_date } = this.form;
-            if (!due_date) {
-                this.$showSAlert("Advertencia", "Debe ingresar la fecha de vencimiento", "warning");
-                return;
-            }
+            // let { due_date } = this.form;
+            // if (!due_date) {
+            //     this.$showSAlert("Advertencia", "Debe ingresar la fecha de vencimiento", "warning");
+            //     return;
+            // }
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
                 (this.form.observation == "" &&

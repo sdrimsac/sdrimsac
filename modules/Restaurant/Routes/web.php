@@ -216,11 +216,17 @@ Route::prefix('caja')->group(function () {
             Route::delete('remove-infraction/{id}', [TableRoomController::class, 'removeInfraction']);
             Route::get('get-infractions-debt/{id}', [TableRoomController::class, 'getInfractionsDebt']);
             Route::get('get-info/{id}', [TableRoomController::class, 'getInfo']);
+            Route::prefix('penalties-settings')->group(function () {
+                Route::get('', [TableRoomController::class, 'penaltiesSettings']);
+                Route::post('', [TableRoomController::class, 'storePenaltiesSettings']);
+                Route::delete('{id}', [TableRoomController::class, 'destroyPenaltiesSettings']);
+            });
 
         });
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');
         Route::get('rooms/tables_to_leave', 'TableRoomController@tablesToLeave');
+
         Route::get('rooms/check', 'TableRoomController@check');
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
@@ -276,11 +282,13 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/tables', 'TableController@get_tables');
         Route::get('tables/orden/{id}', 'TableController@get_ordens');
         Route::get('tables/record/{id}', 'TableController@record');
+        Route::get('tables/table-types', 'TableController@tableTypes');
         Route::post('tables', 'TableController@store');
         Route::post('tables/disabled-table', 'TableController@disabled');
         Route::post('tables/enabled-table', 'TableController@enabled');
         Route::post('tables/massive', 'TableController@store_massive');
         
+
         //**** TRABAJADORES */
         Route::get('workers', 'WorkerController@index')->name('restaurant.workers');
         Route::get('workers/records', 'WorkerController@records');

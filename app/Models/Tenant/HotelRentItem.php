@@ -13,6 +13,7 @@ class HotelRentItem extends ModelTenant
         'discount_instead_services',
         'was_cancel',
         'is_reserve',
+        'date_payment',
         'advances',
         'sale_note_id',
         'document_id',
@@ -39,10 +40,21 @@ class HotelRentItem extends ModelTenant
         'active' => 'boolean',
     ];
 
+    public function payments()
+    {
+        return $this->hasMany(HotelRentPayment::class);
+    }
+    public function penalties()
+    {
+        return $this->hasMany(HotelRentPenalty::class);
+    }
+
+
     public function hotel_rent()
     {
         return $this->belongsTo(HotelRent::class);
     }
+
 
     public function table()
     {
@@ -54,10 +66,17 @@ class HotelRentItem extends ModelTenant
         return $this->belongsToMany(Person::class, 'hotel_rent_item_person');
     }
 
+    public function persons()
+    {
+        return $this->hasMany(HotelRentItemPerson::class);
+    }
+
+
     public function services()
     {
         return $this->hasMany(HotelRentItemServices::class);
     }
+
     public function getPrice()
     {
         $table_ = Table::find($this->table_id);

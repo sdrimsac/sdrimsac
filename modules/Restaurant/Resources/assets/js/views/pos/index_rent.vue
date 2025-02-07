@@ -1085,7 +1085,7 @@
             v-if="configuration.show_expenses_incomes_caja"
             :showDialog.sync="showExpensesIncomes"
             :company="company"
-            :cash_id="cashId"
+            :cash_id="cash_id"
             :establishments="establishments"
             @checkCashAvailable="checkCashAvailable"
             :fromPos="true"
@@ -1599,37 +1599,37 @@ export default {
         },
         async finishRegister(id, paymentVariation = null) {
             this.updateTables();
-            this.rentId = id;
-            const response = await this.$http(
-                `/caja/rent/advance-document/${id}`
-            );
-            const { data } = response;
-            let { items, hotel_rent_id, customer_number } = data;
-            if (paymentVariation) {
-                let { description, price } = paymentVariation;
-                let foodDefault = this.itemDefault;
-                foodDefault.description = description;
-                foodDefault.quantity = 1;
-                foodDefault.sale_unit_price = Number(price);
-                this.paymentsOrden(
-                    {
-                        items,
-                        is_room: true,
-                        is_advance: true,
-                        hotel_rent_id,
-                        customer_number
-                    },
-                    [foodDefault]
-                );
-            } else {
-                this.paymentsOrden({
-                    items,
-                    is_room: true,
-                    is_advance: true,
-                    hotel_rent_id,
-                    customer_number
-                });
-            }
+            // this.rentId = id;
+            // const response = await this.$http(
+            //     `/caja/rent/advance-document/${id}`
+            // );
+            // const { data } = response;
+            // let { items, hotel_rent_id, customer_number } = data;
+            // if (paymentVariation) {
+            //     let { description, price } = paymentVariation;
+            //     let foodDefault = this.itemDefault;
+            //     foodDefault.description = description;
+            //     foodDefault.quantity = 1;
+            //     foodDefault.sale_unit_price = Number(price);
+            //     this.paymentsOrden(
+            //         {
+            //             items,
+            //             is_room: true,
+            //             is_advance: true,
+            //             hotel_rent_id,
+            //             customer_number
+            //         },
+            //         [foodDefault]
+            //     );
+            // } else {
+            //     this.paymentsOrden({
+            //         items,
+            //         is_room: true,
+            //         is_advance: true,
+            //         hotel_rent_id,
+            //         customer_number
+            //     });
+            // }
         },
 
         sendToCleanById(id) {
@@ -1645,6 +1645,15 @@ export default {
             );
         },
         selectTable(table) {
+            if (!this.cash_id) {
+                this.$showSAlert(
+                    "Error",
+                    "Necesita abrir una caja para poder seleccionar una habitación",
+                    "error"
+                );
+                return;
+            }
+
             if (table.status_table_id == 1) {
                 this.currentTable = table;
                 this.showRoomRentForm = true;
@@ -2542,8 +2551,9 @@ export default {
         async trigerFunction(id) {
             switch (id) {
                 case 77:
-                    if (!this.$cashId) {
-                        this.$toast.error("Abra una caja");
+                    if (!this.cash_id) {
+                        this.$showSAlert("Error", "Abra una caja", "error");
+                        return;
                     } else {
                         this.showExpensesIncomes = true;
                     }
@@ -2594,11 +2604,20 @@ export default {
                     this.openTablesRooms();
                     break;
                 case 6:
+                    if (!this.cash_id) {
+                        this.$showSAlert(
+                            "Error",
+                            "Necesita abrir una caja para poder seleccionar una habitación",
+                            "error"
+                        );
+                        return;
+                    }
                     if (this.configuration.view_daily_cash_pin) {
                         this.showPinRequest = true;
                     } else {
                         this.view_modal();
                     }
+
                     break;
                 case 7:
                     this.showHistory();
@@ -3609,7 +3628,7 @@ export default {
         async view_modal() {
             this.loading = true;
             const response = await this.$http.get(
-                `/caja/worker/totales_sales?cash_id=${this.$cashId}&send=1`
+                `/caja/worker/totales_sales?cash_id=${this.cash_id}&send=1`
             );
             let { total_sales } = response.data;
             if (total_sales) {
@@ -4928,7 +4947,6 @@ export default {
                 this.getLastDocument();
             }
 
-    
             this.formVariation = {
                 afectar_caja: true,
                 orden_id: null,
@@ -5020,10 +5038,11 @@ export default {
             }
 
             await this.calculateTotal();
-    
+
             this.total_sales_pos = 0;
-    
+
             this.getExchange();
+            this.getTables();
         },
         typesearch() {
             this.ordens = [];
@@ -5459,13 +5478,27 @@ export default {
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
+        },
+        async getCashId() {
+            try {
+                const { data } = await this.$http.get("/getCashId");
+            
+
+                if (data != null) {
+                    if (data.cash_id) {
+                        this.cash_id = data.cash_id;
+                    }
+                }
+            } catch (e) {
+                console.log("error getCashId", e);
+            }
         }
     },
     beforeUnmount() {
         document.removeEventListener("keydown", this.handleKeydown);
     },
     mounted() {
-        console.log("cash_idxxxxxxxxx", this.$cashId);
+        this.getCashId();
         setTimeout(() => {
             this.cash_id = this.$cashId;
             this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";

@@ -445,9 +445,13 @@
                         >
                             <label class="control-label">
                                 <i class="fas fa-map-marked-alt"></i> Zona
+                                <a href="#" @click="showCreateFormZone = true">
+                                    <i class="fas fa-plus-circle"></i> Nuevo
+                                </a>
                             </label>
                             <el-select
                                 v-model="form.client_zone_id"
+
                                 filterable
                                 dusk="client_zone_id"
                             >
@@ -652,6 +656,58 @@
                                 <img
                                     v-if="form.image_url"
                                     :src="form.image_url"
+                                    class="avatar"
+                                />
+                                <i
+                                    v-else
+                                    class="el-icon-plus avatar-uploader-icon"
+                                ></i>
+                            </el-upload>
+                        </div>
+                    </div>
+                    <div class="col-md-2" v-if="configuration.mod_renta">
+                        <div class="form-group">
+                            <label class="control-label">
+                                DNI 1
+                                <span class="text-danger"></span>
+                            </label>
+                            <el-upload
+                                class="avatar-uploader text-center bg-white"
+                                :data="{ type: 'persons_extra1' }"
+                                :headers="headers"
+                                :action="`/${resource}/uploads`"
+                                :show-file-list="false"
+                                :on-success="onSuccessExtra1"
+                            >
+                                <img
+                                    v-if="form.image_extra1_url"
+                                    :src="form.image_extra1_url"
+                                    class="avatar"
+                                />
+                                <i
+                                    v-else
+                                    class="el-icon-plus avatar-uploader-icon"
+                                ></i>
+                            </el-upload>
+                        </div>
+                    </div>
+                    <div class="col-md-2" v-if="configuration.mod_renta">
+                        <div class="form-group">
+                            <label class="control-label">
+                                DNI 2
+                                <span class="text-danger"></span>
+                            </label>
+                            <el-upload
+                                class="avatar-uploader text-center bg-white"
+                                :data="{ type: 'persons_extra2' }"
+                                :headers="headers"
+                                :action="`/${resource}/uploads`"
+                                :show-file-list="false"
+                                :on-success="onSuccessExtra2"
+                            >
+                                <img
+                                    v-if="form.image_extra2_url"
+                                    :src="form.image_extra2_url"
                                     class="avatar"
                                 />
                                 <i
@@ -1001,6 +1057,26 @@
                 </el-button>
             </div>
         </form>
+        <el-dialog width="600px" :visible.sync="showCreateFormZone" append-to-body @close="showCreateFormZone = false" :title="'Crear Zona'">
+            <div class="row m-2">
+                <div class="col-12">
+                    <label class="control-label">
+
+                        <i class="fas fa-align-left"></i> Ingrese la Zona
+                    </label>
+                    <el-input v-model="form_zone.description"></el-input>
+                </div>
+                <div style="margin-top:5px" class="d-flex justify-content-center">
+                    <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                        <!-- Botón Guardar -->
+                        <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" @click.prevent="submitZone" native-type="submit" :loading="loading_submit">
+                            <i class="fas fa-plus-circle"></i>
+                            <span> Crear</span>
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </el-dialog>
     </el-dialog>
 </template>
 
@@ -1033,6 +1109,7 @@ export default {
     ],
     data() {
         return {
+            showCreateFormZone:false,
             headers: headers_token,
             item_unit_type: null,
             // item_unit_types: [],
@@ -1052,12 +1129,16 @@ export default {
             all_provinces: [],
             all_districts: [],
             provinces: [],
+            form_zone: {
+                description: null
+            },
             districts: [],
             locations: [],
             person_types: [],
             identity_document_types: [],
             all_users: [],
             configuration: {},
+
             item_unit_types: [],
             document_types: [
                 {
@@ -1118,14 +1199,57 @@ export default {
         }
     },
     methods: {
+        async submitZone(){
+            const response = await this.$http.post(`/client_zones`, this.form_zone);
+            if(response.data.success){
+                this.showCreateFormZone = false;
+                this.$toast.success(response.data.message);
+                let zones = response.data.zones;
+                this.zones = zones;
+                let zone_id = response.data.id;
+                this.form.client_zone_id = zone_id;
+            }else{
+                this.$toast.error(response.data.message);
+            }
+
+        },
         onSuccess(response, file, fileList) {
             if (response.success) {
                 this.$nextTick(() => {
+
                     this.form = {
                         ...this.form,
                         image: response.data.filename,
                         image_url: response.data.temp_image,
                         temp_path: response.data.temp_path
+                    };
+                });
+            } else {
+                this.$toast.error(response.message);
+            }
+        },
+        onSuccessExtra1(response, file, fileList) {
+            if (response.success) {
+                this.$nextTick(() => {
+                    this.form = {
+                        ...this.form,
+                        image_extra1: response.data.filename,
+                        image_extra1_url: response.data.temp_image,
+                        temp_path_extra1: response.data.temp_path
+                    };
+                });
+            } else {
+                this.$toast.error(response.message);
+            }
+        },
+        onSuccessExtra2(response, file, fileList) {
+            if (response.success) {
+                this.$nextTick(() => {
+                    this.form = {
+                        ...this.form,
+                        image_extra2: response.data.filename,
+                        image_extra2_url: response.data.temp_image,
+                        temp_path_extra2: response.data.temp_path
                     };
                 });
             } else {

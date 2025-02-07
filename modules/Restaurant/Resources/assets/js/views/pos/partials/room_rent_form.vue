@@ -46,6 +46,7 @@
                     :min="1"
                     style="width: 100%;"
                     :step="1"
+                    :max="4"
                     size="small"
                 ></el-input-number>
             </div>
@@ -70,13 +71,14 @@
             </div>
             <div class="col-md-4">
                 <label for="checkin_date">
-                    Fecha de termino
+                    Fecha de pago
                 </label>
                 <el-date-picker
-                    v-model="form.checkout_date"
+                    v-model="form.date_payment"
                     type="date"
-                    placeholder="Fecha de termino"
+                    placeholder="Fecha de pago"
                     size="small"
+
                     style="width: 100%;"
                     value-format="yyyy-MM-dd"
                     :picker-options="{
@@ -86,6 +88,19 @@
                         }
                     }"
                 ></el-date-picker>
+            </div>
+            <div class="col-md-4">
+                <label for="checkin_date">
+                    Tiempo de permanencia (en meses)
+                </label>
+                <el-input-number
+                    class="w-100"
+                    v-model="form.duration"
+                    :min="1"
+                    :max="36"
+                    size="small"
+                ></el-input-number>
+            
             </div>
             <div class="col-md-4">
                 <label for="checkin_date">
@@ -165,6 +180,31 @@
                         </el-button>
                     </div>
         </div>
+        <div
+                        class="row mt-2"
+                        v-for="(guess, gidx) in guesses"
+                        :key="gidx"
+                    >
+                        <div class="col-8">
+                            <span>
+                                {{ guess.name }}
+                                <br />
+                                <small>
+                                    {{ guess.number }}
+                                </small>
+                            </span>
+                        </div>
+                        <div class="col-4">
+                            <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                size="mini"
+                                @click.prevent="removeGuess(guess, gidx)"
+                                circle
+                            ></el-button>
+                        </div>
+
+                    </div>
         <div class="row mt-2">
             <div class="col-12">
                 <label for="observation">Observación</label>
@@ -235,9 +275,11 @@ export default {
     },
     data() {
         return {
+            guesses: [],
             paymentVariation: {
                 description: "Consumo",
                 price: 0
+
             },
             credit_line_limit: 150,
             services: [],
@@ -278,10 +320,46 @@ export default {
         };
     },
     methods: {
-    
+        removeGuess(guess, idx){
+            this.guesses.splice(idx, 1);
+            this.form.quantity_persons = this.guesses.length;
+            if (this.guesses.length == 0) {
+                this.form.quantity_persons = 1;
+            }
+        },
+        addGuess(){
+            if (this.guesses && this.guesses.length >= 4) {
+                this.$message({
+                    message: "Solo puede agregar hasta 4 huéspedes",
+                    type: "warning"
+                });
+                return;
+            }
+
+            if (!this.room.guess_id) {
+                this.$message({
+                    message: "Debe seleccionar un huésped",
+                    type: "warning"
+                });
+                return;
+            }
+            let customer = this.customers.find(
+                c => c.id == this.room.guess_id
+            );
+            this.guesses.push(customer);
+
+            if (this.guesses) {
+                this.form.quantity_persons = this.guesses.length;
+            }
+
+            // this.form.quantity_persons = this.rooms[idx].quantity_persons;
+            this.room.guess_id = null;
+        },
+
         updatePrice() {
             let [type] = this.types.filter(
                 t => t.id == this.form.table_type_id
+
             );
             this.form.advances = type.price;
             this.form.sub_total = type.price;
@@ -322,9 +400,12 @@ export default {
     
 
         initForm() {
+            this.guesses = [];
             this.rooms = [];
             this.services = [];
             this.form = {
+                duration: 1,
+                date_payment: moment().format("YYYY-MM-DD"),
                 quantity_persons: 1,
                 checkin_date: moment().format("YYYY-MM-DD"),
                 checkout_date: null,
@@ -507,6 +588,7 @@ export default {
             try {
                 this.loading = true;
                 this.form.table_id = this.table.id;
+                this.form.guesses = this.guesses;
                 const response = await this.$http.post(
                     "/caja/rent/set-room-rent",
                     this.form
@@ -525,7 +607,7 @@ export default {
         },
         validate() {
             let pass = true;
-            let { customer_id, table_type_id, sub_total, advances , checkin_date} = this.form;
+            let { customer_id, table_type_id, sub_total, advances , checkin_date, duration} = this.form;
             if (!customer_id) {
                 this.$toast.warning("Debe seleccionar un cliente");
                 pass = false;
@@ -535,6 +617,12 @@ export default {
                 this.$toast.warning("Debe seleccionar un tipo de habitación");
                 pass = false;
             }
+
+            if (!duration || duration < 1) {
+                this.$toast.warning("Debe ingresar el tiempo de permanencia");
+                pass = false;
+            }
+
 
             if (!sub_total || sub_total < 0) {
                 this.$toast.warning("Debe ingresar la mensualidad");

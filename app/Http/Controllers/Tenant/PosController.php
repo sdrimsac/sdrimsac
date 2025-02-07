@@ -160,27 +160,28 @@ class PosController extends Controller
         // $customer 
 
     }
-    function getDetailsDigitalPayment($content){
+    function getDetailsDigitalPayment($content)
+    {
         // Yape! Jose O. Huaman P. te envió un pago por S/ 100.00
         $message = explode(" ", $content);
-        
+
         $details = [
             'type' => str_replace('!', '', $message[0]), // Elimina el ! del tipo
-            'person_name' => 'NN', 
+            'person_name' => 'NN',
             'amount' => 0
         ];
 
         // Obtener nombre completo de la persona
         $person_name_parts = [];
-        for($i = 1; $i < count($message); $i++) {
-            if($message[$i] === 'te') break;
+        for ($i = 1; $i < count($message); $i++) {
+            if ($message[$i] === 'te') break;
             $person_name_parts[] = $message[$i];
         }
         $details['person_name'] = implode(' ', $person_name_parts);
 
         // Obtener monto
-        for($i = 0; $i < count($message); $i++) {
-            if($message[$i] === 'S/') {
+        for ($i = 0; $i < count($message); $i++) {
+            if ($message[$i] === 'S/') {
                 $details['amount'] = (float) str_replace(',', '', $message[$i + 1]);
                 break;
             }
@@ -188,28 +189,30 @@ class PosController extends Controller
 
         return $details;
     }
-    public function digital_payments(Request $request){
-        
+    public function digital_payments(Request $request)
+    {
+
 
         $person_name = $request->person_name;
         $amount = $request->amount;
         $date = $request->date;
         $records = DigitalPayment::query();
-        if($person_name){
-            $records->where('person_name', 'like', '%'.$person_name.'%');
+        if ($person_name) {
+            $records->where('person_name', 'like', '%' . $person_name . '%');
         }
-        if($amount){
+        if ($amount) {
             $records->where('amount', $amount);
         }
-        if($date){
+        if ($date) {
             $records->whereDate('created_at', $date);
         }
         $records->orderBy('created_at', 'desc');
         return new DigitalPaymentCollection($records->paginate(20));
     }
-    public function digital_payment(Request $request){
+    public function digital_payment(Request $request)
+    {
         $configuration = Configuration::first();
-        if(!$configuration->digital_notifications){
+        if (!$configuration->digital_notifications) {
             return ['success' => false, 'message' => 'No se puede registrar pagos digitales'];
         }
         $package_name = $request->package_name;
@@ -330,13 +333,14 @@ class PosController extends Controller
         $date_last = \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y');
         return compact('date_last');
     }
-    public function tables_rent(){
+    public function tables_rent()
+    {
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)
             ->where('active', 1)
             ->get();
 
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
-        $establishment = Establishment::select('id','description')->where('id', auth()->user()->establishment_id)->first();
+        $establishment = Establishment::select('id', 'description')->where('id', auth()->user()->establishment_id)->first();
         $method_payment = PaymentMethodType::where('active', 1)->orderBy('description', 'asc')->get();
         if (!$establishment) {
             $establishment = Establishment::first();
@@ -345,8 +349,8 @@ class PosController extends Controller
         $documents_type = IdentityDocumentType::where('active', 1)->get();
         $customers = $this->table('customers');
         $user = User::with(['establishment', 'area', 'worker_type', 'modules'])
-        ->select('id', 'name', 'email', 'phone')
-        ->findOrFail(auth()->user()->id);
+            ->select('id', 'name', 'email', 'phone')
+            ->findOrFail(auth()->user()->id);
         $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -371,7 +375,7 @@ class PosController extends Controller
         });
         $items = [];
         $company = Company::first();
-        
+
         $item_default = null;
         $config = Configuration::first();
         if ($config->item_variation_id) {
@@ -380,20 +384,19 @@ class PosController extends Controller
         $areas = Area::all();
         $tablesClean = [];
         $tablesLeave = [];
-        $tables = Table::where('is_room',true);
+        $tables = Table::where('is_room', true);
 
-        if($config->mod_renta) {
-            $tables = $tables->with(['hotel_rent_items' => function($query) {
+        if ($config->mod_renta) {
+            $tables = $tables->with(['hotel_rent_items' => function ($query) {
                 $query->latest()
-                      ->with(['hotel_rent' => function($query) {
-                          $query
-                          ->with(['documents' => function($query) {
-                            $query->latest('due_date');
-                        }]);
-                      }]);
+                    ->with(['payments' => function ($query) {
+                        $query->where('is_paid', 0)->first();
+                    }]);
+
             }])->get();
-        
-            $tables = $tables->transform(function($table) {
+
+
+            $tables = $tables->transform(function ($table) {
                 $t_return = [
                     'id' => $table->id,
                     'number' => $table->number,
@@ -401,20 +404,21 @@ class PosController extends Controller
                     'status_table_id' => $table->status_table_id,
                     'is_cleaning' => $table->is_cleaning,
                     'floor_id' => $table->floor_id,
-            
-                
+
+
                 ];
-                if($latestRentItem = $table->hotel_rent_items->first()) {
+                if ($latestRentItem = $table->hotel_rent_items->first()) {
                     $table->hotel_rent_id = $latestRentItem->hotel_rent_id;
                     $t_return['hotel_rent_id'] = $latestRentItem->hotel_rent_id;
-                    if($latestDocument = $latestRentItem->hotel_rent->documents->first()) {
-                        $table->due_date = $latestDocument->due_date;
-                        $t_return['due_date'] = Carbon::parse($latestDocument->due_date)->format('d/m/Y');
+                    if ($latestDocument = $latestRentItem->payments->first()) {
+
+                        $table->due_date = $latestDocument->date_payment;
+                        $t_return['due_date'] = Carbon::parse($latestDocument->date_payment)->format('d/m/Y');
+
                     }
                 }
 
                 return $t_return;
-                
             });
         } else {
             $tables = $tables->get();
@@ -444,10 +448,11 @@ class PosController extends Controller
         );
     }
     public function tables()
-    {   $brands = Brand::all();
+    {
+        $brands = Brand::all();
         $categoria_madera = CategoriaMadera::all();
         $medida_alto = ItemMedidaAlto::all();
-        $medida_grosor = ItemMedidaGrosor:: all();
+        $medida_grosor = ItemMedidaGrosor::all();
         $medida_ancho = ItemMedidaAncho::all();
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)
             ->where('active', 1)
@@ -494,7 +499,7 @@ class PosController extends Controller
             ->whereHas('items', function ($query) use ($user) {
                 $query->whereHas('warehouses', function ($query) use ($user) {
                     $query->where('warehouse_id', $user->establishment_id)
-                    ->where('active', 1);
+                        ->where('active', 1);
                 });
             })
             ->where('name', '<>', 'INSUMOS')
@@ -510,14 +515,14 @@ class PosController extends Controller
         $tablesLeave = [];
         if ($config->hotels) {
             $tablesClean = DB::connection('tenant')->table('tables')
-            ->where('establishment_id', auth()->user()->establishment_id)
-            ->where('is_cleaning', true)->get();
+                ->where('establishment_id', auth()->user()->establishment_id)
+                ->where('is_cleaning', true)->get();
 
             $configuration = Configuration::first();
             $time_to_leave = $configuration->alarm_to_end;
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
-           
+
             $tablesLeave = Table
                 ::where('establishment_id', auth()->user()->establishment_id)
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
@@ -538,7 +543,7 @@ class PosController extends Controller
 
             foreach ($tablesLeave as $table) {
                 $hotel_rent_items = HotelRentItem::where('table_id', $table->id)
-                ->latest('id')->first();
+                    ->latest('id')->first();
                 $table->hotel_rent_items = collect($hotel_rent_items);
             }
         }
@@ -584,18 +589,17 @@ class PosController extends Controller
             $establishment = Establishment::first()->id;
         }
         $user_series = UserSerie::where('user_id', $user_id)
-        ->pluck('serie_id')->toArray();
-        
-        if(count($user_series)>0){
-            // $series = 
-            $series = Series::whereIn('id',$user_series)->get();
-        }else{
-            $series = Series::whereIn('document_type_id', ['01', '03', '80'])
-            ->where([['establishment_id', $establishment], ['contingency', false]])
-            ->get();
+            ->pluck('serie_id')->toArray();
 
+        if (count($user_series) > 0) {
+            // $series = 
+            $series = Series::whereIn('id', $user_series)->get();
+        } else {
+            $series = Series::whereIn('document_type_id', ['01', '03', '80'])
+                ->where([['establishment_id', $establishment], ['contingency', false]])
+                ->get();
         }
-      
+
         $payment_method_types = PaymentMethodType::all();
         $cards_brand = CardBrand::all();
         $payment_destinations = $this->getPaymentDestinations();
@@ -639,7 +643,7 @@ class PosController extends Controller
             return [
                 'students' => $students,
                 'id' => $row->id,
-                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,   
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -649,7 +653,7 @@ class PosController extends Controller
         });
         return $customers;
     }
-  
+
     public function table($table)
     {
         $configuration = Configuration::first();
@@ -682,11 +686,11 @@ class PosController extends Controller
                     ];
                 });
                 $promotion_active_id = null;
-                if($configuration->promotions_by_points || $configuration->is_promotion_document){
+                if ($configuration->promotions_by_points || $configuration->is_promotion_document) {
                     $promotion_customer = PromotionDocumentCustomer::where('customer_id', $row->id)
-                    ->where('active', true)
-                    ->first();
-                    if($promotion_customer){
+                        ->where('active', true)
+                        ->first();
+                    if ($promotion_customer) {
                         $promotion_active_id = $promotion_customer->promotion_document_id;
                     }
                 }

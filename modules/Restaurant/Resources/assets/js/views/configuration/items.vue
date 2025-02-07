@@ -60,6 +60,16 @@
                         <span>Promociones</span>
                     </el-button>
                     <el-button
+                        v-if="resource == 'caja/rooms' && isRenta"
+                        class="custom-button"
+                        @click.prevent="clickSeePenalities"
+                    >
+                        <i class="fas fa-exclamation-triangle"></i>
+
+                        <span>Penalidades</span>
+                    </el-button>
+
+                    <el-button
                         v-if="resource == 'caja/rooms'"
                         class="custom-button"
                         @click.prevent="clickSeeTypes()"
@@ -339,7 +349,9 @@
                     :type="typeItem"
                 ></items-rooms>
                 <promotions :showDialog.sync="showPromotions"></promotions>
-                <insumos :showDialog.sync="showInsumos"></insumos>
+                <insumos :showDialog.sync="showInsumos"></insumos>.
+
+                <penalities :showDialog.sync="showPenalities"></penalities>
             </div>
         </div>
     </div>
@@ -375,7 +387,9 @@
 <script>
 const Promotions = () => import("./promotions.vue");
 const Insumos = () => import("./insumos.vue");
+const Penalities = () => import("./penalities.vue");
 import CreateForm from "./form.vue";
+
 import CreateFormMassive from "./formTableMassive.vue";
 import ItemsRooms from "./items_rooms.vue";
 import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
@@ -390,7 +404,8 @@ export default {
         CreateFormMassive,
         ItemsRooms,
         Promotions,
-        Insumos
+        Insumos,
+        Penalities
     },
     data() {
         return {
@@ -419,7 +434,8 @@ export default {
             myOptions: ["op1", "op2", "op3"],
             types: [],
             typeItem: null,
-            showPromotions: false
+            showPromotions: false,
+            showPenalities: false
         };
     },
     created() {
@@ -439,9 +455,13 @@ export default {
         }
     },
     methods: {
+        clickSeePenalities(){
+            this.showPenalities = true;
+        },
         clickRemove(id){
             this.$confirm("¿Desea eliminar la observación?", "Eliminar", {
                 confirmButtonText: "Eliminar",
+
                 cancelButtonText: "Cancelar",
                 type: "warning"
             }).then(() => {

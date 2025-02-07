@@ -299,7 +299,7 @@ class PersonController extends Controller
 
     public function store(PersonRequest $request)
     {
-
+        try{
         if ($request->state) {
             if ($request->state != "ACTIVO") {
                 return [
@@ -341,40 +341,98 @@ class PersonController extends Controller
             }
         }
     
-        if ($temp_path) {
-            $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
-            
-            // Check if directory exists and create it if not
-            if (!Storage::exists($directory)) {
-            Storage::makeDirectory($directory);
-            }
 
-            $file_name_old = $request->input('image');
-            $extension = 'jpg';
-            
-            if ($file_name_old) {
-            $file_name_old_array = explode('.', $file_name_old);
-            $extension = end($file_name_old_array) ?: 'jpg';
-            }
-            
-            if (file_exists($temp_path) && is_readable($temp_path)) {
-                $file_content = file_get_contents($temp_path);
-                $datenow = date('YmdHis');
-                $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
-
-                if ($file_content !== false) {
-                    Storage::put($directory . $file_name, $file_content);
-                } else {
-                    throw new \Exception('Could not read temporary file');
+            if ($temp_path) {
+                $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
+                
+                // Check if directory exists and create it if not
+                if (!Storage::exists($directory)) {
+                Storage::makeDirectory($directory);
                 }
-            } else {
-                throw new \Exception('Temporary file not accessible');
+    
+                $file_name_old = $request->input('image');
+                $extension = 'jpg';
+                
+                if ($file_name_old) {
+                $file_name_old_array = explode('.', $file_name_old);
+                $extension = end($file_name_old_array) ?: 'jpg';
+                }
+                
+                if (file_exists($temp_path) && is_readable($temp_path)) {
+                    $file_content = file_get_contents($temp_path);
+                    $datenow = date('YmdHis');
+                    $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
+    
+                    if ($file_content !== false) {
+                        Storage::put($directory . $file_name, $file_content);
+                    } else {
+                        throw new \Exception('Could not read temporary file');
+                    }
+                } else {
+                    throw new \Exception('Temporary file not accessible');
+                }
+                $person->image = $file_name;
+    
+            } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
+                $person->image = Person::DEFAULT_USER_IMAGE;
             }
-            $person->image = $file_name;
-
-        } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
-            $person->image = Person::DEFAULT_USER_IMAGE;
+    
+            // Guardar imagen adicional 1
+            if ($request->input('temp_path_extra1')) {
+                $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
+                
+                if (!Storage::exists($directory)) {
+                    Storage::makeDirectory($directory);
+                }
+    
+                $file_name_old = $request->input('image_extra1');
+                $extension = 'jpg';
+                
+                if ($file_name_old) {
+                    $file_name_old_array = explode('.', $file_name_old);
+                    $extension = end($file_name_old_array) ?: 'jpg';
+                }
+                
+                $file_content = file_get_contents($request->input('temp_path_extra1'));
+                $datenow = date('YmdHis');
+                $file_name = Str::slug($person->name) . '-extra1-' . $datenow . '.' . $extension;
+                
+                Storage::put($directory . $file_name, $file_content);
+                $person->image_extra1 = $file_name;
+            }
+    
+            // Guardar imagen adicional 2
+            if ($request->input('temp_path_extra2')) {
+                $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
+                
+    
+                if (!Storage::exists($directory)) {
+                    Storage::makeDirectory($directory);
+                }
+    
+                $file_name_old = $request->input('image_extra2');
+                $extension = 'jpg';
+                
+                if ($file_name_old) {
+                    $file_name_old_array = explode('.', $file_name_old);
+                    $extension = end($file_name_old_array) ?: 'jpg';
+                }
+                
+                $file_content = file_get_contents($request->input('temp_path_extra2'));
+                $datenow = date('YmdHis');
+                $file_name = Str::slug($person->name) . '-extra2-' . $datenow . '.' . $extension;
+                
+                Storage::put($directory . $file_name, $file_content);
+                $person->image_extra2 = $file_name;
+            }
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
+
+
         $person->save();
 
         return [

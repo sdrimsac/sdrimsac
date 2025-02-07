@@ -14,6 +14,7 @@ use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use App\Events\MessageEvent;
+use Modules\Restaurant\Models\TableType;
 
 class TableController extends Controller
 {
@@ -52,7 +53,15 @@ class TableController extends Controller
             'message' => 'Mesa activada con éxito'
         ];
     }
+    public function tableTypes(){
+        $table_types = TableType::all();
+        return [
+            'success' => true,
+            'table_types' => $table_types
+        ];
+    }
     public function check()
+
     {
         $total = 0;
         $user = auth()->user();

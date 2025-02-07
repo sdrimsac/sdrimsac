@@ -314,7 +314,9 @@ class DocumentInput
                         'lotes' => (isset($row['item']['lotes'])) ? $row['item']['lotes'] : [],
                         'color_size' => (isset($row['item']['color_size'])) ? $row['item']['color_size'] : [],
                         'IdLoteSelected' => (isset($row['IdLoteSelected']) ? $row['IdLoteSelected'] : null),
-                        'infraction_id' => (isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null)
+                        'infraction_id' => (isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null),
+                        'penalty_id' => (isset($row['item']['penalty_id']) ? $row['item']['penalty_id'] : null),
+                        'hotel_rent_payment_id' => (isset($row['item']['hotel_rent_payment_id']) ? $row['item']['hotel_rent_payment_id'] : null),
                     ],
 
                     'quantity' => $row['quantity'],

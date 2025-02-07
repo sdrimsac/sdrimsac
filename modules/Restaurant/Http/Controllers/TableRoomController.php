@@ -14,6 +14,8 @@ use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\HotelRentItemPerson;
+use App\Models\Tenant\HotelRentPayment;
+use App\Models\Tenant\HotelRentPenaltySetting;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
@@ -51,22 +53,11 @@ class TableRoomController extends Controller
 
     public function setRoomRent(Request $request)
     {
-        // array:11 [
-        //     "quantity_persons" => 1
-        //     "checkin_date" => "2025-01-27"
-        //     "checkout_date" => "2026-01-31"
-        //     "observation" => "xdddd"
-        //     "customer_id" => 1
-        //     "sub_total" => 350
-        //     "advance" => 0
-        //     "total" => 600
-        //     "table_type_id" => 1
-        //     "advances" => "250"
-        //     "table_id" => 3
-        //   ]
+
         $quantity_persons = $request->input('quantity_persons');
         $checkin_date = $request->input('checkin_date');
-        $checkout_date = $request->input('checkout_date');
+        $date_payment = $request->input('date_payment');
+        $duration = $request->input('duration');
         $observation = $request->input('observation');
         $customer_id = $request->input('customer_id');
         $sub_total = $request->input('sub_total');
@@ -83,7 +74,6 @@ class TableRoomController extends Controller
                 'customer_id' => $customer_id,
                 'table_id' => $table_id,
                 'checkin_date' => $checkin_date,
-                'checkout_date' => $checkout_date,
                 'sub_total' => $sub_total,
                 'advances' => $advances,
                 'payment_status' => $payment_status,
@@ -94,17 +84,41 @@ class TableRoomController extends Controller
                 'advance' => $advances,
             ]);
 
-            HotelRentItem::create([
+            $hotel_rent_item =    HotelRentItem::create([
                 'hotel_rent_id' => $hotel_rent->id,
                 'table_id' => $table_id,
                 'quantity_persons' => $quantity_persons,
                 'checkin_date' => $checkin_date,
-                'checkout_date' => $checkout_date,
+                'duration' => $duration,
+                'date_payment' => $date_payment,
                 'payment_status' => $payment_status,
                 'total' => $sub_total,
                 'advance' => $advances,
 
             ]);
+            $payment_date = Carbon::parse($date_payment);
+            $monthly_amount = $sub_total;
+
+            for ($i = 0; $i < $duration; $i++) {
+                $start_date = $payment_date->copy()->addMonths($i);
+                $end_date = $start_date->copy()->addMonth();
+
+                HotelRentPayment::create([
+                    'hotel_rent_item_id' => $hotel_rent_item->id,
+                    'date_payment' => $start_date->format('Y-m-d'),
+                    'date_start' => $start_date->format('Y-m-d'),
+                    'date_end' => $end_date->format('Y-m-d'),
+                    'amount' => $monthly_amount,
+                    'is_paid' => false
+                ]);
+            }
+            $guesses = $request->input('guesses');
+            foreach ($guesses as $guess) {
+                HotelRentItemPerson::create([
+                    'hotel_rent_item_id' => $hotel_rent_item->id,
+                    'person_id' => $guess['id']
+                ]);
+            }
             Table::where('id', $table_id)->update(['status_table_id' => 2]);
             DB::connection('tenant')->commit();
             return response()->json([
@@ -200,8 +214,9 @@ class TableRoomController extends Controller
                 'checkout_date_estimated' => $hotel_rent_item->checkout_date_estimated,
             ],
             'hotel_rent' => [
-                
+                'customer_id' => $hotel_rent->customer_id,
                 'customer' => [
+                    
                     'name' => $customer_data->name ?? '',
                     'number' => $customer_data->number ?? '',
                     'address' => $customer_data->address ?? '',
@@ -843,19 +858,56 @@ class TableRoomController extends Controller
     {
         $hotel_rent = HotelRent::find($request->input('hotel_rent_id'));
         $customer_number = $hotel_rent->customer->number;
+        $hotel_rent_item = $hotel_rent->items->first();
+        $table = $hotel_rent_item->table;
+        $name = $table->getTableFullName();
         $infractions = $request->input('infractions');
+        $payments = $request->input('payments');
+        $penalties = $request->input('penalties');
         $items = collect();
-        $service = $this->get_item_service();
-        $service->price = $hotel_rent->total;
-        $service->description = "Mensualidad";
-        $service->item->description = "Mensualidad";
-        $items->push([
-            'id' => 0,
-            'observation' => '',
-            'food' => $service,
-            'quantity' => 1,
-            'price' => $service->price,
-        ]);
+        foreach ($payments as $payment) {
+            $service = $this->get_item_service();
+            $service->price = $payment['editable_amount'];
+            $service->description = $payment['period'] . " - $name";
+            $service->item->description = $payment['period'] . " - $name";
+            $service->item->hotel_rent_payment_id = $payment['id'];
+
+            $items->push([
+                'id' => 0,
+                'observation' => '',
+                'food' => $service,
+                'quantity' => 1,
+                'price' => $service->price,
+            ]);
+        }
+        // $service = $this->get_item_service();
+        // $service->price = $hotel_rent->total;
+        // $service->description = "Mensualidad";
+        // $service->item->description = "Mensualidad";
+        // $items->push([
+        //     'id' => 0,
+        //     'observation' => '',
+        //     'food' => $service,
+        //     'quantity' => 1,
+        //     'price' => $service->price,
+        // ]);
+
+        foreach ($penalties as $penalty) {
+            $description = "Multa por días de atraso: " . $penalty['days_late'];
+            $service = $this->get_item_service();
+            $service->price = $penalty['amount'];
+            $service->description = $description;
+            $service->item->description = $description;
+            $service->item->penalty_id = $penalty['id'];
+            $items->push([
+
+                'id' => 0,
+                'observation' => '',
+                'food' => $service,
+                'quantity' => 1,
+                'price' => $service->price,
+            ]);
+        }
         foreach ($infractions as $infraction) {
             $service = $this->get_item_service();
             $service->price = $infraction['amount'];
@@ -885,12 +937,39 @@ class TableRoomController extends Controller
     public  function getAmount($id)
     {
         $hotel_rent = HotelRent::find($id);
-        $total = $hotel_rent->total;
+        $hotel_rent_item = $hotel_rent->items->first();
+        $hotel_rent_payments = $hotel_rent_item->payments->where('is_paid', false)->take(10);
+        $hotel_rent_penalties = $hotel_rent_item->penalties->where('status', 'pending');
+        $payments = $hotel_rent_payments->map(function ($payment)  {
+            $pending_amount = $payment->amount;
+
+        
+            // Asegurar que el monto pendiente no sea negativo
+            $pending_amount = max(0, $pending_amount);
+
+            return [
+                'id' => $payment->id,
+                'date_start' => $payment->date_start,
+                'date_end' => $payment->date_end,
+                'amount' => $payment->amount,
+                'select' => false,
+                'editable_amount' => $pending_amount,
+                'period' => $this->getMonth(Carbon::parse($payment->date_start)->format('m')) . ' - ' .
+                    $this->getMonth(Carbon::parse($payment->date_end)->format('m'))
+            ];
+        })->values();
+
+        // Obtener el total pendiente del primer pago
+        $total = $payments->first() ? $payments->first()['editable_amount'] : 0;
+
         return [
             'success' => true,
-            'total' => $total
+            'total' => $total,
+            'payments' => $payments,
+            'penalties' => $hotel_rent_penalties
         ];
     }
+
 
     public  function getInfractionsDebt($id)
     {
@@ -1266,13 +1345,11 @@ class TableRoomController extends Controller
         $tables = Table::where('is_room', true)->where('enabled', true)->get();
         if ($configuration->mod_renta) {
             $tables = $tables->transform(function ($table) {
-                $hotel_rent = HotelRentItem::where('table_id', $table->id)->latest()->first();
-                if ($hotel_rent) {
-                    $table->hotel_rent_id = $hotel_rent->hotel_rent_id;
-                    // Obtener la fecha de vencimiento
-                    $due_date = HotelRentDocument::where('hotel_rent_id', $hotel_rent->hotel_rent_id)
-                        ->orderBy('due_date', 'desc')
-                        ->value('due_date');
+                $hotel_rent_item = HotelRentItem::where('table_id', $table->id)->latest()->first();
+                if ($hotel_rent_item) {
+                    $payments = $hotel_rent_item->payments
+                        ->where('is_paid', 0);
+                    $due_date = $payments->first()->date_payment;
                     $table->due_date = $due_date;
                 }
                 return $table;
@@ -2069,7 +2146,7 @@ class TableRoomController extends Controller
         $due_date = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)
             ->orderBy('due_date', 'desc')
             ->value('due_date');
-        
+
         return [
             'success' => true,
             'due_date' => $due_date
@@ -2079,15 +2156,26 @@ class TableRoomController extends Controller
     public function getInfo($id)
     {
         $hotel_rent = HotelRent::find($id);
+
         $customer = $hotel_rent->customer;
         $customer_number = $customer->number;
         $customer_name = $customer->name;
         $hotel_rent_item = $hotel_rent->items->first();
         $table = $hotel_rent_item->table->getTableFullNameDescription();
-        
-        $due_date = HotelRentDocument::where('hotel_rent_id', $id)
-            ->orderBy('due_date', 'desc')
-            ->value('due_date');
+        $guesses = $hotel_rent_item->persons->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->person->name,
+                'number' => $row->person->number,
+                
+            ];
+        });
+        $due_date = HotelRentPayment::where('hotel_rent_item_id', $hotel_rent_item->id)
+            ->where('is_paid', false)
+            ->orderBy('date_payment', 'desc')
+            ->value('date_payment');
+
+
 
         return [
             'success' => true,
@@ -2095,7 +2183,36 @@ class TableRoomController extends Controller
             'customer_name' => $customer_name,
             'table' => $table,
             'checkin_date' => $hotel_rent_item->checkin_date,
-            'due_date' => $due_date
+            'due_date' => $due_date,
+            'guesses' => $guesses
+        ];
+    }
+
+    public function penaltiesSettings()
+    {
+        $penalties = HotelRentPenaltySetting::all();
+        return [
+            'success' => true,
+            'penalties' => $penalties
+        ];
+    }
+
+    public function storePenaltiesSettings(Request $request)
+    {
+        $penalties = HotelRentPenaltySetting::create($request->all());
+        return [
+            'success' => true,
+            'message' => 'Configuración de penalidades creada con éxito'
+        ];
+    }
+
+    public function destroyPenaltiesSettings($id)
+    {
+        $penalties = HotelRentPenaltySetting::find($id);
+        $penalties->delete();
+        return [
+            'success' => true,
+            'message' => 'Configuración de penalidades eliminada con éxito'
         ];
     }
 }

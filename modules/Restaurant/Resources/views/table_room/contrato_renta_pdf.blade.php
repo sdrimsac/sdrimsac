@@ -10,25 +10,30 @@
             font-family: Arial, sans-serif;
             margin: 30px;
             line-height: 1.4;
-            font-size: 14px; /* Tamaño base del documento */
+            font-size: 14px;
+            /* Tamaño base del documento */
         }
 
         h2 {
-            font-size: 16px; /* Tamaño para títulos principales */
+            font-size: 16px;
+            /* Tamaño para títulos principales */
         }
 
         h3 {
-            font-size: 13px; /* Tamaño para subtítulos */
+            font-size: 13px;
+            /* Tamaño para subtítulos */
             margin: 10px 0 5px 0;
         }
 
         p {
             margin: 5px 0;
-            font-size: 13px; /* Tamaño para párrafos */
+            font-size: 13px;
+            /* Tamaño para párrafos */
         }
 
         ul li {
-            font-size: 13px; /* Tamaño para items de lista */
+            font-size: 13px;
+            /* Tamaño para items de lista */
         }
 
         .center {
@@ -56,15 +61,32 @@
             'company' => $company ?? null,
         ];
 
-        $customer = $hotel_rent['customer'] ?? null;
+        $customer = \App\Models\Tenant\Person::find($hotel_rent['customer_id']);
     @endphp
 
     <div style="display: flex; align-items: center; margin: 0 0 0 0; padding: 0;">
         @php
-            $personImage = $customer && isset($customer['image']) ? storage_path('app/public/uploads/persons/' . $customer['image']) : null;
-            $imageUrl = file_exists($personImage ?? '') ? asset('storage/uploads/persons/' . $customer['image']) : asset('status_images/user.png');
+            // $personImage = $customer && isset($customer['image']) ? storage_path('public/uploads/persons/' . $customer['image']) : null;
+            $personImage =
+                $customer && isset($customer['image'])
+                    ? public_path('storage/uploads/persons/' . $customer['image'])
+                    : null;
+
+            $imageUrl = file_exists($personImage ?? '')
+                ? asset('storage/uploads/persons/' . $customer['image'])
+                : asset('status_images/user.png');
+
+            $image_extra1 =
+                $customer && isset($customer['image_extra1'])
+                    ? public_path('storage/uploads/persons/' . $customer['image_extra1'])
+                    : null;
+            $image_extra2 =
+                $customer && isset($customer['image_extra2'])
+                    ? public_path('storage/uploads/persons/' . $customer['image_extra2'])
+                    : null;
+
         @endphp
-        
+
         <img src="{{ $imageUrl }}" alt="Foto tamaño carné"
             style="width: 100px; height: 120px; margin: 0 10px 0 0; border: 1px solid #000;">
         <h2 class="center" style="margin: 0;">CONTRATO DE ARRENDAMIENTO</h2>
@@ -104,7 +126,8 @@
 
     <h3>CUARTO</h3>
     <p>
-        El monto pactado de común acuerdo, es de S/. {{ $hotel_rent_item ? $hotel_rent_item['total'] : 'N/A' }} (Nuevos soles) mensuales, que se pagarán en
+        El monto pactado de común acuerdo, es de S/. {{ $hotel_rent_item ? $hotel_rent_item['total'] : 'N/A' }} (Nuevos
+        soles) mensuales, que se pagarán en
         forma
         adelantada. El primer pago se realiza a
         la firma del presente contrato y EL ARRENDADOR declara recibir a su entera satisfacción, entregando a EL
@@ -115,7 +138,8 @@
     <p>
         <strong>EL ARRENDATARIO</strong> entrega y <strong>EL ARRENDADOR</strong> recibe a su entera satisfacción a la
         suscripción del presente contrato,
-        el importe de S/ {{ $hotel_rent_item ? $hotel_rent_item['total'] : 'N/A' }} Soles, por concepto de garantía, que cubrirá cualquier daño al área en alquiler
+        el importe de S/ {{ $hotel_rent_item ? $hotel_rent_item['total'] : 'N/A' }} Soles, por concepto de garantía,
+        que cubrirá cualquier daño al área en alquiler
         materia de arriendo y que ocasione <strong>EL ARRENDATARIO</strong>, sólo por el valor justificado del perjuicio
         y hasta por su
         importe total, de ser necesario y sustentado. En caso de entregar <strong>EL ARRENDATARIO</strong> a <strong>EL
@@ -202,7 +226,22 @@
             <p class="text-center">DNI: {{ $customer ? $customer['number'] : 'N/A' }}</p>
         </div>
     </div>
-
+    <div style="page-break-before: always;">
+        <div style="width: 100%; height: 842px;">
+            @if (isset($image_extra1))
+                <div style="width: 100%; height: 421px; text-align: center;">
+                    <img src="{{ $image_extra1 }}"
+                        style="width: auto; height: 421px;">
+                </div>
+            @endif
+            @if (isset($image_extra2))
+                <div style="width: 100%; height: 421px; text-align: center;">
+                    <img src="{{ $image_extra2 }}"
+                        style="width: auto; height: 421px;">
+                </div>
+            @endif
+        </div>
+    </div>
 </body>
 
 </html>
