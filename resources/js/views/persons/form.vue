@@ -451,7 +451,6 @@
                             </label>
                             <el-select
                                 v-model="form.client_zone_id"
-
                                 filterable
                                 dusk="client_zone_id"
                             >
@@ -982,7 +981,13 @@
                         ></el-checkbox>
                     </div>
                 </div>
-                <div class="row" v-if="configuration.consolidated_quotations && !configuration.consolidated_quotation_details">
+                <div
+                    class="row"
+                    v-if="
+                        configuration.consolidated_quotations &&
+                            !configuration.consolidated_quotation_details
+                    "
+                >
                     <div class="col-8 col-lg-8 col-xl-8">
                         <div class="form-group">
                             <label class="control-label"
@@ -1057,19 +1062,36 @@
                 </el-button>
             </div>
         </form>
-        <el-dialog width="600px" :visible.sync="showCreateFormZone" append-to-body @close="showCreateFormZone = false" :title="'Crear Zona'">
+        <el-dialog
+            width="600px"
+            :visible.sync="showCreateFormZone"
+            append-to-body
+            @close="showCreateFormZone = false"
+            :title="'Crear Zona'"
+        >
             <div class="row m-2">
                 <div class="col-12">
                     <label class="control-label">
-
                         <i class="fas fa-align-left"></i> Ingrese la Zona
                     </label>
                     <el-input v-model="form_zone.description"></el-input>
                 </div>
-                <div style="margin-top:5px" class="d-flex justify-content-center">
-                    <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <div
+                    style="margin-top:5px"
+                    class="d-flex justify-content-center"
+                >
+                    <div
+                        class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                    >
                         <!-- Botón Guardar -->
-                        <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" @click.prevent="submitZone" native-type="submit" :loading="loading_submit">
+                        <el-button
+                            class="btn-save btn-save:hover"
+                            icon="fas fa-save fa-lg"
+                            type="primary"
+                            @click.prevent="submitZone"
+                            native-type="submit"
+                            :loading="loading_submit"
+                        >
                             <i class="fas fa-plus-circle"></i>
                             <span> Crear</span>
                         </el-button>
@@ -1109,7 +1131,7 @@ export default {
     ],
     data() {
         return {
-            showCreateFormZone:false,
+            showCreateFormZone: false,
             headers: headers_token,
             item_unit_type: null,
             // item_unit_types: [],
@@ -1199,24 +1221,25 @@ export default {
         }
     },
     methods: {
-        async submitZone(){
-            const response = await this.$http.post(`/client_zones`, this.form_zone);
-            if(response.data.success){
+        async submitZone() {
+            const response = await this.$http.post(
+                `/client_zones`,
+                this.form_zone
+            );
+            if (response.data.success) {
                 this.showCreateFormZone = false;
                 this.$toast.success(response.data.message);
                 let zones = response.data.zones;
                 this.zones = zones;
                 let zone_id = response.data.id;
                 this.form.client_zone_id = zone_id;
-            }else{
+            } else {
                 this.$toast.error(response.data.message);
             }
-
         },
         onSuccess(response, file, fileList) {
             if (response.success) {
                 this.$nextTick(() => {
-
                     this.form = {
                         ...this.form,
                         image: response.data.filename,
@@ -1429,7 +1452,13 @@ export default {
             // Convert all text inputs to uppercase before submission
             Object.keys(this.form).forEach(field => {
                 if (typeof this.form[field] === "string") {
-                    this.form[field] = this.form[field].toUpperCase();
+                    if (
+                        field !== "temp_path_extra1" &&
+                        field !== "temp_path_extra2" &&
+                        field !== "temp_path"
+                    ) {
+                        this.form[field] = this.form[field].toUpperCase();
+                    }
                 }
             });
             this.nuevoMetodo();
@@ -1635,5 +1664,4 @@ export default {
         }
     }
 };
-
 </script>
