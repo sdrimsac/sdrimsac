@@ -121,6 +121,14 @@
                                         @click="selectTable(table)"
                                         style="height: 175px;    max-width: 145px;"
                                     >
+                                        <!-- <div class="d-flex justify-content-end w-100 mb-2">
+                                            <el-button
+                                                size="mini"
+                                                @click.stop="viewImages(table)"
+                                                type="primary"
+                                                icon="el-icon-picture-outline"
+                                            ></el-button>
+                                        </div> -->
                                         <template>
                                             <div
                                                 class="d-flex flex-column justify-content-center align-items-center"
@@ -214,13 +222,26 @@
                                                     }}
                                                 </span>
                                             </div>
-                                            <div
-                                                class="d-flex"
-                                                v-if="
-                                                    table.status_table_id == 2
-                                                "
-                                            >
-                                                <el-tooltip content="Pagar">
+                                            <div class="d-flex">
+                                                <el-tooltip content="Imagenes">
+                                                    <el-button
+                                                        size="mini"
+                                                        class="m-1"
+                                                        @click.stop="
+                                                            viewImages(table)
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fas fa-images"
+                                                        ></i> </el-button
+                                                ></el-tooltip>
+                                                <el-tooltip
+                                                    content="Pagar"
+                                                    v-if="
+                                                        table.status_table_id ==
+                                                            2
+                                                    "
+                                                >
                                                     <el-button
                                                         size="mini"
                                                         class="m-1"
@@ -1109,6 +1130,31 @@
             :fromPos="true"
             @updateCashId="updateCashId"
         ></close-cash>
+        <el-dialog
+            title="Imágenes de la habitación"
+            width="80%"
+            :visible.sync="showImagesDialog"
+            append-to-body
+            @close="showImagesDialog = false"
+        >
+            <template v-if="currentImages.length > 0">
+                <div class="d-flex flex-wrap gap-2">
+                    <img
+                        v-for="image in currentImages"
+                        :key="image.id"
+                        :src="image.image_path"
+                        alt="Imagen de la habitación"
+                        style="width: 25%; height: auto;"
+                    />
+                </div>
+            </template>
+            <template v-else>
+                <div class="text-center">
+                    <i class="fas fa-images"></i>
+                    <p>No hay imágenes disponibles</p>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -1235,6 +1281,8 @@ export default {
 
     data() {
         return {
+            currentImages: [],
+            showImagesDialog: false,
             showRentInfo: false,
             showExpensesIncomes: false,
             showDialogRentPayment: false,
@@ -5482,7 +5530,6 @@ export default {
         async getCashId() {
             try {
                 const { data } = await this.$http.get("/getCashId");
-            
 
                 if (data != null) {
                     if (data.cash_id) {
@@ -5492,6 +5539,11 @@ export default {
             } catch (e) {
                 console.log("error getCashId", e);
             }
+        },
+        viewImages(table) {
+            console.log("table", table);
+            this.currentImages = table.images;
+            this.showImagesDialog = true;
         }
     },
     beforeUnmount() {

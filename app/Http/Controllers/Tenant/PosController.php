@@ -404,6 +404,13 @@ class PosController extends Controller
                     'status_table_id' => $table->status_table_id,
                     'is_cleaning' => $table->is_cleaning,
                     'floor_id' => $table->floor_id,
+                    'images' => $table->images->transform(function ($row) {
+                        return [
+                            'id' => $row->id,
+                            'image_path' => asset('storage/' . $row->image_path),
+                        ];
+                    }),
+
 
 
                 ];

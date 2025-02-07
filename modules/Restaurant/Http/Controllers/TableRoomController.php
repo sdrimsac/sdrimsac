@@ -3,7 +3,6 @@
 namespace Modules\Restaurant\Http\Controllers;
 
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
-use App\CoreFacturalo\Services\Models\Person;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
@@ -46,7 +45,9 @@ use Modules\Restaurant\Models\Tower;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Models\TableImage;
 
 class TableRoomController extends Controller
 {
@@ -216,7 +217,7 @@ class TableRoomController extends Controller
             'hotel_rent' => [
                 'customer_id' => $hotel_rent->customer_id,
                 'customer' => [
-                    
+
                     'name' => $customer_data->name ?? '',
                     'number' => $customer_data->number ?? '',
                     'address' => $customer_data->address ?? '',
@@ -940,10 +941,10 @@ class TableRoomController extends Controller
         $hotel_rent_item = $hotel_rent->items->first();
         $hotel_rent_payments = $hotel_rent_item->payments->where('is_paid', false)->take(10);
         $hotel_rent_penalties = $hotel_rent_item->penalties->where('status', 'pending');
-        $payments = $hotel_rent_payments->map(function ($payment)  {
+        $payments = $hotel_rent_payments->map(function ($payment) {
             $pending_amount = $payment->amount;
 
-        
+
             // Asegurar que el monto pendiente no sea negativo
             $pending_amount = max(0, $pending_amount);
 
@@ -1972,9 +1973,17 @@ class TableRoomController extends Controller
         $table->services = $table->services->transform(function ($row) {
             return [
                 'room_service_id' => $row->room_service_id,
-
             ];
         });
+        $table->images_uploaded = $table->images->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'image_path' => "/storage/" . $row->image_path,
+            ];
+        });
+        
+        $table = $table->makeHidden('images');
+        
         return [
             'success' => true,
             'data' => $table
@@ -2114,16 +2123,84 @@ class TableRoomController extends Controller
             'message' => 'Mesas creadas con éxito'
         ];
     }
+    public function deleteImage($imageId)
+    {
+        try {
+            $image = TableImage::findOrFail($imageId);
+            Storage::disk('public')->delete($image->image_path);
+            $image->delete();
+
+            return [
+                'success' => true,
+                'message' => 'Imagen eliminada con éxito'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar la imagen'
+            ];
+        }
+    }
     public function store(TableRequest $request)
     {
         $id = $request->input('id');
         $table = Table::firstOrNew(['id' => $id]);
-        $table->fill($request->all());
+        $data = $request->except('images');
+        $data['has_frigobar'] = filter_var($data['has_frigobar'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['is_cleaning'] = filter_var($data['is_cleaning'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        if (isset($data['enabled'])) {
+
+            $data['enabled'] = filter_var($data['enabled'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+        if (isset($data['description']) && ($data['description'] === 'undefined' || $data['description'] === 'null')) {
+            $data['description'] = null;
+        }
+
+
+        if (isset($data['month_price']) && ($data['month_price'] === 'undefined' || $data['month_price'] === 'null')) {
+            $data['month_price'] = 0.00;
+        }
+        
+        if (isset($data['is_cleaning']) && ($data['is_cleaning'] === 'undefined' || $data['is_cleaning'] === 'null')) {
+            $data['is_cleaning'] = 0;
+        }
+
+        if(isset($data['created_at']) &&( $data['created_at'] === 'undefined'|| $data['created_at'] === 'null')) {
+            $data['created_at'] = null;
+        }
+
+        if(isset($data['updated_at']) && ($data['updated_at'] === 'undefined' || $data['updated_at'] === 'null')) {
+            $data['updated_at'] = null;
+        }
+
+        if(isset($data['cleaning_start_date']) &&( $data['cleaning_start_date'] === 'undefined' || $data['cleaning_start_date'] === 'null')) {
+            $data['cleaning_start_date'] = null;
+        }
+
+
+
+
+
+
+        $table->fill($data);
+
         $table->is_room = true;
-        $services = $request->input('services');
+        $services = $data['services'];
         TableRoomService::where('table_id', $table->id)->delete();
+
         $table->save();
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('tables', 'public');
+
+                $table->images()->create([
+                    'image_path' => $path,
+                    'order' => $index + 1
+                ]);
+            }
+        }
+        $services = json_decode($services, true);
         foreach ($services as $service) {
             $table_room_service = new TableRoomService;
             $table_room_service->table_id = $table->id;
@@ -2157,9 +2234,10 @@ class TableRoomController extends Controller
     {
         $hotel_rent = HotelRent::find($id);
 
-        $customer = $hotel_rent->customer;
+        $customer = TenantPerson::find($hotel_rent->customer_id);
         $customer_number = $customer->number;
         $customer_name = $customer->name;
+        $customer_img = asset('storage/uploads/persons/' . $customer->image);
         $hotel_rent_item = $hotel_rent->items->first();
         $table = $hotel_rent_item->table->getTableFullNameDescription();
         $guesses = $hotel_rent_item->persons->transform(function ($row) {
@@ -2167,7 +2245,7 @@ class TableRoomController extends Controller
                 'id' => $row->id,
                 'name' => $row->person->name,
                 'number' => $row->person->number,
-                
+
             ];
         });
         $due_date = HotelRentPayment::where('hotel_rent_item_id', $hotel_rent_item->id)
@@ -2181,6 +2259,7 @@ class TableRoomController extends Controller
             'success' => true,
             'customer_number' => $customer_number,
             'customer_name' => $customer_name,
+            'customer_img' => $customer_img,
             'table' => $table,
             'checkin_date' => $hotel_rent_item->checkin_date,
             'due_date' => $due_date,

@@ -97,6 +97,10 @@ class Table extends ModelTenant
     {
         return $this->hasMany(TableUserMaintenance::class);
     }
+    public function images()
+    {
+        return $this->hasMany(TableImage::class)->orderBy('order');
+    }
     public  function services()
     {
         return $this->hasMany(TableRoomService::class);

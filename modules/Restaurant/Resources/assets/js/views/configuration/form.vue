@@ -388,7 +388,7 @@
                                     v-for="(data, idx) in tags"
                                     :key="idx"
                                     :disable-transitions="true"
-                                    @click="select(idx)"
+                                    @click.prevent="select(idx)"
                                     >{{ data.description }}</el-tag
                                 >
                                 <template v-if="tags.length == 0">
@@ -426,6 +426,117 @@
                                     >
                                 </div>
                             </div>
+                            <div class="col-12 mb-3">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        <i class="fas fa-images mr-2"></i>
+                                        Imágenes de la habitación (Máximo 5)
+                                    </label>
+                                    <div
+                                            class="d-block"
+                                            v-if="
+                                                form.images &&
+                                                    getTotalImagesCount < 5
+                                            "
+                                        >
+                                            <input
+                                                type="file"
+                                                ref="fileInput"
+                                                accept="image/*"
+                                                class="d-none"
+                                                @change="handleImageUpload"
+                                            />
+                                            <button
+                                                @click.prevent="
+                                                    $refs.fileInput.click()
+                                                "
+                                                class="btn btn-primary"
+                                            >
+                                                <i class="fas fa-plus mr-2"></i>
+                                                Agregar imagen ({{
+                                                    5 - getTotalImagesCount
+                                                }}
+                                                restantes)
+                                            </button>
+                                        </div>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <div
+                                            v-for="(image,
+                                            index) in form.images"
+                                            :key="index"
+                                        >
+                                            <div
+                                                class="position-relative me-2 mb-2"
+                                            >
+                                                <img
+                                                    :src="
+                                                        image.preview ||
+                                                            image.url
+                                                    "
+                                                    class="img-thumbnail"
+                                                    style="width: 100px; height: 100px; object-fit: cover;"
+                                                />
+                                                <button
+                                                    @click.prevent="
+                                                        removeImageLocal(index)
+                                                    "
+                                                    class="btn btn-danger btn-sm position-absolute"
+                                                    style="top: -10px; right: -10px;"
+
+                                                >
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+
+                                    <small class="text-muted">
+                                        Formatos permitidos: JPG, PNG. Tamaño
+                                        máximo: 10MB
+                                    </small>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.images"
+                                        v-text="errors.images[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div
+                                    class="form-group"
+                                    v-if="
+                                        form.images_uploaded &&
+                                            form.images_uploaded.length > 0
+                                    "
+                                >
+                                    <label class="control-label">
+                                        <i class="fas fa-images mr-2"></i>
+                                        Imágenes subidas
+                                    </label>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <div
+                                        v-for="(image,
+                                        index) in form.images_uploaded"
+                                        :key="index"
+                                        class="position-relative me-2 mb-2"
+                                    >
+                                        <img
+                                            :src="image.image_path"
+                                            class="img-thumbnail"
+                                            style="width: 100px; height: 100px; object-fit: cover;"
+                                        />
+                                        <button
+                                            @click.prevent="removeImage(index)"
+                                            class="btn btn-danger btn-sm position-absolute"
+                                            style="top: -10px; right: -10px;"
+                                        >
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </template>
                     </template>
                 </div>
@@ -456,6 +567,9 @@
     border-radius: 10px;
     overflow: hidden;
 }
+.gap-2 {
+    gap: 0.5rem;
+}
 </style>
 
 <script>
@@ -482,7 +596,9 @@ export default {
             resource: this.type,
             errors: {},
             tags: [],
-            form: {},
+            form: {
+                images: []
+            },
             options: [],
             all_floors: [],
             all_services: [],
@@ -499,12 +615,25 @@ export default {
     computed: {
         isRenta() {
             return this.configurations.mod_renta;
+        },
+        getTotalImagesCount() {
+            const uploadedCount = this.form.images_uploaded
+                ? this.form.images_uploaded.length
+                : 0;
+            const newImagesCount = this.form.images
+                ? this.form.images.length
+                : 0;
+            return uploadedCount + newImagesCount;
         }
     },
     created() {
         this.initForm();
     },
     methods: {
+        removeImageLocal(index) {
+            this.form.images.splice(index, 1);
+            this.$forceUpdate();
+        },
         updatePrice() {
             if (this.isRenta) {
                 let type = this.types.find(
@@ -620,7 +749,8 @@ export default {
                 tower_id: null,
                 price: 0,
                 month_price: 0,
-                floor_id: null
+                floor_id: null,
+                images: []
             };
 
             let [establishment] = this.establishments;
@@ -722,6 +852,7 @@ export default {
                 );
 
                 this.form = response.data.data;
+                this.form.images = [];
                 if (this.type === "caja/rooms") {
                     let { floor, description } = this.form;
                     this.detail = description;
@@ -812,39 +943,124 @@ export default {
             }
             return true;
         },
-        submit() {
-            if (!this.validRoom()) {
+        handleImageUpload(event) {
+            event.preventDefault();
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validar tamaño (10MB máximo) 
+            if (file.size > 10 * 1024 * 1024) {
+                this.$toast.error("La imagen no debe superar los 10MB");
                 return;
             }
+
+            // Validar tipo de archivo
+            if (!file.type.match("image.*")) {
+                this.$toast.error("Por favor seleccione una imagen válida");
+                return;
+            }
+
+            // Verificar límite total de imágenes
+            if (this.getTotalImagesCount >= 5) {
+                this.$toast.error("Máximo 5 imágenes permitidas");
+                return;
+            }
+
+            // Crear preview y añadir a la lista
+            const reader = new FileReader();
+            reader.onload = e => {
+                // Usar this.$set para asegurar reactividad al modificar el array
+                const newImages = [...this.form.images];
+                newImages.push({
+                    file: file,
+                    preview: e.target.result
+                });
+                this.$set(this.form, 'images', newImages);
+                this.$forceUpdate();
+            };
+            reader.readAsDataURL(file);
+            event.target.value = ""; // Resetear input
+        },
+        removeImage(index) {
+            this.$confirm(
+                "¿Estás seguro de querer eliminar esta imagen?",
+                "Eliminar imagen",
+                {
+                    confirmButtonText: "Eliminar",
+                    cancelButtonText: "Cancelar",
+                    type: "warning"
+                }
+            ).then(() => {
+                let image = this.form.images_uploaded[index];
+                this.$http
+                    .delete(`/${this.resource}/delete_image/${image.id}`)
+                    .then(response => {
+                        if (response.status == 200) {
+                            this.form.images_uploaded.splice(index, 1);
+                        }
+                    });
+            });
+        },
+
+        async submit() {
+            if (!this.validRoom()) return;
+
             this.loading_submit = true;
-            this.form.services = this.all_services
+            const formData = new FormData();
+
+            // Obtener servicios seleccionados
+            const selectedServices = this.all_services
                 .filter(s => s.selected)
                 .map(s => s.id);
-            this.$http
-                .post(`/${this.resource}`, this.form)
-                .then(response => {
-                    if (response.data.success) {
-                        this.$showSAlert(response.data.message, "success");
-                        /* this.$toast.success(response.data.message); */
-                        this.$eventHub.$emit("reloadData");
-                        this.close();
-                    } else {
-                        this.$toast.error(response.data.message);
+
+            // Crear una copia del form sin los servicios para evitar duplicación
+            const formCopy = { ...this.form };
+            delete formCopy.services; // Eliminar servicios del objeto principal
+
+            // Añadir el resto de propiedades del form
+            Object.keys(formCopy).forEach(key => {
+                if (key === "images") {
+                    this.form.images.forEach((image, index) => {
+                        if (image.file) {
+                            formData.append(`images[${index}]`, image.file);
+                        }
+                    });
+                } else {
+                    formData.append(key, formCopy[key]);
+                }
+            });
+
+            // Añadir servicios una sola vez
+            formData.append("services", JSON.stringify(selectedServices));
+
+            try {
+                const response = await this.$http.post(
+                    `/${this.resource}`,
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
                     }
-                })
-                .catch(error => {
-                    if (error.response.status === 422) {
-                        this.errors = error.response.data;
-                        this.$toast.error(
-                            "Ocurrió un error / Verifique los datos"
-                        );
-                    } else {
-                        console.log(error);
-                    }
-                })
-                .then(() => {
-                    this.loading_submit = false;
-                });
+                );
+
+                if (response.data.success) {
+                    this.$showSAlert(response.data.message, "success");
+                    this.$eventHub.$emit("reloadData");
+                    this.close();
+                } else {
+                    this.$toast.error(response.data.message);
+                }
+            } catch (error) {
+                if (error.response.status === 422) {
+                    this.errors = error.response.data;
+                    this.$toast.error("Ocurrió un error / Verifique los datos");
+                } else {
+                    console.log(error);
+                }
+            } finally {
+                this.loading_submit = false;
+            }
         },
         close() {
             this.$emit("update:showDialog", false);
