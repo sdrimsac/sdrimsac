@@ -11,7 +11,7 @@
             margin: 30px;
             line-height: 1.4;
             font-size: 14px;
-            /* Tamaño base del documento */
+            text-align: justify; /* Agregado para justificar todo el contenido */
         }
 
         h2 {
@@ -28,7 +28,12 @@
         p {
             margin: 5px 0;
             font-size: 13px;
-            /* Tamaño para párrafos */
+            text-align: justify; /* Agregado para justificar los párrafos */
+        }
+        .pagina {
+            margin: 5px 0;
+            font-size: 13px;
+            text-align: right !important;/* Agregado para justificar los párrafos */
         }
 
         ul li {
@@ -204,11 +209,13 @@
     <p style="text-align: right;">Huancayo, ___ de ________ del 20__</p>
 
 
-
+    <br>
+    <br>
+    <br>
 
     <!-- Repite el resto del texto del contrato -->
 
-    <div style="display: flex; justify-content: space-between; margin-top: 100px; width: 100%;">
+    <div style="display: flex; justify-content: space-between; margin-top: 150px; width: 100%;">
         <div style="text-align: left;">
             <p>________________________</p>
             <p>EL ARRENDADOR</p>
@@ -218,27 +225,27 @@
             <p class="text-center">DNI: {{ $company->representative_number ?? 'N/A' }}</p>
         </div>
         <div style="text-align: right;">
-            <p>________________________</p>
-            <p>EL ARRENDATARIO</p>
-            <p class="text-center">
+            <p class="pagina">________________________</p>
+            <p class="pagina">EL ARRENDATARIO</p>
+            <p class="text-center pagina">
                 {{ $customer ? $customer['name'] : 'N/A' }}
             </p>
-            <p class="text-center">DNI: {{ $customer ? $customer['number'] : 'N/A' }}</p>
+            <p class="text-center pagina">DNI: {{ $customer ? $customer['number'] : 'N/A' }}</p>
         </div>
     </div>
     <div style="page-break-before: always;">
         <div style="width: 100%; height: 842px;">
             @if (isset($image_extra1))
-                <div style="width: 100%; height: 421px; text-align: center;">
-                    <img src="{{ $image_extra1 }}"
-                        style="width: auto; height: 421px;">
-                </div>
+            <div style="width: 100%; height: 400px; text-align: center; margin-bottom: 100px;">
+            <img src="{{ $image_extra1 }}"
+            style="width: auto; height: 300px;">
+            </div>
             @endif
             @if (isset($image_extra2))
-                <div style="width: 100%; height: 421px; text-align: center;">
-                    <img src="{{ $image_extra2 }}"
-                        style="width: auto; height: 421px;">
-                </div>
+            <div style="width: 100%; height: 400px; text-align: center;">
+            <img src="{{ $image_extra2 }}"
+            style="width: auto; height: 300px;">
+            </div>
             @endif
         </div>
     </div>

@@ -1789,7 +1789,8 @@
                                                                                             .length >
                                                                                             1)
                                                                             "
-                                                                            class="form-control text-center"
+                                                                            class="form-control text-center fw-bold"
+                                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif;"
                                                                             v-model="
                                                                                 order_pend.quantity
                                                                             "
@@ -1910,7 +1911,7 @@
                                                                             class="fw-bold"
                                                                         >
                                                                         <!-- aqui es el precio pa modificar siempre aaaa -->
-                                                                            Precio
+                                                                            Precio   
                                                                             
                                                                             {{
                                                                                 currency_id
@@ -1926,7 +1927,7 @@
                                                                                         isEditing &&
                                                                                             configuration.edit_price
                                                                                     "
-                                                                                    class="custom_input text-dark"
+                                                                                    class="custom_input fw-bold"
                                                                                     type="number"
                                                                                     v-model.number="
                                                                                         order_pend.price
@@ -2025,7 +2026,7 @@
                                                                         size="medium"
                                                                     >
                                                                         <strong
-                                                                            style="font-weight: 700"
+                                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif;"
                                                                         >
                                                                             {{
                                                                                 parseFloat(
@@ -2778,6 +2779,8 @@
 
 .custom_input .el-input__inner {
     padding: 0 5px !important;
+    font-weight: bold;
+    font-family: 'Arial Black', Arial, sans-serif;
 }
 
 .el-tag + .el-tag {

@@ -53,7 +53,8 @@
                                             class="mb-0 fw-bold"
                                             :class="{
                                                 'text-danger':
-                                                    option.id == 66 && !localCashId
+                                                    option.id == 66 &&
+                                                    !localCashId
                                             }"
                                             style="font-size: 14px; color: #444;"
                                         >
@@ -1132,21 +1133,41 @@
         ></close-cash>
         <el-dialog
             title="Imágenes de la habitación"
-            width="80%"
+            width="60%"
             :visible.sync="showImagesDialog"
             append-to-body
             @close="showImagesDialog = false"
         >
             <template v-if="currentImages.length > 0">
-                <div class="d-flex flex-wrap gap-2">
-                    <img
+                <el-carousel :interval="4000" type="card" height="300px">
+                    <el-carousel-item
                         v-for="image in currentImages"
                         :key="image.id"
-                        :src="image.image_path"
-                        alt="Imagen de la habitación"
-                        style="width: 25%; height: auto;"
+                        class="bg-white"
+                    >
+                        <img
+                            :src="image.image_path"
+                            alt="Imagen"
+                            class="carousel-image"
+                            @click="openImage(image.image_path)"
+                        />
+                    </el-carousel-item>
+                </el-carousel>
+                <el-dialog
+                    :visible.sync="isDialogVisible"
+                    width="40%"
+                    append-to-body
+                    @close="isDialogVisible = false"
+                    title="Imagen Real"
+                > 
+                 <div class="card bg-white">
+                    <img
+                        :src="selectedImage"
+                        alt="Imagen Ampliada"
+                        class="full-image"
                     />
-                </div>
+                 </div>
+                </el-dialog>
             </template>
             <template v-else>
                 <div class="text-center">
@@ -1159,6 +1180,22 @@
 </template>
 
 <style>
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Imagen en pantalla completa */
+.full-image {
+  width: 90%;
+  height: 90%;
+  display: block;
+  margin: 0 auto;
+}
+
 .btn-black {
     background-color: #000;
 }
@@ -1282,6 +1319,8 @@ export default {
 
     data() {
         return {
+            isDialogVisible: false,
+            selectedImage: "",
             localCashId: this.cash_id,
             currentImages: [],
             showImagesDialog: false,
@@ -1602,6 +1641,10 @@ export default {
         }
     },
     methods: {
+        openImage(imagePath) {
+            this.selectedImage = imagePath;
+            this.isDialogVisible = true; // Abre el modal
+        },
         checkCashAvailable() {
             this.$http
                 .get("/caja/worker/cash_available/" + this.localCashId)
@@ -5526,7 +5569,7 @@ export default {
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
         },
-    
+
         viewImages(table) {
             console.log("table", table);
             this.currentImages = table.images;

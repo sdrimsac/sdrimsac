@@ -492,7 +492,8 @@
                                                     class="time font-weight-light"
                                                 >
                                                     <span
-                                                        class="text-muted lead-font-weight-700"
+                                                        class="lead-font-weight-900" 
+                                                        style="font-weigth: bold; font-family: 'Arial Black', Arial, sans-serif;"
                                                     >
                                                         {{
                                                             data.item
@@ -809,7 +810,8 @@
                                                 class="time font-weight-light"
                                             >
                                                 <span
-                                                    class="text-muted lead-font-weight-700"
+                                                    class="lead-font-weight-900"
+                                                    style="font-weigth: bold; font-family: 'Arial Black', Arial, sans-serif;"
                                                 >
                                                     {{ data.currency }}
                                                     {{ data.price }}
