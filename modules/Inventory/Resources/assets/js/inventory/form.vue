@@ -24,7 +24,8 @@
                                 popper-class="el-select-customers"
                                 clearable
                                 @change="changeItem"
-                                placeholder="Nombre o código interno"
+                                @keydown.native="handleBarcode"
+                                placeholder="Escanee código de barras o busque por nombre/código"
                                 :remote-method="searchRemoteItems"
                                 :loading="loading_search_item"
                             >
@@ -276,7 +277,10 @@ export default {
             item: null,
             warehouses: [],
             inventory_transactions: [],
-            loading_search_item: false
+            loading_search_item: false,
+            product: null,
+            barcodeBuffer: '',
+            lastKeyTime: 0,
         };
     },
     created() {
@@ -299,8 +303,25 @@ export default {
             );
             this.form.color_size = color_size;
         },
+        handleBarcode(event) {
+            const currentTime = new Date().getTime();
+            
+            if (currentTime - this.lastKeyTime > 100) {
+                this.barcodeBuffer = '';
+            }
+            this.lastKeyTime = currentTime;
+            
+            this.barcodeBuffer += event.key;
+            
+            if (event.key === 'Enter' && this.barcodeBuffer.length > 0) {
+                event.preventDefault();
+                this.searchRemoteItems(this.barcodeBuffer);
+                this.barcodeBuffer = '';
+            }
+        },
+
         searchRemoteItems(input) {
-            if (input.length > 2) {
+            if (input.length >= 3) {
                 clearTimeout(this.timer);
                 this.loading_search_item = true;
                 this.timer = setTimeout(() => {
@@ -309,8 +330,9 @@ export default {
                         .then(response => {
                             this.items = response.data;
                             this.loading_search_item = false;
+                            
                         });
-                }, 600);
+                }, 300);
             }
         },
         async changeItem() {
@@ -445,8 +467,10 @@ export default {
             await this.$http
                 .post(`/${this.resource}/transaction`, this.form)
                 .then(response => {
+                    console.log("qwwwewe", response);
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
+                        this.$emit("stock", this.form.quantity);
                         this.$eventHub.$emit("reloadData");
                         this.close();
                     } else {
@@ -456,7 +480,6 @@ export default {
                 .catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
-                        // console.log(error.response.data)
                     } else {
                         console.log(error);
                     }
@@ -468,6 +491,33 @@ export default {
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
+        },
+        setProduct(items) {
+            if (items && items.length > 0) {
+                const item = items[0];
+
+                // Agregar el item al array de items si no existe
+                if (!this.items.some(i => i.id === item.id)) {
+                    this.items.push({
+                        id: item.id,
+                        description: item.descripcion,
+                        stock: item.stock || 0,
+                        // Agregar cualquier otra propiedad necesaria
+                        lots_enabled: item.lots_enabled || false,
+                        series_enabled: item.series_enabled || false,
+                        has_color_size: item.has_color_size || false
+                    });
+                }
+
+                this.form.item_id = item.id;
+                this.form.description = item.descripcion;
+                this.form.quantity = item.stock || 0;
+
+                // Forzar la actualización del item seleccionado
+                /* this.$nextTick(() => {
+                    this.changeItem();
+                }); */
+            }
         }
     }
 };

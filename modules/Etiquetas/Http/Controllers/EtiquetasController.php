@@ -42,6 +42,7 @@ class EtiquetasController extends Controller
             $sale_code = $request->salecode;
             $type = $request->type;
             $purchase_code = $request->purchasecode;
+            /* dump($purchase_code); */
             $description = $request->description;
             $murcielagoCode = $request->murcielagoCode;
             $price1 = $request->price1;
@@ -70,6 +71,9 @@ class EtiquetasController extends Controller
             }
             if ($type == '6' && $format == '1' && $paper == '2') {
                 $template = 'template16';
+            }
+            if ($type == '7' && $format == '1' && $paper == '2') {
+                $template = 'template18';
             }
             $record = Item::where('description', $description)->first();
             $company = Company::first();
@@ -107,6 +111,10 @@ class EtiquetasController extends Controller
                 $width = 100;
             }
             if ($template === "template16") {
+                $height = 20;
+                $width = 60;
+            }
+            if ($template === "template18") {
                 $height = 20;
                 $width = 60;
             }

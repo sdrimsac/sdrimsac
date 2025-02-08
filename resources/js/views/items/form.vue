@@ -3495,6 +3495,7 @@ export default {
                             "success"
                         );
                         if (this.external) {
+
                             this.$emit("add", response.data.data);
                         } else {
                             this.$eventHub.$emit("reloadData");

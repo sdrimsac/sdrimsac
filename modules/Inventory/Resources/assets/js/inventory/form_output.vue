@@ -26,6 +26,7 @@
                                 popper-class="el-select-customers"
                                 clearable
                                 @change="changeItem"
+                                @keydown.native="handleBarcode"
                                 placeholder="Nombre o código interno"
                                 :remote-method="searchRemoteItems"
                                 :loading="loading_search_item"
@@ -260,8 +261,16 @@ export default {
             inventory_transactions: [],
             timer: null,
             item: null,
-            showDialogColorSizeOutput: false
+            showDialogColorSizeOutput: false,
+            barcodeBuffer: '',
+            barcodeTimeoutHandle: null
         };
+    },
+    mounted() {
+        document.addEventListener('keypress', this.handleBarcodeInput);
+    },
+    beforeDestroy() {
+        document.removeEventListener('keypress', this.handleBarcodeInput);
     },
     created() {
         this.initForm();
@@ -282,18 +291,38 @@ export default {
         clickSelectColorSize() {
             this.showDialogColorSizeOutput = true;
         },
-        searchRemoteItems(input) {
-            if (input.length > 2) {
+        handleBarcode(event) {
+            const currentTime = new Date().getTime();
+            
+            if (currentTime - this.lastKeyTime > 100) {
+                this.barcodeBuffer = '';
+            }
+            this.lastKeyTime = currentTime;
+            
+            this.barcodeBuffer += event.key;
+            
+            if (event.key === 'Enter' && this.barcodeBuffer.length > 0) {
+                event.preventDefault();
+                this.searchRemoteItems(this.barcodeBuffer);
+                this.barcodeBuffer = '';
+            }
+        },
+        async searchRemoteItems(input) {
+            if (input.length >= 3) {
                 clearTimeout(this.timer);
                 this.loading_search_item = true;
                 this.timer = setTimeout(() => {
-                    this.$http
-                        .get(`/${this.resource}/items?value=${input}`)
+                    this.$http.get(`/${this.resource}/items?value=${input}`)
                         .then(response => {
                             this.items = response.data;
+                            // Si encontramos exactamente un item, lo seleccionamos automáticamente
+                            /* if (this.items.length === 1) {
+                                this.form.item_id = this.items[0].id;
+                                this.changeItem();
+                            } */
                             this.loading_search_item = false;
                         });
-                }, 600);
+                }, 300); // Reducido de 600 a 300ms para mayor velocidad en lectura de códigos
             }
         },
         async changeItem() {
