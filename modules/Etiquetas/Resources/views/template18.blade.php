@@ -105,7 +105,7 @@
                                 $colour = [0, 0, 0];
                                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                echo '<img style="height: 15px;margin: 0 auto;"  src="data:image/png;base64,' .
+                                echo '<img style="height: 15px; width: 80%; margin: 0 auto;"  src="data:image/png;base64,' .
                                     base64_encode(
                                         $generator->getBarcode(
                                             $barcode,
@@ -118,18 +118,6 @@
                         <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
                             {{ $barcode }}
                         </div>
-                        {{--
-                        <div class="font-xs" style="float:left;width:50%;">
-                            {{ $purchase_code }}
-                        </div>
-                        <div class="font-xs text-center">
-                            S/.{{ $price1 }}
-                        </div>
-                        <div class="font-xs">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span>P. M. {{ $price2 }}</span>
-                        </div> --}}
                     </div>
                 </div>
                 <div style="height: 60px;float: left; width:110px;">
@@ -140,12 +128,12 @@
                                 {{ substr($description, 0, 50) }}
                             </div>
                         </div>
-                        <div style="overflow: hidden;height: 15px; text-align:center;">
+                        <div style="overflow: hidden;height: 15px; text-align:center;width: 100%;">
                             @php
                                 $colour = [0, 0, 0];
                                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                echo '<img style="height: 15px;margin: 0 auto;"  src="data:image/png;base64,' .
+                                echo '<img style="height: 15px; width: 80%; object-fit: contain; margin: 0 auto;"  src="data:image/png;base64,' .
                                     base64_encode(
                                         $generator->getBarcode(
                                             $barcode,
@@ -158,18 +146,6 @@
                         <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
                             {{ $barcode }}
                         </div>
-                        {{--
-                        <div class="font-xs" style="float:left;width:40%;margin-left:15px;">
-                            {{ $purchase_code }}
-                        </div>
-                        <div class="font-xs text-center">
-                            S/.{{ $price1 }}
-                        </div>
-                        <div class="font-xs">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span>P. M. {{ $price2 ?? '0' }}</span>
-                        </div> --}}
                     </div>
                 </div>
             </div>
