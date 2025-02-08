@@ -53,7 +53,7 @@
                                             class="mb-0 fw-bold"
                                             :class="{
                                                 'text-danger':
-                                                    option.id == 66 && !cash_id
+                                                    option.id == 66 && !localCashId
                                             }"
                                             style="font-size: 14px; color: #444;"
                                         >
@@ -937,7 +937,7 @@
                 :customer_default="customer_default"
                 :variation.sync="variation"
                 :documentsType="documentsType"
-                :cash_id.sync="cashId"
+                :cash_id.sync="localCashId"
                 :percentage_igv="percentage_igv"
                 :is_payment.sync="is_payment"
                 :form="form"
@@ -983,7 +983,7 @@
         </template>
         <cash-history
             :configuration="configuration"
-            :cash_id.sync="cashId"
+            :cash_id.sync="localCashId"
             :showHistoryCash.sync="showHistoryCash"
             :area_id="area_id"
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
@@ -1004,7 +1004,7 @@
         ></tables>
         <tables-rooms
             v-if="configuration.hotels"
-            :cash_id.sync="cashId"
+            :cash_id.sync="localCashId"
             :configuration="configuration"
             :printer.sync="printer"
             @getTablesToClean="getTablesToClean"
@@ -1106,7 +1106,7 @@
             v-if="configuration.show_expenses_incomes_caja"
             :showDialog.sync="showExpensesIncomes"
             :company="company"
-            :cash_id="cash_id"
+            :cash_id="localCashId"
             :establishments="establishments"
             @checkCashAvailable="checkCashAvailable"
             :fromPos="true"
@@ -1123,7 +1123,7 @@
         <rent-info :showDialog.sync="showRentInfo" :rentId="rentId"></rent-info>
         <close-cash
             v-if="showDialogClose"
-            :recordId.sync="cash_id"
+            :recordId.sync="localCashId"
             :showDialogClose.sync="showDialogClose"
             :fromBox="true"
             :configuration="configuration"
@@ -1250,7 +1250,8 @@ export default {
         "company",
         "lareaId",
         "area",
-        "areaId"
+        "areaId",
+        "cash_id"
     ],
     components: {
         ExpensesIncomes,
@@ -1281,6 +1282,7 @@ export default {
 
     data() {
         return {
+            localCashId: this.cash_id,
             currentImages: [],
             showImagesDialog: false,
             showRentInfo: false,
@@ -1288,7 +1290,6 @@ export default {
             showDialogRentPayment: false,
             showDialogRentDocuments: false,
             showDialogRentInfractions: false,
-            cash_id: null,
             showDialogClose: false,
             showDialogCash: false,
             types: [],
@@ -1524,7 +1525,6 @@ export default {
         } */
         // ;
         this.conf = this.establishments.conf ?? {};
-        this.cashId = this.cash_id;
         this.ordensPending = this.pending_order;
         this.loading = true;
         //this.socketWhatsappConfig();
@@ -1604,7 +1604,7 @@ export default {
     methods: {
         checkCashAvailable() {
             this.$http
-                .get("/caja/worker/cash_available/" + this.cash_id)
+                .get("/caja/worker/cash_available/" + this.localCashId)
                 .then(response => {
                     let data = response.data;
                     this.cashAvailable = data.cash_available;
@@ -1635,9 +1635,8 @@ export default {
             console.log("id", id);
         },
         updateCashId(id) {
-            this.cash_id = id;
+            this.localCashId = id;
             this.boxOperation = id ? "Cerrar" : "Abrir";
-
             this.optionsMenu[0].title = [this.boxOperation, " Caja"];
         },
         updateTables() {
@@ -1693,7 +1692,7 @@ export default {
             );
         },
         selectTable(table) {
-            if (!this.cash_id) {
+            if (!this.localCashId) {
                 this.$showSAlert(
                     "Error",
                     "Necesita abrir una caja para poder seleccionar una habitación",
@@ -1907,7 +1906,7 @@ export default {
             return false;
         },
         async tableOpen(id) {
-            if (!this.cashId) {
+            if (!this.localCashId) {
                 this.$message({
                     showClose: true,
                     type: "warning",
@@ -2599,7 +2598,7 @@ export default {
         async trigerFunction(id) {
             switch (id) {
                 case 77:
-                    if (!this.cash_id) {
+                    if (!this.localCashId) {
                         this.$showSAlert("Error", "Abra una caja", "error");
                         return;
                     } else {
@@ -2607,7 +2606,7 @@ export default {
                     }
                     break;
                 case 66:
-                    if (this.cash_id) {
+                    if (this.localCashId) {
                         this.showDialogClose = true;
                     } else {
                         this.showDialogCash = true;
@@ -2652,7 +2651,7 @@ export default {
                     this.openTablesRooms();
                     break;
                 case 6:
-                    if (!this.cash_id) {
+                    if (!this.localCashId) {
                         this.$showSAlert(
                             "Error",
                             "Necesita abrir una caja para poder seleccionar una habitación",
@@ -3676,7 +3675,7 @@ export default {
         async view_modal() {
             this.loading = true;
             const response = await this.$http.get(
-                `/caja/worker/totales_sales?cash_id=${this.cash_id}&send=1`
+                `/caja/worker/totales_sales?cash_id=${this.localCashId}&send=1`
             );
             let { total_sales } = response.data;
             if (total_sales) {
@@ -3689,7 +3688,7 @@ export default {
             }
             if (this.configuration.other_currency_pos) {
                 const response_usd = await this.$http.get(
-                    `/caja/worker/totales_sales_usd?cash_id=${this.cashId}&send=1`
+                    `/caja/worker/totales_sales_usd?cash_id=${this.localCashId}&send=1`
                 );
                 let { total_sales_usd } = response_usd.data;
                 if (total_sales_usd) {
@@ -5527,19 +5526,7 @@ export default {
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
         },
-        async getCashId() {
-            try {
-                const { data } = await this.$http.get("/getCashId");
-
-                if (data != null) {
-                    if (data.cash_id) {
-                        this.cash_id = data.cash_id;
-                    }
-                }
-            } catch (e) {
-                console.log("error getCashId", e);
-            }
-        },
+    
         viewImages(table) {
             console.log("table", table);
             this.currentImages = table.images;
@@ -5550,10 +5537,9 @@ export default {
         document.removeEventListener("keydown", this.handleKeydown);
     },
     mounted() {
-        this.getCashId();
+        // this.getCashId();
         setTimeout(() => {
-            this.cash_id = this.$cashId;
-            this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
+            this.boxOperation = this.localCashId ? "Cerrar" : "Abrir";
         }, 1000);
         document.addEventListener("keydown", this.handleKeydown);
 

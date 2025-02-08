@@ -92,8 +92,7 @@ class DashboardController extends Controller
         $user_id = $user->id;
         $cash = Cash::where('user_id', $user_id)
             ->where('state', 1)
-            ->get()
-            ->last();
+            ->first();
 
 
         // if ($cash == null) {
