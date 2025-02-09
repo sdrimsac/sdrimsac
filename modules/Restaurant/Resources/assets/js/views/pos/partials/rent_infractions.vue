@@ -29,11 +29,11 @@
                 <div class="col-12 table-responsive w-100">
                     <table class="table table-bordered table-striped">
                         <thead>
-                            <tr>
-                                <th>Descripción</th>
-                                <th>Monto</th>
-                                <th>Pagado</th>
-                                <th></th>
+                            <tr class="bg-primary">
+                                <th class="text-white">Descripción</th>
+                                <th class="text-white">Monto</th>
+                                <th class="text-white">Pagado</th>
+                                <th class="text-white"> Acciones</th>
                             </tr>
                         </thead>
                         <tbody>

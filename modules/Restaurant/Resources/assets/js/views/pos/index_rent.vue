@@ -120,7 +120,7 @@
                                         class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
                                         :key="idx"
                                         @click="selectTable(table)"
-                                        style="height: 175px;    max-width: 145px;"
+                                        style="height: 190px;    max-width: 300px;"
                                     >
                                         <!-- <div class="d-flex justify-content-end w-100 mb-2">
                                             <el-button
@@ -144,9 +144,157 @@
                                                                 1
                                                         "
                                                     >
-                                                        <i
+                                                        <!-- <i
                                                             class="fas fa-door-closed"
-                                                        ></i>
+                                                        ></i> -->
+                                                        <svg
+                                                            width="100"
+                                                            height="100"
+                                                            viewBox="0 0 200 200"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <!-- Línea que representa la cuerda del cartel -->
+                                                            <line
+                                                                x1="100"
+                                                                y1="20"
+                                                                x2="50"
+                                                                y2="50"
+                                                                stroke="#E0E0E0"
+                                                                stroke-width="4"
+                                                            />
+                                                            <line
+                                                                x1="100"
+                                                                y1="20"
+                                                                x2="150"
+                                                                y2="50"
+                                                                stroke="#E0E0E0"
+                                                                stroke-width="4"
+                                                            />
+
+                                                            <!-- Círculo superior -->
+                                                            <circle
+                                                                cx="100"
+                                                                cy="20"
+                                                                r="8"
+                                                                fill="#F0F0F0"
+                                                                stroke="#E0E0E0"
+                                                                stroke-width="2"
+                                                            />
+
+                                                            <!-- Rectángulo del cartel -->
+                                                            <rect
+                                                                x="30"
+                                                                y="50"
+                                                                width="140"
+                                                                height="130"
+                                                                rx="10"
+                                                                fill="#F8F8F8"
+                                                                stroke="#E0E0E0"
+                                                                stroke-width="4"
+                                                            />
+
+                                                            <!-- Círculos decorativos en las esquinas del cartel -->
+                                                            <circle
+                                                                cx="40"
+                                                                cy="60"
+                                                                r="4"
+                                                                fill="#E0E0E0"
+                                                            />
+                                                            <circle
+                                                                cx="160"
+                                                                cy="60"
+                                                                r="4"
+                                                                fill="#E0E0E0"
+                                                            />
+
+                                                            <!-- Ícono del sofá, lámpara y cuadro -->
+                                                            <g
+                                                                stroke="#00C853"
+                                                                stroke-width="4"
+                                                                fill="none"
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                            >
+                                                                <!-- Cuadro -->
+                                                                <rect
+                                                                    x="80"
+                                                                    y="65"
+                                                                    width="40"
+                                                                    height="20"
+                                                                />
+                                                                <path
+                                                                    d="M80 85 L90 75 L100 85 L110 75 L120 85"
+                                                                />
+
+                                                                <!-- Sofá -->
+                                                                <rect
+                                                                    x="60"
+                                                                    y="90"
+                                                                    width="80"
+                                                                    height="30"
+                                                                    rx="5"
+                                                                />
+                                                                <rect
+                                                                    x="65"
+                                                                    y="95"
+                                                                    width="30"
+                                                                    height="20"
+                                                                    rx="5"
+                                                                />
+                                                                <rect
+                                                                    x="105"
+                                                                    y="95"
+                                                                    width="30"
+                                                                    height="20"
+                                                                    rx="5"
+                                                                />
+                                                                <line
+                                                                    x1="60"
+                                                                    y1="120"
+                                                                    x2="60"
+                                                                    y2="125"
+                                                                />
+                                                                <line
+                                                                    x1="140"
+                                                                    y1="120"
+                                                                    x2="140"
+                                                                    y2="125"
+                                                                />
+
+                                                                <!-- Lámpara -->
+                                                                <line
+                                                                    x1="130"
+                                                                    y1="85"
+                                                                    x2="130"
+                                                                    y2="110"
+                                                                />
+                                                                <circle
+                                                                    cx="130"
+                                                                    cy="80"
+                                                                    r="5"
+                                                                />
+                                                                <line
+                                                                    x1="125"
+                                                                    y1="110"
+                                                                    x2="135"
+                                                                    y2="110"
+                                                                />
+                                                            </g>
+
+                                                            <!-- Texto "LIBRE" -->
+                                                            <text
+                                                                x="100"
+                                                                y="160"
+                                                                font-size="24"
+                                                                font-weight="bold"
+                                                                fill="#00C853"
+                                                                text-anchor="middle"
+                                                                font-family="Arial Black, Arial, sans-serif"
+                                                            >
+                                                                LIBRE
+                                                            </text>
+                                                        </svg>
                                                     </template>
                                                     <template
                                                         v-else-if="
@@ -169,9 +317,114 @@
                                                             </div>
                                                         </template>
                                                         <template v-else>
-                                                            <i
+                                                            <!-- <i
                                                                 class="fas fa-bed"
-                                                            ></i>
+                                                            ></i> -->
+                                                            <svg
+                                                                width="100"
+                                                                height="100"
+                                                                viewBox="0 0 300 250"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <!-- Línea superior para colgar -->
+                                                                <line
+                                                                    x1="150"
+                                                                    y1="20"
+                                                                    x2="60"
+                                                                    y2="80"
+                                                                    stroke="#eee"
+                                                                    stroke-width="5"
+                                                                />
+                                                                <line
+                                                                    x1="150"
+                                                                    y1="20"
+                                                                    x2="240"
+                                                                    y2="80"
+                                                                    stroke="#eee"
+                                                                    stroke-width="5"
+                                                                />
+                                                                <circle
+                                                                    cx="150"
+                                                                    cy="20"
+                                                                    r="8"
+                                                                    fill="#eee"
+                                                                />
+
+                                                                <!-- Base del letrero -->
+                                                                <g
+                                                                    transform="rotate(-10 150 120)"
+                                                                >
+                                                                    <rect
+                                                                        x="50"
+                                                                        y="80"
+                                                                        width="200"
+                                                                        height="120"
+                                                                        rx="15"
+                                                                        fill="#F8F8F8"
+                                                                        stroke="#ddd"
+                                                                        stroke-width="5"
+                                                                    />
+
+                                                                    <!-- Icono de sofá con cuadro y lámpara -->
+                                                                    <g
+                                                                        fill="none"
+                                                                        stroke="#E53935"
+                                                                        stroke-width="5"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                    >
+                                                                        <rect
+                                                                            x="120"
+                                                                            y="100"
+                                                                            width="60"
+                                                                            height="30"
+                                                                        />
+                                                                        <rect
+                                                                            x="130"
+                                                                            y="85"
+                                                                            width="40"
+                                                                            height="15"
+                                                                        />
+                                                                        <line
+                                                                            x1="110"
+                                                                            y1="130"
+                                                                            x2="190"
+                                                                            y2="130"
+                                                                        />
+                                                                        <line
+                                                                            x1="110"
+                                                                            y1="130"
+                                                                            x2="110"
+                                                                            y2="120"
+                                                                        />
+                                                                        <line
+                                                                            x1="190"
+                                                                            y1="130"
+                                                                            x2="190"
+                                                                            y2="120"
+                                                                        />
+                                                                        <rect
+                                                                            x="170"
+                                                                            y="90"
+                                                                            width="10"
+                                                                            height="40"
+                                                                        />
+                                                                    </g>
+
+                                                                    <!-- Texto "OCUPADO" -->
+                                                                    <text
+                                                                        x="150"
+                                                                        y="180"
+                                                                        font-size="35"
+                                                                        font-weight="bold"
+                                                                        fill="#E53935"
+                                                                        text-anchor="middle"
+                                                                        font-family="Arial Black, Arial, sans-serif"
+                                                                    >
+                                                                        OCUPADO
+                                                                    </text>
+                                                                </g>
+                                                            </svg>
                                                         </template>
                                                     </template>
                                                     <template
@@ -290,104 +543,105 @@
                                                             />
                                                         </svg> </el-button
                                                 ></el-tooltip>
-                                            </div>
-                                            <div
-                                                class="d-flex"
-                                                v-if="
-                                                    table.status_table_id == 2
-                                                "
-                                            >
-                                                <el-tooltip
-                                                    content="Infracción"
+                                                <template
+                                                    v-if="
+                                                        table.status_table_id ==
+                                                            2
+                                                    "
                                                 >
-                                                    <el-button
-                                                        size="mini"
-                                                        class="m-1"
-                                                        @click="
-                                                            seeInfraction(
-                                                                $event,
-                                                                table.hotel_rent_id
-                                                            )
-                                                        "
+                                                    <el-tooltip
+                                                        content="Infracción"
                                                     >
-                                                        <svg
-                                                            width="20px"
-                                                            height="20px"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        <el-button
+                                                            size="mini"
+                                                            class="m-1"
+                                                            @click="
+                                                                seeInfraction(
+                                                                    $event,
+                                                                    table.hotel_rent_id
+                                                                )
+                                                            "
                                                         >
-                                                            <path
-                                                                d="M12 8L12 13"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                            />
-                                                            <path
-                                                                d="M12 16V16.5"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                            />
-                                                            <path
-                                                                d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                            />
-                                                        </svg> </el-button
-                                                ></el-tooltip>
+                                                            <svg
+                                                                width="20px"
+                                                                height="20px"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M12 8L12 13"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                />
+                                                                <path
+                                                                    d="M12 16V16.5"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                />
+                                                                <path
+                                                                    d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                />
+                                                            </svg> </el-button
+                                                    ></el-tooltip>
 
-                                                <el-tooltip
-                                                    content="Documentos"
-                                                >
-                                                    <el-button
-                                                        size="mini"
-                                                        class="m-1"
-                                                        @click="
-                                                            seePayments(
-                                                                $event,
-                                                                table.hotel_rent_id
-                                                            )
-                                                        "
+                                                    <el-tooltip
+                                                        content="Documentos"
                                                     >
-                                                        <svg
-                                                            width="20px"
-                                                            height="20px"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        <el-button
+                                                            size="mini"
+                                                            class="m-1"
+                                                            @click="
+                                                                seePayments(
+                                                                    $event,
+                                                                    table.hotel_rent_id
+                                                                )
+                                                            "
                                                         >
-                                                            <path
-                                                                d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                            />
-                                                            <path
-                                                                d="M3 12H9M15 12H21"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                            />
-                                                            <path
-                                                                d="M3 7H21"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                            />
-                                                            <path
-                                                                d="M3 17H21"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                            />
-                                                            <path
-                                                                d="M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
-                                                                stroke="#000000"
-                                                                stroke-width="2"
-                                                            />
-                                                        </svg> </el-button
-                                                ></el-tooltip>
+                                                            <svg
+                                                                width="20px"
+                                                                height="20px"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                />
+                                                                <path
+                                                                    d="M3 12H9M15 12H21"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                />
+                                                                <path
+                                                                    d="M3 7H21"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                />
+                                                                <path
+                                                                    d="M3 17H21"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                />
+                                                                <path
+                                                                    d="M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                />
+                                                            </svg> </el-button
+                                                    ></el-tooltip>
+                                                </template>
                                             </div>
+                                            <div class="d-flex"></div>
                                         </template>
                                     </div>
                                 </div>
@@ -1159,14 +1413,14 @@
                     append-to-body
                     @close="isDialogVisible = false"
                     title="Imagen Real"
-                > 
-                 <div class="card bg-white">
-                    <img
-                        :src="selectedImage"
-                        alt="Imagen Ampliada"
-                        class="full-image"
-                    />
-                 </div>
+                >
+                    <div class="card bg-white">
+                        <img
+                            :src="selectedImage"
+                            alt="Imagen Ampliada"
+                            class="full-image"
+                        />
+                    </div>
                 </el-dialog>
             </template>
             <template v-else>
@@ -1181,19 +1435,19 @@
 
 <style>
 .carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
 }
 
 /* Imagen en pantalla completa */
 .full-image {
-  width: 90%;
-  height: 90%;
-  display: block;
-  margin: 0 auto;
+    width: 90%;
+    height: 90%;
+    display: block;
+    margin: 0 auto;
 }
 
 .btn-black {

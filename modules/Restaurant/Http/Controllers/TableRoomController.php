@@ -2235,6 +2235,7 @@ class TableRoomController extends Controller
         $hotel_rent = HotelRent::find($id);
 
         $customer = TenantPerson::find($hotel_rent->customer_id);
+        $customer_telephone = $customer->telephone;
         $customer_number = $customer->number;
         $customer_name = $customer->name;
         $customer_img = $customer->image;
@@ -2250,6 +2251,7 @@ class TableRoomController extends Controller
                 'id' => $row->id,
                 'name' => $row->person->name,
                 'number' => $row->person->number,
+                'telephone' => $row->person->telephone,
 
             ];
         });
@@ -2263,6 +2265,7 @@ class TableRoomController extends Controller
         return [
             'success' => true,
             'customer_number' => $customer_number,
+            'customer_telephone' => $customer_telephone,
             'customer_name' => $customer_name,
             'customer_img' => $customer_img,
             'table' => $table,

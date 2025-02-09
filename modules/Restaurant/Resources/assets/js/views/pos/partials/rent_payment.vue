@@ -10,26 +10,22 @@
                 <div class="col-12 table-responsive w-100">
                     <table class="table table-bordered table-striped">
                         <thead>
-                            <tr>
+                            <tr class="bg-primary">
                                 <th></th>
-                                <th>Periodo</th>
-                            
-                                <th class="text-end">Mensualidad</th>
-                                <th class="text-end">Monto</th>
+                                <th class="text-white">Periodo</th>
+                                <th class="text-end text-white">Mensualidad</th>
+                                <th class="text-end text-white">Monto</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr
-                                v-for="(payment, idx) in payments"
-                                :key="idx"
-                            >
+                            <tr v-for="(payment, idx) in payments" :key="idx">
                                 <td class="text-center">
                                     <el-checkbox
                                         v-model="payment.select"
                                     ></el-checkbox>
                                 </td>
-                                <td>Mensualidad  {{ payment.period }}</td>
-                                <td class="text-end">   
+                                <td>Mensualidad {{ payment.period }}</td>
+                                <td class="text-end">
                                     {{ payment.amount }}
                                 </td>
                                 <td>
@@ -42,8 +38,8 @@
                                 </td>
                             </tr>
                             <tr
-                            v-for="(penalty, idx) in penalties"
-                            :key="'pen-'+idx"
+                                v-for="(penalty, idx) in penalties"
+                                :key="'pen-' + idx"
                             >
                                 <td class="text-center">
                                     <el-checkbox
@@ -64,14 +60,16 @@
                             </tr>
                             <tr
                                 v-for="(infraction, idx) in infractions"
-                                :key="'inf-'+idx"
+                                :key="'inf-' + idx"
                             >
                                 <td class="text-center">
                                     <el-checkbox
                                         v-model="infraction.select"
                                     ></el-checkbox>
                                 </td>
-                                <td colspan="3">{{ infraction.description }}</td>
+                                <td colspan="2">
+                                    {{ infraction.description }}
+                                </td>
                                 <td class="text-end">
                                     <el-input
                                         v-model="infraction.amount"
@@ -81,7 +79,6 @@
                                     ></el-input>
                                 </td>
                             </tr>
-
                         </tbody>
                         <tfoot>
                             <tr>
@@ -93,9 +90,25 @@
                 </div>
             </div>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <!-- <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Pagar</el-button>
+        </span> -->
+        <span slot="footer" class="dialog-footer">
+            <el-button
+                @click="close"
+                style="background-color: red; color: white; font-size: 18px; padding: 12px 24px;"
+            >
+                Cancelar
+            </el-button>
+
+            <el-button
+                
+                @click="submit"
+                style="background-color: green; color: white; font-size: 18px; padding: 12px 24px;"
+            >
+                Pagar
+            </el-button>
         </span>
     </el-dialog>
 </template>
@@ -121,16 +134,21 @@ export default {
         total() {
             const infractionTotal = this.infractions
                 .filter(infraction => infraction.select)
-                .reduce((acc, infraction) => acc + Number(infraction.amount), 0);
-                
+                .reduce(
+                    (acc, infraction) => acc + Number(infraction.amount),
+                    0
+                );
+
             const paymentTotal = this.payments
                 .filter(payment => payment.select)
-                .reduce((acc, payment) => acc + Number(payment.editable_amount), 0);
+                .reduce(
+                    (acc, payment) => acc + Number(payment.editable_amount),
+                    0
+                );
 
             const penaltyTotal = this.penalties
                 .filter(penalty => penalty.select)
                 .reduce((acc, penalty) => acc + Number(penalty.amount), 0);
-
 
             return (infractionTotal + paymentTotal + penaltyTotal).toFixed(2);
         }
@@ -138,32 +156,35 @@ export default {
     methods: {
         submit() {
             let penalties = this.penalties.filter(penalty => penalty.select);
-            let infractions = this.infractions.filter(infraction => infraction.select);
+            let infractions = this.infractions.filter(
+                infraction => infraction.select
+            );
             let payments = this.payments.filter(payment => payment.select);
-            this.$http.post(`/caja/rent/prepare-payment`, {
-                hotel_rent_id: this.rentId,
-                infractions: infractions,
-                payments: payments,
-                penalties: penalties
-            }).then(response => {
-                let items = response.data.items;
-                let customer_number = response.data.customer_number;
-                this.$emit("paymentsOrden", {
-
-                    items: items,
-                    is_room: true,
+            this.$http
+                .post(`/caja/rent/prepare-payment`, {
                     hotel_rent_id: this.rentId,
-                    is_rent_payment: true,
-                    customer_number,
-
+                    infractions: infractions,
+                    payments: payments,
+                    penalties: penalties
+                })
+                .then(response => {
+                    let items = response.data.items;
+                    let customer_number = response.data.customer_number;
+                    this.$emit("paymentsOrden", {
+                        items: items,
+                        is_room: true,
+                        hotel_rent_id: this.rentId,
+                        is_rent_payment: true,
+                        customer_number
+                    });
+                    this.close();
+                })
+                .catch(error => {
+                    this.$toast.error("Error al preparar el pago");
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
-                this.close();
-                
-            }).catch(error => {
-                this.$toast.error("Error al preparar el pago");
-            }).finally(() => {
-                this.loading = false;
-            });
         },
         getRentAmount() {
             this.$http
@@ -173,15 +194,12 @@ export default {
                     this.payments = response.data.payments.map(payment => ({
                         ...payment,
                         select: false
-
                     }));
                     this.penalties = response.data.penalties.map(penalty => ({
                         ...penalty,
                         select: false
                     }));
                 });
-
-
         },
         removeInfraction(id) {
             this.$confirm(

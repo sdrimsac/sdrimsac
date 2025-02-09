@@ -8,40 +8,41 @@
     >
         <div v-loading="loading">
             <div class="row m-2">
-                <div class="col-12 mb-3">
-                    <h5 class="text-primary">
-                        <i class="fas fa-info-circle"></i> Detalles de la Renta
-                        <el-button
-                            type="primary"
-                            size="mini"
-                            class="float-right"
-                            @click="openContract"
-                            icon="el-icon-document"
-                        >
-                            Ver Contrato
-                        </el-button>
-                    </h5>
-                </div>
-                <div v-if="info.due_date" class="col-12 mb-3">
-                    <div class="due-date-alert">
-                        <i class="fas fa-calendar-alt"></i>
-                        Fecha de Vencimiento:
-                        <span class="due-date">{{
-                            formatDate(info.due_date)
-                        }}</span>
-                        <span class="days-left" v-if="daysLeft !== null">
-                            ({{ daysLeft }} días restantes)
-                        </span>
-                    </div>
-                </div>
-                <div class="col-12 table-responsive">
-                    <div class="row" v-if="info.customer_img">
-                        <div class="col-md-3">
-                            <img :src="info.customer_img" alt="Imagen del cliente" style="width: 100%; height: auto;">
-                        </div>
-                    </div>
+                <div class="col-8 mb-3">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-12 mb-3">
+                            <h5 class="text-primary">
+                                <i class="fas fa-info-circle"></i> Detalles de
+                                la Renta
+                                <el-button
+                                    type="primary"
+                                    size="mini"
+                                    class="float-right"
+                                    @click="openContract"
+                                    icon="el-icon-document"
+                                >
+                                    Ver Contrato
+                                </el-button>
+                            </h5>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div v-if="info.due_date">
+                                <div class="due-date-alert">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Fecha de Vencimiento:
+                                    <span class="due-date">{{
+                                        formatDate(info.due_date)
+                                    }}</span>
+                                    <span
+                                        class="days-left"
+                                        v-if="daysLeft !== null"
+                                    >
+                                        ({{ daysLeft }} días restantes)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
                             <div class="form-group">
                                 <label>Cliente:</label>
                                 <el-input
@@ -50,6 +51,36 @@
                                     size="small"
                                 ></el-input>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-4 mb-3">
+                    <div class="" v-if="info.customer_img">
+                        <div class="">
+                            <img
+                                :src="info.customer_img"
+                                alt="Imagen del cliente"
+                                style="width: 200px; height: 200px;"
+                            />
+                        </div>
+                    </div>
+                </div> -->
+                <div class="col-4 mb-3">
+                    <div
+                        v-if="info.customer_img"
+                        class="d-flex justify-content-center align-items-center"
+                    >
+                        <img
+                            :src="info.customer_img"
+                            alt="Imagen del cliente"
+                            class="img-fluid rounded"
+                            style="width: 200px; height: 200px; object-fit: cover;"
+                        />
+                    </div>
+                </div>
+                <div class="col-12 table-responsive">
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Documento:</label>
                                 <el-input
@@ -59,7 +90,7 @@
                                 ></el-input>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-6 mb-3">
                             <div class="form-group">
                                 <label>Habitación:</label>
                                 <el-input
@@ -68,10 +99,22 @@
                                     size="small"
                                 ></el-input>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Fecha de ingreso:</label>
                                 <el-input
                                     v-model="formattedDate"
+                                    readonly
+                                    size="small"
+                                ></el-input>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Telefono:</label>
+                                <el-input
+                                    v-model="info.customer_telephone"
                                     readonly
                                     size="small"
                                 ></el-input>
@@ -88,7 +131,9 @@
                             </h5>
                         </div>
                         <div class="col-12 table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
+                            <table
+                                class="table table-bordered table-hover table-striped"
+                            >
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
@@ -96,7 +141,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="guess in info.guesses" :key="guess.id">
+                                    <tr
+                                        v-for="guess in info.guesses"
+                                        :key="guess.id"
+                                    >
                                         <td>{{ guess.name }}</td>
                                         <td>{{ guess.number }}</td>
                                     </tr>
