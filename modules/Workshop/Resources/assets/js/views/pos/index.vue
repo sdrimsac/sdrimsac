@@ -1439,6 +1439,8 @@
       :mechanicItem="allFoods"
       @payment="handlePayment"
       :cash_id.sync="cashId"
+      @reloadItems="getFoods"
+      
     ></mechanic>
   </div>
 </template>

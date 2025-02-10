@@ -554,6 +554,7 @@ if ($hostname) {
                 Route::post('documents/brands', [App\Http\Controllers\Tenant\DocumentController::class, 'storeBrands']);
                 Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
                 Route::get('documents/recordsActivity', [App\Http\Controllers\Tenant\ItemController::class, 'recordsActivity']);
+                Route::get('documents/RegisterDocuments', [App\Http\Controllers\Tenant\DocumentController::class, 'RegisterDocuments']);
 
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);

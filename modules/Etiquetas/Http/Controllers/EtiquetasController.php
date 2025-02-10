@@ -42,7 +42,6 @@ class EtiquetasController extends Controller
             $sale_code = $request->salecode;
             $type = $request->type;
             $purchase_code = $request->purchasecode;
-            /* dump($purchase_code); */
             $description = $request->description;
             $murcielagoCode = $request->murcielagoCode;
             $price1 = $request->price1;

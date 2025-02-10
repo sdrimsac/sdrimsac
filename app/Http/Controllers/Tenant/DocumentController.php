@@ -214,28 +214,28 @@ class DocumentController extends Controller
                     strpos($result->Database, 'tenancy_') === 0
                 ) {
                     $resultsPorDB = DB::select('
-    SELECT 
-        ' . $result->Database . '.documents.id AS document_id, 
-        ' . $result->Database . '.state_types.description AS statusDoc,
-        ' . $result->Database . '.soap_types.description AS modo,
-        ' . $result->Database . '.documents.series AS document_series,
-        ' . $result->Database . '.documents.number AS document_number,
-        ' . $result->Database . '.documents.date_of_issue AS document_date_of_due,
-        (SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1) AS proyecto
-    FROM 
-        ' . $result->Database . '.documents
-    INNER JOIN 
-        ' . $result->Database . '.state_types ON ' . $result->Database . '.documents.state_type_id = ' . $result->Database . '.state_types.id
-    INNER JOIN 
-        ' . $result->Database . '.soap_types ON ' . $result->Database . '.documents.soap_type_id = ' . $result->Database . '.soap_types.id
-    WHERE 
-        soap_type_id = "02" 
-        AND ' . $result->Database . '.documents.state_type_id IN ("01", "03") 
-        AND ' . $result->Database . '.documents.date_of_issue >= "' . $fecha7Dias . '" 
-        AND ' . $result->Database . '.documents.date_of_issue < "' . $fechaHoy . '"
-    ORDER BY 
-        4, 5
-');
+                        SELECT 
+                            ' . $result->Database . '.documents.id AS document_id, 
+                            ' . $result->Database . '.state_types.description AS statusDoc,
+                            ' . $result->Database . '.soap_types.description AS modo,
+                            ' . $result->Database . '.documents.series AS document_series,
+                            ' . $result->Database . '.documents.number AS document_number,
+                            ' . $result->Database . '.documents.date_of_issue AS document_date_of_due,
+                            (SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1) AS proyecto
+                        FROM 
+                            ' . $result->Database . '.documents
+                        INNER JOIN 
+                            ' . $result->Database . '.state_types ON ' . $result->Database . '.documents.state_type_id = ' . $result->Database . '.state_types.id
+                        INNER JOIN 
+                            ' . $result->Database . '.soap_types ON ' . $result->Database . '.documents.soap_type_id = ' . $result->Database . '.soap_types.id
+                        WHERE 
+                            soap_type_id = "02" 
+                            AND ' . $result->Database . '.documents.state_type_id IN ("01", "03") 
+                            AND ' . $result->Database . '.documents.date_of_issue >= "' . $fecha7Dias . '" 
+                            AND ' . $result->Database . '.documents.date_of_issue < "' . $fechaHoy . '"
+                        ORDER BY 
+                            4, 5
+                    ');
 
                     // $resultsPorDB = DB::select('
                     // SELECT documents.id as document_id, 
@@ -286,6 +286,108 @@ class DocumentController extends Controller
             ];
         }
     }
+
+    public function RegisterDocuments(Request $request)
+    {
+        $prefix = 'facturador5_';
+        $date_of_issue = $request->date_of_issue;
+        $infoCompleta = [];
+        $domain = $request->domain;
+        $maxRecordsPerFile = 250;
+
+        if ($domain == null) {
+            $domain = "site";
+        }
+
+        try {
+            $results = DB::select("SHOW DATABASES;");
+
+            foreach ($results as $result) {
+                if (strpos($result->Database, $prefix) === 0) {
+                    $company = DB::table($result->Database . '.companies')->first();
+                    if (!$company) {
+                        continue;
+                    }
+
+                    $resultsPorDB = DB::select('
+                        SELECT 
+                            ' . $result->Database . '.documents.id AS document_id, 
+                            ' . $result->Database . '.state_types.description AS statusDoc,
+                            ' . $result->Database . '.soap_types.description AS modo,
+                            ' . $result->Database . '.documents.series AS document_series,
+                            ' . $result->Database . '.documents.number AS document_number,
+                            ' . $result->Database . '.documents.date_of_issue AS document_date_of_due,
+                            ' . $result->Database . '.documents.total AS document_total,
+                            (SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1) AS proyecto
+                        FROM 
+                            ' . $result->Database . '.documents
+                        INNER JOIN 
+                            ' . $result->Database . '.state_types ON ' . $result->Database . '.documents.state_type_id = ' . $result->Database . '.state_types.id
+                        INNER JOIN 
+                            ' . $result->Database . '.soap_types ON ' . $result->Database . '.documents.soap_type_id = ' . $result->Database . '.soap_types.id
+                        WHERE 
+                            soap_type_id = "02" 
+                            AND ' . $result->Database . '.documents.state_type_id IN ("01")
+                        ORDER BY 
+                            4, 5
+                    ');
+
+                    $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
+                    $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies');
+                    $configuration = DB::select('select * from ' . $result->Database . '.configurations');
+
+                    if (
+                        count($resultsPorDB) > 0 &&
+                        $companies[0]->soap_type_id == '02' &&
+                        $configuration[0]->locked_tenant == 0
+                    ) {
+                        $infoCompleta = array_merge($infoCompleta, $resultsPorDB);
+                    }
+                }
+            }
+
+            if (empty($infoCompleta)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron documentos en estado registrado.'
+                ]);
+            }
+
+            // Split records into chunks of 250
+            $chunks = array_chunk($infoCompleta, $maxRecordsPerFile);
+            $zipFileName = 'documentos_registrados_' . $domain . '_' . Carbon::now()->format('Ymd_His') . '.zip';
+            $zipPath = storage_path('app/' . $zipFileName);
+
+            $zip = new \ZipArchive();
+            $zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+            foreach ($chunks as $index => $chunk) {
+                $fileContent = "";
+                foreach ($chunk as $doc) {
+                    $ruc = $company->number;
+                    $serie = $doc['document_series'];
+                    $number = $doc['document_number'];
+                    $date_of_issue = $doc['document_date_of_due'];
+                    $total = $doc['document_total'];
+                    $fileContent .= "$ruc|$serie|$number|$date_of_issue|$total\n";
+                }
+
+                $partFileName = 'documentos_registrados_parte_' . ($index + 1) . '.txt';
+                /* dump($partFileName); */
+                $zip->addFromString($partFileName, $fileContent);
+            }
+
+            $zip->close();
+
+            return response()->download($zipPath)->deleteFileAfterSend(true);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function createSummarie()
     {
         $hostname = Website::query()
@@ -1118,14 +1220,14 @@ class DocumentController extends Controller
                     $total = $row['total'];
                     $infraction_id = isset($row['item']['infraction_id']) ? $row['item']['infraction_id'] : null;
                     $infraction = HotelRentInfraction::find($infraction_id);
-                    if($infraction){
+                    if ($infraction) {
                         $infraction->paid = true;
                         $infraction->hotel_rent_document_id = $hotel_rent_document->id;
                         $infraction->save();
                     }
                     $penalty_id = isset($row['item']['penalty_id']) ? $row['item']['penalty_id'] : null;
                     $penalty = HotelRentPenalty::find($penalty_id);
-                    if($penalty){
+                    if ($penalty) {
                         $penalty->status = "paid";
                         // $penalty->hotel_rent_document_id = $hotel_rent_document->id;
                         $penalty->save();
@@ -1134,18 +1236,15 @@ class DocumentController extends Controller
                     if ($hotel_rent_payment_id) {
                         $hotel_rent_payment = HotelRentPayment::find($hotel_rent_payment_id);
                         if ($hotel_rent_payment) {
-                            if($total == $hotel_rent_payment->amount){
+                            if ($total == $hotel_rent_payment->amount) {
                                 $hotel_rent_payment->is_paid = true;
                                 $hotel_rent_payment->save();
-                            }else{
+                            } else {
                                 $hotel_rent_payment->amount -= $total;
                                 $hotel_rent_payment->save();
                             }
                         }
-
-
                     }
-
                 }
             }
             /* $document = $facturalo->getDocumnet(); */
@@ -1362,7 +1461,7 @@ class DocumentController extends Controller
                 CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
             }
             $vacate = $request->vacate;
-        
+
             if ($configuration->hotels) {
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
@@ -2432,7 +2531,10 @@ class DocumentController extends Controller
         $warehouse = Warehouse::all();
         $payment_conditions = PaymentCondition::all();
         /* $establishments = auth()->user()->establishments()->get(); */
-        return compact('customers', 'sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
+        $user_type = auth()->user()->type; // Agregamos el tipo de usuario
+
+        return compact('customers', 'sellers', 'payment_conditions', 'document_types', 
+                      'series', 'establishments', 'state_types', 'items', 'categories', 'user_type');
     }
 
 

@@ -271,7 +271,7 @@
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-12">
-                            <label>Manijas de prueba</label>
+                            <label>Manijas de Puerta</label>
                             
                             <el-input-number
                                 class="w-100"
@@ -323,7 +323,7 @@
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-12">
-                            <label>Escarpines</label>
+                            <label>Escarpines (tapapolvo / tapabarro)</label>
                             
                             <el-input-number
                                 class="w-100"
