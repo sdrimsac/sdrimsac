@@ -38,7 +38,7 @@ class Template
 
         view()->addLocation(__DIR__ . '/Templates');
         //check if $document is a object
-        $is_sale_note = $document->document_type_id == '80';
+        $is_sale_note = isset($document->document_type_id) && $document->document_type_id == '80';
 
         $period_rent = null;
         $configuration = Configuration::first();
