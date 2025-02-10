@@ -290,7 +290,7 @@ class DocumentController extends Controller
     public function RegisterDocuments(Request $request)
     {   
         //cambiar a tenancy antes se subir a prod
-        $prefix = 'facturador5_';
+        $prefix = 'tenancy_';
         $date_of_issue = $request->date_of_issue;
         $infoCompleta = [];
         $domain = $request->domain;
