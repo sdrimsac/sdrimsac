@@ -296,7 +296,7 @@
                             >Exportar
                         </el-button>
                         <el-button
-                           v-if="userType === 'superadmin'"
+                            v-if="userType === 'superadmin'"
                             class="submit"
                             type="danger"
                             @click.prevent="RegisterRecords"
@@ -378,7 +378,7 @@ export default {
             type: String,
             default: "admin"
         },
-        resource: String,
+        resource: String
     },
     data() {
         return {
@@ -414,7 +414,7 @@ export default {
                     return this.search.d_start > time;
                 }
             },
-            userType: null,
+            userType: null
         };
     },
     computed: {},
@@ -540,6 +540,31 @@ export default {
             window.open(`/${this.resource}/excel?${parameters}`, "_blank");
         },
 
+        /* async RegisterRecords() {
+            let parameters = this.getQueryParameters();
+            try {
+                const response = await this.$http.get(
+                    `/${this.resource}/RegisterDocuments?${parameters}`,
+                    {
+                        params: { domain: "site" },
+                        responseType: "blob"
+                    }
+                );
+
+
+                const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", "documentos_registrados.zip");
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            } catch (error) {
+                console.error("Error al exportar:", error);
+            }
+        }, */
         async RegisterRecords() {
             let parameters = this.getQueryParameters();
             try {
@@ -547,11 +572,15 @@ export default {
                     `/${this.resource}/RegisterDocuments?${parameters}`,
                     {
                         params: { domain: "site" },
-                        responseType: "blob" 
+                        responseType: "blob" // 📌 Asegura que el tipo de respuesta es correcto
                     }
                 );
 
-              
+                if (response.data.size === 0) {
+                    console.error("El archivo ZIP está vacío o corrupto.");
+                    return;
+                }
+
                 const url = window.URL.createObjectURL(
                     new Blob([response.data])
                 );

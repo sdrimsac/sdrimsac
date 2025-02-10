@@ -287,7 +287,7 @@ class DocumentController extends Controller
         }
     }
 
-    public function RegisterDocuments(Request $request)
+    /* public function RegisterDocuments(Request $request)
     {
         $prefix = 'facturador5_';
         $date_of_issue = $request->date_of_issue;
@@ -353,7 +353,6 @@ class DocumentController extends Controller
                 ]);
             }
 
-            // Split records into chunks of 250
             $chunks = array_chunk($infoCompleta, $maxRecordsPerFile);
             $zipFileName = 'documentos_registrados_' . $domain . '_' . Carbon::now()->format('Ymd_His') . '.zip';
             $zipPath = storage_path('app/' . $zipFileName);
@@ -373,7 +372,7 @@ class DocumentController extends Controller
                 }
 
                 $partFileName = 'documentos_registrados_parte_' . ($index + 1) . '.txt';
-                /* dump($partFileName); */
+                
                 $zip->addFromString($partFileName, $fileContent);
             }
 
@@ -386,7 +385,103 @@ class DocumentController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    } */
+
+    public function RegisterDocuments(Request $request)
+    {
+        $prefix = 'facturador5_';
+        $date_of_issue = $request->date_of_issue;
+        $infoCompleta = [];
+        $domain = $request->domain ?? "site";
+        $maxRecordsPerFile = 250;
+
+        try {
+            $results = DB::select("SHOW DATABASES;");
+
+            foreach ($results as $result) {
+                if (strpos($result->Database, $prefix) === 0) {
+                    $company = DB::table($result->Database . '.companies')->first();
+                    if (!$company) {
+                        continue;
+                    }
+
+                    $resultsPorDB = DB::select("
+                    SELECT 
+                        d.id AS document_id, 
+                        s.description AS statusDoc,
+                        t.description AS modo,
+                        d.series AS document_series,
+                        d.number AS document_number,
+                        d.date_of_issue AS document_date_of_due,
+                        d.total AS document_total,
+                        (SELECT trade_name FROM {$result->Database}.companies LIMIT 1) AS proyecto
+                    FROM {$result->Database}.documents d
+                    INNER JOIN {$result->Database}.state_types s ON d.state_type_id = s.id
+                    INNER JOIN {$result->Database}.soap_types t ON d.soap_type_id = t.id
+                    WHERE d.soap_type_id = '02' AND d.state_type_id IN ('01')
+                    ORDER BY d.series, d.number
+                ");
+
+                    if (empty($resultsPorDB)) {
+                        continue;
+                    }
+
+                    $companies = DB::table($result->Database . '.companies')->select('soap_type_id')->first();
+                    $configuration = DB::table($result->Database . '.configurations')->select('locked_tenant')->first();
+
+                    if ($companies->soap_type_id == '02' && $configuration->locked_tenant == 0) {
+                        $infoCompleta = array_merge($infoCompleta, json_decode(json_encode($resultsPorDB), true));
+                    }
+                }
+            }
+
+            if (empty($infoCompleta)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron documentos en estado registrado.'
+                ]);
+            }
+
+            // Crear ZIP
+            $zipFileName = 'documentos_registrados_' . $domain . '_' . Carbon::now()->format('Ymd_His') . '.zip';
+            $zipPath = storage_path('app/' . $zipFileName);
+            $zip = new \ZipArchive();
+
+            if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                throw new Exception("No se pudo crear el archivo ZIP.");
+            }
+
+            $chunks = array_chunk($infoCompleta, $maxRecordsPerFile);
+            foreach ($chunks as $index => $chunk) {
+                $fileContent = "";
+                foreach ($chunk as $doc) {
+                    if (!isset($company->number)) {
+                        continue;
+                    }
+                    $fileContent .= "{$company->number}|{$doc['document_series']}|{$doc['document_number']}|{$doc['document_date_of_due']}|{$doc['document_total']}\n";
+                }
+
+                $partFileName = "documentos_registrados_parte_" . ($index + 1) . ".txt";
+                if (!$zip->addFromString($partFileName, $fileContent)) {
+                    throw new Exception("Error al agregar {$partFileName} al ZIP.");
+                }
+            }
+
+            if (!$zip->close()) {
+                throw new Exception("No se pudo cerrar el archivo ZIP correctamente.");
+            }
+
+            return response()->download($zipPath, $zipFileName, [
+                'Content-Type' => 'application/zip',
+            ])->deleteFileAfterSend(true);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ]);
+        }
     }
+
 
     public function createSummarie()
     {
@@ -2533,8 +2628,18 @@ class DocumentController extends Controller
         /* $establishments = auth()->user()->establishments()->get(); */
         $user_type = auth()->user()->type; // Agregamos el tipo de usuario
 
-        return compact('customers', 'sellers', 'payment_conditions', 'document_types', 
-                      'series', 'establishments', 'state_types', 'items', 'categories', 'user_type');
+        return compact(
+            'customers',
+            'sellers',
+            'payment_conditions',
+            'document_types',
+            'series',
+            'establishments',
+            'state_types',
+            'items',
+            'categories',
+            'user_type'
+        );
     }
 
 
