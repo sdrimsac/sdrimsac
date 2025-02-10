@@ -23,15 +23,6 @@ class HistorialItemController extends Controller
 
         return new HistorialItemCollection($records);
     }
-
-    /* public function record($historialId)
-    {
-        $record = HistorialItem::where('historial_id', $historialId)->get();
-        $record->load('items');
-
-
-        return $record;
-    } */
     public function record($historialId)
     {
         // Obtiene todos los items relacionados con el historial_id proporcionado
