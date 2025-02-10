@@ -120,7 +120,7 @@
                                         class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
                                         :key="idx"
                                         @click="selectTable(table)"
-                                        style="height: 190px;    max-width: 300px;"
+                                        style="height: 210px;    max-width: 300px;"
                                     >
                                         <!-- <div class="d-flex justify-content-end w-100 mb-2">
                                             <el-button
@@ -302,7 +302,7 @@
                                                                 2
                                                         "
                                                     >
-                                                        <template
+                                                        <!-- <template
                                                             v-if="
                                                                 table.due_date
                                                             "
@@ -315,8 +315,8 @@
                                                                     table.due_date
                                                                 }}
                                                             </div>
-                                                        </template>
-                                                        <template v-else>
+                                                        </template> -->
+                                                        <template>
                                                             <!-- <i
                                                                 class="fas fa-bed"
                                                             ></i> -->
@@ -453,9 +453,16 @@
                                                         ></i>
                                                     </template>
                                                 </span>
-
                                                 <span
-                                                    class="h6 mt-2 text-white"
+                                                v-if="table.due_date"
+                                                >
+                                                    Prox. Pago: {{
+                                                        table.due_date
+                                                    }}
+                                                </span>
+                                                <span
+                                                    class="h5 mt-2 text-white"
+
                                                 >
                                                     {{
                                                         table.number
@@ -463,12 +470,7 @@
                                                             .toUpperCase()
                                                     }}
                                                 </span>
-                                                <small
-                                                    v-if="table.timer"
-                                                    class="text-white"
-                                                >
-                                                    {{ table.timer }}
-                                                </small>
+                                        
 
                                                 <span v-if="table.tower_name">
                                                     {{
@@ -1942,8 +1944,8 @@ export default {
             });
         },
         async finishRegister(id, paymentVariation = null) {
+            this.rentId = id;
             this.updateTables();
-            // this.rentId = id;
             // const response = await this.$http(
             //     `/caja/rent/advance-document/${id}`
             // );

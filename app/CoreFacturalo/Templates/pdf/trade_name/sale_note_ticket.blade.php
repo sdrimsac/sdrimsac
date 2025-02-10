@@ -894,10 +894,7 @@ contain"
                 <td colspan="6" class="text-center desc pt-3 font-bold">{{ $footer_text }}</td>
             </tr>
         @endif
-        <tr>
-            <td colspan="6" class="text-center desc pt-3 font-bold">Para consultar el comprobante ingresar a
-                {!! url('/buscar') !!}</td>
-        </tr>
+    
     </table>
 
 </body>

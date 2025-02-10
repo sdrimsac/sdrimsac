@@ -22,7 +22,12 @@
                                     icon="el-icon-document"
                                 >
                                     Ver Contrato
+                                    <template v-if="info.duration">
+                                    {{ `${info.duration} ${info.duration > 1 ? 'Meses' : 'Mes'}` }}
+                                    </template>
                                 </el-button>
+
+                            
                             </h5>
                         </div>
                         <div class="col-12 mb-3">

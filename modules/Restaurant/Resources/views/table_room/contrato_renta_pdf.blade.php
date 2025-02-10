@@ -11,7 +11,8 @@
             margin: 30px;
             line-height: 1.4;
             font-size: 14px;
-            text-align: justify; /* Agregado para justificar todo el contenido */
+            text-align: justify;
+            /* Agregado para justificar todo el contenido */
         }
 
         h2 {
@@ -28,12 +29,15 @@
         p {
             margin: 5px 0;
             font-size: 13px;
-            text-align: justify; /* Agregado para justificar los párrafos */
+            text-align: justify;
+            /* Agregado para justificar los párrafos */
         }
+
         .pagina {
             margin: 5px 0;
             font-size: 13px;
-            text-align: right !important;/* Agregado para justificar los párrafos */
+            text-align: right !important;
+            /* Agregado para justificar los párrafos */
         }
 
         ul li {
@@ -122,11 +126,22 @@
 
     <h3>TERCERO</h3>
     <p>
+        @php
+            $checkin_date = $hotel_rent_item ? $hotel_rent_item['checkin_date'] : 'N/A';
+            $checkout_date = 'N/A';
+            if ($checkin_date !== 'N/A') {
+                $checkout_date = \Carbon\Carbon::parse($hotel_rent_item['checkin_date'])
+                    ->addMonth($hotel_rent_item['duration'])
+                    ->format('Y-m-d');
+            }
+        @endphp
         El presente contrato se inicia el {{ $hotel_rent_item ? $hotel_rent_item['checkin_date'] : 'N/A' }} finalizando
-        el {{ $hotel_rent_item ? $hotel_rent_item['checkout_date_estimated'] : 'N/A' }}.
+        el {{ $checkout_date }}.
         Fecha en que EL <strong>ARRENDATARIO</strong>
+
         entregará el inmueble materia del presente a EL <strong>ARRENDADOR</strong>, en las mismas condiciones en que lo
         recibió, salvo el deterioro de su uso normal y cuidadoso.
+
     </p>
 
     <h3>CUARTO</h3>
@@ -236,16 +251,14 @@
     <div style="page-break-before: always;">
         <div style="width: 100%; height: 842px;">
             @if (isset($image_extra1))
-            <div style="width: 100%; height: 400px; text-align: center; margin-bottom: 100px;">
-            <img src="{{ $image_extra1 }}"
-            style="width: auto; height: 300px;">
-            </div>
+                <div style="width: 100%; height: 400px; text-align: center; margin-bottom: 100px;">
+                    <img src="{{ $image_extra1 }}" style="width: auto; height: 300px;">
+                </div>
             @endif
             @if (isset($image_extra2))
-            <div style="width: 100%; height: 400px; text-align: center;">
-            <img src="{{ $image_extra2 }}"
-            style="width: auto; height: 300px;">
-            </div>
+                <div style="width: 100%; height: 400px; text-align: center;">
+                    <img src="{{ $image_extra2 }}" style="width: auto; height: 300px;">
+                </div>
             @endif
         </div>
     </div>

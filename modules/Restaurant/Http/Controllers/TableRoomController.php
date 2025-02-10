@@ -59,6 +59,7 @@ class TableRoomController extends Controller
         $checkin_date = $request->input('checkin_date');
         $date_payment = $request->input('date_payment');
         $duration = $request->input('duration');
+        $checkout_date = Carbon::parse($checkin_date)->addMonth($duration)->format('Y-m-d');
         $observation = $request->input('observation');
         $customer_id = $request->input('customer_id');
         $sub_total = $request->input('sub_total');
@@ -99,18 +100,30 @@ class TableRoomController extends Controller
             ]);
             $payment_date = Carbon::parse($date_payment);
             $monthly_amount = $sub_total;
-
+            if ($advances > 0) {
+                HotelRentPayment::create([
+                    'hotel_rent_item_id' => $hotel_rent_item->id,
+                    'date_payment' => $checkout_date,
+                    'date_start' => $checkin_date,
+                    'date_end' => $checkout_date,
+                    'amount' => $advances,
+                    'is_paid' => false,
+                    'is_warranty' => true
+                ]);
+            }
             for ($i = 0; $i < $duration; $i++) {
                 $start_date = $payment_date->copy()->addMonths($i);
                 $end_date = $start_date->copy()->addMonth();
+
 
                 HotelRentPayment::create([
                     'hotel_rent_item_id' => $hotel_rent_item->id,
                     'date_payment' => $start_date->format('Y-m-d'),
                     'date_start' => $start_date->format('Y-m-d'),
-                    'date_end' => $end_date->format('Y-m-d'),
+                    'date_end' => $end_date->subDay()->format('Y-m-d'),
                     'amount' => $monthly_amount,
                     'is_paid' => false
+
                 ]);
             }
             $guesses = $request->input('guesses');
@@ -947,6 +960,16 @@ class TableRoomController extends Controller
 
             // Asegurar que el monto pendiente no sea negativo
             $pending_amount = max(0, $pending_amount);
+            if ($payment->is_warranty) {
+                $period = "Garantía";
+            } else {
+                $period = "Mensualidad " .
+                    Carbon::parse($payment->date_start)->format('d') . ' de ' .
+                    $this->getMonth(Carbon::parse($payment->date_start)->format('m')) . ' - ' .
+                    Carbon::parse($payment->date_end)->format('d') . ' de ' .
+                    $this->getMonth(Carbon::parse($payment->date_end)->format('m'));
+            }
+
 
             return [
                 'id' => $payment->id,
@@ -955,10 +978,10 @@ class TableRoomController extends Controller
                 'amount' => $payment->amount,
                 'select' => false,
                 'editable_amount' => $pending_amount,
-                'period' => $this->getMonth(Carbon::parse($payment->date_start)->format('m')) . ' - ' .
-                    $this->getMonth(Carbon::parse($payment->date_end)->format('m'))
+                'period' => $period
             ];
         })->values();
+
 
         // Obtener el total pendiente del primer pago
         $total = $payments->first() ? $payments->first()['editable_amount'] : 0;
@@ -1348,10 +1371,13 @@ class TableRoomController extends Controller
             $tables = $tables->transform(function ($table) {
                 $hotel_rent_item = HotelRentItem::where('table_id', $table->id)->latest()->first();
                 if ($hotel_rent_item) {
+                    $table->hotel_rent_id = $hotel_rent_item->hotel_rent_id;
                     $payments = $hotel_rent_item->payments
-                        ->where('is_paid', 0);
-                    $due_date = $payments->first()->date_payment;
+                        ->where('is_paid', 0)
+                        ->where('is_warranty', false);
+                    $due_date = $payments->first()->date_end;
                     $table->due_date = $due_date;
+
                 }
                 return $table;
             });
@@ -1981,9 +2007,9 @@ class TableRoomController extends Controller
                 'image_path' => "/storage/" . $row->image_path,
             ];
         });
-        
+
         $table = $table->makeHidden('images');
-        
+
         return [
             'success' => true,
             'data' => $table
@@ -2160,20 +2186,20 @@ class TableRoomController extends Controller
         if (isset($data['month_price']) && ($data['month_price'] === 'undefined' || $data['month_price'] === 'null')) {
             $data['month_price'] = 0.00;
         }
-        
+
         if (isset($data['is_cleaning']) && ($data['is_cleaning'] === 'undefined' || $data['is_cleaning'] === 'null')) {
             $data['is_cleaning'] = 0;
         }
 
-        if(isset($data['created_at']) &&( $data['created_at'] === 'undefined'|| $data['created_at'] === 'null')) {
+        if (isset($data['created_at']) && ($data['created_at'] === 'undefined' || $data['created_at'] === 'null')) {
             $data['created_at'] = null;
         }
 
-        if(isset($data['updated_at']) && ($data['updated_at'] === 'undefined' || $data['updated_at'] === 'null')) {
+        if (isset($data['updated_at']) && ($data['updated_at'] === 'undefined' || $data['updated_at'] === 'null')) {
             $data['updated_at'] = null;
         }
 
-        if(isset($data['cleaning_start_date']) &&( $data['cleaning_start_date'] === 'undefined' || $data['cleaning_start_date'] === 'null')) {
+        if (isset($data['cleaning_start_date']) && ($data['cleaning_start_date'] === 'undefined' || $data['cleaning_start_date'] === 'null')) {
             $data['cleaning_start_date'] = null;
         }
 
@@ -2233,18 +2259,18 @@ class TableRoomController extends Controller
     public function getInfo($id)
     {
         $hotel_rent = HotelRent::find($id);
-
         $customer = TenantPerson::find($hotel_rent->customer_id);
         $customer_telephone = $customer->telephone;
         $customer_number = $customer->number;
         $customer_name = $customer->name;
         $customer_img = $customer->image;
-        if($customer_img == "USER.PNG"){
+        if ($customer_img == "USER.PNG") {
             $customer_img = asset('status_images/user.png');
-        }else{
+        } else {
             $customer_img = asset('storage/uploads/persons/' . $customer->image);
         }
         $hotel_rent_item = $hotel_rent->items->first();
+        $duration = $hotel_rent_item->duration;
         $table = $hotel_rent_item->table->getTableFullNameDescription();
         $guesses = $hotel_rent_item->persons->transform(function ($row) {
             return [
@@ -2263,6 +2289,7 @@ class TableRoomController extends Controller
 
 
         return [
+            'duration' => $duration,
             'success' => true,
             'customer_number' => $customer_number,
             'customer_telephone' => $customer_telephone,

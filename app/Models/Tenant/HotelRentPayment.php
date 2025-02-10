@@ -14,6 +14,7 @@ class HotelRentPayment extends ModelTenant
         'date_end',
         'amount',
         'is_paid',
+        'is_warranty'
 
     ];
 

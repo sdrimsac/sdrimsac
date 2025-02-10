@@ -389,10 +389,7 @@ class PosController extends Controller
         if ($config->mod_renta) {
             $tables = $tables->with(['hotel_rent_items' => function ($query) {
                 $query->latest()
-                    ->with(['payments' => function ($query) {
-                        $query->where('is_paid', 0)->first();
-                    }]);
-
+                    ->with(['payments']);
             }])->get();
 
 
@@ -414,15 +411,17 @@ class PosController extends Controller
 
 
                 ];
-                if ($latestRentItem = $table->hotel_rent_items->first()) {
+                $latestRentItem = $table->hotel_rent_items->sortByDesc('created_at')->first();
+                if ($latestRentItem) {
                     $table->hotel_rent_id = $latestRentItem->hotel_rent_id;
                     $t_return['hotel_rent_id'] = $latestRentItem->hotel_rent_id;
-                    if ($latestDocument = $latestRentItem->payments->first()) {
 
+                    $latestDocument = $latestRentItem->payments->where('is_paid', 0)->where('is_warranty', false)->first();
+                    if ($latestDocument) {
                         $table->due_date = $latestDocument->date_payment;
                         $t_return['due_date'] = Carbon::parse($latestDocument->date_payment)->format('d/m/Y');
-
                     }
+
                 }
 
                 return $t_return;

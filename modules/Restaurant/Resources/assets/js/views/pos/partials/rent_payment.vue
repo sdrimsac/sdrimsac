@@ -24,7 +24,7 @@
                                         v-model="payment.select"
                                     ></el-checkbox>
                                 </td>
-                                <td>Mensualidad {{ payment.period }}</td>
+                                <td>{{ payment.period }}</td>
                                 <td class="text-end">
                                     {{ payment.amount }}
                                 </td>
@@ -155,9 +155,14 @@ export default {
     },
     methods: {
         submit() {
+            if(this.total == 0){
+                this.$showSAlert("Alerta", "No hay ningún pago para realizar", "warning");
+                return;
+            }
             let penalties = this.penalties.filter(penalty => penalty.select);
             let infractions = this.infractions.filter(
                 infraction => infraction.select
+
             );
             let payments = this.payments.filter(payment => payment.select);
             this.$http
