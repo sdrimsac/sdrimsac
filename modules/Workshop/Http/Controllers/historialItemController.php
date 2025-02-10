@@ -47,7 +47,7 @@ class HistorialItemController extends Controller
 
 
 
-    public function store(HistorialItemRequest $request)
+    /* public function store(HistorialItemRequest $request)
     {
         $id = $request->input('id');
         $bank = HistorialItem::firstOrNew(['id' => $id]);
@@ -58,9 +58,9 @@ class HistorialItemController extends Controller
             'success' => true,
             'message' => ($id) ? 'Mecanico editado con éxito' : 'Mecanico registrado con éxito'
         ];
-    }
+    } */
 
-    public function destroy($id)
+    /* public function destroy($id)
     {
         try {
 
@@ -75,5 +75,5 @@ class HistorialItemController extends Controller
 
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Mecanico esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Mecanico'];
         }
-    }
+    } */
 }
