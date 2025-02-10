@@ -28,7 +28,7 @@ class HistorialItemController extends Controller
         // Obtiene todos los items relacionados con el historial_id proporcionado
         $items = HistorialItem::where('historial_id', $historialId)->with('item')->get();
 
-        return response()->json($items); // Devuelve los datos en formato JSON
+        return response()->json($items);
     }
     public function updateItem(Request $request, $historialItemId)
     {
