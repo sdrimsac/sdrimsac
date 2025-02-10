@@ -288,15 +288,16 @@ class DocumentController extends Controller
     }
 
     public function RegisterDocuments(Request $request)
-    {
-        $prefix = 'tenancy_';
+    {   
+        //cambiar a tenancy antes se subir a prod
+        $prefix = 'facturador5_';
         $date_of_issue = $request->date_of_issue;
         $infoCompleta = [];
         $domain = $request->domain;
         $maxRecordsPerFile = 250;
 
         if ($domain == null) {
-            $domain = "site";
+            $domain = "site"; 
         }
 
         try {
@@ -309,7 +310,8 @@ class DocumentController extends Controller
                         continue;
                     }
 
-                    $resultsPorDB = DB::select('
+                    // Base query
+                    $query = '
                         SELECT 
                             ' . $result->Database . '.documents.id AS document_id, 
                             ' . $result->Database . '.state_types.description AS statusDoc,
@@ -327,10 +329,16 @@ class DocumentController extends Controller
                             ' . $result->Database . '.soap_types ON ' . $result->Database . '.documents.soap_type_id = ' . $result->Database . '.soap_types.id
                         WHERE 
                             soap_type_id = "02" 
-                            AND ' . $result->Database . '.documents.state_type_id IN ("01")
-                        ORDER BY 
-                            4, 5
-                    ');
+                            AND ' . $result->Database . '.documents.state_type_id IN ("01")';
+
+                    // Add date filter if date_of_issue is provided
+                    if ($date_of_issue) {
+                        $query .= ' AND ' . $result->Database . '.documents.date_of_issue = "' . $date_of_issue . '"';
+                    }
+
+                    $query .= ' ORDER BY 4, 5';
+
+                    $resultsPorDB = DB::select($query);
 
                     $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
                     $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies');
@@ -367,19 +375,19 @@ class DocumentController extends Controller
                     $ruc = $company->number;
                     $serie = $doc['document_series'];
                     $number = $doc['document_number'];
-                    $date_of_issue = $doc['document_date_of_due'];
+                    $date = $doc['document_date_of_due'];
                     $total = $doc['document_total'];
-                    $fileContent .= "$ruc|$serie|$number|$date_of_issue|$total\n";
+                    $fileContent .= "$ruc|$serie|$number|$date|$total\n";
                 }
 
                 $partFileName = 'documentos_registrados_parte_' . ($index + 1) . '.txt';
-                /* dump($partFileName); */
                 $zip->addFromString($partFileName, $fileContent);
             }
 
             $zip->close();
 
             return response()->download($zipPath)->deleteFileAfterSend(true);
+
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
