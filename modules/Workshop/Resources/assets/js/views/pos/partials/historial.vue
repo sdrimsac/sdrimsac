@@ -29,131 +29,146 @@
                 <br />
             </div>
             <div class="form-body">
-                <div class="row">
-                    <table
-                        class="table table-striped table-responsive col-md-12"
-                    >
-                        <thead>
-                            <tr class="bg-primary">
-                                <th class="text-white">#</th>
-                                <th class="text-white">Fecha Registro</th>
-                                <th class="text-white">Vehiculo</th>
-                                <th class="text-white">Personal</th>
-                                <th class="text-white">Motivo de Ingreso</th>
-                                <th class="text-white">Trabajos Realizados</th>
-                                <th class="text-white">Establecimiento</th>
-                                <th class="text-white">Productos Cuenta</th>
-                                <th class="text-white">Estado</th>
-                                <th class="text-white">formato</th>
-                                <th class="text-white">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in historial" :key="index">
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ item.created_at }}</td>
-                                <td>
-                                    {{ item.vehiculo_placa }} -
-                                    {{ item.vehiculo_marca }}
-                                </td>
-                                <td>{{ item.personal_name }}</td>
-                                <td>{{ item.observacion }}</td>
-                                <td>{{ item.motive }}</td>
-                                <td>{{ item.establishment_description }}</td>
-                                <td class="text-center">
-                                    <el-popover
-                                        placement="right"
-                                        width="400"
-                                        trigger="click"
-                                    >
-                                        <!-- Tabla de items dentro del popover -->
-                                        <el-table
-                                            :data="item.item"
-                                            style="width: 100%"
+                <div class="history-table-container">
+                    <div class="table-scroll-wrapper">
+                        <table class="table table-striped history-table">
+                            <thead>
+                                <tr class="bg-primary">
+                                    <th class="text-white">#</th>
+                                    <th class="text-white">Fecha Registro</th>
+                                    <th class="text-white">Vehículo</th>
+                                    <th class="text-white">Mecánico</th>
+                                    <th class="text-white">
+                                        Motivo de Ingreso
+                                    </th>
+                                    <th class="text-white">
+                                        Trabajos Realizados
+                                    </th>
+                                    <th class="text-white">Establecimiento</th>
+                                    <th class="text-white">Productos Cuenta</th>
+                                    <th class="text-white">Estado</th>
+                                    <th class="text-white">Formato</th>
+                                    <th class="text-white">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(item, index) in historial"
+                                    :key="index"
+                                >
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ item.created_at }}</td>
+                                    <td>
+                                        {{ item.vehiculo_placa }} -
+                                        {{ item.vehiculo_marca }}
+                                    </td>
+                                    <td>{{ item.personal_name }}</td>
+                                    <td>{{ item.observacion }}</td>
+                                    <td>{{ item.motive }}</td>
+                                    <td>
+                                        {{ item.establishment_description }}
+                                    </td>
+                                    <td class="text-center">
+                                        <el-popover
+                                            placement="right"
+                                            width="400"
+                                            trigger="click"
                                         >
-                                            <el-table-column
-                                                width="50"
-                                                label="#"
-                                            ></el-table-column>
-                                            <el-table-column
-                                                label="Nombre"
-                                                width="200"
+                                            <!-- Tabla de items dentro del popover -->
+                                            <el-table
+                                                :data="item.item"
+                                                style="width: 100%"
                                             >
-                                                <template v-slot="scope">{{
-                                                    scope.row.description
-                                                }}</template>
-                                            </el-table-column>
-                                            <el-table-column
-                                                label="Cantidad"
-                                                width="100"
-                                            >
-                                                <template v-slot="scope">{{
-                                                    scope.row.cantidad
-                                                }}</template>
-                                            </el-table-column>
-                                            <el-table-column
-                                                label="Precio"
-                                                width="100"
-                                            >
-                                                <template v-slot="scope">{{
-                                                    scope.row.price
-                                                }}</template>
-                                            </el-table-column>
-                                        </el-table>
-                                        <el-button slot="reference">
-                                            <i class="fa fa-eye"></i>
+                                                <el-table-column
+                                                    width="50"
+                                                    label="#"
+                                                ></el-table-column>
+                                                <el-table-column
+                                                    label="Nombre"
+                                                    width="200"
+                                                >
+                                                    <template v-slot="scope">{{
+                                                        scope.row.description
+                                                    }}</template>
+                                                </el-table-column>
+                                                <el-table-column
+                                                    label="Cantidad"
+                                                    width="100"
+                                                >
+                                                    <template v-slot="scope">{{
+                                                        scope.row.cantidad
+                                                    }}</template>
+                                                </el-table-column>
+                                                <el-table-column
+                                                    label="Precio"
+                                                    width="100"
+                                                >
+                                                    <template v-slot="scope">{{
+                                                        scope.row.price
+                                                    }}</template>
+                                                </el-table-column>
+                                            </el-table>
+                                            <el-button slot="reference">
+                                                <i class="fa fa-eye"></i>
+                                            </el-button>
+                                        </el-popover>
+                                    </td>
+                                    <td>
+                                        {{
+                                            item.estado == 0
+                                                ? "Activo"
+                                                : "Inactivo"
+                                        }}
+                                    </td>
+                                    <td>
+                                        <!-- Aquí asociamos el historial_id del registro con el botón -->
+                                        <el-button
+                                            v-for="(subItem,
+                                            subIndex) in item.item"
+                                            :key="subIndex"
+                                            @click.prevent="
+                                                clickPrintFormat(
+                                                    subItem.historial_id
+                                                )
+                                            "
+                                            type="success"
+                                        >
+                                            PDF V
                                         </el-button>
-                                    </el-popover>
-                                </td>
-                                <td>
-                                    {{
-                                        item.estado == 0 ? "Activo" : "Inactivo"
-                                    }}
-                                </td>
-                                <td>
-                                    <!-- Aquí asociamos el historial_id del registro con el botón -->
-                                    <el-button
-                                        v-for="(subItem, subIndex) in item.item"
-                                        :key="subIndex"
-                                        @click.prevent="
-                                            clickPrintFormat(
-                                                subItem.historial_id
-                                            )
-                                        "
-                                        type="success"
-                                    >
-                                        PDF V
-                                    </el-button>
-                                    <!-- <el-button
-                                        type="danger"
-                                        @click.prevent="
-                                            clickrePrint(subItem.historial_id)
-                                        "
-                                    >
-                                        PDF A4
-                                    </el-button> -->
-                                    <el-button
-                                        v-for="(subItem, subIndex) in item.item"
-                                        :key="'a4-' + subIndex"
-                                        @click.prevent="
-                                            clickrePrint(subItem.historial_id)
-                                        "
-                                        type="danger"
-                                    >
-                                        PDF A4
-                                    </el-button>
-                                </td>
-                                <td>
-                                    <el-button
-                                        v-if="item.estado == 0"
-                                        type="primary"
-                                        @click="editHistory(item.id)"
-                                        >Editar</el-button
-                                    >
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <!-- <el-button
+                                            type="danger"
+                                            @click.prevent="
+                                                clickrePrint(subItem.historial_id)
+                                            "
+                                        >
+                                            PDF A4
+                                        </el-button> -->
+                                        <el-button
+                                            v-for="(subItem,
+                                            subIndex) in item.item"
+                                            :key="'a4-' + subIndex"
+                                            @click.prevent="
+                                                clickrePrint(
+                                                    subItem.historial_id
+                                                )
+                                            "
+                                            type="danger"
+                                        >
+                                            PDF A4
+                                        </el-button>
+                                    </td>
+                                    <td>
+                                        <el-button
+                                            v-if="item.estado == 0"
+                                            type="primary"
+                                            @click="editHistory(item.id)"
+                                            >Editar</el-button
+                                        >
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </form>
@@ -161,7 +176,7 @@
             :showDialog.sync="showDialogCarVehicle"
             :vehiculoId="selectedVehiculoId"
             :recordId="recordId"
-            @actualizar="getData"
+            @actualizar="actualizarYEmitir"
         ></car-vehicle>
     </el-dialog>
 </template>
@@ -194,10 +209,10 @@ export default {
         }
     },
     methods: {
-        /* editHistory(recordId = null) {
-            this.recordId = recordId;
-            this.showDialogCarVehicle = true;
-        }, */
+        actualizarYEmitir() {
+            this.getData();
+            this.$emit("actualizar");
+        },
         editHistory(recordId = null) {
             const historialActivo = this.historial.find(
                 item => item.estado === 0
@@ -285,3 +300,135 @@ export default {
     }
 };
 </script>
+<style scoped>
+.history-table-container {
+    position: relative;
+    width: 100%;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.history-table {
+    width: 100%;
+    min-width: 1200px; /* Prevent table from becoming too narrow */
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.history-table th {
+    position: sticky;
+    top: 0;
+
+    padding: 12px 15px;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.history-table td {
+    padding: 10px 15px;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Define column widths */
+.history-table th:nth-child(1),
+.history-table td:nth-child(1) {
+    min-width: 50px;
+} /* # */
+.history-table th:nth-child(2),
+.history-table td:nth-child(2) {
+    min-width: 120px;
+} /* Fecha */
+.history-table th:nth-child(3),
+.history-table td:nth-child(3) {
+    min-width: 150px;
+} /* Vehiculo */
+.history-table th:nth-child(4),
+.history-table td:nth-child(4) {
+    min-width: 120px;
+} /* Personal */
+.history-table th:nth-child(5),
+.history-table td:nth-child(5) {
+    min-width: 200px;
+} /* Motivo */
+.history-table th:nth-child(6),
+.history-table td:nth-child(6) {
+    min-width: 200px;
+} /* Trabajos */
+.history-table th:nth-child(7),
+.history-table td:nth-child(7) {
+    min-width: 150px;
+} /* Establecimiento */
+.history-table th:nth-child(8),
+.history-table td:nth-child(8) {
+    min-width: 120px;
+} /* Productos */
+.history-table th:nth-child(9),
+.history-table td:nth-child(9) {
+    min-width: 100px;
+} /* Estado */
+.history-table th:nth-child(10),
+.history-table td:nth-child(10) {
+    min-width: 120px;
+} /* Formato */
+.history-table th:nth-child(11),
+.history-table td:nth-child(11) {
+    min-width: 100px;
+} /* Acciones */
+
+/* Custom scrollbar */
+.table-scroll-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .history-table {
+        font-size: 14px;
+    }
+
+    .history-table th,
+    .history-table td {
+        padding: 8px 12px;
+    }
+
+    .el-button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Popover table styles */
+.el-table {
+    margin: 0;
+    width: 100%;
+}
+
+.el-popover {
+    max-width: 90vw;
+}
+</style>

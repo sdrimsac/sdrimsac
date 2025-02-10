@@ -40,173 +40,160 @@
             </div>
             <br />
             <div class="card-body">
-                <div class>
-                    <table
-                        class="table table-striped table-responsive col-md-12"
-                    >
-                        <thead>
-                            <tr class="bg-primary">
-                                <th class="text-white">Acciones</th>
-                                <th class="text-white">#</th>
-                                <th class="text-white">Cliente</th>
-                                <th class="text-white">Vehiculo</th>
-                                <th class="text-white">Placa</th>
-                                <th class="text-white">Marca</th>
-                                <th class="text-white">Color</th>
-                                <th class="text-white">Serie</th>
-                                <th class="text-white">Motor</th>
-                                <th class="text-white">Año</th>
-                                <th class="text-white">Kilometros Corridos</th>
-                                <th class="text-white">Fecha Registro</th>
-                                <th class="text-white">Productos</th>
-                                <th class="text-white">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(vehiculo, index) in vehiculos"
-                                :key="index"
-                                :index="customIndex(index)"
-                            >
-                                <td>
-                                    <a class="">
+                <div class="main-table-container">
+                    <div class="table-scroll-container">
+                        <table class="table table-striped custom-table">
+                            <thead>
+                                <tr class="bg-primary">
+                                    <th class="text-white">Acciones</th>
+                                    <th class="text-white">#</th>
+                                    <th class="text-white">Cliente</th>
+                                    <th class="text-white">Vehiculo</th>
+                                    <th class="text-white">Placa</th>
+                                    <th class="text-white">Marca</th>
+                                    <th class="text-white">Color</th>
+                                    <th class="text-white">Serie</th>
+                                    <th class="text-white">Motor</th>
+                                    <th class="text-white">Año</th>
+                                    <th class="text-white">
+                                        Kilometros Corridos
+                                    </th>
+                                    <th class="text-white">Fecha Registro</th>
+                                    <th class="text-white">Productos</th>
+                                    <th class="text-white">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(vehiculo, index) in vehiculos"
+                                    :key="index"
+                                    :index="customIndex(index)"
+                                >
+                                    <td>
+                                        <a class="">
+                                            <el-button
+                                                v-if="
+                                                    vehiculo.historial_id &&
+                                                        vehiculo.items > 0
+                                                "
+                                                type="success"
+                                                @click="
+                                                    openpayOrden(vehiculo.id)
+                                                "
+                                                class="w-100"
+                                                >Cobrar</el-button
+                                            >
+                                        </a>
+                                    </td>
+                                    <td>{{ customIndex(index) }}</td>
+                                    <td>{{ vehiculo.customer_name }}</td>
+                                    <td>
+                                        {{ vehiculo.tipo_vehiculo_description }}
+                                    </td>
+                                    <td>{{ vehiculo.placa }}</td>
+                                    <td>{{ vehiculo.marca }}</td>
+                                    <td>{{ vehiculo.color }}</td>
+                                    <td>{{ vehiculo.serie }}</td>
+                                    <td>{{ vehiculo.motor }}</td>
+                                    <td>{{ vehiculo.anio_fabricacion }}</td>
+                                    <td>{{ vehiculo.kilometraje }}</td>
+                                    <td>{{ vehiculo.created_at }}</td>
+                                    <td>
                                         <el-button
-                                            v-if="
-                                                vehiculo.historial_id &&
-                                                    vehiculo.items > 0
+                                            v-if="vehiculo.historial_id"
+                                            @click="
+                                                selectItem(
+                                                    vehiculo.id,
+                                                    vehiculo.placa,
+                                                    vehiculo.historial_id
+                                                )
                                             "
-                                            type="success"
-                                            @click="openpayOrden(vehiculo.id)"
-                                            class="w-100"
-                                            >Cobrar</el-button
+                                            type="info"
+                                            >Productos</el-button
                                         >
-                                    </a>
-                                </td>
-                                <td>{{ customIndex(index) }}</td>
-                                <td>{{ vehiculo.customer_name }}</td>
-                                <td>
-                                    {{ vehiculo.tipo_vehiculo_description }}
-                                </td>
-                                <td>{{ vehiculo.placa }}</td>
-                                <td>{{ vehiculo.marca }}</td>
-                                <td>{{ vehiculo.color }}</td>
-                                <td>{{ vehiculo.serie }}</td>
-                                <td>{{ vehiculo.motor }}</td>
-                                <td>{{ vehiculo.anio_fabricacion }}</td>
-                                <td>{{ vehiculo.kilometraje }}</td>
-                                <td>{{ vehiculo.created_at }}</td>
-                                <td>
-                                    <el-button
-                                        v-if="vehiculo.historial_id"
-                                        @click="
-                                            selectItem(
-                                                vehiculo.id,
-                                                vehiculo.placa,
-                                                vehiculo.historial_id
-                                            )
-                                        "
-                                        type="info"
-                                        >Productos</el-button
-                                    >
-                                </td>
-                                <td class="text-end">
-                                    <div
-                                        class="btn-toolbar mb-2"
-                                        role="toolbar"
-                                    >
-                                        <div class="btn-group mb-1">
-                                            <button
-                                                class="btn btn-secondary btn-sm dropdown-toggle"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            >
-                                                <i
-                                                    class="fas fa-ellipsis-v"
-                                                ></i>
-                                            </button>
-                                            <div
-                                                class="dropdown-menu dropdown-menu-sm"
-                                            >
-                                                <a class="dropdown-item">
-                                                    <el-button
-                                                        class="w-100"
-                                                        @click="
-                                                            HistorialVehiculo(
-                                                                vehiculo.id
-                                                            )
-                                                        "
-                                                    >
-                                                        <i
-                                                            class="fas fa-list"
-                                                        ></i>
-                                                        Historial
-                                                    </el-button>
-                                                </a>
-                                                <!-- <a class="dropdown-item">
-                          <el-button
-                            type="primary"
-                            @click="clickCreate(vehiculo.id)"
-                            class="w-100"
-                          >Editar</el-button>
-                        </a> -->
-                                                <a class="dropdown-item">
-                                                    <el-button
-                                                        v-if="
-                                                            vehiculo.historial_id
-                                                        "
-                                                        @click.prevent="
-                                                            clickPrintFormat(
-                                                                vehiculo.id
-                                                            )
-                                                        "
-                                                        class="w-100"
-                                                        type="success"
-                                                    >
-                                                        <i
-                                                            class="far fa-file-alt"
-                                                        ></i>
-                                                        Format Vehiculo
-                                                    </el-button>
-                                                </a>
-                                                <a class="dropdown-item">
-                                                    <el-button
-                                                        v-if="
-                                                            vehiculo.historial_id
-                                                        "
-                                                        @click.prevent="
-                                                            clickPrint(
-                                                                vehiculo.id
-                                                            )
-                                                        "
-                                                        class="w-100"
-                                                        type="danger"
-                                                    >
-                                                        <i
-                                                            class="far fa-file-alt"
-                                                        ></i>
-                                                        PDF
-                                                    </el-button>
-                                                </a>
-                                                <!-- <a class="dropdown-item">
-                          <el-button
-                            @click.prevent="format_vehicle(vehiculo.id)"
-                            class="w-100"
-                            type="info"
-                          >
-                            <i class="far fa-file-alt"></i>
-                            Ver PDF
-                          </el-button>
-                        </a>-->
+                                    </td>
+                                    <td class="text-end">
+                                        <div
+                                            class="btn-toolbar mb-2"
+                                            role="toolbar"
+                                        >
+                                            <div class="btn-group mb-1">
+                                                <button
+                                                    class="btn btn-secondary btn-sm dropdown-toggle"
+                                                    type="button"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
+                                                >
+                                                    <i
+                                                        class="fas fa-ellipsis-v"
+                                                    ></i>
+                                                </button>
+                                                <div
+                                                    class="dropdown-menu dropdown-menu-sm"
+                                                >
+                                                    <a class="dropdown-item">
+                                                        <el-button
+                                                            class="w-100"
+                                                            @click="
+                                                                HistorialVehiculo(
+                                                                    vehiculo.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-list"
+                                                            ></i>
+                                                            Historial
+                                                        </el-button>
+                                                    </a>
+                                                    <a class="dropdown-item">
+                                                        <el-button
+                                                            v-if="
+                                                                vehiculo.historial_id
+                                                            "
+                                                            @click.prevent="
+                                                                clickPrintFormat(
+                                                                    vehiculo.id
+                                                                )
+                                                            "
+                                                            class="w-100"
+                                                            type="success"
+                                                        >
+                                                            <i
+                                                                class="far fa-file-alt"
+                                                            ></i>
+                                                            Format Vehiculo
+                                                        </el-button>
+                                                    </a>
+                                                    <a class="dropdown-item">
+                                                        <el-button
+                                                            v-if="
+                                                                vehiculo.historial_id
+                                                            "
+                                                            @click.prevent="
+                                                                clickPrint(
+                                                                    vehiculo.id
+                                                                )
+                                                            "
+                                                            class="w-100"
+                                                            type="danger"
+                                                        >
+                                                            <i
+                                                                class="far fa-file-alt"
+                                                            ></i>
+                                                            PDF
+                                                        </el-button>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
                         <el-pagination
                             layout="total, prev, pager, next"
                             :total="pagination.total"
@@ -226,6 +213,7 @@
                 :showDialog.sync="showDialogHistorial"
                 :vehiculoId="selectedVehiculoId"
                 @recargar="lisVehicle"
+                @actualizar="refrescarDatos"
             ></historial>
             <modal-item
                 :showDialog.sync="showDialogModalItem"
@@ -295,6 +283,10 @@ export default {
         }
     },
     methods: {
+        refrescarDatos() {
+            console.log("Se recibió el evento en Mechanic");
+            this.lisVehicle();
+        },
         handlePageChange(page) {
             this.pagination.current_page = page;
             this.lisVehicle();
@@ -492,3 +484,154 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.main-table-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.table-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-table {
+    width: 100%;
+    min-width: 1500px; /* Ensures table won't compress below this width */
+    margin-bottom: 0;
+}
+
+.custom-table th {
+    position: sticky;
+    top: 0;
+    color: white;
+    white-space: nowrap;
+    padding: 12px 15px;
+    z-index: 1;
+}
+
+.custom-table td {
+    padding: 10px 15px;
+    white-space: nowrap;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Column widths */
+.custom-table th:nth-child(1),
+.custom-table td:nth-child(1) {
+    min-width: 100px;
+} /* Acciones */
+.custom-table th:nth-child(2),
+.custom-table td:nth-child(2) {
+    min-width: 60px;
+} /* # */
+.custom-table th:nth-child(3),
+.custom-table td:nth-child(3) {
+    min-width: 200px;
+} /* Cliente */
+.custom-table th:nth-child(4),
+.custom-table td:nth-child(4) {
+    min-width: 150px;
+} /* Vehiculo */
+.custom-table th:nth-child(5),
+.custom-table td:nth-child(5) {
+    min-width: 120px;
+} /* Placa */
+.custom-table th:nth-child(6),
+.custom-table td:nth-child(6) {
+    min-width: 120px;
+} /* Marca */
+.custom-table th:nth-child(7),
+.custom-table td:nth-child(7) {
+    min-width: 100px;
+} /* Color */
+.custom-table th:nth-child(8),
+.custom-table td:nth-child(8) {
+    min-width: 120px;
+} /* Serie */
+.custom-table th:nth-child(9),
+.custom-table td:nth-child(9) {
+    min-width: 120px;
+} /* Motor */
+.custom-table th:nth-child(10),
+.custom-table td:nth-child(10) {
+    min-width: 80px;
+} /* Año */
+.custom-table th:nth-child(11),
+.custom-table td:nth-child(11) {
+    min-width: 150px;
+} /* Kilometros */
+.custom-table th:nth-child(12),
+.custom-table td:nth-child(12) {
+    min-width: 120px;
+} /* Fecha */
+.custom-table th:nth-child(13),
+.custom-table td:nth-child(13) {
+    min-width: 100px;
+} /* Productos */
+.custom-table th:nth-child(14),
+.custom-table td:nth-child(14) {
+    min-width: 120px;
+} /* Acciones */
+
+/* Scrollbar styling */
+.table-scroll-container::-webkit-scrollbar {
+    height: 8px;
+    background-color: #f5f5f5;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #888;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background-color: #f5f5f5;
+}
+
+.pagination-container {
+    position: sticky;
+    left: 0;
+    margin-top: 15px;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .table-scroll-container {
+        margin-bottom: 10px;
+    }
+
+    .custom-table {
+        font-size: 14px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 8px 12px;
+    }
+
+    .pagination-container {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+
+    .el-pagination {
+        white-space: nowrap;
+    }
+}
+
+// Remove any conflicting table-responsive styles
+.table-responsive {
+    overflow: visible;
+}
+</style>
