@@ -126,6 +126,7 @@ class TableRoomController extends Controller
 
                 ]);
             }
+            
             $guesses = $request->input('guesses');
             foreach ($guesses as $guess) {
                 HotelRentItemPerson::create([

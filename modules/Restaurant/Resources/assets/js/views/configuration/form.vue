@@ -1026,13 +1026,20 @@ export default {
                         }
                     });
                 } else {
-                    formData.append(key, formCopy[key]);
+                    if (formCopy[key] !== null && formCopy[key] !== undefined) {
+                        formData.append(key, formCopy[key]);
+                    }
                 }
             });
 
             // Añadir servicios una sola vez
             formData.append("services", JSON.stringify(selectedServices));
-
+            // Eliminar valores null o undefined de formData
+            for (let [key, value] of formData.entries()) {
+                if (value === 'null' || value === 'undefined') {
+                    formData.delete(key);
+                }
+            }
             try {
                 const response = await this.$http.post(
                     `/${this.resource}`,
