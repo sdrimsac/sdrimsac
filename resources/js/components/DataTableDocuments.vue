@@ -539,32 +539,6 @@ export default {
             let parameters = this.getQueryParameters();
             window.open(`/${this.resource}/excel?${parameters}`, "_blank");
         },
-
-        /* async RegisterRecords() {
-            let parameters = this.getQueryParameters();
-            try {
-                const response = await this.$http.get(
-                    `/${this.resource}/RegisterDocuments?${parameters}`,
-                    {
-                        params: { domain: "site" },
-                        responseType: "blob"
-                    }
-                );
-
-
-                const url = window.URL.createObjectURL(
-                    new Blob([response.data])
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.setAttribute("download", "documentos_registrados.zip");
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-            } catch (error) {
-                console.error("Error al exportar:", error);
-            }
-        }, */
         async RegisterRecords() {
             let parameters = this.getQueryParameters();
             try {
@@ -577,7 +551,7 @@ export default {
                 );
 
                 if (response.data.size === 0) {
-                    console.error("El archivo ZIP está vacío o corrupto.");
+                    console.error("El archivo txt está vacío o corrupto.");
                     return;
                 }
 
@@ -586,7 +560,7 @@ export default {
                 );
                 const link = document.createElement("a");
                 link.href = url;
-                link.setAttribute("download", "documentos_registrados.zip");
+                link.setAttribute("download", "documentos_registrados.txt");
                 document.body.appendChild(link);
                 link.click();
                 link.remove();

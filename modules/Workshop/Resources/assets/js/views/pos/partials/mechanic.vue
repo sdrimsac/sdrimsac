@@ -73,8 +73,7 @@
                                         <a class="">
                                             <el-button
                                                 v-if="
-                                                    vehiculo.historial_id &&
-                                                        vehiculo.items > 0
+                                                    vehiculo.historial_id
                                                 "
                                                 type="success"
                                                 @click="
@@ -629,8 +628,6 @@ export default {
         white-space: nowrap;
     }
 }
-
-// Remove any conflicting table-responsive styles
 .table-responsive {
     overflow: visible;
 }

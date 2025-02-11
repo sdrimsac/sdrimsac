@@ -288,105 +288,35 @@ class DocumentController extends Controller
     }
 
     public function RegisterDocuments(Request $request)
-    {   
-        //cambiar a tenancy antes se subir a prod
-        $prefix = 'tenancy_';
-        $date_of_issue = $request->date_of_issue;
-        $infoCompleta = [];
-        $domain = $request->domain;
-        $maxRecordsPerFile = 250;
-
-        if ($domain == null) {
-            $domain = "site"; 
-        }
-
+    {
         try {
-            $results = DB::select("SHOW DATABASES;");
-
-            foreach ($results as $result) {
-                if (strpos($result->Database, $prefix) === 0) {
-                    $company = DB::table($result->Database . '.companies')->first();
-                    if (!$company) {
-                        continue;
-                    }
-
-                    // Base query
-                    $query = '
-                        SELECT 
-                            ' . $result->Database . '.documents.id AS document_id, 
-                            ' . $result->Database . '.state_types.description AS statusDoc,
-                            ' . $result->Database . '.soap_types.description AS modo,
-                            ' . $result->Database . '.documents.series AS document_series,
-                            ' . $result->Database . '.documents.number AS document_number,
-                            ' . $result->Database . '.documents.date_of_issue AS document_date_of_due,
-                            ' . $result->Database . '.documents.total AS document_total,
-                            (SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1) AS proyecto
-                        FROM 
-                            ' . $result->Database . '.documents
-                        INNER JOIN 
-                            ' . $result->Database . '.state_types ON ' . $result->Database . '.documents.state_type_id = ' . $result->Database . '.state_types.id
-                        INNER JOIN 
-                            ' . $result->Database . '.soap_types ON ' . $result->Database . '.documents.soap_type_id = ' . $result->Database . '.soap_types.id
-                        WHERE 
-                            soap_type_id = "02" 
-                            AND ' . $result->Database . '.documents.state_type_id IN ("01")';
-
-                    // Add date filter if date_of_issue is provided
-                    if ($date_of_issue) {
-                        $query .= ' AND ' . $result->Database . '.documents.date_of_issue = "' . $date_of_issue . '"';
-                    }
-
-                    $query .= ' ORDER BY 4, 5';
-
-                    $resultsPorDB = DB::select($query);
-
-                    $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
-                    $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies');
-                    $configuration = DB::select('select * from ' . $result->Database . '.configurations');
-
-                    if (
-                        count($resultsPorDB) > 0 &&
-                        $companies[0]->soap_type_id == '02' &&
-                        $configuration[0]->locked_tenant == 0
-                    ) {
-                        $infoCompleta = array_merge($infoCompleta, $resultsPorDB);
-                    }
-                }
-            }
-
-            if (empty($infoCompleta)) {
+            $documents = Document::whereIn('state_type_id', ['01', '03'])->get();
+            
+            if ($documents->isEmpty()) {
                 return response()->json([
-                    'success' => false,
+                    'success' => false,  
                     'message' => 'No se encontraron documentos en estado registrado.'
                 ]);
             }
 
-            // Split records into chunks of 250
-            $chunks = array_chunk($infoCompleta, $maxRecordsPerFile);
-            $zipFileName = 'documentos_registrados_' . $domain . '_' . Carbon::now()->format('Ymd_His') . '.zip';
-            $zipPath = storage_path('app/' . $zipFileName);
+            $company = Company::first();
+            $fileContent = "";
 
-            $zip = new \ZipArchive();
-            $zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-
-            foreach ($chunks as $index => $chunk) {
-                $fileContent = "";
-                foreach ($chunk as $doc) {
-                    $ruc = $company->number;
-                    $serie = $doc['document_series'];
-                    $number = $doc['document_number'];
-                    $date = $doc['document_date_of_due'];
-                    $total = $doc['document_total'];
-                    $fileContent .= "$ruc|$serie|$number|$date|$total\n";
-                }
-
-                $partFileName = 'documentos_registrados_parte_' . ($index + 1) . '.txt';
-                $zip->addFromString($partFileName, $fileContent);
+            foreach ($documents as $doc) {
+                $ruc = $company->number;
+                $documenType = $doc->document_type_id;
+                $serie = $doc->series;
+                $number = $doc->number;
+                $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
+                $total = $doc->total;
+                $fileContent .= "{$ruc}|{$documenType}|{$serie}|{$number}|{$date_of_issue}|{$total}\n";
             }
 
-            $zip->close();
-
-            return response()->download($zipPath)->deleteFileAfterSend(true);
+            $fileName = 'documentos_registrados_' . Carbon::now()->format('Ymd_His') . '.txt';
+            
+            return response($fileContent)
+                ->header('Content-Type', 'text/plain')
+                ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
 
         } catch (Exception $e) {
             return response()->json([
