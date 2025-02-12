@@ -206,11 +206,23 @@ class DashboardData
 
             if ($sale_note->currency_type_id == 'PEN') {
 
-                $sale_note_total_payment_pen += collect($sale_note->boxes)->sum('amount');
+                $suma_boxes = collect($sale_note->boxes)->sum('amount');
+                if($suma_boxes > $sale_note->total) {
+                    $sale_note_total_payment_pen += $sale_note->total;
+                } else {
+                    $sale_note_total_payment_pen += $suma_boxes;
+                }
+                // $sale_note_total_payment_pen += collect($sale_note->boxes)->sum('amount');
             } else {
 
                 $sale_note_total_usd += $sale_note->total * $sale_note->exchange_rate_sale;
-                $sale_note_total_payment_usd += collect($sale_note->boxes)->sum('amount') * $sale_note->exchange_rate_sale;
+                $suma_boxes = collect($sale_note->boxes)->sum('amount');
+                if($suma_boxes > $sale_note->total) {
+                    $sale_note_total_payment_usd += $sale_note->total * $sale_note->exchange_rate_sale;
+                } else {
+                    $sale_note_total_payment_usd += $suma_boxes * $sale_note->exchange_rate_sale;
+                }
+                // $sale_note_total_payment_usd += collect($sale_note->boxes)->sum('amount') * $sale_note->exchange_rate_sale;
             }
         }
 
