@@ -1309,6 +1309,7 @@
         :customer_variation="customer_variation"
         :affectation_igv_types="affectation_igv_types"
         @reloadItems="getFoods"
+        @paymentCompleted="handleReload"
       ></payment-form>
     </template>
     <!-- <template v-if="configuration.college">
@@ -1439,8 +1440,7 @@
       :mechanicItem="allFoods"
       @payment="handlePayment"
       :cash_id.sync="cashId"
-      @reloadItems="getFoods"
-      
+      @paymentCompleted="handleReload"
     ></mechanic>
   </div>
 </template>
@@ -1849,6 +1849,10 @@ export default {
     }
   },
   methods: {
+    handleReload() {
+      
+      this.$refs.mechanic.lisVehicle();
+    },
     buttonSmTables(){},
     handlePayment(id) {
       console.log("handlePayment", id);
@@ -2538,7 +2542,6 @@ export default {
     trigerFunction(id) {
       switch (id) {
         case 250:
-          console.log("Datos de allFoods en el padre antes de abrir el modal wqeewqewqeqweq:", this.allFoods);
           this.showDialogMechanic = true;
           break;
         case 214:
@@ -3269,11 +3272,7 @@ export default {
               ) {
                 let idOrden = this.tableSelect.ordens[cat].orden_items[indexxx]
                   .id;
-                for (
-                  let index = 0;
-                  index < this.selectedCatIds.length;
-                  index++
-                ) {
+                for (let index = 0; index < this.selectedCatIds.length; index++) {
                   if (this.selectedCatIds[index] == idOrden) {
                     this.selectedCatIds.splice(index, 1);
                     this.tableSelect.ordens[cat].orden_items[

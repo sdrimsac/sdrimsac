@@ -335,7 +335,7 @@
                 </div>
                 <div
                   id="card"
-                  class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
+                  class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-white"
                   :style="
                                         `${
                                             configuration.trunc_txt
@@ -436,7 +436,7 @@
                       </div>-->
                       <div class="block mb-2">
                         <span class="time font-weight-light">
-                          <span class="text-muted lead-font-weight-700">
+                          <span class="lead-font-weight-900">
                             {{
                             data.item
                             .currency_type_id ==
@@ -609,7 +609,7 @@
               </div>
               <div
                 id="card"
-                class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
+                class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-white"
                 :style="
                                     `${
                                         configuration.trunc_txt
@@ -702,7 +702,7 @@
                   <div class="d-flex flex-column align-items-end">
                     <div class="block mb-2">
                       <span class="time font-weight-light">
-                        <span class="text-muted lead-font-weight-700">
+                        <span class="lead-font-weight-900">
                           S/
                           {{ data.price }}
                         </span>

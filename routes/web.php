@@ -558,6 +558,7 @@ if ($hostname) {
 
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);
+                Route::get('documents/process-txt', [App\Http\Controllers\Tenant\DocumentController::class, 'processTxt']);
 
                 Route::get('documents/search/customers', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomers']);
                 Route::get('documents/search/customer/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomerById']);

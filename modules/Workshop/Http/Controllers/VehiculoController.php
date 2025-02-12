@@ -123,7 +123,7 @@ class VehiculoController extends Controller
         return $record;
     }
 
-    public function record_payment($id)
+    /* public function record_payment($id)
     {
         $record = Vehiculo::find($id);
         $customer_id = $record->customer_id;
@@ -192,7 +192,67 @@ class VehiculoController extends Controller
             'establishment_id' => $historial->establishment_id,
             'items' => $items_with_services
         ];
+    } */
+
+    public function record_payment($id)
+    {
+        $record = Vehiculo::find($id);
+        $customer_id = $record->customer_id;
+        $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
+
+        if (!$historial) {
+            return response()->json([
+                'error' => 'No se encontró un historial activo para este vehículo.'
+            ], 404);
+        }
+
+        // Get regular items from historial
+        $items = $historial->historialItem->transform(function ($row) {
+            $item = $row->item->replicate();
+            $item->quantity = $row->cantidad;
+            $item->item_id = $row->item_id;
+            $item->sale_unit_price = $row->price;
+            return $item;
+        });
+
+        // Get services using SERVICIO item as template
+        $service_item = Item::where('description', 'SERVICIO')->first();
+        $services = collect();
+        
+        if ($service_item) {
+            $services = DB::connection('tenant')->table('historial_service_details as hsd')
+                ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
+                ->where('hsd.historial_id', $historial->id)
+                ->get()
+                ->map(function ($row) use ($service_item) {
+                    $cloned_service_item = $service_item->replicate();
+                    $cloned_service_item->quantity = 1;
+                    $cloned_service_item->sale_unit_price = $row->price_unit;
+                    $cloned_service_item->description = $row->name;
+                    $cloned_service_item->price = $row->price_unit;
+                    $cloned_service_item->currency_type_id = 'PEN';
+                    $cloned_service_item->unit_type_id = 'ZZ';
+                    $cloned_service_item->item_id = $service_item->id;
+                    return $cloned_service_item;
+                });
+        }
+
+        // Combine both regular items and services
+        $all_items = $items->concat($services);
+
+        if ($all_items->isEmpty()) {
+            return response()->json([
+                'error' => 'No hay items ni servicios en el historial para este vehículo.'
+            ], 400);
+        }
+
+        return [
+            'customer_id' => $customer_id,
+            'establishment_id' => $historial->establishment_id,
+            'items' => $all_items->values()
+        ];
     }
+
 
     public function tables()
     {
@@ -639,9 +699,8 @@ class VehiculoController extends Controller
             throw new Exception("El archivo PDF relacionado no se encontró en el almacenamiento");
         }
         if ($historial->filename !== null) {
-            return Storage::disk('tenant')->download("vehiculo" . DIRECTORY_SEPARATOR . $historial->filename.'.pdf');
+            return Storage::disk('tenant')->download("vehiculo" . DIRECTORY_SEPARATOR . $historial->filename . '.pdf');
         }
-       
     }
 
     public function format_History($historial_id)

@@ -122,13 +122,23 @@
                                     </td>
                                     <td>
                                         <!-- Aquí asociamos el historial_id del registro con el botón -->
-                                        <el-button
+                                        <!-- <el-button
                                             v-for="(subItem,
                                             subIndex) in item.item"
                                             :key="subIndex"
                                             @click.prevent="
                                                 clickPrintFormat(
                                                     subItem.historial_id
+                                                )
+                                            "
+                                            type="success"
+                                        >
+                                            PDF V
+                                        </el-button> -->
+                                        <el-button
+                                            @click.prevent="
+                                                clickPrintFormat(
+                                                    item.id
                                                 )
                                             "
                                             type="success"
@@ -144,12 +154,10 @@
                                             PDF A4
                                         </el-button> -->
                                         <el-button
-                                            v-for="(subItem,
-                                            subIndex) in item.item"
-                                            :key="'a4-' + subIndex"
+                                            
                                             @click.prevent="
                                                 clickrePrint(
-                                                    subItem.historial_id
+                                                    item.id
                                                 )
                                             "
                                             type="danger"

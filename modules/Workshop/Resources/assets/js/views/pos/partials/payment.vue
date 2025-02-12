@@ -460,13 +460,6 @@
                                 class="control-label fs-4 fw-bold text-success mb-0"
                                 >Descuento S/</label
                             >
-                            <!-- <input
-                                type="number"
-                                class="form-control w-25 text-right ml-2"
-                                v-model="discount_amount"
-                                @change="inputDiscountAmount"
-                                style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
-              />-->
                             <input
                                 type="number"
                                 class="form-control w-25 text-right ml-2"
@@ -1927,30 +1920,6 @@ export default {
                     }
                 });
         },
-        /* async getvehicle() {
-      const response = await this.$http.get(
-        `/workshop/vehiculo/payment/${this.vehiculo_id}`
-      );
-      if (response.status == 200) {
-        this.vehiculo = response.data;
-        this.form.items = this.formatItems(this.vehiculo.items);
-        this.form.establishment_id = this.vehiculo.establishment_id;
-        this.form.vehiculo_id = this.vehiculo_id;
-        this.reCalculateTotal();
-        this.form.enter_amount = this.form.total;
-        console.log("🚀 ~ file: form.vue ~ line 566 ~ response", this.form);
-        this.reloadDataCustomers(this.vehiculo.customer_id);
-      } catch (error) {
-        if (error.response && error.response.status === 400) {
-          this.$toast.error(error.response.data.error);
-        } else if (error.response && error.response.status === 404) {
-          this.$toast.error(error.response.data.error);
-        } else {
-          this.$toast.error('Ocurrió un error inesperado.');
-        }
-
-      }
-    }, */
         async getvehicle() {
             if (!this.vehiculo_id) {
                 return;
@@ -2027,7 +1996,7 @@ export default {
             }
             this.form.detraction = detraction;
 
-            // this.has_data_detraction = (detraction.pay_constancy || detraction.detraction_type_id || detraction.payment_method_id || (detraction.amount && detraction.amount >0)) ? true:false
+            // this.has_data_detraction = (detraction.pay_constancy || detraction.detraction_type_id || (detraction.amount && detraction.amount >0)) ? true:false
             this.has_data_detraction = detraction
                 ? detraction.has_data_detraction
                 : false;
@@ -4164,6 +4133,7 @@ export default {
                                             );
                                         }
                                         this.$emit("limpiarForm");
+                                        this.$emit('paymentCompleted');
                                         this.loading_submit = false;
                                         this.$emit("removeConsignment");
 
@@ -4201,6 +4171,7 @@ export default {
                                         );
                                     }
                                 }
+                                this.$emit('paymentCompleted');
                                 this.$emit("limpiarForm");
                                 this.$emit("removeConsignment");
                                 this.loading_submit = false;
@@ -4208,7 +4179,9 @@ export default {
                                 this.back(true);
                             }
                         }
+                        this.$emit('paymentCompleted');
                     }
+                    
                 } else {
                     this.loading_submit = true;
                     let {
@@ -4226,6 +4199,11 @@ export default {
 
                 this.$toast.error(message || "Ocurrió un error");
                 this.loading_submit = false;
+                // Emitir evento global en caso de error
+                this.$eventHub.$emit('paymentProcessed', {
+                    success: false,
+                    error: error.response?.data?.message || 'Ocurrió un error'
+                });
             } finally {
                 this.button_payment = false;
             }

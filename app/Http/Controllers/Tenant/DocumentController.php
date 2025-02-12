@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Item;
@@ -287,14 +288,124 @@ class DocumentController extends Controller
         }
     }
 
+    public function sendTxt($cookies)
+    {
+        $url = "https://ww1.sunat.gob.pe/ol-ti-itconsultaunificada/consultaUnificada/importarFromTXT";
+
+        // Datos a escribir en el archivo .txt
+        $txtContent = "20600351118|03|B030|28640|11/02/2025|12.00\n" .
+            "20600351118|03|B030|28641|11/02/2025|10.00\n" .
+            "20600351118|03|B030|28642|11/02/2025|12.00\n" .
+            "20600351118|03|B030|28643|11/02/2025|10.00\n" .
+            "20600351118|03|B030|28644|11/02/2025|10.00\n" .
+            "20600351118|03|B030|28645|11/02/2025|9.00\n" .
+            "20600351118|03|B046|583|11/02/2025|30.00\n";
+
+        // Guardar el archivo en el almacenamiento temporal de Laravel
+        $filePath = storage_path('app/temp_data.txt');
+        Storage::put('temp_data.txt', $txtContent);
+
+        // Crear una cadena de cookies en el formato adecuado
+        // $cookieString = collect($cookies)->map(fn($value, $name) => "$name=$value")->implode('; ');
+        $cookieString = $cookies;
+
+        // Enviar la solicitud HTTP con el archivo adjunto
+        dump($cookieString);
+        $response = Http::withoutVerifying()->withHeaders([
+                'Cookie' => $cookieString
+            ])->attach(
+                'txtarchivo',
+                file_get_contents($filePath),
+                'data.txt'
+            )->post($url);
+
+        // Eliminar el archivo temporal después del envío
+        Storage::delete('temp_data.txt');
+
+        // Retornar la respuesta
+        dump($response->status());
+
+        return $response->json();
+    }
+    public function processTxt()
+    {
+        $cookies = $this->loginSunat();
+        $cookiesToSendTxt = $this->getCoockiesTxt($cookies);
+        $response =  $this->sendTxt($cookiesToSendTxt);
+        dump($response);
+
+        return [
+            'success' => true,
+            'message' => 'Se consultó los documentos'
+        ];
+    }
+    private function getCoockiesTxt($cookies)
+    {
+        $url = "https://e-menu.sunat.gob.pe/cl-ti-itmenu/MenuInternet.htm?action=execute&code=10.5.3.1.1&s=ww1";
+
+
+
+
+
+        // return ['success' => true, 'message' => 'Se consultó los documentos'];
+        $response = Http::withoutVerifying()
+            ->withHeaders([
+                'Cookie' => $cookies."1078718846578718846=1;"
+            ])->get($url);
+
+
+        $cookies = $response->headers()['Set-Cookie'] ?? [];
+        dump($response->cookies());
+        $cookieString = '';
+
+            foreach ($cookies as $cookie) {
+                $parts = explode(';', $cookie);
+                $cookieString .= $parts[0] . ';';
+            }
+        // Retornar la respuesta en JSON o el HTML devuelto
+        return $cookieString;
+    }
+    private function loginSunat()
+    {
+        $url = "https://api-seguridad.sunat.gob.pe/v1/clientessol/4f3b88b3-d9d6-402a-b85d-6a0bc857746a/oauth2/j_security_check";
+        $response = Http::timeout(120) // Usar timeout() en lugar de withTimeout()
+            ->withoutVerifying()
+            ->asForm() // Esto establece application/x-www-form-urlencoded
+
+            ->post($url, [
+                'tipo' => '2',
+                'custom_ruc' => '10787188465',
+                'j_username' => '78718846',
+                'j_password' => 'Jose0906',
+                'state' => 'rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
+                'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
+            ]);
+
+        // Obtener cookies desde los headers de la respuesta
+
+        $cookies = $response->cookies();
+        return $this->formatCookies($cookies);
+    }
+    private function formatCookies($cookies)
+    {
+        /*
+        ** @var GuzzleHttp\Cookie\SetCookie $cookies
+        */
+        $stringCookies = '';
+        foreach ($cookies as   $cookie) {
+            $cookie = $cookie->getName() . '=' . $cookie->getValue();
+            $stringCookies .= $cookie . '; ';
+        }
+        return $stringCookies;
+    }
     public function RegisterDocuments(Request $request)
     {
         try {
             $documents = Document::whereIn('state_type_id', ['01', '03'])->get();
-            
+
             if ($documents->isEmpty()) {
                 return response()->json([
-                    'success' => false,  
+                    'success' => false,
                     'message' => 'No se encontraron documentos en estado registrado.'
                 ]);
             }
@@ -313,11 +424,10 @@ class DocumentController extends Controller
             }
 
             $fileName = 'documentos_registrados_' . Carbon::now()->format('Ymd_His') . '.txt';
-            
+
             return response($fileContent)
                 ->header('Content-Type', 'text/plain')
                 ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
-
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -2471,8 +2581,18 @@ class DocumentController extends Controller
         /* $establishments = auth()->user()->establishments()->get(); */
         $user_type = auth()->user()->type; // Agregamos el tipo de usuario
 
-        return compact('customers', 'sellers', 'payment_conditions', 'document_types', 
-                      'series', 'establishments', 'state_types', 'items', 'categories', 'user_type');
+        return compact(
+            'customers',
+            'sellers',
+            'payment_conditions',
+            'document_types',
+            'series',
+            'establishments',
+            'state_types',
+            'items',
+            'categories',
+            'user_type'
+        );
     }
 
 

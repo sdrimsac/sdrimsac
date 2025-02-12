@@ -72,9 +72,7 @@
                                     <td>
                                         <a class="">
                                             <el-button
-                                                v-if="
-                                                    vehiculo.historial_id
-                                                "
+                                                v-if="vehiculo.historial_id"
                                                 type="success"
                                                 @click="
                                                     openpayOrden(vehiculo.id)
@@ -276,14 +274,9 @@ export default {
             this.mechanicItem
         );
     },
-    watch: {
-        mechanicItem(newValue) {
-            console.log("Cambio en mechanicItem:", newValue);
-        }
-    },
     methods: {
         refrescarDatos() {
-            console.log("Se recibió el evento en Mechanic");
+            
             this.lisVehicle();
         },
         handlePageChange(page) {
@@ -292,7 +285,7 @@ export default {
         },
         format_vehicle(id) {
             this.selectedVehiculoId = id;
-            console.log("ver si esta pasando el id", id);
+           
             this.showDialogFormatPdf = true;
         },
         clickPrintFormat(recordId) {
@@ -427,6 +420,7 @@ export default {
                 });
         },
         lisVehicle() {
+            console.log("🔄 Mechanic.vue -> Ejecutando listVehicle()");
             this.$http
                 .get(
                     `/${
