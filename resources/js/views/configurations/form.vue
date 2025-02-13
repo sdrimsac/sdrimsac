@@ -1264,7 +1264,7 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3 mb-4">
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
                                                         <div class="form-group">
                                                             <label
                                                                 class="control-label w-100"

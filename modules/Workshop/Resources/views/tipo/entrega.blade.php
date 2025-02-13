@@ -309,8 +309,8 @@
                     <td colspan="4" height="40"></td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="">_________________ <br> <strong>firma mecanico</strong></td>
-                    <td colspan="2" class="">_________________ <br> <strong>firma encargado</strong></td>
+                    <td colspan="3" class="">_________________ <br> <strong>Firma Mecaníco</strong></td>
+                    <td colspan="2" class="">_________________ <br> <strong>Firma Encargado</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4" height="40"></td>
