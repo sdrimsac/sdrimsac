@@ -310,7 +310,7 @@ class DocumentController extends Controller
         $cookieString = $cookies;
 
         // Enviar la solicitud HTTP con el archivo adjunto
-        dump($cookieString);
+        /* dump($cookieString); */
         $response = Http::withoutVerifying()->withHeaders([
                 'Cookie' => $cookieString
             ])->attach(
@@ -323,7 +323,7 @@ class DocumentController extends Controller
         Storage::delete('temp_data.txt');
 
         // Retornar la respuesta
-        dump($response->status());
+        /* dump($response->status()); */
 
         return $response->json();
     }
@@ -332,8 +332,8 @@ class DocumentController extends Controller
         $cookies = $this->loginSunat();
         $cookiesToSendTxt = $this->getCoockiesTxt($cookies);
         $response =  $this->sendTxt($cookiesToSendTxt);
-        dump($response);
-
+        /* dump($response);
+ */
         return [
             'success' => true,
             'message' => 'Se consultó los documentos'
@@ -355,7 +355,7 @@ class DocumentController extends Controller
 
 
         $cookies = $response->headers()['Set-Cookie'] ?? [];
-        dump($response->cookies());
+        /* dump($response->cookies()); */
         $cookieString = '';
 
             foreach ($cookies as $cookie) {

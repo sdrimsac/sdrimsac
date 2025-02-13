@@ -22,6 +22,7 @@ Route::get('workshop/vehiculo/format_vehicle/{id}', [VehiculoController::class, 
 Route::get('workshop/vehiculo/format-historial/{historial_id}', [VehiculoController::class, 'format_History']);
 Route::get('workshop/vehiculo/print/{id}/{format}', [VehiculoController::class, 'toPrint']);
 Route::get('workshop/vehiculo/reprint/{id}', [VehiculoController::class, 'RePrint']);
+Route::get('workshop/vehiculo/excelVehicle', [VehiculoController::class, 'excelVehicle']);
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('workshop')->group(function () {
@@ -59,8 +60,13 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('items', [VehiculoController::class, 'setItems']);
 
+        Route::get('ticket-entrega/{historial_id}', [VehiculoController::class, 'generarTicketEntrega'])
+            ->name('tipo.entrega');
+
+
         Route::get('/servicesdetails', [ServicesDetailsController::class, 'index'])->name('tenant.workshop.servicesdetails');
         Route::get('servicesdetails/records', [ServicesDetailsController::class, 'records']);
+        Route::get('servicesdetails/tables', [ServicesDetailsController::class, 'tables']);
         Route::post('servicesdetails', [ServicesDetailsController::class, 'store']);
         Route::get('servicesdetails/record/{id}', [ServicesDetailsController::class, 'record']);
         Route::delete('servicesdetails/{servicesdetails}', [ServicesDetailsController::class, 'destroy']);

@@ -14,6 +14,8 @@ class HistorialItem extends ModelTenant
         'item_id',
         'cantidad',
         'price',
+        'created_at',
+        'updated_at'
     ];
     public function item(){
         return $this->belongsTo(Item::class,'item_id');

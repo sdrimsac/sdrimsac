@@ -45,23 +45,43 @@
                     >Nuevo Servicio</el-button
                 >
             </div>
-            <div class="card">
-              <div class="card-body">
-                <div class="row mb-3">
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label class="form-label">Tipo de Servicio</label>
-                      <el-input></el-input>
+            <div class="">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label fw-bold"
+                                    >Tipo de Servicio</label
+                                >
+                                <el-select
+                                    v-model="form.service_id"
+                                    placeholder="Seleccione un tipo de servicio"
+                                    @change="getData"
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item in service"
+                                        :key="item.id"
+                                        :label="item.description"
+                                        :value="item.id"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label fw-bold"
+                                    >Nombre Del Servicio</label
+                                >
+                                <el-input
+                                    v-model="form.name"
+                                    @input="getData"
+                                    placeholder="Ingrese Nombre del servicio"
+                                ></el-input>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label class="form-label">Nombre Del Servicio</label>
-                      <el-input></el-input>
-                    </div>
-                  </div>
                 </div>
-              </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -79,8 +99,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in records" :key="index">
-                                <td>{{ index + 1 }}</td>
+                            <tr
+                                v-for="(row, index) in records"
+                                :key="customIndex(index)"
+                            >
+                                <td>{{ customIndex(index) }}</td>
                                 <td>{{ row.service_description }}</td>
                                 <td>{{ row.name }}</td>
                                 <td>{{ row.description }}</td>
@@ -133,6 +156,16 @@
                         </tbody>
                     </table>
                 </div>
+                <div>
+                    <el-pagination
+                        @current-change="handlePageChange"
+                        layout="total, prev, pager, next"
+                        :total="pagination.total"
+                        :current-page="pagination.current_page"
+                        :page-size="pagination.per_page"
+                    >
+                    </el-pagination>
+                </div>
             </div>
             <workshop-form
                 :showDialog.sync="showDialog"
@@ -154,27 +187,67 @@ export default {
     },
     data() {
         return {
+            pagination: {},
             title: "",
             showDialog: false,
             resource: "workshop",
             recordId: null,
             records: [],
-            services: []
+            services: [],
+            service: {},
+            form: {
+                service_id: "",
+                name: ""
+            }
         };
     },
     created() {
         this.$eventHub.$on("reloadData", () => {
             this.getData();
+            this.getTables();
         });
         this.getData();
+        this.getTables();
     },
     methods: {
-        getData() {
+        handlePageChange(page) {
+            this.pagination.current_page = page;
+            this.getData();
+        },
+        customIndex(index) {
+            return (
+                this.pagination.per_page * (this.pagination.current_page - 1) +
+                (index + 1)
+            );
+        },
+        getTables() {
             this.$http
-                .get(`/${this.resource}/servicesdetails/records`)
+                .get(`/${this.resource}/servicesdetails/tables`)
                 .then(response => {
-                    this.records = response.data.data;
+                    this.service = response.data.service;
                 });
+        },
+        getData() {
+            if (this.searchTimeout) {
+                clearTimeout(this.searchTimeout);
+            }
+            this.searchTimeout = setTimeout(() => {
+                this.$http
+                    .get(`/${this.resource}/servicesdetails/records`, {
+                        params: {
+                            service_id: this.form.service_id,
+                            name: this.form.name,
+                            page: this.pagination.current_page
+                        }
+                    })
+                    .then(response => {
+                        this.records = response.data.data;
+                        this.pagination = response.data.meta;
+                        this.pagination.per_page = parseInt(
+                            response.data.meta.per_page
+                        );
+                    });
+            }, 300);
         },
         clickCreate(recordId = null) {
             this.recordId = recordId;

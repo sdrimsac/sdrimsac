@@ -25,18 +25,6 @@
                 <h4 class="my-0 text-white">
                    Listado Vehiculos
                 </h4>
-                <div class="card-actions white-text">
-                    <a
-                        href="#"
-                        class="card-action card-action-toggle text-white"
-                        data-card-toggle=""
-                    ></a>
-                    <a
-                        href="#"
-                        class="card-action card-action-dismiss text-white"
-                        data-card-dismiss=""
-                    ></a>
-                </div>
             </div>
             <div class="data-table-visible-columns">
                 <!-- <el-button
@@ -47,6 +35,19 @@
                 >
                     Nuevo Vehiculo
                 </el-button> -->
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <el-button 
+                        type="success"
+                            @click="listvehiculos"
+                         >
+                            <i class="el-icon-tickets"></i>
+                            exportar a excel
+                        </el-button>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -63,7 +64,6 @@
                                 <th class="text-white">Color</th>
                                 <th class="text-white">Año Fabricacion</th>
                                 <th class="text-white">Kilometraje</th>
-                                <th class="text-end">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,6 +162,16 @@ export default {
         this.getData();
     },
     methods: {
+        /* listvehiculos() {
+            window.location.href = "/workshop/vehiculo/excel";
+        }, */
+        listvehiculos() {
+            window.open(
+                `/${this.resource}/excelVehicle`,
+                "_blank"
+            );
+        },
+        
         getData() {
             this.$http.get(`/${this.resource}/records`).then(response => {
                 this.records = response.data.data;

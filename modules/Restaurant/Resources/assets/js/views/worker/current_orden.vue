@@ -69,16 +69,16 @@
                             Caja
                         </el-button>
                         <el-button
-                            type="success"
+                            type="primary"
                             class="btn btn-sm"
                             @click="printTicket"
                         >
-                            <i class="icofont-printer"></i> Imprimir Precuenta
+                            <i class="icofont-printer"></i> Reimprimir Comanda
                         </el-button>
 
                         <el-button
                             v-if="configuration.pdf_preorder"
-                            type="success"
+                            type="info"
                             @click="printTicketPdf"
                             class="btn btn-sm"
                         >

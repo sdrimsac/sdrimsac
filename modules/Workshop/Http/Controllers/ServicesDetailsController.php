@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Modules\Workshop\Models\ServicesDetails;
 use Exception;
 use Illuminate\Http\Request;
+use Modules\Workshop\Models\Services;
 
 class ServicesDetailsController extends Controller
 {
@@ -17,30 +18,35 @@ class ServicesDetailsController extends Controller
         return view('workshop::servicesdetails.index');
     }
 
-    /* public function records()
-    {
-        $records = ServicesDetails::all();
-
-        return new ServicesDetailsCollection($records);
-    } */
-
     public function records(Request $request)
     {
         $records = $this->getRecords($request);
-        
-        return new ServicesDetailsCollection($records->paginate(40));
+
+        return new ServicesDetailsCollection($records->paginate(20));
     }
-    public function getRecords($request)
+    public function getRecords(Request $request)
     {
+        $service_id = $request->service_id;
+        $name = $request->name;
+
         $records = ServicesDetails::query();
-        
-        if ($request->has('description')) {
-            $records->where('description', 'like', '%' . $request->description . '%');
+
+        if ($service_id) {
+            $records->where('service_id', $service_id);
+        }
+
+        if ($name) {
+            $records->where('name', 'like', '%' . $name . '%');
         }
 
         return $records;
     }
 
+    public function tables()
+    {
+        $service = Services::all();
+        return compact('service');
+    }
 
 
     public function record($id)

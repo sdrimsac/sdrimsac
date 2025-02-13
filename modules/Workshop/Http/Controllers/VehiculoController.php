@@ -4,6 +4,7 @@ namespace Modules\Workshop\Http\Controllers;
 
 use App\CoreFacturalo\Template;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
+use App\Exports\ListVehicle;
 use Modules\Workshop\Http\Resources\VehiculoCollection;
 use Modules\Workshop\Http\Resources\VehiculoResource;
 use Modules\Workshop\Http\Requests\VehiculoRequest;
@@ -61,6 +62,22 @@ class VehiculoController extends Controller
             });
         return $records;
     }
+
+    public function excelVehicle(Request $request)
+    {
+        ini_set('memory_limit', '10500M');
+        ini_set('max_execution_time', '30000');
+        $records = $this->getRecords($request, false, true)->get();
+        $establishment = Establishment::first();
+        $company = Company::active();
+        return (new ListVehicle)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Listado_de_vehiculos_' . Carbon::now() . '.xlsx');
+    }
+
+
     public function setItems(Request $request)
     {
 
@@ -112,6 +129,45 @@ class VehiculoController extends Controller
         }
         return response()->json(["success" => true]);
     }
+
+    public function generarTicketEntrega($historial_id)
+    {
+        $historial = Historial::with(['vehiculo', 'personal'])
+            ->findOrFail($historial_id);
+
+        $historialItems = HistorialItem::where('historial_id', $historial_id)->get();
+
+        if ($historialItems->isEmpty()) {
+            return response()->json(["error" => "No hay productos registrados en este historial"], 404);
+        }
+
+        $company = Company::active();
+        $placa = $historial->vehiculo->placa;
+        $mecanico = $historial->personal->name;
+        $updated_at = optional($historialItems->first())->updated_at;
+
+        $width = 226.77;
+        $base_height = 200;
+        $item_height = 30;
+
+        $height = $base_height + ($historialItems->count() * $item_height);
+
+        $customPaper = [$width, 0, $width, $height];
+
+        $pdf = PDF::loadView('workshop::tipo.entrega', compact(
+            'historialItems',
+            'historial_id',
+            'placa',
+            'mecanico',
+            'updated_at',
+            'company'
+        ));
+        $pdf->setPaper(array(0, 0, 249.45, $height));
+
+        return $pdf->stream('ticket_entrega_' . $historial_id . '.pdf');
+    }
+
+
     public function record($id)
     {
         $record = new VehiculoResource(Vehiculo::findOrFail($id));
@@ -218,7 +274,7 @@ class VehiculoController extends Controller
         // Get services using SERVICIO item as template
         $service_item = Item::where('description', 'SERVICIO')->first();
         $services = collect();
-        
+
         if ($service_item) {
             $services = DB::connection('tenant')->table('historial_service_details as hsd')
                 ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')

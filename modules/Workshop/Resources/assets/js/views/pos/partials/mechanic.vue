@@ -182,6 +182,25 @@
                                                             PDF
                                                         </el-button>
                                                     </a>
+                                                    <a class="dropdown-item">
+                                                        <el-button
+                                                            v-if="
+                                                                vehiculo.historial_id  && vehiculo.items > 0
+                                                            "
+                                                            @click.prevent="
+                                                                selectEntrega(
+                                                                    vehiculo.historial_id
+                                                                );
+                                                            "
+                                                            class="w-100"
+                                                            type="primary"
+                                                        >
+                                                            <i
+                                                                class="far fa-file-alt"
+                                                            ></i>
+                                                            TICKET ENTREGA
+                                                        </el-button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -276,7 +295,6 @@ export default {
     },
     methods: {
         refrescarDatos() {
-            
             this.lisVehicle();
         },
         handlePageChange(page) {
@@ -285,7 +303,7 @@ export default {
         },
         format_vehicle(id) {
             this.selectedVehiculoId = id;
-           
+
             this.showDialogFormatPdf = true;
         },
         clickPrintFormat(recordId) {
@@ -300,6 +318,12 @@ export default {
                 "_blank"
             );
         },
+        selectEntrega(historial_id) {
+            window.open(
+            `/${this.resource}/ticket-entrega/${historial_id}`,
+            );
+        },
+
         clickCreate(recordId = null) {
             this.recordId = recordId;
             this.showDialogRegisterHistory = true;
@@ -360,9 +384,6 @@ export default {
             return hasError;
         },
 
-        /* async openpayOrden(id) {
-      this.$emit("payment", id);
-    }, */
         async openpayOrden(id) {
             if (!this.cash_id) {
                 this.$showSAlert(
