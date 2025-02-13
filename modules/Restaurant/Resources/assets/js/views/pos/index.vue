@@ -4,6 +4,14 @@
         v-loading.fullscreen="loading"
         element-loading-text="Espere..."
     >
+        <div class="row" v-if="limitAmount">
+            <div class="col-12">
+                <div :class="`alert alert-danger`">
+                    <h5>Atención</h5>
+                    <p style="font-size: 20px; font-weight: bold">{{ limitAmount.mensaje }}</p>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <!-- <a href="../../../../../../../public/status_images/credito.jpg" target="_blank">
             <img src="../../../../../../../public/status_images/credito.jpg" alt="Descripción de la imagen" class="img-fluid">
@@ -1261,7 +1269,6 @@
                                                                 <span
                                                                     class="lead-font-weight-700 h5"
                                                                 >
-                                                                
                                                                     {{
                                                                         data.description.toUpperCase()
                                                                     }}
@@ -1955,6 +1962,8 @@ const options = {
 };
 export default {
     props: [
+        "limit_month_amount",
+        "month_amount",
         "pending_order",
         "cash_id",
         "worker",
@@ -2190,7 +2199,8 @@ export default {
     },
 
     async created() {
-        console.log("la configuracion es ", this.configuration);
+        console.log("el limite mensual es ", this.limit_month_amount);
+        console.log("el monto mensual es ", this.month_amount);
         this.area_id = this.worker.area_id;
         this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");
@@ -2291,14 +2301,47 @@ export default {
     },
     sockets: {},
     computed: {
+        limitAmount() {
+            if (this.limit_month_amount == 0) {
+                return null;
+            }
+            const porcentaje =
+                (this.month_amount / this.limit_month_amount) * 100;
+
+            if (porcentaje < 70) {
+                return null;
+            }
+
+            if (porcentaje >= 70 && porcentaje < 100) {
+                return {
+                    tipo: "advertencia",
+                    mensaje: `¡Atención! Estás cerca de alcanzar el límite mensual permitido del monto de facturación.`,
+                    color: "warning"
+                };
+            }
+
+            return {
+                tipo: "critico",
+                mensaje: `¡ALERTA! Has superado el límite mensual permitido de facturación.`,
+                color: "danger"
+            };
+        },
         isAndroid() {
             return this.configuration.android_configuration;
         },
         isSellerConsolidated() {
-            return this.isSeller && this.configuration.consolidated_quotations && !this.configuration.consolidated_quotation_details;
+            return (
+                this.isSeller &&
+                this.configuration.consolidated_quotations &&
+                !this.configuration.consolidated_quotation_details
+            );
         },
         canAddItem() {
-            if (this.isSeller && this.configuration.consolidated_quotations && !this.configuration.consolidated_quotation_details) {
+            if (
+                this.isSeller &&
+                this.configuration.consolidated_quotations &&
+                !this.configuration.consolidated_quotation_details
+            ) {
                 return !(
                     this.customer_unit_type_id == null ||
                     this.customer_unit_type_id == ""
@@ -2308,7 +2351,6 @@ export default {
         }
     },
     methods: {
-        
         async printFileWithRawBT(fileUrl) {
             try {
                 const response = await fetch(fileUrl);
@@ -4031,10 +4073,7 @@ export default {
                         }
                         this.$refs.list_orden.changeCurrencyItems();
                     }
-                } 
-                
-            
-                else {
+                } else {
                     let {
                         food: { series }
                     } = orden;
@@ -4066,21 +4105,32 @@ export default {
                                 }
                             }
                         }
-                        if(color_size.length > 0){
-                            let existingColorSize = this.localOrden[indexFind].color_size;
-                            
+                        if (color_size.length > 0) {
+                            let existingColorSize = this.localOrden[indexFind]
+                                .color_size;
+
                             for (let newColor of color_size) {
-                                let existingColor = existingColorSize.find(c => c.code === newColor.code);
-                                
+                                let existingColor = existingColorSize.find(
+                                    c => c.code === newColor.code
+                                );
+
                                 if (existingColor) {
-                                    if (existingColor.quantity + 1 > newColor.stock) {
-                                        this.$toast.error(`No hay suficiente stock para ${newColor.code}`);
+                                    if (
+                                        existingColor.quantity + 1 >
+                                        newColor.stock
+                                    ) {
+                                        this.$toast.error(
+                                            `No hay suficiente stock para ${newColor.code}`
+                                        );
                                         return;
                                     }
-                                    existingColor.quantity = Number(existingColor.quantity) + 1;
+                                    existingColor.quantity =
+                                        Number(existingColor.quantity) + 1;
                                 } else {
                                     if (newColor.stock < 1) {
-                                        this.$toast.error(`No hay stock disponible para ${newColor.code}`);
+                                        this.$toast.error(
+                                            `No hay stock disponible para ${newColor.code}`
+                                        );
                                         return;
                                     }
                                     newColor.quantity = 1;
@@ -5634,7 +5684,6 @@ export default {
                     this.ordens[0].food.item.sale_unit_price = sale_unit_price;
                 }
             }
-
         },
         getExchange() {
             let date = moment().format("YYYY-MM-DD");

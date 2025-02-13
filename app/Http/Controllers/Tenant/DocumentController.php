@@ -121,10 +121,12 @@ use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentPayment;
 use App\Models\Tenant\HotelRentPenalty;
+use App\Services\SunatService;
+use App\Traits\CheckTotalTrait;
 
 class DocumentController extends Controller
 {
-    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait;
+    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait,CheckTotalTrait;
     private $max_count_payment = 0;
     protected $document_state = [
         '-' => '-',
@@ -189,6 +191,52 @@ class DocumentController extends Controller
             'message' => 'Se consultó los resumenes'
 
         ];
+    }
+    public function txtValidate(Request $request) 
+    {
+        // Validate that a file was uploaded
+        $request->validate([
+            'txt_file' => 'required|file|mimetypes:text/plain'
+        ]);
+
+        try {
+            // Obtener el archivo txt de la request
+            $file = $request->file('txt_file');
+            
+            if (!$file || !$file->isValid()) {
+                return [
+                    'success' => false,
+                    'message' => 'El archivo no es válido o no se pudo procesar correctamente'
+                ];
+            }
+            
+            // Crear nombre único para el archivo temporal
+            $namefile = uniqid() . '.txt';
+            
+            // Guardar el archivo temporal
+            Storage::putFileAs('public/txt', $file, $namefile);
+            
+            $sunat_service = new SunatService();
+            
+            // Procesar el archivo
+            $result = $sunat_service->processTxt($namefile);
+            
+            // Eliminar archivo temporal
+            Storage::delete('public/txt/' . $namefile);
+            
+            return $result;
+
+        } catch (\Exception $e) {
+            // Asegurar que se elimine el archivo temporal si existe
+            if (isset($namefile)) {
+                Storage::delete('public/txt/' . $namefile);
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Error al procesar el archivo: ' . $e->getMessage()
+            ];
+        }
     }
     public function checkDocuments(Request $request)
     {
@@ -293,13 +341,7 @@ class DocumentController extends Controller
         $url = "https://ww1.sunat.gob.pe/ol-ti-itconsultaunificada/consultaUnificada/importarFromTXT";
 
         // Datos a escribir en el archivo .txt
-        $txtContent = "20600351118|03|B030|28640|11/02/2025|12.00\n" .
-            "20600351118|03|B030|28641|11/02/2025|10.00\n" .
-            "20600351118|03|B030|28642|11/02/2025|12.00\n" .
-            "20600351118|03|B030|28643|11/02/2025|10.00\n" .
-            "20600351118|03|B030|28644|11/02/2025|10.00\n" .
-            "20600351118|03|B030|28645|11/02/2025|9.00\n" .
-            "20600351118|03|B046|583|11/02/2025|30.00\n";
+        $txtContent = "20600351118|03|B030|28640|11/02/2025|12.00";
 
         // Guardar el archivo en el almacenamiento temporal de Laravel
         $filePath = storage_path('app/temp_data.txt');
@@ -308,16 +350,15 @@ class DocumentController extends Controller
         // Crear una cadena de cookies en el formato adecuado
         // $cookieString = collect($cookies)->map(fn($value, $name) => "$name=$value")->implode('; ');
         $cookieString = $cookies;
-
         // Enviar la solicitud HTTP con el archivo adjunto
         /* dump($cookieString); */
         $response = Http::withoutVerifying()->withHeaders([
-                'Cookie' => $cookieString
-            ])->attach(
-                'txtarchivo',
-                file_get_contents($filePath),
-                'data.txt'
-            )->post($url);
+            'Cookie' => $cookieString
+        ])->attach(
+            'txtarchivo',
+            file_get_contents($filePath),
+            'data.txt'
+        )->post($url);
 
         // Eliminar el archivo temporal después del envío
         Storage::delete('temp_data.txt');
@@ -350,7 +391,7 @@ class DocumentController extends Controller
         // return ['success' => true, 'message' => 'Se consultó los documentos'];
         $response = Http::withoutVerifying()
             ->withHeaders([
-                'Cookie' => $cookies."1078718846578718846=1;"
+                'Cookie' => $cookies . "1078718846578718846=1;"
             ])->get($url);
 
 
@@ -358,10 +399,10 @@ class DocumentController extends Controller
         /* dump($response->cookies()); */
         $cookieString = '';
 
-            foreach ($cookies as $cookie) {
-                $parts = explode(';', $cookie);
-                $cookieString .= $parts[0] . ';';
-            }
+        foreach ($cookies as $cookie) {
+            $parts = explode(';', $cookie);
+            $cookieString .= $parts[0] . ';';
+        }
         // Retornar la respuesta en JSON o el HTML devuelto
         return $cookieString;
     }
@@ -397,6 +438,123 @@ class DocumentController extends Controller
             $stringCookies .= $cookie . '; ';
         }
         return $stringCookies;
+    }
+    public function loginAndFetch()
+    {
+        try {
+            $client = $this->createHttpClient();
+
+            // Login
+            if (!Cache::has('cookiesSunat')) {
+                $loginResponse = $client->asForm()->post('https://api-seguridad.sunat.gob.pe/v1/clientessol/4f3b88b3-d9d6-402a-b85d-6a0bc857746a/oauth2/j_security_check', [
+                    'tipo' => '2',
+                    'custom_ruc' => '10787188465',
+                    'j_username' => '78718846',
+                    'j_password' => 'Jose0906',
+                    'state' => 'rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
+                    'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
+                ]);
+
+
+                // Siguiente petición usando la misma sesión
+                $response = $client->get('https://e-menu.sunat.gob.pe/cl-ti-itmenu/MenuInternet.htm?action=execute&code=10.5.3.1.1&s=ww1');
+            }
+            $txtContent = "20600351118|03|B030|28640|11/02/2025|12.00";
+
+            $tempFile = tempnam(sys_get_temp_dir(), 'sunat_');
+            file_put_contents($tempFile, $txtContent);
+
+            // Crear boundary único
+            $boundary = '-------------' . uniqid();
+
+            // Preparar cliente HTTP con las opciones necesarias
+            $requestHeaders = [];
+            $client->beforeSending(function ($request) use (&$requestHeaders) {
+                $requestHeaders = $request->headers();
+            });
+            $response = $client
+                ->withHeaders([
+                    'Accept' => '*/*',
+                    'Cookie' => 'f5_cspm=1234; f5avraaaaaaaaaaaaaaaa_session_=DOCGHCMLGKJFECNEAJMKMCMLPKHIGCDJHGEKHIDKIGIMGGIOJPBHDMGCLFEFPCOAIDNDDFDJGADEPFEBHJDAKFDJLMLAEJFADMBKEEFMKNIADADHFAOINELIJPOJCNAK; 1078718846578718846=1; 1397099499=1; f5avr1255429519aaaaaaaaaaaaaaaa_cspm_=LCBBDMFGPKLFGLAGIHPAPIFOPAPOKHKEGENFDAFMKBALLGIAMPGFGBNLDLKGFLHOMKMCGICAAENBJEFAMGKAPENPANDMMCALOLJNJGBFPPJKFBNHAFHNAFFBIGIOCAED; ITCONSULTAUNIFICADASESSION=iKv616lwV1iDBG1DOOIxMbP6M6ip5Yq6xCTXNE9lHTsRTOgDu4MiaeR-19hroCHc3Tcj54kfkxJP9TAMm47TjU3AAiy4plANeJBUz8ODYz5mDUwLbcxcYE2qKDC5_NAUl51jKCzP43mGRo_wyFOF1qTmLSCHCpZrYAYAMUEAmwd59I7pc4riNgRrJ88oNre5jG1v2vKbmyaLHvfO-9Z9u2J-jIB-6XclTpyKsZ_bmMN5eZNq2EnjpPI92mhg3rTo!-110559798!2031754005; TS011cfddf=014dc399cb7ffd6888ad3e81e6f04eaf43bfbda8817584ae98a20767f4e308c2a1058037ef524f00e1501af6230bf7ee2a04435f9277f502417a22d06c3420e36a5176a95d4b64ac53d54ceff7991d4808216e8ab06e8b252b9b1a5268da2db289cde07d03503176b35eadbfd4aea1485033a19a4ea2683b76c9893e849787abf02f73266159ab460a2477c94a56e391ecfba0f09db5e51d19e0fd307f188d6969dc097e464b09c483ea5a09fced57d7d0de84a962; TSf806e172027=08fe7428c8ab2000c11bfaf110d9b582f06baafddcdd6691161e02b91e642d360330b4d9f1e1085308fe2611ee11300069316c156b7c84fa9cac27b0cd8764ddb776c226b956c7e9c2c3de3aed4f4a457575383b7cfb06f4377dd2cf1d1832e8; f5avr2113146500aaaaaaaaaaaaaaaa_cspm_=ALOLMKKIFICOKCEJKIPABOCMHBAIMKDNEHNHCBEJILHBNIICMLPJGBIIJCODEDCPHHACHFHDBFKCEAMNMCAABDNEAGGOMGLJKGJKIBDBIPCFHKODOGFPEKLIOAKDEMPF',
+                    'Content-Type' => 'multipart/form-data; boundary=' . $boundary,
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Gecko/20100101 Firefox/90.0',
+
+                ])
+                ->attach(
+                    'txtarchivo',  // nombre del campo
+                    file_get_contents($tempFile),  // contenido del archivo
+                    'data.txt',    // nombre del archivo
+                    [
+                        'Content-Type' => 'text/plain',
+                    ]
+                )
+                ->post('https://ww1.sunat.gob.pe/ol-ti-itconsultaunificada/consultaUnificada/importarFromTXT');
+
+            if ($response->status() == 200) {
+                if (!Cache::has('cookiesSunat')) {
+                    Cache::put('cookiesSunat', $this->getCookies(), now()->addHours(4));
+                }
+            }
+
+    
+            // $filePath = storage_path('app/temp_data.txt');
+            // Storage::put('temp_data.txt', $txtContent);
+            // $headers = [
+            //     "Content-Type: multipart/form-data; boundary=" . '-------------' . uniqid(),
+            //     "Content-Length: " . strlen($filePath)
+            // ];
+            // $document_response = $client
+            //     ->attach(
+            //         'txtarchivo',
+            //         file_get_contents($filePath),
+            //         'data.txt',
+            //         [
+            //             'Content-Disposition' => 'form-data; name="txtarchivo"; filename="temp_data.txt"',
+            //             'Content-Type' => 'text/plain'
+            //         ]
+            //     )->withHeaders($headers)->post('https://ww1.sunat.gob.pe/ol-ti-itconsultaunificada/consultaUnificada/importarFromTXT');
+
+            return [
+                'success' => true,
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+    private function getCookies()
+    {
+        $cookiePath = storage_path('app/cookies');
+        $archivos = glob($cookiePath . '/*.txt');
+        return end($archivos);
+    }
+    private function createHttpClient()
+    {
+        $cookiePath = storage_path('app/cookies');
+
+        // Verifica si el directorio existe, si no, lo crea
+        if (!file_exists($cookiePath)) {
+            mkdir($cookiePath, 0755, true);
+        }
+        $file_cookie = $cookiePath . '/' . uniqid() . '.txt';
+        if (Cache::has('cookiesSunat')) {
+            $archivos = glob($cookiePath . '/*.txt');
+            if (count($archivos) > 0) {
+
+                $file_cookie = end($archivos);
+            }
+        }
+
+        return Http::withOptions([
+            'cookies' => new \GuzzleHttp\Cookie\FileCookieJar(
+                $file_cookie,
+                true
+            ),
+            'verify' => false,
+            'timeout' => 120,
+        ]);
     }
     public function RegisterDocuments(Request $request)
     {
@@ -1612,6 +1770,7 @@ class DocumentController extends Controller
             // Call saveItemWarranty to check and save item warranties
             $this->saveItemWarranty($document, $request->items);
             DB::connection('tenant')->commit();
+            $this->checkTotalAndSendMessage($document);
             return [
                 'success' => true,
                 'data' => [

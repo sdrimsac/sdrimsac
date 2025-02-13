@@ -382,6 +382,17 @@
                             <th class="text-white text-center border">
                                 Inicio Ciclo Facturacion
                             </th>
+                            <th class="text-white text-center border">
+                                Monto de facturación por mes
+                                <el-tooltip
+                                    class="item"
+                                    content="Monto de facturación por mes"
+                                    effect="dark"
+                                    placement="top-start"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </el-tooltip>
+                            </th>
                             <!-- <th class="text-white">Plan</th> -->
                             <!-- <th class="text-white">Correo</th> -->
                             <!-- <th class="text-white text-center border">Ruc</th> -->
@@ -618,6 +629,13 @@
                                         "
                                     ></el-date-picker>
                                 </template>
+                            </td>
+                            <td class="text-center">
+                                <el-input 
+                                style="width: 100px;"
+                                :min="0"
+                                @input="changeLimitMonthAmount(row)"
+                                v-model="row.limit_month_amount" type="number" placeholder="Ingrese el monto de facturación por mes"></el-input>
                             </td>
                             <!-- <td>{{ row.plan }}</td> -->
                             <!-- <td>{{ row.email }}</td> -->
@@ -859,6 +877,7 @@ import AccountStatus from "./partials/account_status.vue";
 import ClientDelete from "./partials/delete.vue";
 import DataLimitNotification from "./partials/DataLimitNotification.vue";
 import DataTable from "../../../components/DataTable2.vue";
+import { debounce } from 'lodash';
 
 export default {
     mixins: [deletable, changeable],
@@ -925,6 +944,21 @@ export default {
         this.text_limit_users = "El límite de usuarios fue superado";
     },
     methods: {
+        changeLimitMonthAmount: debounce(function(row){
+            this.loading = true;
+            this.$http.post(`/${this.resource}/change_limit_month_amount`, row)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$message.success(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    this.$message.error(error.response.data.message);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        }, 1000),
         clickSendPendingDocuments() {
             this.loading = true;
             this.$http

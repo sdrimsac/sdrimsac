@@ -24,6 +24,7 @@ class Document extends ModelTenant
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;
     protected $fillable = [
+        'state_sunat',
         'internal_voided',
         'orden_id',
         'comercial_treatment_id',

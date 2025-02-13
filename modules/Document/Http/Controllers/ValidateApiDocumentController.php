@@ -16,6 +16,7 @@ use Modules\Services\Data\ServiceData;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\CoreFacturalo\Services\Extras\ValidateCpe2;
+use App\Http\Controllers\Tenant\DocumentController;
 use Modules\Document\Http\Requests\ValidateDocumentRequest;
 use Modules\Document\Http\Requests\ValidateApiDocumentsRequest;
 use Modules\Document\Http\Resources\ValidateDocumentsCollection;
@@ -43,7 +44,6 @@ class ValidateApiDocumentController extends Controller
         $date_end = $request['date_end'];
         $month_start = $request['month_start'];
         $month_end = $request['month_end'];
-        $user_id = $request['user_id'];
         $period = $request['period'];
         $d_start = null;
         $d_end = null;
@@ -65,78 +65,54 @@ class ValidateApiDocumentController extends Controller
                 $d_end = $date_end;
                 break;
         }
-        $url_api_peru = "https://apiperu.dev/api/validacion_multiple_cpe";
-        $token_api_peru = "dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765";
-        $total_documents = 0;
-        $states = [];
-        $ruc = $company->number;
-        $records = Document::select('id', 'total', 'series', 'number', 'date_of_issue')->without(['items', 'invoice', 'group', 'establecimientos', 'soap_type'])
-            ->where('document_type_id', $document_type_id)->whereBetween('date_of_issue', [$d_start, $d_end])
-            ->where('state_type_id', '01')
-            ->chunk(30, function (
-                $documents
-            ) use ($document_type_id, $ruc, $token_api_peru, $url_api_peru, &$total_documents, &$states) {
+        $company_number = $company->number;
+        $fileContent = "";
 
-                $array_to_send = [];
-                foreach ($documents as $document) {
-                    $array_to_send[] = [
-                        "ruc_emisor" => $ruc,
-                        "codigo_tipo_documento" => $document_type_id,
-                        "serie_documento" => $document->series,
-                        "numero_documento" => $document->number,
-                        "fecha_de_emision" => $document->date_of_issue,
-                        "total" => $document->total
-                    ];
-                }
-                $total_documents += count($array_to_send);
-                $response2 =   Http::withoutVerifying()->withToken($token_api_peru)->accept('application/json')->post($url_api_peru, [
-                    "ruc_empresa" => $ruc,
-                    "comprobantes" => $array_to_send
-                ]);
-                if ($response2->ok()) {
-
-                    $body = $response2->json();
-                    if ($body['success']) {
-                        $documents_validated = $body["data"]["comprobantes"];
-
-                        foreach ($documents_validated as $validated) {
-                            $series = $validated["serie_documento"];
-                            $number = $validated["numero_documento"];
-                            //  $state = $validated["comprobante_estado_codigo"];
-                            $description_state = $validated["comprobante_estado_descripcion"] == "-" ? "NO EXISTE" : $validated["comprobante_estado_descripcion"];
-
-                            $document_found = Document::where('series', $series)->where('number', $number)->where('document_type_id', $document_type_id)->first();
-
-                            if (!array_key_exists($description_state, $states)) {
-                                $states[$description_state] = 1;
-                            } else {
-                                $states[$description_state] += 1;
-                            }
-                            if ($document_found) {
-                                if ($description_state == "NO EXISTE") {
-                                    $document_found->state_type_id = "01";
-                                } else {
-                                    $state_type = StateType::where('description', 'like', "%{$description_state}%")->first();
-                                    if ($state_type) {
-
-                                        $document_found->state_type_id = $state_type->id;
-                                    }
-                                }
-                                $document_found->save();
-                            }
-                        }
-                    }
-                }
-            });
-        $result = "";
-
-        foreach ($states as $state => $value) {
-            $result = $result . $state . ": " . $value . "**";
+        $documents = Document::whereNull('state_sunat')->whereIn('state_type_id', ['01', '03', '05', '11', '09']);
+        if ($document_type_id) {
+            $documents = $documents->where('document_type_id', $document_type_id);
         }
+        if ($d_start && $d_end) {
+            $documents = $documents->whereBetween('date_of_issue', [$d_start, $d_end]);
+        }
+        $documents = $documents->limit(250);
+        $documents->chunk(50, function ($documents_chunk) use ($company_number, &$fileContent) {
+            foreach ($documents_chunk as $doc) {
+                $documenType = $doc->document_type_id;
+                $serie = $doc->series;
+                $number = $doc->number;
+                $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
+                $total = $doc->total;
+                $fileContent .= "{$company_number}|{$documenType}|{$serie}|{$number}|{$date_of_issue}|{$total}\n";
+            }
+        });
+
+        // Crear un archivo temporal con el contenido
+        $tempFile = tempnam(sys_get_temp_dir(), 'validate_');
+        file_put_contents($tempFile, $fileContent);
+
+        // Crear un objeto UploadedFile
+        $uploadedFile = new \Illuminate\Http\UploadedFile(
+            $tempFile,
+            'validate.txt',
+            'text/plain',
+            null,
+            true
+        );
+
+        // Crear una nueva request con el archivo
+        $newRequest = new Request();
+        $newRequest->files->set('txt_file', $uploadedFile);
+
+        $documentController = new DocumentController();
+        $result = $documentController->txtValidate($newRequest);
+
+        // Limpiar el archivo temporal
+        unlink($tempFile);
+
         return [
             "success" => true,
-
-            "result" => $states
+            "result" => $result
         ];
     }
 

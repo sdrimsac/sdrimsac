@@ -555,10 +555,12 @@ if ($hostname) {
                 Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
                 Route::get('documents/recordsActivity', [App\Http\Controllers\Tenant\ItemController::class, 'recordsActivity']);
                 Route::get('documents/RegisterDocuments', [App\Http\Controllers\Tenant\DocumentController::class, 'RegisterDocuments']);
+                Route::get('documents/txt-validate', [App\Http\Controllers\Tenant\DocumentController::class, 'txtValidate']);
 
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);
                 Route::get('documents/process-txt', [App\Http\Controllers\Tenant\DocumentController::class, 'processTxt']);
+                Route::get('documents/login-fetch', [App\Http\Controllers\Tenant\DocumentController::class, 'loginAndFetch']);
 
                 Route::get('documents/search/customers', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomers']);
                 Route::get('documents/search/customer/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomerById']);
@@ -1183,6 +1185,7 @@ if ($hostname) {
             Route::get('clients/columns',  'System\ClientController@columns');
             Route::get('clients/record/{client}', 'System\ClientController@record');
 
+            Route::post('clients/change_limit_month_amount', 'System\ClientController@changeLimitMonthAmount');
             Route::get('clients/create', 'System\ClientController@create');
             Route::get('clients/tables', 'System\ClientController@tables');
             Route::get('clients/charts', 'System\ClientController@charts');

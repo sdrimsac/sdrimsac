@@ -149,6 +149,21 @@ class ClientController extends Controller
         );
     }
 
+    public function changeLimitMonthAmount(Request $request){
+        $client = Client::findOrFail($request->id);
+        $tenancy = app(Environment::class);
+        $tenancy->tenant($client->hostname->website);
+        
+        DB::connection('tenant')
+            ->table('companies')
+            ->where('id', 1)
+            ->update(['limit_month_amount' => $request->limit_month_amount]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Monto de facturación por mes actualizado correctamente'
+        ]);
+    }
     private function prepareModules(Module $module): Module
     {
         $levels = [];
@@ -186,7 +201,11 @@ class ClientController extends Controller
         foreach ($records as $row) {
             $tenancy = app(Environment::class);
             $tenancy->tenant($row->hostname->website);
-
+            $row->limit_month_amount = DB::connection('tenant')
+                ->table('companies')
+                ->where('id', 1)
+                ->first()
+                ->limit_month_amount ?? 0;
             $row->count_doc = DB::connection('tenant')
                 ->table('configurations')
                 ->first()

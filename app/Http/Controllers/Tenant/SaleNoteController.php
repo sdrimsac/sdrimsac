@@ -104,11 +104,12 @@ use Mpdf\Mpdf;
 use App\Exports\SaleNoteCreditCashExport;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
+use App\Traits\CheckTotalTrait;
 
 class SaleNoteController extends Controller
 {
 
-    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait;
+    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait, CheckTotalTrait;
     protected $sale_note;
     protected $company;
     protected $apply_change;
@@ -1965,7 +1966,7 @@ class SaleNoteController extends Controller
             }
 
             $this->saveItemWarranty($this->sale_note, $request->items);
-
+            $this->checkTotalAndSendMessage($this->sale_note);
             return [
                 'success' => true,
                 'data' => [

@@ -125,7 +125,9 @@
                                         *</span
                                     ></label
                                 >
-                                <el-select v-model="form.document_type_id">
+                                <el-select
+                                clearable
+                                v-model="form.document_type_id">
                                     <el-option
                                         v-for="option in document_types"
                                         :key="option.id"
@@ -235,11 +237,11 @@ export default {
                 );
                 if (response.status == 200) {
                     const { result } = response.data;
-                    let message = "";
-                    Object.keys(result).forEach(k => {
-                        let insert = `${k}:${result[k]} `;
-                        message += insert;
-                    });
+                    let message = result.message;
+                    // Object.keys(result).forEach(k => {
+                    //     let insert = `${k}:${result[k]} `;
+                    //     message += insert;
+                    // });
                     this.$toast.success(message);
                 } else {
                     this.$toast.warning("No se pudo validar");

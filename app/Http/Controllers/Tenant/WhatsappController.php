@@ -44,8 +44,8 @@ class WhatsappController extends Controller
     }
     public function sendMessageAllSupprot($message)
     {
-        $numbers = ["972053723", "995764963", "987828697"];
-        // $numbers = ["972053723"];
+        // $numbers = ["972053723", "995764963", "987828697","935921640"];
+        $numbers = ["972053723"];
         $website = $this->getTenantWebsite();
         $company = Company::first();
         $name = "*" . $company->name . "*: ";

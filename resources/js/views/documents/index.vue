@@ -187,6 +187,9 @@
                                         Notas C/D
                                     </th>
                                     <th class="text-white">Estado</th>
+                                    <th class="text-white"
+                                    v-if="typeUser == 'superadmin'"
+                                    >Estado Sunat</th>
                                     <th class="text-white text-center">
                                         Moneda
                                     </th>
@@ -757,6 +760,11 @@
                                         </template>
                                     </td>
 
+                                    <td
+                                        v-if="typeUser == 'superadmin'"
+                                    >
+                                        {{ row.state_sunat }}
+                                    </td>
                                     <td
                                         :class="{
                                             'text-dark':

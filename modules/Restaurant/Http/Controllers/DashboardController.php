@@ -10,6 +10,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Desarrollador;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Warehouse;
+use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
@@ -23,6 +24,7 @@ use Modules\Restaurant\Models\CategoryFood;
 use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\WorkersType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -118,7 +120,17 @@ class DashboardController extends Controller
     }
     public function pos()
     {
-
+        $now = Carbon::now()->format('Y-m-d');
+        $first_day_month = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $company = Company::first();
+        $limit_month_amount = $company->limit_month_amount;
+        $month_amount = DB::connection('tenant')
+            ->table('documents')
+            ->whereIn('state_type_id', ['01','03','05'] )
+            ->where('document_type_id', '!=', '07')
+            ->where('date_of_issue', '>=', $first_day_month)
+            ->where('date_of_issue', '<=', $now)
+            ->sum('total');
         $user = auth()->user();
         $worker_types = WorkersType::where(function ($query) {
             $searchValue = '%search_value%';
@@ -159,7 +171,14 @@ class DashboardController extends Controller
         $cash_id = $cash ? $cash->id : 0;
         $pending_order = Orden::where('status_orden_id', '<>', 4)->count();
         $lareaId = $area_id;
-        return view('restaurant::pos.dashboard', compact('pending_order', 'lareaId', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
+        return view('restaurant::pos.dashboard', compact(
+            'limit_month_amount',
+            'month_amount',
+            'pending_order',
+            'lareaId',
+            'area_id',
+            'cash_id',
+            'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
     }
 
     public function kitchen()
