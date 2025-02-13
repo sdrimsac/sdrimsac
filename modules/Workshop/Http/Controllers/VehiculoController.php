@@ -147,7 +147,7 @@ class VehiculoController extends Controller
         $updated_at = optional($historialItems->first())->updated_at;
 
         $width = 226.77;
-        $base_height = 200;
+        $base_height = 250;
         $item_height = 30;
 
         $height = $base_height + ($historialItems->count() * $item_height);
