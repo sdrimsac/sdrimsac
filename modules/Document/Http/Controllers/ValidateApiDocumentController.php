@@ -68,7 +68,9 @@ class ValidateApiDocumentController extends Controller
         $company_number = $company->number;
         $fileContent = "";
 
-        $documents = Document::whereNull('state_sunat')->whereIn('state_type_id', ['01', '03', '05', '11', '09']);
+        $documents = Document::where('soap_type_id', '02')
+            ->whereNull('state_sunat')
+            ->whereIn('state_type_id', ['01', '03', '05', '11', '09']);
         if ($document_type_id) {
             $documents = $documents->where('document_type_id', $document_type_id);
         }

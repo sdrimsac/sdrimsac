@@ -54,6 +54,7 @@ class ValidateSunat extends Command
         $company = Company::first();
         $fileContent = "";
         Document::query()
+            ->where('soap_type_id', '02')
             ->whereNull('state_sunat')
             ->whereIn('date_of_issue', [$today, $yesterday])
             ->limit(250)
