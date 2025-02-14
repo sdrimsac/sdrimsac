@@ -8,6 +8,7 @@ use App\Models\Tenant\{
     Summary,
     User
 };
+use Illuminate\Support\Facades\Log;
 
 class SummaryInput
 {
@@ -20,6 +21,7 @@ class SummaryInput
         $summary_status_type_id = $inputs['summary_status_type_id'];
         
         $identifier = Functions::identifier($soap_type_id, $date_of_issue, Summary::class);
+        Log::info($identifier." de resumen");
         $filename = $company->number.'-'.$identifier;
         $inputs['type'] = 'summary';
         $user = auth()->user();
