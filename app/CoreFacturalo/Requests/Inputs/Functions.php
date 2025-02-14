@@ -93,7 +93,7 @@ class Functions
                 $result = DB::select($query, [$soap_type_id, $date_of_issue]);
                 $numeration += $result[0]->total;
             }
-            $numeration += 1;
+            $numeration += 2;
         } else {
             $documents = $model::where('soap_type_id', $soap_type_id)
                 ->where('date_of_issue', $date_of_issue)
