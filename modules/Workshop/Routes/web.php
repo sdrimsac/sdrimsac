@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Workshop\Http\Controllers\CashController;
+use Modules\Workshop\Http\Controllers\ExportarController;
+use Modules\Workshop\Http\Controllers\ExportController;
 use Modules\Workshop\Http\Controllers\ObservationController;
 use Modules\Workshop\Http\Controllers\WorkshopController;
 use Modules\Workshop\Http\Controllers\TipoController;
@@ -23,6 +25,7 @@ Route::get('workshop/vehiculo/format-historial/{historial_id}', [VehiculoControl
 Route::get('workshop/vehiculo/print/{id}/{format}', [VehiculoController::class, 'toPrint']);
 Route::get('workshop/vehiculo/reprint/{id}', [VehiculoController::class, 'RePrint']);
 Route::get('workshop/vehiculo/excelVehicle', [VehiculoController::class, 'excelVehicle']);
+Route::get('workshop/exportar/excelMechanic', [ExportarController::class, 'excelMechanic']);
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('workshop')->group(function () {
@@ -39,8 +42,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('mecanico/records', [PersonalController::class, 'records']);
         Route::post('mecanico', [PersonalController::class, 'store']);
         Route::get('mecanico/record/{id}', [PersonalController::class, 'record']);
+        Route::get('mecanico/report-atencion', [PersonalController::class, 'AtencionExcel']);
         Route::delete('mecanico/{mecanico}', [PersonalController::class, 'destroy']);
 
+        Route::get('/exportar', [ExportarController::class, 'index'])->name('tenant.workshop.exportar');
+        Route::get('exportar/records', [ExportarController::class, 'records']);
+        Route::get('exportar/tables', [ExportarController::class, 'tables']);
+        
         Route::get('/tipo', [TipoController::class, 'index'])->name('tenant.workshop.tipo');
         Route::get('tipo/records', [TipoController::class, 'records']);
         Route::post('tipo', [TipoController::class, 'store']);

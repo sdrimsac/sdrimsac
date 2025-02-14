@@ -48,6 +48,22 @@
                     Nuevo Personal
                 </el-button>
             </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <el-button 
+                             @click="listvehicle">
+                                Exportar Excel
+                            </el-button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -155,6 +171,9 @@ export default {
         this.getData();
     },
     methods: {
+        listvehicle() {
+            window.open(`/${this.resource}/excelVehicle`, "_blank");
+        },
         getData() {
             this.$http.get(`/${this.resource}/mecanico/records`).then(response => {
                 this.records = response.data.data;

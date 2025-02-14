@@ -354,6 +354,7 @@ export default {
             this.all_series = response.data.series;
             this.establishments = response.data.establishments;
             this.payment_conditions = response.data.payment_conditions;
+            this.configuration = response.data.configuration;
         });
 
         await this.getRecords();

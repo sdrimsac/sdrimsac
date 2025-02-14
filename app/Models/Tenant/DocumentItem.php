@@ -18,6 +18,7 @@ class DocumentItem extends ModelTenant
         'document_id',
         'item_id',
         'item',
+        'barcode',
         'quantity',
         'unit_value',
         'affectation_igv_type_id',
@@ -49,6 +50,10 @@ class DocumentItem extends ModelTenant
     //protected $casts = [
     //    'item' => 'array',
     //];
+    public function getBarcodeAttribute($value)
+    {
+        return trim($value); // Elimina espacios en blanco
+    }
     public function getItemAttribute($value)
     {
         return (is_null($value)) ? null : (object) json_decode($value);

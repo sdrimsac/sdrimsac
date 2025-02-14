@@ -297,7 +297,7 @@ class DocumentInput
                         'has_warranty' => $item->has_warranty,
                         'month_day' => $item->month_day,
                         'second_name' => $item->second_name,
-                        'barcode' => $item->barcode,
+                        'barcode' => (string)$item->barcode,
                         'is_promotion' => isset($row['item']['is_promotion']) ? $row['item']['is_promotion'] : false,
                         'internal_id' => $item->internal_id,
                         'item_code' => trim($item->item_code),

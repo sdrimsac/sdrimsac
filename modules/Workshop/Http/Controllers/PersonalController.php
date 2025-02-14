@@ -8,6 +8,7 @@ use Modules\Workshop\Http\Requests\WorkshopPersonalRequest;
 use App\Http\Controllers\Controller;
 use Modules\Workshop\Models\WorkshopPersonal;
 use Exception;
+use Modules\Workshop\Models\Historial;
 
 class PersonalController extends Controller
 {

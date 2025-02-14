@@ -796,12 +796,12 @@
                         </li>
                     @endif
                     {{-- @if ($user->type == 'superadmin' || $config->sale_note_venta) --}}
-                        <li>
-                            <a class="{{ $path[0] === 'purchases' ? 'active' : '' }}"
-                                href="{{ route('tenant.shopping.index') }}">
-                                <i class="icofont-list"></i> Productos Comprados
-                            </a>
-                        </li>
+                    <li>
+                        <a class="{{ $path[0] === 'purchases' ? 'active' : '' }}"
+                            href="{{ route('tenant.shopping.index') }}">
+                            <i class="icofont-list"></i> Productos Comprados
+                        </a>
+                    </li>
                     {{-- @endif --}}
                     {{-- <li>
                         <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
@@ -1105,6 +1105,13 @@
                             href="{{ route('tenant.workshop.servicesdetails') }}">
                             <i class="fas fa-biliard"></i>
                             Servicios Mecanica
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
+                            href="{{ route('tenant.workshop.exportar') }}">
+                            <i class="fas fa-biliard"></i>
+                            Reporte Mecanica
                         </a>
                     </li>
                 </ul>

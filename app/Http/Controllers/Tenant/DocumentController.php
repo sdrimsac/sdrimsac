@@ -2373,14 +2373,12 @@ class DocumentController extends Controller
             ->where('number', 'like', '%' . $number . '%')
             ->whereDoesntHave('note')
             ->whereDoesntHave('document_affected_note');
-        // ->orderBy('id', 'desc')
-        // ->orderBy('number', 'desc');
 
 
         if ($year) {
             // Generar las fechas de inicio y fin del año
-            $startOfYear = Carbon::createFromFormat('Y', $year)->startOfYear()->toDateString(); // 1 de enero del año
-            $endOfYear = Carbon::createFromFormat('Y', $year)->endOfYear()->toDateString();   // 31 de diciembre del año
+            $startOfYear = Carbon::createFromFormat('Y', $year)->startOfYear()->toDateString(); 
+            $endOfYear = Carbon::createFromFormat('Y', $year)->endOfYear()->toDateString();  
 
             // Filtrar los registros por el rango del año
             $records = $records->whereBetween('date_of_issue', [$startOfYear, $endOfYear]);
@@ -2391,24 +2389,12 @@ class DocumentController extends Controller
 
             $records = $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
         }
-        // Filtrar por rango de fechas si `d_start` y `d_end` tienen formato completo `YYYY-MM-DD`
+    
         elseif ($d_start && $d_end) {
             $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
         } elseif ($date_of_issue) {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
         }
-
-        /* if ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
-            $startOfMonth = Carbon::createFromFormat('Y-m', $d_end)->startOfMonth()->toDateString();
-            $endOfMonth = Carbon::createFromFormat('Y-m', $d_end)->endOfMonth()->toDateString();
-
-            $records = $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
-        }
-        elseif ($d_start && $d_end) {
-            $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
-        } elseif ($date_of_issue) {
-            $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
-        } */
 
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);
@@ -2718,6 +2704,7 @@ class DocumentController extends Controller
     {
 
         $customers = $this->table('customers');
+        $configuration = Configuration::all();
         $items = $this->getItems();
         $sellers = Seller::all();
         $categories = CategoryItem::orderBy('name')->get();
@@ -2742,6 +2729,7 @@ class DocumentController extends Controller
 
         return compact(
             'customers',
+            'configuration',
             'sellers',
             'payment_conditions',
             'document_types',

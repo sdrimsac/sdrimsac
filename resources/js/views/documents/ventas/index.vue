@@ -42,6 +42,7 @@
                 <th class="text-white text-center">Cliente</th>
                 <th class="text-white text-center">Dni</th>
                 <th class="text-white">Codigo Interno</th>
+                <th v-if="configuration.health_network" class="text-white">Categoria Principal</th>
                 <th class="text-white">Producto</th>
                 <th class="text-white">Cantidad</th>
                 <th class="text-white text-end">Precio</th>
@@ -72,6 +73,7 @@
                   <td class="text-center"> {{ row.customer.name }} </td>
                   <td class="text-center"> {{ row.customer.number }} </td>
                   <td>{{ item.item.internal_id }}</td>
+                  <td v-if="configuration.health_network">{{ item.item.barcode }}</td>
                   <td>{{ item.item.description }}</td>
                   <td>{{ parseFloat(item.quantity).toFixed(2) }}</td>
                   <td class="text-end">{{ parseFloat(item.unit_value).toFixed(2) }}</td>
@@ -92,7 +94,7 @@ import { deletable } from "../../../mixins/deletable";
 /* import DetractionPayments from "./detraction_payments.vue"; */
 export default {
   mixins: [deletable],
-  props: [],
+  props: ['configuration'],
   components: {
     DataTable
     /* DetractionPayments */

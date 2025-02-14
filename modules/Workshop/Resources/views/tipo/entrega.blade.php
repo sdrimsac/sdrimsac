@@ -292,7 +292,10 @@
             </tr>
             <tbody>
                 @foreach ($historialItems as $item)
-                    <tr>
+                    <tr style="border-spacing: 0; margin: 0;">
+                        <td colspan="4" style="border-bottom: 1px dashed #000; padding: 0; margin: 0; height: 1px;"></td>
+                    </tr>
+                    <tr style="border-spacing: 0; margin: 0;">
                         <td class="description_preparacion">{{ $loop->iteration }}</td>
                         <td class="description_preparacion">
                             {{ $item->item->internal_id ?? 'N/A' }}
@@ -304,9 +307,12 @@
                             {{ $item->cantidad }}
                         </td>
                     </tr>
+                    <tr style="border-spacing: 0; margin: 0;">
+                        <td colspan="4" style="border-bottom: 1px dashed #000; padding: 0; margin: 0; height: 1px;"></td>
+                    </tr>
                 @endforeach
                 <tr>
-                    <td colspan="4" height="40"></td>
+                    <td colspan="4" height="60"></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="">_________________ <br> <strong>Firma Mecaníco</strong></td>

@@ -37,7 +37,7 @@ class Historial extends ModelTenant
     ];
     public function vehiculo()
     {
-        return $this->belongsTo(vehiculo::class, 'vehiculo_id');
+        return $this->belongsTo(Vehiculo::class, 'vehiculo_id');
     }
     public function SaleNote()
     {
@@ -72,15 +72,8 @@ class Historial extends ModelTenant
     {
         return $this->belongsToMany(ServicesDetails::class, 'historial_service_details', 'historial_id', 'services_detail_id');
     }
-    /* public function historialServiceDetails()
-    {
-        return $this->hasMany(HistorialServicesDetails::class, 'historial_id');
-    } */
     public function historialServiceDetails()
     {
         return $this->hasMany(HistorialServicesDetails::class, 'historial_id');
     }
-    /* public function servicesDetails(){
-        return $this->hasMany(HistorialServicesDetails::class);
-    } */
 }

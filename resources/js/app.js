@@ -869,6 +869,10 @@ const app = new Vue({
             import(
                 "../../modules/Workshop/Resources/assets/js/views/mecanico/index.vue"
             ),
+        "tenant-workshop-exportar": () =>
+            import(
+                "../../modules/Workshop/Resources/assets/js/views/exportar/index.vue"
+            ),
         "tenant-billar-tarifa": () => import("../../modules/billar/Resources/assets/js/views/tarifa/index.vue"),
         "tenant-workshop-tipo": () =>
             import(

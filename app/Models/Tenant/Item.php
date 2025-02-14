@@ -97,6 +97,10 @@ class Item extends ModelTenant
             $builder->where('active', 1);
         });
     }*/
+    public function getBarcodeAttribute($value)
+    {
+        return (string) $value; // Asegura que siempre devuelva una cadena
+    }
     public function getCurrentItemWarehouse($warehouse_id)
     {
         return $this->warehouses()->where('warehouse_id', $warehouse_id);
