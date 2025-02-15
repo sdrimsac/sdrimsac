@@ -42,7 +42,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('mecanico/records', [PersonalController::class, 'records']);
         Route::post('mecanico', [PersonalController::class, 'store']);
         Route::get('mecanico/record/{id}', [PersonalController::class, 'record']);
-        Route::get('mecanico/report-atencion', [PersonalController::class, 'AtencionExcel']);
         Route::delete('mecanico/{mecanico}', [PersonalController::class, 'destroy']);
 
         Route::get('/exportar', [ExportarController::class, 'index'])->name('tenant.workshop.exportar');

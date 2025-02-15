@@ -539,56 +539,70 @@
         <table>
             <tr>
                 @if (!$roleService->isArcaUserId($user->id))
+                    @php
+                        $itemsPerTable = 18;
+                        $chunks = array_chunk($anulate_documents, $itemsPerTable);
+                    @endphp
 
-                    <td width="35%">
-                        @if (count($anulate_documents) > 0)
-                            <table class="border f12">
-                                <thead>
-                                    <tr class="thead">
-                                        <th colspan="4">
-                                            <span class="f12">DOCUMENTOS ANULADOS</span>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="center">FECHA</th>
-                                        <th colspan="2" class="center">NRO DOC</th>
-                                        <th class="center">TOTAL</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $t_d = 0;
-
-                                    @endphp
-                                    @foreach ($anulate_documents as $document)
+                    @foreach ($chunks as $chunk)
+                        <td width="35%" style="vertical-align: top; padding-right: 10px;">
+                            @if (count($chunk) > 0)
+                                <table class="border f12">
+                                    <thead>
+                                        <tr class="thead">
+                                            <th colspan="4">
+                                                <span class="f12">DOCUMENTOS ANULADOS</span>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="center">FECHA</th>
+                                            <th colspan="2" class="center">NRO DOC</th>
+                                            <th class="center">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $t_d = 0;
+                                        @endphp
+                                        @foreach ($chunk as $document)
+                                            <tr>
+                                                <td class="center">
+                                                    <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                                </td>
+                                                <td colspan="2" class="center">
+                                                    <span class="f12">{{ $document['full_number'] }}</span>
+                                                </td>
+                                                @php
+                                                    $t_d += $document['total'];
+                                                @endphp
+                                                <td class="right">
+                                                    <span
+                                                        class="f12">{{ number_format($document['total'], 2) }}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         <tr>
                                             <td class="center">
-                                                <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                                <span class="f12">TOTAL</span>
                                             </td>
-                                            <td colspan="2" class="center">
-                                                <span class="f12">{{ $document['full_number'] }}</span>
-                                            </td>
-                                            @php
-                                                $t_d += $document['total'];
-                                            @endphp
-                                            <td class="right">
-                                                <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                            <td colspan="3" class="right">
+                                                <span
+                                                    class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                    <tr>
-                                        <td class="center">
-                                            <span class="f12">TOTAL</span>
-                                        </td>
-                                        <td colspan="3" class="right">
-                                            <span
-                                                class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                    </tbody>
+                                </table>
+                            @endif
+                        </td>
+                    @endforeach
+                @endif
+            </tr>
+        </table>
+        <table>
+            <tr>
+                @if (!$roleService->isArcaUserId($user->id))
 
-                            </table>
-                        @endif
+                    <td width="35%">
                         @if (count($credit_notes) > 0)
                             <table class="border f12">
                                 <thead>
@@ -634,7 +648,6 @@
                                         </td>
                                     </tr>
                                 </tbody>
-
                             </table>
                         @endif
                         @if ($total_discount > 0)
@@ -655,7 +668,6 @@
                                         </td>
                                     </tr>
                                 </tbody>
-
                             </table>
                         @endif
 
@@ -677,7 +689,6 @@
                                     </td>
                                 </tr>
                             </tbody>
-
                         </table>
                     </td>
                 @endif

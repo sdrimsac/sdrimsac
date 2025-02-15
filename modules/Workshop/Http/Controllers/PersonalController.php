@@ -39,7 +39,7 @@ class PersonalController extends Controller
 
         return [
             'success' => true,
-            'message' => ($id) ? 'Mecánico editado con éxito' : 'Mecánico registrado con éxito'
+            'message' => ($id) ? 'Mecánico editado con éxito.' : 'Mecánico registrado con éxito.'
         ];
     }
 
@@ -51,10 +51,12 @@ class PersonalController extends Controller
 
             return [
                 'success' => true,
-                'message' => 'Mecánico eliminado con éxito'
+                'message' => 'Mecánico eliminado con éxito.'
             ];
         } catch (Exception $e) {
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Mecánico está siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Mecánico'];
+            return ($e->getCode() == '23000') ? 
+                ['success' => false, 'message' => 'El mecánico está siendo usado por otros registros, no puede eliminarse.'] : 
+                ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el mecánico.'];
         }
     }
 }
