@@ -604,14 +604,14 @@ class QuotationController extends Controller
                         $selectedDocument = null;
                     }
                     $total_weight = 0;
-                    foreach ($selectedDocument->quotation->items as $item) {
-                        if (isset($item->item->weight)) {
-                            $total_weight += $item->item->weight * $item->quantity;
-                        }
-
-                    }
-
+        
                     if ($selectedDocument) {
+                        foreach ($selectedDocument->quotation->items as $item) {
+                            if (isset($item->item->weight)) {
+                                $total_weight += $item->item->weight * $item->quantity;
+                            }
+                        }
+    
                         if(!in_array($selectedDocument->customer_id, $temp_customer_id)){
                             $consolidated_info['count_diff_customer']++;
                             $temp_customer_id[] = $selectedDocument->customer_id;
