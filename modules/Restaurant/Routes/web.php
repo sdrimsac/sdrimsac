@@ -288,6 +288,7 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/records', 'TableController@records');
         Route::get('tables/tables', 'TableController@get_tables');
         Route::get('tables/orden/{id}', 'TableController@get_ordens');
+        Route::get('tables/UserTable', 'TableController@UserTable');
         Route::get('tables/record/{id}', 'TableController@record');
         Route::get('tables/table-types', 'TableController@tableTypes');
         Route::post('tables', 'TableController@store');
@@ -430,6 +431,8 @@ Route::prefix('caja')->group(function () {
             Route::post('delete-orden-pin', 'OrdenItemController@ordenDeletePin');
             //ACT. MESAS
             Route::get('tables/records-area/{area_id}', 'TableController@recordsByArea');
+
+            /* Route::get('tables/records-area/{area_id}', 'TableController@recordsByArea'); */
 
 
             //Promociones 

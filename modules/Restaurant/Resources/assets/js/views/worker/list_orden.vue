@@ -180,6 +180,9 @@
                                                     </h3>
                                                 </div>
                                                 <div class="stats w-100 row ">
+                                                    <span style="font-weight: bold; color: red; font-size: 20px; font-family: 'Arial Black', sans-serif"> {{ orden.user }}</span>
+                                                </div>
+                                                <div class="stats w-100 row ">
                                                     <h3
                                                         style="font-weight: bold; color: green"
                                                     >

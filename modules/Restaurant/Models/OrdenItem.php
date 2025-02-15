@@ -168,16 +168,23 @@ class OrdenItem extends ModelTenant
     }
     public function user()
     {
-        return  $this->belongsTo(User::class);
+        return  $this->belongsTo(User::class, "user_id");
     }
 
     public function orden()
     {
-        return $this->belongsTo(Orden::class);
+        return $this->belongsTo(Orden::class, 'orden_id');
     }
 
     public function area()
     {
         return $this->belongsTo(Area::class);
+    }
+
+    public function getUsuarioCuandoOcupado()
+    {
+        return $this->orden && $this->orden->estatus_orden_id == 'ocupado'
+            ? $this->user
+            : null;
     }
 }

@@ -82,6 +82,12 @@ class Orden extends ModelTenant
             }
 
         );
+
+        /* static::updated(function ($order) {
+            if ($order->isDirty('status_orden_id')) {
+                broadcast(new OrderUpdated($order))->toOthers();
+            }
+        }); */
     }
 
     public function getDocument(){

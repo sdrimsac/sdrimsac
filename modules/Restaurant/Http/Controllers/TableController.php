@@ -20,40 +20,42 @@ class TableController extends Controller
 {
 
 
-    public function disabled(Request $request){
+    public function disabled(Request $request)
+    {
         $user = auth()->user();
         $user_name = $user->name;
         $table_id = $request->input('table_id');
         $table = Table::find($table_id);
         $table->enabled = false;
         $table->save();
-        $caja_area_id= Area::getAreaCajaId();
-        $message = "El usuario ".$user_name." Inhabilito ".$table->number;
-        event(new MessageEvent($message,$caja_area_id));
+        $caja_area_id = Area::getAreaCajaId();
+        $message = "El usuario " . $user_name . " Inhabilito " . $table->number;
+        event(new MessageEvent($message, $caja_area_id));
 
         return [
             'success' => true,
             'message' => 'Mesa desactivada con éxito'
         ];
-        
     }
-    public function enabled(Request $request){
+    public function enabled(Request $request)
+    {
         $user = auth()->user();
         $user_name = $user->name;
         $table_id = $request->input('table_id');
         $table = Table::find($table_id);
         $table->enabled = true;
         $table->save();
-        $caja_area_id= Area::getAreaCajaId();
-        $message = "El usuario ".$user_name." habilito ".$table->number;
-        event(new MessageEvent($message,$caja_area_id));
+        $caja_area_id = Area::getAreaCajaId();
+        $message = "El usuario " . $user_name . " habilito " . $table->number;
+        event(new MessageEvent($message, $caja_area_id));
 
         return [
             'success' => true,
             'message' => 'Mesa activada con éxito'
         ];
     }
-    public function tableTypes(){
+    public function tableTypes()
+    {
         $table_types = TableType::all();
         return [
             'success' => true,
@@ -85,8 +87,8 @@ class TableController extends Controller
         $orden_items = [];
         foreach ($tables as $table) {
             $ordens = Orden::where('table_id', $table->id)
-            ->whereDoesntHave ('credit_list')
-            ->whereIn('status_orden_id', [1, 2, 3])->get();
+                ->whereDoesntHave('credit_list')
+                ->whereIn('status_orden_id', [1, 2, 3])->get();
             $number_ordens += count($ordens);
             foreach ($ordens as $orden) {
                 $ordens_desc[] = $orden->id;
@@ -96,7 +98,7 @@ class TableController extends Controller
                 $total += OrdenItem::where('orden_id', $orden->id)->selectRaw('SUM(price * quantity) as total')->value('total');
             }
         }
-        if($total == 0){
+        if ($total == 0) {
             return [
                 'success' => false,
             ];
@@ -127,7 +129,6 @@ class TableController extends Controller
         $query = Table::where('number', 'not like', '%caj%');
 
         if ($establishment_table_id) {
-            // $configuration = Configuration::first();
             $query->where('establishment_id', $establishment_table_id)
                 ->where(function ($q) {
                     $q->where(function ($query) {
@@ -140,12 +141,10 @@ class TableController extends Controller
                 });
         } else {
             $query->where('area_id', $id)
-                // ->where('is_room', false)
                 ->where(function ($q) use ($establishment_id) {
                     $q->where('establishment_id', $establishment_id)
                         ->orWhereNull('establishment_id');
                 });
-                /* ->where('has_billar', 0); */
         }
 
         $tables = new TableCollection($query
@@ -168,6 +167,46 @@ class TableController extends Controller
 
         return compact('tables');
     }
+
+    public function UserTable()
+    {
+        try {
+            $orders = Orden::where('status_orden_id', 1)
+                ->with(['orden_items' => function($query) {
+                    $query->where('status_orden_id', 1);
+                }, 'table', 'orden_items.user'])
+                ->whereHas('table', function($query) {
+                    $query->where('status_table_id', 2);
+                })
+                ->get();
+
+            $result = [];
+            foreach($orders as $order) {
+                foreach($order->orden_items as $item) {
+                    $result[] = [
+                        'orden_id' => $order->id,
+                        'orden_item_id' => $item->id,
+                        'table_id' => $order->table_id,
+                        'usuario_id' => $item->user_id,
+                        'usuario' => $item->user ? $item->user->name : 'Sin usuario',
+                        'mesa' => $order->table ? $order->table->number : 'Sin mesa'
+                    ];
+                }
+            }
+
+            return [
+                'success' => true,
+                'data' => $result
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
     public function get_ordens($id)
     {
         $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)
@@ -182,53 +221,51 @@ class TableController extends Controller
         // $this->checkTables();
         $records = Table::where('is_room', false)->where('has_billar', false);
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
-
-
     }
     function checkTables($establishment_id)
     {
-    Table::where('status_table_id', 2)
-        ->where('is_room', false)
-        ->where('has_billar', false)
-        ->where(function ($query) use ($establishment_id) {
-            $query->where('establishment_id', $establishment_id)
-                  ->orWhereNull('establishment_id');
-        })
-        ->chunk(
-            50,
-            function ($tables) {
-                $tableIds = $tables->pluck('id');
+        Table::where('status_table_id', 2)
+            ->where('is_room', false)
+            ->where('has_billar', false)
+            ->where(function ($query) use ($establishment_id) {
+                $query->where('establishment_id', $establishment_id)
+                    ->orWhereNull('establishment_id');
+            })
+            ->chunk(
+                50,
+                function ($tables) {
+                    $tableIds = $tables->pluck('id');
 
-                $ordens = Orden::whereIn('table_id', $tableIds)
-                    ->whereNotIn('status_orden_id', [4, 5])
-                    ->get();
+                    $ordens = Orden::whereIn('table_id', $tableIds)
+                        ->whereNotIn('status_orden_id', [4, 5])
+                        ->get();
 
-                $ordenIds = $ordens->pluck('id');
-                $ordenItems = OrdenItem::whereIn('orden_id', $ordenIds)->get();
+                    $ordenIds = $ordens->pluck('id');
+                    $ordenItems = OrdenItem::whereIn('orden_id', $ordenIds)->get();
 
-                $ordenItemsGrouped = $ordenItems->groupBy('orden_id');
+                    $ordenItemsGrouped = $ordenItems->groupBy('orden_id');
 
-                foreach ($tables as $table) {
-                    $tableOrdens = $ordens->where('table_id', $table->id);
-                    $hasActiveOrdersWithItems = false;
+                    foreach ($tables as $table) {
+                        $tableOrdens = $ordens->where('table_id', $table->id);
+                        $hasActiveOrdersWithItems = false;
 
-                    foreach ($tableOrdens as $orden) {
-                        if ($ordenItemsGrouped->has($orden->id)) {
-                            $hasActiveOrdersWithItems = true;
-                        } else {
-                            $orden->status_orden_id = 4;
-                            $orden->save();
+                        foreach ($tableOrdens as $orden) {
+                            if ($ordenItemsGrouped->has($orden->id)) {
+                                $hasActiveOrdersWithItems = true;
+                            } else {
+                                $orden->status_orden_id = 4;
+                                $orden->save();
+                            }
+                        }
+
+                        if (!$hasActiveOrdersWithItems) {
+                            $table->status_table_id = 1;
+                            $table->save();
                         }
                     }
-
-                    if (!$hasActiveOrdersWithItems) {
-                        $table->status_table_id = 1;
-                        $table->save();
-                    }
                 }
-            }
-        );
-}
+            );
+    }
     // function checkTables($establishment_id)
     // {
 
@@ -244,12 +281,12 @@ class TableController extends Controller
     //                         ->where('status_orden_id', '<>', 4)
     //                         ->where('status_orden_id', '<>', 5)
     //                         ->get();
-        
+
     //                     $hasActiveOrdersWithItems = false;
-        
+
     //                     foreach ($ordens as $orden) {
     //                         $ordenItems = OrdenItem::where('orden_id', $orden->id)->get();
-        
+
     //                         if ($ordenItems->isEmpty()) {
     //                             $orden->status_orden_id = 4;
     //                             $orden->save();
@@ -257,7 +294,7 @@ class TableController extends Controller
     //                             $hasActiveOrdersWithItems = true;
     //                         }
     //                     }
-        
+
     //                     if (!$hasActiveOrdersWithItems) {
     //                         $table->status_table_id = 1;
     //                         $table->save();
