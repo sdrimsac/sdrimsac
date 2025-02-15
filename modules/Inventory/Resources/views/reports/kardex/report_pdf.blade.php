@@ -161,7 +161,7 @@
                                         @break
 
                                         @case($models[2])
-                                            {{ 'Nota de venta' }}
+                                            {{ $quantity < 0 ? 'Nota de venta' : 'Nota de venta Anulado interno' }}
                                         @break
 
                                         @case($models[3])
@@ -264,7 +264,9 @@
                                         @case($models[1])
                                             {{ $quantity > 0 ? $formatQuantity($quantity) : '-' }}
                                         @break
-
+                                        @case($models[2])
+                                        {{ $quantity > 0 ? $formatQuantity($quantity) : '-' }}
+                                    @break
                                         @case($models[3])
                                             @if ($value->inventory_kardexable->type != null)
                                                 {{ $value->inventory_kardexable->type == 1 ? $formatQuantity($quantity) : '-' }}
@@ -299,10 +301,13 @@
                                             {{ $quantity < 0 ? $formatQuantity($quantity) : '-' }}
                                         @break
 
-                                        @case($models[2])
+                                        {{-- @case($models[2])
                                             {{ $formatQuantity($quantity) }}
-                                        @break
+                                        @break --}}
+                                        @case($models[2])
+                                        {{ $quantity < 0 ? ($formatQuantity($quantity)) : '-' }}
 
+                                    @break
                                         @case($models[3])
                                             @if ($value->inventory_kardexable->type != null)
                                                 {{ $value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3 ? $formatQuantity($quantity) : '-' }}

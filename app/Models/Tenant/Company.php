@@ -10,6 +10,7 @@ class Company extends ModelTenant
 {
     protected $with = ['identity_document_type'];
     protected $fillable = [
+        'number_pay_digital',
         'app_name',
         'api_extern_whatsapp_url',
         'api_extern_whatsapp_token',

@@ -84,7 +84,7 @@ class Functions
     {
         $same_rucs = CompanySameRuc::all();
         $path = explode('\\', $model);
-        
+
         if (count($same_rucs) > 0) {
             $numeration = 0;
             $table = $path == 'Voided' ?  'voided' : 'summaries';
@@ -93,7 +93,7 @@ class Functions
                 $result = DB::select($query, [$soap_type_id, $date_of_issue]);
                 $numeration += $result[0]->total;
             }
-            $numeration += 2;
+            $numeration += 1;
         } else {
             $documents = $model::where('soap_type_id', $soap_type_id)
                 ->where('date_of_issue', $date_of_issue)

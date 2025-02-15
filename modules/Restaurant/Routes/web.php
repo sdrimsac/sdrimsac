@@ -205,6 +205,7 @@ Route::prefix('caja')->group(function () {
         Route::post('rooms/insumos/record/update', 'TableRoomController@updateInsumo');
         Route::get('rooms/pdf/{rooms}', 'TableRoomController@pdf');
         Route::prefix('rent')->group(function () {
+            Route::post('desoccupy-rent', [TableRoomController::class, 'desoccupyRent']);
             Route::post('set-room-rent', [TableRoomController::class, 'setRoomRent']);
             Route::get('get-tables', [TableRoomController::class, 'getTables']);
             Route::get('advance-document/{id}', [TableRoomController::class, 'rentDocument']);
@@ -222,6 +223,11 @@ Route::prefix('caja')->group(function () {
                 Route::delete('{id}', [TableRoomController::class, 'destroyPenaltiesSettings']);
             });
 
+            Route::prefix('whatsapp-settings')->group(function () {
+                Route::get('', [TableRoomController::class, 'whatsappSettings']);
+                Route::post('', [TableRoomController::class, 'storeWhatsappSettings']);
+                Route::post('toggle/{id}', [TableRoomController::class, 'toggleWhatsappSettings']);
+            });
         });
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');

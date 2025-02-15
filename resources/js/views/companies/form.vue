@@ -324,9 +324,26 @@
                                         <label
                                             class="control-label font-weight-bold h5"
                                         >
-                                            Nonbre de la app
+                                            Nombre de la app
                                         </label>
                                         <el-input v-model="form.app_name"></el-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">  
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label font-weight-bold h5"
+                                        >
+                                            Número de pago digital (Yape/Plin)
+                                        </label>
+                                        <el-input v-model="form.number_pay_digital"
+                                            :maxlength="9"
+                                            :show-word-limit="true"
+                                        >
+                                            <template v-slot:prepend>
+                                                <i class="fas fa-phone"></i>
+                                            </template>
+                                        </el-input>
                                     </div>
                                 </div>
                             </div>

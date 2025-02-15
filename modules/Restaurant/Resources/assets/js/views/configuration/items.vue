@@ -62,6 +62,15 @@
                     <el-button
                         v-if="resource == 'caja/rooms' && isRenta"
                         class="custom-button"
+                        @click.prevent="clickSeeWhatsapp"
+                    >
+                        <i class="fab fa-whatsapp"></i>
+
+                        <span>Whatsapp</span>
+                    </el-button>
+                    <el-button
+                        v-if="resource == 'caja/rooms' && isRenta"
+                        class="custom-button"
                         @click.prevent="clickSeePenalities"
                     >
                         <i class="fas fa-exclamation-triangle"></i>
@@ -352,6 +361,7 @@
                 <insumos :showDialog.sync="showInsumos"></insumos>.
 
                 <penalities :showDialog.sync="showPenalities"></penalities>
+                <whatsapp-rent :showDialog.sync="showWhatsapp"></whatsapp-rent>
             </div>
         </div>
     </div>
@@ -388,6 +398,7 @@
 const Promotions = () => import("./promotions.vue");
 const Insumos = () => import("./insumos.vue");
 const Penalities = () => import("./penalities.vue");
+const WhatsappRent = () => import("./whatsapp_rent.vue");
 import CreateForm from "./form.vue";
 
 import CreateFormMassive from "./formTableMassive.vue";
@@ -405,10 +416,12 @@ export default {
         ItemsRooms,
         Promotions,
         Insumos,
-        Penalities
+        Penalities,
+        WhatsappRent
     },
     data() {
         return {
+            showWhatsapp: false,
             showInsumos: false,
             showItems: false,
             showDialog: false,
@@ -455,6 +468,9 @@ export default {
         }
     },
     methods: {
+        clickSeeWhatsapp(){
+            this.showWhatsapp = true;
+        },
         clickSeePenalities(){
             this.showPenalities = true;
         },

@@ -71,6 +71,16 @@
                         <div class="row mt-3">
                             <div class="col-12">
                                 <div class="row">
+                                    <div class="col-md-2 col-sm-4 col-6 mb-2">
+                                        <el-button
+                                            class="w-100 d-flex align-items-center justify-content-center"
+                                            :type="showOnlyOccupied ? 'danger' : 'success'"
+                                            @click="showOnlyRoomOccupied"
+                                        >
+                                            <i class="fas fa-bed mr-2"></i>
+                                            Ocupadas
+                                        </el-button>
+                                    </div>
                                     <div
                                         v-for="(floor, index) in floors"
                                         :key="index"
@@ -94,11 +104,11 @@
                             </div>
                             <div class="col-12">
                                 <div
-                                    v-if="tables.length > 0"
+                                    v-if="filteredTables.length > 0"
                                     class="d-flex flex-wrap justify-content-center"
                                 >
                                     <div
-                                        v-for="(table, idx) in tables"
+                                        v-for="(table, idx) in filteredTables"
                                         :class="
                                             `${
                                                 table.rent_month &&
@@ -120,7 +130,7 @@
                                         class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
                                         :key="idx"
                                         @click="selectTable(table)"
-                                        style="height: 210px;    max-width: 300px;"
+                                        style="height: 210px;    max-width: 350px;"
                                     >
                                         <!-- <div class="d-flex justify-content-end w-100 mb-2">
                                             <el-button
@@ -453,16 +463,12 @@
                                                         ></i>
                                                     </template>
                                                 </span>
-                                                <span
-                                                v-if="table.due_date"
-                                                >
-                                                    Prox. Pago: {{
-                                                        table.due_date
-                                                    }}
+                                                <span v-if="table.due_date">
+                                                    Prox. Pago:
+                                                    {{ table.due_date }}
                                                 </span>
                                                 <span
                                                     class="h5 mt-2 text-white"
-
                                                 >
                                                     {{
                                                         table.number
@@ -470,7 +476,6 @@
                                                             .toUpperCase()
                                                     }}
                                                 </span>
-                                        
 
                                                 <span v-if="table.tower_name">
                                                     {{
@@ -641,6 +646,48 @@
                                                                 />
                                                             </svg> </el-button
                                                     ></el-tooltip>
+
+                                                    <el-tooltip
+                                                        content="Desocupar"
+                                                    >
+                                                        <el-button
+                                                            size="mini"
+                                                            class="m-1"
+                                                            @click.stop="
+                                                                desoccupyTable(
+                                                                    $event,
+                                                                    table.hotel_rent_id
+                                                                )
+                                                            "
+                                                        >
+                                                            <svg
+                                                                width="20px"
+                                                                height="20px"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M3 21V3H17V21H3Z"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                />
+                                                                <!-- Marco de la puerta -->
+                                                                <path
+                                                                    d="M13 12C13.5523 12 14 11.5523 14 11C14 10.4477 13.5523 10 13 10C12.4477 10 12 10.4477 12 11C12 11.5523 12.4477 12 13 12Z"
+                                                                    fill="#000000"
+                                                                />
+                                                                <!-- Flecha de salida -->
+                                                                <path
+                                                                    d="M17 12H21M21 12L19 10M21 12L19 14"
+                                                                    stroke="#000000"
+                                                                    stroke-width="2"
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                />
+                                                            </svg> </el-button
+                                                    ></el-tooltip>
                                                 </template>
                                             </div>
                                             <div class="d-flex"></div>
@@ -651,7 +698,7 @@
                                     v-else
                                     class="h-25 d-flex justify-content-center align-items-center"
                                 >
-                                    <span>Sin habitaciones</span>
+                                    <span>{{ showOnlyOccupied ? 'No hay habitaciones ocupadas' : 'Sin habitaciones' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -1432,6 +1479,70 @@
                 </div>
             </template>
         </el-dialog>
+
+        <el-dialog
+            title="Búsqueda y Edición de Clientes"
+            :visible.sync="showSearchCustomerDialog"
+            width="70%"
+            append-to-body
+        >
+            <div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <el-input
+                            v-model="searchCustomerText"
+                            placeholder="Buscar cliente por nombre o número de documento"
+                            @input="searchCustomers"
+                            clearable
+                        >
+                            <template slot="prepend">
+                                <i class="fas fa-search"></i>
+                            </template>
+                        </el-input>
+                    </div>
+                </div>
+
+                <div class="table-responsive" v-if="customersFiltered.length > 0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                            
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="customer in customersFiltered" :key="customer.id">
+                                <td>{{ customer.description }}</td>
+                            
+                                <td>
+                                    <el-button 
+                                        type="primary" 
+                                        size="mini"
+                                        @click="selectCustomerToEdit(customer)"
+                                    >
+                                        Editar
+                                    </el-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else-if="searchCustomerText" class="text-center">
+                    <p>No se encontraron resultados</p>
+                </div>
+            </div>
+
+            <person-form
+    
+                :showDialog.sync="showEditCustomerForm"
+                :recordId="customerId"
+                :fromPos="true"
+                @closeEditForm="closeEditForm"
+                :external="true"
+
+            ></person-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -1575,6 +1686,8 @@ export default {
 
     data() {
         return {
+            customerId: null,
+            timer: null,
             isDialogVisible: false,
             selectedImage: "",
             localCashId: this.cash_id,
@@ -1776,7 +1889,13 @@ export default {
             currentTable: null,
             rentId: null,
             boxOperation: "Abrir",
-            cashAvailable: 0
+            cashAvailable: 0,
+            showSearchCustomerDialog: false,
+            searchCustomerText: '',
+            selectedCustomer: null,
+            showEditCustomerForm: false,
+            customersFiltered: [],
+            showOnlyOccupied: false,
         };
     },
     beforeDestroy() {
@@ -1894,9 +2013,44 @@ export default {
                 );
             }
             return true;
+        },
+        filteredTables() {
+            if (!this.showOnlyOccupied) {
+                return this.tables;
+            }
+            return this.tables.filter(table => table.status_table_id === 2);
         }
     },
     methods: {
+        showOnlyRoomOccupied() {
+            this.showOnlyOccupied = true;
+            this.currentFloorId = null;
+            this.tables = this.all_tables.filter(table => table.status_table_id === 2);
+        },
+        desoccupyTable(event, id) {
+            this.$confirm(
+                "¿Está seguro de querer desocupar la habitación?",
+                "Desocupar habitación",
+                {
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    type: "warning"
+                }
+            ).then(() => {
+                this.$http
+                    .post("/caja/rent/desoccupy-rent", {
+                        id: id
+                    })
+                    .then(response => {
+                        this.$showSAlert(
+                            "Exito",
+                            "Habitación desocupada correctamente",
+                            "success"
+                        );
+                        this.getTables();
+                    });
+            });
+        },
         openImage(imagePath) {
             this.selectedImage = imagePath;
             this.isDialogVisible = true; // Abre el modal
@@ -2009,6 +2163,7 @@ export default {
             }
         },
         selectFloor(floor) {
+            this.showOnlyOccupied = false;
             this.currentFloorId = floor.id;
             this.tables = this.all_tables.filter(t => t.floor_id == floor.id);
         },
@@ -2348,7 +2503,15 @@ export default {
                         ? this.configuration.button_consolidate
                         : true
                 },
-
+                {
+                    id: 55,
+                    title: ["Editar", "Clientes"],
+                    //icon: "fas fa-hand-holding-water"
+                    icon: "fas fa-user-edit ",
+                    visible: this.isSeller
+                        ? this.configuration.button_consolidate
+                        : true
+                },
                 {
                     id: 6,
                     title: ["Venta", "del Dia"],
@@ -2972,7 +3135,12 @@ export default {
                     this.showDialogNewItem = true;
                     break;
                 case 4:
+                    this.customerId = null;
                     this.showDialogNewPerson = true;
+                    break;
+                case 55:
+                    this.showSearchCustomerDialog = true;
+                    this.searchCustomerText = '';
                     break;
                 case 8:
                     this.openviewsItemsMobil();
@@ -3214,28 +3382,11 @@ export default {
                     this.is_payment = false;
                     return this.$toast.error("Seleccione un cliente");
                 }
-            } else {
-                if (variationItem.length > 0) {
-                    let tmpchange = this.formVariation;
-                    let tmpchange2 = this.form;
-
-                    this.form = tmpchange;
-                    this.formVariation = tmpchange2;
-                    this.form.variation = true;
-                }
-                if (this.variation) {
-                    this.isNoteIsDefault();
-                }
-                this.form.currency_type_id =
-                    this.currencyIdChoice == "S/" ||
-                    this.currencyIdChoice == undefined ||
-                    this.currencyIdChoice == "PEN"
-                        ? "PEN"
-                        : "USD";
-
-                /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
-                this.is_payment = true;
             }
+            this.form.currency_type_id =
+                this.currencyIdChoice == "S/" ? "PEN" : "USD";
+
+            this.is_payment = true;
         },
         formatVariation(i) {
             return {
@@ -5830,6 +5981,33 @@ export default {
             console.log("table", table);
             this.currentImages = table.images;
             this.showImagesDialog = true;
+        },
+        searchCustomers() {
+            if(this.timer){
+                clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(() => {
+                if(!this.searchCustomerText) {
+                    this.customersFiltered = [];
+                    return;
+                }
+                this.$http.get(`/documents/search/customers?input=${this.searchCustomerText}`).then(response => {
+                    this.customersFiltered = response.data.customers;
+                });
+            }, 350);
+            
+            
+        },
+
+        selectCustomerToEdit(customer) {
+            this.selectedCustomer = customer;
+            this.customerId = customer.id;
+            this.showEditCustomerForm = true;
+        },
+
+        closeEditForm() {
+            this.selectedCustomer = null;
+            this.searchCustomerText = '';
         }
     },
     beforeUnmount() {

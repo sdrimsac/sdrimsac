@@ -224,11 +224,11 @@ class WhatsappController extends Controller
 
 
             try {
-                $response = Http::post($url, [
-                    'number' => "51" . $number,
-                    'sender' => 'sdrimsac',
-                    'message' => $message,
-                ]);
+                $response = Http::withoutVerifying()->post($url, [
+                        'number' => "51" . $number,
+                        'sender' => 'sdrimsac',
+                        'message' => $message,
+                    ]);
 
                 $status = $response->status();
                 $body = $response->body();
@@ -239,7 +239,11 @@ class WhatsappController extends Controller
 
                 ];
             } catch (\Exception $e) {
-
+                Log::error("Error al enviar el mensaje por WhatsApp: ", [
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
                 return [
                     "message" => $e->getMessage(),
                     "line" => $e->getLine(),

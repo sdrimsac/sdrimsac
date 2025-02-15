@@ -1511,6 +1511,7 @@ export default {
                                 "reloadDataPersons",
                                 response.data.id
                             );
+                            this.$emit("closeEditForm");
                             this.$emit("reloadDataPersons", response.data.id);
                         } else {
                             this.$eventHub.$emit("reloadData");
@@ -1565,6 +1566,7 @@ export default {
         close() {
             this.$eventHub.$emit("initInputPerson");
             this.$emit("update:showDialog", false);
+            this.$emit("closeEditForm");
             this.initForm();
         },
         searchCustomer() {

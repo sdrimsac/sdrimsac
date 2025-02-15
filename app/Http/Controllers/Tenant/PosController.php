@@ -389,6 +389,7 @@ class PosController extends Controller
         if ($config->mod_renta) {
             $tables = $tables->with(['hotel_rent_items' => function ($query) {
                 $query->latest()
+                    ->where('active', true)
                     ->with(['payments']);
             }])->get();
 

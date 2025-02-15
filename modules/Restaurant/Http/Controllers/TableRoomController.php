@@ -48,10 +48,33 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\TableImage;
+use App\Models\Tenant\HotelRentWhatsapp;
 
 class TableRoomController extends Controller
 {
 
+    public function desoccupyRent(Request $request){
+        $id = $request->input('id');
+        $hotel_rent = HotelRent::find($id);
+        $hotel_rent->payment_status = "canceled";
+        $hotel_rent->paid = 1;
+        $hotel_rent->save();
+        $checkout_date = Carbon::now()->format('Y-m-d');
+        $checkout_time = Carbon::now()->format('H:i:s');
+        $hotel_rent_item = HotelRentItem::where('hotel_rent_id', $id)->first();
+        $hotel_rent_item->checkout_date = $checkout_date;
+        $hotel_rent_item->checkout_time = $checkout_time;
+        $hotel_rent_item->payment_status = "canceled";
+        $hotel_rent_item->active = false;
+
+        $hotel_rent_item->save();
+        $table = $hotel_rent_item->table;
+        $table->status_table_id = 1;
+        $table->save();
+        return response()->json([
+            'success' => true,
+        ]);
+    }
     public function setRoomRent(Request $request)
     {
 
@@ -1370,14 +1393,18 @@ class TableRoomController extends Controller
         $tables = Table::where('is_room', true)->where('enabled', true)->get();
         if ($configuration->mod_renta) {
             $tables = $tables->transform(function ($table) {
-                $hotel_rent_item = HotelRentItem::where('table_id', $table->id)->latest()->first();
+                $hotel_rent_item = HotelRentItem::where('table_id', $table->id)
+                    ->where('active', true)
+                ->latest()->first();
                 if ($hotel_rent_item) {
                     $table->hotel_rent_id = $hotel_rent_item->hotel_rent_id;
                     $payments = $hotel_rent_item->payments
                         ->where('is_paid', 0)
                         ->where('is_warranty', false);
-                    $due_date = $payments->first()->date_end;
-                    $table->due_date = $due_date;
+                    if ($payments->count() > 0) {
+                        $due_date = $payments->first()->date_end;
+                        $table->due_date = $due_date;
+                    }
 
                 }
                 return $table;
@@ -2329,5 +2356,78 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Configuración de penalidades eliminada con éxito'
         ];
+    }
+
+    /**
+     * Obtiene la configuración de mensajes de WhatsApp
+     */
+    public function whatsappSettings()
+    {
+        try {
+            $messages = HotelRentWhatsapp::getFormattedMessages();
+            
+            return [
+                'success' => true,
+                'messages' => $messages
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Guarda o actualiza la configuración de mensajes de WhatsApp
+     */
+    public function storeWhatsappSettings(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $type = $data['type']; // 'before_due' o 'after_due'
+            $order = $data['message_order'];
+            
+            HotelRentWhatsapp::saveMessage($data, $type, $order);
+
+            return [
+                'success' => true,
+                'message' => 'Configuración guardada correctamente'
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Activa o desactiva un mensaje
+     */
+    public function toggleWhatsappSettings($id)
+    {
+        try {
+            $message = HotelRentWhatsapp::find($id);
+            
+            if (!$message) {
+                throw new \Exception('Mensaje no encontrado');
+            }
+
+            $message->active = !$message->active;
+            $message->save();
+
+            return [
+                'success' => true,
+                'message' => 'Estado actualizado correctamente'
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }

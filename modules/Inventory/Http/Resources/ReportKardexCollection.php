@@ -49,8 +49,8 @@ class ReportKardexCollection extends ResourceCollection
             "Modules\Item\Models\ItemManufactured",
             "App\Models\Tenant\ItemColorSize",
         ];
-        switch ($row->inventory_kardexable_type) {
 
+        switch ($row->inventory_kardexable_type) {
             case $models[0]: //venta
                 return [
                     'user_name' => isset($row->user_id) ? $row->user->name : '',
@@ -118,7 +118,7 @@ class ReportKardexCollection extends ResourceCollection
                     'internal_id' => $row->item->internal_id,
                     'unit_type_id' => $row->item->unit_type_id,
                     'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                    'type_transaction' => "Nota de venta" . ($row->quantity > 0 ? ' Anulacion':''),
+                    'type_transaction' => "Nota de venta" . ($row->quantity > 0 ? ' Anulado interno':''),
                     'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? \Carbon\Carbon::parse($row->inventory_kardexable->date_of_issue)->format('d/m/Y') : '',
                     'view' => true,
                     'asiento' => "V-1",
