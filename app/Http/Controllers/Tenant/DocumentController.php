@@ -247,7 +247,7 @@ class DocumentController extends Controller
         if ($domain == null) {
             $domain = "SITE";
         }
-        $number = [995764963,  987828697, 972053723, 927498983, 935921640];
+        $number = [995764963,  987828697, 972053723, 902717302, 935921640];
         // $number = 
         $message = 'Reporte de sistemas que no completaron el envio de documentos ';
         $file_name = 'Tenant_Procesos_Caidos_' . $domain . "_" . Carbon::now() . '.xlsx';
