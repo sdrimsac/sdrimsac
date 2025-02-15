@@ -97,8 +97,12 @@
                 <!-- Logo End -->
 
                 <!-- User Menu Start -->
-                <div class="user-container d-flex" style="max-width: 300px ;max-height: 120px;">
-                    <div class="name" style="width: 80px; height: 80px; overflow: hidden;">
+                <div class="user-container d-flex" style="max-width: 350px ;max-height: 120px;">
+                    <div class="text-center date-time-container" style="color: var(--light-text); line-height: 1;">
+                        <span id="current-date"></span><br>
+                        <span id="current-time"></span>
+                    </div>
+                    <div class="name user-image-container">
                         @php
                             $config = DB::connection('tenant')->table('configurations')->first();
                             $user = auth()->user();
@@ -111,19 +115,25 @@
                                     $imageData = base64_encode(file_get_contents($imagePath));
                                     $mimeType = mime_content_type($imagePath);
                             @endphp
-                                    <img src="data:{{ $mimeType }};base64, {{ $imageData }}" alt="{{ $user->image }}"
-                                        style="width: 80%; height: 80%; object-fit: cover; margin: 0; transform: translateY(5px);" class="profile" alt="profile">
+                                    <img src="data:{{ $mimeType }};base64, {{ $imageData }}" 
+                                         alt="{{ $user->image }}"
+                                         class="profile-image"
+                                         loading="lazy">
                             @php
                                 } else {
                             @endphp
-                                    <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
-                                        class="profile" alt="profile">
+                                    <img src="/status_images/user.png" 
+                                         class="profile-image"
+                                         alt="profile"
+                                         loading="lazy">
                             @php
                                 }
                             @endphp
                         @else
-                            <img src="/status_images/user.png" style="width: 80%; height: 80%; object-fit: cover;"
-                                class="profile" alt="profile">
+                            <img src="/status_images/user.png" 
+                                 class="profile-image"
+                                 alt="profile"
+                                 loading="lazy">
                         @endif
                     </div>
                     <span></span>
@@ -143,10 +153,8 @@
                         aria-haspopup="true" aria-expanded="false">
                         <img style="width:90%;height:90%" class="profile" alt="profile"
                             src="{{ asset('acorn/img/profile/store.png') }}" />
-
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
-
                         <div class="row  ms-0 me-0">
                             <div class="col-12 pe-1 ps-1">
                                 <ul class="list-unstyled">
@@ -258,7 +266,6 @@
                         <i data-cs-icon="menu"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
-
                         <div class="row  ms-0 me-0">
                             <div class="col-12 pe-1 ps-1">
                                 <ul class="list-unstyled">
@@ -630,6 +637,55 @@
                 width: 25% !important;
             }
         }
+        @media screen and (max-width: 800px) {
+            .date-time-container {
+                display: none !important;
+            }
+            .user-image-container {
+                display: none !important;
+            }
+        }
+        .user-image-container {
+            aspect-ratio: 1/1; /* Fuerza una relación de aspecto 1:1 (cuadrado) */
+            width: 60px; /* Ancho fijo */
+            height: 60px; /* Alto igual al ancho */
+            min-width: 60px; /* Evita que se comprima */
+            min-height: 60px; /* Evita que se comprima */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0 10px; /* Añade espacio a los lados */
+            border-radius: 8px; /* Bordes redondeados suaves */
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            image-rendering: -webkit-optimize-contrast;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .user-image-container {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                min-height: 50px;
+            }
+        }
+
+        @media screen and (max-width: 800px) {
+            .date-time-container,
+            .user-image-container {
+                display: none !important;
+            }
+        }
     </style>
     <!-- Vendor Scripts Start -->
     <script src="{{ asset('acorn/js/vendor/jquery-3.5.1.min.js') }}"></script>
@@ -738,6 +794,19 @@
                     });
             });
         });
+        function updateDateTime() {
+                            const now = new Date();
+                            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                            
+                            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', dateOptions);
+                            document.getElementById('current-time').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+                        }
+
+                        // Update initially
+                        updateDateTime();
+                        // Update every second
+                        setInterval(updateDateTime, 1000);
     </script>
     <!-- Page Specific Scripts End -->
 </body>

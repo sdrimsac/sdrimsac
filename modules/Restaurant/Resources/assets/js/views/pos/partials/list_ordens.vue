@@ -1472,7 +1472,17 @@
                             "
                                                     >
                                                         <div class="row">
-                                                            <h6 class="text-danger" v-if="checkIgvApp(order_pend.food.item.sale_affectation_igv_type_id)">
+                                                            <h6
+                                                                class="text-danger"
+                                                                v-if="
+                                                                    checkIgvApp(
+                                                                        order_pend
+                                                                            .food
+                                                                            .item
+                                                                            .sale_affectation_igv_type_id
+                                                                    )
+                                                                "
+                                                            >
                                                                 PRODUCTO CON IGV
                                                             </h6>
                                                             <h3
@@ -1910,9 +1920,9 @@
                                                                         <span
                                                                             class="fw-bold"
                                                                         >
-                                                                        <!-- aqui es el precio pa modificar siempre aaaa -->
-                                                                            Precio   
-                                                                            
+                                                                            <!-- aqui es el precio pa modificar siempre aaaa -->
+                                                                            Precio
+
                                                                             {{
                                                                                 currency_id
                                                                             }}
@@ -2611,12 +2621,13 @@
             </div>
         </el-dialog>
         <el-dialog
-            v-loading="deleteOrdenLoading"
-            width="450px"
-            :visible.sync="showPinRequest"
-            title="Ingrese su PIN"
-            append-to-body
-        >
+                    v-loading="deleteOrdenLoading"
+                    width="350px"
+                    :visible.sync="showPinRequest"
+                    title="Ingrese su PIN"
+                    append-to-body
+                    @closed="handlePinDialogClose"
+                >
             <div class="row mt-1">
                 <p class="h5" style="word-break: break-word;">
                     Para poder eliminar la orden debe ingresar un motivo y su
@@ -2635,7 +2646,7 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-12">
+                <!-- <div class="col-12">
                     <el-input
                         v-model="pin"
                         placeholder="Ingrese su PIN"
@@ -2643,71 +2654,76 @@
                         maxlength="4"
                         readonly
                     ></el-input>
+                </div> -->
+                <div class="pin-input d-flex justify-content-center">
+                    <span
+                        v-for="(digit, index) in 4"
+                        :key="index"
+                        class="pin-circle"
+                        :class="{ filled: pin[index] !== undefined }"
+                    ></span>
                 </div>
-                <div
-                    class="col-12 card"
-                    style="max-width: 218px;margin-left: 104px;margin-top: 14px;"
-                >
-                    <div class="row" style="  margin-left: 20px;">
-                        <el-button
-                            v-for="num in [1, 2, 3]"
-                            :key="num"
-                            class="m-2 col-md-4 btn-rounded2 btn-primary"
-                            @click="generatePin(num)"
-                            style="border-radius: 50% !important ; width: 42px; color:white"
-                            >{{ num }}</el-button
-                        >
-                    </div>
-                    <div class="row" style="  margin-left: 20px;">
-                        <el-button
-                            v-for="num in [4, 5, 6]"
-                            :key="num"
-                            class="m-2 col-md-4 btn-primary"
-                            @click="generatePin(num)"
-                            style="border-radius: 50% !important ; width: 42px; color:white"
-                            >{{ num }}</el-button
-                        >
-                    </div>
-                    <div class="row" style="  margin-left: 20px;">
-                        <el-button
-                            v-for="num in [7, 8, 9]"
-                            :key="num"
-                            class="m-2 col-md-4 btn-primary"
-                            @click="generatePin(num)"
-                            style="border-radius: 50% !important ; width: 42px; color:white"
-                            >{{ num }}</el-button
-                        >
-                    </div>
-                    <div class="row" style="  margin-left: 20px;">
-                        <el-button
-                            @click="pin = ''"
-                            class="m-2 col-md-4"
-                            type="danger"
-                            icon="el-icon-delete"
-                            style="border-radius: 50% !important ; width: 42px;"
-                        ></el-button>
+                <el-input
+                    ref="pinInput"
+                    v-model="pin"
+                    type="password"
+                    maxlength="4"
+                    class="hidden-input"
+                    @keyup.native="handleKeyPress"
+                />
 
-                        <el-button
-                            v-for="num in [0]"
-                            :key="num"
-                            class="m-2 col-md-4 btn-primary"
-                            @click="generatePin(num)"
-                            style="border-radius: 50% !important ; width: 42px; color:white"
-                            >{{ num }}</el-button
-                        >
-                        <div class="col-md-4"></div>
+                <div
+                    class="col-12 card p-4"
+                    style="max-width: 350px; margin-left: 0px; margin-top: 14px;"
+                >
+                    <div class="">
+                        <div class="keypad-grid">
+                            <el-button
+                                v-for="num in [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+                                :key="num"
+                                class="keypad-button btn-primary"
+                                @click="generatePin(num)"
+                                >{{ num }}</el-button
+                            >
+
+                            <el-button
+                                @click="pin = ''"
+                                class="keypad-button"
+                                type="danger"
+                                icon="el-icon-delete"
+                            ></el-button>
+
+                            <el-button
+                                class="keypad-button btn-primary"
+                                @click="generatePin(0)"
+                                >0</el-button
+                            >
+
+                            <el-button
+                                @click="cancelOrdenaPin"
+                                class="keypad-button"
+                                type="success"
+                                icon="el-icon-s-promotion"
+                            ></el-button>
+
+                            <!-- <div class="keypad-spacer"></div> -->
+                        </div>
                     </div>
                 </div>
             </div>
             <div
                 slot="footer"
                 class="dialog-footer"
-                style="text-align: center !important ; "
+                style="text-align: right !important;"
             >
-                <el-button @click="showPinRequest = false">Cancelar</el-button>
-                <el-button type="primary" @click="cancelOrdenaPin"
-                    >Eliminar</el-button
+                <el-button
+                    @click="showPinRequest = false"
+                    type="danger"
+                    size="large"
+                    style="padding: 12px 24px; font-size: 16px;"
                 >
+                    Cancelar
+                </el-button>
             </div>
         </el-dialog>
         <consignment-form
@@ -2722,7 +2738,6 @@
             :fromPos="true"
         ></consignment-form>
         <consolidated-modal
-            
             :configuration="configuration"
             :showDialog.sync="showConsolidated"
         ></consolidated-modal>
@@ -2780,7 +2795,7 @@
 .custom_input .el-input__inner {
     padding: 0 5px !important;
     font-weight: bold;
-    font-family: 'Arial Black', Arial, sans-serif;
+    font-family: "Arial Black", Arial, sans-serif;
 }
 
 .el-tag + .el-tag {
@@ -2808,6 +2823,61 @@
     display: flex;
     align-items: center;
     gap: 10px; /* Espaciado entre el texto y los botones */
+}
+.keypad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(4, 80px);
+    gap: 10px;
+    justify-content: center;
+}
+
+.keypad-button {
+    width: 100%;
+    height: 100%;
+    border-radius: 50% !important;
+    font-size: 24px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keypad-spacer {
+    width: 80px;
+    height: 80px;
+}
+.pin-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* .pin-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #aaa;
+    border-radius: 50%;
+} */
+
+.pin-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black; /* 🔹 Borde negro */
+    border-radius: 50%;
+    background-color: white; /* 🔹 Fondo blanco */
+}
+
+/* 🔹 Cuando se llena un círculo */
+.filled {
+    background-color:rgb(0, 17, 173);
+}
+
+/* 🔹 Ocultar el input real */
+.hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 </style>
 <script>
@@ -2985,6 +3055,16 @@ export default {
     },
 
     watch: {
+        showPinRequest(newValue) {
+            if (newValue) {
+                // Cuando se abre el diálogo, focus en el input oculto
+                this.$nextTick(() => {
+                    if (this.$refs.pinInput) {
+                        this.$refs.pinInput.$el.querySelector('input').focus();
+                    }
+                });
+            }
+        },
         localOrden: {
             handler(newVal) {
                 // Aquí puedes llamar a calculateTotal u otras funciones
@@ -3162,9 +3242,12 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
-        checkIgvApp(igv_type_id){
+        checkIgvApp(igv_type_id) {
             console.log("igv_type_id", igv_type_id);
-             return this.configuration.affectation_igv_type_id !== "10" && igv_type_id == "10";
+            return (
+                this.configuration.affectation_igv_type_id !== "10" &&
+                igv_type_id == "10"
+            );
         },
         toggleEdit() {
             this.isEditing = !this.isEditing;
@@ -3834,7 +3917,10 @@ export default {
         openQuotation() {
             this.quotationDirect = false;
             if (this.localOrden.length > 0) {
-                if (this.isSellerConsolidated && !this.configuration.consolidated_quotation_details) {
+                if (
+                    this.isSellerConsolidated &&
+                    !this.configuration.consolidated_quotation_details
+                ) {
                     this.quotationDirect = true;
                 }
 
@@ -5012,11 +5098,41 @@ export default {
             }
         },
 
-        generatePin(num) {
-            if (this.pin.length == 4) {
-                return;
+        handlePinDialogClose() {
+            this.pin = "";
+            this.reasonToDelete = null;
+            this.ordenIdToDelete = null;
+            this.deleteGeneralOrden = false;
+        },
+
+        handleKeyPress(event) {
+            const key = event.key;
+            
+            // Solo permitir números
+            if (/^\d$/.test(key) && this.pin.length < 4) {
+                // No es necesario hacer nada ya que el v-model actualizará el pin
+            } else if (key === 'Backspace') {
+                // Permitir borrar
+                this.pin = this.pin.slice(0, -1);
+            } else if (key === 'Enter' && this.pin.length === 4) {
+                // Si presiona Enter y el PIN está completo
+                this.cancelOrdenaPin();
             }
-            this.pin += num;
+            
+            // Prevenir cualquier otra entrada
+            if (!/^\d$/.test(key) && key !== 'Backspace') {
+                event.preventDefault();
+            }
+        },
+
+        generatePin(num) {
+            if (this.pin.length < 4) {
+                this.pin += num;
+                if (this.pin.length === 4) {
+                    // Opcionalmente, ejecutar la acción cuando se complete el PIN
+                    // this.cancelOrdenaPin();
+                }
+            }
         },
         async cancelOrdena(id) {
             if (this.configuration.pin_orden_delete) {

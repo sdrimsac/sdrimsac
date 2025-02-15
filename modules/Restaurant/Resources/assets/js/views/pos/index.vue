@@ -6,9 +6,9 @@
     >
         <div class="row" v-if="limitAmount">
             <div class="col-12">
-                <div :class="`alert alert-danger`">
-                    <h5>Atención</h5>
-                    <p style="font-size: 20px; font-weight: bold">{{ limitAmount.mensaje }}</p>
+                <div :class="`alert alert-${limitAmount.color}`">
+                    <h6>Atención</h6> 
+                    <p style="font-size: 16px; font-weight: bold">{{ limitAmount.mensaje }}</p>
                 </div>
             </div>
         </div>

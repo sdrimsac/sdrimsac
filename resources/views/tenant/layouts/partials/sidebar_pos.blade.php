@@ -8,7 +8,7 @@
 <div class="menu-container ">
     <ul>
         <li class="modulo-caja">
-            <h1 style=" color: white; font-size: 250%; font-weight: bold; margin-top: 21px ">MODULO DE CAJA</h1>
+            <h1 style=" color: white; font-size: 250%; font-weight: bold; margin-top: 21px ">CAJA</h1>
         </li>
     </ul>
 </div>
