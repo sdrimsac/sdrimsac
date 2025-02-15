@@ -406,9 +406,19 @@ class QuotationController extends Controller
             } else {
                 $document = SaleNote::find($sale_note_id);
             }
+            $user_id = auth()->user()->id;
+            $cash = Cash::where('user_id', $user_id)->where('state', '1')->first();
+            if(!$cash){
+                return [
+                    'success' => false,
+                    'message' => 'No se encontró caja abierta'
+                ];
+            }
+
             $method = $request->payment_method;
             $amount = $request->total;
             $cajas    = new Box();
+            $cajas->cash_id = $cash->id;
             $cajas->group_id = 1;
             $cajas->category_id = 1;
             $cajas->subcategory_id = 1;
