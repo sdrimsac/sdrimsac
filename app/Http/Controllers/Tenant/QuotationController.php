@@ -482,7 +482,9 @@ class QuotationController extends Controller
                 $sale_note_id = $saleNote->id;
                 $document = $saleNote;
             }
-
+            if(!$document){
+                continue;
+            }
             $total = $document->total;
             $total_paid = $document->boxes()->sum('amount');
             $paid = $total_paid >= $total ? true : false;
