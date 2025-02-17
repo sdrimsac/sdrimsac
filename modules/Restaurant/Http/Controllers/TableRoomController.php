@@ -2381,27 +2381,27 @@ class TableRoomController extends Controller
     /**
      * Guarda o actualiza la configuración de mensajes de WhatsApp
      */
-    public function storeWhatsappSettings(Request $request)
-    {
-        try {
-            $data = $request->all();
-            $type = $data['type']; // 'before_due' o 'after_due'
-            $order = $data['message_order'];
+    // public function storeWhatsappSettings(Request $request)
+    // {
+    //     try {
+    //         $data = $request->all();
+    //         $type = $data['type']; // 'before_due' o 'after_due'
+    //         $order = $data['message_order'];
             
-            HotelRentWhatsapp::saveMessage($data, $type, $order);
+    //         HotelRentWhatsapp::saveMessage($data, $type, $order);
 
-            return [
-                'success' => true,
-                'message' => 'Configuración guardada correctamente'
-            ];
+    //         return [
+    //             'success' => true,
+    //             'message' => 'Configuración guardada correctamente'
+    //         ];
 
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'success' => false,
+    //             'message' => $e->getMessage()
+    //         ];
+    //     }
+    // }
 
     /**
      * Activa o desactiva un mensaje
@@ -2423,6 +2423,84 @@ class TableRoomController extends Controller
                 'message' => 'Estado actualizado correctamente'
             ];
 
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function uploadTempImage(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $temp_name = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(storage_path('app/public/temp'), $temp_name);
+            
+            return [
+                'success' => true,
+                'temp_name' => $temp_name,
+                'temp_url' => '/storage/temp/' . $temp_name
+            ];
+        }
+        
+        return [
+            'success' => false,
+            'message' => 'No se encontró ningún archivo'
+        ];
+    }
+
+    public function removeWhatsappImage($id)
+    {
+        try {
+            $message = HotelRentWhatsapp::find($id);
+            if ($message && $message->image_path) {
+                Storage::disk('public')->delete($message->image_path);
+                $message->image_path = null;
+                $message->save();
+            }
+            
+            return [
+                'success' => true,
+                'message' => 'Imagen eliminada correctamente'
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar la imagen'
+            ];
+        }
+    }
+
+    public function storeWhatsappSettings(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $image_path = null;
+            
+            if ($request->has('temp_name')) {
+                $temp_path = storage_path('app/public/temp/' . $data['temp_name']);
+                if (file_exists($temp_path)) {
+                    $new_path = 'whatsapp/' . $data['temp_name'];
+                    Storage::disk('public')->put($new_path, file_get_contents($temp_path));
+                    unlink($temp_path);
+                    $image_path = $new_path;
+                }
+            }
+            
+            $message = HotelRentWhatsapp::saveMessage($data, $data['type'], $data['message_order']);
+            
+            if ($image_path) {
+                $message->image_path = $image_path;
+                $message->save();
+            }
+            
+            return [
+                'success' => true,
+                'message' => 'Mensaje guardado correctamente',
+                'image_path' => $image_path
+            ];
         } catch (\Exception $e) {
             return [
                 'success' => false,

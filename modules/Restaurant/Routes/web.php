@@ -227,6 +227,8 @@ Route::prefix('caja')->group(function () {
                 Route::get('', [TableRoomController::class, 'whatsappSettings']);
                 Route::post('', [TableRoomController::class, 'storeWhatsappSettings']);
                 Route::post('toggle/{id}', [TableRoomController::class, 'toggleWhatsappSettings']);
+                Route::post('upload-temp', [TableRoomController::class, 'uploadTempImage']);
+                Route::delete('remove-image/{id}', [TableRoomController::class, 'removeWhatsappImage']);
             });
         });
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');

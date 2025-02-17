@@ -258,6 +258,7 @@ class BoxesController extends Controller
     }
     function get_category($item)
     {
+        $configuration = Configuration::first();
         $hotels = $this->configuration->hotels;
         if ($hotels) {
             $item_hotel = $item->item;
@@ -278,12 +279,17 @@ class BoxesController extends Controller
                     return $category->name;
                 }
             }
-            // }
+            if ($configuration->mod_renta) {
+                return "ALQUILER";
+            }
             return "OTROS";
         }
         if (gettype($category) == "string") {
             return $category;
         } else {
+            if ($configuration->mod_renta) {
+                return "ALQUILER";
+            }
             return isset($item->item->category) ?  $item->item->category->name : "OTROS";
         }
     }
@@ -511,8 +517,9 @@ class BoxesController extends Controller
             'customer_number' => $customer->number
         ];
     }
-    function get_items_from_box($cash_id,$currency_type_id = "PEN")
+    function get_items_from_box($cash_id, $currency_type_id = "PEN")
     {
+        $configuration = Configuration::first();
         $boxes = Box::where('currency_type_id', $currency_type_id)
             ->where('cash_id', $cash_id)
             ->select('document_id', 'sale_note_id', 'method')
@@ -559,15 +566,24 @@ class BoxesController extends Controller
                                 if ($item_db) {
                                     if (isset($item_db->category->name)) {
                                         $category_name = $item_db->category->name;
-                                        if (array_key_exists($category_name, $categories)) {
-                                            $categories[$category_name] += $item->total;
-                                        } else {
-                                            $categories[$category_name] = $item->total;
+                                    } else {
+                                        $category_name = "OTROS";
+                                        if ($configuration->mod_renta) {
+                                            $category_name = "ALQUILER";
                                         }
                                     }
-                                    $description_item = $item_db->description;
-                                    if (mb_stripos($description_item, 'Media tarifa') !== false) {
-                                        $description_item .= " - Media tarifa";
+                                    if (array_key_exists($category_name, $categories)) {
+                                        $categories[$category_name] += $item->total;
+                                    } else {
+                                        $categories[$category_name] = $item->total;
+                                    }
+                                    if ($configuration->mod_renta) {
+                                        $description_item = $item->item->description;
+                                    } else {
+                                        $description_item = $item_db->description;
+                                        if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                            $description_item .= " - Media tarifa";
+                                        }
                                     }
                                     $key = $description_item . "-" . $item->unit_price;
                                     $id_exist = array_search($key, array_column($all_items, 'key'));
@@ -617,53 +633,101 @@ class BoxesController extends Controller
                             "total" => $sale_note->total,
                         ];
                         $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get();
+
                         foreach ($items as $item) {
                             if ($item) {
                                 $item_db = Item::find($item->item_id);
-                                if ($item_db && $item_db->category_id) {
-                                    $category_id = $item_db->category_id;
-                                    $category = CategoryItem::find($category_id);
-                                    $category_name = $category->name;
-                                    if (array_key_exists($category_name, $categories)) {
-                                        $categories[$category_name] += $item->total;
-                                    } else {
-                                        $categories[$category_name] = $item->total;
-                                    }
-                                    $description_item = $item_db->description;
-                                    if (mb_stripos($description_item, 'Media tarifa') !== false) {
-                                        $description_item .= " - Media tarifa";
-                                    }
-                                    $key = $description_item . "-" . $item->unit_price;
-                                    $id_exist = array_search($key, array_column($all_items, 'key'));
+                                if ($configuration->mod_renta) {
+                                    if ($item_db) {
+                                        $category_id = $item_db->category_id;
 
-                                    if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
-                                        if ($id_exist !== false) {
-                                            $all_items[$id_exist] = [
-                                                "price" => $item->unit_price,
-                                                "key" => $key,
-                                                "category" => $this->get_category($item),
-                                                "description" => $description_item,
-                                                "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                                "total" => $all_items[$id_exist]["total"] + $item->total,
-                                            ];
+                                        $category_name = "ALQUILER";
+                                        if (array_key_exists($category_name, $categories)) {
+                                            $categories[$category_name] += $item->total;
                                         } else {
-                                            $all_items[] = [
-                                                "key" => $key,
-                                                "price" => $item->unit_price,
-                                                "description" => $description_item,
-                                                "quantity" => $item->quantity,
-                                                "category" => $this->get_category($item),
-                                                "total" => $item->total,
-                                            ];
+                                            $categories[$category_name] = $item->total;
                                         }
+                                        if ($configuration->mod_renta) {
+                                            $description_item = $item->item->description;
+                                        } else {
+                                            $description_item = $item_db->description;
+                                            if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                                $description_item .= " - Media tarifa";
+                                            }
+                                        }
+                                        $key = $description_item . "-" . $item->unit_price;
+                                        $id_exist = array_search($key, array_column($all_items, 'key'));
+                                        if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
+                                            if ($id_exist !== false) {
+                                                $all_items[$id_exist] = [
+                                                    "price" => $item->unit_price,
+                                                    "key" => $key,
+                                                    "category" => $this->get_category($item),
+                                                    "description" => $description_item,
+                                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                                    "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                ];
+                                            } else {
+                                                $all_items[] = [
+                                                    "key" => $key,
+                                                    "price" => $item->unit_price,
+                                                    "description" => $description_item,
+                                                    "quantity" => $item->quantity,
+                                                    "category" => $this->get_category($item),
+                                                    "total" => $item->total,
+                                                ];
+                                            }
+                                        }
+                                    } else {
+                                        Log::info("Item no tiene categoria: " . $item->item_id);
                                     }
                                 } else {
-                                    Log::info("Item no tiene categoria: " . $item->item_id);
+                                    if ($item_db && $item_db->category_id) {
+                                        $category_id = $item_db->category_id;
+                                        $category = CategoryItem::find($category_id);
+                                        $category_name = $category->name;
+                                        if (array_key_exists($category_name, $categories)) {
+                                            $categories[$category_name] += $item->total;
+                                        } else {
+                                            $categories[$category_name] = $item->total;
+                                        }
+                                        $description_item = $item_db->description;
+                                        if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                            $description_item .= " - Media tarifa";
+                                        }
+                                        $key = $description_item . "-" . $item->unit_price;
+                                        $id_exist = array_search($key, array_column($all_items, 'key'));
+                                        if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
+                                            if ($id_exist !== false) {
+                                                $all_items[$id_exist] = [
+                                                    "price" => $item->unit_price,
+                                                    "key" => $key,
+                                                    "category" => $this->get_category($item),
+                                                    "description" => $description_item,
+                                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                                    "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                ];
+                                            } else {
+                                                $all_items[] = [
+                                                    "key" => $key,
+                                                    "price" => $item->unit_price,
+                                                    "description" => $description_item,
+                                                    "quantity" => $item->quantity,
+                                                    "category" => $this->get_category($item),
+                                                    "total" => $item->total,
+                                                ];
+                                            }
+                                        }
+                                    } else {
+                                        Log::info("Item no tiene categoria: " . $item->item_id);
+                                    }
                                 }
+                            } else {
                             }
                         }
                         $all_documents["notas"]["total"] += $sale_note->total;
                         $all_documents["notas"]["quantity"] += 1;
+                    } else {
                     }
                 }
             }
@@ -1217,9 +1281,9 @@ class BoxesController extends Controller
             ->where('cash_id', $cash_id)->pluck('id')->toArray();
         $credit_notes = Note::whereIn('affected_document_id', $documents)->get();
         $documents_credit = Document::where("document_type_id", "07")
-        ->where("cash_id", $cash_id)
-        ->get();
-        
+            ->where("cash_id", $cash_id)
+            ->get();
+
         foreach ($credit_notes as $credit_note) {
             $document = Document::find($credit_note->document_id);
             $all[] = [
@@ -1323,14 +1387,14 @@ class BoxesController extends Controller
             &$max_01_document_id,
             &$min_03_document_id,
             &$max_03_document_id
-    
+
         ) {
             foreach ($documents as $document) {
                 $document = Document::select(['id', 'document_type_id', 'total'])
                     ->with('items')
                     ->find($document->id);
 
-                
+
                 if ($document->document_type_id == '01') {
                     if ($min_01_document_id == null) {
                         $min_01_document_id = $document->id;
@@ -1358,9 +1422,7 @@ class BoxesController extends Controller
             }
         });
         $boxes = Box::select(['document_id', 'sale_note_id'])
-            ->where('cash_id', $cash_id)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use 
-            
-            (
+            ->where('cash_id', $cash_id)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use (
                 &$items,
                 &$min_01_document_id,
                 &$max_01_document_id,
@@ -1385,26 +1447,26 @@ class BoxesController extends Controller
                             ->with('items')
                             ->find($box->document_id);
 
-                            if ($document->document_affected_note) {
-                                $affected_document = Document::select(['id', 'document_type_id', 'total'])
-                                    ->find($document->document_affected_note->document_id);
-                                if ($affected_document->document_type_id == '07') {
-                                    if ($min_07_document_id == null) {
-                                        $min_07_document_id = $affected_document->id;
-                                    } else {
-                                        $min_07_document_id = ($affected_document->id < $min_07_document_id) ? $affected_document->id : $min_07_document_id;
-                                    }
-                                    if ($max_07_document_id == null) {
-                                        $max_07_document_id = $affected_document->id;
-                                    } else {
-                                        $max_07_document_id = ($affected_document->id > $max_07_document_id) ? $affected_document->id : $max_07_document_id;
-                                    }
-                                    $total_07_document += $affected_document->total;
+                        if ($document->document_affected_note) {
+                            $affected_document = Document::select(['id', 'document_type_id', 'total'])
+                                ->find($document->document_affected_note->document_id);
+                            if ($affected_document->document_type_id == '07') {
+                                if ($min_07_document_id == null) {
+                                    $min_07_document_id = $affected_document->id;
+                                } else {
+                                    $min_07_document_id = ($affected_document->id < $min_07_document_id) ? $affected_document->id : $min_07_document_id;
                                 }
+                                if ($max_07_document_id == null) {
+                                    $max_07_document_id = $affected_document->id;
+                                } else {
+                                    $max_07_document_id = ($affected_document->id > $max_07_document_id) ? $affected_document->id : $max_07_document_id;
+                                }
+                                $total_07_document += $affected_document->total;
                             }
+                        }
                         if ($document->document_type_id == '01') {
                             // if (!$document->document_affected_note) {
-                                $total_01_document += $document->total;
+                            $total_01_document += $document->total;
                             // }
                             if ($min_01_document_id == null) {
                                 $min_01_document_id = $document->id;
@@ -1641,23 +1703,23 @@ class BoxesController extends Controller
                         $document = Document::select(['id', 'document_type_id', 'total', 'number'])
                             ->with('items')
                             ->find($box->document_id);
-                            if ($document->document_affected_note) {
-                                $affected_document = Document::select(['id', 'document_type_id', 'total'])
-                                    ->find($document->document_affected_note->document_id);
-                                if ($affected_document->document_type_id == '07') {
-                                    if ($min_07_document_id == null) {
-                                        $min_07_document_id = $affected_document->id;
-                                    } else {
-                                        $min_07_document_id = ($affected_document->id < $min_07_document_id) ? $affected_document->id : $min_07_document_id;
-                                    }
-                                    if ($max_07_document_id == null) {
-                                        $max_07_document_id = $affected_document->id;
-                                    } else {
-                                        $max_07_document_id = ($affected_document->id > $max_07_document_id) ? $affected_document->id : $max_07_document_id;
-                                    }
-                                    $total_07_document += $affected_document->total;
+                        if ($document->document_affected_note) {
+                            $affected_document = Document::select(['id', 'document_type_id', 'total'])
+                                ->find($document->document_affected_note->document_id);
+                            if ($affected_document->document_type_id == '07') {
+                                if ($min_07_document_id == null) {
+                                    $min_07_document_id = $affected_document->id;
+                                } else {
+                                    $min_07_document_id = ($affected_document->id < $min_07_document_id) ? $affected_document->id : $min_07_document_id;
                                 }
+                                if ($max_07_document_id == null) {
+                                    $max_07_document_id = $affected_document->id;
+                                } else {
+                                    $max_07_document_id = ($affected_document->id > $max_07_document_id) ? $affected_document->id : $max_07_document_id;
+                                }
+                                $total_07_document += $affected_document->total;
                             }
+                        }
                         if ($document->document_type_id == '01') {
                             $total_01_document += $document->total;
                             if ($min_01_document_id == null) {
@@ -1717,7 +1779,7 @@ class BoxesController extends Controller
                 }
             });
 
-        
+
         $total_items = 0;
         foreach ($items as $item) {
             $total_items += $item["total"];
@@ -1796,7 +1858,7 @@ class BoxesController extends Controller
     {
         ini_set('memory_limit', '10096M');
         ini_set('max_execution_time', '30000');
-        $configuration = Configuration::first();    
+        $configuration = Configuration::first();
         $socket_channel = $configuration->socket_channel;
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
@@ -2004,7 +2066,7 @@ class BoxesController extends Controller
         $counter = $cash->counter ?? [];
         $user = User::find($cash->user_id);
         //    $establishment =  auth()->user()->establishment;
-        $info = $this->get_items_from_box($cash_id,"USD");
+        $info = $this->get_items_from_box($cash_id, "USD");
         $items = $info['items'];
         $grouped = $info['grouped'];
         $documents = $info['documents'];
@@ -2352,9 +2414,9 @@ class BoxesController extends Controller
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number .'_'.$socket_channel.'.pdf');
-        if($cash_id == 565){
-             Log::info($path);
+        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
+        if ($cash_id == 565) {
+            Log::info($path);
         }
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
@@ -2895,7 +2957,7 @@ class BoxesController extends Controller
     }
     function get_detraction_payments($cash_id)
     {
-    
+
         $global_payments = GlobalPayment::where('destination_id', $cash_id)->where('destination_type', Cash::class)
             ->where('payment_type', DetractionPayment::class)->get();
         $payments = $global_payments->transform(function ($row) {

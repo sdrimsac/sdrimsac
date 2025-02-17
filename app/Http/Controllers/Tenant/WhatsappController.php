@@ -171,6 +171,57 @@ class WhatsappController extends Controller
             'message' => 'Número registrado con éxito'
         ], 200);
     }
+    public function sendImage($image, $number = null)
+    {
+        $extension = pathinfo($image, PATHINFO_EXTENSION);
+        if ($number == null) {
+            $configuration = Configuration::first();
+            $number = $configuration->number_activity;
+        }
+        if (!$number) {
+            Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
+            return;
+        }
+        $web_whatsapp = config('app.web_whatsapp');
+        $url = "https://" . $web_whatsapp . '/api/send-media';
+        $content_file = file_get_contents(Storage::disk('public')->path($image));
+        $this->client = new Client([
+            'verify' => false,
+            'stream' => false,
+            'headers' => [
+                'User-Agent' => 'Testing 1.0'
+            ]
+        ]);
+        try {
+            $response = $this->client->post($url, [
+                'multipart' => [
+                    [
+                        'name'     => 'number',
+                        'contents' => "51" . $number
+                    ],
+
+                    [
+                        'name'     => 'sender',
+                        'contents' =>   'sdrimsac'
+                    ],
+                    [
+                        'name'     => 'file',
+                        'contents' => $content_file,
+                        'filename' => $image . "." . $extension
+                    ],
+
+                ]
+            ]);
+
+            return  $response->getBody()->getContents();
+        } catch (\Exception $e) {
+
+            return [
+                "message" => $e->getMessage(),
+                "line" => $e->getLine(),
+            ];
+        }
+    }
     public function sendMessage($message, $number = null)
     {
         $company = Company::first();
@@ -225,10 +276,10 @@ class WhatsappController extends Controller
 
             try {
                 $response = Http::withoutVerifying()->post($url, [
-                        'number' => "51" . $number,
-                        'sender' => 'sdrimsac',
-                        'message' => $message,
-                    ]);
+                    'number' => "51" . $number,
+                    'sender' => 'sdrimsac',
+                    'message' => $message,
+                ]);
 
                 $status = $response->status();
                 $body = $response->body();

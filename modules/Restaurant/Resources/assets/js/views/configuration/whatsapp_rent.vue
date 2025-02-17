@@ -58,6 +58,36 @@
                             >Guardar</el-button>
                         </div>
                     </div>
+                    <div class="col-12 mb-3">
+                        <label class="control-label">Imagen del mensaje</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <el-upload
+                                class="upload-demo"
+                                :action="`/caja/rent/whatsapp-settings/upload-temp`"
+                                :on-success="(response) => handleUploadSuccess(response, 'before_due', index)"
+                                :on-error="handleUploadError"
+                                :before-upload="beforeUpload"
+                                :headers="headers"
+                                :show-file-list="false"
+                            >
+                                <el-button size="small" type="primary">
+                                    <i class="fas fa-upload"></i> Subir imagen
+                                </el-button>
+                            </el-upload>
+                            <div v-if="message.temp_path || message.image_path" class="image-preview">
+                                <img 
+                                    :src="message.temp_path ? message.temp_path : `/storage/${message.image_path}`" 
+                                    class="preview-img"
+                                >
+                                <el-button 
+                                    type="danger" 
+                                    size="mini" 
+                                    icon="el-icon-delete"
+                                    @click="removeImage('before_due', index)"
+                                ></el-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -109,6 +139,36 @@
                             >Guardar</el-button>
                         </div>
                     </div>
+                    <div class="col-12 mb-3">
+                        <label class="control-label">Imagen del mensaje</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <el-upload
+                                class="upload-demo"
+                                :action="`/caja/rent/whatsapp-settings/upload-temp`"
+                                :on-success="(response) => handleUploadSuccess(response, 'after_due', index)"
+                                :on-error="handleUploadError"
+                                :headers="headers"
+                                :before-upload="beforeUpload"
+                                :show-file-list="false"
+                            >
+                                <el-button size="small" type="primary">
+                                    <i class="fas fa-upload"></i> Subir imagen
+                                </el-button>
+                            </el-upload>
+                            <div v-if="message.temp_path || message.image_path" class="image-preview">
+                                <img 
+                                    :src="message.temp_path ? message.temp_path : `/storage/${message.image_path}`" 
+                                    class="preview-img"
+                                >
+                                <el-button 
+                                    type="danger" 
+                                    size="mini" 
+                                    icon="el-icon-delete"
+                                    @click="removeImage('after_due', index)"
+                                ></el-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,33 +181,94 @@ export default {
     data() {
         return {
             loading: false,
+            headers: headers_token,
             form: {
                 before_due: [
-                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta “{{banco}}”  y confirmar enviando el Boucher al numero de WhatsApp “{{numero_whatsapp}}”  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false },
-                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta “{{banco}}”  y confirmar enviando el Boucher al numero de WhatsApp “{{numero_whatsapp}}”  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false },
-                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta “{{banco}}”  y confirmar enviando el Boucher al numero de WhatsApp “{{numero_whatsapp}}”  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false }
+                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta “{{banco}}”  y confirmar enviando el Boucher al numero de WhatsApp “{{numero_whatsapp}}”  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null },
+                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta “{{banco}}”  y confirmar enviando el Boucher al numero de WhatsApp “{{numero_whatsapp}}”  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null },
+                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta “{{banco}}”  y confirmar enviando el Boucher al numero de WhatsApp “{{numero_whatsapp}}”  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null }
                 ],
                 after_due: [
-                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra VENCIDO su recibo de pago  correspondiente al mes {{mes}}  Tiene (1) día(s) de atraso,  recuerde que puede pagar a través de las plataformas de Yape “numero de registrado para yape” o a la  cuenta {{banco}}  y confirmar enviando el Boucher al número de WhatsApp {{numero_whatsapp}} Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false }
+                    { content: 'Sr. Inquilino {{huesped}}  le comunica que ya se encuentra VENCIDO su recibo de pago  correspondiente al mes {{mes}}  Tiene (1) día(s) de atraso,  recuerde que puede pagar a través de las plataformas de Yape “numero de registrado para yape” o a la  cuenta {{banco}}  y confirmar enviando el Boucher al número de WhatsApp {{numero_whatsapp}} Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null }
                 ]
             }
         };
     },
     methods: {
+        beforeUpload(file) {
+            const isImage = file.type.startsWith('image/');
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isImage) {
+                this.$message.error('Solo se permiten imágenes!');
+                return false;
+            }
+            if (!isLt2M) {
+                this.$message.error('La imagen no debe pesar más de 2MB!');
+                return false;
+            }
+            this.$forceUpdate();
+            return true;
+        },
+
+        handleUploadSuccess(response, type, index) {
+            if (response.success) {
+                this.form[type][index].temp_path = response.temp_url;
+                this.form[type][index].temp_name = response.temp_name;
+                this.$message.success('Imagen subida correctamente');
+                this.$forceUpdate();
+            } else {
+                this.$message.error('Error al subir la imagen');
+            }
+        },
+
+        handleUploadError() {
+            this.$message.error('Error al subir la imagen');
+        },
+
+        removeImage(type, index) {
+            if (this.form[type][index].image_path) {
+                // Si la imagen ya está guardada, llamar al endpoint para eliminarla
+                this.$http.delete(`/caja/rent/whatsapp-settings/remove-image/${this.form[type][index].id}`)
+                    .then(() => {
+                        this.form[type][index].image_path = null;
+                        this.$message.success('Imagen eliminada correctamente');
+                    })
+                    .catch(() => {
+                        this.$message.error('Error al eliminar la imagen');
+                    });
+            }
+            this.form[type][index].temp_path = null;
+            this.form[type][index].temp_name = null;
+        },
+
         async saveMessage(message, type, order) {
             try {
                 message.saving = true;
-                const response = await this.$http.post('/caja/rent/whatsapp-settings', {
-                    content: message.content,
-                    days: message.days,
-                    time: message.time,
-                    active: message.active,
-                    type: type,
-                    message_order: order
+                const formData = new FormData();
+                formData.append('content', message.content);
+                formData.append('days', message.days);
+                formData.append('time', message.time);
+                formData.append('active', message.active);
+                formData.append('type', type);
+                formData.append('message_order', order);
+                if (message.temp_name) {
+                    formData.append('temp_name', message.temp_name);
+                }
+
+                const response = await this.$http.post('/caja/rent/whatsapp-settings', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 });
 
                 if (response.data.success) {
                     this.$message.success('Mensaje guardado correctamente');
+                    if (response.data.image_path) {
+                        message.image_path = response.data.image_path;
+                        message.temp_path = null;
+                        message.temp_name = null;
+                    }
                 } else {
                     this.$message.error(response.data.message);
                 }
@@ -187,13 +308,13 @@ export default {
 
                     // Aseguramos tener siempre 3 mensajes antes y 1 después
                     this.form.before_due = before_due.length > 0 ? formatMessages(before_due) : [
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false },
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false },
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false }
+                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null },
+                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null },
+                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null }
                     ];
 
                     this.form.after_due = after_due.length > 0 ? formatMessages(after_due) : [
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra VENCIDO su recibo de pago  correspondiente al mes {{mes}}.  Tiene (1) día(s) de atraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al número de WhatsApp {{numero_whatsapp}}. Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false }
+                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra VENCIDO su recibo de pago  correspondiente al mes {{mes}}.  Tiene (1) día(s) de atraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al número de WhatsApp {{numero_whatsapp}}. Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null }
                     ];
                 }
             } catch (error) {
@@ -249,5 +370,23 @@ h5 {
 
 .el-button {
     margin-top: 0;
+}
+
+.image-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.preview-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.el-upload {
+    width: auto !important;
 }
 </style>

@@ -104,9 +104,9 @@ class TenantCommand extends Command
                 $whatsapp_settings = HotelRentWhatsapp::where('active', true)->get();
 
                 foreach ($whatsapp_settings as $setting) {
-                    if ($setting->send_time !== $current_time) {
-                        continue;
-                    }
+                    // if ($setting->send_time !== $current_time) {
+                    //     continue;
+                    // }
 
 
 
@@ -117,9 +117,12 @@ class TenantCommand extends Command
                         $message = str_replace(". ", ".\n", $message);
                         // Si los días de diferencia coinciden con los configurados
                         if ($days_difference === $setting->days) {
-
+                            if($setting->image_path){
+                                $whatsapp->sendImage($setting->image_path, $customer_telephone);
+                            }
 
                             $whatsapp->sendMessage($message, $customer_telephone);
+                        
                         }
                     }
                     // Para mensajes después del vencimiento
@@ -128,6 +131,9 @@ class TenantCommand extends Command
                         $message = str_replace(". ", ".\n", $message);
                         // Si los días de diferencia coinciden con los configurados
                         if (abs($days_difference) === $setting->days) {
+                            if($setting->image_path){
+                                $whatsapp->sendImage($setting->image_path, $customer_telephone);
+                            }
 
                             $whatsapp->sendMessage($message, $customer_telephone);
                         }

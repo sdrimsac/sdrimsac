@@ -55,9 +55,11 @@ class HotelRentWhatsapp extends ModelTenant
             ->get()
             ->map(function ($message) {
                 return [
+                    'id' => $message->id,
                     'content' => $message->content,
                     'days' => $message->days,
                     'time' => $message->send_time,
+                    'image_path' => $message->image_path,
                     'active' => $message->active
                 ];
             });
@@ -67,9 +69,11 @@ class HotelRentWhatsapp extends ModelTenant
             ->get()
             ->map(function ($message) {
                 return [
+                    'id' => $message->id,
                     'content' => $message->content,
                     'days' => $message->days,
                     'time' => $message->send_time,
+                    'image_path' => $message->image_path,
                     'active' => $message->active
                 ];
             });
