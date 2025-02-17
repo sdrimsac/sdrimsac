@@ -559,7 +559,7 @@ class DocumentController extends Controller
     public function RegisterDocuments(Request $request)
     {
         try {
-            $documents = Document::whereIn('state_type_id', ['01', '03'])->get();
+            $documents = Document::whereIn('state_type_id', ['01', '03', '05'])->get();
 
             if ($documents->isEmpty()) {
                 return response()->json([
