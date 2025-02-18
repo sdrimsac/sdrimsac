@@ -42,7 +42,7 @@ class Template
 
         $period_rent = null;
         $configuration = Configuration::first();
-        
+
 
         if (is_object($document)) {
             $text = null;
@@ -88,17 +88,17 @@ class Template
                                 $unit_type = ItemUnitType::where('description', $row->item->from_unit_type_id_desc)->where('item_id', $row->item_id)->first();
                             }
                             if ($unit_type) {
-                            
+
                                 $unds =  floatval($unit_type->quantity_unit);
                                 $row->unit_desc = " X " . number_format($unds, 2);
                                 $row->unit_qty = number_format($row->quantity / $unds, 2);
                                 // $row->price_unit = number_format($unit_type->total, 2);
                                 //aqui esta jalando el precio por defecto y no el total
                                 $price_default = $unit_type->price_default;
-                                $price_var = "price_".$price_default;
+                                $price_var = "price_" . $price_default;
                                 $row->price_unit = number_format($unit_type->{$price_var}, 2);
-                                try{
-                                    if($row->price_unit == 0 || $row->price_unit == null){
+                                try {
+                                    if ($row->price_unit == 0 || $row->price_unit == null) {
                                         $row->price_unit = number_format($row->unit_price, 2);
                                         // $price_default = $unit_type->price_default;
                                         // $price_var = "price_".$price_default;
@@ -126,7 +126,7 @@ class Template
             $detail_points = [];
             $detail_message = [];
             if ($document->document_type_id == '80' || $document->document_type_id == '03' || $document->document_type_id == '01') {
-                if (($configuration->promotions_by_points || $configuration->is_promotion_document )&& PromotionDocumentCustomerDetail::where($document_type, $document->id)->exists()) {
+                if (($configuration->promotions_by_points || $configuration->is_promotion_document) && PromotionDocumentCustomerDetail::where($document_type, $document->id)->exists()) {
 
                     if ($configuration->promotions_by_points) {
 
@@ -151,7 +151,7 @@ class Template
 
                         $points_before_detail = $type_promotion->getPointBeforeDetail($type_promotion->id);
                         $detail_points['acc_points'] = $points_before_detail + $currentDocumentPoints;
-                        if($count_promotion_document_customer_detail == $type_promotion_id){
+                        if ($count_promotion_document_customer_detail == $type_promotion_id) {
                             $detail_points['acc_points'] = 0;
                         }
                         $detail_points['is_points'] = true;
@@ -214,18 +214,18 @@ class Template
                         }
                     }
                 }
-                if($configuration->mod_renta){
+                if ($configuration->mod_renta) {
                     $footer_text = $period_rent;
                 }
 
-                if($configuration->mod_renta){
+                if ($configuration->mod_renta) {
                     $field = $is_sale_note ? 'sale_note_id' : 'document_id';
                     $hotel_rent_document = HotelRentDocument::where($field, $document->id)->first();
-                    $hotel_rent = $hotel_rent_document->hotel_rent;
-                    $period_rent = " Pagos: ". $hotel_rent->period(). " de cada mes.";
-                    
-
+                    if ($hotel_rent_document) {
+                        $hotel_rent = $hotel_rent_document->hotel_rent;
+                        $period_rent = " Pagos: " . $hotel_rent->period() . " de cada mes.";
                         $document->observation .= $period_rent;
+                    }
                 }
             }
             return view($view, compact('company', 'detail_points', 'detail_message', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name', 'students', 'footer_text'))->render();
