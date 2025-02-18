@@ -20,7 +20,8 @@ class InputRequest
     public function handle($request, Closure $next, $type, $service)
     {
         $inputs = $request->all();
-        if($service === 'api') {
+        $serie_documento = array_key_exists('serie_documento', $inputs);
+        if($service === 'api' || $serie_documento) {
             $inputs = $this->transformInputs($inputs, $type);
         }
         $inputs = $this->validationInputs($inputs, $type, $service);
@@ -38,8 +39,7 @@ class InputRequest
     private function validationInputs($inputs, $type, $service)
     {
         $class = "App\\CoreFacturalo\\Requests\\".ucfirst($service)."\\Validation\\".ucfirst($type)."Validation";
-        Log::info('class validation: ' . $class);
-        Log::info('inputs validation: ' . json_encode($inputs));
+        
         return $class::validation($inputs);
     }
 
