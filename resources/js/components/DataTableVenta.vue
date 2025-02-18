@@ -216,6 +216,25 @@
                         </div>
                     </div>
                     <div
+                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                    >
+                        <div class="form-group">
+                            <label class="control-label w-100">Unidad De Medida</label>
+                            <el-select
+                                v-model="search.unit_type_id"
+                                filterable
+                                clearable
+                            >
+                                <el-option
+                                    v-for="option in unit_types"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div
                         class="col-lg-4 col-md-4 col-md-4 col-sm-12"
                         style="margin-top:29px"
                     >
@@ -325,6 +344,7 @@ export default {
             activePanel: 0,
             payment_conditions: [],
             sellers: [],
+            unit_types: [],
             see_more: false,
             totals: null,
             totalSum: 0,
@@ -355,6 +375,7 @@ export default {
             this.establishments = response.data.establishments;
             this.payment_conditions = response.data.payment_conditions;
             this.configuration = response.data.configuration;
+            this.unit_types = response.data.unit_types;
         });
 
         await this.getRecords();
@@ -426,6 +447,7 @@ export default {
                 series: null,
                 item_id: null,
                 warehouse_id: null,
+                unit_type_id: null,
                 has_sale: false,
                 active: false,
                 series: null,

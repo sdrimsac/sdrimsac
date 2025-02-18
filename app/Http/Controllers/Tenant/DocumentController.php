@@ -118,6 +118,7 @@ use Modules\Restaurant\Models\Table;
 use Modules\Workshop\Models\Historial;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
+use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentPayment;
 use App\Models\Tenant\HotelRentPenalty;
@@ -126,7 +127,7 @@ use App\Traits\CheckTotalTrait;
 
 class DocumentController extends Controller
 {
-    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait,CheckTotalTrait;
+    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait, CheckTotalTrait;
     private $max_count_payment = 0;
     protected $document_state = [
         '-' => '-',
@@ -192,7 +193,7 @@ class DocumentController extends Controller
 
         ];
     }
-    public function txtValidate(Request $request) 
+    public function txtValidate(Request $request)
     {
         // Validate that a file was uploaded
         $request->validate([
@@ -202,30 +203,29 @@ class DocumentController extends Controller
         try {
             // Obtener el archivo txt de la request
             $file = $request->file('txt_file');
-            
+
             if (!$file || !$file->isValid()) {
                 return [
                     'success' => false,
                     'message' => 'El archivo no es válido o no se pudo procesar correctamente'
                 ];
             }
-            
+
             // Crear nombre único para el archivo temporal
             $namefile = uniqid() . '.txt';
-            
+
             // Guardar el archivo temporal
             Storage::putFileAs('public/txt', $file, $namefile);
-            
+
             $sunat_service = new SunatService();
-            
+
             // Procesar el archivo
             $result = $sunat_service->processTxt($namefile);
-            
+
             // Eliminar archivo temporal
             Storage::delete('public/txt/' . $namefile);
-            
-            return $result;
 
+            return $result;
         } catch (\Exception $e) {
             // Asegurar que se elimine el archivo temporal si existe
             if (isset($namefile)) {
@@ -496,7 +496,7 @@ class DocumentController extends Controller
                 }
             }
 
-    
+
             // $filePath = storage_path('app/temp_data.txt');
             // Storage::put('temp_data.txt', $txtContent);
             // $headers = [
@@ -556,15 +556,26 @@ class DocumentController extends Controller
             'timeout' => 120,
         ]);
     }
-    public function RegisterDocuments(Request $request)
-    {
+    public function RegisterDocuments(Request $request) 
+    { 
         try {
-            $documents = Document::whereIn('state_type_id', ['01', '03', '05'])->get();
+            // Validate date_of_issue is required
+            if (!$request->has('date_of_issue') || !$request->date_of_issue) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El campo fecha de emisión es obligatorio.'
+                ]);
+            }
+
+            $query = Document::whereIn('state_type_id', ['01', '03', '05']);
+            $query->whereDate('date_of_issue', $request->date_of_issue);
+
+            $documents = $query->get();
 
             if ($documents->isEmpty()) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'No se encontraron documentos en estado registrado.'
+                    'success' => false, 
+                    'message' => 'No se encontraron documentos para el periodo seleccionado.'
                 ]);
             }
 
@@ -574,7 +585,7 @@ class DocumentController extends Controller
             foreach ($documents as $doc) {
                 $ruc = $company->number;
                 $documenType = $doc->document_type_id;
-                $serie = $doc->series;
+                $serie = $doc->series; 
                 $number = $doc->number;
                 $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
                 $total = $doc->total;
@@ -586,6 +597,7 @@ class DocumentController extends Controller
             return response($fileContent)
                 ->header('Content-Type', 'text/plain')
                 ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -2360,6 +2372,7 @@ class DocumentController extends Controller
         $number = $request->number;
         $series = $request->series;
         $item_id = $request->item_id;
+        $unit_type_id = $request->unit_type_id;
         $establishments = $request->establishments;
         $company = Company::first();
         $customer_id = $request->customer_id;
@@ -2376,21 +2389,17 @@ class DocumentController extends Controller
 
 
         if ($year) {
-            // Generar las fechas de inicio y fin del año
-            $startOfYear = Carbon::createFromFormat('Y', $year)->startOfYear()->toDateString(); 
-            $endOfYear = Carbon::createFromFormat('Y', $year)->endOfYear()->toDateString();  
+            $startOfYear = Carbon::createFromFormat('Y', $year)->startOfYear()->toDateString();
+            $endOfYear = Carbon::createFromFormat('Y', $year)->endOfYear()->toDateString();
 
-            // Filtrar los registros por el rango del año
             $records = $records->whereBetween('date_of_issue', [$startOfYear, $endOfYear]);
         } elseif ($d_end && preg_match('/^\d{4}-\d{2}$/', $d_end)) {
-            // Convertir `d_end` al primer día y último día del mes
+
             $startOfMonth = Carbon::createFromFormat('Y-m', $d_end)->startOfMonth()->toDateString();
             $endOfMonth = Carbon::createFromFormat('Y-m', $d_end)->endOfMonth()->toDateString();
 
             $records = $records->whereBetween('date_of_issue', [$startOfMonth, $endOfMonth]);
-        }
-    
-        elseif ($d_start && $d_end) {
+        } elseif ($d_start && $d_end) {
             $records = $records->whereBetween('date_of_issue', [$d_start, $d_end]);
         } elseif ($date_of_issue) {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%');
@@ -2402,6 +2411,11 @@ class DocumentController extends Controller
         if ($item_id) {
             $records = $records->whereHas('items', function ($query) use ($item_id) {
                 $query->where('item_id', $item_id);
+            });
+        }
+        if ($unit_type_id) {
+            $records = $records->whereHas('items', function ($query) use ($unit_type_id) {
+                $query->whereJsonContains('item->unit_type_id', $unit_type_id);
             });
         }
         if ($establishments) {
@@ -2702,7 +2716,7 @@ class DocumentController extends Controller
     }
     public function data_table()
     {
-
+        $unit_types = UnitType::all();
         $customers = $this->table('customers');
         $configuration = Configuration::all();
         $items = $this->getItems();
@@ -2738,7 +2752,8 @@ class DocumentController extends Controller
             'state_types',
             'items',
             'categories',
-            'user_type'
+            'user_type',
+            'unit_types'
         );
     }
 

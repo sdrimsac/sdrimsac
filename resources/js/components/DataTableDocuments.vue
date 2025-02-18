@@ -540,32 +540,41 @@ export default {
             window.open(`/${this.resource}/excel?${parameters}`, "_blank");
         },
         async RegisterRecords() {
+            if (!this.search.date_of_issue) {
+            this.$showSAlert(
+                'ALERTA',
+                'Por favor seleccione una fecha para exportar',
+                 'warning'
+            );
+            return;
+            }
+
             let parameters = this.getQueryParameters();
             try {
-                const response = await this.$http.get(
-                    `/${this.resource}/RegisterDocuments?${parameters}`,
-                    {
-                        params: { domain: "site" },
-                        responseType: "blob" // 📌 Asegura que el tipo de respuesta es correcto
-                    }
-                );
-
-                if (response.data.size === 0) {
-                    console.error("El archivo txt está vacío o corrupto.");
-                    return;
+            const response = await this.$http.get(
+                `/${this.resource}/RegisterDocuments?${parameters}`,
+                {
+                params: { domain: "site" },
+                responseType: "blob"
                 }
+            );
 
-                const url = window.URL.createObjectURL(
-                    new Blob([response.data])
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.setAttribute("download", "documentos_registrados.txt");
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
+            if (response.data.size === 0) {
+                console.error("El archivo txt está vacío o corrupto.");
+                return;
+            }
+
+            const url = window.URL.createObjectURL(
+                new Blob([response.data])
+            );
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "documentos_registrados.txt"); 
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
             } catch (error) {
-                console.error("Error al exportar:", error);
+            console.error("Error al exportar:", error);
             }
         },
 

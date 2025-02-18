@@ -19,7 +19,7 @@ class FormatController extends Controller
 {
     public function index()
     {
-    //    dd();
+        //    dd();
         return view('format::accounting.index');
     }
 
@@ -29,13 +29,13 @@ class FormatController extends Controller
         $type = $request->input('type');
         $export = $request->input('export');
         $month = $request->input('month');
-        $d_start = Carbon::parse($month.'-01')->format('Y-m-d');
-        $d_end = Carbon::parse($month.'-01')->endOfMonth()->format('Y-m-d');
+        $d_start = Carbon::parse($month . '-01')->format('Y-m-d');
+        $d_end = Carbon::parse($month . '-01')->endOfMonth()->format('Y-m-d');
 
-        if($export=="PDF" || $export=="pdf"){
+        if ($export == "PDF" || $export == "pdf") {
 
-            if($type === 'sale') {
-                $filename = 'Reporte_Formato_Ventas_'.date('YmdHis');
+            if ($type === 'sale') {
+                $filename = 'Reporte_Formato_Ventas_' . date('YmdHis');
                 //$data = [
                 //    'period' => $month,
                 //    'company' => $this->getCompany(),
@@ -44,21 +44,23 @@ class FormatController extends Controller
                 $period = $month;
                 $company = $this->getCompany();
                 $records = $this->getSaleDocuments($d_start, $d_end);
-               // dd($this->getSaleDocuments($d_start, $d_end));
-               // return view('expense::expenses.form');
+                // dd($this->getSaleDocuments($d_start, $d_end));
+                // return view('expense::expenses.form');
 
                 //$pdf = PDF::loadView('account::account.templates.format_sale_pdf', compact("period","company","records"))->setPaper('a4', 'landscape');
                 $pdf = PDF::loadView('format::account.templates.format_sale_pdf', [
-                    "period" =>$period,"company" => $company,"records" => $records
-                    ],[], [
+                    "period" => $period,
+                    "company" => $company,
+                    "records" => $records
+                ], [], [
                     'format' => 'A4-L'
-               ]);
-                return $pdf->stream('Reporte_Ventas_'.date('YmdHis').'.pdf');
+                ]);
+                return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
                 /*return (new ReportFormatSaleExport())
                     ->data($data)
                     ->download($filename.'.xlsx');*/
             } else {
-                $filename = 'Reporte_Formato_Compras_'.date('YmdHis');
+                $filename = 'Reporte_Formato_Compras_' . date('YmdHis');
                 $data = [
                     'period' => $month,
                     'company' => $this->getCompany(),
@@ -68,9 +70,9 @@ class FormatController extends Controller
                     ->data($data)
                     ->download($filename.'.xlsx');*/
             }
-        }else{
-            if($type === 'sale') {
-                $filename = 'Reporte_Contable_'.date('YmdHis');
+        } else {
+            if ($type === 'sale') {
+                $filename = 'Reporte_Contable_' . date('YmdHis');
                 $data = [
                     'period' => $month,
                     'company' => $this->getCompany(),
@@ -80,9 +82,9 @@ class FormatController extends Controller
 
                 return (new ReportFormatSaleExport())
                     ->data($data)
-                    ->download($filename.'_'.$nombreComercial.'.xlsx');
+                    ->download($filename . '_' . $nombreComercial . '.xlsx');
             } else {
-                $filename = 'Reporte_Formato_Compras_'.date('YmdHis');
+                $filename = 'Reporte_Formato_Compras_' . date('YmdHis');
                 $data = [
                     'period' => $month,
                     'company' => $this->getCompany(),
@@ -90,10 +92,9 @@ class FormatController extends Controller
                 ];
                 return (new ReportFormatPurchaseExport())
                     ->data($data)
-                    ->download($filename.'.xlsx');
+                    ->download($filename . '.xlsx');
             }
         }
-
     }
     private function getCompany()
     {
@@ -107,57 +108,55 @@ class FormatController extends Controller
     private function getDocuments($d_start, $d_end)
     {
         return Document::query()
-                                ->whereBetween('date_of_issue', [$d_start, $d_end])
-                                ->whereIn('document_type_id', ['01', '03'])
-                                ->whereIn('currency_type_id', ['PEN','USD'])
-                                ->orderBy('series')
-                                ->orderBy('number')
-                                ->get();
-
+            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            ->whereIn('document_type_id', ['01', '03'])
+            ->whereIn('currency_type_id', ['PEN', 'USD'])
+            ->orderBy('series')
+            ->orderBy('number')
+            ->get();
     }
     private function getSaleDocuments($d_start, $d_end)
     {
         return Document::query()
-                                ->whereBetween('date_of_issue', [$d_start, $d_end])
-                                //->where('establishment_id',auth()->user()->establishment_id)
-                                ->whereIn('document_type_id', ['01', '03','07','08'])
-                                ->whereIn('currency_type_id', ['PEN'])
-                                ->whereIn('soap_type_id', ['02'])
-                                ->orderBy('series')
-                                ->orderBy('number')
-                                ->get()->transform(function($row) {
-                                    return [
-                                        'date_of_issue' => $row->date_of_issue,
-                                        'document_type_id' => $row->document_type_id,
-                                        'state_type_id' => $row->state_type_id,
-                                        'series' => $row->series,
-                                        'number' => $row->number,
-                                        'customer_identity_document_type_id' => $row->customer->identity_document_type_id,
-                                        'customer_number' => $row->customer->number,
-                                        'customer_name' => $row->customer->name,
-                                        'total_exportation' => $row->total_exportation,
-                                        'total_taxed' => $row->total_taxed,
-                                        'total_exonerated' => $row->total_exonerated,
-                                        'total_unaffected' => $row->total_unaffected,
-                                        'total_plastic_bag_taxes' => $row->total_plastic_bag_taxes,
-                                        'total_isc' => $row->total_isc,
-                                        'total_discount' => $row->total_discount,
-                                        'total_igv' => $row->total_igv,
-                                        'total' => $row->total,
-                                        'exchange_rate_sale' => $row->exchange_rate_sale,
-                                        'currency_type_symbol' => $row->currency_type->symbol,
-                                        'items'=>$row->items,
-                                        'affected_document'=>null,
-                                        // 'affected_document' => (in_array($row->document_type_id, ['07', '08'])) ? [
-                                        //     'date_of_issue' => $row->note->affected_document->date_of_issue,
-                                        //     'document_type_id' => $row->note->affected_document->document_type_id,
-                                        //     'series' => $row->note->affected_document->series,
-                                        //     'number' => $row->note->affected_document->number,
+            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            //->where('establishment_id',auth()->user()->establishment_id)
+            ->whereIn('document_type_id', ['01', '03', '07', '08'])
+            ->whereIn('currency_type_id', ['PEN'])
+            ->whereIn('soap_type_id', ['02'])
+            ->orderBy('series')
+            ->orderBy('number')
+            ->get()->transform(function ($row) {
+                return [
+                    'date_of_issue' => $row->date_of_issue,
+                    'document_type_id' => $row->document_type_id,
+                    'state_type_id' => $row->state_type_id,
+                    'series' => $row->series,
+                    'number' => $row->number,
+                    'customer_identity_document_type_id' => $row->customer->identity_document_type_id,
+                    'customer_number' => $row->customer->number,
+                    'customer_name' => $row->customer->name,
+                    'total_exportation' => $row->total_exportation,
+                    'total_taxed' => $row->total_taxed,
+                    'total_exonerated' => $row->total_exonerated,
+                    'total_unaffected' => $row->total_unaffected,
+                    'total_plastic_bag_taxes' => $row->total_plastic_bag_taxes,
+                    'total_isc' => $row->total_isc,
+                    'total_discount' => $row->total_discount,
+                    'total_igv' => $row->total_igv,
+                    'total' => $row->total,
+                    'exchange_rate_sale' => $row->exchange_rate_sale,
+                    'currency_type_symbol' => $row->currency_type->symbol,
+                    'items' => $row->items,
+                    'affected_document' => null,
+                    // 'affected_document' => (in_array($row->document_type_id, ['07', '08'])) ? [
+                    //     'date_of_issue' => $row->note->affected_document->date_of_issue,
+                    //     'document_type_id' => $row->note->affected_document->document_type_id,
+                    //     'series' => $row->note->affected_document->series,
+                    //     'number' => $row->note->affected_document->number,
 
-                                        // ] : null
-                                    ];
+                    // ] : null
+                ];
             });
-
     }
 
     private function getPurchaseDocuments($d_start, $d_end)
@@ -168,7 +167,7 @@ class FormatController extends Controller
             ->whereIn('currency_type_id', ['PEN'])
             ->orderBy('series')
             ->orderBy('number')
-            ->get()->transform(function($row) {
+            ->get()->transform(function ($row) {
                 return [
                     'date_of_issue' => \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'),
                     'state_type_id' => $row->state_type_id,
@@ -189,12 +188,11 @@ class FormatController extends Controller
                     'currency_type_symbol' => $row->currency_type->symbol
                 ];
             });
-
     }
     private function getStructureFoxcont($documents)
     {
 
-        return $documents->transform(function($row) {
+        return $documents->transform(function ($row) {
             return [
                 'date_of_issue' => \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'),
                 'date_of_due' => $row->invoice->date_of_due->format('d/m/Y'),
@@ -212,7 +210,6 @@ class FormatController extends Controller
                 'total' => number_format($row->total, 2, ".", ""),
             ];
         });
-
     }
 
 
@@ -220,13 +217,12 @@ class FormatController extends Controller
     {
         $company_account = CompanyAccount::first();
         $rows = [];
-        foreach ($documents as $index => $row)
-        {
+        foreach ($documents as $index => $row) {
             $date_of_issue = Carbon::parse($row->date_of_issue);
-            $currency_type_id = ($row->currency_type_id === 'PEN')?'MN':'US';
-            $document_type_id = ($row->document_type_id === '01')?'FT':'BV';
-            $detail = $row->customer->name.', '.$document_type_id.' '.$row->number_full;
-            $number_index = $date_of_issue->format('m').str_pad($index + 1, 4, "0", STR_PAD_LEFT);
+            $currency_type_id = ($row->currency_type_id === 'PEN') ? 'MN' : 'US';
+            $document_type_id = ($row->document_type_id === '01') ? 'FT' : 'BV';
+            $detail = $row->customer->name . ', ' . $document_type_id . ' ' . $row->number_full;
+            $number_index = $date_of_issue->format('m') . str_pad($index + 1, 4, "0", STR_PAD_LEFT);
 
             foreach ($row->items as $item) {
 
@@ -253,7 +249,7 @@ class FormatController extends Controller
                     'col_R' => $document_type_id,
                     'col_S' => $row->number_full,
                     'col_T' => \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'),
-                    'col_U' => ($row->date_of_due) ? \Carbon\Carbon::parse($row->date_of_due)->format('d-m-Y'):'',
+                    'col_U' => ($row->date_of_due) ? \Carbon\Carbon::parse($row->date_of_due)->format('d-m-Y') : '',
                     'col_V' => '',
                     'col_W' => $detail,
                 ];
@@ -309,10 +305,7 @@ class FormatController extends Controller
                     'col_V' => '',
                     'col_W' => 'POR VENTA',
                 ];
-
-
             }
-
         }
         return $rows;
     }
@@ -323,14 +316,13 @@ class FormatController extends Controller
 
         $company_account = CompanyAccount::first();
         $rows = [];
-        foreach ($documents as $index => $row)
-        {
+        foreach ($documents as $index => $row) {
             $date_of_issue = Carbon::parse($row->date_of_issue);
-            $currency_type_id = ($row->currency_type_id === 'PEN')?'S':'D';
-            $document_type_id = ($row->document_type_id === '01')?'01':'03';
-            $detail = substr($row->customer->name.', '.$document_type_id.' '.$row->number_full, 0, 60);
+            $currency_type_id = ($row->currency_type_id === 'PEN') ? 'S' : 'D';
+            $document_type_id = ($row->document_type_id === '01') ? '01' : '03';
+            $detail = substr($row->customer->name . ', ' . $document_type_id . ' ' . $row->number_full, 0, 60);
 
-            $number_index = $date_of_issue->format('m').str_pad($index + 1, 4, "0", STR_PAD_LEFT);
+            $number_index = $date_of_issue->format('m') . str_pad($index + 1, 4, "0", STR_PAD_LEFT);
 
             foreach ($row->items as $item) {
 
@@ -346,8 +338,8 @@ class FormatController extends Controller
                     'col_038_038' => $currency_type_id,
                     'col_039_048' => str_pad(number_format($row->exchange_rate_sale, 7), 10, '0', STR_PAD_LEFT),
                     'col_049_050' => $document_type_id,
-                    'col_051_070' => $row->series.'-'.str_pad($row->number, 15,'0', STR_PAD_LEFT),
-                    'col_071_078' => str_pad(($row->date_of_due)?$row->date_of_due->format('d/m/y') : \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'), 8,' ', STR_PAD_LEFT),
+                    'col_051_070' => $row->series . '-' . str_pad($row->number, 15, '0', STR_PAD_LEFT),
+                    'col_071_078' => str_pad(($row->date_of_due) ? $row->date_of_due->format('d/m/y') : \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'), 8, ' ', STR_PAD_LEFT),
                     'col_079_089' => str_pad($row->customer->number, 11, ' ', STR_PAD_LEFT),
                     'col_090_099' => str_pad('', 10, ' ', STR_PAD_LEFT),
                     'col_100_103' => str_pad('', 4, ' ', STR_PAD_LEFT),
@@ -378,15 +370,15 @@ class FormatController extends Controller
                     'col_003_006' => $number_index,
                     'col_007_014' => \Carbon\Carbon::parse($date_of_issue)->format('d-m-Y'),
                     // 'col_015_024' => '40111',
-                    'col_015_024' =>  ($row->currency_type_id === 'PEN') ? $company_account->igv_pen : $company_account->igv_usd,
+                    'col_015_024' => ($row->currency_type_id === 'PEN') ? $company_account->igv_pen : $company_account->igv_usd,
                     // 'col_025_036' => str_pad($row->total, 12, '0', STR_PAD_LEFT),
                     'col_025_036' => ($row->state_type_id == '11') ? str_pad(0, 12, '0', STR_PAD_LEFT) : str_pad($item->total_igv, 12, '0', STR_PAD_LEFT),
                     'col_037_037' => 'H',
                     'col_038_038' => $currency_type_id,
                     'col_039_048' => str_pad(number_format($row->exchange_rate_sale, 7), 10, '0', STR_PAD_LEFT),
                     'col_049_050' => $document_type_id,
-                    'col_051_070' => $row->series.'-'.str_pad($row->number, 15,'0', STR_PAD_LEFT),
-                    'col_071_078' => str_pad(($row->date_of_due)?\Carbon\Carbon::parse($row->date_of_due)->format('d-m-Y') : \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'), 8,' ', STR_PAD_LEFT),
+                    'col_051_070' => $row->series . '-' . str_pad($row->number, 15, '0', STR_PAD_LEFT),
+                    'col_071_078' => str_pad(($row->date_of_due) ? \Carbon\Carbon::parse($row->date_of_due)->format('d-m-Y') : \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'), 8, ' ', STR_PAD_LEFT),
                     'col_079_089' => str_pad($row->customer->number, 11, ' ', STR_PAD_LEFT),
                     'col_090_099' => str_pad('', 10, ' ', STR_PAD_LEFT),
                     'col_100_103' => str_pad('', 4, ' ', STR_PAD_LEFT),
@@ -413,7 +405,7 @@ class FormatController extends Controller
                     'col_351_358' => str_pad('', 8, ' ', STR_PAD_LEFT),
                 ];
 
-                if($row->state_type_id != '11'){
+                if ($row->state_type_id != '11') {
 
                     $rows[] = [
                         'col_001_002' => '02',
@@ -426,14 +418,14 @@ class FormatController extends Controller
                         'col_038_038' => $currency_type_id,
                         'col_039_048' => str_pad(number_format($row->exchange_rate_sale, 7), 10, '0', STR_PAD_LEFT),
                         'col_049_050' => $document_type_id,
-                        'col_051_070' => $row->series.'-'.str_pad($row->number, 15,'0', STR_PAD_LEFT),
-                        'col_071_078' => str_pad(($row->date_of_due)?$row->date_of_due->format('d/m/y') : \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'), 8,' ', STR_PAD_LEFT),
+                        'col_051_070' => $row->series . '-' . str_pad($row->number, 15, '0', STR_PAD_LEFT),
+                        'col_071_078' => str_pad(($row->date_of_due) ? $row->date_of_due->format('d/m/y') : \Carbon\Carbon::parse($row->date_of_issue)->format('d-m-Y'), 8, ' ', STR_PAD_LEFT),
                         'col_079_089' => str_pad($row->customer->number, 11, ' ', STR_PAD_LEFT),
                         'col_090_099' => str_pad('', 10, ' ', STR_PAD_LEFT),
                         'col_100_103' => str_pad('', 4, ' ', STR_PAD_LEFT),
                         'col_104_113' => str_pad('', 10, ' ', STR_PAD_LEFT),
                         'col_114_114' => str_pad('', 1, ' ', STR_PAD_LEFT),
-                        'col_115_122' =>\Carbon\Carbon::parse($date_of_issue)->format('d-m-Y'),
+                        'col_115_122' => \Carbon\Carbon::parse($date_of_issue)->format('d-m-Y'),
                         'col_123_134' => str_pad('', 12, ' ', STR_PAD_LEFT),
                         'col_135_146' => str_pad('', 12, ' ', STR_PAD_LEFT),
                         'col_147_158' => str_pad('', 12, ' ', STR_PAD_LEFT),
@@ -452,12 +444,8 @@ class FormatController extends Controller
                         'col_349_350' => str_pad('', 2, ' ', STR_PAD_LEFT),
                         'col_351_358' => str_pad('', 8, ' ', STR_PAD_LEFT),
                     ];
-
                 }
-
             }
-
-
         }
         return $rows;
     }
