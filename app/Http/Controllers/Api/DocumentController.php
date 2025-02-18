@@ -322,14 +322,14 @@ class DocumentController extends Controller
                 // payment
                 $boxes    = Box::firstOrNew(['document_id' =>  $document->id]);
                 $boxes->group_id = 1;
-                $boxes->method = PaymentMethodType::find($payment->payment_method_type_id ?? "01")->description;
+                $boxes->method = PaymentMethodType::find($payment['payment_method_type_id'] ?? "01")->description;
                 $boxes->operation_number = "";
                 $boxes->category_id = 1;
                 $boxes->subcategory_id = 1;
                 $boxes->currency_type_id = $document->currency_type_id;
                 $boxes->exchange_rate_sale = $document->exchange_rate_sale;
-                $boxes->amount = $payment->payment;
-                $boxes->date = $payment->date_of_payment;
+                $boxes->amount = $payment['payment'];
+                $boxes->date = $payment['date_of_payment'];
                 $boxes->type = '1';
                 $boxes->state = '1';
                 $boxes->cash_id = $document->cash_id;
