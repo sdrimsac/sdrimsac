@@ -85,6 +85,7 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\CreditByClientExport;
 use App\Exports\DocumentExport;
 use App\Exports\DocumentVenta;
+use App\Http\Controllers\Api\DocumentController as ApiDocumentController;
 use App\Http\Resources\Tenant\DocumentDetractionCollection;
 use App\Http\Resources\Tenant\DocumentVentaCollection;
 use App\Models\Tenant\BankAccount;
@@ -196,15 +197,16 @@ class DocumentController extends Controller
 
         ];
     }
-    public function storeClient(Request $request){
-        try{
+    public function storeClient(Request $request)
+    {
+        try {
             $document = $request->document;
-        $transform = new DocumentTransform();
-        $inputs = $transform->transform($document);
-        $validation = new DocumentValidation();
-        $inputs = $validation->validationSalud($inputs);
+            $transform = new DocumentTransform();
+            $inputs = $transform->transform($document);
+            $validation = new DocumentValidation();
+            $inputs = $validation->validationSalud($inputs);
             $document_input = DocumentInput::set($inputs);
-            $result = $this->storeTransform($document_input);
+            $result = (new ApiDocumentController)->storeTransform($document_input);
             return $result;
         } catch (\Exception $e) {
             return [
@@ -579,8 +581,8 @@ class DocumentController extends Controller
             'timeout' => 120,
         ]);
     }
-    public function RegisterDocuments(Request $request) 
-    { 
+    public function RegisterDocuments(Request $request)
+    {
         try {
             // Validate date_of_issue is required
             if (!$request->has('date_of_issue') || !$request->date_of_issue) {
@@ -597,7 +599,7 @@ class DocumentController extends Controller
 
             if ($documents->isEmpty()) {
                 return response()->json([
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'No se encontraron documentos para el periodo seleccionado.'
                 ]);
             }
@@ -608,7 +610,7 @@ class DocumentController extends Controller
             foreach ($documents as $doc) {
                 $ruc = $company->number;
                 $documenType = $doc->document_type_id;
-                $serie = $doc->series; 
+                $serie = $doc->series;
                 $number = $doc->number;
                 $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
                 $total = $doc->total;
@@ -620,7 +622,6 @@ class DocumentController extends Controller
             return response($fileContent)
                 ->header('Content-Type', 'text/plain')
                 ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
-
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
