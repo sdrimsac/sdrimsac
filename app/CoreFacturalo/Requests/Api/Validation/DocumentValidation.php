@@ -61,7 +61,7 @@ class DocumentValidation
 
     public static function validation($inputs) {
         $series = Functions::findSeries($inputs);
-        
+        $inputs['customer_id'] = Functions::person($inputs['customer'], 'customers');
         $inputs['series'] = $series->number;
 //        unset($inputs['series_id']);
         //aca estas eliminado series_id por eso no llega
