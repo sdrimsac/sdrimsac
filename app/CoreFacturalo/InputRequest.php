@@ -20,8 +20,8 @@ class InputRequest
     public function handle($request, Closure $next, $type, $service)
     {
         $inputs = $request->all();
-        $serie_documento = array_key_exists('serie_documento', $inputs);
-        if($service === 'api' || $serie_documento) {
+        // $serie_documento = array_key_exists('serie_documento', $inputs);
+        if($service === 'api') {
             $inputs = $this->transformInputs($inputs, $type);
         }
         $inputs = $this->validationInputs($inputs, $type, $service);
@@ -32,7 +32,6 @@ class InputRequest
     private function transformInputs($inputs, $type)
     {
         $class = "App\\CoreFacturalo\\Requests\\Api\\Transform\\".ucfirst($type)."Transform";
-        Log::info('class transform: ' . $class);
         return $class::transform($inputs);
     }
 

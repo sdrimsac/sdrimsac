@@ -11,10 +11,10 @@ class DocumentValidation
         $inputs['series'] = $series->number;
         //        unset($inputs['series_id']);
         //aca estas eliminado series_id por eso no llega
-        if (!isset($inputs['customer_id'])) {
-            $inputs['customer_id'] = Functions::person($inputs['customer'], 'customers');
-        }
-        $inputs['items'] = self::items($inputs['items']);
+        // if (!isset($inputs['customer_id'])) {
+        //     $inputs['customer_id'] = Functions::person($inputs['customer'], 'customers');
+        // }
+        // $inputs['items'] = self::items($inputs['items']);
         Functions::DNI($inputs);
         Functions::identityDocumentTypeInvoice($inputs);
 

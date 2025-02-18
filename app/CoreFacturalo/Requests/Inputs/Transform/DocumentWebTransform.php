@@ -2,10 +2,6 @@
 
 namespace App\CoreFacturalo\Requests\Inputs\Transform;
 
-use App\CoreFacturalo\Requests\Api\Transform\Common\EstablishmentTransform;
-use App\CoreFacturalo\Requests\Api\Transform\Common\PersonTransform;
-use App\CoreFacturalo\Requests\Api\Transform\Common\ActionTransform;
-use App\CoreFacturalo\Requests\Api\Transform\Common\LegendTransform;
 use App\CoreFacturalo\Requests\Api\Transform\Functions;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Models\Tenant\Item;
