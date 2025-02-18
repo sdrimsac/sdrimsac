@@ -8,6 +8,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Item;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\ItemCollection;
+use App\Models\Tenant\Cash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Tenant\FormatTemplate;
@@ -63,7 +64,12 @@ class ConfigurationController extends Controller
         $affectation_igv_type_id = $configuration->affectation_igv_type_id;
         $user = auth()->user() ?? auth('api')->user();
         $establishment_id = $user->establishment_id;
-        $cash_id = $configuration->cash_id;
+        $cash = Cash::where('user_id',$user->id)->where('state',1)->first();
+        if($cash){
+            $cash_id = $cash->id;
+        }else{
+            $cash_id = null;
+        }
         return compact('affectation_igv_type_id','establishment_id','cash_id');
     }
     public function tablesNumbersEstablishments(Request $request){
