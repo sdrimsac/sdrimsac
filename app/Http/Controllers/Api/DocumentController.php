@@ -314,6 +314,18 @@ class DocumentController extends Controller
         $document = $fact->getDocument();
         $payments = $inputs["payments"];
         $company = Company::first();
+        $paymentsValue   = [
+            "01" => "Efectivo",
+            "02" => "Culqui",
+            "03" => "Yape",
+            "04" => "PLIN",
+            "05" => "TARJETA: IZYPAY",
+            "06" => "TARJETA: NIUBIZ",
+            "07" => "TARJETA: OPENPAY",
+            "08" => "DIDI FOOD",
+            "09" => "PEDIDOS YA",
+            "10" => "RAPPI"
+        ];
         if (isset($payments[0])) {
             foreach ($payments as $payment) {
                 //                 date_of_payment
@@ -322,7 +334,7 @@ class DocumentController extends Controller
                 // payment
                 $boxes    = Box::firstOrNew(['document_id' =>  $document->id]);
                 $boxes->group_id = 1;
-                $boxes->method = PaymentMethodType::find($payment['payment_method_type_id'] ?? "01")->description;
+                $boxes->method = $paymentsValue[$payment['payment_method_type_id'] ?? "01"];
                 $boxes->operation_number = "";
                 $boxes->category_id = 1;
                 $boxes->subcategory_id = 1;
