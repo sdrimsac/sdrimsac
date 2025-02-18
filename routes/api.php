@@ -183,7 +183,7 @@ if ($hostname) {
             Route::get('subcategories/records', 'SubcategoryController@records');
             Route::delete('subcategories/{subcategories}', 'SubcategoryController@destroy');
 
-            Route::get('configurations/record', '\App\Http\Controllers\Tenant\ConfigurationController@record');
+            Route::get('configurations-client', '\App\Http\Controllers\Tenant\ConfigurationController@recordConfigurationClient');
 
             //cajas Egresos//
             Route::get('reports/boxes', 'BoxController@reports');

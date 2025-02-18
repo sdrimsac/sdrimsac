@@ -58,6 +58,14 @@ class ConfigurationController extends Controller
             ];
         }
     }
+    public function recordConfigurationClient(Request $request){
+        $configuration = Configuration::first();
+        $affectation_igv_type_id = $configuration->affectation_igv_type_id;
+        $user = auth()->user() ?? auth('api')->user();
+        $establishment_id = $user->establishment_id;
+        $cash_id = $configuration->cash_id;
+        return compact('affectation_igv_type_id','establishment_id','cash_id');
+    }
     public function tablesNumbersEstablishments(Request $request){
         $establishments = Establishment::all()->transform(function($row){
             return [
