@@ -103,7 +103,7 @@ class DocumentTransform
                     'item_code_gs1' => Functions::valueKeyInArray($row, 'codigo_producto_gsl'),
                     'unit_type_id' => strtoupper($row['unidad_de_medida']),
                     'currency_type_id' => $inputs['codigo_tipo_moneda'],
-                    'name_product_pdf' => $row['detalle_pdf'],
+                    'name_product_pdf' => Functions::valueKeyInArray($row, 'detalle_pdf'),
                     'quantity' => Functions::valueKeyInArray($row, 'cantidad'),
                     'unit_value' => Functions::valueKeyInArray($row, 'valor_unitario'),
                     'price_type_id' => Functions::valueKeyInArray($row, 'codigo_tipo_precio'),
