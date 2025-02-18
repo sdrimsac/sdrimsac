@@ -17,6 +17,8 @@ class ClientPaymentCollection extends ResourceCollection
         return $this->collection->transform(function($row, $key) {
             return [
                 'id' => $row->id,
+                'document' => $row->document,
+                'document_url' => $row->document_url,
                 'date_of_payment' => $row->date_of_payment->format('d/m/Y'),
                 'payment_method_type_description' => $row->payment_method_type->description,
                 'card_brand' => $row->card_brand,

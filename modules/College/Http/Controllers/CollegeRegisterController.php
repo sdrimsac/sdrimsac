@@ -73,9 +73,9 @@ class CollegeRegisterController extends Controller
     public function records(Request $request)
     {
         $member_id = $request->member_id;
-        $registers = CollegeRegister::where('member_id', $member_id);
+        $registers = CollegeRegister::where('member_id', $member_id)->orderBy('id', 'desc');
 
-
+        
         return new CollegeRegisterCollection($registers->paginate(15));
     }
 

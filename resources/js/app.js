@@ -318,6 +318,13 @@ Vue.component(
     require("./views/system/configuration/apk-url.vue")
 );
 
+//emit document url
+Vue.component(
+    "system-configuration-emit-document-url",
+    require("./views/system/configuration/emit_document_url.vue")
+);
+
+
 //messages client
 Vue.component(
     "system-configuration-messages-client",

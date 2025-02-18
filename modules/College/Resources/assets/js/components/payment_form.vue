@@ -64,6 +64,14 @@
                 </tr>
             </tbody>
         </table>
+        <el-pagination
+                    @current-change="getRecords"
+                    layout="total, prev, pager, next"
+                    :total="pagination.total"
+                    :current-page.sync="pagination.current_page"
+                    :page-size="pagination.per_page"
+                  >
+                  </el-pagination>
     </div>
         <payment-college
             type="incomplete"
@@ -106,6 +114,11 @@ export default {
             registerForm: null,
             servicesForm: [],
             paymentsForm: [],
+            pagination: {
+                total: 0,
+                pageSize: 10,
+                currentPage: 1
+            },
             memberForm: null,
             showPayments: false,
             payableForm: null,
@@ -121,17 +134,18 @@ export default {
             if (payment) {
                 let { document, sale_note } = payment;
                 let doct = document ?? sale_note;
-                console.log(doct);
+                if(doct){
                 let [item] = doct.items;
                 let name = item.item.description;
                 this.titlePayment = `Pagos de ${name}`;
+                }
             } else {
                 this.titlePayment = `Pagos de ${this.member.person.name}`;
             }
         },
         getRecords() {
             this.getRegisters();
-            this.$emit("getRecords");
+            // this.$emit("getRecords");
         },
         openFormPayment(record) {
             this.planForm = record.plan;
@@ -176,16 +190,20 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/college/${this.resource}/records?member_id=${this.member.id}`
+                    `/college/${this.resource}/records?member_id=${this.member.id}&page=${this.pagination.current_page}`
                 );
                 if (response.status == 200) {
-                    const { data } = response.data;
+                    const { data,meta } = response.data;
+                    this.pagination = meta;
+                    this.pagination.per_page = parseInt(response.data.meta.per_page);
 
                     this.registers = data.map(d => {
                         if (d.payments.length > 0) {
                             let lastPayment = d.payments[d.payments.length - 1];
-                            let { items, penalties } = lastPayment.details;
-                            let penaltiesAmount = 0;
+                            if(lastPayment.details){
+                                let { items, penalties } = lastPayment.details;
+                            if(items && penalties){
+                                let penaltiesAmount = 0;
                             if (penalties) {
                                 penaltiesAmount = penalties.reduce(
                                     (a, b) => a + Number(b.sale_unit_price),
@@ -203,7 +221,9 @@ export default {
                                 (lastPayment.document
                                     ? lastPayment.document.total
                                     : lastPayment.sale_note.total);
-                            console.log(d.rest);
+                            }
+                            }
+                            
                         }
 
                         d.paid = d.payments.reduce((a, b) => {

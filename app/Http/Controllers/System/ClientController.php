@@ -25,6 +25,7 @@ use Modules\Document\Helpers\DocumentHelper;
 use Modules\MobileApp\Models\System\AppModule;
 use App\CoreFacturalo\ClientHelper;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
@@ -48,7 +49,94 @@ class ClientController extends Controller
 
         ];
     }
+    public function clientEmitDocument(Request $request)
+    {
+        $configuration = Configuration::first();
+        $document = $request->document;
+        $document_emit_url = $configuration->document_emit_url;
+        $document_emit_url_token = $configuration->document_emit_url_token;
+        $url = rtrim($document_emit_url, '/');
+        $token = $document_emit_url_token;
 
+        try {
+            // Agregar logging para debug
+            Log::info("Realizando petición a: " . $url . "/api/documents");
+            Log::info("Token: " . $token);
+            Log::info("Documento: ", $document);
+
+            $response = Http::withoutVerifying()
+                ->withToken($token)
+                ->post($url . "/api/documents-client", [
+                    "document" => $document
+                ]);
+
+            if (!$response->successful()) {
+                Log::error("Error en la respuesta: " . $response->body());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error en la petición: ' . $response->status(),
+                    'response' => $response->body()
+                ], $response->status());
+            }
+
+            $responseData = $response->json();
+
+            if (empty($responseData)) {
+                Log::warning("Respuesta vacía del servidor");
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La respuesta del servidor está vacía'
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $responseData
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error en clientEmitDocument: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    public function affectationTenant()
+    {
+        $configuration = Configuration::first();
+        $document_emit_url = $configuration->document_emit_url;
+        $document_emit_url_token = $configuration->document_emit_url_token;
+        $affectation_tenant = null;
+        $cash_id = null;
+        try {
+            if ($document_emit_url && $document_emit_url_token) {
+
+                $url = rtrim($document_emit_url, '/');
+                $token = $document_emit_url_token;
+
+                $response = Http::withoutVerifying()->withToken($token)->get($url . "/api/configurations-client");
+                $data = $response->json();
+                if ($data['affectation_igv_type_id']) {
+                    $affectation_tenant = $data['affectation_igv_type_id'];
+                }
+                if ($data['cash_id']) {
+                    $cash_id = $data['cash_id'];
+                }
+                return response()->json([
+                    'affectation_tenant' => $affectation_tenant,
+                    'cash_id' => $cash_id
+                ]);
+                // $affectation_tenant = $response['affectation_tenant'];
+            }
+            return response()->json([
+                'affectation_tenant' => $affectation_tenant
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'affectation_tenant' => $affectation_tenant
+            ]);
+        }
+    }
     public function tables()
     {
 
@@ -149,11 +237,12 @@ class ClientController extends Controller
         );
     }
 
-    public function changeLimitMonthAmount(Request $request){
+    public function changeLimitMonthAmount(Request $request)
+    {
         $client = Client::findOrFail($request->id);
         $tenancy = app(Environment::class);
         $tenancy->tenant($client->hostname->website);
-        
+
         DB::connection('tenant')
             ->table('companies')
             ->where('id', 1)

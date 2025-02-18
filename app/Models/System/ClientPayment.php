@@ -20,6 +20,8 @@ class ClientPayment extends Model
         'state',
         'message_client_before_end',
         'message_client_after_end',
+        'document',
+        'document_url',
     ];
 
     protected $casts = [
@@ -35,5 +37,10 @@ class ClientPayment extends Model
     public function card_brand()
     {
         return $this->belongsTo(CardBrand::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }

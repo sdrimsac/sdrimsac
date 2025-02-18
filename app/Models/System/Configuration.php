@@ -10,6 +10,8 @@ class Configuration extends Model
     use UsesSystemConnection;
 
     protected $fillable = [
+        'document_emit_url',
+        'document_emit_url_token',
         'locked_admin',
         'certificate',
         'soap_send_id',

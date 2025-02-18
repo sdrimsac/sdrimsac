@@ -117,6 +117,7 @@
                                     <th class="text-center">TIPO USUARIO</th>
                                     <th class="text-center">ÁREA</th>
                                     <th class="text-center">PIN</th>
+                                    <th class="text-center">TOKEN</th>
                                     <th class="text-center">ACTIVIDAD</th>
                                     <th class="text-center">ESTABLECIMIENTO</th>
                                     <th class="text-center">SERIES</th>
@@ -175,7 +176,8 @@
                                         >
                                         </el-button>
                                     </td>
-
+                                    <!-- TOKEN -->
+                                    <td class="text-center">{{ row.api_token }}</td>    
                                     <!-- ACTIVIDAD -->
                                     <td class="text-center">
                                         <div

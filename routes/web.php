@@ -1196,6 +1196,8 @@ if ($hostname) {
             // Route::delete('clients/{client}', 'System\ClientController@destroy');
 
             Route::post('clients/password/{client}', 'System\ClientController@password');
+            Route::get('clients/affectation_tenant', 'System\ClientController@affectationTenant');
+            Route::post('clients/client-emit-document', 'System\ClientController@clientEmitDocument');
             Route::post('clients/locked_emission', 'System\ClientController@lockedEmission');
             Route::post('clients/locked_tenant', 'System\ClientController@lockedTenant');
             // Route::post('clients/locked_tenant', 'System\ClientController@lockedTenant'); //Linea repetida
@@ -1216,6 +1218,7 @@ if ($hostname) {
             Route::get('client_payments/record/{id}', 'System\ClientPaymentController@record');
             Route::delete('client_payments/{client_payment}', 'System\ClientPaymentController@destroy');
             Route::get('client_payments/cancel_payment/{client_payment_id}', 'System\ClientPaymentController@cancel_payment');
+            Route::post('client_payments/cancel_payment_client', 'System\ClientPaymentController@cancel_payment_client');
 
             Route::get('client_account_status/records/{client_id}', 'System\AccountStatusController@records');
             Route::get('client_account_status/client/{client_id}', 'System\AccountStatusController@client');
@@ -1285,6 +1288,7 @@ if ($hostname) {
             Route::get('status/cpu', 'System\StatusController@cpu')->name('system.status.cpu');
             Route::get('configurations/apiruc', 'System\ConfigurationController@apiruc');
             Route::get('configurations/apkurl', 'System\ConfigurationController@apkurl');
+            Route::get('configurations/emit-document-url', 'System\ConfigurationController@emitDocumentUrl');
 
             Route::get('configurations/update-tenant-discount-type-base', 'System\ConfigurationController@updateTenantDiscountTypeBase');
 

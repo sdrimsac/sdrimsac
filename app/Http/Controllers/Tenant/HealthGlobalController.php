@@ -24,7 +24,7 @@ class HealthGlobalController
         $month = $request->month_start;
         $year = $request->year_start;
         $is_year = $year != null;
-   
+        
         $type = $request->type;
         $records = $this->getRecords($month, $year);
         if($is_year){
@@ -103,7 +103,6 @@ class HealthGlobalController
         $establishments = Establishment::all();
 
         $records = [];
-
         foreach ($establishments as $establishment) {
             $is_service = $establishment->is_service;
             $notes_ft = [];

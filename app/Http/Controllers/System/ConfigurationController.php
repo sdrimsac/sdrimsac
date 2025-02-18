@@ -20,6 +20,15 @@ class ConfigurationController extends Controller
         return view('system.configuration.index', compact('configuration'));
     }
 
+    public function emitDocumentUrl()
+    {
+        $configuration = Configuration::first();
+        return [
+            'document_emit_url' => $configuration->document_emit_url,
+            'document_emit_url_token' => $configuration->document_emit_url_token
+        ];
+    }
+
     public function record()
     {
 
@@ -60,6 +69,16 @@ class ConfigurationController extends Controller
         {
             $configuration->apk_url = $request->apk_url;
             $this->updateApkUrl($request->apk_url);
+        }
+
+        if($request->document_emit_url)
+        {
+            $configuration->document_emit_url = $request->document_emit_url;
+        }
+
+        if($request->document_emit_url_token)
+        {
+            $configuration->document_emit_url_token = $request->document_emit_url_token;
         }
 
         $configuration->save();

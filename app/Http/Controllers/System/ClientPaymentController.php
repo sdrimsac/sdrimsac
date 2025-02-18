@@ -11,6 +11,7 @@ use App\Models\System\PaymentMethodType;
 use App\Models\System\CardBrand;
 use App\Models\System\Configuration;
 use Hyn\Tenancy\Environment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -154,7 +155,28 @@ class ClientPaymentController extends Controller
             'message' => 'Pago eliminado con éxito'
         ];
     }
+    public function cancel_payment_client(Request $request)
+    {
+        $client_payment_id = $request->client_payment_id;
+        $document = $request->document;
+        $document_url = $request->ticket;
+        $client_payment = ClientPayment::find($client_payment_id);
+        $client_payment->document = $document;
+        $client_payment->document_url = $document_url;
+        $client_payment->state = true;
+        $client_payment->save();
 
+        $client = Client::findOrFail($client_payment->client_id);
+        $tenancy = app(Environment::class);
+        $tenancy->tenant($client->hostname->website);
+        DB::connection('tenant')->table('account_payments')->where('reference_id', $client_payment->id)->update(['state' => 1, 'date_of_payment_real' => date('Y-m-d')]);
+
+        return [
+            'success' => true,
+            'message' => 'Monto pagado', 
+        ];
+
+    } 
 
     public function cancel_payment($client_payment_id)
     {

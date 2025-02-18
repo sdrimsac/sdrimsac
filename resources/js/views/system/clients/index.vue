@@ -813,6 +813,9 @@
 
         <client-payments
             :clientId="recordId"
+            :affectation_tenant="affectation_tenant"
+            :cash_id="cash_id"
+            :client_number="client_number"
             :showDialog.sync="showDialogPayments"
         ></client-payments>
 
@@ -893,6 +896,7 @@ export default {
     },
     data() {
         return {
+            client_number: null,
             loading: false,
             selectBillingDate: "",
             showDialogEdit: false,
@@ -905,6 +909,8 @@ export default {
             text_limit_doc: null,
             text_limit_users: null,
             loaded: false,
+            affectation_tenant: null,
+            cash_id: null,
             year: moment().format("YYYY"),
             total_documents: 0,
             dataChartLine: {
@@ -939,11 +945,17 @@ export default {
             this.getData();
         });
         this.getData();
-
+        this.getAffectationTenant();
         this.text_limit_doc = "El límite de comprobantes fue superado";
         this.text_limit_users = "El límite de usuarios fue superado";
     },
     methods: {
+        getAffectationTenant(){
+            this.$http.get(`/${this.resource}/affectation_tenant`).then(response => {
+                this.affectation_tenant = response.data.affectation_tenant;
+                this.cash_id = response.data.cash_id;
+            });
+        },
         changeLimitMonthAmount: debounce(function(row){
             this.loading = true;
             this.$http.post(`/${this.resource}/change_limit_month_amount`, row)
@@ -1147,15 +1159,17 @@ export default {
         getData() {
             this.$http.get(`/${this.resource}/records`).then(response => {
                 this.records = response.data.data;
-                console.log(this.records);
             });
         },
         clickCreate(recordId = null) {
             this.recordId = recordId;
+        
             this.showDialog = true;
         },
         clickPayments(recordId = null) {
             this.recordId = recordId;
+            let client = this.records.find(record => record.id === recordId);
+            this.client_number = client.number;
             this.showDialogPayments = true;
         },
         clickAccountStatus(recordId = null) {
