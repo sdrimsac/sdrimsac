@@ -39,6 +39,7 @@ class InputRequest
     {
         $class = "App\\CoreFacturalo\\Requests\\".ucfirst($service)."\\Validation\\".ucfirst($type)."Validation";
         Log::info('class validation: ' . $class);
+        Log::info('inputs validation: ' . json_encode($inputs));
         return $class::validation($inputs);
     }
 
