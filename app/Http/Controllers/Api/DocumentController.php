@@ -303,6 +303,8 @@ class DocumentController extends Controller
             $facturalo->updateHash();
             $facturalo->updateQr();
             $facturalo->createPdf();
+
+
             // $facturalo->sendEmail();
             // $facturalo->senderXmlSignedBill();
 
@@ -310,6 +312,48 @@ class DocumentController extends Controller
         });
 
         $document = $fact->getDocument();
+        $payments = $inputs["payments"];
+        $company = Company::first();
+        if (isset($payments[0])) {
+            foreach ($payments as $payment) {
+                //                 date_of_payment
+                // payment_method_type_id
+                // reference
+                // payment
+                $boxes    = Box::firstOrNew(['document_id' =>  $document->id]);
+                $boxes->group_id = 1;
+                $boxes->method = PaymentMethodType::find($payment->payment_method_type_id ?? "01")->description;
+                $boxes->operation_number = "";
+                $boxes->category_id = 1;
+                $boxes->subcategory_id = 1;
+                $boxes->currency_type_id = $document->currency_type_id;
+                $boxes->exchange_rate_sale = $document->exchange_rate_sale;
+                $boxes->amount = $payment->payment;
+                $boxes->date = $payment->date_of_payment;
+                $boxes->type = '1';
+                $boxes->state = '1';
+                $boxes->cash_id = $document->cash_id;
+                $boxes->orden_id =  $document->orden_id;
+                $boxes->document_id = $document->id;
+                $boxes->user_id = auth()->user()->id;
+                /* $boxes->seller_id = auth()->user()->id; */
+                $boxes->establishment_id = auth()->user()->establishment_id;
+                $document_save = $document;
+                switch ($document_save->document_type_id) {
+                    case "01":
+                        $type_document = "FACTURA ELECTRONICA";
+                        break;
+                    case "03":
+                        $type_document = "BOLETA DE VENTA ELECTRONICA";
+                        break;
+                }
+                $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+                $boxes->description = "VENTAS " . $documents_rows;
+                $boxes->soap_type_id = $company->soap_type_id;
+                $boxes->soap_type_id = $company->soap_type_id;
+                $boxes->save();
+            }
+        }
         // $response = $fact->getResponse();
         return [
             'success' => true,
@@ -575,5 +619,4 @@ class DocumentController extends Controller
 
         return $records;
     }
-    
 }
