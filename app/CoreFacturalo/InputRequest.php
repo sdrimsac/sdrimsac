@@ -3,6 +3,7 @@
 namespace App\CoreFacturalo;
 
 use Closure;
+use Illuminate\Support\Facades\Log;
 
 class InputRequest
 {
@@ -30,13 +31,14 @@ class InputRequest
     private function transformInputs($inputs, $type)
     {
         $class = "App\\CoreFacturalo\\Requests\\Api\\Transform\\".ucfirst($type)."Transform";
+        Log::info('class transform: ' . $class);
         return $class::transform($inputs);
     }
 
     private function validationInputs($inputs, $type, $service)
     {
         $class = "App\\CoreFacturalo\\Requests\\".ucfirst($service)."\\Validation\\".ucfirst($type)."Validation";
-   
+        Log::info('class validation: ' . $class);
         return $class::validation($inputs);
     }
 
