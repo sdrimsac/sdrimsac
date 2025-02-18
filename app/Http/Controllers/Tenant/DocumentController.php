@@ -78,6 +78,9 @@ use App\Models\System\Configuration as Config;
 use Modules\Item\Http\Requests\CategoryRequest;
 use  Modules\Inventory\Models\InventoryConfiguration;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
+use App\CoreFacturalo\Requests\Api\Transform\DocumentTransform;
+use App\CoreFacturalo\Requests\Api\Validation\DocumentValidation;
+use App\CoreFacturalo\Requests\Inputs\DocumentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\CreditByClientExport;
 use App\Exports\DocumentExport;
@@ -192,6 +195,23 @@ class DocumentController extends Controller
             'message' => 'Se consultó los resumenes'
 
         ];
+    }
+    public function storeClient(Request $request){
+        try{
+            $document = $request->document;
+        $transform = new DocumentTransform();
+        $inputs = $transform->transform($document);
+        $validation = new DocumentValidation();
+        $inputs = $validation->validationSalud($inputs);
+            $document_input = DocumentInput::set($inputs);
+            $result = $this->storeTransform($document_input);
+            return $result;
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
     public function txtValidate(Request $request)
     {

@@ -219,6 +219,7 @@ if ($hostname) {
             Route::get('documents/validate/{id}', '\App\Http\Controllers\Tenant\DocumentController@validar_cpe');
             // Route::post('documents', 'Api\DocumentController@store');
             Route::post('documents', '\App\Http\Controllers\Tenant\DocumentController@store');
+            Route::post('documents-client', '\App\Http\Controllers\Tenant\DocumentController@storeClient');
             Route::get('documents/tables', '\App\Http\Controllers\Tenant\DocumentController@tables');
             Route::get('app/documents/tables', '\App\Http\Controllers\Tenant\DocumentController@tables');
             Route::get('documents/lists', 'Api\DocumentController@lists');
