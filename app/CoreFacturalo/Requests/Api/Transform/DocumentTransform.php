@@ -6,6 +6,7 @@ use App\CoreFacturalo\Requests\Api\Transform\Common\ActionTransform;
 use App\CoreFacturalo\Requests\Api\Transform\Common\EstablishmentTransform;
 use App\CoreFacturalo\Requests\Api\Transform\Common\LegendTransform;
 use App\CoreFacturalo\Requests\Api\Transform\Common\PersonTransform;
+use Illuminate\Support\Facades\Log;
 
 class DocumentTransform
 {
@@ -18,6 +19,7 @@ class DocumentTransform
         //     $inputs['items'][$key]['codigo_interno'] = ($inputs['items'][$key]['codigo_interno']) ? $inputs['items'][$key]['codigo_interno']:'';
         //     $inputs['items'][$key]['codigo_producto_sunat'] = ($inputs['items'][$key]['codigo_producto_sunat']) ? $inputs['items'][$key]['codigo_producto_sunat']:'';
         // }
+
         $inputs_transform = [
             'series' => Functions::valueKeyInArray($inputs, 'serie_documento'),
             'user_id' => Functions::valueKeyInArray($inputs, 'user_id'),
@@ -79,7 +81,7 @@ class DocumentTransform
 
         $inputs_transform = self::invoice($inputs_transform, $inputs);
         $inputs_transform = self::note($inputs_transform, $inputs);
-
+        Log::info('inputs_transform: ' . json_encode($inputs_transform));
         return $inputs_transform;
     }
 
