@@ -321,6 +321,8 @@ class DocumentController extends Controller
                 'state_type_id' => $document->state_type_id,
                 'state_type_description' => $this->getStateTypeDescription($document->state_type_id),
                 'number_to_letter' => $document->number_to_letter,
+                // 'ticket' => $document->ticket,
+                'download_pdf' => $document->download_external_pdf,
                 // 'hash' => $document->hash,
                 // 'qr' => $document->qr,
             ],
