@@ -93,6 +93,14 @@ export default {
                         "DD/MM/YYYY"
                     );
                 }
+                if(!p.details){
+                    return {
+                        ...p,
+                        items: 0,
+                        penalties: 0,
+                        total: 0
+                    }
+                }
                 let { items, penalties } = p.details;
 
                 if (penalties) {
