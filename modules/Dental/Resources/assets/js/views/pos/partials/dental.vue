@@ -14,7 +14,25 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label for="vehiculo">Cliente</label>
-                        <el-input placeholder="buscar cliente"></el-input>
+
+                        <el-select
+                            v-model="form.customer_id"
+                            filterable
+                            remote
+                            class="border-left rounded-left border-info"
+                            popper-class="el-select-customers"
+                            dusk="customer_id"
+                            placeholder="Escriba el nombre o número de documento del cliente"
+                            :remote-method="searchRemoteCustomers"
+                            :loading="loading_search"
+                        >
+                            <el-option
+                                v-for="option in customers"
+                                :key="option.id"
+                                :value="option.id"
+                                :label="option.description"
+                            ></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <br />
@@ -120,30 +138,26 @@
                 </div>
             </div>
             <div class="section-content mt-4">
-                <!-- Sección: Odontograma -->
-                <odontograma
-                    v-if="section === 'odontograma'"
-                    :record-id="recordId"
-                />
-                
-                <!-- Otras secciones (ejemplo) -->
-                <div v-if="section === 'info'">
-                    <p>Información del paciente...</p>
+                <div v-if="section == 'info'">
+                    <info :patient.sync="selectedPatient"></info>
                 </div>
-                <div v-if="section === 'exploracion'">
-                    <p>Exploración física...</p>
+                <div v-if="section == 'exploracion'">
+                    <exploracion :id.sync="selectedPatient.id"></exploracion>
                 </div>
-                <div v-if="section === 'diagnostico'">
-                    <p>Exploración física...</p>
+                <div v-show="section == 'odontograma'">
+                    <odontograma :id.sync="selectedPatient.id"></odontograma>
                 </div>
-                <div v-if="section === 'evolucion'">
-                    <p>Exploración física...</p>
+                <div v-show="section == 'diagnostico'">
+                    <diagnostico :id.sync="selectedPatient.id"></diagnostico>
                 </div>
-                <div v-if="section === 'tratamientos'">
-                    <p>Exploración física...</p>
+                <div v-show="section == 'evolucion'">
+                    <evolucion :id.sync="selectedPatient.id"></evolucion>
                 </div>
-                <div v-if="section === 'cita'">
-                    <p>Exploración física...</p>
+                <div v-show="section == 'tratamientos'">
+                    <tratamientos></tratamientos>
+                </div>
+                <div v-show="section == 'citas'">
+                    <citas :id.sync="selectedPatient.id"></citas>
                 </div>
             </div>
         </form>
@@ -151,24 +165,59 @@
 </template>
 <script>
 import Odontograma from "./odontograma.vue";
+import Info from "./info.vue";
+import Exploracion from "./exploracion.vue";
+import Diagnostico from "./diagnostico.vue";
+import Citas from "./citas.vue";
+import Evolucion from "./evolucion.vue";
+import Tratamientos from "./tratamientos.vue";
+
 export default {
     props: ["showDialog", "recordId"],
     components: {
-        Odontograma
+        Exploracion,
+        Citas,
+        Info,
+        Odontograma,
+        Diagnostico,
+        Evolucion,
+        Tratamientos
     },
     data() {
         return {
             section: "",
             resource: "dental",
+            selectedPatient: {},
+            loading_search: false,
+            form: {
+                customer_id: null
+            },
+            customers: []
         };
     },
     methods: {
+        searchRemoteCustomers(input) {
+            if (input.length > 0) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+
+                this.$http
+                    .get(`/${this.resource}/searchCustomers?${parameters}`)
+                    .then(response => {
+                        this.customers = response.data.customers;
+                        this.loading_search = false;
+                        if (this.customers.length == 0) {
+                            this.customers = this.all_customers;
+                        }
+                    });
+            } else {
+                this.customers = this.all_customers;
+            }
+        },
         changeSection(section) {
             this.section = section;
         },
-        open() {
-            
-        },
+        open() {},
         close() {
             this.$emit("update:showDialog", false);
         }

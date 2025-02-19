@@ -1434,6 +1434,7 @@
     </el-dialog>
     <detraction-payment :showDialog.sync="showDialogDetraction"></detraction-payment>
     <Dental :showDialog.sync="showDialogDental"></Dental>
+    <Medical :showDialog.sync="showDialogMedical"></Medical>
     
   </div>
 </template>
@@ -1507,6 +1508,7 @@ const ProductsDue = () => import("./partials/products_due.vue");
 const ItemSet = () =>
   import("../../../../../../../resources/js/views/item_sets/form.vue");
 const Dental = () => import("./partials/dental.vue");
+const Medical = () => import("./partials/medical.vue");
 const ConsolidatedListModal = () =>
   import("./partials/consolidated_list_modal.vue");
 const options = {
@@ -1530,6 +1532,7 @@ export default {
     "areaId"
   ],
   components: {
+    Medical,
     Dental,
     QuotationListModal,
     ConsolidatedListModal,
@@ -1565,6 +1568,7 @@ export default {
       selectedVehiculoPlaca: null,
       selectedVehiculoId: null,
       showDialogDental: false,
+      showDialogMedical: false,
       showQuotationListDialog: false,
       customersSearch: [],
       loading_search: false,
@@ -1956,9 +1960,15 @@ export default {
     setMenuOptions() {
       this.optionsMenu = [
         {
+          id: 251,
+          title: ["Citas Medicas"],
+          /* icon: "fas fa-cogs", */
+          visible: true && !this.isSeller
+        },
+        {
           id: 250,
-          title: ["Dental"],
-          icon: "fas fa-cogs",
+          title: ["Historias Clinicas"],
+          /* icon: "fas fa-cogs", */
           visible: true && !this.isSeller
         },
         {
@@ -2530,6 +2540,9 @@ export default {
     },
     trigerFunction(id) {
       switch (id) {
+        case 251:
+          this.showDialogMedical = true;
+          break;
         case 250:
           this.showDialogDental = true;
           break;

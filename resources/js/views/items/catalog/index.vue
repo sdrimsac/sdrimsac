@@ -47,40 +47,41 @@
                                     clearable
                                 ></el-input>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
-                                <!-- <el-button
-                                    @click="toggleCatalog"
-                                    :type="
-                                        isCatalogEnabled ? 'danger' : 'success'
-                                    "
-                                    >{{
-                                        isCatalogEnabled
-                                            ? "Desactivar Catálogo completo"
-                                            : "Activar Catálogo completo"
-                                    }}</el-button
-                                > -->
-                                <!-- <el-button
-                                    type="succces"
-                                    @click="sendToCatalog"
-                                >
-                                    Filtro por categoría
-                                </el-button> -->
-                                <el-button
-                                    type="succces"
-                                    @click="sendToCatalog"
-                                >
-                                    armar catalogo
-                                </el-button>
-                                <!-- </div> -->
+                            <div class="col-lg-3 col-md-3 col-sm-4 pb-2">
+                                <label>Establecimientos</label>
+                                <el-select v-model="search.warehouse_id">
+                                    <el-option
+                                        v-for="warehouse in warehouses"
+                                        :key="warehouse.id"
+                                        :value="warehouse.id"
+                                        :label="warehouse.description"
+                                    >
+                                    </el-option>
+                                </el-select>
                             </div>
-                            <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                                <!-- <div class="text-end mb-3"> -->
+                            <div class="col-lg-3 col-md-3 col-sm-12 pb-2 d-flex justify-content-center align-items-end">
+                                <el-button
+                                    type="success"
+                                    @click="sendToCatalog"
+                                    class="me-2"
+                                >
+                                    Armar catálogo
+                                </el-button>
+
+                                <el-button 
+                                    type="danger" 
+                                    @click="printPDF"
+                                >
+                                    <i class="fas fa-print"></i> Generar Catalogo PDF
+                                </el-button>
+                            </div>
+                            <!-- <div class="col-lg-1 col-md-1 col-sm-12 pb-2">
                                 <div class="text-end mb-3">
                                     <el-button type="danger" @click="printPDF">
-                                        <i class="fas fa-print"></i> Generar PDF
+                                        <i class="fas fa-print"></i> Generar Catalogo PDF
                                     </el-button>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -216,78 +217,110 @@
                                                 position: 'relative'
                                             }"
                                         >
-                                            <!-- Add a semi-transparent overlay to ensure text remains readable -->
+                                            <div class="overlay"></div> <!-- Nuevo overlay -->
                                             <div
-                                                class="text-center py-3"
+                                                class="text-center py-3 content-wrapper"
                                                 style="position: relative;"
                                             >
-                                                <h1>Catálogo de Productos</h1>
-                                                <img
-                                                    :src="
-                                                        '/storage/uploads/logos/' +
-                                                            company.logo
-                                                    "
-                                                    alt="Logo"
-                                                    class="my-4"
-                                                    style="max-width: 200px;"
-                                                    v-if="company.logo"
-                                                />
-                                                <h3>
-                                                    {{ company.trade_name }}
-                                                </h3>
-                                                <p class="mt-3">
-                                                    {{
-                                                        new Date().toLocaleDateString()
-                                                    }}
-                                                </p>
-                                                <div
-                                                    class="spacer"
-                                                    style="height: 400px;"
-                                                ></div>
-                                                <h4>Contacto:</h4>
-                                                <p>
-                                                    Teléfono:
-                                                    {{
-                                                        establishment.telephone
-                                                    }}
-                                                </p>
-                                                <p>
-                                                    Email:
-                                                    {{ establishment.email }}
-                                                </p>
-                                                <p>
-                                                    Dirección:
-                                                    {{ establishment.address }}
-                                                </p>
+                                                <div>
+                                                    <h1 class="catalog-title">
+                                                        CATALOGOS DE PRODUCTOS
+                                                    </h1>
+                                                    <img
+                                                        :src="'/storage/uploads/logos/' + company.logo"
+                                                        alt="Logo"
+                                                        class="my-4 company-logo"
+                                                        v-if="company.logo"
+                                                    />
+                                                    <h3 class="company-name">
+                                                        {{ company.trade_name }}
+                                                    </h3>
+                                                </div>
+                                                
+                                                <div class="spacer"></div>
+                                                
+                                                <div class="contact-info mt-4"> <!-- Cambiado de mt-auto a mt-4 -->
+                                                    <h4>Contacto:</h4>
+                                                    <p>
+                                                        Teléfono:
+                                                        {{
+                                                            establishment.telephone
+                                                        }}
+                                                    </p>
+                                                    <p>
+                                                        Email:
+                                                        {{ establishment.email }}
+                                                    </p>
+                                                    <p>
+                                                        Dirección:
+                                                        {{ establishment.address }}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <!-- Página de productos -->
                                         <div>
-                                            <template v-for="(category, catIndex) in categories">
-                                                <template v-if="filteredItems.filter(item => item.category_id === category.id).length > 0">
+                                            <template
+                                                v-for="(category,
+                                                catIndex) in categories"
+                                            >
+                                                <template
+                                                    v-if="
+                                                        filteredItems.filter(
+                                                            item =>
+                                                                item.category_id ===
+                                                                category.id
+                                                        ).length > 0
+                                                    "
+                                                >
                                                     <div
-                                                        v-for="(chunk, chunkIndex) in Math.ceil(
-                                                            filteredItems.filter(item => item.category_id === category.id).length / 9
+                                                        v-for="(chunk,
+                                                        chunkIndex) in Math.ceil(
+                                                            filteredItems.filter(
+                                                                item =>
+                                                                    item.category_id ===
+                                                                    category.id
+                                                            ).length / 9
                                                         )"
-                                                        :key="`${catIndex}-${chunkIndex}`"
+                                                        :key="
+                                                            `${catIndex}-${chunkIndex}`
+                                                        "
                                                         class="pdf-page products-page"
                                                         :style="{
                                                             minHeight: '1000px',
                                                             padding: '20px',
                                                             backgroundImage: `url(${images[1].url})`,
-                                                            backgroundSize: 'cover',
-                                                            backgroundPosition: 'center',
-                                                            backgroundRepeat: 'no-repeat',
+                                                            backgroundSize:
+                                                                'cover',
+                                                            backgroundPosition:
+                                                                'center',
+                                                            backgroundRepeat:
+                                                                'no-repeat',
                                                             position: 'relative'
                                                         }"
                                                     >
-                                                        <h6 class="category-title mb-3 text-center">{{ category.name }}</h6>
+                                                        <h6
+                                                            class="category-title mb-3 text-center"
+                                                        >
+                                                            {{ category.name }}
+                                                        </h6>
                                                         <div class="row g-2">
                                                             <div
-                                                                v-for="(product, index) in filteredItems
-                                                                    .filter(item => item.category_id === category.id)
-                                                                    .slice(chunkIndex * 9, (chunkIndex + 1) * 9)"
+                                                                v-for="(product,
+                                                                index) in filteredItems
+                                                                    .filter(
+                                                                        item =>
+                                                                            item.category_id ===
+                                                                            category.id
+                                                                    )
+                                                                    .slice(
+                                                                        chunkIndex *
+                                                                            9,
+                                                                        (chunkIndex +
+                                                                            1) *
+                                                                            9
+                                                                    )"
                                                                 :key="index"
                                                                 class="col-4"
                                                                 style="height: 280px; margin-bottom: 10px; padding: 0 5px;"
@@ -297,30 +330,43 @@
                                                                     style="width: 170px; height: 270px;"
                                                                 >
                                                                     <img
-                                                                        :src="product.image_url"
+                                                                        :src="
+                                                                            product.image_url
+                                                                        "
                                                                         class="card-img-top"
                                                                         alt="Producto"
                                                                         style="height: 140px; object-fit: contain; padding: 5px;"
                                                                     />
-                                                                    <div class="card-body p-2">
+                                                                    <div
+                                                                        class="card-body p-2"
+                                                                    >
                                                                         <h6
                                                                             class="card-title mb-1 fw-bold"
                                                                             style="font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
                                                                         >
-                                                                            {{ product.internal_id }}
+                                                                            {{
+                                                                                product.internal_id
+                                                                            }}
                                                                         </h6>
                                                                         <p
                                                                             class="card-text mb-1 fw-bold"
                                                                             style="font-size: 11px; height: 40px; overflow: hidden;"
                                                                         >
-                                                                            {{ product.description }}
+                                                                            {{
+                                                                                product.description
+                                                                            }}
                                                                         </p>
                                                                         <p
                                                                             class="card-text mb-0"
                                                                             style="font-size: 16px; margin-top: 5px;"
                                                                         >
-                                                                            <strong style="color: #000000;">
-                                                                                S/. {{ product.sale_unit_price }}
+                                                                            <strong
+                                                                                style="color: #000000;"
+                                                                            >
+                                                                                S/.
+                                                                                {{
+                                                                                    product.sale_unit_price
+                                                                                }}
                                                                             </strong>
                                                                         </p>
                                                                     </div>
@@ -337,7 +383,6 @@
                                             class="pdf-page back-cover"
                                             :style="{
                                                 minHeight: '1000px',
-
                                                 pageBreakBefore: 'always',
                                                 backgroundImage: `url(${images[2].url})`,
                                                 backgroundSize: 'cover',
@@ -346,66 +391,43 @@
                                                 position: 'relative'
                                             }"
                                         >
+                                            <div class="overlay"></div>
                                             <div
-                                                class="text-center d-flex flex-column justify-content-center"
-                                                style="height: 100%; position: relative; padding-top: 200px;"
+                                                class="text-center d-flex flex-column align-items-center justify-content-center content-wrapper"
+                                                style="height: 100%; position: relative; padding-top: 100px;"
                                             >
-                                                <div style="margin-top: 100px;">
+                                                <div class="back-cover-content text-center">
                                                     <img
-                                                        :src="
-                                                            '/storage/uploads/logos/' +
-                                                                company.logo
-                                                        "
+                                                        :src="'/storage/uploads/logos/' + company.logo"
                                                         alt="Logo"
-                                                        class="my-4"
-                                                        style="max-width: 200px;"
+                                                        class="my-4 company-logo"
                                                         v-if="company.logo"
+                                                        style="display: block; margin: 0 auto;"
                                                     />
-                                                    <h3>
-                                                        TODO LOS DERECHOS
-                                                        RESERVADOS
-                                                    </h3>
-                                                    <p class="mt-3">
-                                                        {{
-                                                            new Date().toLocaleDateString()
-                                                        }}
-                                                    </p>
+                                                    <div style="margin-top: 30px;">
+                                                        <h3 class="rights-reserved">
+                                                            TODO LOS DERECHOS RESERVADOS
+                                                        </h3>
+                                                        <p class="catalog-date" style="margin-top: 20px;">
+                                                            {{ new Date().toLocaleDateString() }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    class="contact-info mt-auto"
-                                                >
+                                                <div class="contact-info" style="margin-top: 100px;">
                                                     <h4>Contacto:</h4>
-                                                    <template
-                                                        v-if="establishment"
-                                                    >
+                                                    <template v-if="establishment">
                                                         <p>
-                                                            Teléfono:
-                                                            {{
-                                                                establishment.telephone ||
-                                                                    "No disponible"
-                                                            }}
+                                                            Teléfono: {{ establishment.telephone || "No disponible" }}
                                                         </p>
                                                         <p>
-                                                            Email:
-                                                            {{
-                                                                establishment.email ||
-                                                                    "No disponible"
-                                                            }}
+                                                            Email: {{ establishment.email || "No disponible" }}
                                                         </p>
                                                         <p>
-                                                            Dirección:
-                                                            {{
-                                                                establishment.address ||
-                                                                    "No disponible"
-                                                            }}
+                                                            Dirección: {{ establishment.address || "No disponible" }}
                                                         </p>
                                                     </template>
                                                     <template v-else>
-                                                        <p>
-                                                            Información de
-                                                            contacto no
-                                                            disponible
-                                                        </p>
+                                                        <p>Información de contacto no disponible</p>
                                                     </template>
                                                 </div>
                                             </div>
@@ -437,6 +459,109 @@
     align-items: center;
     justify-content: center;
 }
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* Overlay semi-transparente */
+    z-index: 1;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    padding-top: 40px; /* Agregado padding-top para ajustar posición inicial */
+}
+
+.catalog-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    /* letter-spacing: 2px; */
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1rem;
+    border-radius: 5px;
+    /* display: inline-block; */
+}
+
+.company-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 1.5rem 0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    /* display: inline-block; */
+}
+
+.company-logo {
+    max-width: 200px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.contact-info {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 1rem; /* Reducido de 2rem a 1rem */
+    width: 80%; /* Agregado para centrar mejor el contenido */
+    margin-left: auto;
+    margin-right: auto;
+    /* Agregado para asegurar que se mantiene en la primera página */
+    position: relative;
+    bottom: auto;
+}
+
+.contact-info h4 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid white;
+    padding-bottom: 0.5rem;
+}
+
+.contact-info p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.rights-reserved {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 1.5rem 0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.catalog-date {
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.spacer {
+    height: 100px; /* Reducido de 200px a 100px */
+}
+
+.pdf-page.cover-page {
+    min-height: 800px;
+    max-height: 1123px; /* Altura estándar A4 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 20px;
+}
 </style>
 <script>
 import queryString from "query-string";
@@ -447,6 +572,7 @@ export default {
     }, */
     data() {
         return {
+            warehouses: [],
             establishment: {
                 telephone: "",
                 email: "",
@@ -475,7 +601,7 @@ export default {
             company: {},
             search: {
                 category_id: null,
-                warehouse_id: 1,
+                warehouse_id: null, // Será establecido en mounted
                 value: null,
                 active: null,
                 description: null
@@ -498,7 +624,7 @@ export default {
         "search.category_id": {
             async handler(newVal) {
                 this.pagination.current_page = 1;
-                
+
                 // Ejecutar ambas peticiones de forma independiente
                 try {
                     await Promise.all([
@@ -516,7 +642,15 @@ export default {
                 this.pagination.current_page = 1;
                 this.getRecords();
             }
-        }
+        },
+        // Agregar watcher para warehouse_id
+        'search.warehouse_id': {
+            handler(newVal) {
+                this.pagination.current_page = 1;
+                this.getRecords();
+                this.updateFilteredItems(this.search.category_id);
+            }
+        },
     },
     /* mounted() {
         this.fetchImages();
@@ -525,15 +659,20 @@ export default {
     async mounted() {
         try {
             const response = await this.$http.get(`/${this.resource}/tables`);
-            console.log("Respuesta completa:", response.data); // Debugging
 
             this.categories = response.data.categories;
             this.company = response.data.company;
+            this.warehouses = response.data.warehouses;
 
             // Verificación y asignación segura
             if (response.data.establishment) {
                 this.establishment = response.data.establishment;
             } else {
+            }
+
+            // Establecer el primer warehouse por defecto si existe
+            if (this.warehouses && this.warehouses.length > 0) {
+                this.search.warehouse_id = this.warehouses[0].id;
             }
         } catch (error) {
             this.$message.error("Error al cargar datos del establecimiento");
@@ -549,7 +688,11 @@ export default {
         // Nuevo método para actualizar items filtrados
         async updateFilteredItems(categoryId) {
             try {
-                const params = categoryId ? { category_id: categoryId } : {};
+                const params = {
+                    category_id: categoryId || null,
+                    warehouse_id: this.search.warehouse_id
+                };
+                
                 const response = await this.$http.post("catalog/storeCatalog", params);
                 
                 if (response.data) {
@@ -564,24 +707,17 @@ export default {
 
         async sendToCatalog() {
             try {
-                const response = await this.$http.post(
-                    "catalog/storeCatalog",
-                    {
-                        products: this.selectedProducts,
-                        category_id: this.search.category_id || null
-                    },
-                    {
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    }
-                );
+                const response = await this.$http.post("catalog/storeCatalog", {
+                    products: this.selectedProducts,
+                    category_id: this.search.category_id || null,
+                    warehouse_id: this.search.warehouse_id
+                });
 
                 if (response.data) {
                     this.$message.success("Catálogo armado con éxito");
                     this.enableCatalog = true;
                     this.selectedProducts = [];
-                    
+
                     // Actualizar ambas listas
                     await Promise.all([
                         this.getRecords(),
@@ -665,19 +801,23 @@ export default {
             if (this.time) {
                 clearTimeout(this.time);
             }
-            
-            return new Promise((resolve) => {
+
+            return new Promise(resolve => {
                 this.time = setTimeout(async () => {
                     this.loading = true;
                     try {
                         // Asegurarse de que category_id se incluya en los parámetros
-                        const url = `/${this.resource}/records?${this.getQueryParameters()}`;
+                        const url = `/${
+                            this.resource
+                        }/records?${this.getQueryParameters()}`;
                         const response = await this.$http.get(url);
-                        
+
                         if (response.data) {
                             this.records = response.data.data;
                             this.pagination = {
-                                current_page: parseInt(response.data.meta.current_page),
+                                current_page: parseInt(
+                                    response.data.meta.current_page
+                                ),
                                 total: parseInt(response.data.meta.total),
                                 per_page: parseInt(response.data.meta.per_page),
                                 from: parseInt(response.data.meta.from)

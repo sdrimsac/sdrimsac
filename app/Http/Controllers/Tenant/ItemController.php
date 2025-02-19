@@ -837,43 +837,6 @@ class ItemController extends Controller
         $records = $this->getRecords($request);
         return new ItemCollection($records->paginate(config('tenant.items_per_page')));
     }
-    /* public function recordsCatalog(Request $request)
-    {
-        $enableCatalog = $request->input('enable_catalog', false);
-        if ($enableCatalog) {
-            $records = Item::select(
-            'internal_id',
-            'description', 
-            'sale_unit_price',
-            'category_id',
-            'image',
-            )
-            ->with(['category:id,name'])
-            ->whereTypeUser()
-            ->whereNotIsSet()
-            ->where('active', 1)
-            ->get();
-
-            $transformedItems = (new ItemCatalogCollection($records))->collection->groupBy('category.name');
-
-            $categorized_items = [];
-            foreach($transformedItems as $category_name => $items) {
-            $categorized_items[] = [
-                'category' => $category_name,
-                'items' => $items
-            ];
-            }
-
-            return response()->json([
-            'success' => true,
-            'data' => $categorized_items
-            ]);
-
-        } else {
-            $records = $this->getRecordsCatalog($request);
-            return new ItemCatalogCollection($records->paginate(config('tenant.items_per_page')));
-        }
-    } */
 
     public function recordsCatalog(Request $request)
     {
@@ -924,17 +887,18 @@ class ItemController extends Controller
         return $categories_array;
     }
 
-    public function storeCatalog(Request $request)
+    public function storeCatalog(Request $request) 
     {
         $products = $request->input('products');
         $category_id = $request->input('category_id');
+        $warehouse_id = $request->input('warehouse_id') ?? 1; // Default warehouse_id is 1
 
         if (!empty($products)) {
             DB::connection('tenant')->table('item_catalog')->truncate();
 
             $inserts = array_map(function ($product_id) {
                 return [
-                    'id_item_catalog' => $product_id, 
+                    'id_item_catalog' => $product_id,
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
@@ -943,7 +907,6 @@ class ItemController extends Controller
             DB::connection('tenant')->table('item_catalog')->insert($inserts);
         }
 
-        // Get items not in catalog
         $catalog_ids = DB::connection('tenant')->table('item_catalog')
             ->pluck('id_item_catalog')
             ->toArray();
@@ -951,9 +914,15 @@ class ItemController extends Controller
         $items = Item::whereTypeUser()
             ->whereNotIsSet()
             ->where('active', 1)
-            ->whereNotIn('id', $catalog_ids);
+            ->whereNotIn('id', $catalog_ids)
+            ->whereExists(function ($query) use ($warehouse_id) {
+                $query->select(DB::raw(1))
+                    ->from('item_warehouse') 
+                    ->whereColumn('item_warehouse.item_id', 'items.id')
+                    ->where('item_warehouse.warehouse_id', $warehouse_id)
+                    ->where('item_warehouse.active', 1);
+            });
 
-        // Add category filter if category_id is provided
         if ($category_id) {
             $items = $items->where('category_id', $category_id);
         }
@@ -1175,7 +1144,6 @@ class ItemController extends Controller
 
         return $records->orderBy('description', 'ASC');
     }
-
 
     public function getRecordsUltima_Venta($item_id)
     {

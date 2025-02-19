@@ -909,6 +909,10 @@ const app = new Vue({
             import(
                 "../../modules/Dental/Resources/assets/js/views/specialties/index.vue"
             ),
+        "tenant-dental-medic": () =>
+            import(
+                "../../modules/Dental/Resources/assets/js/views/medic/index.vue"
+            ),
         "tenant-dental-tariffs": () =>
             import(
                 "../../modules/Dental/Resources/assets/js/views/tariffs/index.vue"

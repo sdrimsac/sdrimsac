@@ -1132,14 +1132,21 @@
                         <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
                             href="{{ route('tenant.dental.specialties') }}">
                             <i class=""></i>
-                            Listado de Especialidades
+                            Especialidades
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
                             href="{{ route('tenant.dental.tariffs') }}">
                             <i class=""></i>
-                            Listado de Tarifas
+                            Tarifas
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
+                            href="{{ route('tenant.dental.medic') }}">
+                            <i class=""></i>
+                            Medicos
                         </a>
                     </li>
                 </ul>

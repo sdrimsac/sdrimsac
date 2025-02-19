@@ -25,7 +25,10 @@ class ItemCatalogCollection extends ResourceCollection
         $warehouses = Warehouse::select('id', 'description')->get();
         return $this->collection->transform(function ($row, $key) use ($warehouses) {
 
-            $item_warehouses = ItemWarehouse::select('warehouse_id')->where('item_id', $row->id)->get();
+            $item_warehouses = ItemWarehouse::select('warehouse_id')
+                ->where('item_id', $row->id)
+                ->where('active', 1)
+                ->get();
             $warehouses_ids = $item_warehouses->pluck('warehouse_id')->toArray();
             $is_in_all_warehouses = count($warehouses_ids) === $warehouses->count();
             

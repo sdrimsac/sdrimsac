@@ -284,16 +284,48 @@
 </template>
 <script>
 export default {
-    props: [
-        "current_tooth",
-        "tooth_details",
-        "tooth_info",
-        "teeth",
-        "repaint",
-        "ranges",
-        "line",
-        "id"
-    ],
+    props: {
+        current_tooth: {
+            required: true
+        },
+        tooth_details: {
+            type: Array,
+            default: () => []
+        },
+        tooth_info: {
+            type: Object,
+            required: true
+        },
+        teeth: {
+            type: Array,
+            required: true
+        },
+        repaint: {
+            type: Function,
+            required: true
+        },
+        ranges: {
+            type: Array,
+            default: () => []
+        },
+        line: {
+            type: Number,
+            required: true
+        },
+        id: {
+            required: true
+        }
+    },
+    watch: {
+        current_tooth: {
+            handler(newVal) {
+                if (newVal) {
+                    this.setDetails(newVal);
+                }
+            },
+            immediate: true
+        }
+    },
     data() {
         return {
             showDialog: false,
@@ -330,9 +362,11 @@ export default {
     methods: {
         open() {
             this.showDialog = true;
+            this.titleDialog = `Historia clínica - Diente N° ${this.current_tooth}`;
         },
         close() {
             this.showDialog = false;
+            this.resetDetails();
         },
         create() {
             console.log('open');
@@ -677,15 +711,10 @@ export default {
             this.side = item.sides;
             this.range = item.range;
             this.hasAcronym = !!item.acronym;
-            //  this.side && (this.teeth[this.current_tooth][this.itemSelected].sides)
+           
             this.hasOptions = !!item.options;
             item.options && (this.options = item.options);
             item.acronym && (this.acronyms = item.acronym);
-
-            // if (this.hasAcronym && !this.hasOptions) {
-            //   this.optionsSelected = item.acronym;
-            //   this.options = [item.value];
-            // }
         },
         querySearch(queryString, cb) {
             const filter = queryString

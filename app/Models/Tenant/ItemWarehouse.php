@@ -13,7 +13,7 @@ class ItemWarehouse extends ModelTenant
         'item_id',
         'warehouse_id',
         'stock',
-        'type',
+        'active',
         
     ];
 
