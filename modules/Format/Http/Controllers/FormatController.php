@@ -121,12 +121,34 @@ class FormatController extends Controller
             ->whereBetween('date_of_issue', [$d_start, $d_end])
             //->where('establishment_id',auth()->user()->establishment_id)
             ->whereIn('document_type_id', ['01', '03', '07', '08'])
-            ->whereIn('currency_type_id', ['PEN'])
+            // ->whereIn('currency_type_id', ['PEN'])
             ->whereIn('soap_type_id', ['02'])
             ->orderBy('series')
             ->orderBy('number')
             ->get()->transform(function ($row) {
+                $is_pen = $row->currency_type_id == 'PEN';
+                $total_exportation = $row->total_exportation;
+                $total_taxed = $row->total_taxed;
+                $total_exonerated = $row->total_exonerated;
+                $total_unaffected = $row->total_unaffected;
+                $total_plastic_bag_taxes = $row->total_plastic_bag_taxes;
+                $total_isc = $row->total_isc;
+                $total_discount = $row->total_discount;
+                $total_igv = $row->total_igv;
+                $total = $row->total;
+                if (!$is_pen) {
+                    $total_exportation = $row->total_exportation * $row->exchange_rate_sale;
+                    $total_taxed = $row->total_taxed * $row->exchange_rate_sale;
+                    $total_exonerated = $row->total_exonerated * $row->exchange_rate_sale;
+                    $total_unaffected = $row->total_unaffected * $row->exchange_rate_sale;
+                    $total_plastic_bag_taxes = $row->total_plastic_bag_taxes * $row->exchange_rate_sale;
+                    $total_isc = $row->total_isc * $row->exchange_rate_sale;
+                    $total_discount = $row->total_discount * $row->exchange_rate_sale;
+                    $total_igv = $row->total_igv * $row->exchange_rate_sale;
+                    $total = $row->total * $row->exchange_rate_sale;
+                }
                 return [
+                    'is_pen' => $is_pen,
                     'date_of_issue' => $row->date_of_issue,
                     'document_type_id' => $row->document_type_id,
                     'state_type_id' => $row->state_type_id,
@@ -135,15 +157,15 @@ class FormatController extends Controller
                     'customer_identity_document_type_id' => $row->customer->identity_document_type_id,
                     'customer_number' => $row->customer->number,
                     'customer_name' => $row->customer->name,
-                    'total_exportation' => $row->total_exportation,
-                    'total_taxed' => $row->total_taxed,
-                    'total_exonerated' => $row->total_exonerated,
-                    'total_unaffected' => $row->total_unaffected,
-                    'total_plastic_bag_taxes' => $row->total_plastic_bag_taxes,
-                    'total_isc' => $row->total_isc,
-                    'total_discount' => $row->total_discount,
-                    'total_igv' => $row->total_igv,
-                    'total' => $row->total,
+                    'total_exportation' => $total_exportation,
+                    'total_taxed' => $total_taxed,
+                    'total_exonerated' => $total_exonerated,
+                    'total_unaffected' => $total_unaffected,
+                    'total_plastic_bag_taxes' => $total_plastic_bag_taxes,
+                    'total_isc' => $total_isc,
+                    'total_discount' => $total_discount,
+                    'total_igv' => $total_igv,
+                    'total' => $total,
                     'exchange_rate_sale' => $row->exchange_rate_sale,
                     'currency_type_symbol' => $row->currency_type->symbol,
                     'items' => $row->items,

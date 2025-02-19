@@ -68,6 +68,9 @@
             IMPORTE TOTAL
         </td>
         <td class="border-left font-weight" style="border: 1px solid black;">
+            TIPO DE CAMBIO
+        </td>
+        <td class="border-left font-weight" style="border: 1px solid black;">
             ESTADO
         </td>
         <td class="border-left font-weight" style="border: 1px solid black;">
@@ -97,6 +100,8 @@
         <td class="border-left font-weight" style="border: 1px solid black;">INAFECTA</td>
         <td class="border-left font-weight"></td>
         <td class="border-left font-weight"></td>
+        <td class="border-left font-weight"></td>
+
         <td class="border-left font-weight"></td>
         <td class="border-left font-weight"></td>
 
@@ -133,6 +138,11 @@
                 <td class="border-left" style="border: 1px solid black;"></td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_igv'] }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total'] }}</td>
+                <td class="border-left" style="border: 1px solid black;">
+                    @if (!$row['is_pen'])
+                    {{ $row['exchange_rate_sale'] }}
+                    @endif
+                </td>
                 <td class="border-left" style="border: 1px solid black;">{{ $row['state_type_id'] === '01' ? 'Registrado' : ($row['state_type_id'] === '03' ? 'Enviado' : ($row['state_type_id'] === '05' ? 'Aceptado' : ($row['state_type_id'] === '07' ? 'Observado' : ($row['state_type_id'] === '09' ? 'Rechazado' : ($row['state_type_id'] === '11' ? 'Anulado' : ($row['state_type_id'] === '13' ? 'Por anular' : '')))))) }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ isset($row['items']) && count($row['items']) > 0 ? ($row['items'][0]->item->unit_type_id != 'ZZ' ? 'P' : 'S') : '' }}</td>
                 {{-- Columnas de documento afectado --}}
@@ -177,6 +187,11 @@
                 <td class="border-left"></td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_igv'] }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total'] }}</td>
+                <td class="border-left" style="border: 1px solid black;">
+                    @if (!$row['is_pen'])
+                        {{ $row['exchange_rate_sale'] }}
+                    @endif
+                </td>
                 <td class="border-left" style="border: 1px solid black;">{{ $row['state_type_id'] === '01' ? 'Registrado' : ($row['state_type_id'] === '03' ? 'Enviado' : ($row['state_type_id'] === '05' ? 'Aceptado' : ($row['state_type_id'] === '07' ? 'Observado' : ($row['state_type_id'] === '09' ? 'Rechazado' : ($row['state_type_id'] === '11' ? 'Anulado' : ($row['state_type_id'] === '13' ? 'Por anular' : '')))))) }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ isset($row['items']) && count($row['items']) > 0 ? ($row['items'][0]->item->unit_type_id != 'ZZ' ? 'P' : 'S') : '' }}</td>
                 {{-- Columnas de documento afectado --}}
@@ -244,6 +259,11 @@
                 <td class="border-left"></td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_igv'] }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total'] }}</td>
+                <td class="border-left" style="border: 1px solid black;">
+                    @if (!$row['is_pen'])
+                        {{ $row['exchange_rate_sale'] }}
+                    @endif
+                </td>
                 <td class="border-left" style="border: 1px solid black;">{{ $row['state_type_id'] === '01' ? 'Registrado' : ($row['state_type_id'] === '03' ? 'Enviado' : ($row['state_type_id'] === '05' ? 'Aceptado' : ($row['state_type_id'] === '07' ? 'Observado' : ($row['state_type_id'] === '09' ? 'Rechazado' : ($row['state_type_id'] === '11' ? 'Anulado' : ($row['state_type_id'] === '13' ? 'Por anular' : '')))))) }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ isset($row['items']) && count($row['items']) > 0 ? ($row['items'][0]->item->unit_type_id != 'ZZ' ? 'P' : 'S') : '' }}</td>
                 {{-- Columnas de documento afectado --}}
@@ -288,6 +308,11 @@
                 <td class="border-left" style="border: 1px solid black;"></td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_igv'] }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total'] }}</td>
+                <td class="border-left" style="border: 1px solid black;">
+                    @if (!$row['is_pen'])
+                        {{ $row['exchange_rate_sale'] }}
+                    @endif
+                </td>
                 <td class="border-left" style="border: 1px solid black;">{{ $row['state_type_id'] === '01' ? 'Registrado' : ($row['state_type_id'] === '03' ? 'Enviado' : ($row['state_type_id'] === '05' ? 'Aceptado' : ($row['state_type_id'] === '07' ? 'Observado' : ($row['state_type_id'] === '09' ? 'Rechazado' : ($row['state_type_id'] === '11' ? 'Anulado' : ($row['state_type_id'] === '13' ? 'Por anular' : '')))))) }}</td>
                 <td class="border-left" style="border: 1px solid black;">{{ isset($row['items']) && count($row['items']) > 0 ? ($row['items'][0]->item->unit_type_id != 'ZZ' ? 'P' : 'S') : '' }}</td>
                 {{-- Columnas de documento afectado --}}
