@@ -306,12 +306,22 @@ export default {
                         }));
                     };
 
-                    // Aseguramos tener siempre 3 mensajes antes y 1 después
-                    this.form.before_due = before_due.length > 0 ? formatMessages(before_due) : [
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null },
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null },
-                    { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null }
-                    ];
+                    const defaultBeforeMessage = {
+                        content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra disponible su recibo de pago  correspondiente al mes {{mes}}.  Evite  el cargo de moras por retraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al numero de WhatsApp {{numero_whatsapp}}.  Si ya pago omita este mensaje Atte. La Gerencia General',
+                        days: 0,
+                        time: '08:00',
+                        active: true,
+                        saving: false,
+                        temp_path: null,
+                        temp_name: null
+                    };
+
+                    // Aseguramos tener siempre 3 mensajes antes
+                    let formattedBeforeDue = before_due.length > 0 ? formatMessages(before_due) : [];
+                    while (formattedBeforeDue.length < 3) {
+                        formattedBeforeDue.push({ ...defaultBeforeMessage });
+                    }
+                    this.form.before_due = formattedBeforeDue;
 
                     this.form.after_due = after_due.length > 0 ? formatMessages(after_due) : [
                     { content: 'Sr. Inquilino {{huesped}} le comunica que ya se encuentra VENCIDO su recibo de pago  correspondiente al mes {{mes}}.  Tiene (1) día(s) de atraso,  recuerde que puede pagar a través de las plataformas de Yape {{yape/plin}} o a la  cuenta {{banco}}  y confirmar enviando el Boucher al número de WhatsApp {{numero_whatsapp}}. Si ya pago omita este mensaje Atte. La Gerencia General', days: 0, time: '08:00', active: true, saving: false, temp_path: null, temp_name: null }

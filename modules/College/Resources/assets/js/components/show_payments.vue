@@ -110,7 +110,7 @@ export default {
                     );
                 }
                 p.items = items.reduce(
-                    (a, b) => a + Number(b.sale_unit_price),
+                    (a, b) => a + Number(b.sale_unit_price) * Number(b.quantity),
                     0
                 );
                 p.total = p.items + (p.penalties || 0);
