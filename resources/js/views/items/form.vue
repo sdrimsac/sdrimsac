@@ -393,24 +393,28 @@
                                             <div class="btn-group">
                                                 <!-- Modificar los botones para usar los nuevos métodos -->
                                                 <!-- Para Categoría -->
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     v-if="!form_category.add"
                                                     class="btn btn-sm btn-primary btn-circle mx-1"
-                                                    @click="activateCategoryForm"
+                                                    @click="
+                                                        activateCategoryForm
+                                                    "
                                                 >
-                                                    <i class="fas fa-plus-circle"></i>
+                                                    <i
+                                                        class="fas fa-plus-circle"
+                                                    ></i>
                                                 </button>
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     v-if="form_category.add"
                                                     class="btn btn-sm btn-success btn-circle mx-1"
                                                     @click="saveCategoryForm"
                                                 >
                                                     <i class="fas fa-save"></i>
                                                 </button>
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     v-if="form_category.add"
                                                     class="btn btn-sm btn-danger btn-circle mx-1"
                                                     @click="cancelCategoryForm"
@@ -471,24 +475,26 @@
                                             <div class="btn-group">
                                                 <!-- Modificar los botones para usar los nuevos métodos -->
                                                 <!-- Para Marca -->
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     v-if="!form_brand.add"
                                                     class="btn btn-sm btn-primary btn-circle mx-1"
                                                     @click="activateBrandForm"
                                                 >
-                                                    <i class="fas fa-plus-circle"></i>
+                                                    <i
+                                                        class="fas fa-plus-circle"
+                                                    ></i>
                                                 </button>
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     v-if="form_brand.add"
                                                     class="btn btn-sm btn-success btn-circle mx-1"
                                                     @click="saveBrandForm"
                                                 >
                                                     <i class="fas fa-save"></i>
                                                 </button>
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     v-if="form_brand.add"
                                                     class="btn btn-sm btn-danger btn-circle mx-1"
                                                     @click="cancelBrandForm"
@@ -1393,25 +1399,52 @@
                                     <strong>Precios por Almacén</strong>
                                 </h4>
 
-                                <table>
-                                    <tbody>
-                                        <tr
-                                            v-for="w in form.warehouse_prices"
-                                            :key="w.id"
-                                        >
-                                            <td width="60%">
-                                                <h5>{{ w.warehouse }}</h5>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    v-model="w.price"
-                                                    @input="$forceUpdate()"
-                                                    placeholder="Precio de almacen"
-                                                ></el-input>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Almacén</th>
+                                                <th>Precio Venta</th>  
+                                                <th>Stock Inicial</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="warehouse in warehouses" :key="warehouse.id">
+                                                <td>{{ warehouse.description }}</td>
+                                                <td>
+                                                    <el-input
+                                                        v-model="getPriceForWarehouse(warehouse.id).price"
+                                                        type="number" 
+                                                        step="0.01"
+                                                        placeholder="Precio de venta"
+                                                    >
+                                                        <template slot="prepend">S/.</template>
+                                                    </el-input>
+                                                </td>
+                                                <td>
+                                                    <el-input
+                                                        v-model="getStockForWarehouse(warehouse.id).stock"
+                                                        type="number"
+                                                        :disabled="!!recordId"
+                                                        min="0"
+                                                        @input="calculateTotalStock"
+                                                        placeholder="Stock inicial"
+                                                    >
+                                                        <template slot="append"></template>
+                                                    </el-input>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" class="text-end">
+                                                    <strong>Stock Total:</strong>
+                                                </td>
+                                                <td><strong>{{ totalStock }} </strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                             <!-- Botones de Guardar y Candelar dentro del tab-pane -->
                         </div>
@@ -2643,7 +2676,9 @@ export default {
                 promotion_count: null,
                 item_price_ranges: [],
                 category_id: null,
-                brand_id: null
+                brand_id: null,
+                warehouse_prices: [], // Para precios por almacén
+                item_warehouses: []  // Para stock por almacén
             },
             sale_unit_price: null,
             configuration: {},
@@ -2753,6 +2788,9 @@ export default {
     },
 
     computed: {
+        totalStock() {
+            return this.form.item_warehouses.reduce((sum, w) => sum + Number(w.stock || 0), 0);
+        },
         formattedSaleUnitPrice: {
             get() {
                 // Formatea el valor con dos decimales siempre que sea numérico
@@ -3183,10 +3221,28 @@ export default {
                 model: null,
                 quality: null,
                 origin: null,
-                month_day: null
+                month_day: null,
+                warehouse_prices: [], // Para precios por almacén
+                item_warehouses: []  // Para stock por almacén
             };
             this.show_has_igv = true;
             this.enabled_percentage_of_profit = false;
+            
+            // Inicializar arrays de almacenes
+            if (this.warehouses.length > 0) {
+                // Precios por almacén
+                this.form.warehouse_prices = this.warehouses.map(w => ({
+                    warehouse_id: w.id,
+                    price: 0,
+                    warehouse: w.description
+                }));
+
+                // Stock por almacén  
+                this.form.item_warehouses = this.warehouses.map(w => ({
+                    warehouse_id: w.id,
+                    stock: 0
+                }));
+            }
         },
         onSuccess(response, file, fileList) {
             if (response.success) {
@@ -3346,7 +3402,7 @@ export default {
                 return {
                     ...i,
                     selected,
-                    total: i.total,
+                    total: i.total
                     // total: (Number(i.price2) * Number(i.quantity_unit)).toFixed(
                     //     2
                     // )
@@ -3476,6 +3532,22 @@ export default {
                     );
             }
 
+            // Validar que cada almacén tenga stock definido
+            if (!this.recordId) {
+                const invalidStock = this.form.item_warehouses.some(w => {
+                    return w.stock === null || w.stock === undefined || w.stock < 0;
+                });
+                
+                if (invalidStock) {
+                    this.$showSAlert(
+                        "Error",
+                        "Debe especificar un stock inicial válido para cada almacén",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+
             this.loading_submit = true;
             this.form.all_establishment = this.allEstablishment;
             this.form.categoria_madera = this.categoria_madera.filter(
@@ -3485,8 +3557,22 @@ export default {
                 "🚀 ~ file: form.vue:2309 ~ submit ~ this.form:",
                 this.form
             );
+
+            // Preparar datos para enviar
+            const formData = {
+                ...this.form,
+                warehouse_prices: this.form.warehouse_prices.map(w => ({
+                    warehouse_id: w.warehouse_id,
+                    price: Number(w.price)
+                })),
+                item_warehouses: this.form.item_warehouses.map(w => ({
+                    warehouse_id: w.warehouse_id, 
+                    stock: Number(w.stock)
+                }))
+            };
+
             await this.$http
-                .post(`/${this.resource}`, this.form)
+                .post(`/${this.resource}`, formData)
                 .then(response => {
                     if (response.data.success) {
                         this.$showSAlert(
@@ -3495,7 +3581,6 @@ export default {
                             "success"
                         );
                         if (this.external) {
-
                             this.$emit("add", response.data.data);
                         } else {
                             this.$eventHub.$emit("reloadData");
@@ -3681,24 +3766,39 @@ export default {
                 return;
             }
 
-            this.$http.post("/items/categories", this.form_category)
+            this.$http
+                .post("/items/categories", this.form_category)
                 .then(response => {
                     if (response.data.success) {
-                        this.$showSAlert("Éxito", "Categoría registrada correctamente.", "success");
+                        this.$showSAlert(
+                            "Éxito",
+                            "Categoría registrada correctamente.",
+                            "success"
+                        );
                         this.categories.push(response.data.data);
-                        let lastElement = this.categories[this.categories.length - 1];
+                        let lastElement = this.categories[
+                            this.categories.length - 1
+                        ];
                         this.form.category_id = lastElement.id;
                         this.showCategoryForm = false;
                         this.form_category.name = "";
                         this.form_category.add = false;
                         this.$forceUpdate();
                     } else {
-                        this.$showSAlert("Error", "No se pudo guardar la categoría.", "error");
+                        this.$showSAlert(
+                            "Error",
+                            "No se pudo guardar la categoría.",
+                            "error"
+                        );
                     }
                 })
                 .catch(error => {
                     console.error("Error al guardar la categoría:", error);
-                    this.$showSAlert("Error", "Ocurrió un error al guardar la categoría.", "error");
+                    this.$showSAlert(
+                        "Error",
+                        "Ocurrió un error al guardar la categoría.",
+                        "error"
+                    );
                 });
         },
 
@@ -3741,10 +3841,15 @@ export default {
                 return;
             }
 
-            this.$http.post("/brands", this.form_brand)
+            this.$http
+                .post("/brands", this.form_brand)
                 .then(response => {
                     if (response.data.success) {
-                        this.$showSAlert("Éxito", "Marca registrada correctamente.", "success");
+                        this.$showSAlert(
+                            "Éxito",
+                            "Marca registrada correctamente.",
+                            "success"
+                        );
                         this.brands.push(response.data.data);
                         let lastElement = this.brands[this.brands.length - 1];
                         this.form.brand_id = lastElement.id;
@@ -3753,12 +3858,20 @@ export default {
                         this.form_brand.add = false;
                         this.$forceUpdate();
                     } else {
-                        this.$showSAlert("Error", "No se pudo guardar la marca.", "error");
+                        this.$showSAlert(
+                            "Error",
+                            "No se pudo guardar la marca.",
+                            "error"
+                        );
                     }
                 })
                 .catch(error => {
                     console.error("Error al guardar la marca:", error);
-                    this.$showSAlert("Error", "Ocurrió un error al guardar la marca.", "error");
+                    this.$showSAlert(
+                        "Error",
+                        "Ocurrió un error al guardar la marca.",
+                        "error"
+                    );
                 });
         },
 
@@ -3774,6 +3887,44 @@ export default {
                 };
                 this.$forceUpdate();
             });
+        },
+        // Obtener precio para un almacén específico
+        getPriceForWarehouse(warehouseId) {
+            if (!this.form.warehouse_prices) {
+                this.form.warehouse_prices = [];
+            }
+        
+            let price = this.form.warehouse_prices.find(w => w.warehouse_id === warehouseId);
+            if (!price) {
+                price = {
+                    warehouse_id: warehouseId,
+                    price: this.form.sale_unit_price || 0
+                };
+                this.form.warehouse_prices.push(price);
+            }
+            return price;
+        },
+        
+        // Obtener stock para un almacén específico  
+        getStockForWarehouse(warehouseId) {
+            if (!this.form.item_warehouses) {
+                this.form.item_warehouses = [];
+            }
+        
+            let stock = this.form.item_warehouses.find(w => w.warehouse_id === warehouseId);
+            if (!stock) {
+                stock = {
+                    warehouse_id: warehouseId,
+                    stock: 0
+                };
+                this.form.item_warehouses.push(stock);
+            }
+            return stock;
+        },
+        
+        // Calcular stock total
+        calculateTotalStock() {
+            this.form.stock = this.totalStock;
         }
     },
     watch: {
@@ -3787,8 +3938,7 @@ export default {
                 });
             }
         }
-    },
+    }
     // Métodos para Categoría
-    
 };
 </script>

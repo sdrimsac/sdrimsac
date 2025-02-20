@@ -583,6 +583,24 @@
                                                 ></i>
                                             </el-tooltip>
                                         </el-radio-button>
+                                        <el-radio-button
+                                            :label="8"
+                                            plain
+                                            class="mb-2 me-2"
+                                            style="font-size: 16px;"
+                                        >
+                                            50x25
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="La medida de la etiqueta de 50mm x 25mm solo esta disponible para 1 columnas x etiqueta"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-radio-button>
                                     </el-radio-group>
                                 </div>
                             </div>
@@ -1390,6 +1408,87 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div
+                                    v-if="modeloSeleccionado === 'Modelo8'"
+                                    class="d-flex flex-row justify-content-center preview-container"
+                                >
+                                    <div
+                                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white p-2"
+                                    >
+                                        <!-- Price at top -->
+                                        <!-- <span
+                                            :style="
+                                                `color:${
+                                                    type == 'Precio venta'
+                                                        ? '#E6A23C'
+                                                        : '#000'
+                                                }`
+                                            "
+                                            class="text-center mb-1"
+                                            style="font-size: 14px;"
+                                        >
+                                            S/. {{ sale_code || "N/D" }}
+                                        </span> -->
+
+                                        <!-- Image section immediately below price -->
+                                        <div class="mb-2">
+                                            <div
+                                                v-if="imageSaved"
+                                                class="d-flex justify-content-center"
+                                            >
+                                                <img
+                                                    :src="imageSaved"
+                                                    alt="imagen"
+                                                    class="img-thumbnail"
+                                                    style="width: 120px; height: 60px; object-fit: contain;"
+                                                />
+                                            </div>
+                                            <div
+                                                v-else
+                                                class="d-flex justify-content-center"
+                                            >
+                                                <el-empty
+                                                    :image-size="80"
+                                                ></el-empty>
+                                            </div>
+                                        </div>
+
+                                        <!-- Description below image -->
+                                        <span class="text-center mb-2" style="font-size: 12px;">
+                                            {{
+                                                product.descripcion ||
+                                                    "DESCRIPCION DEL PRODUCTO"
+                                            }}
+                                        </span>
+
+                                        <!-- Barcode at bottom -->
+                                        <img
+                                            v-show="product_id"
+                                            id="barcode"
+                                            alt="barcode"
+                                            class="mb-2"
+                                        />
+
+                                        <!-- Footer info -->
+                                        <div
+                                            class="d-flex w-100 justify-content-between"
+                                            style="font-size: 12px;"
+                                        >
+                                            <span>{{ product.location || "S/L" }}</span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type != 'Precio venta'
+                                                            ? '#409EFF'
+                                                            : '#000'
+                                                    }`
+                                                "
+                                            >
+                                                {{ purchase_code || "N/D" }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-12">
                                 <div
@@ -1711,61 +1810,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <template v-if="typeUser == 'superadmin'">
-                    <div class="row">
-                        <div class="col-md-2 col-12">
-                            <label for="density">Densidad</label>
-                            <el-input
-                                type="number"
-                                v-model="config.density"
-                            ></el-input>
-                        </div>
-
-                        <div class="col-md-2 col-12">
-                            <label for="orientation">Orientación</label>
-                            <el-select v-model="config.orientation">
-                                <el-option
-                                    label="Vertical"
-                                    value="portrait"
-                                ></el-option>
-                                <el-option
-                                    label="Horizontal"
-                                    value="landscape"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2 col-12">
-                            <label for="top">Arriba</label>
-                            <el-input
-                                type="number"
-                                v-model="config.margins.top"
-                            ></el-input>
-                        </div>
-                        <div class="col-md-2 col-12">
-                            <label for="left">Izquierda</label>
-                            <el-input
-                                type="number"
-                                v-model="config.margins.left"
-                            ></el-input>
-                        </div>
-                        <div class="col-md-2 col-12">
-                            <label for="right">Derecha</label>
-                            <el-input
-                                type="number"
-                                v-model="config.margins.right"
-                            ></el-input>
-                        </div>
-                        <div class="col-md-2 col-12">
-                            <label for="bottom">Abajo</label>
-                            <el-input
-                                type="number"
-                                v-model="config.margins.bottom"
-                            ></el-input>
-                        </div>
-                    </div>
-                </template> -->
             </div>
         </div>
         <form-word :words.sync="words" :showDialog.sync="showForm"></form-word>
@@ -2372,6 +2416,8 @@ export default {
                     return "Modelo6";
                 case 7:
                     return "Modelo7";
+                case 8:
+                    return "Modelo8";
                 default:
                     return null;
             }

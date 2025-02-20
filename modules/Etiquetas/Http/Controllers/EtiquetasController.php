@@ -74,6 +74,10 @@ class EtiquetasController extends Controller
             if ($type == '7' && $format == '1' && $paper == '2') {
                 $template = 'template18';
             }
+            if ($type == '8' && $format == '1' && $paper == '1') {
+                $template = 'template20';
+            }
+            
             $record = Item::where('description', $description)->first();
             $company = Company::first();
             $price = $record->sale_unit_price;
@@ -116,6 +120,10 @@ class EtiquetasController extends Controller
             if ($template === "template18") {
                 $height = 20;
                 $width = 60;
+            }
+            if ($template === "template20") {
+                $height = 25;
+                $width = 50;
             }
             // if($company->number == '10465702449'){
             //     $format = 1;

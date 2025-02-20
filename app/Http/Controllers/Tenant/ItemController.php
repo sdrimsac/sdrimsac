@@ -1329,14 +1329,14 @@ class ItemController extends Controller
     }
 
 
-    public function store(ItemRequest $request)
+    public function store(ItemRequest $request) 
     {
         try {
             DB::connection('tenant')->beginTransaction();
+            
             $all_establishment = $request->all_establishment;
-
             $id = $request->input('id');
-
+            
             $item = Item::firstOrNew(['id' => $id]);
             $item->item_type_id = '01';
             $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
@@ -1500,15 +1500,107 @@ class ItemController extends Controller
                 }
             }
             if ($request['warehouse_prices'] != null) {
+                // Limpiamos registros previos
+                ItemWarehousePrice::where('item_id', $item->id)->delete();
+                
+                $processedWarehouses = [];
                 foreach ($request['warehouse_prices'] as $w) {
-                    if ($w["price"] != null) {
-
-                        $warehouse_price = new ItemWarehousePrice;
-                        $warehouse_price->warehouse_id = $w["warehouse_id"];
-                        $warehouse_price->item_id = $item->id;
-                        $warehouse_price->price = $w["price"];
-                        $warehouse_price->save();
+                    if ($w["price"] != null && !in_array($w["warehouse_id"], $processedWarehouses)) {
+                        ItemWarehousePrice::create([
+                            'warehouse_id' => $w["warehouse_id"],
+                            'item_id' => $item->id,
+                            'price' => $w["price"]
+                        ]);
+                        $processedWarehouses[] = $w["warehouse_id"];
                     }
+                }
+            }
+            if ($request['item_warehouses'] != null) {
+                $has_stock = collect($request['item_warehouses'])->some(function($w) {
+                    return $w['stock'] != null && $w['stock'] > 0;
+                });
+
+                if ($has_stock) {
+                    // Solo limpiar y crear nuevos registros si hay algún stock mayor a 0
+                    ItemWarehouse::where('item_id', $item->id)->delete();
+                    
+                    $processedWarehouses = [];
+                    foreach ($request['item_warehouses'] as $w) {
+                        if (!in_array($w["warehouse_id"], $processedWarehouses)) {
+                            // Asegurar que stock sea 0 si es null
+                            $stock = $w["stock"] ?? 0;
+                            
+                            $item_warehouse = ItemWarehouse::create([
+                                'warehouse_id' => $w["warehouse_id"],
+                                'item_id' => $item->id,
+                                'stock' => $stock
+                            ]);
+
+                            // Solo crear registros relacionados si es nuevo item y tiene stock positivo
+                            if (!$id && $stock > 0) {
+                                $inventory = Inventory::create([
+                                    'type' => 1,
+                                    'description' => 'Stock Inicial',
+                                    'item_id' => $item->id,
+                                    'warehouse_id' => $w["warehouse_id"], 
+                                    'quantity' => $stock,
+                                    'date_of_issue' => date('Y-m-d')
+                                ]);
+
+                                Kardex::create([
+                                    'type' => null,
+                                    'date_of_issue' => date('Y-m-d'),
+                                    'item_id' => $item->id,
+                                    'quantity' => $stock
+                                ]);
+
+                                InventoryKardex::create([
+                                    'date_of_issue' => date('Y-m-d'),
+                                    'item_id' => $item->id,
+                                    'warehouse_id' => $w["warehouse_id"],
+                                    'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                                    'inventory_kardexable_id' => $inventory->id,
+                                    'quantity' => $stock,
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                    'user_id' => auth()->id()
+                                ]);
+                            }
+                            
+                            $processedWarehouses[] = $w["warehouse_id"];
+                        }
+                    }
+                } else {
+                    // Si no hay stock o es null, asegurarse que exista registro en almacén 1
+                    $exists = ItemWarehouse::where('item_id', $item->id)
+                        ->where('warehouse_id', 1)
+                        ->exists();
+
+                    if (!$exists) {
+                        ItemWarehouse::create([
+                            'warehouse_id' => 1,
+                            'item_id' => $item->id,
+                            'stock' => 0
+                        ]);
+                    }
+                }
+
+                // Actualizar stock total
+                $total_stock = ItemWarehouse::where('item_id', $item->id)->sum('stock');
+                $item->stock = $total_stock;
+                $item->save();
+            } else {
+                // Si no se especificó ningún almacén, crear registro por defecto en almacén 1
+                $exists = ItemWarehouse::where('item_id', $item->id)
+                    ->where('warehouse_id', 1)
+                    ->exists();
+
+                if (!$exists) {
+                    ItemWarehouse::create([
+                        'warehouse_id' => 1,
+                        'item_id' => $item->id,
+                        'stock' => 0
+                    ]);
                 }
             }
             $lote = null;

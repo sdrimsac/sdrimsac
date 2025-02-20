@@ -360,22 +360,8 @@
                                         </button>
                                     </template>
                                 </div>
-                                <!-- <template v-for="item in row.warehouses">
-                                <template>{{item.stock}} - {{item.warehouse_description}}</template><br>
-                </template>-->
-
-                                <!-- <br/>Mín:{{ row.stock_min }} -->
                             </td>
-                            <!-- <td v-if="row.warehouse_prices.length > 0">
-                <table>
-                  <tbody>
-                    <tr v-for="price in row.warehouse_prices" :key="price.id">
-                      <td>{{ price.price }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-              <td v-else>{{ row.sale_unit_price }}</td>-->
+                            
                             <td v-if="row.warehouse_prices.length > 0">
                                 <table>
                                     <tbody>
@@ -397,32 +383,6 @@
                             <td v-if="typeUser != 'seller'" class="text-end">
                                 {{ row.purchase_unit_price }}
                             </td>
-                            <!-- <td class="text-center">
-                            {{ row.has_igv_description }}
-                        </td> -->
-                            <!-- <td class="text-center">
-                                <button
-                                    class="btn"
-                                    :style="{
-                                        color: 'white',
-                                        backgroundColor: row.warehouses.some(
-                                            warehouse => warehouse.active
-                                        )
-                                            ? 'green'
-                                            : 'red',
-                                        fontWeight: 'bold',
-                                        width: '110px'
-                                    }"
-                                >
-                                    {{
-                                        row.warehouse.some(
-                                            warehouse => warehouse.active
-                                        )
-                                            ? "Habilitado"
-                                            : "Inhabilitado"
-                                    }}
-                                </button>
-                            </td> -->
 
                             <td class="text-center">
                                 <button
