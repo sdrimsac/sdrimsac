@@ -150,6 +150,4 @@ class ConsolidatedController extends Controller
      return compact('pedidos','notaventa','sales','balances');
      }
 
-
-
 }

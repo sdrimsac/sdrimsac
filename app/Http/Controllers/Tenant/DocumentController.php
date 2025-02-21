@@ -2739,7 +2739,8 @@ class DocumentController extends Controller
         }
     }
     public function data_table()
-    {
+    { 
+        $users = User::where('type', 'seller')->where('name', '!=', 'CONTADOR')->select('name')->get();
         $unit_types = UnitType::all();
         $customers = $this->table('customers');
         $configuration = Configuration::all();
@@ -2777,7 +2778,8 @@ class DocumentController extends Controller
             'items',
             'categories',
             'user_type',
-            'unit_types'
+            'unit_types',
+            'users'
         );
     }
 

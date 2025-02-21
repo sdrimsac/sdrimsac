@@ -83,28 +83,32 @@
 <body>
     @for ($i = 0; $i < $stock; $i += 2)
         <div>
-            <div class="" style=" height: 60px;">
-                <div style="height: 60px;float: left; width:110px;">
+            <div class="" style="height: 60px;">
+                <div style="height: 60px;float: left; width:110px; padding: 3px;">
                     <div>
-                        {{-- <div style="width: 50%; float: left; text-align: center;">
-                            <div style="height: 30px;">
-                                <img style="height: 20px; max-width:100px;" src='{{ $image }}'>
+                        {{-- <div style="width: 100%;">
+                            <div class="text-center"
+                                style="width:100%;height:20px;font-size:6px;overflow:hidden;text-align: center;margin: 0 auto;">
+                                {{ substr($description, 0, 30) }}
                             </div>
                         </div> --}}
-                    </div>
-                    <div style="height:13px;width:100%;overflow:hidden;">
-                        <div class="w-100 " style="height: 5px;text-align: center;">
-
-                            {{-- <div class="font-xxs" style="float:left;width:50%;">
-                                {{ $location ?? '-' }}
-                            </div> --}}
+                        <div style="width: 100%;">
+                            <div class="text-center"
+                                style="width:100%;height:20px;font-size:6px;overflow:hidden;text-align: center;margin: 8px auto 0;">
+                                {{ substr($description, 0, 50) }}
+                            </div>
+                            <div class="text-center" style="font-size: 8px;">
+                                {{ $sale_code }}
+                            </div>
                         </div>
-                        <div style="overflow: hidden;height: 15px;">
+                    </div>
+                    <div style="height:13px;width:100%;overflow:hidden;text-align:center;">
+                        <div style="overflow: hidden;height: 15px;text-align:center;">
                             @php
                                 $colour = [0, 0, 0];
                                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                echo '<img style="height: 15px; float: left; margin-left: 5px;"  src="data:image/png;base64,' .
+                                echo '<img style="height: 15px; width: 90%; margin: 0 auto;"  src="data:image/png;base64,' .
                                     base64_encode(
                                         $generator->getBarcode(
                                             $barcode,
@@ -117,42 +121,25 @@
                         <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
                             {{ $barcode }}
                         </div>
-                        <div style="width: 90%; float: left; margin-left: 5px;">
-                            <div class="font-xs text-center">
-                                S/.{{ $sale_code }}
-                            </div>
-                            <div class="text-center font-xs"
-                                style="width:100%; height:20px; font-size:6px; text-align: center">
-                                {{ substr($description, 0, 30) }}
-                            </div>
-                        </div>
-
                     </div>
-                </div>
-                <div style="float: left; width:5px;height: 55px;">
-                    <br>
                 </div>
                 <div style="height: 60px;float: left; width:110px;">
-                    <div>
-                        <div style="width: 50%; float: left;text-align: center;">
-                            {{-- <div style="height: 30px;">
-                                <img style="height: 20px; max-width:100px;"
-                                    src='{{ $image }}'>
-                            </div> --}}
+                    <div style="padding: 5px">
+                        <div style="width: 100%;">
+                            <div class="text-center"
+                                style="width:100%;height:20px;font-size:6px;overflow:hidden;text-align: center;margin: 8px auto 0;">
+                                {{ substr($description, 0, 50) }}
+                            </div>
+                            <div class="text-center" style="font-size: 8px;">
+                                {{ $sale_code }}
+                            </div>
                         </div>
-                    </div>
-                    <div style="height:13px;width:100%;overflow:hidden;">
-                        <div class="w-100" style="height: 5px; text-align: center;">
-                            {{-- <div class="font-xxs" style="float:left;width:50%;">
-                                {{ $location ?? '-' }}
-                            </div> --}}
-                        </div>
-                        <div style="overflow: hidden;height: 15px; text-align:center; margin:0px; padding:0px;">
+                        <div style="overflow: hidden;height: 15px; text-align:center;width: 100%;">
                             @php
                                 $colour = [0, 0, 0];
                                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                echo '<img style="height: 15px; float: left; margin-left: 12px;"  src="data:image/png;base64,' .
+                                echo '<img style="height: 15px; width: 90%; object-fit: contain; margin: 0 auto;"  src="data:image/png;base64,' .
                                     base64_encode(
                                         $generator->getBarcode(
                                             $barcode,
@@ -164,17 +151,6 @@
                         </div>
                         <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
                             {{ $barcode }}
-                        </div>
-                        <div style="width: 90%; float: left; margin-left: 10px;">
-                            {{-- @if ($configuration->correo_red_salud_ticket) --}}
-                            <div class="font-xs text-center">
-                                S/.{{ $sale_code }}
-                            </div>
-                            {{-- @endif --}}
-                            <div class="text-center font-xs"
-                                style="width:100%; height:20px; font-size:6px; text-align: center">
-                                {{ substr($description, 0, 30) }}
-                            </div>
                         </div>
                     </div>
                 </div>

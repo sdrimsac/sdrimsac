@@ -843,7 +843,6 @@ class ItemController extends Controller
         $records = $this->getRecordsCatalog($request);
 
         return new ItemCatalogCollection($records->paginate(config('tenant.items_per_page')));
-  
     }
 
     public function recordsUltima_Venta(Request $request, $id)
@@ -887,7 +886,7 @@ class ItemController extends Controller
         return $categories_array;
     }
 
-    public function storeCatalog(Request $request) 
+    public function storeCatalog(Request $request)
     {
         $products = $request->input('products');
         $category_id = $request->input('category_id');
@@ -917,7 +916,7 @@ class ItemController extends Controller
             ->whereNotIn('id', $catalog_ids)
             ->whereExists(function ($query) use ($warehouse_id) {
                 $query->select(DB::raw(1))
-                    ->from('item_warehouse') 
+                    ->from('item_warehouse')
                     ->whereColumn('item_warehouse.item_id', 'items.id')
                     ->where('item_warehouse.warehouse_id', $warehouse_id)
                     ->where('item_warehouse.active', 1);
@@ -984,17 +983,16 @@ class ItemController extends Controller
         }
 
         return $records->orderBy('description', 'ASC');
-
     }
 
     public function getRecordsInfo(Request $request)
-    { 
+    {
         $catalog_ids = DB::connection('tenant')->table('item_catalog')
             ->select('id_item_catalog')
             ->get()
             ->pluck('id_item_catalog')
             ->toArray();
-        
+
         return $catalog_ids;
     }
 
@@ -1033,38 +1031,6 @@ class ItemController extends Controller
                 });
                 break;
             case 'description':
-                /* if ($request->value) {
-                    if (count($textoIntoArray) === 1) {
-                        /* $records
-                            ->where('description', 'like', "%{$request->value}%")
-                            ->orWhere('internal_id', 'like', "%{$request->value}%")
-                            ->orWhere('second_name', 'like', "%{$request->value}%")
-                            ->orWhere('active', 'like', "%{$request->value}%"); *//*
-                            $records->where('description', 'like', "%{$request->value}%")
-                            ->orWhere('internal_id', 'like', "%{$request->value}%")
-                            ->orWhere('second_name', 'like', "%{$request->value}%")
-                            ->orWhere('active', 'like', "%{$request->value}%")
-                            ->orWhere(function ($query) use ($textoIntoArray) {
-                                foreach ($textoIntoArray as $value) {
-                                    $query->where('description', 'like', '%' . $value . '%');
-                                }
-                            });
-                    } else {
-
-                        /* foreach ($textoIntoArray as $key => $value) {
-
-                            $records->where('description', 'like', '%' . $value . '%');
-                        } *//*
-                        $records->where('description', 'like', "%{$request->value}%")
-                        ->orWhere('internal_id', 'like', "%{$request->value}%")
-                        ->orWhere('second_name', 'like', "%{$request->value}%")
-                        ->orWhere('active', 'like', "%{$request->value}%");
-                    }
-                    $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
-                        ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"])
-                        ->orderBy('description', 'ASC');
-                }
-                break; */
                 if ($request->value) {
                     if (count($textoIntoArray) === 1) {
                         $records->where(function ($query) use ($textoIntoArray) {
@@ -1273,7 +1239,7 @@ class ItemController extends Controller
     }
 
     public function tables()
-    {   
+    {
         $company = Company::active();
         $establishment = Establishment::first();
         $categoria_madera = CategoriaMadera::all();
@@ -1530,14 +1496,23 @@ class ItemController extends Controller
                             // Asegurar que stock sea 0 si es null
                             $stock = $w["stock"] ?? 0;
                             
+                            // Verificar si ya existe un registro de kardex inicial para este item y almacén
+                            $existingKardex = InventoryKardex::where('item_id', $item->id)
+                                ->where('warehouse_id', $w["warehouse_id"])
+                                ->where('inventory_kardexable_type', 'Modules\Inventory\Models\Inventory')
+                                ->exists();
+
                             $item_warehouse = ItemWarehouse::create([
                                 'warehouse_id' => $w["warehouse_id"],
                                 'item_id' => $item->id,
                                 'stock' => $stock
                             ]);
 
-                            // Solo crear registros relacionados si es nuevo item y tiene stock positivo
-                            if (!$id && $stock > 0) {
+                            // Solo crear registros relacionados si:
+                            // 1. Es nuevo item
+                            // 2. Tiene stock positivo
+                            // 3. No existe kardex previo para este almacén
+                            if (!$id && $stock > 0 && !$existingKardex) {
                                 $inventory = Inventory::create([
                                     'type' => 1,
                                     'description' => 'Stock Inicial',
@@ -1547,24 +1522,27 @@ class ItemController extends Controller
                                     'date_of_issue' => date('Y-m-d')
                                 ]);
 
-                                Kardex::create([
-                                    'type' => null,
-                                    'date_of_issue' => date('Y-m-d'),
-                                    'item_id' => $item->id,
-                                    'quantity' => $stock
-                                ]);
+                                // Solo crear kardex si hay stock positivo
+                                if ($stock > 0) {
+                                    Kardex::create([
+                                        'type' => null,
+                                        'date_of_issue' => date('Y-m-d'),
+                                        'item_id' => $item->id,
+                                        'quantity' => $stock
+                                    ]);
 
-                                InventoryKardex::create([
-                                    'date_of_issue' => date('Y-m-d'),
-                                    'item_id' => $item->id,
-                                    'warehouse_id' => $w["warehouse_id"],
-                                    'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
-                                    'inventory_kardexable_id' => $inventory->id,
-                                    'quantity' => $stock,
-                                    'created_at' => now(),
-                                    'updated_at' => now(),
-                                    'user_id' => auth()->id()
-                                ]);
+                                    InventoryKardex::create([
+                                        'date_of_issue' => date('Y-m-d'),
+                                        'item_id' => $item->id,
+                                        'warehouse_id' => $w["warehouse_id"],
+                                        'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                                        'inventory_kardexable_id' => $inventory->id,
+                                        'quantity' => $stock,
+                                        'created_at' => now(),
+                                        'updated_at' => now(),
+                                        'user_id' => auth()->id()
+                                    ]);
+                                }
                             }
                             
                             $processedWarehouses[] = $w["warehouse_id"];
@@ -1680,7 +1658,6 @@ class ItemController extends Controller
     public function storeBonusUnitType(Request $request)
     {
 
-        // 
         $bonus_unit_type = $request->item_unit_type;
         BonusUnitType::query()->delete();
         foreach ($bonus_unit_type as $unit) {

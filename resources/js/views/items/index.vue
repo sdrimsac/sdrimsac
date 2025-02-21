@@ -605,20 +605,18 @@ export default {
             this.showBonusDialog = true;
         },
         clickReportForImport(query = null) {
-            let { column, value, warehouse_id, area_id } = query;
+            let { column, value, warehouse_id, area_id, active } = query;
             window.open(
                 `/items/excel-for-import?column=${column || ""}&value=${value ||
-                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id ||
-                    ""}`,
+                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id || ""}&active=${active || ""}`,
                 "_blank"
             );
         },
         clickReport(query = null) {
-            let { column, value, warehouse_id, area_id } = query;
+            let { column, value, warehouse_id, area_id, active } = query;
             window.open(
                 `/items/excel?column=${column || ""}&value=${value ||
-                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id ||
-                    ""}`,
+                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id || ""}&active=${active || ""}`,
                 "_blank"
             );
         },

@@ -235,7 +235,26 @@
                         </div>
                     </div>
                     <div
-                        class="col-lg-4 col-md-4 col-md-4 col-sm-12"
+                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                    >
+                        <div class="form-group">
+                            <label class="control-label w-100">Usuario</label>
+                            <el-select
+                                v-model="search.user_id"
+                                filterable
+                                clearable
+                            >
+                                <el-option
+                                    v-for="option in users"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div
+                        class="col-lg-3 col-md-3 col-md-3 col-sm-12"
                         style="margin-top:29px"
                     >
                         <el-button
@@ -287,11 +306,6 @@
                             ></slot>
                         </tbody>
                     </table>
-                    <!-- <div class="col-md-12 text-end ">
-                            <h6>
-                                <b>Total venta S/ {{ totalSum }}</b>
-                            </h6>
-          </div>-->
                     <div>
                         <el-pagination
                             @current-change="getRecords"
@@ -345,6 +359,7 @@ export default {
             payment_conditions: [],
             sellers: [],
             unit_types: [],
+            users: [],
             see_more: false,
             totals: null,
             totalSum: 0,
@@ -376,6 +391,7 @@ export default {
             this.payment_conditions = response.data.payment_conditions;
             this.configuration = response.data.configuration;
             this.unit_types = response.data.unit_types;
+            this.users = response.data.users;
         });
 
         await this.getRecords();

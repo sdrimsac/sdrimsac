@@ -23,7 +23,6 @@ class Quotation extends ModelTenant
         'payment_method_type_id',
         'seller_id',
         'prefix',
-
         'date_of_issue',
         'time_of_issue',
         'date_of_due',
