@@ -404,6 +404,13 @@
                             {{ conf.show_payment_method ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
+                    <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label">Configuracion Android</label
+                        ><br />
+                        <el-checkbox v-model="form.android_configuration">
+                            {{ form.android_configuration ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
                     <div
                         v-if="configuration.health_network"
                         class="col-md-3 flex-column justify-content-end"

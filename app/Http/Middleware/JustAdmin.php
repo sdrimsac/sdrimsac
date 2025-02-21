@@ -118,7 +118,7 @@ class JustAdmin
                 $workshop = (bool) $config->workshop;
                 $odontologia = (bool) $config->odontologia;
                 $rent = (bool) $config->mod_renta;
-
+                $salon = (bool) $config->mode_salon;
 
                 if ($config->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
@@ -151,7 +151,11 @@ class JustAdmin
                 } else if (str_contains($description_type, 'CAJ') || str_contains($description_type, 'VEN') || str_contains($description_type, 'ANALISTA')) {
                     if($rent){
                         $redirect_to .= 'rent-pos';
-                    }else{
+                    }
+                    else if($salon){
+                        $redirect_to .= 'salon-pos';
+                    }
+                    else{
                         $redirect_to .= 'dashboard-pos';
                     }
                 } else if ($description_type == 'LIMPIEZA') {

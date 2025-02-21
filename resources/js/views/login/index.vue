@@ -250,6 +250,9 @@ export default {
                         route = "billar/worker/dashboard-pos";
                     } else if (this.config.mod_renta) {
                         route = "caja/worker/rent-pos";
+                    } 
+                    else if (this.config.mode_salon) {
+                        route = "caja/worker/salon-pos";
                     } else {
                         route = "caja/worker/dashboard-pos";
                     }

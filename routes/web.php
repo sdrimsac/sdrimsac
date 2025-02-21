@@ -1210,6 +1210,8 @@ if ($hostname) {
             Route::post('clients/locked-by-column', 'System\ClientController@lockedByColumn');
 
             Route::post('clients/upload', 'System\ClientController@upload');
+            Route::post('clients/videos', 'System\ClientController@storeVideos');
+            Route::get('clients/videos', 'System\ClientController@getVideos');
 
             Route::get('client_payments/records/{client_id}', 'System\ClientPaymentController@records');
             Route::get('client_payments/client/{client_id}', 'System\ClientPaymentController@client');

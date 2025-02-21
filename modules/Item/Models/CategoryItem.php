@@ -14,6 +14,7 @@ class CategoryItem extends ModelTenant
     protected $table = "categories";
 
     protected $fillable = [
+        'show_count_pos',
         'name',
         'identifier',
         'icono',
@@ -21,6 +22,10 @@ class CategoryItem extends ModelTenant
         'user_id',
         'active'
 
+    ];
+
+    protected $casts = [
+        'show_count_pos' => 'boolean',
     ];
 
     public function user()

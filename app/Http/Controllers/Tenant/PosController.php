@@ -456,11 +456,22 @@ class PosController extends Controller
     }
     public function tables()
     {
+        $config = Configuration::first();
+
+        $categories_to_show = [];
         $brands = Brand::all();
-        $categoria_madera = CategoriaMadera::all();
-        $medida_alto = ItemMedidaAlto::all();
-        $medida_grosor = ItemMedidaGrosor::all();
-        $medida_ancho = ItemMedidaAncho::all();
+        if($config->maderera){
+            $categoria_madera = CategoriaMadera::all();
+            $medida_alto = ItemMedidaAlto::all();
+            $medida_grosor = ItemMedidaGrosor::all();
+            $medida_ancho = ItemMedidaAncho::all();
+        }else{
+            $categoria_madera = [];
+            $medida_alto = [];
+            $medida_grosor = [];
+            $medida_ancho = [];
+        }
+        
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)
             ->where('active', 1)
             ->get();
@@ -513,7 +524,6 @@ class PosController extends Controller
             ->get();
         //  dd($row,$documents);
         $item_default = null;
-        $config = Configuration::first();
         if ($config->item_variation_id) {
             $item_default = Item::where('id', $config->item_variation_id)->first();
         }
@@ -554,10 +564,19 @@ class PosController extends Controller
                 $table->hotel_rent_items = collect($hotel_rent_items);
             }
         }
-
+        if($config->mode_salon){
+            $categories_to_show = CategoryItem::where('show_count_pos', true)->get()->transform(function($row){
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'image' => url('').'/storage/uploads/category/'.$row->icono,
+                ];
+            });
+        }
         $promotions_document = PromotionDocument::where('active', true)->get();
 
         return compact(
+            'categories_to_show',
             'brands',
             'promotions_document',
             'tablesLeave',

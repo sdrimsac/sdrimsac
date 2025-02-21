@@ -2125,7 +2125,7 @@ export default {
     },
     computed: {
         isAndroid() {
-            return this.configuration.android_configuration;
+            return this.establishments.android_configuration;
         },
         promotionByPoints() {
             return this.configuration.promotions_by_points;

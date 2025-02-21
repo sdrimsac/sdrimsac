@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'mode_salon',
         'crear_items',
         'catalog',
         'consolidated_quotation_details',
@@ -299,6 +300,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'mode_salon' => 'boolean',
         'crear_items' => 'boolean',
         'catalog' => 'boolean',
         'consolidated_quotation_details' => 'boolean',
@@ -541,6 +543,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'mode_salon' => (bool)$this->mode_salon,
             'create_items' => (bool)$this->crear_items,
             'catalog' => (bool)$this->catalog,
             'consolidated_quotation_details' => (bool)$this->consolidated_quotation_details,

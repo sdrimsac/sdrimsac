@@ -145,6 +145,40 @@
                                         >
                                             <div class="container mt-4">
                                                 <div class="row">
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    ref="salonIcon"
+                                                                    class="fas fa-cut tab-icon"
+                                                                ></i>
+                                                                Modo salón
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.mode_salon
+                                                                "
+                                                                active-text="HABILITADO"
+                                                                inactive-text="DESHABILITADO"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    () =>
+                                                                        submit(
+                                                                            'Modo salón',
+                                                                            form.mode_salon,
+                                                                            'salonIcon'
+                                                                        )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                     <!-- Créditos en Nota de Venta y otros elementos -->
                                                     <div class="col-md-3 mb-4">
                                                         <div class="form-group">

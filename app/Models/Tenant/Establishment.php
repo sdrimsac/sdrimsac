@@ -16,6 +16,7 @@ class Establishment extends ModelTenant
         'conf'
     ];
     protected $fillable = [
+        'android_configuration',
         'tab_single',
         'is_product',
         'is_service',
@@ -45,6 +46,7 @@ class Establishment extends ModelTenant
         'documents',
     ];
     protected $casts = [
+        'android_configuration' => 'boolean',
         'is_product' => 'boolean',
         'is_service' => 'boolean',
         'has_igv_31556' => 'boolean',

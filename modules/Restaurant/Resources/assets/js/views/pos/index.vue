@@ -46,7 +46,7 @@
                                             title
                                             data-bs-original-title="Item Count"
                                             aria-label="Item Count"
-                                            >Menú De Acciones</span
+                                            >Menú De Acciones </span
                                         >
                                     </button>
 
@@ -79,7 +79,7 @@
                                                 ></i>
                                             </button>
                                         </template>
-
+                        
                                         <template v-if="isAndroid">
                                             <button
                                                 class="btn btn-sm btn-primary"
@@ -2199,8 +2199,7 @@ export default {
     },
 
     async created() {
-        console.log("el limite mensual es ", this.limit_month_amount);
-        console.log("el monto mensual es ", this.month_amount);
+        console.log("this.establishments", this.establishments);
         this.area_id = this.worker.area_id;
         this.getExchange();
         this.isSeller = this.checkWorkerType("vendedor");
@@ -2327,7 +2326,7 @@ export default {
             };
         },
         isAndroid() {
-            return this.configuration.android_configuration;
+            return this.establishments.android_configuration;
         },
         isSellerConsolidated() {
             return (

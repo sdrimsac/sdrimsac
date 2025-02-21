@@ -10,6 +10,8 @@ class Configuration extends Model
     use UsesSystemConnection;
 
     protected $fillable = [
+        'before_video_url',
+        'after_video_url',
         'document_emit_url',
         'document_emit_url_token',
         'locked_admin',

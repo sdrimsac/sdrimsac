@@ -64,6 +64,8 @@ class Client extends Model
     protected $with = ['hostname','plan'];
 
     protected $fillable = [
+    
+        'phone',
         'hostname_id',
         'number',
         'name',

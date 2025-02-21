@@ -27,6 +27,7 @@ use App\CoreFacturalo\ClientHelper;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
 {
@@ -389,58 +390,58 @@ class ClientController extends Controller
         $user_id = 1;
         // Se buscan los valores en las tablas de los clientes, luego se compara con las tablas de admin para mostrar
         // correctamente la seleccion en la seccion de modulos de permisos
-        $modules = DB::connection('tenant')
-            ->table('modules')
-            ->where('modules.order_menu', '<=', 13)
-            ->join('module_user', 'module_user.module_id', '=', 'modules.id')
-            ->where('module_user.user_id', $user_id)
-            ->select('modules.value as value')
-            ->get()
-            ->pluck('value');
-        $client->modules = DB::connection('system')
-            ->table('modules')
-            ->wherein('value', $modules)
-            ->select('id')
-            ->distinct()
-            ->get()
-            ->pluck('id');
+        // $modules = DB::connection('tenant')
+        //     ->table('modules')
+        //     ->where('modules.order_menu', '<=', 13)
+        //     ->join('module_user', 'module_user.module_id', '=', 'modules.id')
+        //     ->where('module_user.user_id', $user_id)
+        //     ->select('modules.value as value')
+        //     ->get()
+        //     ->pluck('value');
+        // $client->modules = DB::connection('system')
+        //     ->table('modules')
+        //     ->wherein('value', $modules)
+        //     ->select('id')
+        //     ->distinct()
+        //     ->get()
+        //     ->pluck('id');
 
         // Se buscan los valores en las tablas de los clientes, luego se compara con las tablas de admin para mostrar
         // correctamente la seleccion en la seccion de modulos de permisos
         // Apps
-        $apps = DB::connection('tenant')
-            ->table('modules')
-            ->where('modules.order_menu', '>', 13)
-            ->join('module_user', 'module_user.module_id', '=', 'modules.id')
-            ->where('module_user.user_id', $user_id)
-            ->select('modules.value as value')
-            ->get()
-            ->pluck('value');
+        // $apps = DB::connection('tenant')
+        //     ->table('modules')
+        //     ->where('modules.order_menu', '>', 13)
+        //     ->join('module_user', 'module_user.module_id', '=', 'modules.id')
+        //     ->where('module_user.user_id', $user_id)
+        //     ->select('modules.value as value')
+        //     ->get()
+        //     ->pluck('value');
 
-        $client->apps = DB::connection('system')
-            ->table('modules')
-            ->wherein('value', $apps)
-            ->select('id')
-            ->distinct()
-            ->get()
-            ->pluck('id');
+        // $client->apps = DB::connection('system')
+        //     ->table('modules')
+        //     ->wherein('value', $apps)
+        //     ->select('id')
+        //     ->distinct()
+        //     ->get()
+        //     ->pluck('id');
 
         // Se buscan los valores en las tablas de los clientes, luego se compara con las tablas de admin para mostrar
         // correctamente la seleccion en la seccion de modulos de permisos
-        $levels = DB::connection('tenant')
-            ->table('module_level_user')
-            ->where('module_level_user.user_id', $user_id)
-            ->join('module_levels', 'module_levels.id', '=', 'module_level_user.module_level_id')
-            ->get()
-            ->pluck('value');
+        // $levels = DB::connection('tenant')
+        //     ->table('module_level_user')
+        //     ->where('module_level_user.user_id', $user_id)
+        //     ->join('module_levels', 'module_levels.id', '=', 'module_level_user.module_level_id')
+        //     ->get()
+        //     ->pluck('value');
 
-        $client->levels = DB::connection('system')
-            ->table('module_levels')
-            ->wherein('value', $levels)
-            ->select('id')
-            ->distinct()
-            ->get()
-            ->pluck('id');
+        // $client->levels = DB::connection('system')
+        //     ->table('module_levels')
+        //     ->wherein('value', $levels)
+        //     ->select('id')
+        //     ->distinct()
+        //     ->get()
+        //     ->pluck('id');
 
         $config = DB::connection('tenant')
             ->table('configurations')
@@ -561,6 +562,7 @@ class ClientController extends Controller
             if (!empty($smtp_password)) {
                 $client->setSmtpPassword($smtp_password);
             }
+            $client->phone = $request->phone;
             $client->plan_id = $request->plan_id;
             $client->save();
 
@@ -598,77 +600,27 @@ class ClientController extends Controller
 
 
             //modules
-            DB::connection('tenant')
-                ->table('module_user')
-                ->where('user_id', $user_id)
-                ->delete();
-            DB::connection('tenant')
-                ->table('module_level_user')
-                ->where('user_id', $user_id)
-                ->delete();
-
-            // Obtenemos los value de las tablas
-            $valueModules = DB::connection('system')
-                ->table('modules')
-                ->wherein('id', $request->modules)
-                ->get()
-                ->pluck('value');
-            $valueLevels = DB::connection('system')
-                ->table('module_levels')
-                ->wherein('id', $request->levels)
-                ->get()
-                ->pluck('value');
-
-            // Obtenemos el modelo del modulo, asi se obtendrá el id del elemento
-            DB::connection('tenant')
-                ->table('modules')
-                ->wherein('value', $valueModules)
-                ->select(
-                    'id as module_id',
-                    DB::raw(" CONCAT($user_id) as user_id")
-                )
-                ->get()
-                ->transform(function ($module) use (&$array_modules) {
-                    $array_modules[] = (array)$module;
-                });
-            DB::connection('tenant')
-                ->table('module_levels')
-                ->wherein('value', $valueLevels)
-                ->select(
-                    'id as module_level_id',
-                    DB::raw(" CONCAT($user_id) as user_id")
-                )
-                ->get()
-                ->transform(function ($level) use (&$array_levels) {
-                    $array_levels[] = (array)$level;
-                });
-
-            // Se actualiza las tablas de permisos
-            DB::connection('tenant')
-                ->table('module_user')
-                ->insert($array_modules);
-            DB::connection('tenant')
-                ->table('module_level_user')
-                ->insert($array_levels);
+        
 
             // Actualiza el modulo de farmacia.
             $config = (array)DB::connection('tenant')
                 ->table('configurations')
                 ->first();
-            $config['is_pharmacy'] = (self::EnablePharmacy($user_id)) ? 1 : 0;
+            // $config['is_pharmacy'] = (self::EnablePharmacy($user_id)) ? 1 : 0;
             DB::connection('tenant')
                 ->table('configurations')
                 ->update($config);
             return [
                 'success' => true,
                 'message' => 'Cliente Actualizado satisfactoriamente',
-                'modules' => $array_modules,
-                'levels' => $array_levels,
+                
             ];
         } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
             ];
         }
     }
@@ -1386,40 +1338,101 @@ class ClientController extends Controller
     public function upload(Request $request)
     {
         if ($request->hasFile('file')) {
-            $new_request = [
-                'file' => $request->file('file'),
-                'type' => $request->input('type'),
-            ];
+            $file = $request->file('file');
+            
+            // Validar que sea un archivo MP4 y menor a 10MB
+            if ($file->getClientMimeType() !== 'video/mp4') {
+                return [
+                    'success' => false,
+                    'message' => 'Solo se permiten archivos MP4'
+                ];
+            }
 
-            return $this->upload_certificate($new_request);
+            if ($file->getSize() > 10485760) { // 10MB en bytes
+                return [
+                    'success' => false,
+                    'message' => 'El archivo debe ser menor a 10MB'
+                ];
+            }
+
+            $temp = tempnam(sys_get_temp_dir(), 'video');
+            file_put_contents($temp, file_get_contents($file));
+
+            return [
+                'success' => true,
+                'data' => [
+                    'filename' => $file->getClientOriginalName(),
+                    'temp_path' => $temp,
+                    'preview_url' => 'data:video/mp4;base64,' . base64_encode(file_get_contents($temp))
+                ]
+            ];
         }
         return [
             'success' => false,
-            'message' => 'Error al subir file.',
+            'message' =>  'Error al subir el archivo',
         ];
     }
 
-    public function upload_certificate($request)
+    public function storeVideos(Request $request)
     {
-        $file = $request['file'];
-        $type = $request['type'];
+        try {
+            $configuration = Configuration::first();
+            
+            // Procesar video antes del vencimiento
+            if ($request->before_temp_path) {
+                $before_path = $this->uploadVideo($request->before_temp_path, 'before');
+                $configuration->before_video_url = $before_path;
+            }
 
-        $temp = tempnam(sys_get_temp_dir(), $type);
-        file_put_contents($temp, file_get_contents($file));
+            // Procesar video después del vencimiento  
+            if ($request->after_temp_path) {
+                $after_path = $this->uploadVideo($request->after_temp_path, 'after');
+                $configuration->after_video_url = $after_path;
+            }
 
-        $mime = mime_content_type($temp);
-        $data = file_get_contents($temp);
+            $configuration->save();
 
-        return [
-            'success' => true,
-            'data' => [
-                'filename' => $file->getClientOriginalName(),
-                'temp_path' => $temp,
-                //'temp_image' => 'data:' . $mime . ';base64,' . base64_encode($data)
-            ]
-        ];
+            return [
+                'success' => true,
+                'message' => 'Videos guardados correctamente'
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
 
+    private function uploadVideo($temp_path, $prefix)
+    {
+        if (!file_exists($temp_path)) {
+            throw new \Exception('No se encontró el archivo temporal');
+        }
+
+        $directory = 'public/uploads/videos';
+        if (!Storage::exists($directory)) {
+            Storage::makeDirectory($directory);
+        }
+
+        $file_content = file_get_contents($temp_path);
+        $file_name = $prefix . '_' . date('YmdHis') . '.mp4';
+        
+        Storage::put($directory . '/' . $file_name, $file_content);
+        unlink($temp_path); // Eliminar archivo temporal
+
+        return Storage::url($directory . '/' . $file_name);
+    }
+
+    public function getVideos()
+    {
+        $configuration = Configuration::first();
+        return [
+            'before_video_url' => $configuration->before_video_url,
+            'after_video_url' => $configuration->after_video_url
+        ];
+    }
 
     /**
      *

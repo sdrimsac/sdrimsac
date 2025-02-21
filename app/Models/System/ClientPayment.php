@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models\System;
+
+use App\Http\Controllers\System\ClientPaymentController;
 use Hyn\Tenancy\Traits\UsesSystemConnection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,4 +45,31 @@ class ClientPayment extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function send_message_before_end()
+    {
+        $configuration = Configuration::first();
+        $client = $this->client;
+        if(!$client->phone) return;
+        $number = $client->phone;
+        $message = $this->message_client_before_end;
+        $message = str_replace("<br>", "\n", $message);
+        (new ClientPaymentController)->sendMessage($message, $number);
+        $before_video_url = $configuration->before_video_url;
+        (new ClientPaymentController)->sendVideo($before_video_url, $number);
+    }
+    public function send_message_after_end()
+    {
+        $configuration = Configuration::first();
+        $client = $this->client;
+        if(!$client->phone) return; 
+        $number = $client->phone;
+        $message = $this->message_client_after_end;
+        $message = str_replace("<br>", "\n", $message);
+        (new ClientPaymentController)->sendMessage($message, $number);
+        $after_video_url = $configuration->after_video_url;
+        (new ClientPaymentController)->sendVideo($after_video_url, $number);
+    }
+    
+
 }

@@ -324,6 +324,11 @@ Vue.component(
     require("./views/system/configuration/emit_document_url.vue")
 );
 
+//upload videos
+Vue.component(
+    "system-configuration-upload-videos",
+    require("./views/system/configuration/upload_videos.vue")
+);
 
 //messages client
 Vue.component(
@@ -476,6 +481,10 @@ const app = new Vue({
                 import(
                     "../../modules/Restaurant/Resources/assets/js/views/pos/index_rent.vue"
                 ),
+                "tenant-salon-pos": () =>
+                    import(
+                        "../../modules/Restaurant/Resources/assets/js/views/pos/index_salon.vue"
+                    ),
         "tenant-restaurant-pos": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/pos/index.vue"

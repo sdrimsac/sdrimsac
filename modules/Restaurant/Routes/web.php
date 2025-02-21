@@ -344,6 +344,7 @@ Route::prefix('caja')->group(function () {
             //Mantenimiento
             Route::get('maintenance', 'MaintenanceController@index')->name('restaurant.maintenance.index')->middleware('just.worker');;
             Route::get('rent-pos', 'DashboardController@rentPos')->name('restaurant.rent.pos.dashboard')->middleware('just.worker');;
+            Route::get('salon-pos', 'DashboardController@salonPos')->name('restaurant.salon.pos.dashboard')->middleware('just.worker');;
 
             Route::get('totales_sales', 'PosController@total_sales');
             Route::get('totales_sales_usd', 'PosController@total_sales_usd');

@@ -234,6 +234,26 @@
                             </small>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div
+                            :class="{ 'has-danger': errors.phone }"
+                            class="form-group"
+                        >
+                            <label class="control-label">
+                                Teléfono
+                            </label>
+                            <el-input
+                                v-model="form.phone"
+                            >
+                            </el-input>
+                            <small
+                                v-if="errors.phone"
+                                class="form-control-feedback"
+                                v-text="errors.phone[0]"
+                            >
+                            </small>
+                        </div>
+                    </div>
                     <div class="col-md-6 center-el-checkbox mt-4" v-show="false">
                         <div
                             :class="{ 'has-danger': errors.locked_emission }"
@@ -994,11 +1014,11 @@ export default {
             this.form.levels = levels;
             this.form.regex_password_client = this.regex_password_client;
 
-            if (modules.length < 1) {
-                return this.$message.error(
-                    "Debe seleccionar al menos un módulo"
-                );
-            }
+            // if (modules.length < 1) {
+            //     return this.$message.error(
+            //         "Debe seleccionar al menos un módulo"
+            //     );
+            // }
 
             if (!this.form.is_update) {
                 if (this.form.certificate && !this.form.password_certificate) {

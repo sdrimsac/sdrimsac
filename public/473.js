@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 webpackJsonp([473,437],{
+=======
+webpackJsonp([473,436],{
+>>>>>>> Stashed changes
 
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/DataTable.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {

@@ -74,6 +74,50 @@ class DashboardController extends Controller
         //  return Food::all();
         //     return new InventoryCollection($reports->paginate(config('tenant.items_per_page')));
     }
+    public function salonPos()
+    {
+
+        $user = auth()->user();
+        $worker_types = WorkersType::where(function ($query) {
+            $searchValue = '%search_value%';
+            foreach (['CAJ', 'caj', 'VEN', 'ANALI', 'anali', 'ven'] as $value) {
+                $query->orWhere('description', 'LIKE', str_replace('search_value', $value, $searchValue));
+            }
+        })->get();
+        $worker_type_ids = $worker_types->pluck('id');
+        if (!$worker_type_ids->contains($user->worker_type_id)) {
+
+            // if ($user->worker_type_id != $id) {
+            return redirect('/');
+            // }
+        }
+        $user_id = $user->id;
+        $cash = Cash::where('user_id', $user_id)
+            ->where('state', 1)
+            ->first();
+
+
+        // if ($cash == null) {
+        //     return redirect()->route('restaurant.cash.index');
+        // }
+        // if($cash->date_opening==$date && $cash->date_closed==null && $cash->state==1){
+        //     return redirect()-> route('restaurant.cash.index');
+        // }
+        // if ($cash->date_opening == $date && $cash->date_closed != null && $cash->state == 0) {
+        //     return redirect()->route('restaurant.cash.index');
+        // }
+        $worker = true;
+        $area_id = auth()->user()->area_id;
+        $company = Company::first();
+        $desarrollador = Desarrollador::first();
+        $configuration = Configuration::first();
+        $establishments = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $auth_login = auth()->user()->id;
+        $cash_id = $cash ? $cash->id : 0;
+        $pending_order = Orden::where('status_orden_id', '<>', 4)->count();
+        $lareaId = $area_id;
+        return view('restaurant::pos.salon', compact('pending_order', 'lareaId', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
+    }
     public function rentPos()
     {
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
@@ -10,14 +11,105 @@ use App\Models\System\ClientPayment;
 use App\Models\System\PaymentMethodType;
 use App\Models\System\CardBrand;
 use App\Models\System\Configuration;
+use GuzzleHttp\Client as GuzzleHttpClient;
 use Hyn\Tenancy\Environment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ClientPaymentController extends Controller
 {
+    protected $client;
+
+    public function sendMessage($message, $number)
+    {
+        $web_whatsapp = config('app.web_whatsapp');
+        $url = "https://" . $web_whatsapp . "/api/send-message";
+
+
+
+        try {
+            $response = Http::withoutVerifying()->post($url, [
+                'number' => "51" . $number,
+                'sender' => 'sdrimsac',
+                'message' => $message,
+            ]);
+
+            $status = $response->status();
+            $body = $response->body();
+            return [
+                "success" => $status == 200,
+                "message" => $body
+
+
+            ];
+        } catch (\Exception $e) {
+            Log::error("Error al enviar el mensaje por WhatsApp: ", [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return [
+                "message" => $e->getMessage(),
+                "line" => $e->getLine(),
+            ];
+        }
+    }
+    public function sendVideo($video, $number = null)
+    {
+        $web_whatsapp = config('app.web_whatsapp');
+        $url = "https://" . $web_whatsapp . '/api/send-media';
+        
+        $video = str_replace('/storage/', '', $video);
+        $video_path = Storage::disk('public')->path($video);
+        if (!file_exists($video_path)) {
+            return [
+                "message" => "El archivo de video no existe en la ruta especificada",
+                "path" => $video_path
+            ];
+        }
+        
+        $content_file = file_get_contents($video_path);
+        $extension = pathinfo($video, PATHINFO_EXTENSION);
+
+        $client = new GuzzleHttpClient([
+            'verify' => false,
+            'stream' => false,
+            'headers' => [
+                'User-Agent' => 'Testing 1.0'
+            ]
+        ]);
+        try {
+            $response = $client->post($url, [
+                'multipart' => [
+                    [
+                        'name'     => 'number',
+                        'contents' => "51" . $number
+                    ],
+
+                    [
+                        'name'     => 'sender',
+                        'contents' =>   'sdrimsac'
+                    ],
+                    [
+                        'name'     => 'file',
+                        'contents' => $content_file,
+                        'filename' => $video . "." . $extension
+                    ],
+
+                ]
+            ]);
+
+            $body = $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            return [
+                "message" => $e->getMessage(),
+                "line" => $e->getLine(),
+            ];
+        }
+    }
     public function records($client_id)
     {
         $records = ClientPayment::where('client_id', $client_id)->get();
@@ -25,7 +117,8 @@ class ClientPaymentController extends Controller
         return new ClientPaymentCollection($records);
     }
 
-    public function record($id){
+    public function record($id)
+    {
         $record = ClientPayment::find($id);
         return response()->json($record);
     }
@@ -42,7 +135,7 @@ class ClientPaymentController extends Controller
     {
         $client = Client::find($client_id);
 
-        $total_paid = collect($client->payments)->where('state',true)->sum('payment');
+        $total_paid = collect($client->payments)->where('state', true)->sum('payment');
         $total = collect($client->payments)->sum('payment');
         $total_difference = round($total - $total_paid, 2);
 
@@ -53,22 +146,23 @@ class ClientPaymentController extends Controller
             'total' => $total,
             'total_difference' => $total_difference
         ];
-
     }
-    function format_message_client_before_end($message,$client_payment,$configuration){
-        $payment_date = date('d-m-Y',strtotime($client_payment->date_of_payment));
+    function format_message_client_before_end($message, $client_payment, $configuration)
+    {
+        $payment_date = date('d-m-Y', strtotime($client_payment->date_of_payment));
         $number_communication = $configuration->number_communication;
         $number_payment = $configuration->number_payment;
         $message = str_replace("DD-MM-AAAA", $payment_date, $message);
         $message = str_replace("#########", $number_payment, $message);
         $message = str_replace("%%%%%%%%%", $number_communication, $message);
-    
+
         $client_payment->message_client_before_end = $message;
         $client_payment->save();
     }
 
-    function format_message_client_after_end($message,$client_payment,$configuration){
-        $payment_date = date('d-m-Y',strtotime($client_payment->date_of_payment));
+    function format_message_client_after_end($message, $client_payment, $configuration)
+    {
+        $payment_date = date('d-m-Y', strtotime($client_payment->date_of_payment));
         $number_communication = $configuration->number_communication;
         $number_payment = $configuration->number_payment;
         $message = str_replace("DD-MM-AAAA", $payment_date, $message);
@@ -96,7 +190,7 @@ class ClientPaymentController extends Controller
         ];
         $spanish_days = [
             'Monday' => 'Lunes',
-            'Tuesday' => 'Martes', 
+            'Tuesday' => 'Martes',
             'Wednesday' => 'Miércoles',
             'Thursday' => 'Jueves',
             'Friday' => 'Viernes',
@@ -122,12 +216,12 @@ class ClientPaymentController extends Controller
         $record->fill($request->all());
         $record->save();
 
-        if($record->message_client_before_end == null){
-            $this->format_message_client_before_end($configuration->message_client_before_end,$record,$configuration);
+        if ($record->message_client_before_end == null) {
+            $this->format_message_client_before_end($configuration->message_client_before_end, $record, $configuration);
         }
 
-        if($record->message_client_after_end == null){
-            $this->format_message_client_after_end($configuration->message_client_after_end,$record,$configuration);
+        if ($record->message_client_after_end == null) {
+            $this->format_message_client_after_end($configuration->message_client_after_end, $record, $configuration);
         }
 
         $client = Client::findOrFail($request->client_id);
@@ -136,12 +230,12 @@ class ClientPaymentController extends Controller
 
         DB::connection('tenant')->table('account_payments')->insert(
 
-            ['date_of_payment' => $record->date_of_payment, 'reference_id' => $record->id, 'payment_method_type_id'=> $record->payment_method_type_id, 'card_brand_id' =>$record->card_brand_id, 'reference' => $record->reference, 'payment' => $record->payment, 'state' => 0, 'created_at' => date('Y-m-d H:i:s')]
+            ['date_of_payment' => $record->date_of_payment, 'reference_id' => $record->id, 'payment_method_type_id' => $record->payment_method_type_id, 'card_brand_id' => $record->card_brand_id, 'reference' => $record->reference, 'payment' => $record->payment, 'state' => 0, 'created_at' => date('Y-m-d H:i:s')]
         );
 
         return [
             'success' => true,
-            'message' => ($id)?'Pago editado con éxito':'Pago programado con éxito'
+            'message' => ($id) ? 'Pago editado con éxito' : 'Pago programado con éxito'
         ];
     }
 
@@ -173,10 +267,9 @@ class ClientPaymentController extends Controller
 
         return [
             'success' => true,
-            'message' => 'Monto pagado', 
+            'message' => 'Monto pagado',
         ];
-
-    } 
+    }
 
     public function cancel_payment($client_payment_id)
     {
@@ -191,8 +284,7 @@ class ClientPaymentController extends Controller
 
         return [
             'success' => true,
-            'message' => 'Monto pagado', 
+            'message' => 'Monto pagado',
         ];
-
-    } 
+    }
 }
