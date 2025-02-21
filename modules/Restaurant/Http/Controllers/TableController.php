@@ -343,8 +343,18 @@ class TableController extends Controller
     public function store(TableRequest $request)
     {
         $id = $request->input('id');
+        $data = $request->all();
+        
+        // Convert is_cleaning to boolean
+        if (isset($data['is_cleaning'])) {
+            $data['is_cleaning'] = filter_var($data['is_cleaning'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+        if (isset($data['has_frigobar'])) {
+            $data['has_frigobar'] = filter_var($data['has_frigobar'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+
         $table = Table::firstOrNew(['id' => $id]);
-        $table->fill($request->all());
+        $table->fill($data);
         $table->save();
 
         return [
@@ -352,6 +362,8 @@ class TableController extends Controller
             'message' => ($id) ? 'Área actualizada con éxito' : 'Área creada con éxito'
         ];
     }
+
+
     public function destroy($id)
     {
         //
