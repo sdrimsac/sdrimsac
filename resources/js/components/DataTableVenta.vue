@@ -471,7 +471,8 @@ export default {
                 d_start: null,
                 d_end: null,
                 year: null,
-                pending_payment: false
+                pending_payment: false,
+                user_id: null,
             };
         },
         changestablishment() {

@@ -14,7 +14,7 @@
             <div class="form-body p-2">
                 <!-- Panel General -->
                 <el-tabs tab-position="top">
-                    <el-tab-pane label="General">
+                    <el-tab-pane label="General" name="general">
                         <!-- Primer bloque de fila-->
                         <div class="container">
                             <div class="row">
@@ -1392,6 +1392,7 @@
                     <el-tab-pane
                         v-if="form.unit_type_id != 'ZZ'"
                         label="Almacenes"
+                        name="warehouses"
                     >
                         <div class="row">
                             <div class="col-12">
@@ -1452,6 +1453,7 @@
                     <el-tab-pane
                         v-if="configuration.quantity_prices"
                         label="Precios por rango de cantidad"
+                        name="price-ranges"
                     >
                         <div class="row">
                             <div class="table-responsive">
@@ -1512,7 +1514,7 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Lista de Precios">
+                    <el-tab-pane label="Lista de Precios" name="price-list">
                         <div class="row">
                             <div
                                 v-if="form.unit_type_id != 'ZZ'"
@@ -2106,6 +2108,7 @@
                                 form.item_unit_types.length > 0
                         "
                         label="Precios por rango en politica de precio"
+                        name="price-range-policy"
                     >
                         <div class="row">
                             <div class="table-responsive">
@@ -2321,6 +2324,7 @@
                     <el-tab-pane
                         v-if="configuration.commercial_treatment_items"
                         label="Tratamiento Comercial"
+                        name="commercial-treatment"
                     >
                         <div class="row m-2">
                             <table>
@@ -2354,7 +2358,7 @@
                             </table>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Compras">
+                    <el-tab-pane label="Compras" name="purchases">
                         <div class="row">
                             <div class="col-12 col-lg-6 col-xl-6">
                                 <div
@@ -2468,6 +2472,7 @@
                     <el-tab-pane
                         label="Categoria Madera"
                         v-if="configuration.maderera"
+                        name="wood-category"
                     >
                         <div class="row">
                             <div class="col-12">
@@ -3558,17 +3563,20 @@ export default {
                 this.form
             );
 
-            // Preparar datos para enviar
+            // Preparar datos para enviar asegurándose que los arrays existan
             const formData = {
                 ...this.form,
-                warehouse_prices: this.form.warehouse_prices.map(w => ({
-                    warehouse_id: w.warehouse_id,
-                    price: Number(w.price)
-                })),
-                item_warehouses: this.form.item_warehouses.map(w => ({
-                    warehouse_id: w.warehouse_id, 
-                    stock: Number(w.stock)
-                }))
+                warehouse_prices: Array.isArray(this.form.warehouse_prices) ? 
+                    this.form.warehouse_prices.map(w => ({
+                        warehouse_id: w.warehouse_id,
+                        price: Number(w.price || 0) // Asegurar que price tenga un valor numérico
+                    })) : [],
+                    
+                item_warehouses: Array.isArray(this.form.item_warehouses) ? 
+                    this.form.item_warehouses.map(w => ({
+                        warehouse_id: w.warehouse_id,
+                        stock: Number(w.stock || 0) // Asegurar que stock tenga un valor numérico
+                    })) : []
             };
 
             await this.$http
