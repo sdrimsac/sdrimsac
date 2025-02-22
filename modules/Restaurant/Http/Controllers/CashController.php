@@ -27,8 +27,10 @@ use App\Http\Resources\Tenant\BoxCollection;
 use App\Http\Resources\Tenant\CashResource;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Http\Resources\Tenant\CashCollection;
+use App\Http\Resources\Tenant\DocumentCajaCollection;
 use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
+use App\Http\Resources\Tenant\SaleNoteCajaCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
 use App\Jobs\CashReportProccess;
 use App\Jobs\CashReportSmallProccess;
@@ -311,16 +313,15 @@ class CashController extends Controller
                         $total_items += $d_it->total_value;
                         $price = $d_it->unit_price;
                         if ($d_it->affectation_igv_type_id == '10') {
-                            $price = number_format($price/1.18,2,'.','');
+                            $price = number_format($price / 1.18, 2, '.', '');
                         }
                         if (array_key_exists($d_it->item_id, $items)) {
 
-    
+
                             if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                 $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
-                               
                             } else {
-                               
+
                                 $items[$d_it->item_id]["prices"][$price] =  [
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
@@ -334,7 +335,7 @@ class CashController extends Controller
                             //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
                             $items[$d_it->item_id]["total"] += $d_it->total_value;
                         } else {
-                          
+
                             $items[$d_it->item_id] = [
                                 "description" => $d_it->item->description,
                                 "count" => $quantity,
@@ -392,16 +393,15 @@ class CashController extends Controller
                             $total_items += $d_it->total_value;
                             $price = $d_it->unit_price;
                             if ($d_it->affectation_igv_type_id == '10') {
-                                $price = number_format($price/1.18,2,'.','');
+                                $price = number_format($price / 1.18, 2, '.', '');
                             }
                             if (array_key_exists($d_it->item_id, $items)) {
 
 
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
-                                   
                                 } else {
-                                   
+
                                     $items[$d_it->item_id]["prices"][$price] =  [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
@@ -412,7 +412,7 @@ class CashController extends Controller
                                 //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
                                 $items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
-                               
+
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" => $quantity,
@@ -528,9 +528,8 @@ class CashController extends Controller
 
                             if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                 $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
-                               
                             } else {
-                               
+
                                 $items[$d_it->item_id]["prices"][$price] =  [
                                     "count" =>  $d_it->quantity,
                                     "factor" => $factor,
@@ -544,7 +543,7 @@ class CashController extends Controller
                             $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
                             //$items[$d_it->item_id]["total"] += $d_it->total_value;
                         } else {
-                           
+
                             $items[$d_it->item_id] = [
                                 "description" => $d_it->item->description,
                                 "count" =>  $quantity,
@@ -612,12 +611,11 @@ class CashController extends Controller
                             if (array_key_exists($d_it->item_id, $items)) {
 
                                 $price = $d_it->unit_price;
-    
+
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
-                                  
                                 } else {
-                                  
+
                                     $items[$d_it->item_id]["prices"][$price] =  [
                                         "count" =>  $d_it->quantity,
                                         "factor" => $factor,
@@ -628,6 +626,7 @@ class CashController extends Controller
                                 //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
                                 $items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
+
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
@@ -1000,7 +999,7 @@ class CashController extends Controller
                             if (array_key_exists($d_it->item_id, $items)) {
 
                                 $price = $d_it->unit_price;
-                                
+
 
                                 if (array_key_exists($price, $items[$d_it->item_id]["prices"])) {
                                     $items[$d_it->item_id]["prices"][$price]["count"] +=  $d_it->quantity;
@@ -1156,9 +1155,9 @@ class CashController extends Controller
         $user = auth()->user();
         $type_document = $request->typeDocument;
         $establishment_id = auth()->user()->establishment_id;
+        $configuration = Configuration::first();
 
         $seriesIds = $user->series()->pluck('user_id');
-
         $hasSeriesAssigned = $seriesIds->count() > 0;
 
         $model = null;
@@ -1173,15 +1172,23 @@ class CashController extends Controller
                 $model = Quotation::class;
                 break;
         }
+
         $company = Company::active();
         $documents = $model::where('establishment_id', $establishment_id);
+
+        // Filtrar por usuario autenticado si documents_user es verdadero
+        if ($configuration->documents_user) {
+            $documents->where('user_id', $user->id);
+        }
+        
         if ($company->soap_type_id != '01') {
-            $documents = $documents->where('soap_type_id', $company->soap_type_id);
+            $documents->where('soap_type_id', $company->soap_type_id);
         }
+        
         if ($hasSeriesAssigned) {
-            $documents = $documents->whereIn('user_id', $seriesIds);
+            $documents->whereIn('user_id', $seriesIds);
         }
-        // $documents = $is_note_sale ?  SaleNote::where('establishment_id', $establishment_id) : Document::where('establishment_id', $establishment_id);
+
         $column = $request->column ?? "description";
         $value = $request->value;
         $remain = $request->remain == "true" ? true : false;
@@ -1209,10 +1216,10 @@ class CashController extends Controller
         $result = null;
         switch ($type_document) {
             case 'documents':
-                $result = new DocumentCollection($documents->paginate(10));
+                $result = new DocumentCajaCollection($documents->paginate(10));
                 break;
             case 'saleNotes':
-                $result = new SaleNoteCollection($documents->paginate(10));
+                $result = new SaleNoteCajaCollection($documents->paginate(10));
                 break;
             default:
                 $result = new QuotationCollection($documents->paginate(10));
@@ -1244,7 +1251,7 @@ class CashController extends Controller
         return compact('printer');
     }
 
-    function get_items_from_box($cash_id,$currency_type_id = "PEN")
+    function get_items_from_box($cash_id, $currency_type_id = "PEN")
     {
         $boxes = Box::where('cash_id', $cash_id)->where('currency_type_id', $currency_type_id)->get();
         $all_items = [];
@@ -1382,7 +1389,7 @@ class CashController extends Controller
             "documents" => $all_documents,
             "documents_info" => $documents,
             "totalCategory" => $totalCategory,
-            
+
         ];
     }
     /*  */
@@ -1682,7 +1689,7 @@ class CashController extends Controller
         $company = Company::first();
         $company_number = $company->number;
         $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
-        if (file_exists($path) && $cash->state == 0) {  
+        if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
 
@@ -2207,7 +2214,7 @@ class CashController extends Controller
             $message = "Caja pendiente de cierre del usuario: " . $user_cash->name;
             $message_for_user = "El usuario: " . $user->name . " intentó abrir una caja, pero usted tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
             if ($user_cash->telephone) {
-                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user,$user->establishment_id);
+                (new WhatsappController)->sendMessageOne($user_cash->telephone, $message_for_user, $user->establishment_id);
             }
             $message_for_all = "El usuario: " . $user->name . " intentó abrir una caja, pero el usuario: " . $user_cash->name . " tiene una caja pendiente de cierre en el establecimiento: " . $establishment_description;
             (new WhatsappController)->sendMessageAll($message_for_all);
@@ -2313,7 +2320,7 @@ class CashController extends Controller
 
             $message = "usuario:$name, aperturó caja con S/ $amount en $establishment_description";
         }
-        (new WhatsappController)->sendMessageAll($message,$establishment_id);
+        (new WhatsappController)->sendMessageAll($message, $establishment_id);
         return [
             "cash_id" => $cash->id,
             'success' => true,

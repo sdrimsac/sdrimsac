@@ -3083,17 +3083,14 @@ export default {
             if (customer != null) {
                 this.students = customer.students || [];
                 this.customer = customer;
-                if (this.form.document_type_id == "01") {
-                    if (
-                        customer.identity_document_type_id == "1" ||
-                        customer.identity_document_type_id == "4" ||
-                        customer.identity_document_type_id == "-"
-                    ) {
-                        this.form.customer_id = null;
-                        this.value = null;
-                    }
+                
+                // Resetear la promoción si es Clientes Varios o seleccionar la primera disponible
+                if (this.isClientesVarios()) {
+                    this.form.promotion_id = null;
+                } else if (this.promotions_document && this.promotions_document.length > 0) {
+                    this.form.promotion_id = this.promotions_document[0].id;
                 }
-
+                
                 this.form.customer_telephone = customer.phone;
                 this.setLocalStorageIndex("customer", this.customer);
                 if (
@@ -3373,13 +3370,16 @@ export default {
                 }
             }
 
-            // this.form.promotion_id =
-            //     this.promotions_document.length > 0
-            //         ? this.promotions_document[0].id
-            //         : null;
-            // if (this.form.promotion_id) {
-            //     this.changePromotion();
-            // }
+            // Modificar la asignación de promoción por defecto
+            if (this.promotions_document && this.promotions_document.length > 0 && !this.isClientesVarios()) {
+                this.form.promotion_id = this.promotions_document[0].id;
+                if (this.form.promotion_id) {
+                    this.changePromotion();
+                }
+            } else {
+                this.form.promotion_id = null;
+            }
+
             if (this.form.offert) {
                 this.form.items = this.form.items.map(item => {
                     let key = Math.random()

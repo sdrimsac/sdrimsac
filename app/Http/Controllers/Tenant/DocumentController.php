@@ -2393,6 +2393,7 @@ class DocumentController extends Controller
         $date_of_issue = $request->date_of_issue;
         $document_type_id = $request->document_type_id;
         $state_type_id = $request->state_type_id;
+        $user_id = $request->user_id; 
         $number = $request->number;
         $series = $request->series;
         $item_id = $request->item_id;
@@ -2411,6 +2412,10 @@ class DocumentController extends Controller
             ->whereDoesntHave('note')
             ->whereDoesntHave('document_affected_note');
 
+        // Add user_id filter
+        if ($user_id) {
+            $records = $records->where('user_id', $user_id);
+        }
 
         if ($year) {
             $startOfYear = Carbon::createFromFormat('Y', $year)->startOfYear()->toDateString();
@@ -2740,7 +2745,7 @@ class DocumentController extends Controller
     }
     public function data_table()
     { 
-        $users = User::where('type', 'seller')->where('name', '!=', 'CONTADOR')->select('name')->get();
+        $users = User::where('type', 'seller')->where('name', '!=', 'CONTADOR')->select('id', 'name')->get();
         $unit_types = UnitType::all();
         $customers = $this->table('customers');
         $configuration = Configuration::all();

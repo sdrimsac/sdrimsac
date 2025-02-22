@@ -112,9 +112,7 @@
                         ></el-date-picker>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <label class="control-label w-100"
-                            >Año</label
-                        >
+                        <label class="control-label w-100">Año</label>
                         <el-date-picker
                             v-model="search.year"
                             type="year"
@@ -125,14 +123,28 @@
                         ></el-date-picker>
                     </div>
                     <div class="col-lg-4 col-md-4 ">
-                    <div class="form-group">
-                        <label class="control-label w-100">Clientes</label>
+                        <div class="form-group">
+                            <label class="control-label w-100">Clientes</label>
 
-                        <el-select v-model="search.customer_id" filterable remote popper-class="el-select-customers" clearable placeholder="Nombre o número de documento" :remote-method="searchRemoteCustomers" :loading="loading_search">
-                            <el-option v-for="option in customers" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                        </el-select>
+                            <el-select
+                                v-model="search.customer_id"
+                                filterable
+                                remote
+                                popper-class="el-select-customers"
+                                clearable
+                                placeholder="Nombre o número de documento"
+                                :remote-method="searchRemoteCustomers"
+                                :loading="loading_search"
+                            >
+                                <el-option
+                                    v-for="option in customers"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
                     </div>
-                </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100"
@@ -196,9 +208,7 @@
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
-                    >
+                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100">Categoría</label>
                             <el-select
@@ -215,11 +225,11 @@
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
-                    >
+                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
-                            <label class="control-label w-100">Unidad De Medida</label>
+                            <label class="control-label w-100"
+                                >Unidad De Medida</label
+                            >
                             <el-select
                                 v-model="search.unit_type_id"
                                 filterable
@@ -234,21 +244,21 @@
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
-                    >
+                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <div class="form-group">
-                            <label class="control-label w-100">Usuario</label>
+                            <label class="control-label w-100"
+                                >Usuarios</label
+                            >
                             <el-select
                                 v-model="search.user_id"
                                 filterable
                                 clearable
                             >
                                 <el-option
-                                    v-for="option in users"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
+                                    v-for="user in users"
+                                    :key="user.id"
+                                    :value="user.id"
+                                    :label="user.name"
                                 ></el-option>
                             </el-select>
                         </div>
@@ -278,7 +288,12 @@
                             v-if="records.length > 0"
                             @click.prevent="exportRecordsVentas"
                             icon="el-icon-download"
-                            :disabled="!search.d_end && !search.date_of_issue && !search.customer_id && !search.year"
+                            :disabled="
+                                !search.d_end &&
+                                    !search.date_of_issue &&
+                                    !search.customer_id &&
+                                    !search.year
+                            "
                             >Exportar</el-button
                         >
                     </div>
@@ -464,6 +479,7 @@ export default {
                 item_id: null,
                 warehouse_id: null,
                 unit_type_id: null,
+                user_id: null,
                 has_sale: false,
                 active: false,
                 series: null,
@@ -471,8 +487,7 @@ export default {
                 d_start: null,
                 d_end: null,
                 year: null,
-                pending_payment: false,
-                user_id: null,
+                pending_payment: false
             };
         },
         changestablishment() {

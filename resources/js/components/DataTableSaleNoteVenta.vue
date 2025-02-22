@@ -156,25 +156,26 @@
                             </el-select>
                         </div>
                     </div>
-                    <!-- <div class="col-md-3 col-lg-3">
-                        <label for="seller_id">Vendedor</label>
-
-                        <el-select
-                            clearable
-                            v-model="search.seller_id"
-                            class="border-left rounded-left border-info w-100"
-                            popper-class="el-select-customers"
-                            placeholder="Seleccione un Asesor - Vendedor"
-                            @change="getRecords"
-                        >
-                            <el-option
-                                v-for="(option, idx) in sellers"
-                                :key="idx"
-                                :value="option.id"
-                                :label="option.name"
-                            ></el-option>
-                        </el-select>
-                    </div> -->
+                    <div
+                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                    >
+                        <div class="form-group">
+                            <label class="control-label w-100">Usuario</label>
+                            <el-select
+                                v-model="search.user_id"
+                                filterable
+                                clearable
+                                @change="getRecords"
+                            >
+                                <el-option
+                                    v-for="(option, idx) in users"
+                                    :key="idx"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
                     <div class="col-md-6 col-sm-12">
                         <el-button
                             type="success"
@@ -269,7 +270,8 @@ export default {
                 seller_id: null,
                 category_id: null,
                 series: null,
-                end: null
+                end: null,
+                user_id: null,
             },
             totals: {
                 total_pen: 0,
@@ -281,6 +283,7 @@ export default {
             pagination: {},
             array_users: [],
             series: [],
+            users: [],
             saleNotesPending: 0
             // sale_notes_pending:0
         };
@@ -298,6 +301,7 @@ export default {
             this.sellers = response.data.sellers;
             this.categories = response.data.categories;
             this.state_types = response.data.state_types;
+            this.users = response.data.users;
         });
     },
     async mounted() {

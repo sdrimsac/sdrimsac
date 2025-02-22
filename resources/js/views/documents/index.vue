@@ -868,36 +868,15 @@
                                     >
                                         {{ row.total }}
                                     </td>
-
-                                    <!-- <template v-if="row.balance > 0">
-                                        <td
-                                            :class="{
-                                                'text-dark':
-                                                    row.state_type_id === '11'
-                                            }"
-                                            class="text-left text-danger font-weight-bold"
-                                        >
-                                            {{ row.balance }}
-                                        </td>
-                                    </template>
-                                    <template v-else>
-                                        <td
-                                            :class="{
-                                                'text-dark':
-                                                    row.state_type_id === '11'
-                                            }"
-                                            class="text-left"
-                                        >
-                                            {{ row.balance }}
-                                        </td>
-                                    </template> -->
                                     <template>
                                         <td class="text-center">
                                             <span
-                                                v-if="row.paid"
+                                                v-if="row.remain == 0"
                                                 class="badge rounded-pill bg-success text-white"
-                                                >Pagado</span
-                                            ><span
+                                            >
+                                                Pagado
+                                            </span>
+                                            <span
                                                 v-else
                                                 class="badge rounded-pill bg-warning text-white"
                                             >

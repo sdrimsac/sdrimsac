@@ -732,8 +732,12 @@ class SaleNoteController extends Controller
         $series = $request->series;
         $description = $request->description;
         $category_id = $request->category_id;
+        $user_id = $request->user_id;
         $records = SaleNote::query();
 
+        if ($user_id) {
+            $records = $records->where("user_id", $user_id);
+        }
         if ($customer_id) {
             $records = $records->where("customer_id", $customer_id);
         }
@@ -936,7 +940,11 @@ class SaleNoteController extends Controller
         $company = Company::active();
         $state_types = StateType::whereIn('id', ['01', '11'])->get();
         $payment_method_types = PaymentMethodType::where('active', 1)->get();
-        $users = User::where('active', 1)->get();
+        $users = User::where('active', 1)
+                ->where('type', 'seller')
+                ->where('name', '!=', 'CONTADOR')
+                ->select('id', 'name')
+                ->get();
         $user_select = User::select('id')->where('id', auth()->user()->id)->first();
         $document_type_03_filter = config('tenant.document_type_03_filter');
         $promotions_document = PromotionDocument::where('active', 1)->get();

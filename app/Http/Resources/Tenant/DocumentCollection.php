@@ -227,7 +227,6 @@ class DocumentCollection extends ResourceCollection
                 'user_email' => ($row->user) ? $row->user->email : '',
                 'external_id' => $row->external_id,
                 'observation' => $row->observation,
-
                 'balance' => $balance
 
             ];
