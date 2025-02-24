@@ -138,23 +138,29 @@ class PromotionDocumentController extends Controller
                 'message' => 'No tienes mas cambios disponibles'
             ];
         }
-        $record = PromotionDocumentCustomer::where('customer_id', $id)
-            ->where('promotion_document_id', $promotion_document_id)
-            ->where('active', 1)
+        
+        // Join promotion_documents table to get points_value
+        $record = PromotionDocumentCustomer::where('promotion_document_customers.customer_id', $id)
+            ->where('promotion_document_customers.promotion_document_id', $promotion_document_id)
+            ->where('promotion_document_customers.active', 1)
+            ->join('promotion_documents', 'promotion_documents.id', '=', 'promotion_document_customers.promotion_document_id')
+            ->select('promotion_document_customers.*', 'promotion_documents.points_value', 'promotion_documents.total')
             ->first();
 
         if (!$record) return [
             'success' => false,
         ];
+
         $points = $record->points;
+        $points_value = $record->points_value; // New field from promotion_documents
         $promotion_document_id = $record->promotion_document_id;
+        $total = $record->total;
+        
         $items = PromotionDocumentItem::where('promotion_document_id', $promotion_document_id)
             ->where('points_value', '<=', $points)
             ->with('item.itemwarehouses')
             ->get()->transform(function ($item) {
                 $item_data = $item->item;
-                
-                /* $item_warehouse = $item_data->item_warehouse_prices->first(); */
                 $item_warehouse = $item_data->itemWarehouses ? $item_data->itemWarehouses->first() : null;
                 $stock = $item_warehouse ? $item_warehouse->stock : null;
 
@@ -166,13 +172,14 @@ class PromotionDocumentController extends Controller
                     'points_value' => $item->points_value,
                     'stock' => $stock,
                     'item'   => $item_data,
-                    
-
                 ];
             });
+
         return [
             'success' => true,
             'message' => $points,
+            'points_value' => $points_value,
+            'total' => $total,
             'items' => $items
         ];
     }

@@ -452,46 +452,43 @@
 
                                     <!-- Observaciones y Vendedor -->
                                     <div
-                                        class="col-12 col-md-12 col-lg-12 d-flex align-items-center justify-content-start flex-wrap pt-0 pb-0"
+                                        class="form-row d-flex align-items-center justify-content-between flex-wrap"
                                     >
                                         <!-- Observaciones -->
-                                        <div class="col-8">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label fw-bold"
-                                                    >Observaciones</label
-                                                >
-                                                <el-input
-                                                    ref="observation"
-                                                    :placeholder="bank"
-                                                    v-model="form.observation"
-                                                    style="width: 95%;"
-                                                ></el-input>
-                                            </div>
+                                        <div
+                                            class="col-12 col-md-8 col-lg-8 d-flex flex-column mb-2 mb-lg-0"
+                                        >
+                                            <label for="observations"
+                                                >Observaciones</label
+                                            >
+                                            <el-input
+                                                v-model="form.observation"
+                                                type="text"
+                                                class="w-100"
+                                                placeholder="Observaciones"
+                                                size="large"
+                                            ></el-input>
                                         </div>
 
                                         <!-- Vendedor -->
                                         <div
-                                            class="col-4 "
-                                            v-if="configuration.seller_caja"
+                                            class="col-12 col-md-4 col-lg-4 d-flex flex-column mb-2 mb-lg-0"
                                         >
-                                            <div class="form-group">
-                                                <label for="seller"
-                                                    >Vendedor</label
-                                                >
-                                                <el-select
-                                                    v-model="form.seller_id"
-                                                    style="width: 90%;"
-                                                >
-                                                    <el-option
-                                                        v-for="(option,
-                                                        idx) in sellers"
-                                                        :key="idx"
-                                                        :label="option.name"
-                                                        :value="option.id"
-                                                    ></el-option>
-                                                </el-select>
-                                            </div>
+                                            <label for="seller">Vendedor</label>
+                                            <el-select
+                                                v-model="form.seller_id"
+                                                class="w-100"
+                                                placeholder="Seleccionar Vendedor"
+                                                size="large"
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in sellers"
+                                                    :key="idx"
+                                                    :label="option.name"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
                                         </div>
                                     </div>
                                 </div>
@@ -1147,7 +1144,13 @@
                                 configuration.is_promotion_document ||
                                     configuration.promotions_by_points
                             "
-                        >
+                        > 
+                        
+                        <!-- </div> -->
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-white">Puntos Acumulados: {{ Number(pointsMessage || 0).toFixed(2) }}</span>
+                            <span class="text-white">Puntos Ganados Venta: {{ Number(ventalista || 0).toFixed(2) }}</span>
+                        </div>
                             <label for="promotion" class="w-100 fw-bold"
                                 >Promoción</label
                             >
@@ -1196,12 +1199,12 @@
                                     type="primary"
                                     size="small"
                                 >
-                                    Promocion
+                                    Canjear
                                 </el-button>
                             </div>
                         </div>
                         <br />
-                        <div class="radio-tile-group2 d-flex mb-3">
+                        <div class="radio-tile-group2 d-flex mb-3 justify-content-end me-4">
                             <div
                                 class="input-container2 border rounded-sm me-2"
                                 :class="{ selected: printerOn === '1' }"
@@ -1254,11 +1257,13 @@
 
                         <!-- Desocupar habitación -->
                         <template v-if="form.is_room">
-                            <div class="mb-3">
-                                <label for="vacate">Desocupar habitación</label>
-                                <el-checkbox
-                                    v-model="form.vacate"
-                                ></el-checkbox>
+                            <div class="mb-3 d-flex justify-content-end">
+                                <div>
+                                    <label for="vacate">Desocupar habitación</label>
+                                    <el-checkbox
+                                        v-model="form.vacate"
+                                    ></el-checkbox>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -1949,8 +1954,11 @@ export default {
     },
     data() {
         return {
+            activeTab: 'general', // Añadir esta línea para definir el tab activo por defecto
             all_series: [],
             listPromotionItems: [],
+            promotionItems: [],
+            showDialogPromotionBox: false,
             promotionItems: [],
             showDialogPromotionBox: false,
             dialogWidth: "70%", // Valor inicial para pantallas grandes
@@ -2119,8 +2127,9 @@ export default {
             students: [],
             bank: null,
             hasExceedBank: false,
-            bank_accounts: []
-            // percentage_igv: 18
+            bank_accounts: [],
+            pointsMessage: '',
+            ventalista: 0
         };
     },
     computed: {
@@ -2336,8 +2345,28 @@ export default {
         },
 
         reCalculateTotal() {
-            // Recalcular el total cuando cambien los checkboxes
-            console.log("Recalculando el total");
+            // ...existing code...
+            
+           
+            // Calcula puntos basado en el total de venta (form.total) y el monto de promocion (total)
+            let saleTotal = this.form.total; // Monto total de la venta
+            let promotionTotal = this.total || 0; // Monto que tiene la promoción
+            let points_value = this.points_value || 0.1; // Valor de puntos por unidad monetaria
+
+            // Calcula puntos solo si hay un monto de venta
+            if(saleTotal > 0) {
+                // Si hay monto de promoción, usa ese para calcular puntos
+                if(promotionTotal > 0) {
+                    this.ventalista = parseFloat((saleTotal / promotionTotal).toFixed(2));
+                } else {
+                    // Si no hay monto de promoción, usa el cálculo estándar
+                    this.ventalista = parseFloat((saleTotal * points_value).toFixed(2));
+                }
+            } else {
+                this.ventalista = 0;
+            }
+            
+            // ...existing code...
         },
         formatNumber(value) {
             return new Intl.NumberFormat("es-PE", {
@@ -3041,14 +3070,31 @@ export default {
                         let { data } = response;
                         if (data.success) {
                             this.hasPromotionText = data.message;
+                            this.pointsMessage = data.message; // Store the points value here
+                            this.points_value = data.points_value;
+                            this.total = data.total;
                             this.listPromotionItems = data.items;
-                            /* console.log("ver si esta llegando los items a este filla", this.listPromotionItems); */
+                            
+                            // Calculate points to be earned from this sale
+                            this.calculatePointsEarned();
                         } else {
                             this.hasPromotionText = null;
+                            this.pointsMessage = '';
+                            this.points_value = '';
+                            this.total = '';
                             this.listPromotionItems = [];
+                            this.ventalista = 0;
                         }
                     }
                 });
+        },
+        calculatePointsEarned() {
+            if (this.points_value && this.form.total && this.total) {
+                // Calculate points earned based on total sale and points_value
+                this.ventalista = parseFloat((this.form.total * this.points_value / this.total ).toFixed(2));
+            } else {
+                this.ventalista = 0;
+            }
         },
         verifyPromotionCustomer() {
             this.hasPromotionText = null;
@@ -4086,6 +4132,23 @@ export default {
                 total_value: this.form.total_value
             });
             // this.discountGlobal();
+            
+            let saleTotal = this.form.total; // Monto total de la venta
+            let promotionTotal = this.total || 0; // Monto que tiene la promoción
+            let points_value = this.points_value || 0.1; // Valor de puntos por unidad monetaria
+
+            // Calcula puntos solo si hay un monto de venta
+            if(saleTotal > 0) {
+                // Si hay monto de promoción, usa ese para calcular puntos
+                if(promotionTotal > 0) {
+                    this.ventalista = parseFloat((saleTotal / promotionTotal).toFixed(2));
+                } else {
+                    // Si no hay monto de promoción, usa el cálculo estándar
+                    this.ventalista = parseFloat((saleTotal * points_value).toFixed(2));
+                }
+            } else {
+                this.ventalista = 0;
+            }
         },
         chargeGlobal() {
             let base = parseFloat(this.form.total);

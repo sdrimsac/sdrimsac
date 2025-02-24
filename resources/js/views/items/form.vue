@@ -13,7 +13,7 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body p-2">
                 <!-- Panel General -->
-                <el-tabs tab-position="top">
+                <el-tabs tab-position="top" v-model="activeTab">
                     <el-tab-pane label="General" name="general">
                         <!-- Primer bloque de fila-->
                         <div class="container">
@@ -2711,7 +2711,8 @@ export default {
             area_id: 2,
             timer: null,
             madera: [],
-            all_commercial_treatments: []
+            all_commercial_treatments: [],
+            activeTab: 'general',
         };
     },
     async created() {
