@@ -2755,7 +2755,17 @@ class DocumentController extends Controller
     }
     public function data_table()
     { 
-        $users = User::where('type', 'seller')->where('name', '!=', 'CONTADOR')->select('id', 'name')->get();
+        $users = User::where(function($query) {
+            $query->where('type', 'seller')
+                  ->orWhere('type', 'admin');
+            })
+            ->where('name', '!=', 'CONTADOR')
+            ->where(function($query) {
+            $query->where('worker_type_id', 1)
+                  ->orWhereNull('worker_type_id');  
+            })
+            ->select('id', 'name')
+            ->get();
         $unit_types = UnitType::all();
         $customers = $this->table('customers');
         $configuration = Configuration::all();

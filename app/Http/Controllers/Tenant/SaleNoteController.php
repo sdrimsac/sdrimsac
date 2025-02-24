@@ -941,11 +941,23 @@ class SaleNoteController extends Controller
         $company = Company::active();
         $state_types = StateType::whereIn('id', ['01', '11'])->get();
         $payment_method_types = PaymentMethodType::where('active', 1)->get();
-        $users = User::where('active', 1)
+        /* $users = User::where('active', 1)
+            ->where('type', 'seller')
+            ->where('name', '!=', 'CONTADOR')
+            ->select('id', 'name')
+            ->get(); */
+        $users = User::where(function ($query) {
+            $query->where('active', 1)
                 ->where('type', 'seller')
-                ->where('name', '!=', 'CONTADOR')
-                ->select('id', 'name')
-                ->get();
+                ->orWhere('type', 'admin');
+        })
+            ->where('name', '!=', 'CONTADOR')
+            ->where(function ($query) {
+                $query->where('worker_type_id', 1)
+                    ->orWhereNull('worker_type_id');
+            })
+            ->select('id', 'name')
+            ->get();
         $user_select = User::select('id')->where('id', auth()->user()->id)->first();
         $document_type_03_filter = config('tenant.document_type_03_filter');
         $promotions_document = PromotionDocument::where('active', 1)->get();
@@ -1301,7 +1313,8 @@ class SaleNoteController extends Controller
         $item_warehouse->stock = $item_warehouse->stock + $qty;
         $item_warehouse->save();
     }
-    function dumpWithTime($line){
+    function dumpWithTime($line)
+    {
         // dump($line . " - " . date('Y-m-d H:i:s'));
     }
     public function store(SaleNoteRequest $request)
@@ -1396,10 +1409,10 @@ class SaleNoteController extends Controller
                             'status_orden_id' => 4,
                             'customer_id' => $this->sale_note->customer_id
                         ]);
-                
+
                     OrdenItem::where('orden_id', $request->orden_id)
                         ->update(['status_orden_id' => 4]);
-                        
+
                     $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
                     foreach ($orden_items as $orden_item) {
                         $orden_item->restoreRestaurant();
@@ -1551,10 +1564,10 @@ class SaleNoteController extends Controller
                         if ($hotel_rent_payment_id) {
                             $hotel_rent_payment = HotelRentPayment::find($hotel_rent_payment_id);
                             if ($hotel_rent_payment) {
-                                if($total == $hotel_rent_payment->amount){
+                                if ($total == $hotel_rent_payment->amount) {
                                     $hotel_rent_payment->is_paid = true;
                                     $hotel_rent_payment->save();
-                                }else{
+                                } else {
                                     $hotel_rent_payment->amount -= $total;
                                     $hotel_rent_payment->save();
                                 }
@@ -1613,10 +1626,10 @@ class SaleNoteController extends Controller
                         'name_product_pdf' => $row['name_product_pdf'] ?? '',
                         'sale_note_id' => $this->sale_note->id
                     ]);
-                    
+
                     $sale_note_item->fill($row);
                     $sale_note_item->save();
-                
+
                     // Restaurar stock si es necesario
                     if (!empty($row['toWarehouse']) && $row['toWarehouse'] > 0) {
                         $this->restoreStock(

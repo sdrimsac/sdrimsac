@@ -1425,7 +1425,6 @@
                                                 <td>
                                                     <el-input
                                                         v-model="getStockForWarehouse(warehouse.id).stock"
-                                                        type="number"
                                                         :disabled="!!recordId"
                                                         min="0"
                                                         @input="calculateTotalStock"
@@ -3376,6 +3375,18 @@ export default {
                         if (this.form.series_enabled == 1) {
                             this.form.series_enabled = true;
                         } else this.form.series_enabled = false;
+
+                        // Sincronizar stocks de almacenes al editar
+                        if (this.form.warehouses && this.form.warehouses.length > 0) {
+                            this.form.item_warehouses = this.warehouses.map(warehouse => {
+                                // Buscar el stock existente en warehouses
+                                const existingWarehouse = this.form.warehouses.find(w => w.warehouse_id === warehouse.id);
+                                return {
+                                    warehouse_id: warehouse.id,
+                                    stock: existingWarehouse ? Number(existingWarehouse.stock) : 0
+                                };
+                            });
+                        }
                     });
             } else {
                 if (this.warehouses.length > 0) {
@@ -3392,6 +3403,12 @@ export default {
                 this.showSeries = true;
                 this.form.area_id = 2;
                 this.form.commercial_treatments = this.all_commercial_treatments;
+
+                // Inicializar stock para nuevo producto
+                this.form.item_warehouses = this.warehouses.map(w => ({
+                    warehouse_id: w.id,
+                    stock: 0
+                }));
             }
         },
         restoreUnitTypes() {
@@ -3919,16 +3936,31 @@ export default {
             if (!this.form.item_warehouses) {
                 this.form.item_warehouses = [];
             }
-        
-            let stock = this.form.item_warehouses.find(w => w.warehouse_id === warehouseId);
-            if (!stock) {
-                stock = {
+
+            let stockItem = this.form.item_warehouses.find(w => w.warehouse_id === warehouseId);
+            
+            // Si estamos editando y existe data en warehouses
+            if (this.recordId && this.form.warehouses && !stockItem) {
+                const existingWarehouse = this.form.warehouses.find(w => w.warehouse_id === warehouseId);
+                if (existingWarehouse) {
+                    stockItem = {
+                        warehouse_id: warehouseId,
+                        stock: Number(existingWarehouse.stock)
+                    };
+                    this.form.item_warehouses.push(stockItem);
+                }
+            }
+            
+            // Si aún no existe el stock para ese almacén, creamos uno nuevo
+            if (!stockItem) {
+                stockItem = {
                     warehouse_id: warehouseId,
                     stock: 0
                 };
-                this.form.item_warehouses.push(stock);
+                this.form.item_warehouses.push(stockItem);
             }
-            return stock;
+            
+            return stockItem;
         },
         
         // Calcular stock total

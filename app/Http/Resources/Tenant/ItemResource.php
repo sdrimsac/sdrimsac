@@ -151,6 +151,16 @@ class ItemResource extends JsonResource
                     "warehouse" => $row->getWarehouseDescription()
                 ];
             }),
+            'warehouses' => collect($this->warehouses)->transform(function ($row) {
+
+                return [
+                    "id" => $row->id,
+                    "warehouse_id" => $row->warehouse_id,
+                    "warehouse_description" => $row->warehouse_description,
+                    "stock" => $row->stock,
+                    /* "warehouse" => $row->getWarehouseDescription() */
+                ];
+            }),
             'series_enabled' => $this->series_enabled,
             'is_promotion' => (bool) $this->is_promotion,
             'promotion_count' => $this->promotion_count,
