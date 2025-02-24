@@ -1301,6 +1301,9 @@ class SaleNoteController extends Controller
         $item_warehouse->stock = $item_warehouse->stock + $qty;
         $item_warehouse->save();
     }
+    function dumpWithTime($line){
+        // dump($line . " - " . date('Y-m-d H:i:s'));
+    }
     public function store(SaleNoteRequest $request)
     {
         try {
@@ -1309,7 +1312,7 @@ class SaleNoteController extends Controller
             DB::connection('tenant')->transaction(function () use ($request, $configuration) {
 
                 $vehiculo_id = Functions::valueKeyInArray($request->all(), "vehiculo_id", null);
-
+                $this->dumpWithTime("vehiculo_id");
                 if ($vehiculo_id) {
                     (new VehiculoController)->restoreItems($vehiculo_id);
                 }
@@ -1356,10 +1359,13 @@ class SaleNoteController extends Controller
                         }
                     }
                 }
+                $this->dumpWithTime("quotation_id");
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
                 $user = User::find($request['user_id']);
+                $this->dumpWithTime("mergeData");
                 $data = $this->mergeData($request);
                 $data['time_of_issue'] = date('H:i:s');
+                $this->dumpWithTime("updateOrCreate");
                 $this->sale_note =  SaleNote::updateOrCreate(
                     ['id' => $request->input('id')],
                     $data
@@ -1414,6 +1420,7 @@ class SaleNoteController extends Controller
                 //         event(new OrdenReadyEvent($orden_item->id));
                 //     }
                 // }
+                $this->dumpWithTime("orden_id");
                 if ($request->orden_ids) {
                     $ids = $request->orden_ids;
                     foreach ($ids as $id) {
@@ -1435,7 +1442,7 @@ class SaleNoteController extends Controller
                 if ($request->is_pay_credit_list) {
                     SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
                 }
-
+                $this->dumpWithTime("is_pay_credit_list");
                 $vacate = $request->vacate;
                 if ($configuration->hotels) {
                     if ($request->hotel_rent_item_ids) {
@@ -1464,7 +1471,7 @@ class SaleNoteController extends Controller
                             $item->save();
                         }
                     }
-
+                    $this->dumpWithTime("hotel_rent_item_ids");
                     if ($request->hotel_rent_id && !$promotion_sale) {
                         $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
                         $hotel_rent_items = $hotel_rent->items;
@@ -1516,6 +1523,7 @@ class SaleNoteController extends Controller
                         }
                     }
                 }
+                $this->dumpWithTime("hotel_rent_item_ids");
                 if ($configuration->mod_renta && $request->hotel_rent_id) {
                     $hotel_rent_document = HotelRentDocument::create([
                         'hotel_rent_id' => $request->hotel_rent_id,
@@ -1554,7 +1562,7 @@ class SaleNoteController extends Controller
                         }
                     }
                 }
-
+                $this->dumpWithTime("is_list_credit");
                 if ($request->is_list_credit) {
                     CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
                 }
@@ -1564,6 +1572,7 @@ class SaleNoteController extends Controller
                 if (!$cash) {
                     throw new Exception("No existe caja abierta para el usuario");
                 }
+                $this->dumpWithTime("is_list_credit");
                 if ($promotion_sale && $request->hotel_rent_item_service_id) {
                     SaleNotePromotion::create([
                         'sale_note_id' => $this->sale_note->id,
@@ -1573,6 +1582,7 @@ class SaleNoteController extends Controller
 
                     HotelRentItemServices::where('id', $request->hotel_rent_item_service_id)->update(['active' => 0]);
                 }
+                $this->dumpWithTime("all_ordens e");
                 if ($all_ordens) {
                     $tables = Table::where('establishment_id', auth()->user()->establishment_id)
                         ->orWhereNull('establishment_id')
@@ -1596,6 +1606,7 @@ class SaleNoteController extends Controller
                         Table::where('id', $table->id)->update(['status_table_id' => 1]);
                     }
                 }
+                $this->dumpWithTime("all_ordens");
                 foreach ($data['items'] as $row) {
                     $sale_note_item = new SaleNoteItem([
                         'percentage_igv' => 18,
@@ -1635,6 +1646,7 @@ class SaleNoteController extends Controller
 
                 // }
                 /////------------------------------------------
+                $this->dumpWithTime("generate");
                 if ($request->generate == true) {
                     if ($configuration->sale_note_credit_confirm) {
                         $user = User::find($request->user_id);
@@ -1782,7 +1794,7 @@ class SaleNoteController extends Controller
                 if ($box) {
                     $original_cash_id = $box->cash_id;
                 }
-
+                $this->dumpWithTime("box");
 
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
@@ -1792,8 +1804,9 @@ class SaleNoteController extends Controller
                     $document_save = SaleNote::where('id', $this->sale_note->id)->first();
                     $type_document = "NOTA DE VENTA";
                     $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
-
+                    $this->dumpWithTime("boxes 1");
                     if ($request->boxes) {
+                        $this->dumpWithTime("boxes 1.1");
                         $message = "";
                         foreach ($request->boxes as $currentBox) {
                             $method = $currentBox['method'];
@@ -1845,6 +1858,7 @@ class SaleNoteController extends Controller
                             }
                         }
                     } else {
+                        $this->dumpWithTime("boxes 1.2");
                         if (!$configuration->sale_note_credit_cash) {
                             $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
                             $cajas->group_id = 1;
@@ -1869,16 +1883,18 @@ class SaleNoteController extends Controller
                     }
                 }
                 $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
-
+                $this->dumpWithTime("promotion");
                 if ($request->receive_promotion) {
                     $this->updatePromotion($this->sale_note);
                 }
+                $this->dumpWithTime("promotion 2");
                 if ($request->promotion_id) {
                     $this->savePromotion(
                         $this->sale_note,
                         $request->promotion_id
                     );
                 }
+                $this->dumpWithTime("setFilename");
                 $this->setFilename();
                 // $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
                 $paid = $request->paid;
@@ -1886,9 +1902,10 @@ class SaleNoteController extends Controller
                     // if($configuration->android_configuration){
                     //     sleep(5);
                     // }
-                    dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
+                    // dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
                     // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
+                $this->dumpWithTime("payments");
                 if (count($request->payments) > 0) {
                     $total_payment = 0;
 
@@ -1909,7 +1926,7 @@ class SaleNoteController extends Controller
                         }
                     }
 
-
+                    $this->dumpWithTime("payments 2");
                     //si el index payment_method_type_id no existe poner paid a true
                     if (!isset($request->payments[0]['payment_method_type_id']) && !$bank_account_id) {
                         $paid = 1;
@@ -1929,6 +1946,7 @@ class SaleNoteController extends Controller
 
 
                 } else {
+                    $this->dumpWithTime("generate 2");
                     $paid = 0;
                     $user_id = auth()->user()->id;
                     $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
@@ -2005,8 +2023,9 @@ class SaleNoteController extends Controller
             if ($this->sale_note->creditPayments) {
                 $this->sale_note->calculatePenalties();
             }
-
+            $this->dumpWithTime("saveItemWarranty");
             $this->saveItemWarranty($this->sale_note, $request->items);
+            $this->dumpWithTime("checkTotalAndSendMessage");
             $this->checkTotalAndSendMessage($this->sale_note);
             return [
                 'success' => true,
