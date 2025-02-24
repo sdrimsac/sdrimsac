@@ -1508,7 +1508,15 @@ class DocumentController extends Controller
             $facturalo->updateHash();
             $facturalo->updateQr();
             $facturalo->createPdf();
-            $facturalo->senderXmlSignedBill();
+            try{
+                $facturalo->senderXmlSignedBill();
+            } catch (\Exception $e) {
+                Log::error("Error al enviar el XML firmado: ", [
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
             // return $facturalo;
 
             if ($request->vehiculo_id) {
