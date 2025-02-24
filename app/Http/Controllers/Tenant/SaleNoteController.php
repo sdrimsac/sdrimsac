@@ -1902,7 +1902,7 @@ class SaleNoteController extends Controller
                     // if($configuration->android_configuration){
                     //     sleep(5);
                     // }
-                    // dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
+                    dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
                     // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 $this->dumpWithTime("payments");
