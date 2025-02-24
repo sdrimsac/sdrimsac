@@ -29,21 +29,20 @@ class OrdenEvent implements ShouldBroadcast
     public $order_item;
     public function __construct($id)
     {
-        $orden = OrdenItem::find($id);
-        $user = User::find($orden->user_id)->name;
-        $quantity = $orden->quantity;
-        $to_carry = $orden->to_carry;
-        $user = User::find($orden->user_id)->name;
-        $general_orden  = Orden::find($orden->orden_id);
-        $table = Table::find($general_orden->table_id);
-        $food = Food::find($orden->food_id);
-        $observation = $orden->observations;
-        $this->order_item = array(
+        $orden = OrdenItem::with(['user:id,name', 'food', 'orden.table'])
+            ->findOrFail($id);
+        
+        $this->order_item = [
             'id' => $id,
-            'quantity' => $quantity,
-            'to_carry' => $to_carry,
-            'time' => $orden->time, 'user' => $user, 'orden' => $general_orden,  'food' => $food, 'table' => $table, 'observations' => $observation
-        );
+            'quantity' => $orden->quantity,
+            'to_carry' => $orden->to_carry,
+            'time' => $orden->time,
+            'user' => $orden->user->name,
+            'orden' => $orden->orden,
+            'food' => $orden->food,
+            'table' => $orden->orden->table,
+            'observations' => $orden->observations
+        ];
     }
 
     /**

@@ -615,15 +615,8 @@ class OrdenController extends Controller
             $ref = $request->ref;
             $sale_direct = $request->saleDirect ?? true;
             $configuration = Configuration::first();
-            // if ($configuration->commands_fisico == true) {
-            //     $orden = Orden::where('commands_fisico', $request->commands_fisico)->where('status_orden_id', '4')->first();
-            //     if ($orden !== null) {
-            //         return [
-            //             'success' => false,
-            //             'message' => 'Nº de Comanda ya fue cobrada'
-            //         ];
-            //     }
-            // }
+
+
             if ($request->caja == false && $configuration->pin_switch) {
 
                 $pin = $request->pin;
@@ -739,28 +732,65 @@ class OrdenController extends Controller
             /* ----------------------------- */
             $orden_items_ids = [];
             $orden_items_ids_for_kitchen = [];
-            foreach ($items as $item) {
-                $orden_item = new OrdenItem;
-                $orden_item->food_id = $item['food']['id'];
-                $orden_item->observations = $item['observation'] ?? '-';
-                $orden_item->quantity = $item['quantity'];
-                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
-                $orden_item->price = $item['price'];
-                $orden_item->user_id = $user_id;
-                $orden_item->orden_id = $orden->id;
-                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
-                $orden_item->status_orden_id = 1;
-                $orden_item->date = Carbon::today();
-                $orden_item->time = date('H:i:s');
-                $orden_item->area_id = $item['food']['area_id'];
-                $orden_item->save();
-                $orden_item->stockRestaurant();
-                $orden_items_ids[] = $orden_item->id;
-                $orden_items_ids_for_kitchen[] = [
-                    "orden_id" => $orden_item->id,
-                    "area_id" => $orden_item->area_id
+            // foreach ($items as $item) {
+            //     $orden_item = new OrdenItem;
+            //     $orden_item->food_id = $item['food']['id'];
+            //     $orden_item->observations = $item['observation'] ?? '-';
+            //     $orden_item->quantity = $item['quantity'];
+            //     $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
+            //     $orden_item->price = $item['price'];
+            //     $orden_item->user_id = $user_id;
+            //     $orden_item->orden_id = $orden->id;
+            //     $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
+            //     $orden_item->status_orden_id = 1;
+            //     $orden_item->date = Carbon::today();
+            //     $orden_item->time = date('H:i:s');
+            //     $orden_item->area_id = $item['food']['area_id'];
+            //     $orden_item->save();
+            //     $orden_item->stockRestaurant();
+            //     $orden_items_ids[] = $orden_item->id;
+            //     $orden_items_ids_for_kitchen[] = [
+            //         "orden_id" => $orden_item->id,
+            //         "area_id" => $orden_item->area_id
+            //     ];
+            //     event(new OrdenEvent($orden_item->id));
+            // }
+            $orden_items = collect($items)->map(function ($item) use ($orden, $user_id) {
+                return [
+                    'food_id' => $item['food']['id'],
+                    'observations' => $item['observation'] ?? '-',
+                    'quantity' => $item['quantity'],
+                    'unit_type_id' => Functions::valueKeyInArray($item, 'type_id', null),
+                    'price' => $item['price'],
+                    'user_id' => $user_id,
+                    'orden_id' => $orden->id,
+                    'to_carry' => Functions::valueKeyInArray($item, 'to_carry', 0),
+                    'status_orden_id' => 1,
+                    'date' => Carbon::today(),
+                    'time' => date('H:i:s'),
+                    'area_id' => $item['food']['area_id']
                 ];
-                event(new OrdenEvent($orden_item->id));
+            });
+            
+            // Inserción masiva de OrdenItems
+            $created_items = OrdenItem::insert($orden_items->toArray());
+            
+            // Obtener los IDs de los items creados
+            $orden_items_ids = OrdenItem::where('orden_id', $orden->id)
+            ->whereIn('food_id', collect($items)->pluck('food.id'))
+            ->pluck('id')
+            ->toArray();
+            
+            // Preparar datos para cocina
+            $orden_items_ids_for_kitchen = OrdenItem::whereIn('id', $orden_items_ids)
+                ->get(['id as orden_id', 'area_id'])
+                ->toArray();
+            
+            // Actualizar stock y disparar eventos
+            foreach($orden_items_ids as $item_id) {
+                $orden_item = OrdenItem::find($item_id);
+                $orden_item->stockRestaurant();
+                event(new OrdenEvent($item_id));
             }
             if ($request->add_charge_room) {
                 $food = $this->get_item_service();
@@ -823,7 +853,7 @@ class OrdenController extends Controller
                 'direct_printing' => (bool) $establishment->direct_printing,
                 //'print'   => url('') . "/restaurant/worker/print-ticket/{$id}"
             ];
-            /* ----------------------------- */
+        
         } catch (Exception $e) {
             if ($e->getMessage() != null) {
 

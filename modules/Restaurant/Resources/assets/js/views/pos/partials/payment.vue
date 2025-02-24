@@ -559,7 +559,7 @@
                         </div>
 
                         <!-- Column 2: Descuento -->
-                        <div class="col-lg-4 col-md-4 col-sm-12" >
+                        <div class="col-lg-4 col-md-4 col-sm-12">
                             <div
                                 v-if="conf.show_discounts_payment"
                                 class="p-2"
@@ -2557,18 +2557,17 @@ export default {
         },
 
         isClientesVarios() {
-            
             if (!this.value) return false;
-            
+
             const customer = this.customers.find(c => c.id === this.value);
-            
-            return !!(customer && (
-                customer.number === "99999999" || 
-                customer.name.toLowerCase().includes("Clientes Varios")
-            ));
+
+            return !!(
+                customer &&
+                (customer.number === "99999999" ||
+                    customer.name.toLowerCase().includes("Clientes Varios"))
+            );
         },
         checkTotal(newMethod) {
-            
             /* let hasExceedBank = false; */
             /* if (hasExceedBank) {
                 Swal.fire({
@@ -3083,14 +3082,17 @@ export default {
             if (customer != null) {
                 this.students = customer.students || [];
                 this.customer = customer;
-                
+
                 // Resetear la promoción si es Clientes Varios o seleccionar la primera disponible
                 if (this.isClientesVarios()) {
                     this.form.promotion_id = null;
-                } else if (this.promotions_document && this.promotions_document.length > 0) {
+                } else if (
+                    this.promotions_document &&
+                    this.promotions_document.length > 0
+                ) {
                     this.form.promotion_id = this.promotions_document[0].id;
                 }
-                
+
                 this.form.customer_telephone = customer.phone;
                 this.setLocalStorageIndex("customer", this.customer);
                 if (
@@ -3371,7 +3373,11 @@ export default {
             }
 
             // Modificar la asignación de promoción por defecto
-            if (this.promotions_document && this.promotions_document.length > 0 && !this.isClientesVarios()) {
+            if (
+                this.promotions_document &&
+                this.promotions_document.length > 0 &&
+                !this.isClientesVarios()
+            ) {
                 this.form.promotion_id = this.promotions_document[0].id;
                 if (this.form.promotion_id) {
                     this.changePromotion();
@@ -4359,7 +4365,7 @@ export default {
             ) {
                 try {
                     const result = await Swal.fire({
-                        title: 'Advertencia',
+                        title: "Advertencia",
                         /* text: '¿Desea continuar sin registrar la bancarización?', */
                         html: `
                         <div class="text-danger">
@@ -4372,15 +4378,15 @@ export default {
                             ¿Desea continuar sin registrar la bancarización?
                         </p>
                         `,
-                        icon: 'warning',
+                        icon: "warning",
                         showCancelButton: true,
-                        confirmButtonText: 'Sí',
-                        cancelButtonText: 'No',
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
                         reverseButtons: true
                     });
 
                     if (!result.isConfirmed) {
-                        throw new Error('Cancelled');
+                        throw new Error("Cancelled");
                     }
                 } catch (e) {
                     pass = false;
@@ -4791,10 +4797,7 @@ export default {
                             format = data.print_ticket;
                             break;
                     }
-                    if (this.printer && format && this.printerOn == 1) {
-                        // this.printerDocument(this.printer,format)
-                        //this.$emit("printer",this.printer,format,1);
-                    }
+
                     this.operation_number = null;
                     if (response.data.success == true) {
                         let document_id = 0;
@@ -4815,28 +4818,31 @@ export default {
                             if (this.configuration.all_items_pos) {
                                 this.$emit("reloadItems");
                             }
-                            /* let customer = this.all_customers.find(
-                                c => c.id == form.customer_id
-                            ); */
 
                             if (ordenId) {
+                                // Convertir llamadas await en promesas
+                                const promises = [];
+
                                 if (
                                     this.configuration.college &&
                                     this.form.student_id
                                 ) {
-                                    const registerCollegeResponse = await this.$http.post(
-                                        "/college/registers/sale",
-                                        {
-                                            is_sale_note:
-                                                form.document_type_id == "80",
-                                            document_id: this.documentNewId,
-                                            detail: {
-                                                items: this.form.items.map(
-                                                    s => s.item
-                                                )
-                                            },
-                                            student_id: this.form.student_id
-                                        }
+                                    promises.push(
+                                        this.$http.post(
+                                            "/college/registers/sale",
+                                            {
+                                                is_sale_note:
+                                                    form.document_type_id ==
+                                                    "80",
+                                                document_id: this.documentNewId,
+                                                detail: {
+                                                    items: this.form.items.map(
+                                                        s => s.item
+                                                    )
+                                                },
+                                                student_id: this.form.student_id
+                                            }
+                                        )
                                     );
                                 }
 
@@ -4845,30 +4851,36 @@ export default {
                                     this.consignment_id &&
                                     this.isConsignment
                                 ) {
-                                    const consigmentLiquidate = await this.$http.post(
-                                        `/consignment/liquidated`,
-                                        {
-                                            id: this.consignment_id,
-                                            items: this.form.items.map(i => ({
-                                                consignment_item_id:
-                                                    i.consignment_item_id,
-                                                toWarehouse: i.toWarehouse,
-                                                quantity: i.quantity
-                                            })),
-                                            document_id: this.documentNewId,
-                                            document_type_id:
-                                                form.document_type_id
-                                        }
+                                    promises.push(
+                                        this.$http
+                                            .post(`/consignment/liquidated`, {
+                                                id: this.consignment_id,
+                                                items: this.form.items.map(
+                                                    i => ({
+                                                        consignment_item_id:
+                                                            i.consignment_item_id,
+                                                        toWarehouse:
+                                                            i.toWarehouse,
+                                                        quantity: i.quantity
+                                                    })
+                                                ),
+                                                document_id: this.documentNewId,
+                                                document_type_id:
+                                                    form.document_type_id
+                                            })
+                                            .then(response => {
+                                                if (response.status == 200) {
+                                                    this.$toast.success(
+                                                        "Liquidación de consignación realizada."
+                                                    );
+                                                }
+                                            })
                                     );
-                                    if (consigmentLiquidate.status == 200) {
-                                        this.$toast.success(
-                                            "Liquidación de consignación realizada."
-                                        );
-                                    }
                                 }
-                                const response2 = await this.$http.post(
-                                    "pos/orden_payment",
-                                    {
+
+                                // Agregar promesa de orden_payment
+                                promises.push(
+                                    this.$http.post("pos/orden_payment", {
                                         id: ordenId,
                                         customer_id: customer.id,
                                         document: {
@@ -4876,7 +4888,7 @@ export default {
                                                 form.document_type_id === "80",
                                             id: this.documentNewId
                                         }
-                                    }
+                                    })
                                 );
 
                                 if (this.configuration.promotions_sell) {
@@ -4885,59 +4897,56 @@ export default {
                                     );
                                     if (!how_is.name.includes("VARIOS")) {
                                         let itemspromo = form.items;
-
-                                        const procesarOferta = await axios.post(
-                                            `pos/processPromo`,
-                                            { itemspromo, how_is }
+                                        promises.push(
+                                            axios.post(`pos/processPromo`, {
+                                                itemspromo,
+                                                how_is
+                                            })
                                         );
                                     }
                                 }
 
-                                if (response2.data.success == true) {
-                                    if (this.form.customer_telephone) {
-                                        if (this.personalWhatsapp) {
-                                            await this.$emit("getFile", {
-                                                total: this.form.total,
-                                                documentId: this.documentNewId,
-                                                documentTypeId:
+                                // Ejecutar todas las promesas en paralelo
+                                Promise.all(promises).then(responses => {
+                                    const response2 =
+                                        responses[promises.length - 1]; // orden_payment response
+                                    if (response2.data.success == true) {
+                                        if (this.form.customer_telephone) {
+                                            if (this.personalWhatsapp) {
+                                                this.$emit("getFile", {
+                                                    total: this.form.total,
+                                                    documentId: this
+                                                        .documentNewId,
+                                                    documentTypeId:
+                                                        form.document_type_id,
+                                                    number: this.form
+                                                        .customer_telephone,
+                                                    message: this.form.message
+                                                });
+                                            } else {
+                                                this.clickSendWhatsapp(
                                                     form.document_type_id,
-                                                number: this.form
-                                                    .customer_telephone,
-                                                message: this.form.message
-                                            });
-                                        } else {
-                                            await this.clickSendWhatsapp(
-                                                form.document_type_id,
-                                                this.documentNewId,
-                                                this.number,
-                                                form
-                                            );
+                                                    this.documentNewId,
+                                                    this.number,
+                                                    form
+                                                );
+                                            }
                                         }
                                         if (!this.variation) {
                                             this.$emit("limpiarForm");
                                         }
-                                        this.loading_submit = false;
                                         this.$emit("removeConsignment");
-
-                                        this.back(true);
-                                    } else {
-                                        if (!this.variation) {
-                                            this.$emit("limpiarForm");
-                                        }
                                         this.loading_submit = false;
-                                        this.$emit("removeConsignment");
                                         this.back(true);
                                     }
-                                } else {
-                                    console.log(response2);
-                                }
+                                });
                             } else {
                                 if (this.conf.pos_quick_sale) {
                                     this.$toast.success("Venta realizada.");
                                 }
                                 if (this.form.customer_telephone) {
                                     if (this.personalWhatsapp) {
-                                        await this.$emit("getFile", {
+                                        this.$emit("getFile", {
                                             total: this.form.total,
                                             documentId: this.documentNewId,
                                             documentTypeId:
@@ -4947,7 +4956,7 @@ export default {
                                             message: this.form.message
                                         });
                                     } else {
-                                        await this.clickSendWhatsapp(
+                                        this.clickSendWhatsapp(
                                             form.document_type_id,
                                             this.documentNewId,
                                             this.number,
@@ -4960,7 +4969,6 @@ export default {
                                 }
                                 this.$emit("removeConsignment");
                                 this.loading_submit = false;
-
                                 this.back(true);
                             }
                         }

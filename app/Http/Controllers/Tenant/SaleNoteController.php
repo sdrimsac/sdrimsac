@@ -1383,19 +1383,36 @@ class SaleNoteController extends Controller
                     CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
                 }
                 if ($request->orden_id) {
-                    $Orden = Orden::findOrFail($request->orden_id);
-                    $Orden->sale_note_id = $this->sale_note->id;
-                    $Orden->status_orden_id = 4;
-                    $Orden->customer_id = $this->sale_note->customer_id;
-                    $Orden->save();
+                    Orden::where('id', $request->orden_id)
+                        ->update([
+                            'sale_note_id' => $this->sale_note->id,
+                            'status_orden_id' => 4,
+                            'customer_id' => $this->sale_note->customer_id
+                        ]);
+                
+                    OrdenItem::where('orden_id', $request->orden_id)
+                        ->update(['status_orden_id' => 4]);
+                        
                     $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
                     foreach ($orden_items as $orden_item) {
-                        $orden_item->status_orden_id = 4;
                         $orden_item->restoreRestaurant();
-                        $orden_item->save();
                         event(new OrdenReadyEvent($orden_item->id));
                     }
                 }
+                // if ($request->orden_id) {
+                //     $Orden = Orden::findOrFail($request->orden_id);
+                //     $Orden->sale_note_id = $this->sale_note->id;
+                //     $Orden->status_orden_id = 4;
+                //     $Orden->customer_id = $this->sale_note->customer_id;
+                //     $Orden->save();
+                //     $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
+                //     foreach ($orden_items as $orden_item) {
+                //         $orden_item->status_orden_id = 4;
+                //         $orden_item->restoreRestaurant();
+                //         $orden_item->save();
+                //         event(new OrdenReadyEvent($orden_item->id));
+                //     }
+                // }
                 if ($request->orden_ids) {
                     $ids = $request->orden_ids;
                     foreach ($ids as $id) {
@@ -1580,27 +1597,43 @@ class SaleNoteController extends Controller
                     }
                 }
                 foreach ($data['items'] as $row) {
-                    $item_id = isset($row['id']) ? $row['id'] : null;
-                    $sale_note_item = new SaleNoteItem;
-                    $sale_note_item->percentage_igv = 18;
+                    $sale_note_item = new SaleNoteItem([
+                        'percentage_igv' => 18,
+                        'name_product_pdf' => $row['name_product_pdf'] ?? '',
+                        'sale_note_id' => $this->sale_note->id
+                    ]);
+                    
                     $sale_note_item->fill($row);
-                    $sale_note_item->percentage_igv = 18;
-                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
-                    $sale_note_item->sale_note_id = $this->sale_note->id;
                     $sale_note_item->save();
-                    if (array_key_exists('toWarehouse', $row)) {
-                        $quantity_to_restore = $row['toWarehouse'];
-                        if ($quantity_to_restore > 0) {
-                            $item_id = $row['item_id'];
-                            $warehouse_id = $row['item']['warehouse_id'];
-                            $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
-                        }
+                
+                    // Restaurar stock si es necesario
+                    if (!empty($row['toWarehouse']) && $row['toWarehouse'] > 0) {
+                        $this->restoreStock(
+                            $row['toWarehouse'],
+                            $row['item_id'],
+                            $row['item']['warehouse_id']
+                        );
                     }
-
-                    // $item = Item::find($item_id);
-                    //  $item->stock = $item->stock - $row['quantity'];
-                    // $item->save();
                 }
+                // foreach ($data['items'] as $row) {
+                //     $item_id = isset($row['id']) ? $row['id'] : null;
+                //     $sale_note_item = new SaleNoteItem;
+                //     $sale_note_item->percentage_igv = 18;
+                //     $sale_note_item->fill($row);
+                //     $sale_note_item->percentage_igv = 18;
+                //     $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
+                //     $sale_note_item->sale_note_id = $this->sale_note->id;
+                //     $sale_note_item->save();
+                //     if (array_key_exists('toWarehouse', $row)) {
+                //         $quantity_to_restore = $row['toWarehouse'];
+                //         if ($quantity_to_restore > 0) {
+                //             $item_id = $row['item_id'];
+                //             $warehouse_id = $row['item']['warehouse_id'];
+                //             $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
+                //         }
+                //     }
+
+                // }
                 /////------------------------------------------
                 if ($request->generate == true) {
                     if ($configuration->sale_note_credit_confirm) {
