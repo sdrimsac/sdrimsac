@@ -1221,7 +1221,7 @@ if ($hostname) {
             Route::delete('client_payments/{client_payment}', 'System\ClientPaymentController@destroy');
             Route::get('client_payments/cancel_payment/{client_payment_id}', 'System\ClientPaymentController@cancel_payment');
             Route::post('client_payments/cancel_payment_client', 'System\ClientPaymentController@cancel_payment_client');
-
+            Route::post('client_payments/messages/{client_payment_id}', 'System\ClientPaymentController@messages');
             Route::get('client_account_status/records/{client_id}', 'System\AccountStatusController@records');
             Route::get('client_account_status/client/{client_id}', 'System\AccountStatusController@client');
             Route::get('client_account_status/tables', 'System\AccountStatusController@tables');

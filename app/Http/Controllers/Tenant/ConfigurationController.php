@@ -59,18 +59,37 @@ class ConfigurationController extends Controller
             ];
         }
     }
-    public function recordConfigurationClient(Request $request){
+    public function recordConfigurationClient(Request $request)
+    {
+        // Obtener configuración y usuario
         $configuration = Configuration::first();
-        $affectation_igv_type_id = $configuration->affectation_igv_type_id;
         $user = auth()->user() ?? auth('api')->user();
-        $establishment_id = $user->establishment_id;
-        $cash = Cash::where('user_id',$user->id)->where('state',1)->first();
-        if($cash){
-            $cash_id = $cash->id;
-        }else{
-            $cash_id = null;
+        
+        // Obtener el ID de caja activa para el usuario
+        $cash_id = $this->getActiveCashId($user);
+        
+        return [
+            'affectation_igv_type_id' => $configuration->affectation_igv_type_id,
+            'establishment_id' => $user->establishment_id,
+            'cash_id' => $cash_id
+        ];
+    }
+
+    /**
+     */
+    private function getActiveCashId($user)
+    {
+        $cash = Cash::where('user_id', $user->id)
+                    ->where('state', 1)
+                    ->first();
+                    
+        if ($cash) {
+            return $cash->id;
         }
-        return compact('affectation_igv_type_id','establishment_id','cash_id');
+        
+        $cash = Cash::where('state', 1)->first();
+        
+        return $cash ? $cash->id : null;
     }
     public function tablesNumbersEstablishments(Request $request){
         $establishments = Establishment::all()->transform(function($row){

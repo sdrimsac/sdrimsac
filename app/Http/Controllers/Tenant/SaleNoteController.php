@@ -102,6 +102,7 @@ use Modules\Workshop\Models\Historial;
 use Modules\Workshop\Http\Controllers\VehiculoController;
 use Mpdf\Mpdf;
 use App\Exports\SaleNoteCreditCashExport;
+use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
 use App\Traits\CheckTotalTrait;
@@ -1886,8 +1887,8 @@ class SaleNoteController extends Controller
                     // if($configuration->android_configuration){
                     //     sleep(5);
                     // }
-
-                    event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
+                    dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id));
+                    // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 if (count($request->payments) > 0) {
                     $total_payment = 0;

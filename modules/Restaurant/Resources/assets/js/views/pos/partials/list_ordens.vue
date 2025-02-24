@@ -1475,12 +1475,7 @@
                                                             <h6
                                                                 class="text-danger"
                                                                 v-if="
-                                                                    checkIgvApp(
-                                                                        order_pend
-                                                                            .food
-                                                                            .item
-                                                                            .sale_affectation_igv_type_id
-                                                                    )
+                                                                    igvStatusMap[order_pend.id]
                                                                 "
                                                             >
                                                                 PRODUCTO CON IGV
@@ -3109,6 +3104,14 @@ export default {
         }
     },
     computed: {
+        igvStatusMap() {
+        // Crea un mapa que cachea los resultados por item
+        return this.localOrden.reduce((map, orden) => {
+            const igvTypeId = orden.food.item.sale_affectation_igv_type_id;
+            map[orden.id] = this.configuration.affectation_igv_type_id !== "10" && igvTypeId == "10";
+            return map;
+        }, {});
+    },
         isAppNotIgvAndHaveIgv() {
             return (
                 this.configuration.affectation_igv_type_id != "10" &&
@@ -3242,13 +3245,14 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
-        checkIgvApp(igv_type_id) {
-            console.log("igv_type_id", igv_type_id);
-            return (
-                this.configuration.affectation_igv_type_id !== "10" &&
-                igv_type_id == "10"
-            );
-        },
+    
+        // checkIgvApp(igv_type_id) {
+        //     console.log("igv_type_id", igv_type_id);
+        //     return (
+        //         this.configuration.affectation_igv_type_id !== "10" &&
+        //         igv_type_id == "10"
+        //     );
+        // },
         toggleEdit() {
             this.isEditing = !this.isEditing;
         },

@@ -58,6 +58,47 @@ class Area extends ModelTenant
         }
         return null;
     }
+    public static function getAreaEstablishmentJob($id,$user_id)
+    {
+        $user = User::find($user_id);
+        if (!$user) return null;
+        $establishment_id = $user->establishment_id;
+    
+        $area = Area::where('id', $id)->first();
+        if (!$area) return null;
+        $description = $area->description;
+        $description = explode(" ", $description);
+
+        $description = $description[0];
+    
+        $user = User::where('establishment_id', $establishment_id)
+            ->whereHas('area', function ($query) use ($description) {
+                $query->where('description', 'like', '%' . $description . '%');
+            })
+            ->first();
+        if ($user) {
+            return $user->area_id;
+        } else {
+            $user = User::whereHas('worker_type', function ($query) use ($description) {
+                $query->where('description', 'like', '%' . $description . '%');
+            })
+                ->first();
+            if ($user) {
+                return $user->area_id;
+            } else {
+                $user = User::where('establishment_id', $establishment_id)
+                    ->whereHas('area', function ($query) {
+                        $query->where('description', 'like', '%CAJA%');
+                    })
+                    ->first();
+                if ($user) {
+                    return $user->area_id;
+                }
+            }
+        }
+        return null;
+        
+    }
     public static function getAreaEstablishment($id)
     {
         
@@ -97,7 +138,25 @@ class Area extends ModelTenant
         }
         return null;
     }
-
+    public static function getZoneEstablishmentJob($id,$user_id)
+    {
+        $user = User::find($user_id);
+        if (!$user) return null;
+        $establishment_id = $user->establishment_id;
+        $area = Area::where('id', $id)->first();
+        if (!$area) return null;
+        $description = $area->description;
+        $description = explode(" ", $description);
+        $description = $description[0];
+        $area_establishment = Area::where('establishment_id', $establishment_id)
+            ->where('description', 'like', '%' . $description . '%')
+            ->first();
+        if ($area_establishment) {
+            return $area_establishment->id;
+        } else {
+            return null;
+        }
+    }
     public static function getZoneEstablishment($id)
     {
         $establishment_id = auth()->user()->establishment_id;

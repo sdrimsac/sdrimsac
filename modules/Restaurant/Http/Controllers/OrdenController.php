@@ -41,9 +41,11 @@ use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
 use App\Events\MessageEvent;
+use App\Jobs\PrintOrderJob as JobsPrintOrderJob;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
+use Modules\Restaurant\Jobs\PrintOrderJob;
 
 class OrdenController extends Controller
 {
@@ -279,7 +281,7 @@ class OrdenController extends Controller
                 $timestamp . '_orden_.pdf',
                 [
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"' 
+                    'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"'
                 ]
             );
         } else {
@@ -610,86 +612,145 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         try {
-            $customer_id_credit_list = $request->customer_id_credit_list;
-            $user = User::query();
+            $user = null;
             $ref = $request->ref;
             $sale_direct = $request->saleDirect ?? true;
             $configuration = Configuration::first();
-
-
             if ($request->caja == false && $configuration->pin_switch) {
-
                 $pin = $request->pin;
+                if (!$pin) {
+                    return [
+                        'success' => false,
+                        'message' => 'Pin incorrecto'
+                    ];
+                }
                 $user = User::where('pin', $pin)->first();
-                if (!$user || !$pin) {
+                if (!$user) {
                     return [
                         'success' => false,
                         'message' => 'Pin incorrecto'
                     ];
                 }
             } else {
-                $user = User::where('id', auth()->user()->id)->first();
-            }
-            if ($configuration->commands_fisico == true) {
-                $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
-                if ($orden != null) {
-                    $id = $orden->id;
-                } else {
-                    $id = null;
-                }
-            } else {
-                if ($request->id != null) {
-                    $orden = Orden::find($request->id);
-                    if ($orden) {
-                        $id = $orden->id;
-                    }
-                } else {
-                    $id = null;
-                }
+                $user = User::find(auth()->id());
             }
 
+            // Optimizar la búsqueda de orden
+            $id = null;
+            if ($configuration->commands_fisico) {
+                $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
+                $id = $orden ? $orden->id : null;
+            } else if ($request->id) {
+                $orden = Orden::find($request->id);
+                $id = $orden ? $orden->id : null;
+            }
+
+            // if ($request->caja == false && $configuration->pin_switch) {
+
+            //     $pin = $request->pin;
+            //     $user = User::where('pin', $pin)->first();
+            //     if (!$user || !$pin) {
+            //         return [
+            //             'success' => false,
+            //             'message' => 'Pin incorrecto'
+            //         ];
+            //     }
+            // } else {
+            //     $user = User::where('id', auth()->user()->id)->first();
+            // }
+            // if ($configuration->commands_fisico == true) {
+            //     $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
+            //     if ($orden != null) {
+            //         $id = $orden->id;
+            //     } else {
+            //         $id = null;
+            //     }
+            // } else {
+            //     if ($request->id != null) {
+            //         $orden = Orden::find($request->id);
+            //         if ($orden) {
+            //             $id = $orden->id;
+            //         }
+            //     } else {
+            //         $id = null;
+            //     }
+            // }
+
+
+            // $new_orden = collect($request->orden);
+
+            // if (!$new_orden->has('status_orden_id')) {
+            //     $new_orden->put('status_orden_id', 1);
+            // }
+
+            // $items = $request->items;
+            // $user_id = $user->id;
+            // $message = 'Pedido realizado.';
+            // $establishment_id = auth()->user()->establishment_id;
+            // if ($request->caja == true && $sale_direct == true) {
+            //     $table = Table::where('number', "caja")
+            //         ->where('establishment_id', $establishment_id)
+            //         ->first();
+            //     if ($table == null) {
+            //         $table = Table::firstOrNew(['id' => $request->table_id]);
+            //         $table->area_id = auth()->user()->area_id;
+            //         $table->number = 'caja';
+            //         $table->status_table_id = 2;
+            //         $table->establishment_id = $establishment_id;
+            //         $table->save();
+            //     }
+            // } else {
+
+            //     //   dd($request->all());
+            //     if ($request->orden) {
+            //         $table = Table::find($request->orden['table_id']);
+
+            //         $table->status_table_id = 2;
+            //         $table->save();
+            //     }
+            // }
+            // if (count($items) == 0) {
+            //     return [
+            //         'success' => false,
+            //         'message' => 'No se puede guardar una orden sin items'
+            //     ];
+            // }
+            //si la orden existe solo quiero agregar
+            //los items
 
             $new_orden = collect($request->orden);
-
-            //si new_orden no tiene status_orden_id por defecto es 1
-            if (!$new_orden->has('status_orden_id')) {
-                $new_orden->put('status_orden_id', 1);
-            }
+            $new_orden->put('status_orden_id', $new_orden->get('status_orden_id', 1));
 
             $items = $request->items;
-            $user_id = $user->id;
-            $message = 'Pedido realizado.';
-            $establishment_id = auth()->user()->establishment_id;
-            if ($request->caja == true && $sale_direct == true) {
-                $table = Table::where('number', "caja")
-                    ->where('establishment_id', $establishment_id)
-                    ->first();
-                if ($table == null) {
-                    $table = Table::firstOrNew(['id' => $request->table_id]);
-                    $table->area_id = auth()->user()->area_id;
-                    $table->number = 'caja';
-                    $table->status_table_id = 2;
-                    $table->establishment_id = $establishment_id;
-                    $table->save();
-                }
-            } else {
-
-                //   dd($request->all());
-                if ($request->orden) {
-                    $table = Table::find($request->orden['table_id']);
-
-                    $table->status_table_id = 2;
-                    $table->save();
-                }
-            }
-            if (count($items) == 0) {
+            if (empty($items)) {
                 return [
                     'success' => false,
                     'message' => 'No se puede guardar una orden sin items'
                 ];
             }
-            //si la orden existe solo quiero agregar
-            //los items
+
+            $user_id = $user->id;
+            $message = 'Pedido realizado.';
+            $establishment_id = auth()->user()->establishment_id;
+
+            // Optimizar la búsqueda y creación de mesa
+            if ($request->caja && $sale_direct) {
+                $table = Table::firstOrCreate(
+                    [
+                        'number' => 'caja',
+                        'establishment_id' => $establishment_id
+                    ],
+                    [
+                        'area_id' => auth()->user()->area_id,
+                        'status_table_id' => 2
+                    ]
+                );
+            } else if ($request->orden) {
+                $table = Table::where('id', $request->orden['table_id'])
+                    ->update(['status_table_id' => 2]);
+                $table = Table::find($request->orden['table_id']);
+            }
+
             $orden = null;
             if ($id != null) {
                 $orden = Orden::find($id);
@@ -771,27 +832,34 @@ class OrdenController extends Controller
                     'area_id' => $item['food']['area_id']
                 ];
             });
-            
-            // Inserción masiva de OrdenItems
-            $created_items = OrdenItem::insert($orden_items->toArray());
-            
-            // Obtener los IDs de los items creados
-            $orden_items_ids = OrdenItem::where('orden_id', $orden->id)
-            ->whereIn('food_id', collect($items)->pluck('food.id'))
-            ->pluck('id')
-            ->toArray();
-            
-            // Preparar datos para cocina
-            $orden_items_ids_for_kitchen = OrdenItem::whereIn('id', $orden_items_ids)
-                ->get(['id as orden_id', 'area_id'])
-                ->toArray();
-            
-            // Actualizar stock y disparar eventos
-            foreach($orden_items_ids as $item_id) {
-                $orden_item = OrdenItem::find($item_id);
-                $orden_item->stockRestaurant();
-                event(new OrdenEvent($item_id));
+
+            // Inserción masiva y obtención de IDs
+            DB::beginTransaction();
+            try {
+                OrdenItem::insert($orden_items->toArray());
+                
+                // Obtener todos los datos necesarios en una sola consulta
+                $created_items = OrdenItem::where('orden_id', $orden->id)
+                    ->select('id', 'food_id', 'area_id')
+                    ->get();
+                
+                $orden_items_ids = $created_items->pluck('id')->toArray();
+                $orden_items_ids_for_kitchen = $created_items->map(function($item) {
+                    return ['orden_id' => $item->id, 'area_id' => $item->area_id];
+                })->toArray();
+                
+                // Actualizar stock en batch si es posible
+                foreach($created_items as $item) {
+                    $item->stockRestaurant();
+                    event(new OrdenEvent($item->id));
+                }
+                
+                DB::commit();
+            } catch(\Exception $e) {
+                DB::rollback();
+                throw $e;
             }
+
             if ($request->add_charge_room) {
                 $food = $this->get_item_service();
                 $orden_item = new OrdenItem;
@@ -822,18 +890,18 @@ class OrdenController extends Controller
                     }), "orden_id");
                     $area_found = Area::find($area_id);
                     if ($area_found->printer || $area_found->search_print == 1) {
-                        event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
-                        sleep(1);
+                        // Usar colas para la impresión asíncrona
+                        dispatch(new JobsPrintOrderJob($orden->id, "0", true, $area_id, $filtered,null,null,null, $user_id));
+                        // event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
                     }
-                    //esperar un segundo
-
-
                 }
             }
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
-                event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
+                dispatch(new JobsPrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids,null,null,null, $user_id));
+
+                // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
             }
             // if ($isFromBox == false && $print_box) {
             //     event(new PrintEvent($orden->id, "0", true, $user->area_id, $orden_items_ids));
@@ -853,7 +921,6 @@ class OrdenController extends Controller
                 'direct_printing' => (bool) $establishment->direct_printing,
                 //'print'   => url('') . "/restaurant/worker/print-ticket/{$id}"
             ];
-        
         } catch (Exception $e) {
             if ($e->getMessage() != null) {
 

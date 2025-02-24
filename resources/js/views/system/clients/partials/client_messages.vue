@@ -6,6 +6,7 @@
         @open="openDialog"
         width="80%"
         append-to-body
+        v-loading="loading"
     >
         <div class="row">
             <div class="col-md-12 mt-2">
@@ -32,6 +33,7 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="save">Guardar</el-button>
             <el-button @click="closeDialog">Cancelar</el-button>
         </span>
     </el-dialog>
@@ -42,6 +44,7 @@ export default {
     props: ["client_payment_id", "showDialog"],
     data() {
         return {
+            loading: false,
             title: "Mensajes del cliente",
             form: {
                 message_client_before_end: null,
@@ -74,13 +77,18 @@ export default {
             this.$emit("update:showDialog", false);
         },
         save() {
+            this.loading = true;
             this.form.message_client_before_end = this.form.message_client_before_end.replace(/\n/g, "<br>");
             this.form.message_client_after_end = this.form.message_client_after_end.replace(/\n/g, "<br>");
             this.$http
-                .post(`/client_payments/${this.client_payment_id}`, this.form)
+                .post(`/client_payments/messages/${this.client_payment_id}`, this.form)
                 .then(response => {
                     this.$message.success("Mensajes guardados con éxito");
                     this.closeDialog();
+                }).catch(error => {
+                    this.$message.error("Error al guardar los mensajes");
+                }).finally(() => {
+                    this.loading = false;
                 });
         }
     }

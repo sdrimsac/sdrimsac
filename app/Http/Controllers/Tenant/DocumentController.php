@@ -122,6 +122,7 @@ use Modules\Restaurant\Models\Table;
 use Modules\Workshop\Models\Historial;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
+use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentPayment;
@@ -1674,7 +1675,8 @@ class DocumentController extends Controller
             // if($configuration->android_configuration){
             //     sleep(5);
             // }
-            event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
+            // event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
+            dispatch(new PrintOrderJob($document->id, $document->document_type_id, $request->printerOn, 0, [], true,null,null,auth()->user()->id));
 
             if ($request->orden_id != null) {
                 $Orden = Orden::FindOrFail($request->orden_id);

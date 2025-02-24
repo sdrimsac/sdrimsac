@@ -23,6 +23,16 @@ class ClientPaymentController extends Controller
 {
     protected $client;
 
+    public function messages(Request $request, $client_payment_id){
+        $client_payment = ClientPayment::find($client_payment_id);
+        $client_payment->message_client_before_end = $request->message_client_before_end;
+        $client_payment->message_client_after_end = $request->message_client_after_end;
+        $client_payment->save();
+        return [
+            'success' => true,
+            'message' => 'Mensaje enviado con éxito'
+        ];
+    }
     public function sendMessage($message, $number)
     {
         $web_whatsapp = config('app.web_whatsapp');

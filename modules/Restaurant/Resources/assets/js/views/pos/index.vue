@@ -2191,7 +2191,10 @@ export default {
             },
             customer_unit_type_id: null,
             recomputeTrigger: 0,
-            lastDocument: null
+            lastDocument: null,
+            printQueue: [],
+            isPrinting: false,
+            printDelay: 1500
         };
     },
     beforeDestroy() {
@@ -5275,6 +5278,7 @@ export default {
             typeuser = null,
             printing = true
         ) {
+            console.log("Linea 5008 - Printer", "Se esta imprimiendo: " + new Date().toLocaleTimeString());
             let userAgent = navigator.userAgent;
             let isFirefox = userAgent.indexOf("Firefox") != -1;
             if (isFirefox) {
@@ -6461,7 +6465,41 @@ export default {
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
-        }
+        },
+        async processPrintQueue() {
+            if (this.isPrinting || this.printQueue.length === 0) return;
+            
+            this.isPrinting = true;
+            const printJob = this.printQueue.shift();
+            
+            try {
+                await this.Printer(
+                    printJob.printer,
+                    printJob.print,
+                    printJob.copies,
+                    printJob.user_id,
+                    printJob.multiple_boxes,
+                    printJob.typeuser,
+                    printJob.printing
+                );
+                if(this.printQueue.length > 0){
+                    await new Promise(resolve => setTimeout(resolve, this.printDelay));
+                }
+
+            } catch (error) {
+                console.error('Error printing:', error);
+            } finally {
+                this.isPrinting = false;
+                this.processPrintQueue(); // Procesar siguiente trabajo
+            }
+        },
+
+        addToPrintQueue(printJob) {
+            this.printQueue.push(printJob);
+            this.processPrintQueue();
+        },
+
+    
     },
     beforeUnmount() {
         document.removeEventListener("keydown", this.handleKeydown);
@@ -6612,16 +6650,24 @@ export default {
                         let copies = Number(e.data.copies) || 0;
                         if (isNaN(copies)) copies = 0;
                         copies += 1;
-
-                        await this.Printer(
-                            e.data.printer,
-                            e.data.print,
-                            e.data.copies,
-                            e.data.user_id,
-                            e.data.multiple_boxes,
-                            e.data.typeuser,
-                            e.data.printing
-                        );
+                        this.addToPrintQueue({
+                            printer: e.data.printer,
+                            print: e.data.print,
+                            copies: e.data.copies,
+                            user_id: e.data.user_id,
+                            multiple_boxes: e.data.multiple_boxes,
+                            typeuser: e.data.typeuser,
+                            printing: e.data.printing
+                        });
+                        // await this.Printer(
+                        //     e.data.printer,
+                        //     e.data.print,
+                        //     e.data.copies,
+                        //     e.data.user_id,
+                        //     e.data.multiple_boxes,
+                        //     e.data.typeuser,
+                        //     e.data.printing
+                        // );
                     }
                 } else {
                     if (canPrint && e.data.printing) {
