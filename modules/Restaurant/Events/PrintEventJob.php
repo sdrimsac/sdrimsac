@@ -30,8 +30,11 @@ class PrintEventJob implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $user_id = null)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $user_id = null,$url_base = null)
     {
+        if($url_base == null){
+            $url_base = url('');
+        }
         $configuration = Configuration::first();
         $company = Company::active();
         $current_user = User::findOrFail($user_id);
@@ -127,55 +130,55 @@ class PrintEventJob implements ShouldBroadcast
                 break;
             case "S":
                 // $copies = 1;
-                $documentLink = url('') . "/credit-list/receipt/{$id}/ticket";
+                $documentLink = $url_base . "/credit-list/receipt/{$id}/ticket";
                 break;
             case "H":
-                $documentLink = url('') . "/caja/rooms/print_service/{$id}";
+                $documentLink = $url_base . "/caja/rooms/print_service/{$id}";
                 break;
             case "CL":
-                $documentLink = url('') . "/caja/rooms/print_warranty/{$id}";
+                $documentLink = $url_base . "/caja/rooms/print_warranty/{$id}";
                 break;
             case "00":
-                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
+                $documentLink = $url_base . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
                 break;
             case "0":
-                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}";
+                $documentLink = $url_base . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}";
                 break;
             case "box":
-                $documentLink = url('') . "/caja/worker/expenses/print-box?box_id={$id}&area_id={$area_id}";
+                $documentLink = $url_base . "/caja/worker/expenses/print-box?box_id={$id}&area_id={$area_id}";
                 break;
             case "01":
                 $doc = Document::where('id', $id)->first();
-                $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
+                $documentLink = $url_base . "/print/document/{$doc->external_id}/{$format}";
                 if($configuration->android_configuration){
                     sleep(15);
                 }
                 break;
             case "03":
                 $doc = Document::where('id', $id)->first();
-                $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
+                $documentLink = $url_base . "/print/document/{$doc->external_id}/{$format}";
                 if($configuration->android_configuration){
                     // sleep(15);
                 }
                 break;
             case "80":
                 $doc = SaleNote::where('id', $id)->first();
-                $documentLink = url('') . "/sale-notes/print/{$doc->external_id}/{$format}";
+                $documentLink = $url_base . "/sale-notes/print/{$doc->external_id}/{$format}";
                 if($configuration->android_configuration){
                     // sleep(15);
                 }
                 break;
             case "CO":
                 $doc = $id;
-                $documentLink = url('') . $format == "a4" ? "/consignment/format/{$doc}" : "/consignment/format_ticket/{$doc}";
+                $documentLink = $url_base . $format == "a4" ? "/consignment/format/{$doc}" : "/consignment/format_ticket/{$doc}";
                 break;
             case "COL":
                 $doc = $id;
-                $documentLink = url('') .  "/consignment/format_ticket_liquidated/{$doc}";
+                $documentLink = $url_base .  "/consignment/format_ticket_liquidated/{$doc}";
                 break;
             case "COT":
                 $doc = Quotation::where('id', $id)->first();
-                $documentLink = url('') .  "/quotations/print/{$doc->external_id}/{$format}";
+                $documentLink = $url_base .  "/quotations/print/{$doc->external_id}/{$format}";
                 break;
         }
         $printer = $area_printer->printer;

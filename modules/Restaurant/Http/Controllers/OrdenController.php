@@ -41,11 +41,10 @@ use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
 use App\Events\MessageEvent;
-use App\Jobs\PrintOrderJob as JobsPrintOrderJob;
+use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
-use Modules\Restaurant\Jobs\PrintOrderJob;
 
 class OrdenController extends Controller
 {
@@ -891,7 +890,7 @@ class OrdenController extends Controller
                     $area_found = Area::find($area_id);
                     if ($area_found->printer || $area_found->search_print == 1) {
                         // Usar colas para la impresión asíncrona
-                        dispatch(new JobsPrintOrderJob($orden->id, "0", true, $area_id, $filtered,null,null,null, $user_id));
+                        dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered,null,null,null, $user_id, url('')));
                         // event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
                     }
                 }
@@ -899,7 +898,7 @@ class OrdenController extends Controller
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
-                dispatch(new JobsPrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids,null,null,null, $user_id));
+                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids,null,null,null, $user_id, url('')));
 
                 // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
             }

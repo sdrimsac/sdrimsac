@@ -1427,7 +1427,6 @@ class SaleNoteController extends Controller
                             $orden_item->status_orden_id = 4;
                             $orden_item->restoreRestaurant();
                             $orden_item->save();
-                            // event(new OrdenReadyEvent($orden_item->id));
                         }
                     }
                 }
@@ -1881,13 +1880,13 @@ class SaleNoteController extends Controller
                     );
                 }
                 $this->setFilename();
-                $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
+                // $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
                 $paid = $request->paid;
                 if (auth()->user()->type != 'admin') {
                     // if($configuration->android_configuration){
                     //     sleep(5);
                     // }
-                    dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id));
+                    dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
                     // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 if (count($request->payments) > 0) {

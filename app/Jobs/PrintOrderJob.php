@@ -21,6 +21,7 @@ class PrintOrderJob implements ShouldQueue
     protected $isEmit;
     protected $isPrecuenta;
     protected $url;
+    protected $url_base;
     public function __construct(
                 $orden_id,
                 $type,
@@ -30,7 +31,8 @@ class PrintOrderJob implements ShouldQueue
                 $isEmit = false,
                 $isPrecuenta = false,
                 $url = null,
-                $user_id
+                $user_id,
+                $url_base = null
     ) {
         $this->orden_id = $orden_id;
         $this->type = $type;
@@ -41,6 +43,7 @@ class PrintOrderJob implements ShouldQueue
         $this->isEmit = $isEmit;
         $this->isPrecuenta = $isPrecuenta;
         $this->url = $url;
+        $this->url_base = $url_base;
     }
 
     public function handle()
@@ -54,7 +57,8 @@ class PrintOrderJob implements ShouldQueue
             $this->isEmit,
             $this->isPrecuenta,
             $this->url,
-            $this->user_id
+            $this->user_id,
+            $this->url_base
         ));
     }
 } 
