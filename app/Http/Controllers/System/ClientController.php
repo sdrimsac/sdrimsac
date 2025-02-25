@@ -314,7 +314,14 @@ class ClientController extends Controller
             $row->count_user = DB::connection('tenant')
                 ->table('users')
                 ->count();
-
+            $row->company_number = DB::connection('tenant')
+            ->table('companies')
+            ->first()
+            ->number;
+            $row->company_name = DB::connection('tenant')
+            ->table('companies')
+            ->first()
+            ->name;
             $row->count_sales_notes = 0;
             $quantity_pending_documents = $this->getQuantityPendingDocuments();
 

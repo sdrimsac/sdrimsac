@@ -75,6 +75,7 @@ export default {
         "cash_id",
         "showDialog",
         "client_number",
+        "client_name",
         "affectation_tenant",
         "total_difference",
         "recordId",
@@ -229,13 +230,13 @@ export default {
                 fecha_de_vencimiento: moment().format("YYYY-MM-DD"),
                 datos_del_cliente_o_receptor: {
                     codigo_tipo_documento_identidad: "6",
-                    numero_documento: "10414711225",
-                    apellidos_y_nombres_o_razon_social: "EMPRESA XYZ S.A.",
+                    numero_documento: this.client_number,
+                    apellidos_y_nombres_o_razon_social: this.client_name,
                     codigo_pais: "PE",
                     ubigeo: "150101",
-                    direccion: "Av. 2 de Mayo",
-                    correo_electronico: "demo@gmail.com",
-                    telefono: "427-1148"
+                    direccion: "-",
+                    correo_electronico: "-",
+                    telefono: "-"
                 },
                 totales: {
                     total_exportacion: 0.0,

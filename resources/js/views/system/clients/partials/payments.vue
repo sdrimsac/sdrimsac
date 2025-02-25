@@ -237,6 +237,7 @@
                 :client_number="client_number"
                 :showDialog.sync="showDialogPayment"
                 :recordId="recordId"
+                :client_name="client_name"
                 :date_of_payment="date_of_payment"
             ></payment-form>
         </div>
@@ -249,7 +250,7 @@ import ClientMessages from "./client_messages.vue";
 import PaymentForm from "./payment.vue";
 
 export default {
-    props: ["showDialog", "clientId", "client_number", "affectation_tenant", "cash_id"],
+    props: ["showDialog", "clientId", "client_number", "client_name", "affectation_tenant", "cash_id"],
     mixins: [deletable],
     components: {
         ClientMessages,

@@ -77,7 +77,6 @@ class ClientPaymentController extends Controller
         foreach ($payments as $payment) {
             $payment_date = Carbon::parse($payment->date_of_payment);
             $diff_days = $now->diffInDays($payment_date);
-            dump("diff_days" . $diff_days);
             
             if($diff_days > 6) {
                 continue;

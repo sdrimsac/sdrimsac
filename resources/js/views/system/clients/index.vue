@@ -848,6 +848,7 @@
             :affectation_tenant="affectation_tenant"
             :cash_id="cash_id"
             :client_number="client_number"
+            :client_name="client_name"
             :showDialog.sync="showDialogPayments"
         ></client-payments>
 
@@ -928,6 +929,7 @@ export default {
     },
     data() {
         return {
+            client_name: null,
             client_number: null,
             loading: false,
             selectBillingDate: "",
@@ -1218,7 +1220,8 @@ export default {
         clickPayments(recordId = null) {
             this.recordId = recordId;
             let client = this.records.find(record => record.id == recordId);
-            this.client_number = client.number;
+            this.client_number = client.company_number;
+            this.client_name = client.company_name;
             this.showDialogPayments = true;
         },
         clickAccountStatus(recordId = null) {

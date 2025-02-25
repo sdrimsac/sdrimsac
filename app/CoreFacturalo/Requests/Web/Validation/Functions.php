@@ -12,6 +12,7 @@ use App\Models\Tenant\{
 };
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Modules\Services\Data\ServiceData;
 
 class Functions
 {
@@ -42,10 +43,49 @@ class Functions
     public static function person($inputs, $type)
     {
         if (isset($inputs['id'])) return Person::find($inputs['id'])->id;
+        
+        $service = ServiceData::service('ruc', $inputs['number']);
+        // Log::info("L45 service response: " . json_encode($service));
+        
+        // Validar que exista la estructura de datos y tenga el formato correcto
+        if (isset($service['data']) && is_array($service['data'])) {
+            // Solo actualizar los valores si los datos del servicio son válidos
+            if ($inputs['identity_document_type_id'] == '6') { // Si es RUC
+                if (!empty($service['data']['nombre_o_razon_social'])) {
+                    $inputs['name'] = $service['data']['nombre_o_razon_social'];
+                    $inputs['trade_name'] = $service['data']['nombre_o_razon_social'];
+                }
+                if (!empty($service['data']['condicion'])) {
+                    $inputs['condition'] = $service['data']['condicion'];
+                }
+                if (!empty($service['data']['estado'])) {
+                    $inputs['state'] = $service['data']['estado'];
+                }
+            } else { // Si es DNI u otro
+                if (!empty($service['data']['nombre_completo'])) {
+                    $inputs['name'] = $service['data']['nombre_completo'];
+                }
+            }
 
-        $district_id = $inputs['district_id'];
-        $province_id = ($district_id) ? substr($district_id, 0, 4) : null;
-        $department_id = ($district_id) ? substr($district_id, 0, 2) : null;
+            if (!empty($service['data']['direccion_completa'])) {
+                $inputs['address'] = $service['data']['direccion_completa'];
+            }
+
+            if (!empty($service['data']['ubigeo']) && is_array($service['data']['ubigeo']) && count($service['data']['ubigeo']) == 3) {
+                $department_id = $service['data']['ubigeo'][0];
+                $province_id = $service['data']['ubigeo'][1];
+                $district_id = $service['data']['ubigeo'][2];
+            } else {
+                $district_id = $inputs['district_id'] ?? null;
+                $province_id = $district_id ? substr($district_id, 0, 4) : null;
+                $department_id = $district_id ? substr($district_id, 0, 2) : null;
+            }
+        } else {
+            $district_id = $inputs['district_id'] ?? null;
+            $province_id = $district_id ? substr($district_id, 0, 4) : null;
+            $department_id = $district_id ? substr($district_id, 0, 2) : null;
+        }
+    
 
         $person = Person::updateOrCreate([
             'type' => $type,
