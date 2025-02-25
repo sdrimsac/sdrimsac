@@ -756,7 +756,7 @@ class CashController extends Controller
                             $purchase_unit_price /= 1.18;
                         }
                         $max_quantity_item = null;
-                        if ($d_it->relation_item->max_quantity) {
+                        if ($d_it->relation_item->max_quantity && $d_it->m_item && $d_it->m_item->max_quantity > 0) {
                             $max_quantity_item = $d_it->relation_item->max_quantity;
                             $purchase_unit_price /= $d_it->m_item->max_quantity;
                             $uit = ItemUnitType::where('quantity_unit', $d_it->m_item->max_quantity)->where('item_id', $d_it->item_id)->first();
