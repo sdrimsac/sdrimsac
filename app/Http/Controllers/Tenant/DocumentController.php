@@ -823,7 +823,7 @@ class DocumentController extends Controller
     public function records(Request $request)
     {
         $records = $this->getRecords($request);
-
+        dump("yaa");
         return new DocumentCollection($records);
     }
 
@@ -1509,7 +1509,7 @@ class DocumentController extends Controller
             $facturalo->updateHash();
             $facturalo->updateQr();
             $facturalo->createPdf();
-            try{
+            try {
                 $facturalo->senderXmlSignedBill();
             } catch (\Exception $e) {
                 Log::error("Error al enviar el XML firmado: ", [
@@ -1676,7 +1676,7 @@ class DocumentController extends Controller
             //     sleep(5);
             // }
             // event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
-            dispatch(new PrintOrderJob($document->id, $document->document_type_id, $request->printerOn, 0, [], true,null,null,auth()->user()->id, url('')));
+            dispatch(new PrintOrderJob($document->id, $document->document_type_id, $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
 
             if ($request->orden_id != null) {
                 $Orden = Orden::FindOrFail($request->orden_id);
@@ -2403,7 +2403,7 @@ class DocumentController extends Controller
         $date_of_issue = $request->date_of_issue;
         $document_type_id = $request->document_type_id;
         $state_type_id = $request->state_type_id;
-        $user_id = $request->user_id; 
+        $user_id = $request->user_id;
         $number = $request->number;
         $series = $request->series;
         $item_id = $request->item_id;
@@ -2631,7 +2631,9 @@ class DocumentController extends Controller
 
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(20);
         }
-
+        $records->load(['boxes' => function ($query) {
+            $query->select('id', 'amount', 'document_id')->without('document'); // document_id es necesario para la relación
+        }, 'orden', 'sale_note_related']);
 
         return $records;
     }
@@ -2754,15 +2756,15 @@ class DocumentController extends Controller
         }
     }
     public function data_table()
-    { 
-        $users = User::where(function($query) {
+    {
+        $users = User::where(function ($query) {
             $query->where('type', 'seller')
-                  ->orWhere('type', 'admin');
-            })
+                ->orWhere('type', 'admin');
+        })
             ->where('name', '!=', 'CONTADOR')
-            ->where(function($query) {
-            $query->where('worker_type_id', 1)
-                  ->orWhereNull('worker_type_id');  
+            ->where(function ($query) {
+                $query->where('worker_type_id', 1)
+                    ->orWhereNull('worker_type_id');
             })
             ->select('id', 'name')
             ->get();

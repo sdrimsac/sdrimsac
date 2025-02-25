@@ -13,6 +13,8 @@ use App\Models\Tenant\RegisterMovement;
 
 class DocumentCollection extends ResourceCollection
 {
+
+
     /**
      * Transform the resource collection into an array.
      *
@@ -21,9 +23,11 @@ class DocumentCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+        $configuration = Configuration::first();
 
-        return $this->collection->transform(function ($row, $key) {
-            $configuration = Configuration::first();
+
+        return $this->collection->transform(function ($row, $key) use ($configuration) {
+
             $has_xml = true;
             $has_pdf = true;
             $has_cdr = false;
@@ -99,7 +103,8 @@ class DocumentCollection extends ResourceCollection
             //    $balance = number_format(($row->tototal_paymenttal) - $total_payments,2, ".", "");
 
             // }
-            $boxes = Box::where('document_id', $row->id);
+            // $boxes = Box::where('document_id', $row->id);
+            $boxes = $row->boxes;
             $is_credit = $row->payment_condition_id == "02";
             $paid = false;
             $remain = 0;
@@ -127,15 +132,14 @@ class DocumentCollection extends ResourceCollection
             //     $paid = true;
             // }
 
-            $boxes = $boxes->get();
 
             $sale_note_related = $row->sale_note_related->transform(function ($sale_note) {
                 return [
                     "number" => $sale_note->getNumberFullAttribute(),
                 ];
             });
-
-            $orden = Orden::where('document_id', $row->id)->first();
+            $orden = $row->orden;
+            // $orden = Orden::where('document_id', $row->id)->first();
             $ordens_ref = $orden ? $orden->ref : null;
 
             if ($sale_note_related->count() > 0 && !$paid) {

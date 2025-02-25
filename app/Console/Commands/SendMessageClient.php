@@ -66,7 +66,9 @@ class SendMessageClient extends Command
         // Enviar mensajes según la fecha
         if ($isDay25) {
             foreach ($payments as $payment) {
+
                 $payment->send_message_before_end();
+                sleep(rand(1, 3));
             }
             $this->info('Línea 45 before_payment: ' . count($payments));
         }
@@ -74,6 +76,7 @@ class SendMessageClient extends Command
         if ($isLastDay) {
             foreach ($payments as $payment) {
                 $payment->send_message_after_end();
+                sleep(rand(1, 3));
             }
             $this->info('Línea 51 after_payment: ' . count($payments));
         }

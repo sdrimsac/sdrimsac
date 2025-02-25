@@ -80,6 +80,7 @@ class ClientPaymentController extends Controller
             }else{
                 $payment->send_message_before_end();
             }
+            sleep(rand(1, 3));
         }
         return response()->json([
             'success' => true,
@@ -358,6 +359,7 @@ class ClientPaymentController extends Controller
             $message_response .= $response_success_message['success'] ? "correctamente" : "con error";
             
             if($url_video) {
+                sleep(rand(1, 3));
                 $message_response .= " y el video se envió ";
                 $message_response .= isset($response_success_video) ? "correctamente" : "con error";
             }
