@@ -39,7 +39,8 @@ class ClientPaymentController extends Controller
         $web_whatsapp = config('app.web_whatsapp');
         $url = "https://" . $web_whatsapp . "/api/send-message";
 
-
+        // Reemplazar <br> por saltos de línea
+        $message = str_replace('<br>', "\n", $message);
 
         try {
             $response = Http::withoutVerifying()->post($url, [
