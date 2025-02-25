@@ -823,7 +823,6 @@ class DocumentController extends Controller
     public function records(Request $request)
     {
         $records = $this->getRecords($request);
-        dump("yaa");
         return new DocumentCollection($records);
     }
 
