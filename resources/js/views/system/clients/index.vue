@@ -376,7 +376,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource">
+                    <data-table :resource="resource"
+                    ref="dataTable"
+                    >
                         <tr slot="heading" class="bg-secondary">
                             <th class="text-center border text-white">#</th>
                             <th class="text-white text-center border">
@@ -970,7 +972,6 @@ export default {
         this.loaded = true;
     },
     created() {
-        console.log("object");
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });
@@ -1200,10 +1201,14 @@ export default {
                 })
                 .then(() => {});
         },
-        getData() {
-            this.$http.get(`/${this.resource}/records`).then(response => {
-                this.records = response.data.data;
-            });
+        getData(records = null) {
+            if (records) {
+                this.records = records;
+            } else {
+                if (this.$refs.dataTable) {
+                    this.records = this.$refs.dataTable.records;
+                }
+            }
         },
         clickCreate(recordId = null) {
             this.recordId = recordId;
@@ -1212,7 +1217,7 @@ export default {
         },
         clickPayments(recordId = null) {
             this.recordId = recordId;
-            let client = this.records.find(record => record.id === recordId);
+            let client = this.records.find(record => record.id == recordId);
             this.client_number = client.number;
             this.showDialogPayments = true;
         },

@@ -372,6 +372,7 @@ export default {
                     this.pagination.per_page = parseInt(
                         response.data.meta.per_page
                     );
+                    this.$parent.getData(this.records);
                 });
             }, 350);
         },
