@@ -66,6 +66,11 @@ class SendMessageClient extends Command
         // Enviar mensajes según la fecha
         if ($isDay25) {
             foreach ($payments as $payment) {
+                $payment_date = Carbon::parse($payment->date_of_payment);
+                $diff_days = $now->diffInDays($payment_date);
+                if($diff_days > 6) {
+                    continue;
+                }
 
                 $payment->send_message_before_end();
                 sleep(rand(1, 3));
@@ -75,6 +80,11 @@ class SendMessageClient extends Command
 
         if ($isLastDay) {
             foreach ($payments as $payment) {
+                $payment_date = Carbon::parse($payment->date_of_payment);
+                $diff_days = $now->diffInDays($payment_date);
+                if($diff_days > 6) {
+                    continue;
+                }
                 $payment->send_message_after_end();
                 sleep(rand(1, 3));
             }

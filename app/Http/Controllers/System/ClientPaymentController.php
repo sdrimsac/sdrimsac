@@ -75,9 +75,17 @@ class ClientPaymentController extends Controller
         $isLastDayOfMonth = $now->endOfMonth()->day === $now->day;
         $payments = ClientPayment::where('state', 0)->get();
         foreach ($payments as $payment) {
+            $payment_date = Carbon::parse($payment->date_of_payment);
+            $diff_days = $now->diffInDays($payment_date);
+            dump("diff_days" . $diff_days);
+            
+            if($diff_days > 6) {
+                continue;
+            }
             if($isLastDayOfMonth){
                 $payment->send_message_after_end();
             }else{
+
                 $payment->send_message_before_end();
             }
             sleep(rand(1, 3));

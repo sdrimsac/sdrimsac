@@ -18,6 +18,7 @@
             <div class="col-md-12">
                 <label for="description">Descripción servicio</label>
                 <el-input
+                    type="textarea"
                     v-model="form.description"
                     placeholder="Descripción"
                 ></el-input>
@@ -76,7 +77,8 @@ export default {
         "client_number",
         "affectation_tenant",
         "total_difference",
-        "recordId"
+        "recordId",
+        "date_of_payment"
     ],
     data() {
         return {
@@ -87,8 +89,20 @@ export default {
                 description: null,
                 payment_method: "01"
             },
-
-
+            monthsSpanish: {
+                "01": "ENERO",
+                "02": "FEBRERO",
+                "03": "MARZO",
+                "04": "ABRIL",
+                "05": "MAYO",
+                "06": "JUNIO",
+                "07": "JULIO",
+                "08": "AGOSTO",
+                "09": "SEPTIEMBRE",
+                "10": "OCTUBRE",
+                "11": "NOVIEMBRE",
+                "12": "DICIEMBRE"
+            },
             paymentsValue: {
                 "01": "Efectivo",
                 "02": "Culqui",
@@ -151,7 +165,10 @@ export default {
         openDialog() {
             this.form.customer_number = this.client_number;
             this.form.payment_method = "01";
-            this.form.description = "Servicio de facturación";
+            let date = moment(this.date_of_payment, "D/M/YYYY");
+            let monthNumber = ("0" + (date.month() + 2)).slice(-2);
+            let month = this.monthsSpanish[monthNumber];
+            this.form.description = "MEMBRESIA 12 MESES DE APP FACTURACION ELECTRONICA Y CONTROL INTERNO – PAGO POR USO CORRESPONDE AL MES DE "+ month;
         },
         closeDialog() {
             this.$emit("update:showDialog", false);

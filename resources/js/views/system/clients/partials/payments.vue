@@ -237,6 +237,7 @@
                 :client_number="client_number"
                 :showDialog.sync="showDialogPayment"
                 :recordId="recordId"
+                :date_of_payment="date_of_payment"
             ></payment-form>
         </div>
     </el-dialog>
@@ -267,7 +268,8 @@ export default {
             has_card: false,
             client: {},
             showDialogMessages: false,
-            showDialogPayment: false
+            showDialogPayment: false,
+            date_of_payment: null
         };
     },
     async created() {
@@ -317,12 +319,11 @@ export default {
                 });
         },
         async clickCancelPayment(client_payment_id) {
-            console.log(client_payment_id);
-            console.log(this.records);
+            
             let payment = this.records.find(
                 record => record.id == client_payment_id
             );
-
+            this.date_of_payment = payment.date_of_payment;
             this.total_difference = 0;
             if (payment) {
                 this.total_difference = payment.payment;
