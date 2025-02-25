@@ -5,6 +5,7 @@ namespace App\Models\System;
 use App\Http\Controllers\System\ClientPaymentController;
 use Hyn\Tenancy\Traits\UsesSystemConnection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class ClientPayment extends Model
 {
@@ -54,9 +55,19 @@ class ClientPayment extends Model
         $number = $client->phone;
         $message = $this->message_client_before_end;
         $message = str_replace("<br>", "\n", $message);
-        (new ClientPaymentController)->sendMessage($message, $number);
+        $response = (new ClientPaymentController)->sendMessage($message, $number);
+        if($response['success']){
+            Log::info("Mensaje enviado correctamente a $number");
+        }else{
+            Log::error("Error al enviar el mensaje a $number: " . $response['message']);
+        }
         $before_video_url = $configuration->before_video_url;
-        (new ClientPaymentController)->sendVideo($before_video_url, $number);
+        $response = (new ClientPaymentController)->sendVideo($before_video_url, $number);
+        if($response['success']){
+            Log::info("Video enviado correctamente a $number");
+        }else{
+            Log::error("Error al enviar el video a $number: " . $response['message']);
+        }
     }
     public function send_message_after_end()
     {

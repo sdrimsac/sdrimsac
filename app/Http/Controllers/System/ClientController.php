@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Document\Helpers\DocumentHelper;
 use Modules\MobileApp\Models\System\AppModule;
 use App\CoreFacturalo\ClientHelper;
+use App\Models\System\ClientPayment;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -49,6 +50,10 @@ class ClientController extends Controller
             'name' => 'nombre',
 
         ];
+    }
+    public function sendPaymentsMessages(Request $request)
+    {
+        
     }
     public function clientEmitDocument(Request $request)
     {
@@ -600,20 +605,20 @@ class ClientController extends Controller
 
 
             //modules
-        
 
-            // Actualiza el modulo de farmacia.
-            $config = (array)DB::connection('tenant')
-                ->table('configurations')
-                ->first();
-            // $config['is_pharmacy'] = (self::EnablePharmacy($user_id)) ? 1 : 0;
-            DB::connection('tenant')
-                ->table('configurations')
-                ->update($config);
+
+            // // Actualiza el modulo de farmacia.
+            // $config = (array)DB::connection('tenant')
+            //     ->table('configurations')
+            //     ->first();
+            // // $config['is_pharmacy'] = (self::EnablePharmacy($user_id)) ? 1 : 0;
+            // DB::connection('tenant')
+            //     ->table('configurations')
+            //     ->update($config);
             return [
                 'success' => true,
                 'message' => 'Cliente Actualizado satisfactoriamente',
-                
+
             ];
         } catch (Exception $e) {
             return [
@@ -1339,7 +1344,7 @@ class ClientController extends Controller
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            
+
             // Validar que sea un archivo MP4 y menor a 10MB
             if ($file->getClientMimeType() !== 'video/mp4') {
                 return [
@@ -1377,7 +1382,7 @@ class ClientController extends Controller
     {
         try {
             $configuration = Configuration::first();
-            
+
             // Procesar video antes del vencimiento
             if ($request->before_temp_path) {
                 $before_path = $this->uploadVideo($request->before_temp_path, 'before');
@@ -1396,7 +1401,6 @@ class ClientController extends Controller
                 'success' => true,
                 'message' => 'Videos guardados correctamente'
             ];
-
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -1418,7 +1422,7 @@ class ClientController extends Controller
 
         $file_content = file_get_contents($temp_path);
         $file_name = $prefix . '_' . date('YmdHis') . '.mp4';
-        
+
         Storage::put($directory . '/' . $file_name, $file_content);
         unlink($temp_path); // Eliminar archivo temporal
 

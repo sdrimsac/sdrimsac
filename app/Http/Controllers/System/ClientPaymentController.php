@@ -11,6 +11,7 @@ use App\Models\System\ClientPayment;
 use App\Models\System\PaymentMethodType;
 use App\Models\System\CardBrand;
 use App\Models\System\Configuration;
+use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Hyn\Tenancy\Environment;
 use Illuminate\Http\Request;
@@ -66,6 +67,23 @@ class ClientPaymentController extends Controller
                 "line" => $e->getLine(),
             ];
         }
+    }
+    public function sendPaymentsMessages()
+    {
+        $now = Carbon::now();
+        $isLastDayOfMonth = $now->endOfMonth()->day === $now->day;
+        $payments = ClientPayment::where('state', 0)->get();
+        foreach ($payments as $payment) {
+            if($isLastDayOfMonth){
+                $payment->send_message_after_end();
+            }else{
+                $payment->send_message_before_end();
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Mensajes enviados correctamente'
+        ]);
     }
     public function sendVideo($video, $number = null)
     {
@@ -296,5 +314,63 @@ class ClientPaymentController extends Controller
             'success' => true,
             'message' => 'Monto pagado',
         ];
+    }
+
+    public function sendWhatsappMessage(Request $request, $client_payment_id) 
+    {
+        try {
+            $configuration = Configuration::first();
+            $client_payment = ClientPayment::find($client_payment_id);
+            
+            if (!$client_payment) {
+                return [
+                    'success' => false,
+                    'message' => 'Pago de cliente no encontrado'
+                ];
+            }
+            $url_video = null;
+            // Guardar el mensaje actualizado
+            if ($request->message_type === 'before') {
+                $client_payment->message_client_before_end = $request->message;
+                $url_video = $configuration->before_video_url;
+            } else {
+                $client_payment->message_client_after_end = $request->message;
+                $url_video = $configuration->after_video_url;
+            }
+            $client_payment->save();
+
+            // Obtener el número de teléfono del cliente
+            $client = $client_payment->client;
+            if (!$client || !$client->phone) {
+                return [
+                    'success' => false,
+                    'message' => 'El cliente no tiene número de teléfono registrado'
+                ];
+            }
+
+            // Enviar el mensaje por WhatsApp
+            $response_success_message = $this->sendMessage($request->message, $client->phone);
+            if($url_video){
+                $response_success_video = $this->sendVideo($url_video, $client->phone );
+            }
+            $message_response = "El mensaje se envió ";
+            $message_response .= $response_success_message['success'] ? "correctamente" : "con error";
+            
+            if($url_video) {
+                $message_response .= " y el video se envió ";
+                $message_response .= isset($response_success_video) ? "correctamente" : "con error";
+            }
+            
+            return [
+                'success' => true,
+                'message' => $message_response
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al enviar el mensaje: ' . $e->getMessage()
+            ];
+        }
     }
 }

@@ -1222,9 +1222,11 @@ if ($hostname) {
             Route::get('client_payments/cancel_payment/{client_payment_id}', 'System\ClientPaymentController@cancel_payment');
             Route::post('client_payments/cancel_payment_client', 'System\ClientPaymentController@cancel_payment_client');
             Route::post('client_payments/messages/{client_payment_id}', 'System\ClientPaymentController@messages');
+            Route::get('client_payments/send_payments_messages', 'System\ClientPaymentController@sendPaymentsMessages');
             Route::get('client_account_status/records/{client_id}', 'System\AccountStatusController@records');
             Route::get('client_account_status/client/{client_id}', 'System\AccountStatusController@client');
             Route::get('client_account_status/tables', 'System\AccountStatusController@tables');
+            Route::post('client_payments/send_whatsapp/{id}', [App\Http\Controllers\System\ClientPaymentController::class, 'sendWhatsappMessage']);
 
             //Planes
             Route::get('plans', 'System\PlanController@index')->name('system.plans.index');
@@ -1340,3 +1342,4 @@ if ($hostname) {
 
 // Dentro del grupo de rutas existente
 Route::post('quotations/consolidateds/anular-document', [App\Http\Controllers\Tenant\QuotationController::class, 'anularDocument']);
+

@@ -47,24 +47,38 @@ class SendMessageClient extends Command
      */
     public function handle()
     {
-        $now = Carbon::now()->startOfDay();
+        $now = Carbon::now();
         
-        $before_payment = ClientPayment::where('state', 0)
-            ->whereDate('date_of_payment', $now->copy()->addDay())
-            ->get();
+        // Validar si es día 25 o último día del mes
+        $isLastDay = $now->endOfMonth()->day === $now->day;
+        $isDay25 = $now->day === 25;
         
-        $after_payment = ClientPayment::where('state', 0)
-            ->whereDate('date_of_payment', $now->copy()->subDay())
-            ->get();
+        if (!$isDay25 && !$isLastDay) {
+            $this->info('No es fecha de envío de mensajes');
+            return 0;
+        }
+        
+        $now = $now->startOfDay();
+        $payments = ClientPayment::where('state', 0)->get();
+        
 
-        foreach ($before_payment as $payment) {
-            $payment->send_message_before_end();
+
+        // Enviar mensajes según la fecha
+        if ($isDay25) {
+            foreach ($payments as $payment) {
+                $payment->send_message_before_end();
+            }
+            $this->info('Línea 45 before_payment: ' . count($payments));
         }
 
-        foreach ($after_payment as $payment) {
-            $payment->send_message_after_end();
+        if ($isLastDay) {
+            foreach ($payments as $payment) {
+                $payment->send_message_after_end();
+            }
+            $this->info('Línea 51 after_payment: ' . count($payments));
         }
 
         $this->info('Envío de mensajes a los clientes finalizados');
+        return 0;
     }
 }

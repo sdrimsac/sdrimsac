@@ -310,24 +310,51 @@
                 </h4>
             </div>
             <div class="data-table-visible-columns">
-                <el-button
-                    type="secondary"
-                    class=""
-                    @click.prevent="clickSendPendingDocuments()"
+                <el-tooltip
+                    class="item"
+                    content="Enviar mensajes de cobro a los clientes"
+                    effect="dark"
+                    placement="top-start"
                 >
-                    <i class="fab fa-whatsapp fa-lg"></i>
-                    <i class="fa fa-sync"></i>
-                    Enviar reportes de documentos pendientes
-                </el-button>
-                <el-button
-                    type="secondary"
-                    class=""
-                    @click.prevent="clickRestartWhatsapp()"
+                    <el-button
+                        type="secondary"
+                        class=""
+                        @click.prevent="clickSendPaymentsMessages()"
+                    >
+                        <i class="fab fa-whatsapp fa-lg"></i>
+                        <i class="fas fa-bell fa-lg"></i>
+                    </el-button>
+                </el-tooltip>
+                <el-tooltip
+                    class="item"
+                    content="Enviar reportes de documentos pendientes"
+                    effect="dark"
+                    placement="top-start"
                 >
-                    <i class="fab fa-whatsapp fa-lg"></i>
-                    <i class="fa fa-sync"></i>
-                    Reiniciar Whatsapp
-                </el-button>
+                    <el-button
+                        type="secondary"
+                        class=""
+                        @click.prevent="clickSendPendingDocuments()"
+                    >
+                        <i class="fab fa-whatsapp fa-lg"></i>
+                        <i class="fas fa-file fa-lg"></i>
+                    </el-button>
+                </el-tooltip>
+                <el-tooltip
+                    class="item"
+                    content="Reiniciar Whatsapp"
+                    effect="dark"
+                    placement="top-start"
+                >
+                    <el-button
+                        type="secondary"
+                        class=""
+                        @click.prevent="clickRestartWhatsapp()"
+                    >
+                        <i class="fab fa-whatsapp fa-lg"></i>
+                        <i class="fa fa-sync"></i>
+                    </el-button>
+                </el-tooltip>
                 <el-button
                     type="secondary"
                     class=""
@@ -631,11 +658,14 @@
                                 </template>
                             </td>
                             <td class="text-center">
-                                <el-input 
-                                style="width: 100px;"
-                                :min="0"
-                                @input="changeLimitMonthAmount(row)"
-                                v-model="row.limit_month_amount" type="number" placeholder="Ingrese el monto de facturación por mes"></el-input>
+                                <el-input
+                                    style="width: 100px;"
+                                    :min="0"
+                                    @input="changeLimitMonthAmount(row)"
+                                    v-model="row.limit_month_amount"
+                                    type="number"
+                                    placeholder="Ingrese el monto de facturación por mes"
+                                ></el-input>
                             </td>
                             <!-- <td>{{ row.plan }}</td> -->
                             <!-- <td>{{ row.email }}</td> -->
@@ -880,7 +910,7 @@ import AccountStatus from "./partials/account_status.vue";
 import ClientDelete from "./partials/delete.vue";
 import DataLimitNotification from "./partials/DataLimitNotification.vue";
 import DataTable from "../../../components/DataTable2.vue";
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 export default {
     mixins: [deletable, changeable],
@@ -950,15 +980,29 @@ export default {
         this.text_limit_users = "El límite de usuarios fue superado";
     },
     methods: {
-        getAffectationTenant(){
-            this.$http.get(`/${this.resource}/affectation_tenant`).then(response => {
-                this.affectation_tenant = response.data.affectation_tenant;
-                this.cash_id = response.data.cash_id;
-            });
-        },
-        changeLimitMonthAmount: debounce(function(row){
+        clickSendPaymentsMessages() {
             this.loading = true;
-            this.$http.post(`/${this.resource}/change_limit_month_amount`, row)
+            this.$http
+                .get(`/client_payments/send_payments_messages`)
+                .then(response => {
+                    this.$message.success(response.data.message);
+                    this.loading = false;
+                }).catch(error => {
+                    this.loading = false;
+                });
+        },
+        getAffectationTenant() {
+            this.$http
+                .get(`/${this.resource}/affectation_tenant`)
+                .then(response => {
+                    this.affectation_tenant = response.data.affectation_tenant;
+                    this.cash_id = response.data.cash_id;
+                });
+        },
+        changeLimitMonthAmount: debounce(function(row) {
+            this.loading = true;
+            this.$http
+                .post(`/${this.resource}/change_limit_month_amount`, row)
                 .then(response => {
                     if (response.data.success) {
                         this.$message.success(response.data.message);
@@ -1163,7 +1207,7 @@ export default {
         },
         clickCreate(recordId = null) {
             this.recordId = recordId;
-        
+
             this.showDialog = true;
         },
         clickPayments(recordId = null) {
