@@ -835,14 +835,20 @@ class OrdenController extends Controller
             // Inserción masiva y obtención de IDs
             DB::beginTransaction();
             try {
+                $food_ids = $orden_items->pluck('food_id')->toArray();
+                
                 OrdenItem::insert($orden_items->toArray());
                 
-                // Obtener todos los datos necesarios en una sola consulta
+                // Obtener solo los items recién creados usando los food_ids
                 $created_items = OrdenItem::where('orden_id', $orden->id)
+                    ->whereIn('food_id', $food_ids)
                     ->select('id', 'food_id', 'area_id')
+                    ->latest('id')
+                    ->take(count($food_ids))
                     ->get();
                 
                 $orden_items_ids = $created_items->pluck('id')->toArray();
+        
                 $orden_items_ids_for_kitchen = $created_items->map(function($item) {
                     return ['orden_id' => $item->id, 'area_id' => $item->area_id];
                 })->toArray();
