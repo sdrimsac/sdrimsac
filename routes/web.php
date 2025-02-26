@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemColorSizeController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\ManifestController;
+use App\Http\Controllers\Tenant\MozoController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\PrincipalCategoryController;
 use App\Http\Controllers\Tenant\PromotionDocumentController;
@@ -173,6 +174,20 @@ if ($hostname) {
                     Route::get('product_seller', [SellerController::class, 'recordsProduct']);
                     Route::get('list-product', [SellerController::class, 'exportProduct']);
                     Route::get('/enabled/{type}/{id}', [SellerController::class, 'enabledSellers']);
+                });
+                Route::prefix('/mozo')->group(function () {
+                    Route::get('/', [MozoController::class, 'index'])->name('tenant.mozo.index');
+                    Route::get('/records', [MozoController::class, 'records']);
+                    Route::get('/columns', [MozoController::class, 'columns']);
+                    Route::get('/record/{id}', [MozoController::class, 'record']);
+                    /* Route::get('/record/{id}', [MozoController::class, 'record']); */
+                    Route::get('/tables', [MozoController::class, 'tables']);
+                    Route::post('/', [MozoController::class, 'store']);
+                    Route::delete('/delete/{id}', [App\Http\Controllers\Tenant\MozoController::class, 'destroy']);
+                    /* Route::get('ventas-seller', [MozoController::class, 'exportSellers']);
+                    Route::get('product_seller', [MozoController::class, 'recordsProduct']);
+                    Route::get('list-product', [MozoController::class, 'exportProduct']); */
+                    Route::get('/enabled/{type}/{id}', [MozoController::class, 'enabledSellers']);
                 });
                 Route::prefix('/registers')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\RegisterController::class, 'index'])->name('tenant.registers.index');

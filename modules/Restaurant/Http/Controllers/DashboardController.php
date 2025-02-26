@@ -9,6 +9,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Desarrollador;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Mozo;
 use App\Models\Tenant\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Routing\Controller;
@@ -302,5 +303,12 @@ class DashboardController extends Controller
             'success' => true,
             'data' => $tables
         ];
+    }
+
+    public function data_table()
+    {
+        $mozos = Mozo::all();
+
+        return compact('mozos');
     }
 }

@@ -1013,6 +1013,13 @@
                             <i class="icofont-price"></i> Receta
                         </a>
                     </li>
+
+                    <li>
+                        <a class="{{ $path[0] === 'mozo' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.mozo.index') }}">
+                            <i class="icofont-price"></i> mozo vendedores 
+                        </a>
+                    </li>
                     {{-- @endif --}}
                 </ul>
             </li>

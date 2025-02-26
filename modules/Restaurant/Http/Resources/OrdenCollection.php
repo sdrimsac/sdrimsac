@@ -29,6 +29,7 @@ class OrdenCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             $configuration = Configuration::first();
+            $mozo_name = DB::connection('tenant')->table('seller_mozo')->where('id', $row->mozo_id)->value('name');
             if ($row->sale_note_id != null) {
                 $document_type_id = "80";
                 $document_type = "NOTA DE VENTA";
@@ -48,7 +49,7 @@ class OrdenCollection extends ResourceCollection
             }
             $credit_list = CreditList::where('orden_id', $row->id)->first();
             return [
-                'credit_list_id'   => ($credit_list) ? $credit_list->id : null,
+                'credit_list_id'    => ($credit_list) ? $credit_list->id : null,
                 'table'             => $row->mesa->number,
                 'id'                => ($configuration->commands_fisico == "1") ? $row->commands_fisico : $row->id,
                 'date'              => \Carbon\Carbon::parse($row->date)->format('d-m-Y'),
@@ -56,16 +57,17 @@ class OrdenCollection extends ResourceCollection
                 'document_type'     =>  $document_type,
                 'document_type_id'  => $document_type_id,
                 'document_number'   => $document_number,
-                'status'           =>  $row->status_orden->description,
-                'status_id'          => $row->status_orden->id,
+                'status'            =>  $row->status_orden->description,
+                'status_id'         => $row->status_orden->id,
                 'customer'          => optional($row->customer)->name,
                 'document'          => $row->document,
                 'sale_note'         => $row->salenote,
-                'ref' => $row->ref,
-                'time' => $row->created_at ? Carbon::createFromTimeStamp(strtotime($row->created_at))->format('H:i:s') : "-",
-        
+                'ref'               => $row->ref,
+                'mozo_id'           => $row->mozo_id,
+                'time'              => $row->created_at ? Carbon::createFromTimeStamp(strtotime($row->created_at))->format('H:i:s') : "-",
                 'orden_items'       => $row->orden_items,
-                'total'             =>  $total
+                'total'             =>  $total,
+                'mozo_name'         => $mozo_name,
             ];
         });
     }

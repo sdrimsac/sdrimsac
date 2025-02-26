@@ -8,17 +8,17 @@
             <div class="page-title-container">
                 <div class="row">
                     <!-- Title Start -->
-                    <div class="col-12 col-md-7">
+                    <div class="col-12 col-md-12 d-flex justify-content-between align-items-center">
                         <h1 class="mb-0 pb-0 display-4" id="title">
                             Zona de Preparación
                         </h1>
-                    </div>
 
+                        <el-button v-if="configuration.seller_mozo" type="primary" class="btn-round" style="border-radius: 10px;" @click="historial">Ver historial del día</el-button>
+                    </div>
                     <!-- Title End -->
                 </div>
             </div>
             <!-- Title and Top Buttons End -->
-
             <!-- Content Start -->
             <div class="card mb-2">
                 <div class="card-body h-100">
@@ -180,7 +180,13 @@
                                                     </h3>
                                                 </div>
                                                 <div class="stats w-100 row ">
-                                                    <span style="font-weight: bold; color: red; font-size: 20px; font-family: 'Arial Black', sans-serif"> {{ orden.user }}</span>
+                                                    <span style="font-weight: bold; color: blue; font-size: 20px;
+                                                     font-family: 'Arial Black', sans-serif"> {{ orden.mozo_name }}</span>
+                                                </div>
+                                                <div class="stats w-100 row ">
+                                                    <span style="font-weight: bold; color: red; font-size: 20px; font-family: 'Arial Black', sans-serif"> 
+                                                        USUARIO: {{ orden.user }}
+                                                    </span>
                                                 </div>
                                                 <div class="stats w-100 row ">
                                                     <h3
@@ -209,25 +215,31 @@
             </div>
             <!-- Content End -->
         </div>
+        <History-orden :showDialog.sync="showDialogHistory_orden" :areas.sync="areas"></History-orden>
     </div>
 </template>
 
 <script>
 import VueResponsiveImage from "vue-responsive-image";
+import HistoryOrden from "./history_orden.vue";
+import History_orden from "./history_orden.vue";
 
 export default {
     props: ["configuration", "area_id", "divided_items"],
     components: {
-        VueResponsiveImage
+        VueResponsiveImage,
+        HistoryOrden
     },
     data() {
         return {
             ordens: [],
+            areas: [],
             audio: HTMLAudioElement,
             sound: "../../../../../../../sound.ogg",
 
             loading_logout: false,
-            loading_text: null
+            loading_text: null,
+            showDialogHistory_orden: false
         };
     },
     mounted() {
@@ -276,7 +288,22 @@ export default {
             }
         );
     },
-    created() {
+    async created() {
+        try {
+            this.loading = true;
+            const response = await this.$http.get(`tables`);
+            if (response.status === 200) {
+                this.areas = response.data.areas;
+                console.log("ver si esta llegando los mozos", this.areas);
+            } else {
+                throw new Error('Error al obtener datos');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            this.$toast.error('Error al cargar los mozos');
+        } finally {
+            this.loading = false;
+        }
         this.getOrdens();
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
@@ -306,6 +333,9 @@ export default {
         });
     },
     methods: {
+        historial() {
+            this.showDialogHistory_orden = true;
+        },
        
         deleteOrden(id) {
             this.ordens = this.ordens.filter(o => o.id != id);

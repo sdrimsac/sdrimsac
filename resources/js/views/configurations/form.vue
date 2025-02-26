@@ -145,7 +145,10 @@
                                         >
                                             <div class="container mt-4">
                                                 <div class="row">
-                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                    <div
+                                                        class="col-md-3 mb-4"
+                                                        v-if="canSee"
+                                                    >
                                                         <div class="form-group">
                                                             <label
                                                                 class="control-label w-100"
@@ -556,8 +559,11 @@
                                                                     ref="healthIcon"
                                                                     class=""
                                                                 ></i> -->
-                                                                <i class="fa fas fa-tooth"></i>
-                                                                Entorno Odontología
+                                                                <i
+                                                                    class="fa fas fa-tooth"
+                                                                ></i>
+                                                                Entorno
+                                                                Odontología
                                                             </label>
                                                             <el-switch
                                                                 v-model="
@@ -594,8 +600,11 @@
                                                                     ref="healthIcon"
                                                                     class=""
                                                                 ></i> -->
-                                                                <i class="fa fas fa-tooth"></i>
-                                                                Entorno Alquiler de Habitaciones 
+                                                                <i
+                                                                    class="fa fas fa-tooth"
+                                                                ></i>
+                                                                Entorno Alquiler
+                                                                de Habitaciones
                                                             </label>
                                                             <el-switch
                                                                 v-model="
@@ -1298,7 +1307,10 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                    <div
+                                                        class="col-md-3 mb-4"
+                                                        v-if="canSee"
+                                                    >
                                                         <div class="form-group">
                                                             <label
                                                                 class="control-label w-100"
@@ -1307,7 +1319,8 @@
                                                                     ref="androidIcon"
                                                                     class="fas fa-mobile-alt tab-icon"
                                                                 ></i> -->
-                                                                Habilitar Catalogo
+                                                                Habilitar
+                                                                Catalogo
                                                                 <el-tooltip
                                                                     class="item"
                                                                     effect="dark"
@@ -4150,7 +4163,11 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                        Editar Cliente En Modulo de Cobro
+                                                                        Editar
+                                                                        Cliente
+                                                                        En
+                                                                        Modulo
+                                                                        de Cobro
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -4187,7 +4204,12 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                        Mostrar Cantidades Total De Productos En caja POS
+                                                                        Mostrar
+                                                                        Cantidades
+                                                                        Total De
+                                                                        Productos
+                                                                        En caja
+                                                                        POS
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -4225,7 +4247,13 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                        Cambiar politica de precio en la lista de productos
+                                                                        Cambiar
+                                                                        politica
+                                                                        de
+                                                                        precio
+                                                                        en la
+                                                                        lista de
+                                                                        productos
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -4262,7 +4290,16 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                        Agregar directamente la primera política de precio a la lista de productos
+                                                                        Agregar
+                                                                        directamente
+                                                                        la
+                                                                        primera
+                                                                        política
+                                                                        de
+                                                                        precio a
+                                                                        la lista
+                                                                        de
+                                                                        productos
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -4299,7 +4336,14 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                        Editar Precio del select de la Politica de Precio
+                                                                        Editar
+                                                                        Precio
+                                                                        del
+                                                                        select
+                                                                        de la
+                                                                        Politica
+                                                                        de
+                                                                        Precio
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -4336,7 +4380,12 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                        Mostrar Solo Documentos de Usuario Emitido
+                                                                        Mostrar
+                                                                        Solo
+                                                                        Documentos
+                                                                        de
+                                                                        Usuario
+                                                                        Emitido
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -4363,7 +4412,9 @@
                                                             </div>
                                                             <div
                                                                 class="col-md-2 mt-4"
-                                                                v-if="form.consolidated_quotations"
+                                                                v-if="
+                                                                    form.consolidated_quotations
+                                                                "
                                                             >
                                                                 <div
                                                                     class="form-group"
@@ -4374,7 +4425,8 @@
                                                                         <i
                                                                             class="el-icon-s-grid icon-tab"
                                                                         ></i>
-                                                                            Distribuidora v2
+                                                                        Distribuidora
+                                                                        v2
                                                                     </label>
                                                                     <el-switch
                                                                         @change="
@@ -7144,7 +7196,8 @@
                                                             class="el-icon-s-grid icon-tab"
                                                         ></i>
                                                         Mostrar Nombre
-                                                        Secundario de producto en pdf
+                                                        Secundario de producto
+                                                        en pdf
                                                     </label>
                                                     <el-switch
                                                         @change="
@@ -7177,7 +7230,8 @@
                                                         <i
                                                             class="el-icon-s-grid icon-tab"
                                                         ></i>
-                                                        Mostrar Codigo De Origen en ticket de pdf 
+                                                        Mostrar Codigo De Origen
+                                                        en ticket de pdf
                                                     </label>
                                                     <el-switch
                                                         @change="
@@ -7346,7 +7400,6 @@
                                                     </div>
                                                 </div>
 
-
                                                 <div class="col-md-2 mt-4">
                                                     <div class="form-group">
                                                         <label
@@ -7355,7 +7408,9 @@
                                                             <i
                                                                 class="fas fa-list fa-lg"
                                                             ></i>
-                                                            Imprimir el álmacen de origen del item en el pdf
+                                                            Imprimir el álmacen
+                                                            de origen del item
+                                                            en el pdf
                                                         </label>
                                                         <el-switch
                                                             v-model="
@@ -7381,7 +7436,12 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-2 mt-4" v-if="form.sale_note_credit_cash">
+                                                <div
+                                                    class="col-md-2 mt-4"
+                                                    v-if="
+                                                        form.sale_note_credit_cash
+                                                    "
+                                                >
                                                     <div class="form-group">
                                                         <label
                                                             class="control-label w-100"
@@ -7389,7 +7449,10 @@
                                                             <i
                                                                 class="fas fa-list fa-lg"
                                                             ></i>
-                                                            Imprimir el saldo pendiente de pago en el pdf - Notas de venta credito
+                                                            Imprimir el saldo
+                                                            pendiente de pago en
+                                                            el pdf - Notas de
+                                                            venta credito
                                                         </label>
                                                         <el-switch
                                                             v-model="
@@ -10474,7 +10537,10 @@
                                                                 <i
                                                                     class="fas fa-file-alt tab-icon"
                                                                 ></i>
-                                                                Imprimir Observaciones Separados en Comanda
+                                                                Imprimir
+                                                                Observaciones
+                                                                Separados en
+                                                                Comanda
                                                             </label>
                                                             <el-switch
                                                                 v-model="
@@ -10508,7 +10574,9 @@
                                                                 <i
                                                                     class="fas fa-file-alt tab-icon"
                                                                 ></i>
-                                                                Mostrar opción de dividir ordenes iguales
+                                                                Mostrar opción
+                                                                de dividir
+                                                                ordenes iguales
                                                             </label>
                                                             <el-switch
                                                                 v-model="
@@ -10527,6 +10595,76 @@
                                                                         'Mostrar opción de dividir ordenes iguales',
                                                                         form.divided_items,
                                                                         'divided_items',
+                                                                        'fileAltIcon'
+                                                                    )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-file-alt tab-icon"
+                                                                ></i>
+                                                                Almacen de
+                                                                cocina pedido
+                                                                para cada
+                                                                almacen
+                                                                independiente
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.kitchen_mozo
+                                                                "
+                                                                active-text="Si"
+                                                                inactive-text="No"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    submit(
+                                                                        'para las cocinas separar los pedidos por alamcenes ',
+                                                                        form.kitchen_mozo,
+                                                                        'kitchen_mozo',
+                                                                        'fileAltIcon'
+                                                                    )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-file-alt tab-icon"
+                                                                ></i>
+                                                                Seleccionar Mozo para Pedidos
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.seller_mozo
+                                                                "
+                                                                active-text="Si"
+                                                                inactive-text="No"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    submit(
+                                                                        'para las cocinas separar los pedidos por alamcenes ',
+                                                                        form.seller_mozo,
+                                                                        'kitchen_mozo',
                                                                         'fileAltIcon'
                                                                     )
                                                                 "

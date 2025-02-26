@@ -963,6 +963,7 @@ const app = new Vue({
                 "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
             ),
         "tenant-sellers-index": () => import("./views/sellers/index.vue"),
+        "tenant-mozo-index": () => import("./views/mozo/index.vue"),
         "tenant-bank_accounts-index": () =>
             import("./views/bank_accounts/index.vue"),
         "tenant-banks-index": () => import("./views/banks/index.vue"),

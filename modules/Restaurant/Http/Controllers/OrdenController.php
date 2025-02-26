@@ -466,6 +466,52 @@ class OrdenController extends Controller
         }
         return new OrdenCollection($ordens->orderBy('created_at', 'desc')->paginate(10));
     }
+
+    public function ordenskitchen(Request $request)
+    {
+        $current_cash = Cash::whereNull('time_closed')
+            ->whereHas('user', function ($query) {
+                $query->whereHas('area', function ($q) {
+                    $q->where('description', 'like', '%CAJ%');
+                });
+            })
+            ->latest()
+            ->first();
+
+        if (!$current_cash) {
+            $emptyCollection = new Collection();
+            $paginated = new LengthAwarePaginator($emptyCollection, 0, 10);
+            return new OrdenCollection($paginated);
+        }
+
+        $ordens = Orden::query()
+            ->where('created_at', '>=', $current_cash->date_opening)
+            ->where(function ($query) {
+                $query->whereNull('document_id')
+                    ->whereNull('sale_note_id');
+            });
+
+        if ($request->value) {
+            $ordens->where('id', 'like', '%' . $request->value . '%');
+        }
+        $user = auth()->user();
+        /* $is_kitchen = $this->isArea('COCINA', $user->area_id); */
+        $ordens->whereHas('orden_items', function ($q) use ($user) {
+            $q->where('area_id', $user->area_id);
+        })->whereIn('status_orden_id', [1, 2, 3]);
+        /* if ($is_kitchen) {
+            $ordens->whereIn('status_orden_id', [1, 2, 3]);
+        } */
+        /* if ($is_kitchen) {  
+            $ordens->whereIn('status_orden_id', [1, 2, 3])
+                   ->whereHas('area', function ($q) {
+                       $q->where('description', 'like', '%COCINA%');
+                   });
+        } */
+
+        return new OrdenCollection($ordens->orderBy('created_at', 'desc')->paginate(10));
+    }
+
     public function ordenslist()
     {
         $date = Carbon::now()->format('Y-m-d');
@@ -613,6 +659,7 @@ class OrdenController extends Controller
         try {
             $user = null;
             $ref = $request->ref;
+            $mozo_id = $request->mozo_id;
             $sale_direct = $request->saleDirect ?? true;
             $configuration = Configuration::first();
             if ($request->caja == false && $configuration->pin_switch) {
@@ -754,6 +801,7 @@ class OrdenController extends Controller
             if ($id != null) {
                 $orden = Orden::find($id);
                 $orden->ref = $ref;
+                $orden->mozo_id = $mozo_id;
                 $table = Table::find($orden->table_id);
                 if ($table->is_room) {
                     $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
@@ -771,6 +819,7 @@ class OrdenController extends Controller
 
                 $orden->date = Carbon::today();
                 $orden->ref = $ref;
+                $orden->mozo_id = $mozo_id;
                 $orden->to_carry = $request->to_carry;
                 $orden->commands_fisico = $request->commands_fisico;
 
@@ -836,9 +885,9 @@ class OrdenController extends Controller
             DB::beginTransaction();
             try {
                 $food_ids = $orden_items->pluck('food_id')->toArray();
-                
+
                 OrdenItem::insert($orden_items->toArray());
-                
+
                 // Obtener solo los items recién creados usando los food_ids
                 $created_items = OrdenItem::where('orden_id', $orden->id)
                     ->whereIn('food_id', $food_ids)
@@ -846,21 +895,21 @@ class OrdenController extends Controller
                     ->latest('id')
                     ->take(count($food_ids))
                     ->get();
-                
+
                 $orden_items_ids = $created_items->pluck('id')->toArray();
-        
-                $orden_items_ids_for_kitchen = $created_items->map(function($item) {
+
+                $orden_items_ids_for_kitchen = $created_items->map(function ($item) {
                     return ['orden_id' => $item->id, 'area_id' => $item->area_id];
                 })->toArray();
-                
+
                 // Actualizar stock en batch si es posible
-                foreach($created_items as $item) {
+                foreach ($created_items as $item) {
                     $item->stockRestaurant();
                     event(new OrdenEvent($item->id));
                 }
-                
+
                 DB::commit();
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 DB::rollback();
                 throw $e;
             }
@@ -896,7 +945,7 @@ class OrdenController extends Controller
                     $area_found = Area::find($area_id);
                     if ($area_found->printer || $area_found->search_print == 1) {
                         // Usar colas para la impresión asíncrona
-                        dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered,null,null,null, $user_id, url('')));
+                        dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
                         // event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
                     }
                 }
@@ -904,7 +953,7 @@ class OrdenController extends Controller
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
-                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids,null,null,null, $user_id, url('')));
+                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
 
                 // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
             }
@@ -1137,5 +1186,12 @@ class OrdenController extends Controller
             'success' => true,
             'message' => 'Orden finalizada'
         ];
+    }
+
+    public function tables()
+    {
+        $areas = Area::all();
+
+        return compact('areas');
     }
 }

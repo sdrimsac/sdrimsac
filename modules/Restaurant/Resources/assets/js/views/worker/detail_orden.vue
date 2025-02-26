@@ -385,6 +385,7 @@
                     :localOrden.sync="localOrden"
                     :ordens.sync="ordensItems"
                     :ordenSelectedId.sync="ordenSelectedId"
+                    :mozos.sync="mozos"
                     @updateOrdens="updateOrdens"
                     @deleteFood="deleteFood"
                     @ordenDeleted="createOrden"
@@ -427,8 +428,24 @@ export default {
         "tables_row_select",
         "changingOrden",
     ],
-    created() {
+    async created() {
         this.ordens = this.table.orden;
+
+        try {
+            this.loading = true;
+            const response = await this.$http.get(`dashboard/data_table`);
+            if (response.status === 200) {
+                this.mozos = response.data.mozos;
+                console.log("ver si esta llegando los mozos", this.mozos);
+            } else {
+                throw new Error('Error al obtener datos');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            this.$toast.error('Error al cargar los mozos');
+        } finally {
+            this.loading = false;
+        }
     },
     watch: {
         table(newTable, _) {
@@ -437,6 +454,7 @@ export default {
     },
     data() {
         return {
+            mozos: [], // Add this line
             divided_items: false,
             allFalse: true,
             currentFood: {},

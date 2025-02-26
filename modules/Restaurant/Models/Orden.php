@@ -8,6 +8,7 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use App\Traits\RegisterMovementTrait;
 use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\Mozo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Restaurant\Models\Table;
@@ -30,6 +31,7 @@ class Orden extends ModelTenant
         'sale_note_id',
         'document_id',
         'ref',
+        'mozo_id',
     ];
 
     protected $casts = [
@@ -155,6 +157,10 @@ class Orden extends ModelTenant
     public function mesa()
     {
         return $this->belongsTo(Table::class, 'table_id', 'id');
+    }
+    public function mozo()
+    {
+        return $this->belongsTo(Mozo::class, 'mozo_id');
     }
 
     public function getTotal(){

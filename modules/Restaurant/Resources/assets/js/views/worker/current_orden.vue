@@ -49,7 +49,26 @@
                 >
             </template>
         </div>
-        <br>
+        <div>
+            <template v-if="configuration &&  configuration.seller_mozo">
+                <label>Seleccione Mozo</label>
+                <el-select
+                    v-model="selectedMozo"
+                    placeholder="Seleccione un mozo"
+                    @change="updateMozo"
+                    clearable
+                >
+                    <el-option
+                        v-for="mozo in mozos"
+                        :key="mozo.id"
+                        :label="mozo.name"
+                        :value="mozo.id"
+                    >
+                    </el-option>
+                </el-select>
+            </template>
+        </div>
+        <br />
         <div id="ordens " class="border-dark rounded-top">
             <div class="bg-primary rounded-top p-2">
                 <span class="el-dialog__title text-white"
@@ -540,7 +559,7 @@
         >
             <div class="row mt-1">
                 <h6 class="fw-bold">
-                    Para poder eliminar la orden debe --------- ingresar un
+                    Para poder eliminar la orden debe ingresar un
                     motivo y su PIN de usuario.
                 </h6>
             </div>
@@ -700,10 +719,12 @@ export default {
         "ordenSelectedId",
         "referencia",
         "table",
-        "divided_items"
+        "divided_items",
+        "mozos"
     ],
     async created() {
         this.referenciaInput = this.referencia;
+        this.mozos = this.mozos || [];
         await this.getTags();
     },
     components: {
@@ -737,12 +758,16 @@ export default {
             loadingObservation: false,
             currentOrden: null,
             form_ped: {},
-            to_carry: false
+            to_carry: false,
+            selectedMozo: null
         };
     },
     watch: {
         ordens(newOrdens, _) {
             this.calculateTotal(newOrdens);
+        },
+        selectedMozo(newValue) {
+            this.$emit("mozo-selected", newValue);
         }
     },
     mounted() {},
@@ -1089,6 +1114,12 @@ export default {
                 .addClass("active");
         },
         async sendOrden(pin = null) {
+            // Add validation for mozo selection
+            /* if (!this.selectedMozo) {
+                this.$toast.error('Debe seleccionar un mozo');
+                return;
+            } */
+
             let form_submit = {
                 id: this.ordenSelectedId,
                 caja: false,
@@ -1096,6 +1127,7 @@ export default {
                 printing: this.configuration.print_commands,
                 commands_fisico: null,
                 ref: this.referencia,
+                mozo_id: this.selectedMozo, // Add mozo_id at root level
                 orden: {
                     table_id: this.tableId,
                     status_orden_id: 1
@@ -1119,6 +1151,7 @@ export default {
                         this.showDialogPing = false;
                         const { ordenId } = response.data;
                         this.referenciaInput = null;
+
                         this.$toast.success(message);
                         this.closeDialog(ordenId);
                         // this.$emit("add", ordenId);
@@ -1431,6 +1464,10 @@ export default {
             this.dialogLocalObservation = false;
             this.currentLocalOrden = null;
             this.localObservation = null;
+        },
+        updateMozo(value) {
+            // Optionally emit an event when mozo changes
+            this.$emit("mozo-selected", value);
         }
     }
 };

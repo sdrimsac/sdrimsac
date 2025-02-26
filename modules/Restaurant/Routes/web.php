@@ -69,9 +69,9 @@ Route::prefix('caja')->group(function () {
     Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']);
     Route::middleware(['auth', 'locked.tenant'])->group(function () {
-       
+
         Route::get('logoutget', 'RestaurantController@logout');
-       
+
         Route::get('test-sender', function () {
 
             $keyword = request("message");
@@ -102,12 +102,11 @@ Route::prefix('caja')->group(function () {
 
         Route::prefix('cash-transfer')->group(function () {
             Route::get('/', 'CashTransferController@index')->name('caja.cash_transfer');
-            Route::prefix('report')->group(function (){
+            Route::prefix('report')->group(function () {
                 Route::get('/', 'CashTransferController@index_report')->name('caja.cash_transfer_report');
                 Route::get('/columns', 'CashTransferController@columns_report');
                 Route::get('/records', 'CashTransferController@records_report');
                 Route::get('/export', 'CashTransferController@export_report');
-
             });
             Route::get('/columns', 'CashTransferController@columns');
             Route::get('available', 'CashTransferController@available');
@@ -282,7 +281,7 @@ Route::prefix('caja')->group(function () {
         Route::get('room_services/record/{id}', 'TableRoomServiceController@record');
         Route::delete('room_services/record/{id}', 'TableRoomServiceController@destroy');
         //MESAS BILLAR */
-        
+
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');
@@ -297,7 +296,7 @@ Route::prefix('caja')->group(function () {
         Route::post('tables/disabled-table', 'TableController@disabled');
         Route::post('tables/enabled-table', 'TableController@enabled');
         Route::post('tables/massive', 'TableController@store_massive');
-        
+
 
         //**** TRABAJADORES */
         Route::get('workers', 'WorkerController@index')->name('restaurant.workers');
@@ -307,7 +306,7 @@ Route::prefix('caja')->group(function () {
         Route::post('workers/commercial_treatment', 'WorkerController@commercial_treatment');
         Route::get('workers/record/{id}', 'WorkerController@record');
         Route::post('workers', 'WorkerController@store');
-        
+
 
         Route::get('pos', 'PosController@index')->name('restaurant.pos');
         Route::get('pos/search_orden', 'PosController@search');
@@ -328,7 +327,7 @@ Route::prefix('caja')->group(function () {
         //**** MESAS */
         Route::prefix('worker')->group(function () {
 
-            
+
 
 
 
@@ -350,6 +349,7 @@ Route::prefix('caja')->group(function () {
             Route::get('totales_sales_usd', 'PosController@total_sales_usd');
             Route::get('dashboard', 'DashboardController@index')->name('restaurant.workers.dashboard');
             Route::get('dashboard/foods', 'DashboardController@foods');
+            Route::get('dashboard/data_table', 'DashboardController@data_table');
             Route::get('dashboard-kitchen', 'DashboardController@kitchen')->name('restaurant.kitchen.dashboard')->middleware('just.worker');
             Route::get('dashboard-pos', 'DashboardController@pos')->name('restaurant.pos.dashboard')->middleware('just.worker');;
             Route::post('subcategories', [App\Http\Controllers\Tenant\SubcategoryController::class, 'store']);
@@ -363,7 +363,7 @@ Route::prefix('caja')->group(function () {
             Route::get('expenses/columns', [PosController::class, 'columns']);
             Route::get('expenses/tables', [PosController::class, 'tables']);
 
-        
+
 
             //Ingresos
             Route::get('incomes', [IncomesController::class, 'incomes'])->name('restaurant.incomes.index')->middleware('just.worker');;
@@ -425,6 +425,11 @@ Route::prefix('caja')->group(function () {
             Route::get('ordens-items', 'OrdenItemController@records');
             Route::get('ordens-list', 'OrdenController@ordenslist');
             Route::get('ordens-pending', 'OrdenController@ordenspending');
+            /* Route::get('ordens-kitchen', 'OrdenController@ordenskitchen'); */
+            Route::get('ordens-kitchen', [OrdenController::class, 'ordenskitchen']);
+
+            Route::get('tables', 'OrdenController@tables');
+
             // Route::get('ordens-areas', 'OrdenController@ordensareas');
 
             Route::get('list-ordens-items', 'OrdenItemController@list_ordens_items');

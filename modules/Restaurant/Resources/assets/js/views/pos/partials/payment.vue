@@ -3129,6 +3129,17 @@ export default {
                 this.students = customer.students || [];
                 this.customer = customer;
 
+                if (this.form.document_type_id == "01") {
+                    if (
+                        customer.identity_document_type_id == "1" ||
+                        customer.identity_document_type_id == "4" ||
+                        customer.identity_document_type_id == "-"
+                    ) {
+                        this.form.customer_id = null;
+                        this.value = null;
+                    }
+                }
+
                 // Resetear la promoción si es Clientes Varios o seleccionar la primera disponible
                 if (this.isClientesVarios()) {
                     this.form.promotion_id = null;
