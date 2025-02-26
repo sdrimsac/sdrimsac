@@ -46,7 +46,6 @@ class Functions
         
         $service = ServiceData::service('ruc', $inputs['number']);
         // Log::info("L45 service response: " . json_encode($service));
-        
         // Validar que exista la estructura de datos y tenga el formato correcto
         if (isset($service['data']) && is_array($service['data'])) {
             // Solo actualizar los valores si los datos del servicio son válidos
@@ -75,6 +74,15 @@ class Functions
                 $department_id = $service['data']['ubigeo'][0];
                 $province_id = $service['data']['ubigeo'][1];
                 $district_id = $service['data']['ubigeo'][2];
+                if($department_id == "-"){
+                    $department_id = null;
+                }
+                if($province_id == "-"){
+                    $province_id = null;
+                }
+                if($district_id == "-"){
+                    $district_id = null;
+                }
             } else {
                 $district_id = $inputs['district_id'] ?? null;
                 $province_id = $district_id ? substr($district_id, 0, 4) : null;

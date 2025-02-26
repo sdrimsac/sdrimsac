@@ -3649,10 +3649,8 @@ export default {
                 }
 
             if (!["21", "37"].includes(row.affectation_igv_type_id)) {
-                console.log("sumando total_value: ", row.total_value_without_rounding, row.affectation_igv_type_id);
-                total_value += row.total_value_without_rounding
-                    ? parseFloat(row.total_value_without_rounding)
-                    : parseFloat(row.total_value);
+                console.log("sumando total_value: ", row.total_value, row.affectation_igv_type_id);
+                total_value +=  parseFloat(row.total_value);
             }
                 total_plastic_bag_taxes += parseFloat(
                     row.total_plastic_bag_taxes || 0

@@ -19,10 +19,11 @@ class DocumentTransform
         //     $inputs['items'][$key]['codigo_interno'] = ($inputs['items'][$key]['codigo_interno']) ? $inputs['items'][$key]['codigo_interno']:'';
         //     $inputs['items'][$key]['codigo_producto_sunat'] = ($inputs['items'][$key]['codigo_producto_sunat']) ? $inputs['items'][$key]['codigo_producto_sunat']:'';
         // }
-
+        $api_user = auth('api')->user();
+        $api_user_id = $api_user ? $api_user->id : null;
         $inputs_transform = [
             'series' => Functions::valueKeyInArray($inputs, 'serie_documento'),
-            'user_id' => Functions::valueKeyInArray($inputs, 'user_id'),
+            'user_id' => Functions::valueKeyInArray($inputs, 'user_id',$api_user_id),
             'afectar_caja' => Functions::valueKeyInArray($inputs, 'afectar_caja'),
             'method_pay' => 'Efectivo',
             'operation_type_id' => '0101',

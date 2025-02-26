@@ -122,6 +122,7 @@ class ClientController extends Controller
 
                 $response = Http::withoutVerifying()->withToken($token)->get($url . "/api/configurations-client");
                 $data = $response->json();
+                Log::info($response->body());
                 if ($data['affectation_igv_type_id']) {
                     $affectation_tenant = $data['affectation_igv_type_id'];
                 }
@@ -138,6 +139,7 @@ class ClientController extends Controller
                 'affectation_tenant' => $affectation_tenant
             ]);
         } catch (\Exception $e) {
+            Log::error("Error en affectationTenant: " . $e->getMessage());
             return response()->json([
                 'affectation_tenant' => $affectation_tenant
             ]);

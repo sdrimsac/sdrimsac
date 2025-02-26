@@ -188,7 +188,7 @@ export default {
                 codigo_tipo_precio: "01",
                 precio_unitario: amount,
                 codigo_tipo_afectacion_igv: this.affectation_tenant,
-                total_base_igv: 100.0,
+                total_base_igv: amount,
                 porcentaje_igv: 18,
                 total_igv: 0,
                 total_impuestos: 0,
@@ -201,6 +201,7 @@ export default {
                 item.total_impuestos = (amount / 1.18) * 0.18;
                 item.valor_unitario = (amount / 1.18).toFixed(2);
                 item.total_valor_item = (amount / 1.18).toFixed(2);
+                item.total_base_igv = (amount / 1.18).toFixed(2);
             }
 
             return [item];
