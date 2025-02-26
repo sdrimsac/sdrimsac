@@ -25,7 +25,7 @@ class MozoController extends Controller
 {
     public function index()
     {
-        return view('tenant.Mozo.index');
+        return view('tenant.mozo.index');
     }
     public function records(Request $request)
     {
