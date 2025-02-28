@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\SeriesRequest;
 use App\Http\Resources\Tenant\MozoCollection;
 use App\Http\Resources\Tenant\MozoResource;
 use App\Http\Resources\Tenant\SellerCollection;
-use App\Http\Resources\Tenant\SellerResource;
-use App\Http\Resources\Tenant\SeriesCollection;
-use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
@@ -19,7 +15,6 @@ use App\Models\Tenant\Series;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Report\Exports\ExportSeller;
-use Modules\Report\Exports\ExportProduct;
 
 class MozoController extends Controller
 {
@@ -84,7 +79,7 @@ class MozoController extends Controller
 
     public function record($id)
     {
-        $record = new MozoResource(Seller::findOrFail($id));
+        $record = new MozoResource(Mozo::findOrFail($id));
 
         return $record;
     }

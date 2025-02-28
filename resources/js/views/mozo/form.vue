@@ -181,15 +181,9 @@ export default {
             form: {},
             loading_submit: false,
             loading_submitI: false,
-            timer: null
+            timer: null,
+            cursorPosition: 0
         };
-    },
-    watch: {
-        "form.document_type_id": function(newVal) {
-            if (newVal !== null) {
-                this.form.name = `MOZO - ${this.form.name || ""}`;
-            }
-        }
     },
     methods: {
         initForm() {
@@ -238,7 +232,12 @@ export default {
                     if (response.data.success) {
                         const data = response.data.data;
                         const fullName = `${data.apellido_paterno} ${data.apellido_materno} ${data.nombres}`;
-                        this.form.name = `MOZO - ${fullName}`;
+                        // Solo agregar el prefijo si no existe
+                        if (!fullName.includes('MOZO -')) {
+                            this.form.name = `MOZO - ${fullName}`;
+                        } else {
+                            this.form.name = fullName;
+                        }
                     }
                 } else if (documentTypeId === 4) {
                     response = await this.$http.get(
@@ -274,6 +273,12 @@ export default {
                 `/${this.resource}/record/${id}`
             );
             this.form = response.data.data;
+            
+            // Limpiar cualquier prefijo duplicado al cargar
+            if (this.form.name) {
+                const cleanName = this.form.name.replace(/^(MOZO - )+/g, 'MOZO - ');
+                this.form.name = cleanName;
+            }
         },
 
         close() {
@@ -317,7 +322,23 @@ export default {
             }
         },
         convertToUppercase(field) {
-            this.form[field] = this.form[field].toUpperCase();
+            const input = document.querySelector(`input[name="${field}"]`) || document.activeElement;
+            this.cursorPosition = input.selectionStart;
+            
+            // Convertir a mayúsculas sin modificar el prefijo "MOZO -"
+            let value = this.form[field];
+            if (value.startsWith('MOZO -')) {
+                const prefix = 'MOZO - ';
+                const rest = value.substring(prefix.length);
+                this.form[field] = prefix + rest.toUpperCase();
+            } else {
+                this.form[field] = value.toUpperCase();
+            }
+
+            // Restaurar la posición del cursor en el siguiente tick
+            this.$nextTick(() => {
+                input.setSelectionRange(this.cursorPosition, this.cursorPosition);
+            });
         }
     }
 };

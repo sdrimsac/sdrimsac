@@ -11,6 +11,7 @@ class Mozo extends ModelTenant
     protected $fillable = [
         'establishment_id',
         'user_id',
+        'document_type_id',
         'name',
         'document',
         'telephone',

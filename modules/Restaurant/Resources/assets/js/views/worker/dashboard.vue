@@ -413,7 +413,7 @@ export default {
             e => {
             let { order_item } = e;
             this.listaOrden(order_item);
-            this.playSound("pedidos_listo.mp3");
+            this.playSound(`pedidos_listo.mp3`);
             }
         );
 

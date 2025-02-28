@@ -20,7 +20,7 @@ class MozoResource extends JsonResource
             'document' => $this->document,
             'telephone' => $this->telephone,
             'establishment_id' => $this->establishment_id,
-            /* 'document_type_id' => $this->document_type_id, */
+            'document_type_id' => $this->document_type_id,
             // 'establishment_description' => optional($this->establishment)->description ?? '-',
             'active' => (bool) $this->active,
             
