@@ -135,6 +135,7 @@ class OrdenItemController extends Controller
     }
     public function ordenReady($id)
     {
+        $configuration = Configuration::first();
         try {
             $orden_item = OrdenItem::find($id);
             $orden_item->status_orden_id = 3;
@@ -146,7 +147,10 @@ class OrdenItemController extends Controller
                 $Orden->save();
             }
             event(new OrdenReadyEvent($id));
-            event(new OrdenReadyListEvent($id));
+            if ($configuration->seller_mozo) {
+                event(new OrdenReadyListEvent($id));
+            }
+            
             return [
                 'success' => true,
                 'message' => 'Orden lista'
