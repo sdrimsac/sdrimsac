@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\System\ClientPayment;
+use App\Models\System\MessageSendSchedule;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\Payment;
@@ -48,48 +49,49 @@ class SendMessageClient extends Command
     public function handle()
     {
         $now = Carbon::now();
-        
-        // Validar si es día 25 o último día del mes
-        $isLastDay = $now->endOfMonth()->day === $now->day;
-        $isDay25 = $now->day === 25;
-        
-        if (!$isDay25 && !$isLastDay) {
-            $this->info('No es fecha de envío de mensajes');
-            return 0;
-        }
-        
+        $isCloseTo8Am = ($now->hour === 7 && $now->minute >= 50) || ($now->hour === 8 && $now->minute <= 30);
+        $days_messages = MessageSendSchedule::where('active', 1)->get();
+        $day = $now->day;
+
+
+    
+
+
         $now = $now->startOfDay();
-        $payments = ClientPayment::where('state', 0)->get();
-        
+        if($isCloseTo8Am){
+            ClientPayment::where('state', 0)->update(['send_whatsapp' => 0]);
+        }
+        $payments = ClientPayment::where('state', 0)->where('send_whatsapp', 0)->get();
 
+        foreach ($days_messages as $day_message) {
+            
+            if ($day_message->send_day_at === $day) {
+                if ($day_message->id == 3) {
+                    foreach ($payments as $payment) {
+                        $payment_date = Carbon::parse($payment->date_of_payment);
+                        $diff_days = $now->diffInDays($payment_date);
+                        if ($diff_days > 6) {
+                            continue;
+                        }
+                        $payment->send_message_after_end();
+                        sleep(rand(1, 3));
+                    }
+                } else {
+                    foreach ($payments as $payment) {
+                        $payment_date = Carbon::parse($payment->date_of_payment);
+                        $diff_days = $now->diffInDays($payment_date);
+                        if ($diff_days > 6) {
+                            continue;
+                        }
 
-        // Enviar mensajes según la fecha
-        if ($isDay25) {
-            foreach ($payments as $payment) {
-                $payment_date = Carbon::parse($payment->date_of_payment);
-                $diff_days = $now->diffInDays($payment_date);
-                if($diff_days > 6) {
-                    continue;
+                        $payment->send_message_before_end();
+                        sleep(rand(1, 3));
+                    }
                 }
-
-                $payment->send_message_before_end();
-                sleep(rand(1, 3));
             }
-            $this->info('Línea 45 before_payment: ' . count($payments));
         }
 
-        if ($isLastDay) {
-            foreach ($payments as $payment) {
-                $payment_date = Carbon::parse($payment->date_of_payment);
-                $diff_days = $now->diffInDays($payment_date);
-                if($diff_days > 6) {
-                    continue;
-                }
-                $payment->send_message_after_end();
-                sleep(rand(1, 3));
-            }
-            $this->info('Línea 51 after_payment: ' . count($payments));
-        }
+    
 
         $this->info('Envío de mensajes a los clientes finalizados');
         return 0;

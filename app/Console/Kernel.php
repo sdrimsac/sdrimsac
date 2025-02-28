@@ -34,6 +34,9 @@ class Kernel extends ConsoleKernel
          $schedule->command('tenancy:run sunat:validate-all')->dailyAt('05:00');
          $schedule->command('tenancy:run rent:calculate-penalties')->dailyAt('06:00');
          $schedule->command('send:message-client')->dailyAt('08:00');
+         $schedule->command('send:message-client')->dailyAt('08:40');
+         $schedule->command('send:message-client')->dailyAt('09:00');
+         $schedule->command('block:client-has-no-payment')->dailyAt('07:00');
         //delete:register-movements
         // $schedule->command('delete:register-movements')->dailyAt('00:00');
     }

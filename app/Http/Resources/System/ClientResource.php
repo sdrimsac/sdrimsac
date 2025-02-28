@@ -44,6 +44,8 @@
                 'apps' => [],
                 'levels' => [],
                 'phone' => $this->phone,
+                'group_whatsapp' => $this->group_whatsapp,  
+                'sent_to_group' => (bool)$this->sent_to_group,
                 //'count_doc' => $this->count_doc,
                 // 'max_documents' => (int) $this->plan->limit_documents,
                 //'count_user' => $this->count_user,

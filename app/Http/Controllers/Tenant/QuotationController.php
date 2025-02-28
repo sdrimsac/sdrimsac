@@ -49,6 +49,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Consolidated;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
@@ -247,6 +248,31 @@ class QuotationController extends Controller
             ->first();
         return $series->id;
     }
+    function itemsWithStock($items, $establishment_id)
+    {
+        $items_with_stock = [];
+        foreach ($items as $item) {
+            $quantity = $item->quantity;
+            $from_unit_type_id_desc = $item->item->from_unit_type_id_desc;
+            $from_unit_type_id = $item->item->from_unit_type_id;
+            $item_unit_types = $item->item->item_unit_types;
+            if (($from_unit_type_id_desc || $from_unit_type_id) && $item_unit_types) {
+                if ($from_unit_type_id_desc) {
+                    $quantity = $quantity * collect($item_unit_types)->where('description', $from_unit_type_id_desc)->first()->quantity_unit;
+                }
+                if ($from_unit_type_id) {
+                    $quantity = $quantity * collect($item_unit_types)->where('id', $from_unit_type_id)->first()->quantity_unit;
+                }
+            }
+            $item_id = $item->item_id;
+            $item_warehouse = ItemWarehouse::select('stock')->where('item_id', $item_id)->where('warehouse_id', $establishment_id)->first();
+            if ($item_warehouse && $item_warehouse->stock >= $quantity) {
+                $items_with_stock[] = $item;
+            }
+        }
+        return $items_with_stock;
+    }
+
     function getDocumentArray($quotation_id)
     {
         $q = Quotation::find($quotation_id);
@@ -293,7 +319,7 @@ class QuotationController extends Controller
         $document['seller_id'] = $q->seller_id;
         $document['operation_type_id'] = "0101";
         $document['date_of_due'] = Carbon::now()->format('Y-m-d');
-        $document['items'] = $q->items;
+        $document['items'] = $this->itemsWithStock($q->items, $q->establishment_id);
         $document['charges'] = $q->charges;
         $document['discounts'] = $q->discounts;
         $document['attributes'] = [];
@@ -303,6 +329,68 @@ class QuotationController extends Controller
             'format_pdf' => "a4"
         ];
         $document['quotation_id'] = $q->id;
+
+        return $this->reCalculateTotal($document);
+    }
+    function reCalculateTotal($document){
+        $total_discount = 0;
+        $total_charge = 0;
+        $total_exportation = 0;
+        $total_taxed = 0;
+        $total_exonerated = 0;
+        $total_unaffected = 0;
+        $total_free = 0;
+        $total_igv = 0;
+        $total_value = 0;
+        $total = 0;
+        $total_plastic_bag_taxes = 0;
+
+        foreach ($document['items'] as $row) {
+            $total_discount += floatval($row->total_discount);
+            $total_charge += floatval($row->total_charge);
+
+            if ($row->affectation_igv_type_id === "10") {
+                $total_taxed += floatval($row->total_value);
+            }
+            if ($row->affectation_igv_type_id === "20") {
+                $total_exonerated += floatval($row->total_value);
+            }
+            if ($row->affectation_igv_type_id === "30") {
+                $total_unaffected += floatval($row->total_value);
+            }
+            if ($row->affectation_igv_type_id === "40") {
+                $total_exportation += floatval($row->total_value);
+            }
+            if (in_array($row->affectation_igv_type_id, ["11", "12", "13", "14", "15", "16"])) {
+                $unit_value = floatval($row->total_value) / floatval($row->quantity);
+                $total_value_partial = $unit_value * floatval($row->quantity);
+                $row->total_taxes = floatval($row->total_value) - $total_value_partial + floatval($row->total_plastic_bag_taxes ?? 0);
+                $row->total_igv = $total_value_partial * (floatval($row->percentage_igv) / 100);
+                $row->total_base_igv = $total_value_partial;
+                $total_value -= floatval($row->total_value);
+                $total += floatval($row->total);
+            }
+            if (in_array($row->affectation_igv_type_id, ["10", "20", "30", "40"])) {
+                $total_igv += floatval($row->total_igv);
+                $total += floatval($row->total);
+            }
+            if (!in_array($row->affectation_igv_type_id, ["21", "37"])) {
+                $total_value += floatval($row->total_value);
+            }
+            $total_plastic_bag_taxes += floatval($row->total_plastic_bag_taxes ?? 0);
+        }
+
+        $document['total_exportation'] = round($total_exportation, 2);
+        $document['total_taxed'] = round($total_taxed, 2);
+        $document['total_exonerated'] = round($total_exonerated, 2);
+        $document['total_unaffected'] = round($total_unaffected, 2);
+        $document['total_free'] = round($total_free, 2);
+        $document['total_igv'] = round($total_igv, 2);
+        $document['total_value'] = round($total_value, 2);
+        $document['total_value_without_rounding'] = $total_value;
+        $document['total_taxes'] = round($total_igv, 2);
+        $document['total_plastic_bag_taxes'] = round($total_plastic_bag_taxes, 2);
+        $document['total'] = round($total_charge + $total + $document['total_plastic_bag_taxes'], 2);
 
         return $document;
     }
@@ -408,7 +496,7 @@ class QuotationController extends Controller
             }
             $user_id = auth()->user()->id;
             $cash = Cash::where('user_id', $user_id)->where('state', '1')->first();
-            if(!$cash){
+            if (!$cash) {
                 return [
                     'success' => false,
                     'message' => 'No se encontró caja abierta'
@@ -482,7 +570,7 @@ class QuotationController extends Controller
                 $sale_note_id = $saleNote->id;
                 $document = $saleNote;
             }
-            if(!$document){
+            if (!$document) {
                 continue;
             }
             $total = $document->total;
@@ -538,7 +626,6 @@ class QuotationController extends Controller
                 if ($document) {
                     $documen_type_id = isset($document->document_type_id) ? $document->document_type_id : "80";
                     event(new PrintEvent($document->id, $documen_type_id, true, 0, [], true));
-                    sleep(1);
                 }
             } else {
                 $document = $this->getDocumentArray($quotation_id);
@@ -604,7 +691,6 @@ class QuotationController extends Controller
                     if ($document && $saleNote) {
                         if ($document->created_at > $saleNote->created_at) {
                             $selectedDocument = $document;
-
                         } else {
                             $selectedDocument = $saleNote;
                         }
@@ -616,15 +702,15 @@ class QuotationController extends Controller
                         $selectedDocument = null;
                     }
                     $total_weight = 0;
-        
+
                     if ($selectedDocument) {
                         foreach ($selectedDocument->quotation->items as $item) {
                             if (isset($item->item->weight)) {
                                 $total_weight += $item->item->weight * $item->quantity;
                             }
                         }
-    
-                        if(!in_array($selectedDocument->customer_id, $temp_customer_id)){
+
+                        if (!in_array($selectedDocument->customer_id, $temp_customer_id)) {
                             $consolidated_info['count_diff_customer']++;
                             $temp_customer_id[] = $selectedDocument->customer_id;
                         }
@@ -632,11 +718,11 @@ class QuotationController extends Controller
                         $paid = $payed >= $selectedDocument->total ? true : false;
                         $consolidated_info['count_document']++;
                         $consolidated_info['total'] += $selectedDocument->total;
-                        if($selectedDocument->document_type_id == '01'){
+                        if ($selectedDocument->document_type_id == '01') {
                             $consolidated_info['count_01']++;
-                        }elseif($selectedDocument->document_type_id == '03'){
+                        } elseif ($selectedDocument->document_type_id == '03') {
                             $consolidated_info['count_03']++;
-                        }elseif($selectedDocument->document_type_id == '80'){
+                        } elseif ($selectedDocument->document_type_id == '80') {
                             $consolidated_info['count_80']++;
                         }
                         $register = [

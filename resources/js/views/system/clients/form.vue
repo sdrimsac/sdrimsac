@@ -254,6 +254,43 @@
                             </small>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div
+                            :class="{ 'has-danger': errors.group_whatsapp }"
+                            class="form-group"
+                        >
+                            <label class="control-label">
+                                Grupo de Whatsapp
+                            </label>
+                            <el-input
+                                v-model="form.group_whatsapp"
+                            >
+                            </el-input>
+                            <small
+                                v-if="errors.group_whatsapp"
+                                class="form-control-feedback"
+                                v-text="errors.group_whatsapp[0]"
+                            >
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div
+                            :class="{ 'has-danger': errors.sent_to_group }"
+                            class="form-group"
+                        >
+                            <label class="control-label">
+                                Tipo de envío
+                            </label>
+                            <el-switch
+                                v-model="form.sent_to_group"
+                                active-text="Enviar a grupo"
+                                inactive-text="Enviar a cliente"
+                            >
+                            </el-switch>
+                        
+                        </div>
+                    </div>
                     <div class="col-md-6 center-el-checkbox mt-4" v-show="false">
                         <div
                             :class="{ 'has-danger': errors.locked_emission }"

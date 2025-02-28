@@ -34,17 +34,90 @@ class ClientPaymentController extends Controller
             'message' => 'Mensaje enviado con éxito'
         ];
     }
-    public function sendMessage($message, $number)
+    public function sendVideo($video, $number = null,$to_group = false)
     {
         $web_whatsapp = config('app.web_whatsapp');
-        $url = "https://" . $web_whatsapp . "/api/send-message";
+        if($to_group){
+            $url = "https://" . $web_whatsapp . '/api/send-file-by-name';
+        }else{
+            $url = "https://" . $web_whatsapp . '/api/send-media';
+        }
+        
+        $video = str_replace('/storage/', '', $video);
+        $video_path = Storage::disk('public')->path($video);
+        if (!file_exists($video_path)) {
+            return [
+                "message" => "El archivo de video no existe en la ruta especificada",
+                "path" => $video_path
+            ];
+        }
+        
+        $content_file = file_get_contents($video_path);
+        $extension = pathinfo($video, PATHINFO_EXTENSION);
+
+        $client = new GuzzleHttpClient([
+            'verify' => false,
+            'stream' => false,
+            'headers' => [
+                'User-Agent' => 'Testing 1.0'
+            ]
+        ]);
+        try {
+            $name_number = "number";
+            $content_number = "51" . $number;
+            if($to_group){
+                $name_number = "chatName";
+                $content_number = $number;
+            }
+            $response = $client->post($url, [
+                'multipart' => [
+                    [
+                        'name'     => $name_number,
+                        'contents' => $content_number
+                        ],
+
+                    [
+                        'name'     => 'sender',
+                        'contents' =>   'sdrimsac'
+                    ],
+                    [
+                        'name'     => 'file',
+                        'contents' => $content_file,
+                        'filename' => $video . "." . $extension
+                    ],
+
+                ]
+            ]);
+
+            $body = $response->getBody()->getContents();
+            return json_decode($body, true);
+        } catch (\Exception $e) {
+            return [
+                "message" => $e->getMessage(),
+                "line" => $e->getLine(),
+            ];
+        }
+    }
+    public function sendMessage($message, $number,$to_group = false)
+    {
+        $web_whatsapp = config('app.web_whatsapp');
+        if($to_group){
+            $url = "https://" . $web_whatsapp . "/api/send-message-by-name";
+        }else{
+            $url = "https://" . $web_whatsapp . "/api/send-message";
+        }
 
         // Reemplazar <br> por saltos de línea
         $message = str_replace('<br>', "\n", $message);
-
+        $name_number = "number";
+        $content_number = "51" . $number;
+        if($to_group){
+            $name_number = "chatName";
+            $content_number = $number;
+        }
         try {
             $response = Http::withoutVerifying()->post($url, [
-                'number' => "51" . $number,
+                $name_number => $content_number,
                 'sender' => 'sdrimsac',
                 'message' => $message,
             ]);
@@ -76,8 +149,7 @@ class ClientPaymentController extends Controller
         $payments = ClientPayment::where('state', 0)->get();
         foreach ($payments as $payment) {
             $payment_date = Carbon::parse($payment->date_of_payment);
-            $diff_days = $now->diffInDays($payment_date);
-            
+            $diff_days = $now->diffInDays($payment_date,false);
             if($diff_days > 6) {
                 continue;
             }
@@ -94,59 +166,7 @@ class ClientPaymentController extends Controller
             'message' => 'Mensajes enviados correctamente'
         ]);
     }
-    public function sendVideo($video, $number = null)
-    {
-        $web_whatsapp = config('app.web_whatsapp');
-        $url = "https://" . $web_whatsapp . '/api/send-media';
-        
-        $video = str_replace('/storage/', '', $video);
-        $video_path = Storage::disk('public')->path($video);
-        if (!file_exists($video_path)) {
-            return [
-                "message" => "El archivo de video no existe en la ruta especificada",
-                "path" => $video_path
-            ];
-        }
-        
-        $content_file = file_get_contents($video_path);
-        $extension = pathinfo($video, PATHINFO_EXTENSION);
 
-        $client = new GuzzleHttpClient([
-            'verify' => false,
-            'stream' => false,
-            'headers' => [
-                'User-Agent' => 'Testing 1.0'
-            ]
-        ]);
-        try {
-            $response = $client->post($url, [
-                'multipart' => [
-                    [
-                        'name'     => 'number',
-                        'contents' => "51" . $number
-                    ],
-
-                    [
-                        'name'     => 'sender',
-                        'contents' =>   'sdrimsac'
-                    ],
-                    [
-                        'name'     => 'file',
-                        'contents' => $content_file,
-                        'filename' => $video . "." . $extension
-                    ],
-
-                ]
-            ]);
-
-            $body = $response->getBody()->getContents();
-        } catch (\Exception $e) {
-            return [
-                "message" => $e->getMessage(),
-                "line" => $e->getLine(),
-            ];
-        }
-    }
     public function records($client_id)
     {
         $records = ClientPayment::where('client_id', $client_id)->get();
@@ -356,11 +376,18 @@ class ClientPaymentController extends Controller
                     'message' => 'El cliente no tiene número de teléfono registrado'
                 ];
             }
-
+            $to_group = $client->sent_to_group;
+            $number = $client->phone;
+            $group_whatsapp = $client->group_whatsapp;
+            if($to_group && $group_whatsapp){
+                $number = $group_whatsapp;
+            }else{
+                $to_group = false;
+            }
             // Enviar el mensaje por WhatsApp
-            $response_success_message = $this->sendMessage($request->message, $client->phone);
+            $response_success_message = $this->sendMessage($request->message, $number,$to_group);
             if($url_video){
-                $response_success_video = $this->sendVideo($url_video, $client->phone );
+                $response_success_video = $this->sendVideo($url_video, $number,$to_group);
             }
             $message_response = "El mensaje se envió ";
             $message_response .= $response_success_message['success'] ? "correctamente" : "con error";

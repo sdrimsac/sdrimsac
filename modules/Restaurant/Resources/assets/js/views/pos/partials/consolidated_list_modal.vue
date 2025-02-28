@@ -343,9 +343,9 @@ export default {
                             let message = data.message;
                             let has_print = data.has_print;
                             if (!has_print) {
-                                for (const document of this.documents) {
-                                    await this.clickEmit(document);
-                                }
+                                 for (const document of this.documents) {
+                                     await this.clickEmit(document);
+                                 }
                                 this.getRecords();
                             }
 

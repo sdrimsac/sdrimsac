@@ -25,6 +25,7 @@ use Modules\Document\Helpers\DocumentHelper;
 use Modules\MobileApp\Models\System\AppModule;
 use App\CoreFacturalo\ClientHelper;
 use App\Models\System\ClientPayment;
+use App\Models\System\MessageSendSchedule;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -578,6 +579,8 @@ class ClientController extends Controller
             }
             $client->phone = $request->phone;
             $client->plan_id = $request->plan_id;
+            $client->group_whatsapp = $request->group_whatsapp;
+            $client->sent_to_group = $request->sent_to_group;
             $client->save();
 
             $plan = Plan::find($request->plan_id);
@@ -710,6 +713,36 @@ class ClientController extends Controller
             ];
         }
     }
+    public function storeScheduleVideos(Request $request)
+    {
+        $messages_send_schedule = $request->messages;
+
+        foreach ($messages_send_schedule as $message_send_schedule) {
+            MessageSendSchedule::updateOrCreate(
+                ['id' => $message_send_schedule['id']],
+                [
+                    'send_day_at' => $message_send_schedule['send_day_at'],
+                    'active' => $message_send_schedule['active']
+                ]
+            );
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Mensaje de envío programado actualizado satisfactoriamente'
+        ];
+    }
+
+    public function recordsScheduleVideos()
+    {
+        $message_send_schedules = MessageSendSchedule::all();
+
+        return [
+            'success' => true,
+            'messages' => $message_send_schedules
+        ];
+    }
+    
     public function store(ClientRequest $request)
     {
         $migration = $request->input('migration');
@@ -767,6 +800,10 @@ class ClientController extends Controller
             $client->number = $request->input('number');
             $client->plan_id = $request->input('plan_id');
             $client->locked_emission = $request->input('locked_emission');
+            $client->group_whatsapp = $request->input('group_whatsapp');
+            $client->sent_to_group = $request->input('sent_to_group');
+            $client->phone = $request->input('phone');
+
             $client->save();
 
             DB::connection('system')->commit();

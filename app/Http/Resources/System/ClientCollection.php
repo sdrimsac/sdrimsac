@@ -32,6 +32,8 @@ class ClientCollection extends ResourceCollection
             $last_payment = ClientPayment::where('client_id',$row->id)->orderBy('id','desc')->first();
             $end_payment =$last_payment ? $last_payment->end_payment : null;
             return [
+                'group_whatsapp' => $row->group_whatsapp,
+                'sent_to_group' => (bool) $row->sent_to_group,
                 'company_name' => $row->company_name,
                 'company_number' => $row->company_number,
                 'limit_month_amount' => $row->limit_month_amount,

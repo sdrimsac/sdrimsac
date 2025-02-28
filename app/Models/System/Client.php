@@ -64,7 +64,8 @@ class Client extends Model
     protected $with = ['hostname','plan'];
 
     protected $fillable = [
-    
+        'group_whatsapp',
+        'sent_to_group',
         'phone',
         'hostname_id',
         'number',
@@ -92,6 +93,7 @@ class Client extends Model
         'smtp_port' => 'int',
         'locked_create_establishments' => 'boolean',
         'restrict_sales_limit' => 'boolean',
+        'sent_to_group' => 'boolean',
     ];
 
 

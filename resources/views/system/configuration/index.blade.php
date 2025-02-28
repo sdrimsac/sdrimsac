@@ -20,6 +20,7 @@
             <system-configuration-token></system-configuration-token>
             <system-configuration-apk-url></system-configuration-apk-url>
             <system-configuration-emit-document-url></system-configuration-emit-document-url>
+            <system-configuration-schedule-videos></system-configuration-schedule-videos>
             <system-configuration-upload-videos></system-configuration-upload-videos>
             {{-- <system-configuration-messages-client></system-configuration-messages-client> --}}
         </div>

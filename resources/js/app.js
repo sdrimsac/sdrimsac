@@ -330,6 +330,12 @@ Vue.component(
     require("./views/system/configuration/upload_videos.vue")
 );
 
+//upload videos
+Vue.component(
+    "system-configuration-schedule-videos",
+    require("./views/system/configuration/schedule_videos.vue")
+);
+
 //messages client
 Vue.component(
     "system-configuration-messages-client",
