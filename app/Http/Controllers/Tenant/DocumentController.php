@@ -2629,10 +2629,11 @@ class DocumentController extends Controller
         } else {
 
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(20);
+            $records->load(['boxes' => function ($query) {
+                $query->select('id', 'amount', 'document_id')->without('document'); // document_id es necesario para la relación
+            }, 'orden', 'sale_note_related']);
         }
-        $records->load(['boxes' => function ($query) {
-            $query->select('id', 'amount', 'document_id')->without('document'); // document_id es necesario para la relación
-        }, 'orden', 'sale_note_related']);
+
 
         return $records;
     }
