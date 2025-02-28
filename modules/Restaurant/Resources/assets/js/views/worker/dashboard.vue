@@ -342,6 +342,7 @@ export default {
     ],
     data() {
         return {
+            audio: HTMLAudioElement,
             tableUsers: [],
             divided_items: false,
             ordenToChange: null,
@@ -406,6 +407,15 @@ export default {
     mounted() {
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
+
+        Echo.channel("orden_list").listen(
+            `.order-list-${this.configuration.socket_channel}`,
+            e => {
+            let { order_item } = e;
+            this.listaOrden(order_item);
+            this.playSound("pedidos_listo.mp3");
+            }
+        );
 
         Echo.channel("orden_delete").listen(
             `.order-delete-${this.configuration.socket_channel}`,
@@ -518,6 +528,20 @@ export default {
         });
     },
     methods: {
+        playSound(sound = "services_sound.mp3") {
+            let audio = new Audio(`/sounds/${sound}`);
+            if (audio) {
+                audio.play();
+            }
+        },
+        listaOrden(order_item) {
+            this.$notify({
+            title: "Orden Lista",
+            message: `La orden ${order_item} esta lista para ser entregada`,
+            type: "success",
+            duration: 0
+            });
+        },
         async userorden() {
             try {
                 const response = await this.$http.get(`/caja/tables/UserTable`);

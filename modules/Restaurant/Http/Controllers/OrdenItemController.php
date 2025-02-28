@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Events\OrdenCancelEvent;
+use Modules\Restaurant\Events\OrdenReadyListEvent;
 use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenDelete;
@@ -134,7 +135,6 @@ class OrdenItemController extends Controller
     }
     public function ordenReady($id)
     {
-
         try {
             $orden_item = OrdenItem::find($id);
             $orden_item->status_orden_id = 3;
@@ -146,6 +146,7 @@ class OrdenItemController extends Controller
                 $Orden->save();
             }
             event(new OrdenReadyEvent($id));
+            event(new OrdenReadyListEvent($id));
             return [
                 'success' => true,
                 'message' => 'Orden lista'

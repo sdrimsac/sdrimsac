@@ -39,8 +39,7 @@
                                                             'imagen-no-disponible.jpg'
                                                     "
                                                 >
-                                                    <img
-                                                        src="/imagen-no-disponible.jpg"
+                                                    <img     src="/imagen-no-disponible.jpg"
                                                         :alt="
                                                             orden.food
                                                                 .description
@@ -263,7 +262,12 @@ export default {
             `.order-request-${this.configuration.socket_channel}`,
             e => {
                 if (this.area_id == e.order_item.food.area_id) {
-                    this.ordens = [...this.ordens, e.order_item];
+                    // Asegurarse de que mozo_name esté disponible
+                    const orderItem = {
+                        ...e.order_item,
+                        mozo_name: e.order_item.mozo_name || '-'
+                    };
+                    this.ordens = [...this.ordens, orderItem];
                     this.play();
                 }
             }

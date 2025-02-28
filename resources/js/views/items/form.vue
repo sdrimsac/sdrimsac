@@ -1390,7 +1390,7 @@
 
                     <!-- Almacenes  -->
                     <el-tab-pane
-                        v-if="form.unit_type_id != 'ZZ'"
+                        
                         label="Almacenes"
                         name="warehouses"
                     >
@@ -1406,7 +1406,7 @@
                                             <tr>
                                                 <th>Almacén</th>
                                                 <th>Precio Venta</th>  
-                                                <th>Stock Inicial</th>
+                                                <th v-if="form.unit_type_id != 'ZZ'">Stock Inicial</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1422,7 +1422,7 @@
                                                         <template slot="prepend">S/.</template>
                                                     </el-input>
                                                 </td>
-                                                <td>
+                                                <td v-if="form.unit_type_id != 'ZZ'">
                                                     <el-input
                                                         v-model="getStockForWarehouse(warehouse.id).stock"
                                                         :disabled="!!recordId"
@@ -1435,7 +1435,7 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        <tfoot>
+                                        <tfoot v-if="form.unit_type_id != 'ZZ'">
                                             <tr>
                                                 <td colspan="2" class="text-end">
                                                     <strong>Stock Total:</strong>

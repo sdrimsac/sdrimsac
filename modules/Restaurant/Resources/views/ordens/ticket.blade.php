@@ -318,6 +318,15 @@
                     </tr>
 
                 @endif
+                @if ($is_restaurant && $configuration->seller_mozo)
+                    <tr>
+                        <td colspan="4" class="header_title1 text-center" valign="top">
+                            @if (isset($mozo_name) && $mozo_name)
+                                {{ $mozo_name }}
+                            @endif
+                        </td>
+                    </tr>
+                @endif
                 @if ($is_restaurant)
                     <tr>
                         <td colspan="4" class="header_title1 text-center" valign="top">
@@ -497,7 +506,7 @@
                                         <br>
                                         <strong>Obs: {{ $row_carry->observations }}</strong>
                                     @endif
-                                    
+
 
                                 </td>
 
@@ -578,6 +587,16 @@
                         {{ $date }}
                     </td>
                 </tr>
+
+                @if ($is_restaurant && $configuration->seller_mozo)
+                    <tr>
+                        <td colspan="4" class="header_title1 text-center" valign="top">
+                            @if (isset($mozo_name) && $mozo_name)
+                                {{ $mozo_name }}
+                            @endif
+                        </td>
+                    </tr>
+                @endif
 
                 @if ($is_restaurant)
                     <tr>
@@ -683,6 +702,11 @@
             @endif
         </div>
     @endif
+
+    {{-- Mostrar el nombre del mozo si está disponible --}}
+    {{-- @if (isset($mozo_name) && $mozo_name)
+        <div>Mozo: {{ $mozo_name }}</div>
+    @endif --}}
 
 </body>
 

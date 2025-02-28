@@ -147,7 +147,9 @@ class OrdenController extends Controller
         $orden = $request->id;
         $ordens_items_extern = explode("_", $request->ids);
         $area_id = $request->area_id;
+        $mozo_id = $request->mozo_id;
         $area_desc = null;
+        $mozo_name = null;
         //   $to_kitchen = true; en true no es pa cocina
         $to_kitchen = false;
         if ($precuenta) {
@@ -162,6 +164,12 @@ class OrdenController extends Controller
                 // if (!str_contains($desc, "CAJA")) {
                 //     $to_kitchen = false;
                 // }
+            }
+        }
+        if ($mozo_id) {
+            $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $mozo_id)->first();
+            if ($mozo) {
+                $mozo_name = $mozo->name;
             }
         }
 
@@ -246,6 +254,17 @@ class OrdenController extends Controller
         }
         // 
 
+        $mozo_name = $request->mozo_name ?? null;
+        if (!$mozo_name && $ordenes && $ordenes->mozo_id) {
+            $mozo = DB::connection('tenant')
+                ->table('seller_mozo')
+                ->where('id', $ordenes->mozo_id)
+                ->first();
+            if ($mozo) {
+                $mozo_name = $mozo->name;
+            }
+        }
+
         try {
             $pdf = PDF::loadView('restaurant::ordens.ticket', compact(
                 'two_or_more',
@@ -262,7 +281,8 @@ class OrdenController extends Controller
                 'orden',
                 'show_unit_ticket',
                 'ordenes',
-                'orden_items'
+                'orden_items',
+                'mozo_name' // Asegurarnos que mozo_name está incluido aquí
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
@@ -287,6 +307,7 @@ class OrdenController extends Controller
             return $pdf->stream($timestamp . '_orden_.pdf');
         }
     }
+
     public function printTicket2(Request $request)
     {
 
@@ -297,6 +318,7 @@ class OrdenController extends Controller
         $orden = $request->id;
         $ordens_items_extern = explode("_", $request->ids);
         $area_id = $request->area_id;
+        $mozo_id = $request->mozo_id;
         $area_desc = null;
         //   $to_kitchen = true; en true no es pa cocina
         $to_kitchen = true;
@@ -308,6 +330,12 @@ class OrdenController extends Controller
                 if (str_contains($desc, "COCIN")) {
                     $to_kitchen = false;
                 }
+            }
+        }
+        if ($mozo_id) {
+            $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $mozo_id)->first();
+            if ($mozo) {
+                $mozo_name = $mozo->name;
             }
         }
 
@@ -395,7 +423,8 @@ class OrdenController extends Controller
                 'orden',
                 'show_unit_ticket',
                 'ordenes',
-                'orden_items'
+                'orden_items',
+                'mozo_name'
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
@@ -467,50 +496,84 @@ class OrdenController extends Controller
         return new OrdenCollection($ordens->orderBy('created_at', 'desc')->paginate(10));
     }
 
-    public function ordenskitchen(Request $request)
+    /* public function ordenskitchen(Request $request)
     {
+        // Get the latest open cash register from users in the 'CAJA' area
         $current_cash = Cash::whereNull('time_closed')
             ->whereHas('user', function ($query) {
                 $query->whereHas('area', function ($q) {
-                    $q->where('description', 'like', '%CAJ%');
+                    $q->where('description', 'like', '%CAJ%'); 
                 });
             })
             ->latest()
             ->first();
 
+        // If no open cash register exists, return empty collection
         if (!$current_cash) {
             $emptyCollection = new Collection();
             $paginated = new LengthAwarePaginator($emptyCollection, 0, 10);
             return new OrdenCollection($paginated);
         }
 
+        // Get all orders created since cash register opened
         $ordens = Orden::query()
-            ->where('created_at', '>=', $current_cash->date_opening)
-            ->where(function ($query) {
-                $query->whereNull('document_id')
-                    ->whereNull('sale_note_id');
+            ->where('created_at', '>=', $current_cash->date_opening);
+
+        // Filter by order ID if search value provided 
+        if ($request->value) {
+            $ordens->where('id', 'like', '%' . $request->value . '%');
+        }
+
+        $user = auth()->user();
+
+        // Only get orders that have items for current user's area
+        $ordens->whereHas('orden_items', function ($q) use ($user) {
+            $q->where('area_id', $user->area_id);
+        });
+
+        // Return paginated results ordered by newest first
+        return new OrdenCollection(
+            $ordens->orderBy('created_at', 'desc')
+                   ->paginate(10)
+        );
+    } */
+
+    public function ordenskitchen(Request $request)
+    {
+
+        $current_cash = Cash::whereNull('time_closed')
+            ->where('state', 1)
+            ->whereHas('user', function ($query) {
+            $query->whereHas('area', function ($q) {
+                $q->where('description', 'like', '%CAJ%');
             });
+            })
+            ->latest()
+            ->first();
+
+        if (!$current_cash) {
+            return new OrdenCollection(new LengthAwarePaginator([], 0, 10));
+        }
+
+        $ordens = Orden::query()
+            ->where('created_at', '>=', $current_cash->date_opening);
 
         if ($request->value) {
             $ordens->where('id', 'like', '%' . $request->value . '%');
         }
+
         $user = auth()->user();
-        /* $is_kitchen = $this->isArea('COCINA', $user->area_id); */
         $ordens->whereHas('orden_items', function ($q) use ($user) {
             $q->where('area_id', $user->area_id);
-        })->whereIn('status_orden_id', [1, 2, 3]);
-        /* if ($is_kitchen) {
-            $ordens->whereIn('status_orden_id', [1, 2, 3]);
-        } */
-        /* if ($is_kitchen) {  
-            $ordens->whereIn('status_orden_id', [1, 2, 3])
-                   ->whereHas('area', function ($q) {
-                       $q->where('description', 'like', '%COCINA%');
-                   });
-        } */
+        });
 
-        return new OrdenCollection($ordens->orderBy('created_at', 'desc')->paginate(10));
+        return new OrdenCollection(
+            $ordens->orderBy('created_at', 'desc')
+                ->paginate(10)
+        );
     }
+
+
 
     public function ordenslist()
     {
@@ -567,6 +630,12 @@ class OrdenController extends Controller
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $user = auth()->user();
         $printer = null;
+
+        $mozo_name = null;
+        if ($orden && $orden->mozo_id) {
+            $mozo_name = $this->getMozoName($orden->mozo_id);
+        }
+
         if (!$to_kitchen) {
             $area_id = $user->area_id;
             $area = Area::find($area_id);
@@ -598,16 +667,24 @@ class OrdenController extends Controller
             if (count($orden_items) != 0) {
                 $ids_string = join("_", $orden_items);
             }
+
+            // Obtener el nombre del mozo
+            $mozo_name = null;
+            if ($orden->mozo_id) {
+                $mozo_name = $this->getMozoName($orden->mozo_id);
+            }
+
+            // Agregar el nombre del mozo al objeto orden
+            $orden->mozo_name = $mozo_name;
+
             event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items, false, $precuenta));
             return [
                 'success' => true,
                 'data' => $orden,
-                'area_id' => $area_id,
-                'area' => $area,
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}"
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}"
             ];
         }
     }
@@ -619,6 +696,10 @@ class OrdenController extends Controller
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $user = auth()->user();
         $printer = null;
+        $mozo_name = null;
+        if ($orden && $orden->mozo_id) {
+            $mozo_name = $this->getMozoName($orden->mozo_id);
+        }
         if (!$to_kitchen) {
             $area_id = $user->area_id;
             $area = Area::find($area_id);
@@ -644,13 +725,23 @@ class OrdenController extends Controller
             if (count($orden_items) != 0) {
                 $ids_string = join("_", $orden_items);
             }
+
+            // Obtener el nombre del mozo
+            $mozo_name = null;
+            if ($orden->mozo_id) {
+                $mozo_name = $this->getMozoName($orden->mozo_id);
+            }
+
+            // Agregar el nombre del mozo al objeto orden
+            $orden->mozo_name = $mozo_name;
+
             return [
                 'success' => true,
                 'data' => $orden,
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}"
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}"
             ];
         }
     }
@@ -801,7 +892,8 @@ class OrdenController extends Controller
             if ($id != null) {
                 $orden = Orden::find($id);
                 $orden->ref = $ref;
-                $orden->mozo_id = $mozo_id;
+                $orden->mozo_id = $mozo_id; // Solo guardamos el ID
+
                 $table = Table::find($orden->table_id);
                 if ($table->is_room) {
                     $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
@@ -819,7 +911,7 @@ class OrdenController extends Controller
 
                 $orden->date = Carbon::today();
                 $orden->ref = $ref;
-                $orden->mozo_id = $mozo_id;
+                $orden->mozo_id = $mozo_id; // Solo guardamos el ID
                 $orden->to_carry = $request->to_carry;
                 $orden->commands_fisico = $request->commands_fisico;
 
@@ -1193,5 +1285,19 @@ class OrdenController extends Controller
         $areas = Area::all();
 
         return compact('areas');
+    }
+
+    // Método auxiliar para obtener el nombre del mozo
+    private function getMozoName($mozo_id)
+    {
+        if (!$mozo_id) return null;
+
+        $mozo = DB::connection('tenant')
+            ->table('seller_mozo')
+            ->select('name')
+            ->where('id', $mozo_id)
+            ->first();
+
+        return $mozo ? $mozo->name : null;
     }
 }

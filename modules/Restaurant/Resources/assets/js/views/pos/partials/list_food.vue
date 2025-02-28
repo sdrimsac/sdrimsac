@@ -878,7 +878,7 @@
                                         <div class="container">
                                             <span
                                                 class="badge rounded-pill bg-primary w-50 col-10 fw-bold"
-                                                style="text-align: center !important justify-content: center;"
+                                                style="text-align: center !important; justify-content: center;"
                                             >
                                                 Stock
                                                 <template
@@ -1178,6 +1178,14 @@ export default {
         if (this.foods.length > 0) {
             this.loading = false;
         }
+        Echo.channel("orden_list").listen(
+            `.order-list-${this.configuration.socket_channel}`,
+            e => {
+            let { order_item } = e;
+            this.listaOrden(order_item);
+            this.playSound("pedidos_listo.mp3");
+            }
+        );
     },
     /* watch: {
         cotizarConfirmado(newVal) {
@@ -1238,6 +1246,14 @@ export default {
         }
     },
     methods: {
+        listaOrden(order_item) {
+            this.$notify({
+            title: "Orden Lista",
+            message: `La orden ${order_item} esta lista para ser entregada`,
+            type: "success",
+            duration: 0
+            });
+        },
         selectUnitType(unit_type) {
             this.showDialogUnitType = false;
 

@@ -23,6 +23,7 @@ class OrdenReadyEvent implements ShouldBroadcast
     public function __construct($id)
     {
         $this->order_item = $id;
+        
     }
 
     /**

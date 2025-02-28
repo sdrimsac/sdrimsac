@@ -266,6 +266,17 @@
                 </tr>
 
                 @if ($is_restaurant)
+
+                    <tr>
+                        <td colspan="4" class="header_title1 text-center" valign="top">
+                            @if (isset($mozo_name) && $mozo_name)
+                                {{ $mozo_name }}
+                            @endif
+                        </td>
+                    </tr>
+                @endif
+
+                @if ($is_restaurant)
                     <tr>
                         <td colspan="4" class="header_title1 text-center" valign="top">
                             USUARIO: {{ join(', ', $users) }}
