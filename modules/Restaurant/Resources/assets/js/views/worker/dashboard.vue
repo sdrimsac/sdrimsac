@@ -413,6 +413,7 @@ export default {
             e => {
             let { order_item } = e;
             this.listaOrden(order_item);
+            /* console.log("🚀 ~ file: dashboard.vue ~ line 202 ~ Echo.channel ~ order_item edrrrrr", order_item) */
             this.playSound(`pedidos_listo.mp3`);
             }
         );
@@ -537,9 +538,10 @@ export default {
         listaOrden(order_item) {
             this.$notify({
             title: "Orden Lista",
-            message: `La orden ${order_item} esta lista para ser entregada`,
+            message: `La orden ${order_item.id} está lista para ser entregada. Pedido por: <span style="color: blue; text-transform: uppercase">${order_item.mozo_name}</span>`,
             type: "success",
-            duration: 0
+            duration: 0,
+            dangerouslyUseHTMLString: true
             });
         },
         async userorden() {

@@ -51,7 +51,7 @@
         </div>
         <div>
             <template v-if="configuration &&  configuration.seller_mozo">
-                <label>Seleccione Mozo</label>
+                <label>Seleccione Mozo <span class="text-danger">*</span></label>
                 <el-select
                     v-model="selectedMozo"
                     placeholder="Seleccione un mozo"
@@ -1114,11 +1114,10 @@ export default {
                 .addClass("active");
         },
         async sendOrden(pin = null) {
-            // Add validation for mozo selection
-            /* if (!this.selectedMozo) {
+            if (this.configuration.seller_mozo && !this.selectedMozo) {
                 this.$toast.error('Debe seleccionar un mozo');
                 return;
-            } */
+            }
 
             let form_submit = {
                 id: this.ordenSelectedId,

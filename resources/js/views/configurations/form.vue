@@ -4412,6 +4412,44 @@
                                                             </div>
                                                             <div
                                                                 class="col-md-2 mt-4"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt tab-icon"
+                                                                        ></i>
+                                                                        Ocultar Historia Reporte de Caja
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="
+                                                                            form.kitchen_mozo
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                        @change="
+                                                                            submit(
+                                                                                'Ocultar Reporte de caja mientras la caja esta abierta ',
+                                                                                form.kitchen_mozo,
+                                                                                'kitchen_mozo',
+                                                                                'fileAltIcon'
+                                                                            )
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
+
+                                                            <div
+                                                                class="col-md-2 mt-4"
                                                                 v-if="
                                                                     form.consolidated_quotations
                                                                 "
@@ -10609,44 +10647,8 @@
                                                                 <i
                                                                     class="fas fa-file-alt tab-icon"
                                                                 ></i>
-                                                                Almacen de
-                                                                cocina pedido
-                                                                para cada
-                                                                almacen
-                                                                independiente
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.kitchen_mozo
-                                                                "
-                                                                active-text="Si"
-                                                                inactive-text="No"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    submit(
-                                                                        'para las cocinas separar los pedidos por alamcenes ',
-                                                                        form.kitchen_mozo,
-                                                                        'kitchen_mozo',
-                                                                        'fileAltIcon'
-                                                                    )
-                                                                "
-                                                            ></el-switch>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    class="fas fa-file-alt tab-icon"
-                                                                ></i>
-                                                                Seleccionar Mozo para Pedidos
+                                                                Seleccionar Mozo
+                                                                para Pedidos
                                                             </label>
                                                             <el-switch
                                                                 v-model="

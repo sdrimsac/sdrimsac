@@ -190,13 +190,9 @@
                                                     </label>
 
                                                     <el-input
-                                                        @input="
-                                                            value =>
-                                                                (form.description = value.toUpperCase())
-                                                        "
-                                                        v-model="
-                                                            form.description
-                                                        "
+                                                        v-model="form.description"
+                                                        @input="handleDescriptionInput" 
+                                                        ref="descriptionInput"
                                                         dusk="description"
                                                     >
                                                         <i
@@ -3966,7 +3962,20 @@ export default {
         // Calcular stock total
         calculateTotalStock() {
             this.form.stock = this.totalStock;
-        }
+        },
+        handleDescriptionInput(value) {
+            // Guardar la posición actual del cursor
+            const input = this.$refs.descriptionInput.$el.querySelector('input');
+            const cursorPosition = input.selectionStart;
+            
+            // Convertir a mayúsculas
+            this.form.description = value.toUpperCase();
+            
+            // Restaurar la posición del cursor en el siguiente tick
+            this.$nextTick(() => {
+                input.setSelectionRange(cursorPosition, cursorPosition);
+            });
+        },
     },
     watch: {
         "form_category.add": {

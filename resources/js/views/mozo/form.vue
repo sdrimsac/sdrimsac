@@ -231,13 +231,13 @@ export default {
                     );
                     if (response.data.success) {
                         const data = response.data.data;
-                        const fullName = `${data.apellido_paterno} ${data.apellido_materno} ${data.nombres}`;
-                        // Solo agregar el prefijo si no existe
-                        if (!fullName.includes('MOZO -')) {
-                            this.form.name = `MOZO - ${fullName}`;
-                        } else {
-                            this.form.name = fullName;
-                        }
+                        // Obtener solo el primer apellido y primer nombre
+                        const firstLastName = data.apellido_paterno;
+                        const firstName = data.nombres.split(' ')[0];
+                        const shortName = `${firstName} ${firstLastName}`;
+                        
+                        // Agregar el prefijo MOZO
+                        this.form.name = `MOZO - ${shortName}`;
                     }
                 } else if (documentTypeId === 4) {
                     response = await this.$http.get(
@@ -260,10 +260,10 @@ export default {
         open() {
             console.log(this.recordId);
             if (this.recordId) {
-                this.title = "Editar vendedor";
+                this.title = "Editar Mozo";
                 this.getRecord(this.recordId);
             } else {
-                this.title = "Crear vendedor";
+                this.title = "Crear Mozo";
                 this.initForm();
             }
         },
@@ -289,8 +289,7 @@ export default {
         async submit() {
             this.loading_submit = true;
             this.errors = {};
-            // Convert non-numeric fields to lowercase before saving
-            this.form.name = this.form.name.toLowerCase();
+            this.form.name = this.form.name.toUpperCase();
             const response = await this.$http.post(
                 `/${this.resource}`,
                 this.form

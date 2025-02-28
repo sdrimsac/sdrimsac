@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <el-dialog
-                title="Cierra de Caja - Contador de dineraaao"
+                title="Cierra de Caja - Contador de dinero"
                 :visible.sync="showDialogClose"
                 @open="dateclosed"
                 :before-close="closeDialog"
@@ -727,6 +727,10 @@ export default {
                 );
 
                 if (response.data.success) {
+                    this.$eventHub.$emit('cashStatusChanged', {
+                        status: 'closed',
+                        cashId: null
+                    });
                     this.$eventHub.$emit("reloadData");
                     this.open_cash = true;
                     this.$toast.success(response.data.message);

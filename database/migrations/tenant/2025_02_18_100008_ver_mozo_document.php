@@ -29,9 +29,8 @@ class VerMozoDocument extends Migration
      */
     public function down()
     {
-        Schema::table('seller-mozo', function (Blueprint $table) {
+        Schema::table('seller_mozo', function (Blueprint $table) {
             $table->dropColumn('document_type_id');
         });
     }
 }
-

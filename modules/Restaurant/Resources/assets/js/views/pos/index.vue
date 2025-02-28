@@ -1963,7 +1963,7 @@ const options = {
 export default {
     props: [
         "limit_month_amount",
-        "month_amount",
+        "month_amount", 
         "pending_order",
         "cash_id",
         "worker",
@@ -1976,6 +1976,20 @@ export default {
         "area",
         "areaId"
     ],
+
+    computed: {
+        canShowHistory() {
+            return !this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId);
+        }
+    },
+
+    watch: {
+        cashId: {
+            handler() {
+                this.setMenuOptions();
+            }
+        }
+    },
     components: {
         Warranty,
         MonthSales,
@@ -2199,6 +2213,8 @@ export default {
     },
     beforeDestroy() {
         clearInterval(this.timer);
+        // Limpiar listener al destruir componente
+        this.$eventHub.$off('cashStatusChanged');
     },
 
     async created() {
@@ -2303,6 +2319,9 @@ export default {
     },
     sockets: {},
     computed: {
+        canShowHistory() {
+            return !this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId);
+        },
         limitAmount() {
             if (this.limit_month_amount == 0) {
                 return null;
@@ -2353,6 +2372,15 @@ export default {
         }
     },
     methods: {
+        async updateCashId(id) {
+            // Cuando se abre la caja
+            this.$eventHub.$emit('cashStatusChanged', {
+                status: 'open',
+                cashId: id
+            });
+            this.$emit("update:cash_id", id);
+        },
+
         async printFileWithRawBT(fileUrl) {
             try {
                 const response = await fetch(fileUrl);
@@ -2766,7 +2794,7 @@ export default {
                     id: 7,
                     title: ["Historial", ""],
                     icon: "fas fa-history ",
-                    visible: true && !this.isSeller
+                    visible: !this.isSeller && (!this.configuration.kitchen_mozo || !this.cashId)
                 },
 
                 {
