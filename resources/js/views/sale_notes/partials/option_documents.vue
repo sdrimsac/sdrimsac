@@ -330,6 +330,9 @@ export default {
     created() {
         this.initForm();
         this.initDocument();
+        /* this.$eventHub.$on("reloadDataPersons", customer_id => {
+            this.reloadDataCustomers(customer_id);
+        }); */
     },
     methods: {
         initForm() {
@@ -380,6 +383,7 @@ export default {
                     this.searchRemoteCustomers(response.data.customers.name);
                     //this.customers = response.data.customers
                     this.form.customer_id = customer_id;
+                    
                 });
         },
 
@@ -409,9 +413,28 @@ export default {
             // this.filterCustomers()
         },
         addRowCliente(data) {
-            //console.log(data)
             this.document.customer_id = data.id;
-            this.searchRemoteCustomers(data.number);
+            
+            // Add the new customer to the customers array if it doesn't exist
+            const customerExists = this.customers.some(customer => customer.id === data.id);
+            if (!customerExists) {
+                this.customers.push(data);
+                // Also add to all_customers for filtering purposes
+                this.all_customers.push(data);
+            }
+            
+            // Update the select with the new customer's data
+            this.$nextTick(() => {
+                if (this.$refs.cliente) {
+                    this.$refs.cliente.selected = {
+                        id: data.id,
+                        name: data.name
+                    };
+                }
+            });
+
+            // Optional: You can still call searchRemoteCustomers if needed
+            // this.searchRemoteCustomers(data.number);
         },
         filterCustomers() {
             if (

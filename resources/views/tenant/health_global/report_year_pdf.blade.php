@@ -231,7 +231,7 @@
                     <p><b>Empresa: </b>{{ $company->name }}</p>
                 </td>
                 <td align="center">
-                    <p><b>Fecha: </b>{{ date('Y-m-d') }}</p>
+                    <p><b>Fecha: </b>{{ $month }}</p>
                 </td>
             </tr>
             <tr>

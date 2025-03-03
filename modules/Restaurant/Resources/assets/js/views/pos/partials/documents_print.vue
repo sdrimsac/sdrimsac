@@ -6,7 +6,7 @@
     @open="open"
     width="80%"
     v-loading="loading"
-    title="Comprobantes"
+    title="Comprobantes Boletas y Facturas"
   >
     <div class>
       <div class>

@@ -200,7 +200,7 @@
                         <p><strong>Ruc: </strong>{{ $company->number }}</p>
                     </td>
                     <td class="text-end" colspan="5" style="border: 2px solid black; background-color: #DCDCDC; font-size: 13px;">
-                        <p><strong>Fecha: </strong>{{ date('Y-m-d') }}</p>
+                        <p><strong>Reporte Fecha: </strong>{{ $month }}</p>
                     </td>
                 </tr>
             </table>
