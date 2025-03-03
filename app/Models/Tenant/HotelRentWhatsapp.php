@@ -98,7 +98,7 @@ class HotelRentWhatsapp extends ModelTenant
                 'content' => $data['content'],
                 'days' => $data['days'],
                 'send_time' => $data['time'],
-                'active' => $data['active'] ?? true
+                'active' => $data['active'] ? 1 : 0
             ]
         );
     }
