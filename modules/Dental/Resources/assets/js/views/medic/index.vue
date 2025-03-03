@@ -113,6 +113,16 @@
                                                 Eliminar
                                             </a>
                                         </template>
+                                        <a 
+                                        type="button"
+                                        class="dropdown-item text-success" 
+                                        @click.prevent="
+                                                    clickDetails(row.id)
+                                                "
+                                        >
+                                            <i class="fa fa-eye"></i> Detalles
+                                            
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -129,12 +139,17 @@
                 :provinces="provinces"
                 :districts="districts"
             ></Medic-form>
+            <Medic-details
+                :showDialogMedicDetails.sync="showDialogMedicDetails"
+                :recordId="recordId"
+            ></Medic-details>
         </div>
     </div>
 </template>
 
 <script>
 import MedicForm from "./form.vue";
+import MedicDetails from "./medic_details.vue";
 /* import { deletable } from "../../mixins/deletable"; */
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 
@@ -142,12 +157,14 @@ export default {
     mixins: [deletable],
     props: ["typeUser"],
     components: {
-        MedicForm
+        MedicForm,
+        MedicDetails,
     },
     data() {
         return {
             title: "",
             showDialog: false,
+            showDialogMedicDetails: false,
             resource: "dental/medic",
             recordId: null,
             records: [],
@@ -188,6 +205,10 @@ export default {
         clickCreate(recordId = null) {
             this.recordId = recordId;
             this.showDialog = true;
+        },
+        clickDetails(recordId = null) {
+            this.recordId = recordId;
+            this.showDialogMedicDetails = true;
         },
         clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>

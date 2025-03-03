@@ -11,6 +11,7 @@ use App\Models\Tenant\Person;
 use Exception;
 use Modules\Dental\Http\Resources\QuotyResource;
 use Modules\Dental\Http\Requests\QuotyRequest;
+use Modules\Dental\Models\Medic;
 use Modules\Dental\Models\Quoty;
 use Modules\Dental\Models\Specialty;
 
@@ -45,13 +46,10 @@ class QuotyController extends Controller
     }
     public function tables()
     {
-
-        $person = Person::where('type', 'medico')->get();
+        $medics = Medic::all();
         $specialities = Specialty::all();
-        return [
-            'persons' => $person,
-            'specialities' => $specialities
-        ];
+
+        return compact('medics', 'specialities');
     }
 
     public function store(QuotyRequest $request)

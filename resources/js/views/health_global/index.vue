@@ -9,40 +9,34 @@
                     <div class="row">
                         <template>
                             <div class="col-md-3">
-                                <label class="control-label w-100"
-                                    >Fecha de apertura</label
-                                >
+                                <label class="control-label w-100">
+                                    Fecha de apertura
+                                    <small class="text-muted d-block">(Mes y Año)</small>
+                                </label>
                                 <el-date-picker
                                     class="w-100"
                                     v-model="form.month_start"
                                     type="month"
                                     value-format="yyyy-MM"
                                     clearable
+                                    @change="handleMonthChange"
+                                    placeholder="Seleccione mes y año"
                                 ></el-date-picker>
                             </div>
-                            <!-- <div class="col-md-3">
-                                <label class="control-label w-100">AÑO</label>
-                                <el-date-picker
-                                    class="w-100"
-                                    v-model="form.year_start"
-                                    type="year"
-                                    value-format="yyyy"
-                                    clearable
-                                ></el-date-picker>
-                            </div> -->
                             <div class="col-lg-2 col-md-2 pb-2">
                                 <div class="form-group">
-                                    <label class="control-label w-100"
-                                        >Año</label
-                                    >
-
+                                    <label class="control-label w-100">
+                                        Año
+                                        <small class="text-muted d-block">(Solo año)</small>
+                                    </label>
                                     <el-date-picker
                                         v-model="form.year_start"
                                         type="year"
                                         style="width: 100%;"
-                                        placeholder="Buscar"
+                                        placeholder="Seleccione año"
                                         value-format="yyyy"
                                         clearable 
+                                        @change="handleYearChange"
                                     >
                                     </el-date-picker>
                                 </div>
@@ -104,7 +98,14 @@ export default {
             loading_submit: false,
             titleDialog: null,
             resource: "reports/boxes/global",
-            form: {},
+            form: {
+                id: null,
+                user_id: null,
+                type_box: null,
+                period: "month",
+                month_start: null,
+                year_start: null
+            },
             array_subcategorias: [],
             array_categorias: [],
             array_group: [],
@@ -180,8 +181,8 @@ export default {
                 type_box: null,
                 period: "month",
 
-                month_start: moment().format("YYYY-MM"),
-                year_start: moment().format("YYYY")
+                month_start: null,
+                year_start: null
             };
         },
         date_start() {
@@ -295,6 +296,16 @@ export default {
 
             let link = `${ruta}`;
             window.open(`${link}`, "_blank");
+        },
+        handleMonthChange(value) {
+            if (value) {
+                this.form.year_start = null;
+            }
+        },
+        handleYearChange(value) {
+            if (value) {
+                this.form.month_start = null;
+            }
         },
         close() {
             this.$emit("update:showDialog_report", false);

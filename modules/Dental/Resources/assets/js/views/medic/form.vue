@@ -11,27 +11,6 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <!-- <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.number }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-align-left"></i> DNI
-                            </label>
-                            <el-input v-model="form.number" maxLength="8" show-limit>
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.number"
-                                v-text="errors.number[0]"
-                            ></small>
-                        </div>
-                    </div> -->
                     <div class="col-md-4">
                         <div
                             class="form-group"
@@ -42,18 +21,17 @@
                             </label>
                             <el-input
                                 v-model="form.number"
-                                :maxlength="8"
-                                id="dni"
-                                placeholder="Ingrese el DNI"
-                                :class="{ 'is-invalid': errors.number }"
-                                @input="validateNumbers('number')"
+                                placeholder="Documento"
+                                :disabled="loading_submit || loading_search"
+                                minlength="8"
+                                maxlength="8"
+                                show-word-limit
                             >
                                 <el-button
-                                    slot="append"
-                                    :loading="loading_search"
+                                    @click="searchDocument"
+                                    slot="prepend"
                                     icon="el-icon-search"
-                                    @click.prevent="searchMedic"
-                                    type="primary"
+                                    :loading="loading_search"
                                 ></el-button>
                             </el-input>
                             <small
@@ -182,48 +160,31 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-4 col-lg-4 col-xl-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.district_id }"
                         >
                             <label class="control-label">
-                                <i class="fas fa-align-left"></i> DISTRITO
+                                <i class="fas fa-map-marker-alt"></i> Distrito
                             </label>
-                            <el-select v-model="form.district_id" filterable>
+                            <el-select
+                                v-model="form.district_id"
+                                filterable
+                                popper-class="el-select-districts"
+                                dusk="district_id"
+                            >
                                 <el-option
-                                    v-for="district in districts"
-                                    :key="district.id"
-                                    :label="district.description"
-                                    :value="district.id"
-                                >
-                                </el-option>
+                                    v-for="option in districts"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
                             </el-select>
                             <small
-                                class="form-control-feedback"
+                                class="text-danger"
                                 v-if="errors.district_id"
                                 v-text="errors.district_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.address }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-align-left"></i> DIRECION
-                            </label>
-                            <el-input v-model="form.address">
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.address"
-                                v-text="errors.address[0]"
                             ></small>
                         </div>
                     </div>
@@ -249,6 +210,27 @@
                                 class="form-control-feedback"
                                 v-if="errors.telephone"
                                 v-text="errors.telephone[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.address }"
+                        >
+                            <label class="control-label">
+                                <i class="fas fa-align-left"></i> DIRECION
+                            </label>
+                            <el-input v-model="form.address">
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.address"
+                                v-text="errors.address[0]"
                             ></small>
                         </div>
                     </div>
@@ -318,7 +300,7 @@ export default {
             resource: "dental/medic",
             errors: {},
             form: {},
-            identity_document_type_id: "1",
+            identity_document_type_id: "1"
         };
     },
     created() {
@@ -349,8 +331,7 @@ export default {
                 district_id: null,
                 address: null,
                 telephone: null,
-                email: null,
-                
+                email: null
             };
         },
         create() {
@@ -387,8 +368,73 @@ export default {
                     this.loading_submit = false;
                 });
         },
-        searchMedic() {
-            this.searchServiceNumberByType();
+        async searchDocument() {
+            if (!this.form.number) {
+                this.$message({
+                    message: 'Ingrese el número de documento',
+                    type: 'warning'
+                });
+                return;
+            }
+
+            this.loading_search = true;
+            try {
+                const response = await this.$http.get(
+                    `/service/dni/${this.form.number}`
+                );
+                
+                if (response.data.success) {
+                    const data = response.data.data;
+                    
+                    // Asignar nombre completo
+                    this.form.name = data.nombre_completo;
+
+                    // Buscar y asignar departamento
+                    const departmentMatch = this.departments.find(
+                        dep => dep.description.toUpperCase() === data.departamento
+                    );
+                    if (departmentMatch) {
+                        this.form.department_id = departmentMatch.id;
+                    }
+
+                    // Buscar y asignar provincia
+                    const provinceMatch = this.provinces.find(
+                        prov => prov.description.toUpperCase() === data.provincia
+                    );
+                    if (provinceMatch) {
+                        this.form.province_id = provinceMatch.id;
+                    }
+
+                    // Buscar y asignar distrito
+                    const districtMatch = this.districts.find(
+                        dist => dist.description.toUpperCase() === data.distrito
+                    );
+                    if (districtMatch) {
+                        this.form.district_id = districtMatch.id;
+                    }
+
+                    // Asignar dirección
+                    this.form.address = data.direccion_completa;
+
+                    this.$message({
+                        message: 'Datos encontrados y completados',
+                        type: 'success'
+                    });
+                } else {
+                    this.$message({
+                        message: response.data.message || 'No se encontraron datos',
+                        type: 'warning'
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                this.$message({
+                    message: 'Ocurrió un error al consultar el DNI',
+                    type: 'error'
+                });
+            } finally {
+                this.loading_search = false;
+            }
         },
         close() {
             this.$emit("update:showDialog", false);

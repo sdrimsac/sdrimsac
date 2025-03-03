@@ -86,7 +86,7 @@ export default {
       };
     },
     create() {
-      this.titleDialog = this.recordId ? "Editar Vehiculo" : "Nuevo Vehiculo";
+      this.titleDialog = this.recordId ? "Editar Especialdiad" : "Nuevo especialidad";
       if (this.recordId) {
         this.$http
           .get(`/${this.resource}/record/${this.recordId}`)

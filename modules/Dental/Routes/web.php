@@ -11,6 +11,7 @@ use Modules\Dental\Http\Controllers\DiagnosisController;
 use Modules\Dental\Http\Controllers\Disease_TypesController;
 use Modules\Dental\Http\Controllers\DiseaseController;
 use Modules\Dental\Http\Controllers\EvolutionController;
+use Modules\Dental\Http\Controllers\Medic_DetailsController;
 use Modules\Dental\Http\Controllers\MedicController;
 use Modules\Dental\Http\Controllers\ObservationController;
 use Modules\Dental\Http\Controllers\OdontogramController;
@@ -60,6 +61,13 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('tariffs/{id}', [TariffController::class, 'destroy']);
 
         Route::get('searchCustomers', [OdontogramController::class, 'searchCustomers']);
+
+        /* Route::get('medic_details', [Medic_DetailsController::class, 'index'])->name('tenant.dental.medic'); */
+        Route::get('medic_details/record/{id}', [Medic_DetailsController::class, 'record']);
+        Route::get('medic_details/records', [Medic_DetailsController::class, 'records']);
+        Route::get('medic_details/tables', [Medic_DetailsController::class, 'tables']);
+        Route::post('medic_details', [Medic_DetailsController::class, 'store']);
+        Route::delete('medic_details/{id}', [Medic_DetailsController::class, 'destroy']);
 
 
         Route::prefix('worker')->group(function () {
@@ -197,6 +205,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('quotes/patients', [QuotyController::class, 'patients']);
             Route::get('quotes/tables', [QuotyController::class, 'tables']);
             Route::delete('quotes/{id}', [QuotyController::class, 'destroy']);
+
+
 
             Route::post('diagnosis_types', [Diagnosi_TypeController::class, 'store']);
             Route::get('diagnosis_types', [Diagnosi_TypeController::class, 'index'])->name('diagnosis_types.index');
