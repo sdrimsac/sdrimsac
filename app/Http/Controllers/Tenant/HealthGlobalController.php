@@ -181,6 +181,8 @@ class HealthGlobalController
                         ->whereYear('date_of_issue', $year);
                 }
             })->get();
+            $fv_total = 0;
+
             foreach ($fv_notes as $note) {
                 $series = $note->document->series;
                 $number = $note->document->number;
@@ -188,6 +190,7 @@ class HealthGlobalController
                 if (!in_array($document_full_number, $notes_ft)) {
                     $notes_ft[] = $document_full_number;
                 }
+                $fv_total += $note->document->total;
             }
             $bv_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id);
             if ($month == null) {
@@ -218,7 +221,7 @@ class HealthGlobalController
                         ->whereYear('date_of_issue', $year);
                 }
             })->get();
-
+            $bc_total = 0;
             foreach ($bv_notes as $note) {
                 $series = $note->document->series;
                 $number = $note->document->number;
@@ -226,7 +229,9 @@ class HealthGlobalController
                 if (!in_array($document_full_number, $notes_bv)) {
                     $notes_bv[] = $document_full_number;
                 }
+                $bc_total += $note->document->total;
             }
+
 
             $ft_total = Document::where('establishment_id', $establishment->id)
                 ->where('state_type_id', '05')
@@ -239,7 +244,8 @@ class HealthGlobalController
             }
 
             $ft_total = $ft_total->sum('total');
-                
+            
+            $ft_total = $ft_total - $fv_total;
             $bv_anulate = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
                 ->where('document_type_id', '03')
                 ->where('state_type_id', '11');
@@ -269,6 +275,7 @@ class HealthGlobalController
                     ->whereYear('date_of_issue', $year);
             }
             $bv_total = $bv_total->sum('total');
+            $bv_total = $bv_total - $bc_total;
 
             $first_ft = Document::select(['total', 'series', 'number', 'document_type_id'])
                 ->where('establishment_id', $establishment->id)
