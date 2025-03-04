@@ -38,12 +38,17 @@ class KardexServiceProvider extends ServiceProvider
             if(isset($document->has_related_sale_note) && $document->has_related_sale_note == 1) return;
    
             $quantity = $document_item->quantity;
-
             if (isset($document_item->item->has_unit_type)) {
                 $unit_type = ItemUnitType::where('item_id', $document_item->item_id)
                     ->where('description', $document_item->item->has_unit_type)->first();
                 if ($unit_type) {
 
+                    $quantity = $quantity * $unit_type->quantity_unit;
+                }
+            }else if(isset($document_item->item->from_unit_type_id)){
+                $unit_type = ItemUnitType::where('item_id', $document_item->item_id)
+                    ->where('id', $document_item->item->from_unit_type_id)->first();
+                if ($unit_type) {
                     $quantity = $quantity * $unit_type->quantity_unit;
                 }
             }

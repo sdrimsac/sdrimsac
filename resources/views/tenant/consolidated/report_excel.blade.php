@@ -105,29 +105,32 @@
                                         );
                                         $unitTypeDescription = $unitType ? $unitType->description : '-';
                                     }
+                                    $no_in_document = $item->no_found_consolidated_documents;
                                 @endphp
                                 <tr>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif"
+
+                                    >
                                         {{ $idx_g }}
                                     </td>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif">
                                         {{ $item->item->internal_id }}
                                     </td>
 
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif">
                                         {{ $item->item->description }}
                                     </td>
 
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif">
                                         {{ $item->quantity }}
                                     </td>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif">
                                         {{ $item->unit_price }}
                                     </td>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif">
                                         {{ $item->total }}
                                     </td>
-                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                                    <td style="text-align: left; padding: 8px; border: 1px solid #ddd; @if($no_in_document) color: red; @endif">
                                         {{ $unitTypeDescription }}
                                     </td>
                                     <td valign="middle" style="text-align: left; padding: 8px; border: 1px solid #ddd;">

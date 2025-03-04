@@ -63,7 +63,6 @@ class InventoryKardexServiceProvider extends ServiceProvider
             if(isset($document->has_related_sale_note) && $document->has_related_sale_note == 1) return;
             $warehouse = ($document_item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($document_item->warehouse_id)->establishment_id) : $this->findWarehouse();
             $presentationQuantity = (!empty($document_item->item->presentation)) ? $document_item->item->presentation->quantity_unit : 1;
-
             if (!$document_item->item->is_set) {
                 $quantity = $document_item->quantity;
 
@@ -72,6 +71,12 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         ->where('description', $document_item->item->has_unit_type)->first();
                     if ($unit_type) {
 
+                        $quantity = $quantity * $unit_type->quantity_unit;
+                    }
+                }else if(isset($document_item->item->from_unit_type_id)){
+                    $unit_type = ItemUnitType::where('item_id', $document_item->item_id)
+                        ->where('id', $document_item->item->from_unit_type_id)->first();
+                    if ($unit_type) {
                         $quantity = $quantity * $unit_type->quantity_unit;
                     }
                 }

@@ -5,7 +5,6 @@ namespace App\Models\Tenant;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\PriceType;
 use App\Models\Tenant\Catalogs\SystemIscType;
-use Illuminate\Database\Eloquent\Model;
 
 class QuotationItem extends ModelTenant
 {
@@ -13,6 +12,7 @@ class QuotationItem extends ModelTenant
     public $timestamps = false;
 
     protected $fillable = [
+        'no_found_consolidated_documents',
         'quotation_id',
         'item_id',
         'item',
@@ -44,6 +44,9 @@ class QuotationItem extends ModelTenant
         'name_product_pdf'
     ];
 
+    protected $casts = [
+        'no_found_consolidated_documents' => 'boolean',
+    ];
 
     public function quotation()
     {

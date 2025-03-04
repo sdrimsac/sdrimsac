@@ -50,6 +50,7 @@ use App\Models\Tenant\Consolidated;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\QuotationItem;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
@@ -248,7 +249,7 @@ class QuotationController extends Controller
             ->first();
         return $series->id;
     }
-    function itemsWithStock($items, $establishment_id)
+    function itemsWithStock($items, $establishment_id,&$stocks)
     {
         $items_with_stock = [];
         foreach ($items as $item) {
@@ -257,23 +258,39 @@ class QuotationController extends Controller
             $from_unit_type_id = $item->item->from_unit_type_id;
             $item_unit_types = $item->item->item_unit_types;
             if (($from_unit_type_id_desc || $from_unit_type_id) && $item_unit_types) {
-                if ($from_unit_type_id_desc) {
-                    $quantity = $quantity * collect($item_unit_types)->where('description', $from_unit_type_id_desc)->first()->quantity_unit;
-                }
                 if ($from_unit_type_id) {
-                    $quantity = $quantity * collect($item_unit_types)->where('id', $from_unit_type_id)->first()->quantity_unit;
+                
+                    // $quantity = $quantity * collect($item_unit_types)->where('id', $from_unit_type_id)->first()->quantity_unit;
+                    $item_unit_type = ItemUnitType::find($from_unit_type_id);
+                    $quantity = $quantity * $item_unit_type->quantity_unit;
+
+                }else if ($from_unit_type_id_desc) {
+                    // $quantity = $quantity * collect($item_unit_types)->where('description', $from_unit_type_id_desc)->first()->quantity_unit;
+                    $item_unit_type = ItemUnitType::where('description', $from_unit_type_id_desc)->first();
+                    $quantity = $quantity * $item_unit_type->quantity_unit;
                 }
+                
+                
             }
+            if(!isset($stocks[$item->item_id])){
+                $stocks[$item->item_id] = 0;
+            }
+            $stocks[$item->item_id] += $quantity;
+
+            $real_quantity = $stocks[$item->item_id];
+        
             $item_id = $item->item_id;
             $item_warehouse = ItemWarehouse::select('stock')->where('item_id', $item_id)->where('warehouse_id', $establishment_id)->first();
-            if ($item_warehouse && $item_warehouse->stock >= $quantity) {
+            if ($item_warehouse && $item_warehouse->stock >= $real_quantity) {
                 $items_with_stock[] = $item;
+            }else{
+                QuotationItem::where('id', $item->id)->update(['no_found_consolidated_documents' => true]);
             }
         }
         return $items_with_stock;
     }
 
-    function getDocumentArray($quotation_id)
+    function getDocumentArray($quotation_id,&$stocks)
     {
         $q = Quotation::find($quotation_id);
         $document = [];
@@ -287,6 +304,10 @@ class QuotationController extends Controller
         $customer_id = $person->id;
         if ($person->varios) {
             $customer_id = Person::getIdClientesVariosOrCreate();
+        }
+        $items =  $this->itemsWithStock($q->items, $q->establishment_id,$stocks);
+        if(count($items) == 0){
+            return null;
         }
         $document['document_type_id'] = $document_type_id;
         $document['series_id'] = $this->getSeriesId($document_type_id);
@@ -319,7 +340,7 @@ class QuotationController extends Controller
         $document['seller_id'] = $q->seller_id;
         $document['operation_type_id'] = "0101";
         $document['date_of_due'] = Carbon::now()->format('Y-m-d');
-        $document['items'] = $this->itemsWithStock($q->items, $q->establishment_id);
+        $document['items'] = $items;
         $document['charges'] = $q->charges;
         $document['discounts'] = $q->discounts;
         $document['attributes'] = [];
@@ -616,7 +637,7 @@ class QuotationController extends Controller
         $documents = [];
         $to_print = [];
         $has_print = $this->hasDocumentOrSaleNote($quotation_ids->first());
-
+        $stocks = [];
         foreach ($quotation_ids as $quotation_id) {
             if ($has_print) {
                 $document = Document::where('quotation_id', $quotation_id)->first();
@@ -628,8 +649,10 @@ class QuotationController extends Controller
                     event(new PrintEvent($document->id, $documen_type_id, true, 0, [], true));
                 }
             } else {
-                $document = $this->getDocumentArray($quotation_id);
-                $documents[] = $document;
+                $document = $this->getDocumentArray($quotation_id,$stocks);
+                if($document){
+                    $documents[] = $document;
+                }
             }
         }
         return [
@@ -847,7 +870,17 @@ class QuotationController extends Controller
             $firstItem = $items->first();
             $itemData = $firstItem->item;
             $total = $items->sum('total');
-            $totalQuantity = $items->sum('quantity');
+            $totalQuantity = $items->sum(function($qty_item){
+                $quantity = $qty_item->quantity;
+                $unit_type = isset($qty_item->item->from_unit_type_id) ? ItemUnitType::find($qty_item->item->from_unit_type_id) : null;
+                
+
+                if($unit_type){
+                    $quantity = $quantity * $unit_type->quantity_unit;
+                }
+
+                return $quantity;
+            });
             $totalWeight = $totalQuantity * isset($itemData->weight) ? $itemData->weight : 0;
 
             $itemDescription = $itemData->description;

@@ -237,6 +237,7 @@ class DocumentInput
     private static function items($inputs)
     {
         $establishment_id = Functions::valueKeyInArray($inputs, 'establishment_id');
+        $quotation_id = Functions::valueKeyInArray($inputs, 'quotation_id', null);
         $warehouse_id_default = null;
         if ($establishment_id) {
             $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
@@ -266,6 +267,10 @@ class DocumentInput
                 $desc = Functions::valueKeyInArray($row, 'description', null);
                 $item = Item::find($row['item_id']);
                 $type_id = Functions::valueKeyInArray($row, "from_unit_type_id", null);
+                $from_unit_type_id = null;
+                if($quotation_id){
+                    $from_unit_type_id = Functions::valueKeyInArray($row['item'], "from_unit_type_id", null);
+                }
                 $type_desc = null;
                 if ($type_id) {
                     $unit_type = ItemUnitType::find($type_id);
@@ -288,6 +293,7 @@ class DocumentInput
                     'toWarehouse' => Functions::valueKeyInArray($row, 'toWarehouse', 0),
                     'item_id' => $item->id,
                     'item' => [
+                        'from_unit_type_id' => $from_unit_type_id,
                         'college' =>   Functions::valueKeyInArray($inputs, 'college', false),
                         'description_internet' => (isset($row['item']['descriptionInternet'])) ? $row['item']['descriptionInternet'] : null,
                         'has_unit_type'  => $type_desc,
