@@ -129,6 +129,7 @@ use App\Models\Tenant\HotelRentPayment;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Services\SunatService;
 use App\Traits\CheckTotalTrait;
+use GuzzleHttp\Psr7\UploadedFile;
 
 class DocumentController extends Controller
 {
@@ -252,6 +253,7 @@ class DocumentController extends Controller
             Storage::delete('public/txt/' . $namefile);
 
             return $result;
+            
         } catch (\Exception $e) {
             // Asegurar que se elimine el archivo temporal si existe
             if (isset($namefile)) {
@@ -373,11 +375,8 @@ class DocumentController extends Controller
         $filePath = storage_path('app/temp_data.txt');
         Storage::put('temp_data.txt', $txtContent);
 
-        // Crear una cadena de cookies en el formato adecuado
-        // $cookieString = collect($cookies)->map(fn($value, $name) => "$name=$value")->implode('; ');
         $cookieString = $cookies;
-        // Enviar la solicitud HTTP con el archivo adjunto
-        /* dump($cookieString); */
+        
         $response = Http::withoutVerifying()->withHeaders([
             'Cookie' => $cookieString
         ])->attach(
@@ -386,11 +385,7 @@ class DocumentController extends Controller
             'data.txt'
         )->post($url);
 
-        // Eliminar el archivo temporal después del envío
         Storage::delete('temp_data.txt');
-
-        // Retornar la respuesta
-        /* dump($response->status()); */
 
         return $response->json();
     }
@@ -409,10 +404,6 @@ class DocumentController extends Controller
     private function getCoockiesTxt($cookies)
     {
         $url = "https://e-menu.sunat.gob.pe/cl-ti-itmenu/MenuInternet.htm?action=execute&code=10.5.3.1.1&s=ww1";
-
-
-
-
 
         // return ['success' => true, 'message' => 'Se consultó los documentos'];
         $response = Http::withoutVerifying()
@@ -441,9 +432,9 @@ class DocumentController extends Controller
 
             ->post($url, [
                 'tipo' => '2',
-                'custom_ruc' => '10787188465',
-                'j_username' => '78718846',
-                'j_password' => 'Jose0906',
+                'custom_ruc' => '20443618687',
+                'j_username' => '20568798',
+                'j_password' => 'Sdrimsac204436',
                 'state' => 'rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
                 'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
             ]);
@@ -477,7 +468,7 @@ class DocumentController extends Controller
                     'custom_ruc' => '10787188465',
                     'j_username' => '78718846',
                     'j_password' => 'Jose0906',
-                    'state' => 'rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
+                    'state' => 'rO0ABXNyABFqYXZhLnV0bWVudS5IYXNoTWFwBQfaxcMWYNEDAAJGAApiG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
                     'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
                 ]);
 
@@ -521,24 +512,6 @@ class DocumentController extends Controller
                     Cache::put('cookiesSunat', $this->getCookies(), now()->addHours(4));
                 }
             }
-
-
-            // $filePath = storage_path('app/temp_data.txt');
-            // Storage::put('temp_data.txt', $txtContent);
-            // $headers = [
-            //     "Content-Type: multipart/form-data; boundary=" . '-------------' . uniqid(),
-            //     "Content-Length: " . strlen($filePath)
-            // ];
-            // $document_response = $client
-            //     ->attach(
-            //         'txtarchivo',
-            //         file_get_contents($filePath),
-            //         'data.txt',
-            //         [
-            //             'Content-Disposition' => 'form-data; name="txtarchivo"; filename="temp_data.txt"',
-            //             'Content-Type' => 'text/plain'
-            //         ]
-            //     )->withHeaders($headers)->post('https://ww1.sunat.gob.pe/ol-ti-itconsultaunificada/consultaUnificada/importarFromTXT');
 
             return [
                 'success' => true,
@@ -905,11 +878,28 @@ class DocumentController extends Controller
                     }
                     $sales->state_type_id = $state_type;
                     $sales->save();
-
+                    
+                    try {
+                        // Call processTxt method
+                        $processTxtResponse = $this->processTxt();
+                        if (!$processTxtResponse['success']) {
+                            return [
+                                "success" => false,
+                                "message" => "Ocurrió un problema al enviar el archivo TXT"
+                            ];
+                        }
+                    } catch (\Exception $e) {
+                        return [
+                            "success" => false,
+                            "message" => "Ocurrió un problema al enviar el archivo TXT"
+                        ];
+                    }
+                    
                     return [
                         "success" => true,
                         "message" => $this->document_state[$data["comprobante_estado_codigo"]]
                     ];
+                    
                 } else {
                     return [
                         "success" => false,
@@ -926,6 +916,16 @@ class DocumentController extends Controller
             return $exception->getResponse()->getBody();
         }
     }
+
+    // Helper method to generate a temporary txt file
+    private function generateTxtFile($document)
+    {
+        $txtContent = "{$document->company->number}|{$document->document_type_id}|{$document->series}|{$document->number}|" . Carbon::parse($document->date_of_issue)->format('d/m/Y') . "|{$document->total}";
+        $filePath = storage_path('app/temp_data.txt');
+        Storage::put('temp_data.txt', $txtContent);
+        return new \Illuminate\Http\UploadedFile($filePath, 'temp_data.txt', 'text/plain', null, true);
+    }
+    
     public function create($id = null)
     {
         if (auth()->user()->type == 'integrator')
