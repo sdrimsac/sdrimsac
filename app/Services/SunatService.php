@@ -216,9 +216,9 @@ class SunatService
             
             $this->delimiter = '-------------' . uniqid();
             // $company = Company::first();
-            $ruc = '10787188465';
-            $usuario_sol = '78718846';
-            $clave_sol = 'Jose0906';
+            $ruc = '20443618687';
+            $usuario_sol = '20568798';
+            $clave_sol = 'Sdrimsac204436';
             $fileContent = $this->openTxtInvoice($file);
             $this->loginInSunat($ruc, $usuario_sol, $clave_sol);
 

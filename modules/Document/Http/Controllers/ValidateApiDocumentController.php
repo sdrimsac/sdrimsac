@@ -47,6 +47,7 @@ class ValidateApiDocumentController extends Controller
         $period = $request['period'];
         $d_start = null;
         $d_end = null;
+        
         switch ($period) {
             case 'month':
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
@@ -65,57 +66,80 @@ class ValidateApiDocumentController extends Controller
                 $d_end = $date_end;
                 break;
         }
+
         $company_number = $company->number;
         $fileContent = "";
 
         $documents = Document::where('soap_type_id', '02')
             ->whereNull('state_sunat')
-            ->whereIn('state_type_id', ['01', '03', '05', '11', '09']);
+            ->whereIn('state_type_id', ['01', '03', '05']); // Only these three states
+
         if ($document_type_id) {
             $documents = $documents->where('document_type_id', $document_type_id);
         }
         if ($d_start && $d_end) {
             $documents = $documents->whereBetween('date_of_issue', [$d_start, $d_end]);
         }
+
+        // Check if documents exist
+        if ($documents->count() == 0) {
+            return [
+                "success" => false,
+                "message" => "No hay documentos para validar en el rango de fechas seleccionado"
+            ];
+        }
+
         $documents = $documents->limit(250);
-        $documents->chunk(50, function ($documents_chunk) use ($company_number, &$fileContent) {
-            foreach ($documents_chunk as $doc) {
-                $documenType = $doc->document_type_id;
-                $serie = $doc->series;
-                $number = $doc->number;
-                $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
-                $total = $doc->total;
-                $fileContent .= "{$company_number}|{$documenType}|{$serie}|{$number}|{$date_of_issue}|{$total}\n";
+        try {
+            $documents->chunk(50, function ($documents_chunk) use ($company_number, &$fileContent) {
+                foreach ($documents_chunk as $doc) {
+                    $documenType = $doc->document_type_id;
+                    $serie = $doc->series;
+                    $number = $doc->number;
+                    $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
+                    $total = $doc->total;
+                    $fileContent .= "{$company_number}|{$documenType}|{$serie}|{$number}|{$date_of_issue}|{$total}\n";
+                }
+            });
+
+            // Verify if file content was generated
+            if (empty($fileContent)) {
+                return [
+                    "success" => false,
+                    "message" => "Error al generar el archivo TXT"
+                ];
             }
-        });
 
-        // Crear un archivo temporal con el contenido
-        $tempFile = tempnam(sys_get_temp_dir(), 'validate_');
-        file_put_contents($tempFile, $fileContent);
+            $tempFile = tempnam(sys_get_temp_dir(), 'validate_');
+            file_put_contents($tempFile, $fileContent);
 
-        // Crear un objeto UploadedFile
-        $uploadedFile = new \Illuminate\Http\UploadedFile(
-            $tempFile,
-            'validate.txt',
-            'text/plain',
-            null,
-            true
-        );
+            $uploadedFile = new \Illuminate\Http\UploadedFile(
+                $tempFile,
+                'validate.txt',
+                'text/plain',
+                null,
+                true
+            );
 
-        // Crear una nueva request con el archivo
-        $newRequest = new Request();
-        $newRequest->files->set('txt_file', $uploadedFile);
+            $newRequest = new Request();
+            $newRequest->files->set('txt_file', $uploadedFile);
 
-        $documentController = new DocumentController();
-        $result = $documentController->txtValidate($newRequest);
+            $documentController = new DocumentController();
+            $result = $documentController->txtValidate($newRequest);
 
-        // Limpiar el archivo temporal
-        unlink($tempFile);
+            unlink($tempFile);
 
-        return [
-            "success" => true,
-            "result" => $result
-        ];
+            return [
+                "success" => true,
+                "result" => $result
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                "success" => false,
+                "message" => "Error al procesar el archivo TXT: " . $e->getMessage()
+            ];
+        }
     }
 
     public function records(ValidateApiDocumentsRequest $request)
