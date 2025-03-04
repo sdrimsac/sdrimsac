@@ -577,7 +577,7 @@
               <!-- {{ data.user_name }} -->
             </td>
             <td v-if="type == 'documents'">
-              <template v-for="(row, index) in data.sale_note_related">
+              <template v-for="(row, index) in data.sale_note_related" >
                 <small class="d-block" :key="index">
                   {{
                   row.number

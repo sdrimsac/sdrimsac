@@ -101,7 +101,6 @@
                             v-if="errors.document_type_id"
                             v-text="errors.document_type_id[0]"
                         ></small>
-                        <!-- <el-checkbox  v-model="generate_dispatch">Generar Guía Remisión</el-checkbox> -->
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -244,18 +243,22 @@
                     </div>
                 </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="clickClose">Cerrar</el-button>
+            <div style="text-align: right;">
+                <el-button @click="clickClose" size="large" type="danger"
+                    >Cancelar</el-button
+                >
                 <el-button
                     class="submit"
-                    type="primary"
+                    type="success"
+                    size="large"
                     @click="submit"
                     :loading="loading_submit"
                     v-if="flag_generate"
+                    style="border-radius: 8px;"
                     >Generar</el-button
                 >
-            </span>
-
+            </div>
+            <br>
             <document-options
                 :showDialog.sync="showDialogDocumentOptions"
                 :recordId="documentNewId"
@@ -330,9 +333,19 @@ export default {
     created() {
         this.initForm();
         this.initDocument();
-        /* this.$eventHub.$on("reloadDataPersons", customer_id => {
+        this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
-        }); */
+        });
+
+        // Ensure the customer name is rendered based on the provided ID
+        if (this.document.customer_id) {
+            const customer = this.customers.find(
+                c => c.id === this.document.customer_id
+            );
+            if (customer) {
+                this.document.customer_id = customer.id;
+            }
+        }
     },
     methods: {
         initForm() {
@@ -376,7 +389,7 @@ export default {
                 }
             }
         },
-        reloadDataCustomers(customer_id) {
+        /* reloadDataCustomers(customer_id) {
             this.$http
                 .get(`/documents/search/customer/${customer_id}`)
                 .then(response => {
@@ -385,6 +398,16 @@ export default {
                     this.form.customer_id = customer_id;
                     
                 });
+        }, */
+
+        async reloadDataCustomers(customer_id) {
+            const response = await this.$http.get(
+                `/pos/table/customers?customer_id=${customer_id || ""}`
+            );
+            this.all_customers = response.data;
+            this.value = customer_id;
+            this.document.customer_id = customer_id;
+            this.searchRemoteCustomers(response.data[0].name);
         },
 
         searchRemoteCustomers(input) {
@@ -414,27 +437,7 @@ export default {
         },
         addRowCliente(data) {
             this.document.customer_id = data.id;
-            
-            // Add the new customer to the customers array if it doesn't exist
-            const customerExists = this.customers.some(customer => customer.id === data.id);
-            if (!customerExists) {
-                this.customers.push(data);
-                // Also add to all_customers for filtering purposes
-                this.all_customers.push(data);
-            }
-            
-            // Update the select with the new customer's data
-            this.$nextTick(() => {
-                if (this.$refs.cliente) {
-                    this.$refs.cliente.selected = {
-                        id: data.id,
-                        name: data.name
-                    };
-                }
-            });
-
-            // Optional: You can still call searchRemoteCustomers if needed
-            // this.searchRemoteCustomers(data.number);
+            this.searchRemoteCustomers(data.number);
         },
         filterCustomers() {
             if (
@@ -525,29 +528,29 @@ export default {
         },
         async submit() {
             let filtrar = this;
+
             let findCustomer = _.find(this.all_customers, {
                 id: this.document.customer_id
             });
-            if (
-                findCustomer.number.length < 11 &&
-                this.document.document_type_id == "01"
-            ) {
-                return this.$toast.error(
-                    "Ingrese un numero de Ruc de 11 digitos valido para emitir Factura "
-                );
-            }
-            if (
-                findCustomer.number.length < 8 &&
-                this.document.document_type_id == "03"
-            ) {
-                return this.$toast.error(
-                    "Ingrese un numero de DNI de 8 digitos valido para emitir Boleta "
-                );
-            }
-            if (this.generate_dispatch) {
-                if (!this.dispatch_id) {
-                    return this.$toast.error("Debe seleccionar una guía base");
+            if (findCustomer && findCustomer.number) {
+                if (
+                    findCustomer.number.length < 11 &&
+                    this.document.document_type_id == "01"
+                ) {
+                    return this.$toast.error(
+                        "Ingrese un numero de Ruc de 11 digitos valido para emitir Factura "
+                    );
                 }
+                if (
+                    findCustomer.number.length < 8 &&
+                    this.document.document_type_id == "03"
+                ) {
+                    return this.$toast.error(
+                        "Ingrese un numero de DNI de 8 digitos valido para emitir Boleta "
+                    );
+                }
+            } else {
+                return this.$toast.error("Cliente no válido");
             }
             this.loading_submit = true;
 

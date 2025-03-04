@@ -441,8 +441,6 @@ Route::prefix('caja')->group(function () {
             Route::get('tables/records-area/{area_id}', 'TableController@recordsByArea');
 
             /* Route::get('tables/records-area/{area_id}', 'TableController@recordsByArea'); */
-
-
             //Promociones 
             Route::post('pos/processPromo', 'PromocionPorItemController@processPromo');
             Route::get('pos/showCliePromos', 'PromocionPorItemController@showCliePromos');
