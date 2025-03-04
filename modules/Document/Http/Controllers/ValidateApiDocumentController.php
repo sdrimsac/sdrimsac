@@ -36,7 +36,7 @@ class ValidateApiDocumentController extends Controller
     {
         return view('document::validate_documents.index');
     }
-    /* public function validateMassiveNew(Request $request)
+    public function validateMassiveNew(Request $request)
     {
         $company = Company::first();
         $document_type_id = $request['document_type_id'];
@@ -140,9 +140,9 @@ class ValidateApiDocumentController extends Controller
                 "message" => "Error al procesar el archivo TXT: " . $e->getMessage()
             ];
         }
-    } */
+    }
 
-    public function validateMassiveNew(Request $request)
+    /* public function validateMassiveNew(Request $request)
     {
         $company = Company::first();
         $document_type_id = $request['document_type_id'];
@@ -222,7 +222,7 @@ class ValidateApiDocumentController extends Controller
             "success" => true,
             "result" => $result
         ];
-    }
+    } */
 
     public function records(ValidateApiDocumentsRequest $request)
     {
