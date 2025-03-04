@@ -465,9 +465,9 @@ class DocumentController extends Controller
             if (!Cache::has('cookiesSunat')) {
                 $loginResponse = $client->asForm()->post('https://api-seguridad.sunat.gob.pe/v1/clientessol/4f3b88b3-d9d6-402a-b85d-6a0bc857746a/oauth2/j_security_check', [
                     'tipo' => '2',
-                    'custom_ruc' => '10787188465',
-                    'j_username' => '78718846',
-                    'j_password' => 'Jose0906',
+                    'custom_ruc' => '20443618687',
+                    'j_username' => '20568798',
+                    'j_password' => 'Sdrimsac204436',
                     'state' => 'rO0ABXNyABFqYXZhLnV0bWVudS5IYXNoTWFwBQfaxcMWYNEDAAJGAApiG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
                     'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
                 ]);
@@ -848,7 +848,7 @@ class DocumentController extends Controller
         return compact('customers');
     }
 
-    public function validar_cpe($id)
+    /* public function validar_cpe($id)
     {
         try {
             $documents = Document::where('id', $id)->first();
@@ -879,22 +879,6 @@ class DocumentController extends Controller
                     $sales->state_type_id = $state_type;
                     $sales->save();
                     
-                    try {
-                        // Call processTxt method
-                        $processTxtResponse = $this->processTxt();
-                        if (!$processTxtResponse['success']) {
-                            return [
-                                "success" => false,
-                                "message" => "Ocurrió un problema al enviar el archivo TXT"
-                            ];
-                        }
-                    } catch (\Exception $e) {
-                        return [
-                            "success" => false,
-                            "message" => "Ocurrió un problema al enviar el archivo TXT"
-                        ];
-                    }
-                    
                     return [
                         "success" => true,
                         "message" => $this->document_state[$data["comprobante_estado_codigo"]]
@@ -915,15 +899,57 @@ class DocumentController extends Controller
         } catch (RequestException $exception) {
             return $exception->getResponse()->getBody();
         }
-    }
-
-    // Helper method to generate a temporary txt file
-    private function generateTxtFile($document)
+    } */
+    public function validar_cpe($id)
     {
-        $txtContent = "{$document->company->number}|{$document->document_type_id}|{$document->series}|{$document->number}|" . Carbon::parse($document->date_of_issue)->format('d/m/Y') . "|{$document->total}";
-        $filePath = storage_path('app/temp_data.txt');
-        Storage::put('temp_data.txt', $txtContent);
-        return new \Illuminate\Http\UploadedFile($filePath, 'temp_data.txt', 'text/plain', null, true);
+        try {
+            $documents = Document::where('id', $id)->first();
+            $api_url = config('app.api_peru_service_url');
+            $token = config('app.api_peru_service_token');
+            $company = Company::first();
+            $response = Http::withoutVerifying()->withToken($token)->accept('application/json')->post($api_url . "/cpe", [
+                'ruc_emisor' => $company->number,
+                'codigo_tipo_documento' => $documents->document_type_id,
+                'serie_documento' => $documents->series,
+                'numero_documento' => $documents->number,
+                'fecha_de_emision' => Carbon::parse($documents->date_of_issue)->format('Y-m-d'),
+                'total' => $documents->total
+            ]);
+            if ($response->ok()) {
+                $body = $response->json();
+                $data = $body['data'];
+                $success = $body['success'];
+                if ($success) {
+                    $sales = Document::findOrFail($id);
+                    if ($data["comprobante_estado_codigo"] == "0") {
+                        $state_type = "01";
+                    } else {
+                        $description = $this->document_state[$data["comprobante_estado_codigo"]];
+                        $state_type = StateType::where('description', 'like', "%{$description}%")->first();
+                        $state_type = $state_type->id;
+                    }
+                    $sales->state_type_id = $state_type;
+                    $sales->save();
+
+                    return [
+                        "success" => true,
+                        "message" => $this->document_state[$data["comprobante_estado_codigo"]]
+                    ];
+                } else {
+                    return [
+                        "success" => false,
+                        "message" => Functions::valueKeyInArray($body, 'message', "Ocurrió un problema")
+                    ];
+                }
+            } else {
+                return [
+                    "success" => false,
+                    "message" => "Intente nuevamente en unos minutos Sunat no responde..."
+                ];
+            }
+        } catch (RequestException $exception) {
+            return $exception->getResponse()->getBody();
+        }
     }
     
     public function create($id = null)
