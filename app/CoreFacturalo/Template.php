@@ -9,6 +9,7 @@ use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionDocumentCustomerDetail;
+use App\Models\Tenant\Quotation;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\College\Models\CollegeClassroom;
@@ -49,7 +50,7 @@ class Template
             $student_name = null;
 
             $class = null;
-            $config = Configuration::first();
+
             $students = [];
             $document_type = $document->document_type_id == "80" ? "sale_note_id" : "document_id";
             $college_payments = CollegePayment::where($document_type, $document->id)->get();
@@ -74,7 +75,7 @@ class Template
                 }
             }
 
-            $show_unit_types = $config->show_unit_types_ticket;
+            $show_unit_types = $configuration->show_unit_types_ticket;
             $stablishment = Establishment::find($document->establishment_id);
             try {
                 if ($show_unit_types && is_iterable($document->items)) {
@@ -107,7 +108,7 @@ class Template
                                 } catch (\Exception $e) {
                                     Log::error($e->getMessage());
                                 }
-                                if ($config->consolidated_quotations) {
+                                if ($configuration->consolidated_quotations) {
                                     $row->unit_desc = "({$row->unit_desc})";
                                 }
                             }
@@ -122,7 +123,7 @@ class Template
             if ($stablishment) {
                 $is_principal = $stablishment->id == 1;
             }
-            $footer_text = $config->footer_text;
+            $footer_text = $configuration->footer_text;
             $detail_points = [];
             $detail_message = [];
             if ($document->document_type_id == '80' || $document->document_type_id == '03' || $document->document_type_id == '01') {
@@ -225,6 +226,15 @@ class Template
                         $hotel_rent = $hotel_rent_document->hotel_rent;
                         $period_rent = " Pagos: " . $hotel_rent->period() . " de cada mes.";
                         $document->observation .= $period_rent;
+                    }
+                }
+
+                if ($configuration->consolidated_quotations && ($document->document_type_id == '01' || $document->document_type_id == '03') && $document->quotation_id) {
+                    $quotation = Quotation::select('description')->find($document->quotation_id);
+                    if(trim($document->observation) != '') {
+                        $document->observation .= "\n" . $quotation->description;
+                    } else {
+                        $document->observation = $quotation->description;
                     }
                 }
             }

@@ -105,6 +105,23 @@
                                 $total += $value->total;
                                 $total_quantity += $value->total_quantity;
                                 $total_weight += $value->total_weight * $value->total_quantity;
+                                $quantity_description = $value->total_quantity;
+                                $item = \App\Models\Tenant\Item::select('max_quantity','max_quantity_description')->find($value->item_id);
+                                if($item && $item->max_quantity > 0 && $item->max_quantity_description != '') {
+                                    $packs = floor($value->total_quantity / $item->max_quantity);
+                                    $remaining_units = $value->total_quantity % $item->max_quantity;
+                                    
+                                    $quantity_description = '';
+                                    if ($packs > 0) {
+                                        $quantity_description .= $packs . ' ' . strtoupper($item->max_quantity_description);
+                                    }
+                                    if ($remaining_units > 0) {
+                                        if ($packs > 0) {
+                                            $quantity_description .= ' + ';
+                                        }
+                                        $quantity_description .= $remaining_units . ' UND';
+                                    }
+                                }
                             @endphp
 
                             <tr>
@@ -119,7 +136,7 @@
                                 </td>
 
                                 <td style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                                    {{ $value->total_quantity }}
+                                    {{ $quantity_description }}
 
                                 </td>
 
