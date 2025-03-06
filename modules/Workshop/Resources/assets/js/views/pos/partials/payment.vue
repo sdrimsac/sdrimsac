@@ -468,14 +468,33 @@
                                 style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
                             />
 
-                            <el-checkbox
+                            <div class="d-flex justify-content-end">
+                                    <el-checkbox
+                                        v-if="
+                                            configuration.affectation_igv_type_id ==
+                                                '10'
+                                        "
+                                        v-model="discountTotal"
+                                        @change="reCalculateTotal"
+                                        class="is-success text-success"
+                                        style="transform: scale(0.8); margin-right: 10px;"
+                                    >
+                                        {{
+                                            discountTotal
+                                                ? "del total"
+                                                : "a la base"
+                                        }}
+                                    </el-checkbox>
+                                </div>
+
+                            <!-- <el-checkbox
                                 v-model="discountTotal"
                                 @change="reCalculateTotal"
                                 class="ml-3 is-success text-success"
                                 >{{
                                     discountTotal ? "del total" : "a la base"
                                 }}</el-checkbox
-                            >
+                            > -->
                         </div>
                     </div>
 

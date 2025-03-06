@@ -559,7 +559,9 @@ class VehiculoController extends Controller
     }
     public function format_vehicle($id, $historial_id, $version = null)
     {
-        $vehiculo = Vehiculo::where('id', $id)->first();
+        $vehiculo = Vehiculo::with('tipo_vehiculo')
+            ->where('id', $id)
+            ->first();
         $historial = Historial::where('vehiculo_id', $id)
             ->where('estado', 0)->first();
 

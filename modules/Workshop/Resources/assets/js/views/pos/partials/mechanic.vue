@@ -31,9 +31,13 @@
                             ></el-input>
                         </div>
                         <div class="col-md-6 text-end">
-                            <el-button type="primary" @click="clickCreate()"
-                                >Nuevo Registro</el-button
+                            <el-button 
+                                type="primary" 
+                                @click="clickCreate()"
+                                style="padding: 12px 24px; border-radius: 8px; font-size: 16px;"
                             >
+                                Nuevo Registro
+                            </el-button>
                         </div>
                     </div>
                 </div>
@@ -48,19 +52,19 @@
                                     <th class="text-white">Acciones</th>
                                     <th class="text-white">#</th>
                                     <th class="text-white">Cliente</th>
-                                    <th class="text-white">Vehiculo</th>
+                                    <th class="text-white">Tipo Vehiculo</th>
                                     <th class="text-white">Placa</th>
-                                    <th class="text-white">Marca</th>
+                                    <th class="text-white">Detalle</th>
+                                    <!-- <th class="text-white">Marca</th>
                                     <th class="text-white">Color</th>
                                     <th class="text-white">Serie</th>
-                                    <th class="text-white">Motor</th>
+                                    <th class="text-white">Motor</th> -->
                                     <th class="text-white">Año</th>
                                     <th class="text-white">
                                         Kilometros Corridos
                                     </th>
                                     <th class="text-white">Fecha Registro</th>
                                     <th class="text-white">Productos</th>
-                                    <th class="text-white">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,17 +74,116 @@
                                     :index="customIndex(index)"
                                 >
                                     <td>
-                                        <a class="">
+                                        <div class="mb-2">
                                             <el-button
                                                 v-if="vehiculo.historial_id"
                                                 type="success"
                                                 @click="
                                                     openpayOrden(vehiculo.id)
                                                 "
-                                                class="w-100"
-                                                >Cobrar</el-button
+                                                style="width: 90%"
                                             >
-                                        </a>
+                                                <i
+                                                    class="fa fa-cash-register"
+                                                    style="font-size: 20px;"
+                                                ></i>
+
+                                                Cobrar</el-button
+                                            >
+                                        </div>
+                                        <div class="btn-group">
+                                            <button
+                                                class="btn btn-secondary dropdown-toggle"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false"
+                                                style="width: 120px;"
+                                            >
+                                                <i
+                                                    class="fas fa-ellipsis-v"
+                                                ></i>
+                                                Opciones
+                                            </button>
+                                            <div
+                                                class="dropdown-menu dropdown-menu-sm"
+                                            >
+                                                <a class="dropdown-item">
+                                                    <el-button
+                                                        class="w-100"
+                                                        @click="
+                                                            HistorialVehiculo(
+                                                                vehiculo.id
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fas fa-list"
+                                                        ></i>
+                                                        Historial
+                                                    </el-button>
+                                                </a>
+                                                <a class="dropdown-item">
+                                                    <el-button
+                                                        v-if="
+                                                            vehiculo.historial_id
+                                                        "
+                                                        @click.prevent="
+                                                            clickPrintFormat(
+                                                                vehiculo.id
+                                                            )
+                                                        "
+                                                        class="w-100"
+                                                        type="success"
+                                                    >
+                                                        <i
+                                                            class="far fa-file-alt"
+                                                        ></i>
+                                                        Format Vehiculo
+                                                    </el-button>
+                                                </a>
+                                                <a class="dropdown-item">
+                                                    <el-button
+                                                        v-if="
+                                                            vehiculo.historial_id
+                                                        "
+                                                        @click.prevent="
+                                                            clickPrint(
+                                                                vehiculo.id
+                                                            )
+                                                        "
+                                                        class="w-100"
+                                                        type="danger"
+                                                    >
+                                                        <i
+                                                            class="far fa-file-alt"
+                                                        ></i>
+                                                        PDF
+                                                    </el-button>
+                                                </a>
+                                                <a class="dropdown-item">
+                                                    <el-button
+                                                        v-if="
+                                                            vehiculo.historial_id &&
+                                                                vehiculo.items >
+                                                                    0
+                                                        "
+                                                        @click.prevent="
+                                                            selectEntrega(
+                                                                vehiculo.historial_id
+                                                            )
+                                                        "
+                                                        class="w-100"
+                                                        type="primary"
+                                                    >
+                                                        <i
+                                                            class="far fa-file-alt"
+                                                        ></i>
+                                                        TICKET ENTREGA
+                                                    </el-button>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>{{ customIndex(index) }}</td>
                                     <td>{{ vehiculo.customer_name }}</td>
@@ -88,10 +191,27 @@
                                         {{ vehiculo.tipo_vehiculo_description }}
                                     </td>
                                     <td>{{ vehiculo.placa }}</td>
-                                    <td>{{ vehiculo.marca }}</td>
-                                    <td>{{ vehiculo.color }}</td>
-                                    <td>{{ vehiculo.serie }}</td>
-                                    <td>{{ vehiculo.motor }}</td>
+
+                                    <!-- <td>
+                                        MARCA: {{ vehiculo.marca || '-' }}
+                                        <br />COLOR: {{ vehiculo.color || '-' }}
+                                        <br />SERIE: {{ vehiculo.serie || '-' }}
+                                        <br />MOTOR: {{ vehiculo.motor || '-' }}
+                                    </td> -->
+                                    <td>
+                                        <div>
+                                            MARCA: {{ vehiculo.marca || "-" }}
+                                        </div>
+                                        <div>
+                                            COLOR: {{ vehiculo.color || "-" }}
+                                        </div>
+                                        <div>
+                                            SERIE: {{ vehiculo.serie || "-" }}
+                                        </div>
+                                        <div>
+                                            MOTOR: {{ vehiculo.motor || "-" }}
+                                        </div>
+                                    </td>
                                     <td>{{ vehiculo.anio_fabricacion }}</td>
                                     <td>{{ vehiculo.kilometraje }}</td>
                                     <td>{{ vehiculo.created_at }}</td>
@@ -105,105 +225,21 @@
                                                     vehiculo.historial_id
                                                 )
                                             "
-                                            type="info"
-                                            >Productos</el-button
+                                            type="primary"
+                                            style="width: 60px; height: 60px; padding: 0; border-radius: 12px;"
                                         >
-                                    </td>
-                                    <td class="text-end">
-                                        <div
-                                            class="btn-toolbar mb-2"
-                                            role="toolbar"
-                                        >
-                                            <div class="btn-group mb-1">
-                                                <button
-                                                    class="btn btn-secondary btn-sm dropdown-toggle"
-                                                    type="button"
-                                                    data-bs-toggle="dropdown"
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false"
-                                                >
-                                                    <i
-                                                        class="fas fa-ellipsis-v"
-                                                    ></i>
-                                                </button>
-                                                <div
-                                                    class="dropdown-menu dropdown-menu-sm"
-                                                >
-                                                    <a class="dropdown-item">
-                                                        <el-button
-                                                            class="w-100"
-                                                            @click="
-                                                                HistorialVehiculo(
-                                                                    vehiculo.id
-                                                                )
-                                                            "
-                                                        >
-                                                            <i
-                                                                class="fas fa-list"
-                                                            ></i>
-                                                            Historial
-                                                        </el-button>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <el-button
-                                                            v-if="
-                                                                vehiculo.historial_id
-                                                            "
-                                                            @click.prevent="
-                                                                clickPrintFormat(
-                                                                    vehiculo.id
-                                                                )
-                                                            "
-                                                            class="w-100"
-                                                            type="success"
-                                                        >
-                                                            <i
-                                                                class="far fa-file-alt"
-                                                            ></i>
-                                                            Format Vehiculo
-                                                        </el-button>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <el-button
-                                                            v-if="
-                                                                vehiculo.historial_id
-                                                            "
-                                                            @click.prevent="
-                                                                clickPrint(
-                                                                    vehiculo.id
-                                                                )
-                                                            "
-                                                            class="w-100"
-                                                            type="danger"
-                                                        >
-                                                            <i
-                                                                class="far fa-file-alt"
-                                                            ></i>
-                                                            PDF
-                                                        </el-button>
-                                                    </a>
-                                                    <a class="dropdown-item">
-                                                        <el-button
-                                                            v-if="
-                                                                vehiculo.historial_id  && vehiculo.items > 0
-                                                            "
-                                                            @click.prevent="
-                                                                selectEntrega(
-                                                                    vehiculo.historial_id
-                                                                );
-                                                            "
-                                                            class="w-100"
-                                                            type="primary"
-                                                        >
-                                                            <i
-                                                                class="far fa-file-alt"
-                                                            ></i>
-                                                            TICKET ENTREGA
-                                                        </el-button>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Agregar Productos"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-cart-plus"
+                                                    style="font-size: 24px;"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -319,9 +355,7 @@ export default {
             );
         },
         selectEntrega(historial_id) {
-            window.open(
-            `/${this.resource}/ticket-entrega/${historial_id}`,
-            );
+            window.open(`/${this.resource}/ticket-entrega/${historial_id}`);
         },
 
         clickCreate(recordId = null) {

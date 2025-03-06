@@ -35,6 +35,8 @@ class HistorialCollection extends ResourceCollection
                 'mantenimiento' => $row->mantenimiento,
                 'diagnostico' => $row->diagnostico,
                 'estado' => $row->estado,
+                'external_id' => $row->external_id,
+                'document_type_id' => $row->document_type_id,
                 'created_at' => $row->created_at->format('d-m-Y H:i'),
                 'updated_at' => $row->updated_at,
                 'item' => $row->historialItem->transform(function ($historial_item) {

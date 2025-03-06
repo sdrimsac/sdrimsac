@@ -77,7 +77,8 @@
                                         <template v-slot:append>
                                             <el-button
                                                 :loading="loading_search"
-                                                icon="el-icon-search"
+                                                type="primary"
+                                                icon="el-icon-search text-white"
                                                 @click.prevent="searchPlaca"
                                             ></el-button>
                                         </template>
@@ -95,7 +96,7 @@
                         </div>
                         <div
                             class="col-md-3"
-                            :class="{ 'has-danger': errors.description }"
+                            :class="{ 'has-danger': errors.tipo_vehiculo_id }"
                         >
                             <label for="tipo-vehiculo">Tipo de Vehiculo</label>
                             <el-select
@@ -113,8 +114,8 @@
                             </el-select>
                             <small
                                 class="form-control-feedback"
-                                v-if="errors.description"
-                                v-text="errors.description[0]"
+                                v-if="errors.tipo_vehiculo_id"
+                                v-text="errors.tipo_vehiculo_id[0]"
                             ></small>
                         </div>
                         <div
@@ -711,20 +712,33 @@ export default {
             return false;
         },
         validateForm() {
-            const requiredFields = [
-                "customer_id",
-                "placa",
-                "tipo_vehiculo_id",
-                "serie",
-                "color",
-                "modelo",
-                "marca",
-                "motor",
-                "anio_fabricacion",
-                "kilometraje",
-                "personal_id",
-                "observacion"
-            ];
+            const fieldNames = {
+                customer_id: 'Cliente',
+                placa: 'Placa',
+                tipo_vehiculo_id: 'Tipo de Vehículo',
+                serie: 'Serie',
+                color: 'Color',
+                modelo: 'Modelo',
+                marca: 'Marca',
+                motor: 'Motor',
+                anio_fabricacion: 'Año de Fabricación',
+                kilometraje: 'Kilometraje',
+                personal_id: 'Personal',
+            };
+
+            const requiredFields = Object.keys(fieldNames);
+
+            for (const field of requiredFields) {
+                if (!this.form[field]) {
+                    this.$showSAlert(
+                        "ALERTA",
+                        `El campo ${fieldNames[field]} es obligatorio`,
+                        "error"
+                    );
+                    return false;
+                }
+            }
+            return true;
             for (const field of requiredFields) {
                 if (!this.form[field]) {
                     this.$showSAlert(

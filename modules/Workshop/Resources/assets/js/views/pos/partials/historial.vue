@@ -3,7 +3,7 @@
         @open="open"
         @close="close"
         append-to-body
-        :visible.sync="showDialog"
+        :visible.sync="localShowDialog"
         title="Historial De Registro De Vehiculo"
         close-on-click-modal
         width="80%"
@@ -13,16 +13,22 @@
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <!-- <label for="vehiculo">Vehiculo</label>
-            <el-input></el-input>-->
                     </div>
-                    <div class="col-md-4">
-                        <!-- <label for="vehiculo">Documento</label>
-            <el-input></el-input>-->
-                    </div>
+                    <div class="col-md-4"></div>
                     <div class="col-md-4 text-end">
-                        <el-button type="primary" @click="editHistory()"
-                            >Crear Nuevo Historia</el-button
+                        <el-button
+                            type="danger"
+                            size="large"
+                            class="rounded-button"
+                            @click="completeHistory(vehiculoId)"
+                            >Ver Historial Completo
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            size="large"
+                            class="rounded-button"
+                            @click="editHistory()"
+                            >Crear Nuevo Historial</el-button
                         >
                     </div>
                 </div>
@@ -30,6 +36,7 @@
             </div>
             <div class="form-body">
                 <div class="history-table-container">
+                    <div class="table-scroll-wrapper top-scroll"></div>
                     <div class="table-scroll-wrapper">
                         <table class="table table-striped history-table">
                             <thead>
@@ -44,7 +51,7 @@
                                     <th class="text-white">
                                         Trabajos Realizados
                                     </th>
-                                    <th class="text-white">Establecimiento</th>
+                                    <!-- <th class="text-white">Establecimiento</th> -->
                                     <th class="text-white">Productos Cuenta</th>
                                     <th class="text-white">Estado</th>
                                     <th class="text-white">Formato</th>
@@ -59,15 +66,15 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ item.created_at }}</td>
                                     <td>
-                                        {{ item.vehiculo_placa }} -
-                                        {{ item.vehiculo_marca }}
+                                        PLACA: {{ item.vehiculo_placa }} <br>
+                                        MARCA: {{ item.vehiculo_marca }}
                                     </td>
                                     <td>{{ item.personal_name }}</td>
                                     <td>{{ item.observacion }}</td>
                                     <td>{{ item.motive }}</td>
-                                    <td>
+                                    <!-- <td>
                                         {{ item.establishment_description }}
-                                    </td>
+                                    </td> -->
                                     <td class="text-center">
                                         <el-popover
                                             placement="right"
@@ -121,48 +128,63 @@
                                         }}
                                     </td>
                                     <td>
-                                        <!-- Aquí asociamos el historial_id del registro con el botón -->
-                                        <!-- <el-button
-                                            v-for="(subItem,
-                                            subIndex) in item.item"
-                                            :key="subIndex"
-                                            @click.prevent="
-                                                clickPrintFormat(
-                                                    subItem.historial_id
-                                                )
-                                            "
-                                            type="success"
-                                        >
-                                            PDF V
-                                        </el-button> -->
                                         <el-button
                                             @click.prevent="
-                                                clickPrintFormat(
-                                                    item.id
-                                                )
+                                                clickPrintFormat(item.id)
                                             "
                                             type="success"
                                         >
-                                            PDF V
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Descargar formato de vehiculo"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-car text-white fa-lg"
+                                                ></i>
+                                            </el-tooltip>
                                         </el-button>
-                                        <!-- <el-button
-                                            type="danger"
-                                            @click.prevent="
-                                                clickrePrint(subItem.historial_id)
-                                            "
-                                        >
-                                            PDF A4
-                                        </el-button> -->
                                         <el-button
-                                            
                                             @click.prevent="
-                                                clickrePrint(
-                                                    item.id
+                                                clickrePrint(item.id)
+                                            "
+                                            type="danger"
+                                        >
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Descargar formato con los servicios realizados"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-wrench text-white fa-lg"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-button>
+
+                                        <el-button
+                                            v-if="item.estado === 1"
+                                            type="danger"
+                                            size="mini"
+                                            plain
+                                            @click="
+                                                previsualitation(
+                                                    item.external_id,
+                                                    item.document_type_id
                                                 )
                                             "
-                                            type="danger"
                                         >
-                                            PDF A4
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Previsualización del documento emitido"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="far fa-file-pdf text-white fa-lg"
+                                                ></i>
+                                            </el-tooltip>
                                         </el-button>
                                     </td>
                                     <td>
@@ -177,6 +199,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="table-scroll-wrapper bottom-scroll"></div>
                 </div>
             </div>
         </form>
@@ -186,17 +209,34 @@
             :recordId="recordId"
             @actualizar="actualizarYEmitir"
         ></car-vehicle>
+        <document-print-previsualitation
+            :resource="resourcePdf"
+            :showDialog.sync="showPrevisualitation"
+        ></document-print-previsualitation>
+        <document-historial
+            :resource="resourcePdf"
+            :showDialog.sync="showPrevisualitation"
+        ></document-historial>
     </el-dialog>
 </template>
 <script>
 import CarVehicle from "./car_vehicle.vue";
+const DocumentPrintPrevisualitation = () =>
+    import("./document_print_previsualitation.vue");
+const DocumentHistorial = () => import("./document_historial.vue");
 export default {
     props: ["showDialog", "vehiculoId"],
     components: {
-        CarVehicle
+        CarVehicle,
+        DocumentPrintPrevisualitation,
+        DocumentHistorial
     },
     data() {
         return {
+            establishment: null,
+            establishment_id: null,
+            resourcePdf: null,
+            showPrevisualitation: false,
             selectedVehiculoId: null,
             showDialogCarVehicle: false,
             resource: "workshop",
@@ -205,7 +245,8 @@ export default {
                 item: []
             },
             vehiculo: null,
-            recordId: null
+            recordId: null,
+            localShowDialog: this.showDialog
         };
     },
     watch: {
@@ -214,9 +255,55 @@ export default {
             if (newVal) {
                 this.selectedVehiculoId = newVal;
             }
+        },
+        showDialog(newVal) {
+            this.localShowDialog = newVal; // Sync localShowDialog with showDialog
+        },
+        localShowDialog(newVal) {
+            this.$emit("update:showDialog", newVal); // Emit changes to parent
         }
     },
     methods: {
+        previsualitation(external_id, type) {
+            let format_printer = this.establishment
+                ? this.establishment.format_printer
+                : null;
+            console.log(
+                "🚀 ~ previsualitation ~ format_printer: ver si tienen valor",
+                format_printer
+            );
+            let format = "";
+            switch (format_printer) {
+                case "1":
+                    format = "a4";
+                    break;
+                case "2":
+                    format = "a5";
+                    break;
+                case "3":
+                    format = "ticket_50";
+                    break;
+                default:
+                    format = "ticket";
+                    break;
+            }
+            console.log("🚀 ~ previsualitation ~ format:", format);
+            let url = null;
+            if (type == "80") {
+                url = `/sale-notes/print/${external_id}/${format}`;
+            } else if (
+                type == "03" ||
+                type == "01" ||
+                type == "07" ||
+                type == "08"
+            ) {
+                url = `/print/document/${external_id}/${format}`;
+            } else {
+                url = `/quotations/print/${external_id}/${format}`;
+            }
+            this.resourcePdf = url;
+            this.showPrevisualitation = true;
+        },
         actualizarYEmitir() {
             this.getData();
             this.$emit("actualizar");
@@ -235,6 +322,17 @@ export default {
             }
             this.recordId = recordId;
             this.showDialogCarVehicle = true;
+        },
+        completeHistory(vehiculo_id) {
+            if (!vehiculo_id) {
+                console.error("el id del vehiculo no definido", vehiculo_id);
+                return;
+            }
+
+            window.open(
+                `/${this.resource}/historial/format-complete/${vehiculo_id}`,
+                "_blank"
+            );
         },
         clickrePrint(historial_id) {
             window.open(
@@ -322,6 +420,14 @@ export default {
     width: 100%;
     overflow-x: auto;
     padding-bottom: 5px;
+}
+
+.table-scroll-wrapper.top-scroll {
+    margin-bottom: -8px; /* Adjust to align with the table */
+}
+
+.table-scroll-wrapper.bottom-scroll {
+    margin-top: -8px; /* Adjust to align with the table */
 }
 
 .history-table {

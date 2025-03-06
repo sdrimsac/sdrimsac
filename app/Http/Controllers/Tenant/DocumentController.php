@@ -397,8 +397,7 @@ class DocumentController extends Controller
         $cookies = $this->loginSunat();
         $cookiesToSendTxt = $this->getCoockiesTxt($cookies);
         $response =  $this->sendTxt($cookiesToSendTxt);
-        /* dump($response);
- */
+     
         return [
             'success' => true,
             'message' => 'Se consultó los documentos'
@@ -416,7 +415,7 @@ class DocumentController extends Controller
 
 
         $cookies = $response->headers()['Set-Cookie'] ?? [];
-        /* dump($response->cookies()); */
+ 
         $cookieString = '';
 
         foreach ($cookies as $cookie) {

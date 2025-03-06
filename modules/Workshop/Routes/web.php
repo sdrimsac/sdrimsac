@@ -26,6 +26,7 @@ Route::get('workshop/vehiculo/print/{id}/{format}', [VehiculoController::class, 
 Route::get('workshop/vehiculo/reprint/{id}', [VehiculoController::class, 'RePrint']);
 Route::get('workshop/vehiculo/excelVehicle', [VehiculoController::class, 'excelVehicle']);
 Route::get('workshop/exportar/excelMechanic', [ExportarController::class, 'excelMechanic']);
+Route::get('workshop/historial/format-complete/{vehiculo_id}', [HistorialController::class, 'generarPdf']);
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('workshop')->group(function () {

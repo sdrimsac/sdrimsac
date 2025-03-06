@@ -31,7 +31,7 @@ class VehiculoCollection extends ResourceCollection
                 'tipo_vehiculo_description' => $row->tipo_vehiculo ? $row->tipo_vehiculo->description : null,
                 'marca' => $row->marca,
                 'modelo' => $row->modelo,
-                'anio_fabricacion' => $row->anio_fabricacion,
+                'anio_fabricacion' => $row->anio_fabricacion ? date('Y', strtotime($row->anio_fabricacion)) : null,
                 'placa' => $row->placa,
                 'kilometraje' => $row->kilometraje,
                 'active' => $row->active,

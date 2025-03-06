@@ -727,7 +727,7 @@
             <tr>
                 <td valign="top" width="50%" class="border-box">
                     <p>
-                        <strong>Raz. Social:</strong>
+                        <strong>Cliente:</strong>
                         {{ $customer->name }}
                     </p>
                     <p>
@@ -751,6 +751,12 @@
                             N° Flota / Kilometraje:
                         </strong>
                         {{ $vehiculo->kilometraje }}
+                    </p>
+                    <p>
+                        <strong>
+                            Tipo Vehiculo:
+                        </strong>
+                        {{ $vehiculo->tipo_vehiculo->description }}
                     </p>
                 </td>
                 <td valign="top">
