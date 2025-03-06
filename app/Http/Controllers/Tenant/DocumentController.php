@@ -199,6 +199,7 @@ class DocumentController extends Controller
 
         ];
     }
+    
     public function storeClient(Request $request)
     {
         try {
@@ -220,6 +221,7 @@ class DocumentController extends Controller
             ];
         }
     }
+
     public function txtValidate(Request $request)
     {
         // Validate that a file was uploaded
@@ -266,6 +268,7 @@ class DocumentController extends Controller
             ];
         }
     }
+
     public function checkDocuments(Request $request)
     {
         $fechaHoy = Carbon::now()->format('Y-m-d');
@@ -432,9 +435,9 @@ class DocumentController extends Controller
 
             ->post($url, [
                 'tipo' => '2',
-                'custom_ruc' => '20443618687',
-                'j_username' => '20568798',
-                'j_password' => 'Sdrimsac204436',
+                'custom_ruc' => '10787188465',
+                'j_username' => '78718846',
+                'j_password' => 'Jose0906',
                 'state' => 'rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
                 'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
             ]);
@@ -465,9 +468,9 @@ class DocumentController extends Controller
             if (!Cache::has('cookiesSunat')) {
                 $loginResponse = $client->asForm()->post('https://api-seguridad.sunat.gob.pe/v1/clientessol/4f3b88b3-d9d6-402a-b85d-6a0bc857746a/oauth2/j_security_check', [
                     'tipo' => '2',
-                    'custom_ruc' => '20443618687',
-                    'j_username' => '20568798',
-                    'j_password' => 'Sdrimsac204436',
+                    'custom_ruc' => '10787188465',
+                    'j_username' => '78718846',
+                    'j_password' => 'Jose0906',
                     'state' => 'rO0ABXNyABFqYXZhLnV0bWVudS5IYXNoTWFwBQfaxcMWYNEDAAJGAApiG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
                     'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
                 ]);
