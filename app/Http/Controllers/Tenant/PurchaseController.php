@@ -55,6 +55,7 @@ use App\Services\RoleService;
 use App\Traits\JobReportTrait;
 use Exception;
 use Hyn\Tenancy\Models\Hostname;
+use Illuminate\Support\Facades\Storage;
 use Modules\Restaurant\Http\Controllers\CashTransferController;
 use Modules\Restaurant\Models\Food;
 use Mpdf\Config\ConfigVariables;
@@ -317,12 +318,12 @@ class PurchaseController extends Controller
     {
         // Get document type IDs based on document type and operation type
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id, $request->operation_type_id);
-        
+
         $credit_list = $request->credit_list;
 
         // Start query with suppliers filter
         $suppliers = Person::where('type', 'suppliers')
-            ->where(function($query) use ($request) {
+            ->where(function ($query) use ($request) {
                 $query->where('number', 'like', "%{$request->input}%")
                     ->orWhere('name', 'like', "%{$request->input}%")
                     ->orWhere('alias', 'like', "%{$request->input}%");
@@ -342,7 +343,7 @@ class PurchaseController extends Controller
                 return [
                     'id' => $row->id,
                     'description' => ($row->alias ? $row->alias . ' - ' : '') . $row->number . ' - ' . $row->name,
-                    'name' => $row->name, 
+                    'name' => $row->name,
                     'number' => $row->number,
                     'has_credit_line' => (bool) $row->has_credit_line,
                     'credit_line' => $row->credit_line,
@@ -375,7 +376,7 @@ class PurchaseController extends Controller
 
         return $identity_document_type_id;
     }
-    
+
 
     public function tables()
     {
@@ -390,20 +391,6 @@ class PurchaseController extends Controller
         $payment_destinations = $this->getPaymentDestinations() ?? [];
         $customers = $this->getPersons('customers');
 
-        /*  $estados=array(
-            ["id"=>"1","name"=>"Nuevo"],            ["id"=>"2","name"=>"Aceptado"],
-            ["id"=>"3","name"=>"Repartidor"],
-            ["id"=>"4","name"=>"En Camino"],
-            ["id"=>"5","name"=>"Entregado"],
-            ["id"=>"6","name"=>"Cancelado"],
-        );
-        $pedidos = array(
-            array("number"=>"2323", "category_name"=>"POLLOS", "restaurant_name"=>"EL DORADO","time"=>"20 Min","status"=>true,"estados_id"=>"1"),
-            array("number"=>"147852", "category_name"=>"HAMBUERGUESA", "restaurant_name"=>"HAMBUER","time"=>"10 Min","status"=>false,"estados_id"=>"3"),
-            array("number"=>"147852", "category_name"=>"PIZZA", "restaurant_name"=>"EL PIZZERO","time"=>"05 Min","status"=>false,"estados_id"=>"2"),
-            array("number"=>"147852", "category_name"=>"POLLERIA LOYZA", "restaurant_name"=>"EL POLLERIA","time"=>"10 Min","status"=>true,"estados_id"=>"4"),
-            array("number"=>"147852", "category_name"=>"POLLERIA CARBON", "restaurant_name"=>"CARBON","time"=>"10 Min","status"=>false,"estados_id"=>"5"),
-        );*/
         return compact(
             'suppliers',
             'establishment',
@@ -541,7 +528,7 @@ class PurchaseController extends Controller
         return $records->get();
     }
 
-    public function store(PurchaseRequest $request)
+    public function store(PurchaseRequest $request) 
     {
         $has_error = false;
         $message = '';
@@ -617,7 +604,6 @@ class PurchaseController extends Controller
                                 ->first();
 
                             if ($item_lot) {
-
                                 $message = "La serie {$lot['series']} ya existe en el sistema";
                                 throw new Exception($message);
                             }
@@ -630,10 +616,6 @@ class PurchaseController extends Controller
                                 'has_sale' => false,
                                 'state' => $lot['state']
                             ]);
-
-                            // ItemWarehouse::where('item_id', $row['item_id'])
-                            //     ->where('warehouse_id', $row['warehouse_id'])
-                            //     ->increment('stock', 1);
                         }
                     }
 
@@ -663,48 +645,60 @@ class PurchaseController extends Controller
                         }
                     }
                 }
-                $cash = Cash::where('user_id', auth()->id())
+
+                // Check if user is admin or superadmin
+                $isAdminOrSuperadmin = in_array(auth()->user()->type, ['admin', 'superadmin']);
+
+                // Get cash only for non-admin users
+                $cash = $isAdminOrSuperadmin ? true : Cash::where('user_id', auth()->id())
                     ->where('state', 1)
-                    ->latest()->first();
+                    ->latest()
+                    ->first();
+
                 $company = Company::active();
                 $soap_type_id = $company->soap_type_id;
                 $last_box = null;
                 $time_box = null;
                 $date_box = null;
 
-                if ($cash) {
+                if ($cash && !$isAdminOrSuperadmin) {
                     $last_box = Box::where('cash_id', $cash->id)->latest()->first();
                     $time_box = $last_box ? $last_box->created_at->format('H:i:s') : date('H:i:s');
                     $date_box = $last_box ? $last_box->date : date('Y-m-d');
-                }else{
-                    
                 }
-                if(count($data['payments'])>0 && !$cash){
+
+                if (count($data['payments']) > 0 && !$cash && !$isAdminOrSuperadmin) {
                     $has_error = true;
                     $message = "No se puede realizar la compra, no tiene caja aperturada";
                     throw new Exception($message);
                 }
+
                 foreach ($data['payments'] as $payment) {
                     $record_payment = $doc->purchase_payments()->create($payment);
-                    $box = new Box;
-                    $box->cash_id = $cash->id;
-                    $box->date = $record_payment->date_of_payment;
-                    $box->amount = $record_payment->payment;
-                    $box->expenses = 1;
-                    $box->group_id = 2;
-                    $box->category_id = 2;
-                    $box->subcategory_id = 1;
-                    $box->state = 1;
-                    $box->type = 2;
-                    $box->soap_type_id = $soap_type_id;
-                    $box->user_id = auth()->id();
-                    $box->description = 'Compra ' . $doc->series . '-' . $doc->number;
-                    $payment_method_id  = $record_payment->payment_method_type_id;
-                    $payment_method = PaymentMethodType::find($payment_method_id);
-                    $box->method = $payment_method->description;
-                    $box->purchase_id = $doc->id;
-                    $box->currency_type_id = $doc->currency_type_id;
-                    $box->save();
+
+                    // Create box record only for non-admin users
+                    if (!$isAdminOrSuperadmin && $cash !== true) {
+                        $box = new Box;
+                        $box->cash_id = $cash->id;
+                        $box->date = $record_payment->date_of_payment;
+                        $box->amount = $record_payment->payment;
+                        $box->expenses = 1;
+                        $box->group_id = 2;
+                        $box->category_id = 2;
+                        $box->subcategory_id = 1;
+                        $box->state = 1;
+                        $box->type = 2;
+                        $box->soap_type_id = $soap_type_id;
+                        $box->user_id = auth()->id();
+                        $box->description = 'Compra ' . $doc->series . '-' . $doc->number;
+                        $payment_method_id  = $record_payment->payment_method_type_id;
+                        $payment_method = PaymentMethodType::find($payment_method_id);
+                        $box->method = $payment_method->description;
+                        $box->purchase_id = $doc->id;
+                        $box->currency_type_id = $doc->currency_type_id;
+                        $box->save();
+                    }
+
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
                     }
@@ -715,7 +709,7 @@ class PurchaseController extends Controller
                 }
 
                 $configuration = Configuration::first();
-                if ($configuration->sale_note_credit_penalty && $cash) {
+                if ($configuration->sale_note_credit_penalty && $cash && !$isAdminOrSuperadmin) {
                     $total = (new CashTransferController)->available();
                     if ($total > 0) {
                         $date = date('Y-m-d');
@@ -724,11 +718,10 @@ class PurchaseController extends Controller
                         $total_with_purchase = $total + $doc->total;
                         $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total_with_purchase} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total}";
                         $website = $this->getTenantWebsite();
-                        WhatsappSendMessageProccess::dispatch($website->id, $message, null,null,$doc->establishment_id);
+                        WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $doc->establishment_id);
                     }
-                    // El usuario arca - administrador hasta la fecha 07-10-2024 / 09:10:55am contaba con monto de S/5 mil y ha realizado una compra el 07-10-2024 a las 15:54:13 por un monto de S/2590, quedando un saldo a favor de S/2410
-
                 }
+
                 DB::connection('tenant')->commit();
                 $this->createPdf($doc, "a4", $doc->filename);
 
@@ -737,7 +730,6 @@ class PurchaseController extends Controller
                 DB::connection('tenant')->rollBack();
                 $has_error = true;
                 $message = $e->getMessage();
-                $has_error = true;
                 return null;
             }
         });
@@ -763,6 +755,37 @@ class PurchaseController extends Controller
             ],
         ];
     }
+
+    public function toPrinter($id)
+    {
+        $purchase = Purchase::where('id', $id)->first();
+
+        if (!$purchase) {
+            throw new Exception("El código {$id} es inválido, no se encontró el pedido relacionado");
+        }
+
+        if (empty($purchase->filename)) {
+            throw new Exception("El pedido {$id} no tiene un nombre de archivo asignado.");
+        }
+
+        $databaseName = config('database.connections.tenant.database');
+        $tenantDirectory = "tenancy/tenants/{$databaseName}/purchase/";
+
+        $filename = $purchase->filename;
+        if (!Str::endsWith($filename, '.pdf')) {
+            $filename .= '.pdf';
+        }
+
+        $filePath = storage_path("app/{$tenantDirectory}{$filename}");
+
+        if (!file_exists($filePath)) {
+            throw new Exception("El archivo PDF no se encuentra en la ruta esperada: {$filePath}");
+        }
+
+        return response()->file($filePath, $this->generalPdfResponseFileHeaders($filename));
+    }
+
+
     public function toPrint($external_id, $format)
     {
         $purchase = Purchase::where('external_id', $external_id)->first();
@@ -1215,15 +1238,99 @@ class PurchaseController extends Controller
     public function updatefacturar(PurchaseFacturarRequest $request)
     {
         $purchase = Purchase::findOrFail($request->id);
+
+        $this->createPdf($purchase, "a4", $purchase->filename);
+
         $purchase->document_type_id = $request->document_type_id;
         $purchase->series = $request->series;
         $purchase->number = $request->number;
         $purchase->save();
+
+        // Create a new PDF for the updated document type
+        $this->createPdfWithUpdatedHeader($purchase, "a4", $request->document_type_id);
+
         return [
             "success" => true,
-            "message" => "Se Guardo con exito",
+            "message" => "Se guardó con éxito",
             "data" => $purchase
         ];
+    }
+
+    private function createPdfWithUpdatedHeader($purchase, $format_pdf, $document_type_id)
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        $template = new Template();
+        $pdf = new Mpdf();
+
+        $company = Company::active();
+        $filename = $this->createFilename($purchase) . '-' . strtolower($document_type_id);
+
+        // Get the base template
+        $base_template = Configuration::first()->formats;
+
+        // Generate the HTML with the updated header
+        $html = $template->pdf($base_template, "purchase", $company, $purchase, $format_pdf);
+
+        // Update the header based on the document type
+        switch ($document_type_id) {
+            case '01':
+                $html = str_replace('GUÍA', 'FACTURA ELECTRÓNICA', $html);
+                break;
+            case '03':
+                $html = str_replace('GUÍA', 'BOLETA ELECTRÓNICA', $html);
+                break;
+            // Add more cases as needed
+            default:
+                $html = str_replace('GUÍA', 'DOCUMENTO ELECTRÓNICO', $html);
+                break;
+        }
+
+        $pdf_font_regular = config('tenant.pdf_name_regular');
+        $pdf_font_bold = config('tenant.pdf_name_bold');
+
+        if ($pdf_font_regular != false) {
+            $defaultConfig = (new ConfigVariables())->getDefaults();
+            $fontDirs = $defaultConfig['fontDir'];
+
+            $defaultFontConfig = (new FontVariables())->getDefaults();
+            $fontData = $defaultFontConfig['fontdata'];
+
+            $pdf = new Mpdf([
+                'fontDir' => array_merge($fontDirs, [
+                    app_path('CoreFacturalo' . DIRECTORY_SEPARATOR . 'Templates' .
+                        DIRECTORY_SEPARATOR . 'pdf' .
+                        DIRECTORY_SEPARATOR . $base_template .
+                        DIRECTORY_SEPARATOR . 'font')
+                ]),
+                'fontdata' => $fontData + [
+                    'custom_bold' => [
+                        'R' => $pdf_font_bold . '.ttf',
+                    ],
+                    'custom_regular' => [
+                        'R' => $pdf_font_regular . '.ttf',
+                    ],
+                ]
+            ]);
+        }
+
+        $path_css = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR . 'Templates' .
+            DIRECTORY_SEPARATOR . 'pdf' .
+            DIRECTORY_SEPARATOR . $base_template .
+            DIRECTORY_SEPARATOR . 'style.css');
+
+        $stylesheet = file_get_contents($path_css);
+
+        $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
+        $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
+
+        if ($format_pdf != 'ticket') {
+            if (config('tenant.pdf_template_footer')) {
+                $html_footer = $template->pdfFooter($base_template, $purchase);
+                $pdf->SetHTMLFooter($html_footer);
+            }
+        }
+
+        $this->uploadFile($filename, $pdf->output('', 'S'), 'purchase');
     }
 
     public function xml2array($xmlObject, $out = array())

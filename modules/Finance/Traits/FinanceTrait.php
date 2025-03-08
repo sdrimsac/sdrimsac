@@ -44,41 +44,27 @@ trait FinanceTrait
 
     public function getCash(){
 
-        $cash =  Cash::where([['user_id',auth()->user()->id]])->get()->last();
+        $user = auth()->user();
+        $cash = null;
+
+        if ($user->type === 'admin' || $user->type === 'superadmin') {
+            $cash = Cash::whereIn('user_id', function($query) {
+                $query->select('id')
+                      ->from('users')
+                      ->whereIn('type', ['admin', 'superadmin']);
+            })->get()->last();
+        } else {
+            $cash = Cash::where('user_id', $user->id)->get()->last();
+        }
 
         if($cash){
-            
             return [
                 'id' => 'cash',
                 'cash_id' => $cash->id,
                 'description' => ($cash->reference_number) ? "CAJA GENERAL - {$cash->reference_number}" : "CAJA GENERAL",
             ];
-
-        }else{
+        } else {
             return null;
-            // $cash =  Cash::where([['user_id',auth()->user()->id]])->first();
-            // if( $cash==null){
-            //     $cash_create = Cash::create([
-            //         'user_id' => auth()->user()->id,
-            //         'date_opening' => date('Y-m-d'),
-            //         'time_opening' => date('H:i:s'),
-            //         'date_closed' => null,
-            //         'time_closed' => null,
-            //         'beginning_balance' => 0,
-            //         'final_balance' => 0,
-            //         'income' => 0,
-            //         'state' => true,
-            //         'reference_number' => null
-            //     ]);
-            // }
-
-         
-            // return [
-            //     'id' => 'cash',
-            //     'cash_id' => $cash_create->id,
-            //     'description' => "CAJA GENERAL"
-            // ];
-
         }
 
     }
