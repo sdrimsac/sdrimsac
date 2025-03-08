@@ -1680,6 +1680,8 @@
             :showSplitPayment.sync="showSplitPayment"
             :customer_default="customer_default"
             @setPayments="setPayments"
+            :printerOn="printerOn"
+
         >
         </show-split-payment-form>
         <person-college-form
@@ -2394,6 +2396,7 @@ export default {
             });
         },
         setPayments(payments) {
+            this.currentPayments = []; // Limpiar pagos actuales
             payments.forEach(payment => {
                 this.form.enter_amount = payment.amount;
                 this.method_payments = payment.payment_method;

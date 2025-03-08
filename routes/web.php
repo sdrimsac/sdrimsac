@@ -45,6 +45,7 @@ if ($hostname) {
             Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
             Route::get('check-documents', [TenantDocumentController::class, 'checkDocuments']);
             Route::get('purchases/print/{external_id}/{format?}', 'Tenant\PurchaseController@toPrint');
+            Route::get('purchases/printer/{id}', 'Tenant\PurchaseController@toPrinter');
             Route::get('credit-list/receipt/{id}/ticket', [CreditListController::class, 'receipt']);
             Route::get('buscar', [App\Http\Controllers\Tenant\SearchController::class, 'index'])->name('search.index');
             Route::get('search/tables', [App\Http\Controllers\Tenant\SearchController::class, 'tables']);

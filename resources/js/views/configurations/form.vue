@@ -4422,7 +4422,10 @@
                                                                         <i
                                                                             class="fas fa-file-alt tab-icon"
                                                                         ></i>
-                                                                        Ocultar Historia Reporte de Caja
+                                                                        Ocultar
+                                                                        Historia
+                                                                        Reporte
+                                                                        de Caja
                                                                     </label>
                                                                     <el-switch
                                                                         v-model="
@@ -10892,6 +10895,39 @@
                                                                         'Imprimir en Zona Preparación',
                                                                         form.print_kitchen,
                                                                         'print_kitchen',
+                                                                        'printIcon'
+                                                                    )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-print fa-lg"
+                                                                    style="margin-right: 10px;"
+                                                                ></i>
+                                                                Comanda de Cocina en Caja 
+                                                            </label>
+                                                            <el-switch
+                                                                v-model=" form.conopy_kitchen
+                                                                "
+                                                                active-text="Si"
+                                                                inactive-text="No"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    submit(
+                                                                        'Comanda de Cocina en Caja',
+                                                                        form.conopy_kitchen,
+                                                                        'canopy_kitchen',
                                                                         'printIcon'
                                                                     )
                                                                 "

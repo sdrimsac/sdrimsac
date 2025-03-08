@@ -439,6 +439,9 @@ export default {
             let form = JSON.parse(JSON.stringify(this.form));
             let { items } = form;
 
+            // Ensure printerOn is true for split payments
+            form.printerOn = this.printerOn;
+
             if (this.splitByAmount == "1") {
                 for (const p of this.persons) {
                     let fItems = this.formatItems(
@@ -475,7 +478,6 @@ export default {
                     // Filtrar los ítems correspondientes a la persona actual
                     let personItems = items.filter(i =>
                         p.products.some(product => {
-                            console.log("Comparando", product, i);
                             return product.id == i.id;
                         })
                     );
@@ -894,6 +896,7 @@ export default {
             });
         },
         open() {
+            console.log("🚀 ~ created ~ this.orden_items ver que llega:", this.printerOn);
             this.formOrigin = JSON.parse(JSON.stringify(this.form));
             let { items } = this.orden_items;
             this.quantity = items.reduce((a, b) => a + Number(b.quantity), 0);

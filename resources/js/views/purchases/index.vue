@@ -161,9 +161,16 @@
                                 {{ row.state_type_payment_description }}
                             </td>
                             <td>
-                                {{ row.number }}<br /><small
-                                    v-text="row.document_type_description"
-                                ></small>
+                                <template v-if="row.document_type_description === 'GUÍA'">
+                                    {{ row.number_full }}<br /><small
+                                        v-text="row.document_type_description"
+                                    ></small>
+                                </template>
+                                <template v-else>
+                                    {{ row.number }}<br /><small
+                                        v-text="row.document_type_description"
+                                    ></small>
+                                </template>
                             </td>
                             <td class="text-center">
                                 <el-popover

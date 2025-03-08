@@ -1704,6 +1704,7 @@ class DocumentController extends Controller
             // }
             // event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
             dispatch(new PrintOrderJob($document->id, $document->document_type_id, $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
+           
 
             if ($request->orden_id != null) {
                 $Orden = Orden::FindOrFail($request->orden_id);
