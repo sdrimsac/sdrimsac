@@ -743,6 +743,294 @@ class OrdenController extends Controller
             ];
         }
     }
+    /* public function store(Request $request)
+    {
+        try {
+            $user = null;
+            $ref = $request->ref;
+            $mozo_id = $request->mozo_id;
+            $sale_direct = $request->saleDirect ?? true;
+            $configuration = Configuration::first();
+            if ($request->caja == false && $configuration->pin_switch) {
+                $pin = $request->pin;
+                if (!$pin) {
+                    return [
+                        'success' => false,
+                        'message' => 'Pin incorrecto'
+                    ];
+                }
+                $user = User::where('pin', $pin)->first();
+                if (!$user) {
+                    return [
+                        'success' => false,
+                        'message' => 'Pin incorrecto'
+                    ];
+                }
+            } else {
+                $user = User::find(auth()->id());
+            }
+
+            // Optimizar la búsqueda de orden
+            $id = null;
+            if ($configuration->commands_fisico) {
+                $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
+                $id = $orden ? $orden->id : null;
+            } else if ($request->id) {
+                $orden = Orden::find($request->id);
+                $id = $orden ? $orden->id : null;
+            }
+
+            $new_orden = collect($request->orden);
+            $new_orden->put('status_orden_id', $new_orden->get('status_orden_id', 1));
+
+            $items = $request->items;
+            if (empty($items)) {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede guardar una orden sin items'
+                ];
+            }
+
+            $user_id = $user->id;
+            $message = 'Pedido realizado.';
+            $establishment_id = auth()->user()->establishment_id;
+
+            // Optimizar la búsqueda y creación de mesa
+            if ($request->caja && $sale_direct) {
+                $table = Table::firstOrCreate(
+                    [
+                        'number' => 'caja',
+                        'establishment_id' => $establishment_id
+                    ],
+                    [
+                        'area_id' => auth()->user()->area_id,
+                        'status_table_id' => 2
+                    ]
+                );
+            } else if ($request->orden) {
+                $table = Table::where('id', $request->orden['table_id'])
+                    ->update(['status_table_id' => 2]);
+                $table = Table::find($request->orden['table_id']);
+            }
+
+            $orden = null;
+            if ($id != null) {
+                $orden = Orden::find($id);
+                $orden->ref = $ref;
+                $orden->mozo_id = $mozo_id; // Solo guardamos el ID
+
+                $table = Table::find($orden->table_id);
+                if ($table->is_room) {
+                    $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
+                    if ($hotel_rent_item) {
+                        $orden->hotel_rent_item_id = $hotel_rent_item->id;
+                    }
+                }
+                $message = 'Pedido agregado.'; //me refiero en punto de caja
+                $orden->save();
+                //creo la orden y guardo los items
+            } else {
+                $orden = new Orden;
+
+                $orden = $orden->fill($new_orden->all());
+
+                $orden->date = Carbon::today();
+                $orden->ref = $ref;
+                $orden->mozo_id = $mozo_id; // Solo guardamos el ID
+                $orden->to_carry = $request->to_carry;
+                $orden->commands_fisico = $request->commands_fisico;
+
+                if ($request->caja == true) {
+                    $orden->table_id = $table->id;
+                }
+                $table = Table::find($orden->table_id);
+                $table->status_table_id = 2;
+                if ($table->is_room) {
+                    $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
+                    if ($hotel_rent_item) {
+                        $orden->hotel_rent_item_id = $hotel_rent_item->id;
+                    }
+                }
+                $table->save();
+                $orden->save();
+            }
+            event(new OrdenPendingEvent(1));
+            $orden_items_ids = [];
+            $orden_items_ids_for_kitchen = [];
+            
+            $orden_items = collect($items)->map(function ($item) use ($orden, $user_id) {
+                return [
+                    'food_id' => $item['food']['id'],
+                    'observations' => $item['observation'] ?? '-',
+                    'quantity' => $item['quantity'],
+                    'unit_type_id' => Functions::valueKeyInArray($item, 'type_id', null),
+                    'price' => $item['price'],
+                    'user_id' => $user_id,
+                    'orden_id' => $orden->id,
+                    'to_carry' => Functions::valueKeyInArray($item, 'to_carry', 0),
+                    'status_orden_id' => 1,
+                    'date' => Carbon::today(),
+                    'time' => date('H:i:s'),
+                    'area_id' => $item['food']['area_id']
+                ];
+            });
+
+            // Inserción masiva y obtención de IDs
+            DB::beginTransaction();
+            try {
+                $food_ids = $orden_items->pluck('food_id')->toArray();
+
+                OrdenItem::insert($orden_items->toArray());
+
+                // Obtener solo los items recién creados usando los food_ids
+                $created_items = OrdenItem::where('orden_id', $orden->id)
+                    ->whereIn('food_id', $food_ids)
+                    ->select('id', 'food_id', 'area_id')
+                    ->latest('id')
+                    ->take(count($food_ids))
+                    ->get();
+
+                $orden_items_ids = $created_items->pluck('id')->toArray();
+
+                $orden_items_ids_for_kitchen = $created_items->map(function ($item) {
+                    return ['orden_id' => $item->id, 'area_id' => $item->area_id];
+                })->toArray();
+
+                // Actualizar stock en batch si es posible
+                foreach ($created_items as $item) {
+                    $item->stockRestaurant();
+                    event(new OrdenEvent($item->id));
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
+
+            if ($request->add_charge_room) {
+                $food = $this->get_item_service();
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $food->id;
+                $orden_item->observations = '-';
+                $orden_item->quantity = 1;
+                // $orden_item->unit_type_id = 'ZZ';
+                $orden_item->price = 5;
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = 0;
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $food->area_id;
+                $orden_item->save();
+                $orden_item->stockRestaurant();
+            }
+
+            $print_box = $configuration->print_commands;
+            $print_kitchen = $configuration->print_kitchen;
+            $conopy_kitchen = $configuration->conopy_kitchen;
+            /* if ($conopy_kitchen) { // Ensure $conopy_kitchen is entered when true
+                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                foreach ($ids_areas as $area_id) {
+                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                        return $area_id == $a['area_id'];
+                    }), "orden_id");
+                    $area_found = Area::find($area_id);
+                    if ($area_found->printer || $area_found->search_print == 1) {
+                        // Print to kitchen and box area
+                        if ($area_found->description == 'COCINA') {
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            if (!$print_box) {
+                                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $filtered, null, null, null, $user_id, url('')));
+                            }
+                        } else {
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                        }
+                    }
+                }
+            }
+            if ($conopy_kitchen) {
+                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                foreach ($ids_areas as $area_id) {
+                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                        return $area_id == $a['area_id'];
+                    }), "orden_id");
+                    $area_found = Area::find($area_id);
+                    if ($area_found->printer || $area_found->search_print == 1) {
+                        // Print to kitchen and box area
+                        if ($area_found->description == 'COCINA') {
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $filtered, null, null, null, $user_id, url('')));
+                        } else {
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                        }
+                    }
+                }
+            }
+
+            if ($print_kitchen) {
+                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                foreach ($ids_areas as $area_id) {
+                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                        return $area_id == $a['area_id'];
+                    }), "orden_id");
+                    $area_found = Area::find($area_id);
+                    if ($area_found->printer || $area_found->search_print == 1) {
+                        dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                    }
+                }
+            }
+            if ($print_box) {
+                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
+            }
+
+            $isFromBox = $this->isArea("CAJ", $user->area_id);
+
+            /* if ($print_box) {
+                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
+            } 
+
+            $id = strval($orden->id);
+            $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
+            //$orden_items_ids
+            return [
+                'id' => $orden->id,
+                'success' => true,
+                'message' => $message,
+                'ordenId' => $orden->id,
+                'printer' => $establishment->printer,
+                'copies' => $establishment->copies,
+                'printer_serve' => $establishment->printer_serve,
+                'direct_printing' => (bool) $establishment->direct_printing,
+                //'print'   => url('') . "/restaurant/worker/print-ticket/{$id}"
+            ];
+        } catch (Exception $e) {
+            if ($e->getMessage() != null) {
+
+                Log::info($e->getMessage());
+            }
+            if ($e->getLine() != null) {
+
+                Log::info($e->getLine());
+            }
+            if ($orden) {
+                $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
+                if ($ordens_items == 0) {
+                    $orden->delete();
+                    $table = Table::find($orden->table_id);
+                    $table->status_table_id = 1;
+                    $table->save();
+                }
+            }
+            return [
+                'message' => $e->getMessage(),
+                'line'    => $e->getLine(),
+                'file'    => $e->getFile(),
+            ];
+        }
+    } */
+
     public function store(Request $request)
     {
         try {
@@ -962,9 +1250,9 @@ class OrdenController extends Controller
                         }
                     }
                 }
-                if ($print_box) {
+                /* if ($print_box) {
                     dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
-                }
+                } */
             }
 
             $isFromBox = $this->isArea("CAJ", $user->area_id);
