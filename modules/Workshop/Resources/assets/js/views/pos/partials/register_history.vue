@@ -433,7 +433,7 @@
                             <div class="row">
                                 <div
                                     class="col-md-6"
-                                    v-for="service in servicesById[9]"
+                                    v-for="service in servicesById[10]"
                                     :key="service.id"
                                 >
                                     <el-checkbox
