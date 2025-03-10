@@ -108,7 +108,6 @@ class ReportKardexController extends Controller
 
     public function getRecords($request, $note = true)
     {
-
         $item_id = $request['item_id'];
         $date_start = $request['date_start'];
         $date_end = $request['date_end'];
@@ -143,7 +142,7 @@ class ReportKardexController extends Controller
                 $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
-                    ->orderBy('item_id')->orderBy('created_at');;
+                    ->orderBy('item_id')->orderBy('created_at');
             }
         } else {
             if ($note == false) {
@@ -151,12 +150,12 @@ class ReportKardexController extends Controller
                 $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
-                    ->orderBy('item_id')->orderBy('created_at');
+                    ->orderBy('item_id')->orderBy('created_at'); // Ensure created_at is ordered in descending order
             } else {
 
                 $data = InventoryKardex::with(['inventory_kardexable','user'])
                     ->where([['warehouse_id', $warehouse]])
-                    ->orderBy('item_id')->orderBy('created_at');
+                    ->orderBy('item_id')->orderBy('created_at'); // Ensure created_at is ordered in descending order
             }
         }
 
@@ -165,6 +164,7 @@ class ReportKardexController extends Controller
             $data = $data->where('item_id', $item_id);
         }
 
+        //$data = $data->orderBy('date_of_issue', 'asc'); 
 
         return $data;
     }
@@ -476,10 +476,12 @@ class ReportKardexController extends Controller
         if ($date_start && $date_end) {
 
             $data = ItemLot::whereBetween('date', [$date_start, $date_end])
-                ->orderBy('item_id')->orderBy('id');
+                ->orderBy('item_id')
+                ->orderBy('id'); // Ensure created_at is ordered in descending order
         } else {
 
-            $data = ItemLot::orderBy('item_id')->orderBy('id');
+            $data = ItemLot::orderBy('item_id')
+                ->orderBy('id'); // Ensure created_at is ordered in descending order
         }
 
         if ($item_id) {
@@ -492,24 +494,12 @@ class ReportKardexController extends Controller
 
     public function records_series_kardex(Request $request)
     {
-
         $records = $this->getRecords3($request->all());
 
+        // Order records by the most recent date and time in descending order
+        //$records = $records->orderBy('date_of_issue', 'desc')->orderBy('created_at', 'desc');
+
         return new ReportKardexItemLotCollection($records->paginate(config('tenant.items_per_page')));
-
-        /*$records = [];
-
-        if($item)
-        {
-            $records  =  ItemLot::where('item_id', $item)->get();
-
-        }
-        else{
-            $records  = ItemLot::all();
-        }
-
-       // $records  =  ItemLot::all();
-        return new ReportKardexItemLotCollection($records);*/
     }
 
 

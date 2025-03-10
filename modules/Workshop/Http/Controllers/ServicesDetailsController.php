@@ -24,6 +24,15 @@ class ServicesDetailsController extends Controller
 
         return new ServicesDetailsCollection($records->paginate(20));
     }
+
+    public function recordsAdmin(Request $request)
+    {
+        $records = ServicesDetails::query()->get(); 
+
+        return new ServicesDetailsCollection($records);
+    }
+
+
     public function getRecords(Request $request)
     {
         $service_id = $request->service_id;

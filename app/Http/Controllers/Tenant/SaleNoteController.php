@@ -2843,7 +2843,7 @@ class SaleNoteController extends Controller
             'message' => ($sale_note->enabled_concurrency) ? 'Recurrencia activada' : 'Recurrencia desactivada'
         ];
     }
-
+     // para anular nota de venta interno
     public function anulate(Request $request, $id)
     {
 

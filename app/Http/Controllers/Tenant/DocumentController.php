@@ -1426,6 +1426,7 @@ class DocumentController extends Controller
     // }
     public function store(DocumentRequest $request)
     {
+        //dump($request->all());
         DB::connection('tenant')->beginTransaction();
         $user_type = auth()->user()->type;
         $ids = [];
@@ -2951,6 +2952,8 @@ class DocumentController extends Controller
             ->payment_count($this->max_count_payment)
             ->download('Reporte_Pagos_' . Carbon::now() . '.xlsx');
     }
+
+    // para anular un documeto en el sistema
 
     public function destroyDocument($document_id)
     {

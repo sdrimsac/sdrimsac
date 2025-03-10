@@ -434,7 +434,7 @@ export default {
         },
         getServicesDetails() {
             this.$http
-                .get(`/${this.resource}/servicesdetails/records`)
+                .get(`/${this.resource}/servicesdetails/records-admin`)
                 .then(response => {
                     this.services_details = response.data.data.map(service => ({
                         ...service,

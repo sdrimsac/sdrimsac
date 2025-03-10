@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/servicesdetails', [ServicesDetailsController::class, 'index'])->name('tenant.workshop.servicesdetails');
         Route::get('servicesdetails/records', [ServicesDetailsController::class, 'records']);
+        Route::get('servicesdetails/records-admin', [ServicesDetailsController::class, 'recordsAdmin']);
         Route::get('servicesdetails/tables', [ServicesDetailsController::class, 'tables']);
         Route::post('servicesdetails', [ServicesDetailsController::class, 'store']);
         Route::get('servicesdetails/record/{id}', [ServicesDetailsController::class, 'record']);
