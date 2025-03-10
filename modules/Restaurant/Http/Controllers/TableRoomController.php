@@ -2201,7 +2201,7 @@ class TableRoomController extends Controller
         $table = Table::firstOrNew(['id' => $id]);
         $data = $request->except('images');
         $data['has_frigobar'] = filter_var($data['has_frigobar'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
-        $data['is_cleaning'] = filter_var($data['is_cleaning'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        $data['is_cleaning'] = !empty($data['is_cleaning']) ? (filter_var($data['is_cleaning'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0) : 0;
         if (isset($data['enabled'])) {
 
             $data['enabled'] = filter_var($data['enabled'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
@@ -2230,11 +2230,6 @@ class TableRoomController extends Controller
         if (isset($data['cleaning_start_date']) && ($data['cleaning_start_date'] === 'undefined' || $data['cleaning_start_date'] === 'null')) {
             $data['cleaning_start_date'] = null;
         }
-
-
-
-
-
 
         $table->fill($data);
 
