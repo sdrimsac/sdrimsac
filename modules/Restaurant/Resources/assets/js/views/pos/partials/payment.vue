@@ -1952,6 +1952,11 @@ export default {
         },
         method_payments(newMethod, _) {
             this.checkTotal(newMethod);
+        },
+        loading(newVal) {
+            if (!newVal) {
+                this.closeModal();
+            }
         }
     },
     data() {
@@ -3791,9 +3796,9 @@ export default {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
-            let base = parseFloat(this.form.total_value);
             if (global_discount > total) {
                 this.discount_amount = 0;
+                this.$forceUpdate();
                 this.$forceUpdate();
                 return this.$toast.error(
                     "El descuento no puede ser mayor al total"
@@ -4431,6 +4436,9 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
+            this.loading = true;
+            this.loading_submit = true;
+            this.button_payment = true;
             let pass = true;
 
             if (
@@ -4463,13 +4471,19 @@ export default {
                     });
 
                     if (!result.isConfirmed) {
-                        throw new Error("Cancelled");
+                        this.loading = false;
+                        this.loading_submit = false;
+                        this.button_payment = false;
+                        return;
                     }
                 } catch (e) {
                     pass = false;
                 }
             }
             if (!pass) {
+                this.loading = false;
+                this.loading_submit = false;
+                this.button_payment = false;
                 return;
             }
             if (!form) {
@@ -4519,6 +4533,7 @@ export default {
             } else {
                 console.log("no envio variation");
             }
+            
         },
         checkPaymentsIsOk() {
             let total = 0;
@@ -4581,7 +4596,6 @@ export default {
                 return false;
             }
         },
-
         async clickPayment(form) {
             let boxes = this.currentPayments.reduce(
                 (a, b) => a + Number(b.amount),
@@ -5051,12 +5065,10 @@ export default {
                         }
                     }
                 } else {
-                    this.loading_submit = true;
                     let {
                         data: { message }
                     } = response;
                     this.$toast.error(message || "Ocurrió un error");
-                    this.loading_submit = false;
                 }
             } catch (error) {
                 console.log(error);
@@ -5066,8 +5078,9 @@ export default {
                 } = response;
 
                 this.$toast.error(message || "Ocurrió un error");
-                this.loading_submit = false;
             } finally {
+                this.loading_submit = false;
+                this.loading = false;
                 this.button_payment = false;
             }
         },
@@ -5448,6 +5461,9 @@ export default {
             } finally {
                 loading.close();
             }
+        },
+        closeModal() {
+            this.showDialogPromotionBox = false;
         }
     }
 };
