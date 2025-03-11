@@ -12,1001 +12,620 @@
         top="2vh"
         :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
     >
-        <div v-loading="loading" class=" mb-0">
-            <div
-                class="pt-1"
-                v-loading="loading_submit"
-                :element-loading-text="loadingText"
-            >
-                <!-- Cabecera del  Modal de Cobro                 -->
-                <div class="col-lg-12">
-                    <div class="mb-1">
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <div class="row" v-if="configuration.college">
-                                    <el-checkbox
-                                        @change="chageRegister"
-                                        v-model="notRegister"
-                                        >No registrado
-                                    </el-checkbox>
-                                </div>
-                                <!-- Comprobante de Pago  -->
-
-                                <div
-                                    class="form-row d-flex align-items-center justify-content-between flex-wrap no-padding"
-                                >
-                                    <!-- Columna 1: Comprobante de Pago (Factura, Boleta, Nota) -->
-                                    <div
-                                        class="form-group col-12 col-md-6 d-flex flex-column pt-0 pb-0"
-                                    >
-                                        <div
-                                            class="shadow-box d-flex justify-content-between flex-wrap pt-0 pb-0"
-                                        >
-                                            <el-button-group
-                                                v-model="form.document_type_id"
-                                                @change="filterSeries"
-                                            >
-                                                <!-- Botón Factura -->
-                                                <el-button
-                                                    v-if="invoice"
-                                                    label="01"
-                                                    :style="{
-                                                        backgroundColor:
-                                                            form.document_type_id ===
-                                                            '01'
-                                                                ? '#4CAF50'
-                                                                : '#B0B0B0',
-                                                        borderColor:
-                                                            form.document_type_id ===
-                                                            '01'
-                                                                ? '#4CAF50'
-                                                                : '#ccc',
-                                                        color:
-                                                            form.document_type_id ===
-                                                            '01'
-                                                                ? '#fff'
-                                                                : '#000',
-                                                        marginRight: '10px',
-                                                        fontSize: '16px',
-                                                        fontFamily:
-                                                            'Arial, sans-serif',
-                                                        padding: '8px 20px',
-                                                        fontWeight: 'bold',
-                                                        width: '130px',
-                                                        height: '50px',
-                                                        borderRadius: '5px',
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'center',
-                                                        alignItems: 'center'
-                                                    }"
-                                                    @click="
-                                                        selectDocumentType('01')
-                                                    "
-                                                    title="FACTURA"
-                                                >
-                                                    <i
-                                                        class="fas fa-file-invoice-dollar fa-lg"
-                                                        style="margin-right: 8px;"
-                                                    ></i>
-                                                    FACTURA
-                                                </el-button>
-                                                <!-- Botón Boleta -->
-                                                <el-button
-                                                    v-if="receipt"
-                                                    label="03"
-                                                    :style="{
-                                                        backgroundColor:
-                                                            form.document_type_id ===
-                                                            '03'
-                                                                ? '#FFC107'
-                                                                : '#B0B0B0',
-                                                        borderColor:
-                                                            form.document_type_id ===
-                                                            '03'
-                                                                ? '#FFC107'
-                                                                : '#ccc',
-                                                        color:
-                                                            form.document_type_id ===
-                                                            '03'
-                                                                ? '#fff'
-                                                                : '#000',
-                                                        marginRight: '10px',
-                                                        fontSize: '16px',
-                                                        fontFamily:
-                                                            'Arial, sans-serif',
-                                                        padding: '8px 20px',
-                                                        fontWeight: 'bold',
-                                                        width: '130px',
-                                                        height: '50px',
-                                                        borderRadius: '5px',
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'center',
-                                                        alignItems: 'center'
-                                                    }"
-                                                    @click="
-                                                        selectDocumentType('03')
-                                                    "
-                                                    title="BOLETA"
-                                                >
-                                                    <i
-                                                        class="fas fa-file-alt fa-lg"
-                                                        style="margin-right: 8px;"
-                                                    ></i>
-                                                    BOLETA
-                                                </el-button>
-                                                <!-- Botón Nota de Venta -->
-                                                <el-button
-                                                    v-if="sale_note"
-                                                    label="80"
-                                                    :style="{
-                                                        backgroundColor:
-                                                            form.document_type_id ===
-                                                            '80'
-                                                                ? '#1E88E5'
-                                                                : '#B0B0B0',
-                                                        borderColor:
-                                                            form.document_type_id ===
-                                                            '80'
-                                                                ? '#1E88E5'
-                                                                : '#ccc',
-                                                        color:
-                                                            form.document_type_id ===
-                                                            '80'
-                                                                ? '#fff'
-                                                                : '#000',
-                                                        fontSize: '16px',
-                                                        fontFamily:
-                                                            'Arial, sans-serif',
-                                                        padding: '8px 20px',
-                                                        fontWeight: 'bold',
-                                                        width: '130px',
-                                                        height: '50px',
-                                                        borderRadius: '5px',
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'center',
-                                                        alignItems: 'center'
-                                                    }"
-                                                    @click="
-                                                        selectDocumentType('80')
-                                                    "
-                                                    title="NOTA"
-                                                >
-                                                    <i
-                                                        class="fas fa-file-signature fa-lg"
-                                                        style="margin-right: 8px;"
-                                                    ></i>
-                                                    NOTA
-                                                </el-button>
-                                            </el-button-group>
-                                        </div>
+        <!-- Ensure loading_submit covers the entire modal -->
+        <div v-loading="loading_submit" :element-loading-text="loadingText">
+            <div class=" mb-0">
+                <div class="pt-1">
+                    <!-- Cabecera del  Modal de Cobro -->
+                    <div class="col-lg-12">
+                        <div class="mb-1">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="row" v-if="configuration.college">
+                                        <el-checkbox
+                                            @change="chageRegister"
+                                            v-model="notRegister"
+                                            >No registrado
+                                        </el-checkbox>
                                     </div>
-                                    <!-- Columna 2: Serie, Fecha de Emisión y Botón -->
+                                    <!-- Comprobante de Pago  -->
+
                                     <div
-                                        class="form-group col-12 col-md-6 d-flex flex-wrap pt-0 pb-0 justify-content-between"
+                                        class="form-row d-flex align-items-center justify-content-between flex-wrap no-padding"
                                     >
+                                        <!-- Columna 1: Comprobante de Pago (Factura, Boleta, Nota) -->
                                         <div
-                                            class="d-flex justify-content-between w-100 align-items-center"
+                                            class="form-group col-12 col-md-6 d-flex flex-column pt-0 pb-0"
                                         >
-                                            <!-- Serie -->
                                             <div
-                                                class="form-group me-1"
-                                                style="flex: 1 1 auto;"
+                                                class="shadow-box d-flex justify-content-between flex-wrap pt-0 pb-0"
                                             >
-                                                <label
-                                                    class="control-label fw-bold"
-                                                    style="font-size: 1rem;"
+                                                <el-button-group
+                                                    v-model="form.document_type_id"
+                                                    @change="filterSeries"
                                                 >
-                                                    <i
-                                                        class="fas fa-hashtag me-2"
-                                                        style="font-size: 1.2rem;"
-                                                    ></i>
-                                                    Serie
-                                                </label>
-                                                <el-select
-                                                    v-model="form.series_id"
-                                                    class="custom-select"
-                                                    style="width: 100%;"
-                                                    :style="{
-                                                        backgroundColor:
-                                                            form.document_type_id ===
-                                                            '01'
-                                                                ? '#4CAF50'
-                                                                : form.document_type_id ===
-                                                                  '03'
-                                                                ? '#FFC107'
-                                                                : form.document_type_id ===
-                                                                  '80'
-                                                                ? '#1E88E5'
-                                                                : '#B0B0B0',
-                                                        color: '#fff',
-                                                        borderRadius: '5px',
-                                                        height: '45px',
-                                                        fontSize:
-                                                            '25px' /* Tamaño de letra más grande */,
-                                                        fontWeight: 'bold',
-                                                        textAlign:
-                                                            'center' /* Centra el texto horizontalmente */,
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'center' /* Centra el contenido horizontalmente */,
-                                                        alignItems:
-                                                            'center' /* Centra el contenido verticalmente */
-                                                    }"
-                                                >
-                                                    <el-option
-                                                        v-for="option in series"
-                                                        :key="option.id"
-                                                        :label="
-                                                            option.full_number
-                                                        "
-                                                        :value="option.id"
-                                                    ></el-option>
-                                                </el-select>
-                                            </div>
-                                            <!-- Fecha de Emisión -->
-                                            <div
-                                                class="form-group me-1"
-                                                style="flex: 1 1 auto;"
-                                            >
-                                                <label
-                                                    class="control-label fw-bold"
-                                                    style="font-size: 1rem;"
-                                                >
-                                                    <i
-                                                        class="fas fa-calendar-alt me-2"
-                                                        style="font-size: 1.2rem;"
-                                                    ></i>
-                                                    Emisión
-                                                </label>
-                                                <el-date-picker
-                                                    v-model="form.date_of_issue"
-                                                    type="date"
-                                                    value-format="yyyy-MM-dd"
-                                                    format="dd-MM-yyyy"
-                                                    :clearable="false"
-                                                    style="width: 100%;"
-                                                    :readonly="
-                                                        this.configuration
-                                                            .restrict_receipt_date
-                                                    "
-                                                    @change="changeDateOfIssue"
-                                                ></el-date-picker>
-                                            </div>
-                                            <!-- Botón de Visualización de Lista de venta -->
-                                            <div
-                                                class="form-group me-1"
-                                                style="flex: 1 1 auto;"
-                                            >
-                                                <el-tooltip
-                                                    content="Visualiza los productos que se agregaron a la compra"
-                                                    placement="top"
-                                                >
+                                                    <!-- Botón Factura -->
                                                     <el-button
-                                                        icon="fas fa-eye"
-                                                        size="small"
-                                                        type="primary"
+                                                        v-if="invoice"
+                                                        label="01"
+                                                        :style="{
+                                                            backgroundColor:
+                                                                form.document_type_id ===
+                                                                '01'
+                                                                    ? '#4CAF50'
+                                                                    : '#B0B0B0',
+                                                            borderColor:
+                                                                form.document_type_id ===
+                                                                '01'
+                                                                    ? '#4CAF50'
+                                                                    : '#ccc',
+                                                            color:
+                                                                form.document_type_id ===
+                                                                '01'
+                                                                    ? '#fff'
+                                                                    : '#000',
+                                                            marginRight: '10px',
+                                                            fontSize: '16px',
+                                                            fontFamily:
+                                                                'Arial, sans-serif',
+                                                            padding: '8px 20px',
+                                                            fontWeight: 'bold',
+                                                            width: '130px',
+                                                            height: '50px',
+                                                            borderRadius: '5px',
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'center',
+                                                            alignItems: 'center'
+                                                        }"
                                                         @click="
-                                                            showListItems = true
+                                                            selectDocumentType('01')
                                                         "
-                                                        style="font-size: 2rem; 
-                                                        padding: 0px 20px; height: 64px; display: flex; align-items: center; justify-content: center;"
+                                                        title="FACTURA"
                                                     >
+                                                        <i
+                                                            class="fas fa-file-invoice-dollar fa-lg"
+                                                            style="margin-right: 8px;"
+                                                        ></i>
+                                                        FACTURA
                                                     </el-button>
-                                                </el-tooltip>
+                                                    <!-- Botón Boleta -->
+                                                    <el-button
+                                                        v-if="receipt"
+                                                        label="03"
+                                                        :style="{
+                                                            backgroundColor:
+                                                                form.document_type_id ===
+                                                                '03'
+                                                                    ? '#FFC107'
+                                                                    : '#B0B0B0',
+                                                            borderColor:
+                                                                form.document_type_id ===
+                                                                '03'
+                                                                    ? '#FFC107'
+                                                                    : '#ccc',
+                                                            color:
+                                                                form.document_type_id ===
+                                                                '03'
+                                                                    ? '#fff'
+                                                                    : '#000',
+                                                            marginRight: '10px',
+                                                            fontSize: '16px',
+                                                            fontFamily:
+                                                                'Arial, sans-serif',
+                                                            padding: '8px 20px',
+                                                            fontWeight: 'bold',
+                                                            width: '130px',
+                                                            height: '50px',
+                                                            borderRadius: '5px',
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'center',
+                                                            alignItems: 'center'
+                                                        }"
+                                                        @click="
+                                                            selectDocumentType('03')
+                                                        "
+                                                        title="BOLETA"
+                                                    >
+                                                        <i
+                                                            class="fas fa-file-alt fa-lg"
+                                                            style="margin-right: 8px;"
+                                                        ></i>
+                                                        BOLETA
+                                                    </el-button>
+                                                    <!-- Botón Nota de Venta -->
+                                                    <el-button
+                                                        v-if="sale_note"
+                                                        label="80"
+                                                        :style="{
+                                                            backgroundColor:
+                                                                form.document_type_id ===
+                                                                '80'
+                                                                    ? '#1E88E5'
+                                                                    : '#B0B0B0',
+                                                            borderColor:
+                                                                form.document_type_id ===
+                                                                '80'
+                                                                    ? '#1E88E5'
+                                                                    : '#ccc',
+                                                            color:
+                                                                form.document_type_id ===
+                                                                '80'
+                                                                    ? '#fff'
+                                                                    : '#000',
+                                                            fontSize: '16px',
+                                                            fontFamily:
+                                                                'Arial, sans-serif',
+                                                            padding: '8px 20px',
+                                                            fontWeight: 'bold',
+                                                            width: '130px',
+                                                            height: '50px',
+                                                            borderRadius: '5px',
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'center',
+                                                            alignItems: 'center'
+                                                        }"
+                                                        @click="
+                                                            selectDocumentType('80')
+                                                        "
+                                                        title="NOTA"
+                                                    >
+                                                        <i
+                                                            class="fas fa-file-signature fa-lg"
+                                                            style="margin-right: 8px;"
+                                                        ></i>
+                                                        NOTA
+                                                    </el-button>
+                                                </el-button-group>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <!-- Clientes y Whatsapp -->
-                                <div
-                                    class="form-row d-flex align-items-center justify-content-between flex-wrap"
-                                >
-                                    <!-- Clientes -->
-                                    <div
-                                        class="col-12 client-section border-gray"
-                                    >
+                                        <!-- Columna 2: Serie, Fecha de Emisión y Botón -->
                                         <div
-                                            class="row align-items-center justify-content-between py-2 flex-wrap"
+                                            class="form-group col-12 col-md-6 d-flex flex-wrap pt-0 pb-0 justify-content-between"
                                         >
-                                            <!-- Columna 1: Botones -->
                                             <div
-                                                class="col-lg-3 d-flex align-items-center justify-content-start mb-2 mb-lg-0 flex-wrap pt-0 pb-0"
+                                                class="d-flex justify-content-between w-100 align-items-center"
                                             >
-                                                <!-- Botón Nuevo -->
-                                                <el-tooltip
-                                                    content="Crear Cliente"
-                                                    placement="top"
+                                                <!-- Serie -->
+                                                <div
+                                                    class="form-group me-1"
+                                                    style="flex: 1 1 auto;"
                                                 >
-                                                    <el-button
-                                                        v-if="
-                                                            !configuration.college ||
-                                                                notRegister
-                                                        "
-                                                        @click="createClient"
-                                                        class="fw-bold button-custom me-2"
-                                                        type="primary"
-                                                        size="small"
+                                                    <label
+                                                        class="control-label fw-bold"
+                                                        style="font-size: 1rem;"
                                                     >
                                                         <i
-                                                            class="fas fa-user fa-lg"
+                                                            class="fas fa-hashtag me-2"
+                                                            style="font-size: 1.2rem;"
                                                         ></i>
-                                                        Nuevo
-                                                    </el-button>
-                                                </el-tooltip>
-
-                                                <!-- Botón Editar -->
-                                                <el-tooltip
-                                                    content="Editar Cliente"
-                                                    placement="top"
+                                                        Serie
+                                                    </label>
+                                                    <el-select
+                                                        v-model="form.series_id"
+                                                        class="custom-select"
+                                                        style="width: 100%;"
+                                                        :style="{
+                                                            backgroundColor:
+                                                                form.document_type_id ===
+                                                                '01'
+                                                                    ? '#4CAF50'
+                                                                    : form.document_type_id ===
+                                                                      '03'
+                                                                    ? '#FFC107'
+                                                                    : form.document_type_id ===
+                                                                      '80'
+                                                                    ? '#1E88E5'
+                                                                    : '#B0B0B0',
+                                                            color: '#fff',
+                                                            borderRadius: '5px',
+                                                            height: '45px',
+                                                            fontSize:
+                                                                '25px' /* Tamaño de letra más grande */,
+                                                            fontWeight: 'bold',
+                                                            textAlign:
+                                                                'center' /* Centra el texto horizontalmente */,
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'center' /* Centra el contenido horizontalmente */,
+                                                            alignItems:
+                                                                'center' /* Centra el contenido verticalmente */
+                                                        }"
+                                                    >
+                                                        <el-option
+                                                            v-for="option in series"
+                                                            :key="option.id"
+                                                            :label="
+                                                                option.full_number
+                                                            "
+                                                            :value="option.id"
+                                                        ></el-option>
+                                                    </el-select>
+                                                </div>
+                                                <!-- Fecha de Emisión -->
+                                                <div
+                                                    class="form-group me-1"
+                                                    style="flex: 1 1 auto;"
                                                 >
-                                                    <!-- <el-button
-                                                        v-if="configuration.edit_clients"
-                                                        :disabled="
-                                                            !value ||
-                                                                isClientesVarios()
-                                                        "
-                                                        @click="
-                                                            openDialogPerson
-                                                        "
-                                                        class="fw-bold button-custom"
-                                                        type="success"
-                                                        size="small"
+                                                    <label
+                                                        class="control-label fw-bold"
+                                                        style="font-size: 1rem;"
                                                     >
                                                         <i
-                                                            class="fas fa-edit fa-lg"
+                                                            class="fas fa-calendar-alt me-2"
+                                                            style="font-size: 1.2rem;"
                                                         ></i>
-                                                        Editar
-                                                    </el-button> -->
-                                                    <el-button
-                                                        v-if="
-                                                            configuration.edit_clients
+                                                        Emisión
+                                                    </label>
+                                                    <el-date-picker
+                                                        v-model="form.date_of_issue"
+                                                        type="date"
+                                                        value-format="yyyy-MM-dd"
+                                                        format="dd-MM-yyyy"
+                                                        :clearable="false"
+                                                        style="width: 100%;"
+                                                        :readonly="
+                                                            this.configuration
+                                                                .restrict_receipt_date
                                                         "
-                                                        :disabled="
-                                                            !value ||
-                                                                isClientesVarios()
-                                                        "
-                                                        @click="
-                                                            openDialogPerson
-                                                        "
-                                                        class="fw-bold button-custom"
-                                                        type="success"
-                                                        size="small"
-                                                    >
-                                                        <i
-                                                            class="fas fa-edit fa-lg"
-                                                        ></i>
-                                                        Editar
-                                                    </el-button>
-
-                                                    <el-button
-                                                        v-else
-                                                        :disabled="true"
-                                                        class="fw-bold button-custom"
-                                                        type="success"
-                                                        size="small"
-                                                    >
-                                                        <i
-                                                            class="fas fa-edit fa-lg"
-                                                        ></i>
-                                                        Editar
-                                                    </el-button>
-                                                </el-tooltip>
-                                            </div>
-
-                                            <!-- Columna 2: Inputs -->
-                                            <div
-                                                class="col-lg-5 d-flex flex-column mb-2 mb-lg-0"
-                                            >
-                                                <label>Buscar Cliente</label>
-                                                <el-select
-                                                    class="col-md-6"
-                                                    ref="select_person"
-                                                    v-model="value"
-                                                    filterable
-                                                    clearable
-                                                    size="small"
-                                                    placeholder="Cliente"
-                                                    :disabled="loading"
-                                                    @change="changeCustomer"
-                                                    @keyup.native="
-                                                        keyupCustomer
-                                                    "
+                                                        @change="changeDateOfIssue"
+                                                    ></el-date-picker>
+                                                </div>
+                                                <!-- Botón de Visualización de Lista de venta -->
+                                                <div
+                                                    class="form-group me-1"
+                                                    style="flex: 1 1 auto;"
                                                 >
-                                                    <el-option
-                                                        v-for="(option,
-                                                        idx) in customers"
-                                                        :key="idx"
-                                                        :label="
-                                                            option.description
-                                                        "
-                                                        :value="option.id"
-                                                    ></el-option>
-                                                </el-select>
-                                            </div>
-
-                                            <!-- Columna 3: Input WhatsApp -->
-                                            <div
-                                                class="col-lg-4 d-flex flex-column mb-2 mb-lg-0"
-                                            >
-                                                <label for="whatsapp"
-                                                    >WhatsApp</label
-                                                >
-                                                <el-input
-                                                    v-model="
-                                                        form.customer_telephone
-                                                    "
-                                                    type="text"
-                                                    class="w-100"
-                                                    placeholder="Número de WhatsApp"
-                                                    size="large"
-                                                    maxlength="9"
-                                                    show-word-limit
-                                                ></el-input>
+                                                    <el-tooltip
+                                                        content="Visualiza los productos que se agregaron a la compra"
+                                                        placement="top"
+                                                    >
+                                                        <el-button
+                                                            icon="fas fa-eye"
+                                                            size="small"
+                                                            type="primary"
+                                                            @click="
+                                                                showListItems = true
+                                                            "
+                                                            style="font-size: 2rem; 
+                                                            padding: 0px 20px; height: 64px; display: flex; align-items: center; justify-content: center;"
+                                                        >
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Observaciones y Vendedor -->
+                                    <!-- Clientes y Whatsapp -->
                                     <div
                                         class="form-row d-flex align-items-center justify-content-between flex-wrap"
                                     >
-                                        <!-- Observaciones -->
+                                        <!-- Clientes -->
                                         <div
-                                            class="col-12 col-md-8 col-lg-8 d-flex flex-column mb-2 mb-lg-0"
+                                            class="col-12 client-section border-gray"
                                         >
-                                            <label for="observations"
-                                                >Observaciones</label
+                                            <div
+                                                class="row align-items-center justify-content-between py-2 flex-wrap"
                                             >
-                                            <el-input
-                                                v-model="form.observation"
-                                                type="text"
-                                                class="w-100"
-                                                placeholder="Observaciones"
-                                                size="large"
-                                            ></el-input>
+                                                <!-- Columna 1: Botones -->
+                                                <div
+                                                    class="col-lg-3 d-flex align-items-center justify-content-start mb-2 mb-lg-0 flex-wrap pt-0 pb-0"
+                                                >
+                                                    <!-- Botón Nuevo -->
+                                                    <el-tooltip
+                                                        content="Crear Cliente"
+                                                        placement="top"
+                                                    >
+                                                        <el-button
+                                                            v-if="
+                                                                !configuration.college ||
+                                                                    notRegister
+                                                            "
+                                                            @click="createClient"
+                                                            class="fw-bold button-custom me-2"
+                                                            type="primary"
+                                                            size="small"
+                                                        >
+                                                            <i
+                                                                class="fas fa-user fa-lg"
+                                                            ></i>
+                                                            Nuevo
+                                                        </el-button>
+                                                    </el-tooltip>
+
+                                                    <!-- Botón Editar -->
+                                                    <el-tooltip
+                                                        content="Editar Cliente"
+                                                        placement="top"
+                                                    >
+                                                        <!-- <el-button
+                                                            v-if="configuration.edit_clients"
+                                                            :disabled="
+                                                                !value ||
+                                                                    isClientesVarios()
+                                                            "
+                                                            @click="
+                                                                openDialogPerson
+                                                            "
+                                                            class="fw-bold button-custom"
+                                                            type="success"
+                                                            size="small"
+                                                        >
+                                                            <i
+                                                                class="fas fa-edit fa-lg"
+                                                            ></i>
+                                                            Editar
+                                                        </el-button> -->
+                                                        <el-button
+                                                            v-if="
+                                                                configuration.edit_clients
+                                                            "
+                                                            :disabled="
+                                                                !value ||
+                                                                    isClientesVarios()
+                                                            "
+                                                            @click="
+                                                                openDialogPerson
+                                                            "
+                                                            class="fw-bold button-custom"
+                                                            type="success"
+                                                            size="small"
+                                                        >
+                                                            <i
+                                                                class="fas fa-edit fa-lg"
+                                                            ></i>
+                                                            Editar
+                                                        </el-button>
+
+                                                        <el-button
+                                                            v-else
+                                                            :disabled="true"
+                                                            class="fw-bold button-custom"
+                                                            type="success"
+                                                            size="small"
+                                                        >
+                                                            <i
+                                                                class="fas fa-edit fa-lg"
+                                                            ></i>
+                                                            Editar
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                </div>
+
+                                                <!-- Columna 2: Inputs -->
+                                                <div
+                                                    class="col-lg-5 d-flex flex-column mb-2 mb-lg-0"
+                                                >
+                                                    <label>Buscar Cliente</label>
+                                                    <el-select
+                                                        class="col-md-6"
+                                                        ref="select_person"
+                                                        v-model="value"
+                                                        filterable
+                                                        clearable
+                                                        size="small"
+                                                        placeholder="Cliente"
+                                                        :disabled="loading"
+                                                        @change="changeCustomer"
+                                                        @keyup.native="
+                                                            keyupCustomer
+                                                        "
+                                                    >
+                                                        <el-option
+                                                            v-for="(option,
+                                                            idx) in customers"
+                                                            :key="idx"
+                                                            :label="
+                                                                option.description
+                                                            "
+                                                            :value="option.id"
+                                                        ></el-option>
+                                                    </el-select>
+                                                </div>
+
+                                                <!-- Columna 3: Input WhatsApp -->
+                                                <div
+                                                    class="col-lg-4 d-flex flex-column mb-2 mb-lg-0"
+                                                >
+                                                    <label for="whatsapp"
+                                                        >WhatsApp</label
+                                                    >
+                                                    <el-input
+                                                        v-model="
+                                                            form.customer_telephone
+                                                        "
+                                                        type="text"
+                                                        class="w-100"
+                                                        placeholder="Número de WhatsApp"
+                                                        size="large"
+                                                        maxlength="9"
+                                                        show-word-limit
+                                                    ></el-input>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <!-- Vendedor -->
+                                        <!-- Observaciones y Vendedor -->
                                         <div
-                                            class="col-12 col-md-4 col-lg-4 d-flex flex-column mb-2 mb-lg-0"
+                                            class="form-row d-flex align-items-center justify-content-between flex-wrap"
                                         >
-                                            <label for="seller">Vendedor</label>
+                                            <!-- Observaciones -->
+                                            <div
+                                                class="col-12 col-md-8 col-lg-8 d-flex flex-column mb-2 mb-lg-0"
+                                            >
+                                                <label for="observations"
+                                                    >Observaciones</label
+                                                >
+                                                <el-input
+                                                    v-model="form.observation"
+                                                    type="text"
+                                                    class="w-100"
+                                                    placeholder="Observaciones"
+                                                    size="large"
+                                                ></el-input>
+                                            </div>
+
+                                            <!-- Vendedor -->
+                                            <div
+                                                class="col-12 col-md-4 col-lg-4 d-flex flex-column mb-2 mb-lg-0"
+                                            >
+                                                <label for="seller">Vendedor</label>
+                                                <el-select
+                                                    v-model="form.seller_id"
+                                                    class="w-100"
+                                                    placeholder="Seleccionar Vendedor"
+                                                    size="large"
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in sellers"
+                                                        :key="idx"
+                                                        :label="option.name"
+                                                        :value="option.id"
+                                                    ></el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Estudiante -->
+                                    <div
+                                        v-if="students.length != 0"
+                                        class="row col-lg-6 col-xl-12"
+                                    >
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Estudiante
+                                            </label>
                                             <el-select
-                                                v-model="form.seller_id"
-                                                class="w-100"
-                                                placeholder="Seleccionar Vendedor"
-                                                size="large"
+                                                @change="changeStudent"
+                                                v-model="form.student_id"
                                             >
                                                 <el-option
-                                                    v-for="(option,
-                                                    idx) in sellers"
+                                                    v-for="(student,
+                                                    idx) in students"
                                                     :key="idx"
-                                                    :label="option.name"
-                                                    :value="option.id"
-                                                ></el-option>
+                                                    :label="
+                                                        `${student.name} - ${student.class}`
+                                                    "
+                                                    :value="student.id"
+                                                >
+                                                </el-option>
                                             </el-select>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Estudiante -->
-                                <div
-                                    v-if="students.length != 0"
-                                    class="row col-lg-6 col-xl-12"
-                                >
-                                    <div class="form-group">
-                                        <label class="control-label w-100">
-                                            Estudiante
-                                        </label>
-                                        <el-select
-                                            @change="changeStudent"
-                                            v-model="form.student_id"
-                                        >
-                                            <el-option
-                                                v-for="(student,
-                                                idx) in students"
-                                                :key="idx"
-                                                :label="
-                                                    `${student.name} - ${student.class}`
-                                                "
-                                                :value="student.id"
-                                            >
-                                            </el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Operaciones de Pago -->
+                    <!-- Operaciones de Pago -->
 
-                <div
-                    class="container-fluid"
-                    style="background-color: lightgray;"
-                >
-                    <div class="row g-2 align-items-stretch">
-                        <!-- Column 1: Total Venta -->
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <div
-                                class="d-flex justify-content-between align-items-center p-3"
-                                style="background-color: #f8f9fa; border-radius: 5px; height: 100%;"
-                            >
-                                <label
-                                    class="control-label text-primary fs-5 fw-bold mb-0"
-                                >
-                                    Total Venta
-                                </label>
-                                <!-- <label>Total Venta</label> -->
-                                <span
-                                    class="control-label text-primary fs-2 fw-bold mb-0 text-right"
-                                >
-                                    <!-- S/ {{ " " + form.total }} -->
-
-                                    {{
-                                        currencyIdChoice == "PEN" ? "S/ " : "$ "
-                                    }}
-                                    {{ " " + form.total }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Column 2: Descuento -->
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <div
-                                v-if="conf.show_discounts_payment"
-                                class="p-2"
-                                style="background-color: #e9ecef; border-radius: 5px; height: auto; min-height: 50px;"
-                            >
-                                <!-- Fila 1: Título "Desc. S/" e input -->
+                    <div class="container-fluid" style="background-color: lightgray;">
+                        <div class="row g-2 align-items-stretch">
+                            <!-- Column 1: Total Venta -->
+                            <div class="col-lg-4 col-md-4 col-sm-12">
                                 <div
-                                    class="d-flex align-items-center justify-content-start mb-2"
+                                    class="d-flex justify-content-between align-items-center p-3"
+                                    style="background-color: #f8f9fa; border-radius: 5px; height: 100%;"
                                 >
                                     <label
-                                        class="control-label text-success fs-5 fw-bold me-2"
+                                        class="control-label text-primary fs-5 fw-bold mb-0"
                                     >
-                                        Desc. S/
+                                        Total Venta
                                     </label>
-                                    <input
-                                        class="form-control w-50 text-right"
-                                        v-model="discount_amount"
-                                        @input="validateAndProcess"
-                                        maxlength="8"
-                                        placeholder="0.00"
-                                        style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
-                                    />
-                                </div>
-
-                                <!-- Fila 2: Checkboxes alineados al lado derecho -->
-                                <div class="d-flex justify-content-end">
-                                    <el-checkbox
-                                        v-if="
-                                            configuration.affectation_igv_type_id ==
-                                                '10'
-                                        "
-                                        v-model="discountTotal"
-                                        @change="reCalculateTotal"
-                                        class="is-success text-success"
-                                        style="transform: scale(0.8); margin-right: 10px;"
-                                    >
-                                        {{
-                                            discountTotal
-                                                ? "del total"
-                                                : "a la base"
-                                        }}
-                                    </el-checkbox>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Column 3: Faltante/Vuelto -->
-                        <div class="col-lg-4 col-md-4 col-sm-12">
-                            <div
-                                class="d-flex justify-content-between align-items-center p-3"
-                                style="border-radius: 5px; height: 100%;"
-                                :class="{
-                                    'bg-danger text-white': form.difference < 0,
-                                    'bg-primary text-white':
-                                        form.difference >= 0
-                                }"
-                            >
-                                <label
-                                    class="control-label fs-5 fw-bold text-white mb-0"
-                                    v-text="
-                                        form.difference < 0
-                                            ? 'Faltante: '
-                                            : 'Vuelto: '
-                                    "
-                                ></label>
-                                <span
-                                    v-if="is_payment == true"
-                                    class="control-label fs-5 fw-bold text-white"
-                                >
-                                    {{ currencySymbol }}
-                                    {{
-                                        form.difference
-                                            .toFixed(2)
-                                            .replace("-", "")
-                                    }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Medios de Pago / Operaciones y Cargos por tarjeta Transferencias -->
-                <div class="row">
-                    <!-- Column 1: Medios de Pago -->
-                    <div class="col-lg-4 col-md-12 mb-2">
-                        <div
-                            class="text-center text-dark card bg-light"
-                            v-if="conf.show_payment_method"
-                        >
-                            <div class="align-items-start mb-2">
-                                <label class="control-label"
-                                    >Medios de Pago</label
-                                >
-                            </div>
-                            <div class="radio-tile-group2 flex-wrap">
-                                <div class="input-container2 border rounded-sm">
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="cash"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="01"
-                                        @change="method_payment('Efectivo')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat"
-                                    >
-                                        <div class="icon walk-icon"></div>
-                                        <label
-                                            for="cash"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.culqi"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="culqui"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="02"
-                                        @change="method_payment('Culqui')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat"
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.izipay"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="05"
-                                        @change="
-                                            method_payment('TARJETA: IZYPAY')
-                                        "
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.openpay"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="07"
-                                        @change="
-                                            method_payment('TARJETA: OPENPAY')
-                                        "
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonOpenpay.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.nubiz"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="06"
-                                        @change="
-                                            method_payment('TARJETA: NIUBIZ')
-                                        "
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonNiubiz.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.yape"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="yape"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="03"
-                                        @change="method_payment('Yape')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat"
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.plin"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="04"
-                                        @change="method_payment('PLIN')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.didi"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="08"
-                                        @change="method_payment('DIDI FOOD')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonDidi.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.pedidosya"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="09"
-                                        @change="method_payment('PEDIDOS YA')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonPedidosYa.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="input-container2 border rounded-sm"
-                                    v-if="configuration.rappi"
-                                >
-                                    <input
-                                        :disabled="form_payment.is_bank"
-                                        id="plin"
-                                        v-model="method_payments"
-                                        class="radio-button2"
-                                        type="radio"
-                                        name="method_payment"
-                                        value="10"
-                                        @change="method_payment('RAPPI')"
-                                    />
-                                    <div
-                                        class="radio-tile2"
-                                        style="background-image: url('../../images/botonRappi.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                    >
-                                        <div class="icon bike-icon"></div>
-                                        <label
-                                            for="Tarjeta"
-                                            class="radio-tile-label2"
-                                        ></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Column 2: N° de Operación y Cargos de Tarjeta -->
-                    <div class="col-lg-4 col-md-12 mb-2">
-                        <div class="row">
-                            <!-- N° de Operación -->
-
-                            <div
-                                class=""
-                                v-if="methodsValidate.includes(form.method_pay)"
-                            >
-                                <!-- <label
-                                    class="control-label font-weight-bold text-muted mr-2"
-                                    style="font-size: 0.9em; white-space: nowrap;"
-                                    >Nº Op. :</label
-                                > -->
-                                <label class="control-label"
-                                    >N° De Operacion</label
-                                >
-                                <div class="d-flex align-items-center">
-                                    <el-input
-                                        type="number"
-                                        v-model="operation_number"
-                                        size="mini"
-                                        class="d-inline-flex"
-                                    >
-                                    </el-input>
-                                </div>
-                            </div>
-
-                            <!-- Cargos de Tarjeta -->
-                            <div
-                                class="col-12 mt-3"
-                                v-if="
-                                    hasCreditCardCharge &&
-                                        configuration.credit_mode
-                                "
-                            >
-                                <!-- Label "Porcentaje" o "Monto" alineado a la izquierda -->
-                                <label
-                                    class="font-weight-bold mb-1"
-                                    style="text-align: left;"
-                                >
-                                    {{
-                                        chargeCredit.credit_type == "1"
-                                            ? "Porcentaje"
-                                            : "Monto"
-                                    }}
-                                </label>
-
-                                <!-- Fila para el Input, Radio Group y Total Calculado -->
-                                <div
-                                    class="d-flex align-items-center justify-content-between"
-                                >
-                                    <!-- Input de Monto/Porcentaje alineado a la izquierda, más grande y en negrita -->
-                                    <el-input
-                                        type="number"
-                                        @input="calculateCharge"
-                                        style="max-width: 100px; font-weight: bold;"
-                                        v-model="chargeCredit.amount"
-                                        size="mini"
-                                    ></el-input>
-
-                                    <!-- Radio Group centrado en la fila, en azul oscuro -->
-                                    <div
-                                        class="d-flex justify-content-center mx-3"
-                                    >
-                                        <el-radio-group
-                                            @change="calculateCharge"
-                                            v-model="chargeCredit.credit_type"
-                                            size="mini"
-                                            style="color: #004085;"
-                                        >
-                                            <el-radio-button
-                                                label="1"
-                                                style="background-color: #004085; color: white;"
-                                                >%</el-radio-button
-                                            >
-                                            <el-radio-button
-                                                label="2"
-                                                style="background-color: #004085; color: white;"
-                                                >S/</el-radio-button
-                                            >
-                                        </el-radio-group>
-                                    </div>
-
-                                    <!-- Total Calculado alineado a la derecha -->
+                                    <!-- <label>Total Venta</label> -->
                                     <span
-                                        class="h6 font-weight-bold"
-                                        style="margin-left: auto;"
-                                        v-if="
-                                            chargeCredit.total_charge !== 0 &&
-                                                chargeCredit.amount
-                                        "
+                                        class="control-label text-primary fs-2 fw-bold mb-0 text-right"
                                     >
-                                        S/
+                                        <!-- S/ {{ " " + form.total }} -->
+
                                         {{
-                                            chargeCredit.total_charge.toFixed(2)
+                                            currencyIdChoice == "PEN" ? "S/ " : "$ "
+                                        }}
+                                        {{ " " + form.total }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Descuento -->
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <div
+                                    v-if="conf.show_discounts_payment"
+                                    class="p-2"
+                                    style="background-color: #e9ecef; border-radius: 5px; height: auto; min-height: 50px;"
+                                >
+                                    <!-- Fila 1: Título "Desc. S/" e input -->
+                                    <div
+                                        class="d-flex align-items-center justify-content-start mb-2"
+                                    >
+                                        <label
+                                            class="control-label text-success fs-5 fw-bold me-2"
+                                        >
+                                            Desc. S/
+                                        </label>
+                                        <input
+                                            class="form-control w-50 text-right"
+                                            v-model="discount_amount"
+                                            @input="validateAndProcess"
+                                            maxlength="8"
+                                            placeholder="0.00"
+                                            style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
+                                        />
+                                    </div>
+
+                                    <!-- Fila 2: Checkboxes alineados al lado derecho -->
+                                    <div class="d-flex justify-content-end">
+                                        <el-checkbox
+                                            v-if="
+                                                configuration.affectation_igv_type_id ==
+                                                    '10'
+                                            "
+                                            v-model="discountTotal"
+                                            @change="reCalculateTotal"
+                                            class="is-success text-success"
+                                            style="transform: scale(0.8); margin-right: 10px;"
+                                        >
+                                            {{
+                                                discountTotal
+                                                    ? "del total"
+                                                    : "a la base"
+                                            }}
+                                        </el-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 3: Faltante/Vuelto -->
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <div
+                                    class="d-flex justify-content-between align-items-center p-3"
+                                    style="border-radius: 5px; height: 100%;"
+                                    :class="{
+                                        'bg-danger text-white': form.difference < 0,
+                                        'bg-primary text-white':
+                                            form.difference >= 0
+                                    }"
+                                >
+                                    <label
+                                        class="control-label fs-5 fw-bold text-white mb-0"
+                                        v-text="
+                                            form.difference < 0
+                                                ? 'Faltante: '
+                                                : 'Vuelto: '
+                                        "
+                                    ></label>
+                                    <span
+                                        v-if="is_payment == true"
+                                        class="control-label fs-5 fw-bold text-white"
+                                    >
+                                        {{ currencySymbol }}
+                                        {{
+                                            form.difference
+                                                .toFixed(2)
+                                                .replace("-", "")
                                         }}
                                     </span>
                                 </div>
@@ -1014,631 +633,1002 @@
                         </div>
                     </div>
 
-                    <!-- Column 3: Transferencia / Depósitos -->
-                    <div class="col-lg-4 col-md-12 mb-2">
-                        <template v-if="bank_accounts.length != 0">
-                            <!-- <el-checkbox
-                                    @change="transferPayment"
-                                    v-model="form_payment.is_bank"
-                                ></el-checkbox>
-                                <label for="banks">
-                                Transferencia / Depositos
-                                </label> -->
-                            <div class="d-flex align-items-center">
-                                <el-checkbox
-                                    @change="transferPayment"
-                                    v-model="form_payment.is_bank"
-                                ></el-checkbox>
-                                <label for="banks" class="mb-0 ms-2">
-                                    Transferencia / Depositos
-                                </label>
+                    <!-- Medios de Pago / Operaciones y Cargos por tarjeta Transferencias -->
+                    <div class="row">
+                        <!-- Column 1: Medios de Pago -->
+                        <div class="col-lg-4 col-md-12 mb-2">
+                            <div
+                                class="text-center text-dark card bg-light"
+                                v-if="conf.show_payment_method"
+                            >
+                                <div class="align-items-start mb-2">
+                                    <label class="control-label"
+                                        >Medios de Pago</label
+                                    >
+                                </div>
+                                <div class="radio-tile-group2 flex-wrap">
+                                    <div class="input-container2 border rounded-sm">
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="cash"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="01"
+                                            @change="method_payment('Efectivo')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat"
+                                        >
+                                            <div class="icon walk-icon"></div>
+                                            <label
+                                                for="cash"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.culqi"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="culqui"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="02"
+                                            @change="method_payment('Culqui')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat"
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.izipay"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="05"
+                                            @change="
+                                                method_payment('TARJETA: IZYPAY')
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.openpay"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="07"
+                                            @change="
+                                                method_payment('TARJETA: OPENPAY')
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonOpenpay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.nubiz"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="06"
+                                            @change="
+                                                method_payment('TARJETA: NIUBIZ')
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonNiubiz.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.yape"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="yape"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="03"
+                                            @change="method_payment('Yape')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat"
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.plin"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="04"
+                                            @change="method_payment('PLIN')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.didi"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="08"
+                                            @change="method_payment('DIDI FOOD')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonDidi.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.pedidosya"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="09"
+                                            @change="method_payment('PEDIDOS YA')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonPedidosYa.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.rappi"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="10"
+                                            @change="method_payment('RAPPI')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonRappi.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <el-select
-                                :disabled="!form_payment.is_bank"
-                                v-model="form.bank_account_id"
-                                @change="changeBankAccount"
-                            >
-                                <el-option
-                                    v-for="bank in bank_accounts"
-                                    :key="bank.id"
-                                    :label="
-                                        `${bank.description}-${bank.number}`
+                        </div>
+
+                        <!-- Column 2: N° de Operación y Cargos de Tarjeta -->
+                        <div class="col-lg-4 col-md-12 mb-2">
+                            <div class="row">
+                                <!-- N° de Operación -->
+
+                                <div
+                                    class=""
+                                    v-if="methodsValidate.includes(form.method_pay)"
+                                >
+                                    <!-- <label
+                                        class="control-label font-weight-bold text-muted mr-2"
+                                        style="font-size: 0.9em; white-space: nowrap;"
+                                        >Nº Op. :</label
+                                    > -->
+                                    <label class="control-label"
+                                        >N° De Operacion</label
+                                    >
+                                    <div class="d-flex align-items-center">
+                                        <el-input
+                                            type="number"
+                                            v-model="operation_number"
+                                            size="mini"
+                                            class="d-inline-flex"
+                                        >
+                                        </el-input>
+                                    </div>
+                                </div>
+
+                                <!-- Cargos de Tarjeta -->
+                                <div
+                                    class="col-12 mt-3"
+                                    v-if="
+                                        hasCreditCardCharge &&
+                                            configuration.credit_mode
                                     "
-                                    :value="bank.id"
                                 >
-                                </el-option>
-                            </el-select>
-                            <el-input
-                                :disabled="!form_payment.is_bank"
-                                class="mt-1"
-                                placeholder="Nro Operación"
-                                v-model="form.reference_number"
-                            ></el-input>
-                        </template>
-                        <template v-else>
-                            <span class="text-danger"
-                                >No hay cuentas bancarias registradas</span
-                            >
-                        </template>
-                    </div>
-                </div>
-                <!-- Ingreso de pagos/dividir pagos / pagos con metodo de pago/promocion -->
-                <div class="row">
-                    <!-- Columna 1: Ingreso de Montos -->
-                    <div
-                        class="col-xl-4 col-lg-4 col-md-12 mb-4"
-                        v-if="form_payment.payment_method_type_id == '01'"
-                    >
-                        <label class="control-label fw-bold"
-                            >Ingrese Monto</label
-                        >
-                        <div class="d-flex justify-content-center">
-                            <el-input
-                                id="inputTotal"
-                                ref="enter_amount"
-                                v-model="form.enter_amount"
-                                @blur="diferen()"
-                                @input="enterAmount()"
-                                class="me-3"
-                            >
-                                <template slot="prepend">
-                                    {{ currencyTypeActive.symbol }}
-                                </template>
-                            </el-input>
-                            <el-button
-                                type="primary"
-                                @click="addPayment"
-                                :disabled="disabledAddPayment()"
-                            >
-                                <span v-if="form.payment_condition_id == '01'"
-                                    >Agregar</span
+                                    <!-- Label "Porcentaje" o "Monto" alineado a la izquierda -->
+                                    <label
+                                        class="font-weight-bold mb-1"
+                                        style="text-align: left;"
+                                    >
+                                        {{
+                                            chargeCredit.credit_type == "1"
+                                                ? "Porcentaje"
+                                                : "Monto"
+                                        }}
+                                    </label>
+
+                                    <!-- Fila para el Input, Radio Group y Total Calculado -->
+                                    <div
+                                        class="d-flex align-items-center justify-content-between"
+                                    >
+                                        <!-- Input de Monto/Porcentaje alineado a la izquierda, más grande y en negrita -->
+                                        <el-input
+                                            type="number"
+                                            @input="calculateCharge"
+                                            style="max-width: 100px; font-weight: bold;"
+                                            v-model="chargeCredit.amount"
+                                            size="mini"
+                                        ></el-input>
+
+                                        <!-- Radio Group centrado en la fila, en azul oscuro -->
+                                        <div
+                                            class="d-flex justify-content-center mx-3"
+                                        >
+                                            <el-radio-group
+                                                @change="calculateCharge"
+                                                v-model="chargeCredit.credit_type"
+                                                size="mini"
+                                                style="color: #004085;"
+                                            >
+                                                <el-radio-button
+                                                    label="1"
+                                                    style="background-color: #004085; color: white;"
+                                                    >%</el-radio-button
+                                                >
+                                                <el-radio-button
+                                                    label="2"
+                                                    style="background-color: #004085; color: white;"
+                                                    >S/</el-radio-button
+                                                >
+                                            </el-radio-group>
+                                        </div>
+
+                                        <!-- Total Calculado alineado a la derecha -->
+                                        <span
+                                            class="h6 font-weight-bold"
+                                            style="margin-left: auto;"
+                                            v-if="
+                                                chargeCredit.total_charge !== 0 &&
+                                                    chargeCredit.amount
+                                            "
+                                        >
+                                            S/
+                                            {{
+                                                chargeCredit.total_charge.toFixed(2)
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Transferencia / Depósitos -->
+                        <div class="col-lg-4 col-md-12 mb-2">
+                            <template v-if="bank_accounts.length != 0">
+                                <!-- <el-checkbox
+                                        @change="transferPayment"
+                                        v-model="form_payment.is_bank"
+                                    ></el-checkbox>
+                                    <label for="banks">
+                                    Transferencia / Depositos
+                                    </label> -->
+                                <div class="d-flex align-items-center">
+                                    <el-checkbox
+                                        @change="transferPayment"
+                                        v-model="form_payment.is_bank"
+                                    ></el-checkbox>
+                                    <label for="banks" class="mb-0 ms-2">
+                                        Transferencia / Depositos
+                                    </label>
+                                </div>
+                                <el-select
+                                    :disabled="!form_payment.is_bank"
+                                    v-model="form.bank_account_id"
+                                    @change="changeBankAccount"
                                 >
-                                <span v-else>Agregar cuota</span>
-                            </el-button>
-                        </div>
-                        <br />
-                        <div class="mb-3 d-flex justify-content-center">
-                            <button
-                                style="padding: 14px;"
-                                type="button"
-                                class="btn btn-outline-primary fw-bold btn-lg me-2"
-                                @click="setAmountCash(10)"
-                            >
-                                10
-                            </button>
-                            <button
-                                class="btn btn-outline-primary fw-bold btn-lg me-2"
-                                @click="setAmountCash(20)"
-                            >
-                                20
-                            </button>
-                            <button
-                                class="btn btn-outline-primary fw-bold btn-lg me-2"
-                                @click="setAmountCash(50)"
-                            >
-                                50
-                            </button>
-                            <button
-                                class="btn btn-outline-primary fw-bold btn-lg me-2"
-                                @click="setAmountCash(100)"
-                            >
-                                100
-                            </button>
-                            <button
-                                class="btn btn-outline-primary fw-bold btn-lg me-2"
-                                @click="setAmountCash(200)"
-                            >
-                                200
-                            </button>
+                                    <el-option
+                                        v-for="bank in bank_accounts"
+                                        :key="bank.id"
+                                        :label="
+                                            `${bank.description}-${bank.number}`
+                                        "
+                                        :value="bank.id"
+                                    >
+                                    </el-option>
+                                </el-select>
+                                <el-input
+                                    :disabled="!form_payment.is_bank"
+                                    class="mt-1"
+                                    placeholder="Nro Operación"
+                                    v-model="form.reference_number"
+                                ></el-input>
+                            </template>
+                            <template v-else>
+                                <span class="text-danger"
+                                    >No hay cuentas bancarias registradas</span
+                                >
+                            </template>
                         </div>
                     </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-12 mb-2"></div>
-
-                    <!-- Columna 3: Promoción / Imprimir No imprimir -->
-                    <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
-                        <!-- Sección Promoción -->
+                    <!-- Ingreso de pagos/dividir pagos / pagos con metodo de pago/promocion -->
+                    <div class="row">
+                        <!-- Columna 1: Ingreso de Montos -->
                         <div
-                            class=""
-                            v-if="
-                                configuration.is_promotion_document ||
-                                    configuration.promotions_by_points
-                            "
-                        > 
-                        
-                        <!-- </div> -->
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="text-white">Puntos Acumulados: {{ Number(pointsMessage || 0).toFixed(2) }}</span>
-                            <span class="text-white">Puntos Ganados Venta: {{ Number(ventalista || 0).toFixed(2) }}</span>
-                        </div>
-                            <label for="promotion" class="w-100 fw-bold"
-                                >Promoción</label
+                            class="col-xl-4 col-lg-4 col-md-12 mb-4"
+                            v-if="form_payment.payment_method_type_id == '01'"
+                        >
+                            <label class="control-label fw-bold"
+                                >Ingrese Monto</label
                             >
                             <div class="d-flex justify-content-center">
-                                <el-select
-                                    :disabled="isClientesVarios()"
-                                    v-model="form.promotion_id"
-                                    filterable
-                                    clearable
-                                    placeholder="Promoción"
-                                    @change="changePromotion"
+                                <el-input
+                                    id="inputTotal"
+                                    ref="enter_amount"
+                                    v-model="form.enter_amount"
+                                    @blur="diferen()"
+                                    @input="enterAmount()"
+                                    class="me-3"
                                 >
-                                    <el-option
-                                        v-for="(option,
-                                        idx) in promotions_document"
-                                        :key="idx"
-                                        :label="option.description"
-                                        :value="option.id"
-                                    ></el-option>
-                                </el-select>
-                            </div>
-                            <div
-                                class="col-md-12 form-group"
-                                v-if="promotionDocument && hasPromotionText"
-                            >
-                                <br />
-                                <el-checkbox
-                                    @change="receivePromotion"
-                                    v-model="form.receive_promotion"
-                                >
-                                </el-checkbox>
-                                Aplicar promoción |
-                                {{ hasPromotionText }}
-                            </div>
-                            <br />
-                            <div
-                                class="col-md-2 form-group text-center"
-                                v-if="
-                                    promotionByPoints &&
-                                        hasPromotionText &&
-                                        listPromotionItems.length > 0
-                                "
-                            >
+                                    <template slot="prepend">
+                                        {{ currencyTypeActive.symbol }}
+                                    </template>
+                                </el-input>
                                 <el-button
-                                    @click="Promotion()"
                                     type="primary"
-                                    size="small"
+                                    @click="addPayment"
+                                    :disabled="disabledAddPayment()"
                                 >
-                                    Canjear
+                                    <span v-if="form.payment_condition_id == '01'"
+                                        >Agregar</span
+                                    >
+                                    <span v-else>Agregar cuota</span>
                                 </el-button>
                             </div>
-                        </div>
-                        <br />
-                        <div class="radio-tile-group2 d-flex mb-3 justify-content-end me-4">
-                            <div
-                                class="input-container2 border rounded-sm me-2"
-                                :class="{ selected: printerOn === '1' }"
-                            >
-                                <input
-                                    id="imprimir"
-                                    v-model="printerOn"
-                                    @change="updateConfigutation"
-                                    class="radio-button2"
-                                    type="radio"
-                                    name="imprimir"
-                                    value="1"
-                                />
-                                <div class="radio-tile2">
-                                    <div class="icon">
-                                        <i class="fa fa-print"></i>
-                                    </div>
-                                    <label
-                                        for="imprimir"
-                                        class="radio-tile-label2"
-                                        >Imprimir</label
-                                    >
-                                </div>
-                            </div>
-                            <div
-                                class="input-container2 border rounded-sm"
-                                :class="{ selected: printerOn === '0' }"
-                            >
-                                <input
-                                    id="noimprimir"
-                                    v-model="printerOn"
-                                    @change="updateConfigutation"
-                                    class="radio-button2"
-                                    type="radio"
-                                    name="imprimir"
-                                    value="0"
-                                />
-                                <div class="radio-tile2">
-                                    <div class="icon">
-                                        <i class="fa fa-ban"></i>
-                                    </div>
-                                    <label
-                                        for="noimprimir"
-                                        class="radio-tile-label2"
-                                        >No Imprimir</label
-                                    >
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Desocupar habitación -->
-                        <template v-if="form.is_room">
-                            <div class="mb-3 d-flex justify-content-end">
-                                <div>
-                                    <label for="vacate">Desocupar habitación</label>
-                                    <el-checkbox
-                                        v-model="form.vacate"
-                                    ></el-checkbox>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-            <!-- Pagos con método de pago (Tabla) -->
-            <div class="mb-3 d-flex align-items-center">
-                <table class="table" v-if="currentPayments.length != 0">
-                    <thead>
-                        <tr>
-                            <th colspan="5" class="text-left">
-                                {{
-                                    form.payment_condition_id !== "01"
-                                        ? "Cuotas"
-                                        : "Pagos"
-                                }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(paymnt, idx) in currentPayments"
-                            :key="idx"
-                            :class="{ 'table-secondary': idx % 2 === 0 }"
-                        >
-                            <td>{{ idx + 1 }}</td>
-                            <td v-if="form.payment_condition_id !== '01'">
-                                <el-date-picker
-                                    :clearable="false"
-                                    v-model="paymnt.date"
-                                ></el-date-picker>
-                            </td>
-                            <td>{{ paymnt.method }}</td>
-                            <td>
-                                <strong v-if="!isNaN(paymnt.amount)">{{
-                                    Number(paymnt.amount).toFixed(2)
-                                }}</strong>
-                            </td>
-                            <td>
-                                <el-tooltip
-                                    content="Eliminar pago"
-                                    placement="top"
+                            <br />
+                            <div class="mb-3 d-flex justify-content-center">
+                                <button
+                                    style="padding: 14px;"
+                                    type="button"
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(10)"
                                 >
-                                    <el-button
-                                        type="danger"
-                                        icon="el-icon-delete"
-                                        circle
-                                        @click="removePayment(paymnt.id)"
-                                    ></el-button>
-                                </el-tooltip>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!--Billetes y Monedas a recibir por delivery -->
-            <template v-if="configuration.show_coins_to_receive">
-                <div
-                    class="m-2 p-3"
-                    style="background-color: #f5f7fa; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
-                >
-                    <!-- Leyenda o Suma de Monedas -->
-                    <div
-                        class="text-center mb-2"
-                        style="font-size: 1rem; font-weight: bold; color: #004085;"
-                    >
-                        <template v-if="sumCoins.length == 0">
-                            Billetes/Monedas a Recibir
-                        </template>
-                        <template v-else>
-                            {{ formatSumCoins }}
-                        </template>
-                    </div>
-
-                    <!-- Grupo de Botones de Monedas/Billetes -->
-                    <div
-                        class="d-flex justify-content-center align-items-center"
-                    >
-                        <el-button-group
-                            class="d-flex flex-wrap justify-content-center"
-                        >
-                            <el-button
-                                v-for="(coin, idx) in coins"
-                                type="primary"
-                                :key="idx"
-                                @click="addCoin(coin.id)"
-                                size="small"
-                                style="background-color: #007bff; border-color: #007bff; color: white; margin: 0 5px 5px 0;"
-                                round
-                            >
-                                {{ coin.id }}
-                            </el-button>
-
-                            <!-- Botón de Limpiar -->
-                            <el-button
-                                type="danger"
-                                @click="clearSumCoins"
-                                size="small"
-                                style="background-color: #dc3545; border-color: #dc3545; color: white; margin: 0 0 5px 5px;"
-                                round
-                            >
-                                <i class="fas fa-trash"></i>
-                            </el-button>
-                        </el-button-group>
-                    </div>
-                </div>
-            </template>
-
-            <div class="col-lg-12">
-                <div class="card bg-light text-dark p-3">
-                    <div class="row">
-                        <!-- Columna 1 -->
-                        <div class="col-lg-4">
-                            <!-- Modo de Pago Contado/Crédito/Crédito a Cuotas -->
-                            <div
-                                class="mb-3 w-100"
-                                v-if="
-                                    form.document_type_id == '01' ||
-                                        form.document_type_id == '03'
-                                "
-                            >
-                                <label class="fw-bold">Modo de Pago</label>
-                                <el-select v-model="form.payment_condition_id">
-                                    <el-option
-                                        value="01"
-                                        label="Contado"
-                                    ></el-option>
-                                    <el-option
-                                        value="02"
-                                        label="Crédito"
-                                    ></el-option>
-                                    <el-option
-                                        value="03"
-                                        label="Crédito a cuotas"
-                                    ></el-option>
-                                </el-select>
+                                    10
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(20)"
+                                >
+                                    20
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(50)"
+                                >
+                                    50
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(100)"
+                                >
+                                    100
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(200)"
+                                >
+                                    200
+                                </button>
                             </div>
+                        </div>
 
-                            <!-- Afectación IGV -->
-                            <!-- <template > -->
-                            <template v-if="configuration.affectation_optional">
-                                <div class="mb-3">
-                                    <label>
-                                        Afectación IGV para el documento
-                                    </label>
+                        <div class="col-xl-4 col-lg-4 col-md-12 mb-2"></div>
+
+                        <!-- Columna 3: Promoción / Imprimir No imprimir -->
+                        <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+                            <!-- Sección Promoción -->
+                            <div
+                                class=""
+                                v-if="
+                                    configuration.is_promotion_document ||
+                                        configuration.promotions_by_points
+                                "
+                            > 
+                            
+                            <!-- </div> -->
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-white">Puntos Acumulados: {{ Number(pointsMessage || 0).toFixed(2) }}</span>
+                                <span class="text-white">Puntos Ganados Venta: {{ Number(ventalista || 0).toFixed(2) }}</span>
+                            </div>
+                                <label for="promotion" class="w-100 fw-bold"
+                                    >Promoción</label
+                                >
+                                <div class="d-flex justify-content-center">
                                     <el-select
-                                        v-model="affectation_optional_id"
-                                        clearable
+                                        :disabled="isClientesVarios()"
+                                        v-model="form.promotion_id"
                                         filterable
+                                        clearable
+                                        placeholder="Promoción"
+                                        @change="changePromotion"
                                     >
                                         <el-option
-                                            v-for="option in affectation_igv_types.filter(
-                                                affectation =>
-                                                    affectation.id == '10'
-                                            )"
-                                            :key="option.id"
+                                            v-for="(option,
+                                            idx) in promotions_document"
+                                            :key="idx"
                                             :label="option.description"
                                             :value="option.id"
-                                        >
-                                        </el-option>
+                                        ></el-option>
                                     </el-select>
                                 </div>
+                                <div
+                                    class="col-md-12 form-group"
+                                    v-if="promotionDocument && hasPromotionText"
+                                >
+                                    <br />
+                                    <el-checkbox
+                                        @change="receivePromotion"
+                                        v-model="form.receive_promotion"
+                                    >
+                                    </el-checkbox>
+                                    Aplicar promoción |
+                                    {{ hasPromotionText }}
+                                </div>
+                                <br />
+                                <div
+                                    class="col-md-2 form-group text-center"
+                                    v-if="
+                                        promotionByPoints &&
+                                            hasPromotionText &&
+                                            listPromotionItems.length > 0
+                                    "
+                                >
+                                    <el-button
+                                        @click="Promotion()"
+                                        type="primary"
+                                        size="small"
+                                    >
+                                        Canjear
+                                    </el-button>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="radio-tile-group2 d-flex mb-3 justify-content-end me-4">
+                                <div
+                                    class="input-container2 border rounded-sm me-2"
+                                    :class="{ selected: printerOn === '1' }"
+                                >
+                                    <input
+                                        id="imprimir"
+                                        v-model="printerOn"
+                                        @change="updateConfigutation"
+                                        class="radio-button2"
+                                        type="radio"
+                                        name="imprimir"
+                                        value="1"
+                                    />
+                                    <div class="radio-tile2">
+                                        <div class="icon">
+                                            <i class="fa fa-print"></i>
+                                        </div>
+                                        <label
+                                            for="imprimir"
+                                            class="radio-tile-label2"
+                                            >Imprimir</label
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="input-container2 border rounded-sm"
+                                    :class="{ selected: printerOn === '0' }"
+                                >
+                                    <input
+                                        id="noimprimir"
+                                        v-model="printerOn"
+                                        @change="updateConfigutation"
+                                        class="radio-button2"
+                                        type="radio"
+                                        name="imprimir"
+                                        value="0"
+                                    />
+                                    <div class="radio-tile2">
+                                        <div class="icon">
+                                            <i class="fa fa-ban"></i>
+                                        </div>
+                                        <label
+                                            for="noimprimir"
+                                            class="radio-tile-label2"
+                                            >No Imprimir</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Desocupar habitación -->
+                            <template v-if="form.is_room">
+                                <div class="mb-3 d-flex justify-content-end">
+                                    <div>
+                                        <label for="vacate">Desocupar habitación</label>
+                                        <el-checkbox
+                                            v-model="form.vacate"
+                                        ></el-checkbox>
+                                    </div>
+                                </div>
                             </template>
-                            <!-- </template> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagos con método de pago (Tabla) -->
+                <div class="mb-3 d-flex align-items-center">
+                    <table class="table" v-if="currentPayments.length != 0">
+                        <thead>
+                            <tr>
+                                <th colspan="5" class="text-left">
+                                    {{
+                                        form.payment_condition_id !== "01"
+                                            ? "Cuotas"
+                                            : "Pagos"
+                                    }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(paymnt, idx) in currentPayments"
+                                :key="idx"
+                                :class="{ 'table-secondary': idx % 2 === 0 }"
+                            >
+                                <td>{{ idx + 1 }}</td>
+                                <td v-if="form.payment_condition_id !== '01'">
+                                    <el-date-picker
+                                        :clearable="false"
+                                        v-model="paymnt.date"
+                                    ></el-date-picker>
+                                </td>
+                                <td>{{ paymnt.method }}</td>
+                                <td>
+                                    <strong v-if="!isNaN(paymnt.amount)">{{
+                                        Number(paymnt.amount).toFixed(2)
+                                    }}</strong>
+                                </td>
+                                <td>
+                                    <el-tooltip
+                                        content="Eliminar pago"
+                                        placement="top"
+                                    >
+                                        <el-button
+                                            type="danger"
+                                            icon="el-icon-delete"
+                                            circle
+                                            @click="removePayment(paymnt.id)"
+                                        ></el-button>
+                                    </el-tooltip>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--Billetes y Monedas a recibir por delivery -->
+                <template v-if="configuration.show_coins_to_receive">
+                    <div
+                        class="m-2 p-3"
+                        style="background-color: #f5f7fa; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+                    >
+                        <!-- Leyenda o Suma de Monedas -->
+                        <div
+                            class="text-center mb-2"
+                            style="font-size: 1rem; font-weight: bold; color: #004085;"
+                        >
+                            <template v-if="sumCoins.length == 0">
+                                Billetes/Monedas a Recibir
+                            </template>
+                            <template v-else>
+                                {{ formatSumCoins }}
+                            </template>
                         </div>
 
-                        <!-- Columna 2 -->
-                        <div class="col-lg-4">
-                            <!-- Detracción -->
-                            <div
-                                v-if="hasDetraction"
-                                class="p-3 border rounded bg-light mb-3"
+                        <!-- Grupo de Botones de Monedas/Billetes -->
+                        <div
+                            class="d-flex justify-content-center align-items-center"
+                        >
+                            <el-button-group
+                                class="d-flex flex-wrap justify-content-center"
                             >
-                                <h6 class="fw-bold mb-2">Detracción</h6>
+                                <el-button
+                                    v-for="(coin, idx) in coins"
+                                    type="primary"
+                                    :key="idx"
+                                    @click="addCoin(coin.id)"
+                                    size="small"
+                                    style="background-color: #007bff; border-color: #007bff; color: white; margin: 0 5px 5px 0;"
+                                    round
+                                >
+                                    {{ coin.id }}
+                                </el-button>
 
-                                <!-- Cta Bancaria y botón "Más..." -->
-                                <div class="mb-2 d-flex align-items-center">
-                                    <label for="account" class="fw-bold me-2"
-                                        >Cta Bancaria</label
+                                <!-- Botón de Limpiar -->
+                                <el-button
+                                    type="danger"
+                                    @click="clearSumCoins"
+                                    size="small"
+                                    style="background-color: #dc3545; border-color: #dc3545; color: white; margin: 0 0 5px 5px;"
+                                    round
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </el-button>
+                            </el-button-group>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="col-lg-12">
+                    <div class="card bg-light text-dark p-3">
+                        <div class="row">
+                            <!-- Columna 1 -->
+                            <div class="col-lg-4">
+                                <!-- Modo de Pago Contado/Crédito/Crédito a Cuotas -->
+                                <div
+                                    class="mb-3 w-100"
+                                    v-if="
+                                        form.document_type_id == '01' ||
+                                            form.document_type_id == '03'
+                                    "
+                                >
+                                    <label class="fw-bold">Modo de Pago</label>
+                                    <el-select v-model="form.payment_condition_id">
+                                        <el-option
+                                            value="01"
+                                            label="Contado"
+                                        ></el-option>
+                                        <el-option
+                                            value="02"
+                                            label="Crédito"
+                                        ></el-option>
+                                        <el-option
+                                            value="03"
+                                            label="Crédito a cuotas"
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+
+                                <!-- Afectación IGV -->
+                                <!-- <template > -->
+                                <template v-if="configuration.affectation_optional">
+                                    <div class="mb-3">
+                                        <label>
+                                            Afectación IGV para el documento
+                                        </label>
+                                        <el-select
+                                            v-model="affectation_optional_id"
+                                            clearable
+                                            filterable
+                                        >
+                                            <el-option
+                                                v-for="option in affectation_igv_types.filter(
+                                                    affectation =>
+                                                        affectation.id == '10'
+                                                )"
+                                                :key="option.id"
+                                                :label="option.description"
+                                                :value="option.id"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                    </div>
+                                </template>
+                                <!-- </template> -->
+                            </div>
+
+                            <!-- Columna 2 -->
+                            <div class="col-lg-4">
+                                <!-- Detracción -->
+                                <div
+                                    v-if="hasDetraction"
+                                    class="p-3 border rounded bg-light mb-3"
+                                >
+                                    <h6 class="fw-bold mb-2">Detracción</h6>
+
+                                    <!-- Cta Bancaria y botón "Más..." -->
+                                    <div class="mb-2 d-flex align-items-center">
+                                        <label for="account" class="fw-bold me-2"
+                                            >Cta Bancaria</label
+                                        >
+                                        <el-input
+                                            class="flex-grow-1 me-2"
+                                            v-model="company.detraction_account"
+                                            readonly
+                                        ></el-input>
+                                        <button
+                                            @click="
+                                                showDialogDocumentDetraction = true
+                                            "
+                                            class="btn btn-outline-primary"
+                                        >
+                                            Más...
+                                        </button>
+                                    </div>
+
+                                    <!-- Monto en la misma fila -->
+                                    <div class="d-flex align-items-center">
+                                        <label for="amount" class="fw-bold me-2"
+                                            >Monto</label
+                                        >
+                                        <el-input
+                                            v-model="form.detraction.amount"
+                                            readonly
+                                            class="flex-shrink-1"
+                                            style="width: 70px;"
+                                        ></el-input>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna 3 -->
+                            <div class="col-lg-4">
+                                <!-- Botón Dividir Pago -->
+                                <div
+                                    class="mb-3"
+                                    v-if="
+                                        form.payment_condition_id == '01' &&
+                                            configuration.split_payments_pos
+                                    "
+                                >
+                                    <el-button
+                                        type="success"
+                                        icon="el-icon-scissors"
+                                        size="large"
+                                        @click="showSplitPayment = true"
+                                        class="w-100"
                                     >
-                                    <el-input
-                                        class="flex-grow-1 me-2"
-                                        v-model="company.detraction_account"
-                                        readonly
-                                    ></el-input>
+                                        Dividir pago
+                                    </el-button>
+                                </div>
+                                <br />
+                                <!-- Pagar y Cerrar -->
+                                <div class="d-flex justify-content-between mb-3">
                                     <button
-                                        @click="
-                                            showDialogDocumentDetraction = true
-                                        "
-                                        class="btn btn-outline-primary"
+                                        class="btn btn-primary w-100 me-2"
+                                        @click="sendPayment"
+                                        :disabled="button_payment"
                                     >
-                                        Más...
+                                        <i class="fas fa-money-bill-alt"></i> PAGAR
+                                    </button>
+                                    <button
+                                        class="btn btn-dark w-100"
+                                        @click="back(false)"
+                                    >
+                                        <i class="fa fa-reply"></i> Cerrar
                                     </button>
                                 </div>
 
-                                <!-- Monto en la misma fila -->
-                                <div class="d-flex align-items-center">
-                                    <label for="amount" class="fw-bold me-2"
-                                        >Monto</label
-                                    >
-                                    <el-input
-                                        v-model="form.detraction.amount"
-                                        readonly
-                                        class="flex-shrink-1"
-                                        style="width: 70px;"
-                                    ></el-input>
-                                </div>
+                                <!-- Mensaje de Exceso de Monto (Bancarización) -->
+                                <!-- <div
+                                    v-if="hasExceedBank"
+                                    class="text-center text-danger"
+                                >
+                                    <span>
+                                        Recuerde que debido al monto deberá hacer
+                                        esta operación mediante Bancarización.
+                                        Ingrese en el campo "Observaciones" el
+                                        número de voucher o número de operación.
+                                    </span>
+                                </div> -->
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Columna 3 -->
-                        <div class="col-lg-4">
-                            <!-- Botón Dividir Pago -->
-                            <div
-                                class="mb-3"
+                <div v-if="splitPayments.length != 0" class="row m-1 p-2  bg-light rounded">
+                    <span style="margin-bottom:5px;">Pagos divididos</span>
+                    <div class="d-flex flex-wrap ">
+                        <div
+                            v-for="(payment, idx) in splitPayments"
+                            :key="idx"
+                            class="col-2"
+                        >
+                            Pago {{ idx + 1 }}:
+                            <strong
+                                >{{ currencyIdChoice }} {{ payment.amount }}</strong
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="splitProducts.length != 0" class="row m-1 p-2  bg-light rounded">
+                    <span style="margin-bottom:5px;"
+                        >Pagos divididos por producto</span
+                    >
+                    <div class="d-flex flex-wrap ">
+                        <div
+                            v-for="(payment, idx) in splitProducts"
+                            :key="idx"
+                            class="col-3 m-1"
+                        >
+                            <table
                                 v-if="
-                                    form.payment_condition_id == '01' &&
-                                        configuration.split_payments_pos
+                                    payment.products && payment.products.length > 0
                                 "
+                                class="col-12"
                             >
-                                <el-button
-                                    type="success"
-                                    icon="el-icon-scissors"
-                                    size="large"
-                                    @click="showSplitPayment = true"
-                                    class="w-100"
-                                >
-                                    Dividir pago
-                                </el-button>
-                            </div>
-                            <br />
-                            <!-- Pagar y Cerrar -->
-                            <div class="d-flex justify-content-between mb-3">
-                                <button
-                                    class="btn btn-primary w-100 me-2"
-                                    @click="sendPayment"
-                                    :disabled="button_payment"
-                                >
-                                    <i class="fas fa-money-bill-alt"></i> PAGAR
-                                </button>
-                                <button
-                                    class="btn btn-dark w-100"
-                                    @click="back(false)"
-                                >
-                                    <i class="fa fa-reply"></i> Cerrar
-                                </button>
-                            </div>
-
-                            <!-- Mensaje de Exceso de Monto (Bancarización) -->
-                            <!-- <div
-                                v-if="hasExceedBank"
-                                class="text-center text-danger"
-                            >
-                                <span>
-                                    Recuerde que debido al monto deberá hacer
-                                    esta operación mediante Bancarización.
-                                    Ingrese en el campo "Observaciones" el
-                                    número de voucher o número de operación.
-                                </span>
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                v-if="splitPayments.length != 0"
-                class="row m-1 p-2  bg-light rounded"
-            >
-                <span style="margin-bottom:5px;">Pagos divididos</span>
-                <div class="d-flex flex-wrap ">
-                    <div
-                        v-for="(payment, idx) in splitPayments"
-                        :key="idx"
-                        class="col-2"
-                    >
-                        Pago {{ idx + 1 }}:
-                        <strong
-                            >{{ currencyIdChoice }} {{ payment.amount }}</strong
-                        >
-                    </div>
-                </div>
-            </div>
-
-            <div
-                v-if="splitProducts.length != 0"
-                class="row m-1 p-2  bg-light rounded"
-            >
-                <span style="margin-bottom:5px;"
-                    >Pagos divididos por producto</span
-                >
-                <div class="d-flex flex-wrap ">
-                    <div
-                        v-for="(payment, idx) in splitProducts"
-                        :key="idx"
-                        class="col-3 m-1"
-                    >
-                        <table
-                            v-if="
-                                payment.products && payment.products.length > 0
-                            "
-                            class="col-12"
-                        >
-                            <thead>
-                                <tr
-                                    role="button"
-                                    @click="selectAccount(idx)"
-                                    :class="
-                                        'bg-primary text-white border rounded-top'
+                                <thead>
+                                    <tr
+                                        role="button"
+                                        @click="selectAccount(idx)"
+                                        :class="
+                                            'bg-primary text-white border rounded-top'
+                                        "
+                                    >
+                                        <th class="text-center" colspan="3">
+                                            <b> CUENTA {{ idx + 1 }} </b>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    class="border rounded-top "
+                                    v-if="
+                                        payment.products &&
+                                            payment.products.length > 0
                                     "
                                 >
-                                    <th class="text-center" colspan="3">
-                                        <b> CUENTA {{ idx + 1 }} </b>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody
-                                class="border rounded-top "
-                                v-if="
-                                    payment.products &&
-                                        payment.products.length > 0
-                                "
-                            >
-                                <tr
-                                    v-for="(product, idx) in payment.products"
-                                    :key="idx"
-                                >
-                                    <td>
-                                        <h3 class="text-muted text-small">
-                                            {{ product.quantity }}
-                                        </h3>
-                                    </td>
-                                    <td>
-                                        <h3 class="text-muted text-small">
-                                            {{ product.description }}
-                                        </h3>
-                                    </td>
-                                    <td style="text-align:right">
-                                        <h3 class="text-muted text-small">
-                                            {{
-                                                product.price * product.quantity
-                                            }}
-                                        </h3>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        colspan="2"
-                                        class="text-muted text-small"
-                                        style="text-align:right"
+                                    <tr
+                                        v-for="(product, idx) in payment.products"
+                                        :key="idx"
                                     >
-                                        <b> Total</b>
-                                    </td>
-                                    <td class="text-muted text-small">
-                                        {{ currencySymbol }}
-                                        {{
-                                            totalItemSelected(payment.products)
-                                        }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tbody v-else class="border">
-                                <tr>
-                                    <td colspan="3" class="text-center">
-                                        <h3 class="text-muted text-small">
-                                            Sin productos seleccionados
-                                        </h3>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        <td>
+                                            <h3 class="text-muted text-small">
+                                                {{ product.quantity }}
+                                            </h3>
+                                        </td>
+                                        <td>
+                                            <h3 class="text-muted text-small">
+                                                {{ product.description }}
+                                            </h3>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <h3 class="text-muted text-small">
+                                                {{
+                                                    product.price * product.quantity
+                                                }}
+                                            </h3>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            colspan="2"
+                                            class="text-muted text-small"
+                                            style="text-align:right"
+                                        >
+                                            <b> Total</b>
+                                        </td>
+                                        <td class="text-muted text-small">
+                                            {{ currencySymbol }}
+                                            {{
+                                                totalItemSelected(payment.products)
+                                            }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else class="border">
+                                    <tr>
+                                        <td colspan="3" class="text-center">
+                                            <h3 class="text-muted text-small">
+                                                Sin productos seleccionados
+                                            </h3>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <div class="p-3"></div>
             </div>
-            <div class="p-3"></div>
         </div>
 
         <multiple-payment-form
@@ -1953,15 +1943,9 @@ export default {
         method_payments(newMethod, _) {
             this.checkTotal(newMethod);
         },
-        loading(newVal) {
-            if (!newVal) {
-                this.closeModal();
-            }
-        }
     },
     data() {
         return {
-            activeTab: 'general', // Añadir esta línea para definir el tab activo por defecto
             all_series: [],
             listPromotionItems: [],
             promotionItems: [],
@@ -3799,7 +3783,6 @@ export default {
             if (global_discount > total) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
-                this.$forceUpdate();
                 return this.$toast.error(
                     "El descuento no puede ser mayor al total"
                 );
@@ -4436,9 +4419,9 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
-            this.loading = true;
+            /* this.loading = true;
             this.loading_submit = true;
-            this.button_payment = true;
+            this.button_payment = true; */
             let pass = true;
 
             if (
@@ -4471,9 +4454,9 @@ export default {
                     });
 
                     if (!result.isConfirmed) {
-                        this.loading = false;
+                        /* this.loading = false;
                         this.loading_submit = false;
-                        this.button_payment = false;
+                        this.button_payment = false; */
                         return;
                     }
                 } catch (e) {
@@ -4481,9 +4464,9 @@ export default {
                 }
             }
             if (!pass) {
-                this.loading = false;
+                /* this.loading = false;
                 this.loading_submit = false;
-                this.button_payment = false;
+                this.button_payment = false; */
                 return;
             }
             if (!form) {
@@ -5079,8 +5062,8 @@ export default {
 
                 this.$toast.error(message || "Ocurrió un error");
             } finally {
-                this.loading_submit = false;
-                this.loading = false;
+                /* this.loading_submit = false;
+                this.loading = false; */
                 this.button_payment = false;
             }
         },
@@ -5459,11 +5442,9 @@ export default {
             } catch (error) {
                 this.$toast.error("Ocurrió un error");
             } finally {
-                loading.close();
+                this.showDialogPromotionBox = false; // Close the modal
+                loading.close(); // Stop the loading spinner
             }
-        },
-        closeModal() {
-            this.showDialogPromotionBox = false;
         }
     }
 };

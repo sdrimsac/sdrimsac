@@ -1426,7 +1426,6 @@ class DocumentController extends Controller
     // }
     public function store(DocumentRequest $request)
     {
-        //dump($request->all());
         DB::connection('tenant')->beginTransaction();
         $user_type = auth()->user()->type;
         $ids = [];

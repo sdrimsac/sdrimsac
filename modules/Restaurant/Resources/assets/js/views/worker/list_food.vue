@@ -12,7 +12,7 @@
                 <!-- copiar desde aqui -->
                 <div class="col-12 col-lg-6  col-xl-6 col-xxl-4 p-1" v-for="(data, index) in listFoods" :key="index">
                     <!--  -->
-                    <div id="card" class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1">
+                    <div id="card" class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1 bg-white">
                         <div @click="addFood(index)">
                             <div>
                                 <span class="lead-font-weight-700 h5">

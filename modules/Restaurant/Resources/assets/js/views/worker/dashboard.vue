@@ -120,27 +120,27 @@
                     </template>
                 </div>
                 <div
-                    class="col-12 col-sm-6 pt-2 pb-2"
+                    class="col-12 pt-2 pb-2"
                     v-if="show == 'create' && screenWidth > 678"
                 >
-                    <template>
-                        <span slot="label">
-                            <i class="fas fa-list"></i> Categoria de Producto
-                        </span>
-                        <el-select
-                            v-model="category"
-                            filterable
-                            placeholder="Selecionar aqui...."
-                            @change="select_category(category)"
-                        >
-                            <el-option
+                    <div class="categories-scroll">
+                        <div class="categories-wrapper">
+                            <div
                                 v-for="item in categories"
                                 :key="item.id"
-                                :label="item.name"
-                                :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </template>
+                                class="category-card"
+                                :class="{ active: category === item.id }"
+                                @click="select_category(item.id)"
+                            >
+                                <div class="category-circle">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <span class="category-name">{{
+                                    item.name
+                                }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div
@@ -247,8 +247,15 @@
                     >
                         {{ data.status_table.description }}
                     </span>
-                    <template v-if="data.status_table.id !== 1 && getUserForTable(data.id)">
-                        <span class="text-white">{{ getUserForTable(data.id).usuario.substring(0, 15) }}</span>
+                    <template
+                        v-if="
+                            data.status_table.id !== 1 &&
+                                getUserForTable(data.id)
+                        "
+                    >
+                        <span class="text-white">{{
+                            getUserForTable(data.id).usuario.substring(0, 15)
+                        }}</span>
                     </template>
                 </div>
             </div>
@@ -308,6 +315,86 @@
 .hooper-next,
 .hooper-prev {
     padding: 0.2em;
+}
+.categories-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding: 10px 0;
+}
+
+.categories-wrapper {
+    display: flex;
+    gap: 15px;
+    padding: 0 10px;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.category-circle i {
+    font-size: 24px;
+    color: #666;
+}
+
+.category-name {
+    font-size: 12px;
+    text-align: center;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.category-card.active .category-circle {
+    background: #409eff;
+}
+
+.category-card.active .category-circle i {
+    color: white;
+}
+
+.category-card:hover .category-circle {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom scrollbar */
+.categories-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.categories-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 </style>
 
@@ -411,10 +498,10 @@ export default {
         Echo.channel("orden_list").listen(
             `.order-list-${this.configuration.socket_channel}`,
             e => {
-            let { order_item } = e;
-            this.listaOrden(order_item);
-            /* console.log("🚀 ~ file: dashboard.vue ~ line 202 ~ Echo.channel ~ order_item edrrrrr", order_item) */
-            this.playSound(`pedidos_listo.mp3`);
+                let { order_item } = e;
+                this.listaOrden(order_item);
+                /* console.log("🚀 ~ file: dashboard.vue ~ line 202 ~ Echo.channel ~ order_item edrrrrr", order_item) */
+                this.playSound(`pedidos_listo.mp3`);
             }
         );
 
@@ -537,11 +624,11 @@ export default {
         },
         listaOrden(order_item) {
             this.$notify({
-            title: "Orden Lista",
-            message: `La orden ${order_item.id} está lista para ser entregada. Pedido por: <span style="color: blue; text-transform: uppercase">${order_item.mozo_name}</span>`,
-            type: "success",
-            duration: 0,
-            dangerouslyUseHTMLString: true
+                title: "Orden Lista",
+                message: `La orden ${order_item.id} está lista para ser entregada. Pedido por: <span style="color: blue; text-transform: uppercase">${order_item.mozo_name}</span>`,
+                type: "success",
+                duration: 0,
+                dangerouslyUseHTMLString: true
             });
         },
         async userorden() {
@@ -559,7 +646,9 @@ export default {
         },
 
         getUserForTable(tableId) {
-            const tableUser = this.tableUsers.find(user => user.table_id === tableId);
+            const tableUser = this.tableUsers.find(
+                user => user.table_id === tableId
+            );
             return tableUser || null;
         },
         async disabledTable(id) {
@@ -733,6 +822,7 @@ export default {
             this.focus();
         },
         select_category(id) {
+            this.category = id; // Update the selected category
             this.focus();
             this.$refs.detailRef.filterCategory(id);
             this.searchOrden();

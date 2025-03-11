@@ -1032,7 +1032,7 @@
                             @cotizarConfirmado="handleCotizarConfirmado"
                             :cotizarConfirmado.sync="cotizarConfirmado"
                             @cotizarConfirmadoChanged="
-                                handleCotizarConfirmadoRegreso
+                            handleCotizarConfirmadoRegreso
                             "
                         ></list-orden>
                     </div>
