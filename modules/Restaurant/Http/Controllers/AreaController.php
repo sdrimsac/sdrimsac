@@ -80,6 +80,7 @@ class AreaController extends Controller
         $id = $request->input('id');
         $area = Area::firstOrNew(['id' => $id]);
         $area->fill($request->all());
+        $area->search_print = $request->search_print ? 1 : 0;
         $area->save();
 
         return [
