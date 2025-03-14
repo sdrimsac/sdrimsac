@@ -118,6 +118,9 @@
                             ></el-button>
                         </el-input>
                     </template>
+                    <div v-if="configuration.chifa_china">
+                        <el-button @click="open">Crear producto</el-button>
+                    </div>
                 </div>
                 <div
                     class="col-12 pt-2 pb-2"
@@ -284,6 +287,12 @@
                 :category.sync="category"
             ></detail-orden>
         </template>
+        <Pos-form
+            :showDialog.sync="showDialog"
+            :recordId.sync="recordId"
+            :external="true"
+            @addDataMozo="recibirProducto"
+        ></Pos-form>
     </div>
 </template>
 
@@ -407,6 +416,7 @@ import MenuTable from "./menu.vue";
 import ListOrden from "./listar_ordens.vue";
 import queryString from "query-string";
 import swal from "sweetalert2";
+import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
 export default {
     components: {
         ViewTables,
@@ -416,7 +426,8 @@ export default {
         Hooper,
         Slide,
         HooperNavigation,
-        swal
+        swal,
+        PosForm
     },
     props: [
         "configuration",
@@ -429,6 +440,8 @@ export default {
     ],
     data() {
         return {
+            showDialog: false,
+            recordId: null,
             audio: HTMLAudioElement,
             tableUsers: [],
             divided_items: false,
@@ -550,6 +563,12 @@ export default {
                 await this.userorden();
             }
         );
+
+        /* this.$notify({
+            title: "Sistema de Punto de Venta",
+            iconClass: "icofont-waiter icofont-3x",
+            message: "Bienvenido " + this.user.name
+        }); */
     },
 
     async created() {
@@ -616,6 +635,23 @@ export default {
         });
     },
     methods: {
+        async fetchFood(productId) {
+            try {
+                const response = await this.$http.get(`${this.resource}/ver/${productId}`);
+                console.log("Response data:", response.data);
+                this.$root.$emit("productoRecibido", response.data);
+            } catch (error) {
+                console.error("Error al obtener el producto del backend:", error);
+            }
+        },
+        
+        recibirProducto(data) {
+            console.log("Producto recibido:", data);
+            this.fetchFood(data.id);
+        },
+        open() {
+            this.showDialog = true;
+        },
         playSound(sound = "services_sound.mp3") {
             let audio = new Audio(`/sounds/${sound}`);
             if (audio) {

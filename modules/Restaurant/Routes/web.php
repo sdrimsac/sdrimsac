@@ -349,6 +349,7 @@ Route::prefix('caja')->group(function () {
             Route::get('totales_sales_usd', 'PosController@total_sales_usd');
             Route::get('dashboard', 'DashboardController@index')->name('restaurant.workers.dashboard');
             Route::get('dashboard/foods', 'DashboardController@foods');
+            Route::get('dashboard/ver/{id}', 'DashboardController@ver');
             Route::get('dashboard/data_table', 'DashboardController@data_table');
             Route::get('dashboard-kitchen', 'DashboardController@kitchen')->name('restaurant.kitchen.dashboard')->middleware('just.worker');
             Route::get('dashboard-pos', 'DashboardController@pos')->name('restaurant.pos.dashboard')->middleware('just.worker');;

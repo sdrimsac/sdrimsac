@@ -1033,6 +1033,7 @@ class OrdenController extends Controller
 
     public function store(Request $request)
     {
+        //dump($request->all());
         try {
             $user = null;
             $ref = $request->ref;

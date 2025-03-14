@@ -4305,44 +4305,48 @@ export default {
         verifyStock(orden, idx) {
             let current_orden = this.localOrden.filter(o => o.id == orden.id);
             let unit_type_id = current_orden[0].food.item.unit_type_id;
-            this.localOrden[idx].price = this.getPriceRange(
-                this.localOrden[idx]
-            );
-            if (
-                this.configuration.sales_stock &&
-                !this.quotation_stock &&
-                unit_type_id != "ZZ"
-            ) {
-                let qty = current_orden.reduce(
-                    (a, b) => a + Number(b.quantity),
-                    0
-                );
+            
+            // Update price based on quantity
+            this.localOrden[idx].price = this.getPriceRange(this.localOrden[idx]);
+            
+            if (this.configuration.sales_stock && !this.quotation_stock && unit_type_id != "ZZ") {
+                let qty = Number(this.localOrden[idx].quantity); // Get current input quantity
                 let stock = 0;
-                if (
-                    current_orden.length == 1 &&
-                    current_orden[0].lotes.length == 1
-                ) {
+
+                // Determine available stock
+                if (current_orden.length == 1 && current_orden[0].lotes.length == 1) {
                     let [orden] = current_orden;
                     let [lote] = orden.lotes;
                     stock = lote.quantity;
                 } else {
                     stock = Number(current_orden[0].food.item.stock);
                 }
+
+                // Validate quantity against stock
                 if (qty > stock) {
-                    this.$toast.warning("Sobrepaso el stock");
-                    let localOrden_quantity = this.localOrden;
-                    localOrden_quantity[idx].quantity = 1;
+                    this.$toast.warning(`La cantidad excede el stock disponible (${stock})`);
+                    // Reset to maximum available stock
+                    this.localOrden[idx].quantity = stock;
+                    
+                    // Update lots if single lot
+                    if (current_orden.length == 1) {
+                        let [orden] = current_orden;
+                        if (orden.lotes.length == 1) {
+                            orden.lotes[0].quantitySelected = stock;
+                        }
+                    }
                     return;
                 }
+
+                // Update lot quantity if single lot
                 if (current_orden.length == 1) {
                     let [orden] = current_orden;
                     if (orden.lotes.length == 1) {
-                        orden.lotes[0].quantitySelected = this.localOrden[
-                            idx
-                        ].quantity;
+                        orden.lotes[0].quantitySelected = qty;
                     }
                 }
             }
+            
             this.calculateTotal();
         },
         showOrdensPending() {

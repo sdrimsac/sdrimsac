@@ -39,6 +39,7 @@ class PrintOrderJob implements ShouldQueue
         $this->direct = $direct;
         $this->area_id = $area_id;
         $this->filtered_items = $filtered_items;
+        //dump($filtered_items);
         $this->user_id = $user_id;
         $this->isEmit = $isEmit;
         $this->isPrecuenta = $isPrecuenta;

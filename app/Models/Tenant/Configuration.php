@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'chifa_china',
         'conopy_kitchen',
         'seller_mozo',
         'kitchen_mozo',
@@ -304,6 +305,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'chifa_china' => 'boolean',
         'conopy_kitchen' => 'boolean',
         'seller_mozo' => 'boolean',
         'kitchen_mozo' => 'boolean',
@@ -551,6 +553,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'chifa_china' => (bool)$this->chifa_china,
             'conopy_kitchen' => (bool)$this->conopy_kitchen,
             'seller_mozo' => (bool)$this->seller_mozo,
             'kitchen_mozo' => (bool)$this->kitchen_mozo,

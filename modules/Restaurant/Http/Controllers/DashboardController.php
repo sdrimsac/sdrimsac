@@ -29,6 +29,14 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    public function ver($id){
+        // obtener el foods con el id
+        $food = Food::find($id);
+        // retornar la vista con el food
+        return compact('food');
+    }
+
+
     public function foods(Request $request)
     {
         $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();

@@ -21,7 +21,10 @@
                         <div class="mb-1">
                             <div class="card bg-light">
                                 <div class="card-body">
-                                    <div class="row" v-if="configuration.college">
+                                    <div
+                                        class="row"
+                                        v-if="configuration.college"
+                                    >
                                         <el-checkbox
                                             @change="chageRegister"
                                             v-model="notRegister"
@@ -41,7 +44,9 @@
                                                 class="shadow-box d-flex justify-content-between flex-wrap pt-0 pb-0"
                                             >
                                                 <el-button-group
-                                                    v-model="form.document_type_id"
+                                                    v-model="
+                                                        form.document_type_id
+                                                    "
                                                     @change="filterSeries"
                                                 >
                                                     <!-- Botón Factura -->
@@ -79,7 +84,9 @@
                                                             alignItems: 'center'
                                                         }"
                                                         @click="
-                                                            selectDocumentType('01')
+                                                            selectDocumentType(
+                                                                '01'
+                                                            )
                                                         "
                                                         title="FACTURA"
                                                     >
@@ -124,7 +131,9 @@
                                                             alignItems: 'center'
                                                         }"
                                                         @click="
-                                                            selectDocumentType('03')
+                                                            selectDocumentType(
+                                                                '03'
+                                                            )
                                                         "
                                                         title="BOLETA"
                                                     >
@@ -168,7 +177,9 @@
                                                             alignItems: 'center'
                                                         }"
                                                         @click="
-                                                            selectDocumentType('80')
+                                                            selectDocumentType(
+                                                                '80'
+                                                            )
                                                         "
                                                         title="NOTA"
                                                     >
@@ -260,7 +271,9 @@
                                                         Emisión
                                                     </label>
                                                     <el-date-picker
-                                                        v-model="form.date_of_issue"
+                                                        v-model="
+                                                            form.date_of_issue
+                                                        "
                                                         type="date"
                                                         value-format="yyyy-MM-dd"
                                                         format="dd-MM-yyyy"
@@ -270,7 +283,9 @@
                                                             this.configuration
                                                                 .restrict_receipt_date
                                                         "
-                                                        @change="changeDateOfIssue"
+                                                        @change="
+                                                            changeDateOfIssue
+                                                        "
                                                     ></el-date-picker>
                                                 </div>
                                                 <!-- Botón de Visualización de Lista de venta -->
@@ -324,7 +339,9 @@
                                                                 !configuration.college ||
                                                                     notRegister
                                                             "
-                                                            @click="createClient"
+                                                            @click="
+                                                                createClient
+                                                            "
                                                             class="fw-bold button-custom me-2"
                                                             type="primary"
                                                             size="small"
@@ -399,7 +416,9 @@
                                                 <div
                                                     class="col-lg-5 d-flex flex-column mb-2 mb-lg-0"
                                                 >
-                                                    <label>Buscar Cliente</label>
+                                                    <label
+                                                        >Buscar Cliente</label
+                                                    >
                                                     <el-select
                                                         class="col-md-6"
                                                         ref="select_person"
@@ -472,7 +491,9 @@
                                             <div
                                                 class="col-12 col-md-4 col-lg-4 d-flex flex-column mb-2 mb-lg-0"
                                             >
-                                                <label for="seller">Vendedor</label>
+                                                <label for="seller"
+                                                    >Vendedor</label
+                                                >
                                                 <el-select
                                                     v-model="form.seller_id"
                                                     class="w-100"
@@ -523,7 +544,10 @@
                     </div>
                     <!-- Operaciones de Pago -->
 
-                    <div class="container-fluid" style="background-color: lightgray;">
+                    <div
+                        class="container-fluid"
+                        style="background-color: lightgray;"
+                    >
                         <div class="row g-2 align-items-stretch">
                             <!-- Column 1: Total Venta -->
                             <div class="col-lg-4 col-md-4 col-sm-12">
@@ -543,7 +567,9 @@
                                         <!-- S/ {{ " " + form.total }} -->
 
                                         {{
-                                            currencyIdChoice == "PEN" ? "S/ " : "$ "
+                                            currencyIdChoice == "PEN"
+                                                ? "S/ "
+                                                : "$ "
                                         }}
                                         {{ " " + form.total }}
                                     </span>
@@ -604,7 +630,8 @@
                                     class="d-flex justify-content-between align-items-center p-3"
                                     style="border-radius: 5px; height: 100%;"
                                     :class="{
-                                        'bg-danger text-white': form.difference < 0,
+                                        'bg-danger text-white':
+                                            form.difference < 0,
                                         'bg-primary text-white':
                                             form.difference >= 0
                                     }"
@@ -647,7 +674,9 @@
                                     >
                                 </div>
                                 <div class="radio-tile-group2 flex-wrap">
-                                    <div class="input-container2 border rounded-sm">
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                    >
                                         <input
                                             :disabled="form_payment.is_bank"
                                             id="cash"
@@ -707,7 +736,9 @@
                                             name="method_payment"
                                             value="05"
                                             @change="
-                                                method_payment('TARJETA: IZYPAY')
+                                                method_payment(
+                                                    'TARJETA: IZYPAY'
+                                                )
                                             "
                                         />
                                         <div
@@ -734,7 +765,9 @@
                                             name="method_payment"
                                             value="07"
                                             @change="
-                                                method_payment('TARJETA: OPENPAY')
+                                                method_payment(
+                                                    'TARJETA: OPENPAY'
+                                                )
                                             "
                                         />
                                         <div
@@ -761,7 +794,9 @@
                                             name="method_payment"
                                             value="06"
                                             @change="
-                                                method_payment('TARJETA: NIUBIZ')
+                                                method_payment(
+                                                    'TARJETA: NIUBIZ'
+                                                )
                                             "
                                         />
                                         <div
@@ -837,7 +872,9 @@
                                             type="radio"
                                             name="method_payment"
                                             value="08"
-                                            @change="method_payment('DIDI FOOD')"
+                                            @change="
+                                                method_payment('DIDI FOOD')
+                                            "
                                         />
                                         <div
                                             class="radio-tile2"
@@ -863,7 +900,9 @@
                                             type="radio"
                                             name="method_payment"
                                             value="09"
-                                            @change="method_payment('PEDIDOS YA')"
+                                            @change="
+                                                method_payment('PEDIDOS YA')
+                                            "
                                         />
                                         <div
                                             class="radio-tile2"
@@ -913,7 +952,11 @@
 
                                 <div
                                     class=""
-                                    v-if="methodsValidate.includes(form.method_pay)"
+                                    v-if="
+                                        methodsValidate.includes(
+                                            form.method_pay
+                                        )
+                                    "
                                 >
                                     <!-- <label
                                         class="control-label font-weight-bold text-muted mr-2"
@@ -973,7 +1016,9 @@
                                         >
                                             <el-radio-group
                                                 @change="calculateCharge"
-                                                v-model="chargeCredit.credit_type"
+                                                v-model="
+                                                    chargeCredit.credit_type
+                                                "
                                                 size="mini"
                                                 style="color: #004085;"
                                             >
@@ -995,13 +1040,15 @@
                                             class="h6 font-weight-bold"
                                             style="margin-left: auto;"
                                             v-if="
-                                                chargeCredit.total_charge !== 0 &&
-                                                    chargeCredit.amount
+                                                chargeCredit.total_charge !==
+                                                    0 && chargeCredit.amount
                                             "
                                         >
                                             S/
                                             {{
-                                                chargeCredit.total_charge.toFixed(2)
+                                                chargeCredit.total_charge.toFixed(
+                                                    2
+                                                )
                                             }}
                                         </span>
                                     </div>
@@ -1085,7 +1132,8 @@
                                     @click="addPayment"
                                     :disabled="disabledAddPayment()"
                                 >
-                                    <span v-if="form.payment_condition_id == '01'"
+                                    <span
+                                        v-if="form.payment_condition_id == '01'"
                                         >Agregar</span
                                     >
                                     <span v-else>Agregar cuota</span>
@@ -1139,13 +1187,26 @@
                                     configuration.is_promotion_document ||
                                         configuration.promotions_by_points
                                 "
-                            > 
-                            
-                            <!-- </div> -->
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span class="text-white">Puntos Acumulados: {{ Number(pointsMessage || 0).toFixed(2) }}</span>
-                                <span class="text-white">Puntos Ganados Venta: {{ Number(ventalista || 0).toFixed(2) }}</span>
-                            </div>
+                            >
+                                <!-- </div> -->
+                                <div
+                                    class="d-flex align-items-center justify-content-between"
+                                >
+                                    <span class="text-white"
+                                        >Puntos Acumulados:
+                                        {{
+                                            Number(pointsMessage || 0).toFixed(
+                                                2
+                                            )
+                                        }}</span
+                                    >
+                                    <span class="text-white"
+                                        >Puntos Ganados Venta:
+                                        {{
+                                            Number(ventalista || 0).toFixed(2)
+                                        }}</span
+                                    >
+                                </div>
                                 <label for="promotion" class="w-100 fw-bold"
                                     >Promoción</label
                                 >
@@ -1199,7 +1260,9 @@
                                 </div>
                             </div>
                             <br />
-                            <div class="radio-tile-group2 d-flex mb-3 justify-content-end me-4">
+                            <div
+                                class="radio-tile-group2 d-flex mb-3 justify-content-end me-4"
+                            >
                                 <div
                                     class="input-container2 border rounded-sm me-2"
                                     :class="{ selected: printerOn === '1' }"
@@ -1254,7 +1317,9 @@
                             <template v-if="form.is_room">
                                 <div class="mb-3 d-flex justify-content-end">
                                     <div>
-                                        <label for="vacate">Desocupar habitación</label>
+                                        <label for="vacate"
+                                            >Desocupar habitación</label
+                                        >
                                         <el-checkbox
                                             v-model="form.vacate"
                                         ></el-checkbox>
@@ -1381,7 +1446,9 @@
                                     "
                                 >
                                     <label class="fw-bold">Modo de Pago</label>
-                                    <el-select v-model="form.payment_condition_id">
+                                    <el-select
+                                        v-model="form.payment_condition_id"
+                                    >
                                         <el-option
                                             value="01"
                                             label="Contado"
@@ -1399,7 +1466,9 @@
 
                                 <!-- Afectación IGV -->
                                 <!-- <template > -->
-                                <template v-if="configuration.affectation_optional">
+                                <template
+                                    v-if="configuration.affectation_optional"
+                                >
                                     <div class="mb-3">
                                         <label>
                                             Afectación IGV para el documento
@@ -1436,7 +1505,9 @@
 
                                     <!-- Cta Bancaria y botón "Más..." -->
                                     <div class="mb-2 d-flex align-items-center">
-                                        <label for="account" class="fw-bold me-2"
+                                        <label
+                                            for="account"
+                                            class="fw-bold me-2"
                                             >Cta Bancaria</label
                                         >
                                         <el-input
@@ -1491,13 +1562,16 @@
                                 </div>
                                 <br />
                                 <!-- Pagar y Cerrar -->
-                                <div class="d-flex justify-content-between mb-3">
+                                <div
+                                    class="d-flex justify-content-between mb-3"
+                                >
                                     <button
                                         class="btn btn-primary w-100 me-2"
                                         @click="sendPayment"
                                         :disabled="button_payment"
                                     >
-                                        <i class="fas fa-money-bill-alt"></i> PAGAR
+                                        <i class="fas fa-money-bill-alt"></i>
+                                        PAGAR
                                     </button>
                                     <button
                                         class="btn btn-dark w-100"
@@ -1524,7 +1598,10 @@
                     </div>
                 </div>
 
-                <div v-if="splitPayments.length != 0" class="row m-1 p-2  bg-light rounded">
+                <div
+                    v-if="splitPayments.length != 0"
+                    class="row m-1 p-2  bg-light rounded"
+                >
                     <span style="margin-bottom:5px;">Pagos divididos</span>
                     <div class="d-flex flex-wrap ">
                         <div
@@ -1534,13 +1611,17 @@
                         >
                             Pago {{ idx + 1 }}:
                             <strong
-                                >{{ currencyIdChoice }} {{ payment.amount }}</strong
+                                >{{ currencyIdChoice }}
+                                {{ payment.amount }}</strong
                             >
                         </div>
                     </div>
                 </div>
 
-                <div v-if="splitProducts.length != 0" class="row m-1 p-2  bg-light rounded">
+                <div
+                    v-if="splitProducts.length != 0"
+                    class="row m-1 p-2  bg-light rounded"
+                >
                     <span style="margin-bottom:5px;"
                         >Pagos divididos por producto</span
                     >
@@ -1552,7 +1633,8 @@
                         >
                             <table
                                 v-if="
-                                    payment.products && payment.products.length > 0
+                                    payment.products &&
+                                        payment.products.length > 0
                                 "
                                 class="col-12"
                             >
@@ -1577,7 +1659,8 @@
                                     "
                                 >
                                     <tr
-                                        v-for="(product, idx) in payment.products"
+                                        v-for="(product,
+                                        idx) in payment.products"
                                         :key="idx"
                                     >
                                         <td>
@@ -1593,7 +1676,8 @@
                                         <td style="text-align:right">
                                             <h3 class="text-muted text-small">
                                                 {{
-                                                    product.price * product.quantity
+                                                    product.price *
+                                                        product.quantity
                                                 }}
                                             </h3>
                                         </td>
@@ -1609,7 +1693,9 @@
                                         <td class="text-muted text-small">
                                             {{ currencySymbol }}
                                             {{
-                                                totalItemSelected(payment.products)
+                                                totalItemSelected(
+                                                    payment.products
+                                                )
                                             }}
                                         </td>
                                     </tr>
@@ -1671,7 +1757,6 @@
             :customer_default="customer_default"
             @setPayments="setPayments"
             :printerOn="printerOn"
-
         >
         </show-split-payment-form>
         <person-college-form
@@ -1942,7 +2027,7 @@ export default {
         },
         method_payments(newMethod, _) {
             this.checkTotal(newMethod);
-        },
+        }
     },
     data() {
         return {
@@ -2119,7 +2204,7 @@ export default {
             bank: null,
             hasExceedBank: false,
             bank_accounts: [],
-            pointsMessage: '',
+            pointsMessage: "",
             ventalista: 0
         };
     },
@@ -2337,26 +2422,29 @@ export default {
 
         reCalculateTotal() {
             // ...existing code...
-            
-           
+
             // Calcula puntos basado en el total de venta (form.total) y el monto de promocion (total)
             let saleTotal = this.form.total; // Monto total de la venta
             let promotionTotal = this.total || 0; // Monto que tiene la promoción
             let points_value = this.points_value || 0.1; // Valor de puntos por unidad monetaria
 
             // Calcula puntos solo si hay un monto de venta
-            if(saleTotal > 0) {
+            if (saleTotal > 0) {
                 // Si hay monto de promoción, usa ese para calcular puntos
-                if(promotionTotal > 0) {
-                    this.ventalista = parseFloat((saleTotal / promotionTotal).toFixed(2));
+                if (promotionTotal > 0) {
+                    this.ventalista = parseFloat(
+                        (saleTotal / promotionTotal).toFixed(2)
+                    );
                 } else {
                     // Si no hay monto de promoción, usa el cálculo estándar
-                    this.ventalista = parseFloat((saleTotal * points_value).toFixed(2));
+                    this.ventalista = parseFloat(
+                        (saleTotal * points_value).toFixed(2)
+                    );
                 }
             } else {
                 this.ventalista = 0;
             }
-            
+
             // ...existing code...
         },
         formatNumber(value) {
@@ -2385,7 +2473,7 @@ export default {
             });
         },
         setPayments(payments) {
-            this.currentPayments = []; // Limpiar pagos actuales
+            this.currentPayments = [];
             payments.forEach(payment => {
                 this.form.enter_amount = payment.amount;
                 this.method_payments = payment.payment_method;
@@ -3066,14 +3154,14 @@ export default {
                             this.points_value = data.points_value;
                             this.total = data.total;
                             this.listPromotionItems = data.items;
-                            
+
                             // Calculate points to be earned from this sale
                             this.calculatePointsEarned();
                         } else {
                             this.hasPromotionText = null;
-                            this.pointsMessage = '';
-                            this.points_value = '';
-                            this.total = '';
+                            this.pointsMessage = "";
+                            this.points_value = "";
+                            this.total = "";
                             this.listPromotionItems = [];
                             this.ventalista = 0;
                         }
@@ -3083,7 +3171,12 @@ export default {
         calculatePointsEarned() {
             if (this.points_value && this.form.total && this.total) {
                 // Calculate points earned based on total sale and points_value
-                this.ventalista = parseFloat((this.form.total * this.points_value / this.total ).toFixed(2));
+                this.ventalista = parseFloat(
+                    (
+                        (this.form.total * this.points_value) /
+                        this.total
+                    ).toFixed(2)
+                );
             } else {
                 this.ventalista = 0;
             }
@@ -4134,19 +4227,23 @@ export default {
                 total_value: this.form.total_value
             });
             // this.discountGlobal();
-            
+
             let saleTotal = this.form.total; // Monto total de la venta
             let promotionTotal = this.total || 0; // Monto que tiene la promoción
             let points_value = this.points_value || 0.1; // Valor de puntos por unidad monetaria
 
             // Calcula puntos solo si hay un monto de venta
-            if(saleTotal > 0) {
+            if (saleTotal > 0) {
                 // Si hay monto de promoción, usa ese para calcular puntos
-                if(promotionTotal > 0) {
-                    this.ventalista = parseFloat((saleTotal / promotionTotal).toFixed(2));
+                if (promotionTotal > 0) {
+                    this.ventalista = parseFloat(
+                        (saleTotal / promotionTotal).toFixed(2)
+                    );
                 } else {
                     // Si no hay monto de promoción, usa el cálculo estándar
-                    this.ventalista = parseFloat((saleTotal * points_value).toFixed(2));
+                    this.ventalista = parseFloat(
+                        (saleTotal * points_value).toFixed(2)
+                    );
                 }
             } else {
                 this.ventalista = 0;
@@ -4516,7 +4613,6 @@ export default {
             } else {
                 console.log("no envio variation");
             }
-            
         },
         checkPaymentsIsOk() {
             let total = 0;
@@ -4579,6 +4675,7 @@ export default {
                 return false;
             }
         },
+        // realzia la peticon y validacion para cobrar y liberar las mesas
         async clickPayment(form) {
             let boxes = this.currentPayments.reduce(
                 (a, b) => a + Number(b.amount),
@@ -4852,6 +4949,14 @@ export default {
                 if (this.sumCoins.length > 0) {
                     form.sumCoins = this.sumCoins;
                 }
+                /* if (this.configuration.split_payments_pos){
+                    message = "Venta realizada";
+                } else {
+                    const response = await this.$http.post(
+                    `/${this.resource_documents}`,
+                    form
+                );
+                } */
                 const response = await this.$http.post(
                     `/${this.resource_documents}`,
                     form
@@ -4875,6 +4980,7 @@ export default {
                     this.operation_number = null;
                     if (response.data.success == true) {
                         let document_id = 0;
+                        
                         if (form.document_type_id === "80") {
                             this.number = response.data.data.number;
                             document_id = response.data.data.id;

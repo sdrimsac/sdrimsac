@@ -216,7 +216,9 @@
                                                         data-line="1"
                                                     >
                                                         {{
-                                                            ord_row.food.description.toUpperCase()
+                                                            ord_row.food && ord_row.food.description
+                                                                ? ord_row.food.description.toUpperCase()
+                                                                : ''
                                                         }}
                                                     </div>
                                                 </div>
@@ -726,6 +728,7 @@ export default {
         this.referenciaInput = this.referencia;
         this.mozos = this.mozos || [];
         await this.getTags();
+        //this.$root.$on("addProductToOrder", this.addProductToOrder);
     },
     components: {
         swal,
@@ -1119,6 +1122,14 @@ export default {
                 return;
             }
 
+            // Verificar que todos los items en localOrden tengan un id
+            for (let item of this.localOrden) {
+                if (!item.id) {
+                    this.$toast.error('Uno o más productos no tienen ID');
+                    return;
+                }
+            }
+
             let form_submit = {
                 id: this.ordenSelectedId,
                 caja: false,
@@ -1467,7 +1478,12 @@ export default {
         updateMozo(value) {
             // Optionally emit an event when mozo changes
             this.$emit("mozo-selected", value);
-        }
+        },
+        /* addProductToOrder(product) {
+            console.log("ver como llega el dato", product);
+            this.localOrden.push(product);
+            this.calculateTotal();
+        } */
     }
 };
 </script>

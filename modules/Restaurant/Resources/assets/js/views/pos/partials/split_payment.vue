@@ -428,6 +428,10 @@ export default {
             if (this.printerOn) {
                 newForm.printerOn = true;
             }
+            // Ensure sale notes are marked as paid
+            if (form.document_type_id === "80") {
+                newForm.credit = false;
+            }
             const response = await this.$http.post(`/${resource}`, newForm);
             this.loading = false;
         },

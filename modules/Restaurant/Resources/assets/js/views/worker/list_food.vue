@@ -1,62 +1,93 @@
 <template>
-<div>
-    <div v-if="screenWidth > 678" class="row p-2">
-        <h2 class="small-title">Productos</h2>
-        <template v-if="listFoods.length == 0">
-            <div class="col-12 text-center font-weight-bold">
-                <label>No Hay Productos</label>
-            </div>
-        </template>
-        <template v-else>
-            <div class="d-flex flex-wrap">
-                <!-- copiar desde aqui -->
-                <div class="col-12 col-lg-6  col-xl-6 col-xxl-4 p-1" v-for="(data, index) in listFoods" :key="index">
-                    <!--  -->
-                    <div id="card" class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1 bg-white">
-                        <div @click="addFood(index)">
-                            <div>
-                                <span class="lead-font-weight-700 h5">
-                                    {{ data.description.toUpperCase() }}
-                                </span>
-                            </div>
-                            <div class="d-flex align-items-end justify-content-between">
-                                <div class="p-1">
-                                    <div class="icon-container ">
-                                        <div class="icon-container_box">
-                                            <template v-if="
+    <div>
+        <div v-if="screenWidth > 678" class="row p-2">
+            <h2 class="small-title">Productos</h2>
+            <template v-if="Array.isArray(listFoods) && listFoods.length == 0">
+                <div class="col-12 text-center font-weight-bold">
+                    <label>No Hay Productos</label>
+                </div>
+            </template>
+            <template v-else>
+                <div class="d-flex flex-wrap">
+                    <!-- copiar desde aqui -->
+                    <div
+                        class="col-12 col-lg-6  col-xl-6 col-xxl-4 p-1"
+                        v-for="(data, index) in listFoods"
+                        :key="index"
+                    >
+                        <!--  -->
+                        <div
+                            id="card"
+                            class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1 bg-white"
+                        >
+                            <div @click="addFood(index)">
+                                <div>
+                                    <span class="lead-font-weight-700 h5">
+                                        {{ data.description.toUpperCase() }}
+                                    </span>
+                                </div>
+                                <div
+                                    class="d-flex align-items-end justify-content-between"
+                                >
+                                    <div class="p-1">
+                                        <div class="icon-container ">
+                                            <div class="icon-container_box">
+                                                <template
+                                                    v-if="
                                                         data.image ==
                                                             'imagen-no-disponible.jpg'
-                                                    ">
-                                                <img src="/images/imagen-no-disponible.jpg" alt="User Img" class="thumbail" />
-                                            </template>
-                                            <template v-else>
-                                                <img :src="
+                                                    "
+                                                >
+                                                    <img
+                                                        src="/images/imagen-no-disponible.jpg"
+                                                        alt="User Img"
+                                                        class="thumbail"
+                                                    />
+                                                </template>
+                                                <template v-else>
+                                                    <img
+                                                        :src="
                                                             formatUrlImage(
                                                                 data.image
                                                             )
-                                                        " class=" thumbail" />
-                                            </template>
+                                                        "
+                                                        class=" thumbail"
+                                                    />
+                                                </template>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div>
-                                    {{ data.code }}
-                                </div>
-                                <div class="d-flex flex-column align-items-end">
-                                    <div class="text-uppercase font-weight-light h5">
-                                        {{ data.category.name }}
+                                    <div>
+                                        {{ data.code }}
                                     </div>
-                                    <div class="block mb-2">
-                                        <span class="time font-weight-light">
-                                            <span class="text-muted lead-font-weight-700">
-                                             {{ data.currency }} {{ data.price }}</span>
-                                        </span>
-                                    </div>
-                                    <div v-if="
+                                    <div
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <div
+                                            class="text-uppercase font-weight-light h5"
+                                        >
+                                            {{ data.category.name }}
+                                        </div>
+                                        <div class="block mb-2">
+                                            <span
+                                                class="time font-weight-light"
+                                            >
+                                                <span
+                                                    class="text-muted lead-font-weight-700"
+                                                >
+                                                    {{ data.currency }}
+                                                    {{ data.price }}</span
+                                                >
+                                            </span>
+                                        </div>
+                                        <div
+                                            v-if="
                                                 data.item.lots_enabled == 1 &&
                                                     data.item.date_of_due
-                                            ">
-                                        <el-tag :type="
+                                            "
+                                        >
+                                            <el-tag
+                                                :type="
                                                     `${
                                                         isExpired(
                                                             data.item
@@ -65,56 +96,89 @@
                                                             ? 'danger'
                                                             : 'success'
                                                     }`
-                                                ">
-                                            Fecha de vencimiento:
-                                            {{ data.item.date_of_due }}
-                                        </el-tag>
-                                    </div>
-                                    <div>
-                                        <template v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ'">
-                                            <template v-if="data.item.stock > 0">
-                                                <span class="badge rounded-pill bg-primary m-l-0">Stock
-                                                    {{
-                                                        parseFloat(
-                                                            data.item.stock
-                                                        )
-                                                    }}
-                                                </span>
+                                                "
+                                            >
+                                                Fecha de vencimiento:
+                                                {{ data.item.date_of_due }}
+                                            </el-tag>
+                                        </div>
+                                        <div>
+                                            <template
+                                                v-if="
+                                                    data.item.is_set == 0 &&
+                                                        data.item
+                                                            .unit_type_id !=
+                                                            'ZZ'
+                                                "
+                                            >
+                                                <template
+                                                    v-if="data.item.stock > 0"
+                                                >
+                                                    <span
+                                                        class="badge rounded-pill bg-primary m-l-0"
+                                                        >Stock
+                                                        {{
+                                                            parseFloat(
+                                                                data.item.stock
+                                                            )
+                                                        }}
+                                                    </span>
+                                                </template>
+                                                <template v-else>
+                                                    <span
+                                                        class="badge rounded-pill bg-danger m-l-0"
+                                                    >
+                                                        Agotado
+                                                    </span>
+                                                </template>
                                             </template>
-                                            <template v-else>
-                                                <span class="badge rounded-pill bg-danger m-l-0">
-                                                    Agotado
-                                                </span>
-                                            </template>
-                                        </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div
+                                v-if="data.types.length > 0"
+                                class="d-flex justify-content-end"
+                                style="padding-right:5px;margin-top:5px;"
+                            >
+                                <el-dropdown @command="clickCommand">
+                                    <span class="el-dropdown-link">
+                                        Precios<i
+                                            class="el-icon-arrow-down el-icon--right"
+                                        ></i>
+                                    </span>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item
+                                            v-for="(type, idx) in data.types"
+                                            :key="idx"
+                                            :command="type"
+                                        >
+                                            {{ formatDescriptionType(type) }}
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
                         </div>
-                        <div v-if="data.types.length > 0" class="d-flex justify-content-end" style="padding-right:5px;margin-top:5px;">
-                            <el-dropdown @command="clickCommand">
-                                <span class="el-dropdown-link">
-                                    Precios<i class="el-icon-arrow-down el-icon--right"></i>
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="(type, idx) in data.types" :key="idx" :command="type">
-                                        {{ formatDescriptionType(type) }}
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
+                        <!--  -->
                     </div>
-                    <!--  -->
+                    <!-- hasta aqui -->
                 </div>
-                <!-- hasta aqui -->
-            </div>
-        </template>
-    </div>
+            </template>
+        </div>
 
-    <view-image :image="currentImage" :showDialog.sync="showImage"></view-image>
-    <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total" :current-page.sync="pagination.current_page" :page-size="Number(pagination.per_page)">
-    </el-pagination>
-</div>
+        <view-image
+            :image="currentImage"
+            :showDialog.sync="showImage"
+        ></view-image>
+        <el-pagination
+            @current-change="getRecords"
+            layout="total, prev, pager, next"
+            :total="pagination.total"
+            :current-page.sync="pagination.current_page"
+            :page-size="Number(pagination.per_page)"
+        >
+        </el-pagination>
+    </div>
 </template>
 
 <script>
@@ -134,7 +198,7 @@ export default {
     },
     data() {
         return {
-            input_item: '',
+            input_item: "",
             category: null,
             screenWidth: 0,
             selectCategory: 0,
@@ -146,7 +210,7 @@ export default {
             search: "Buscar por Codigo",
             currentImage: null,
             showImage: false,
-            listFoods: [],
+            listFoods: [], // Ensure listFoods is initialized as an array
             selectedFood: null,
             allFalse: true,
             title: null,
@@ -168,7 +232,8 @@ export default {
                 slidesToScroll: 3,
                 swipeToSlide: true,
                 speed: 500,
-                responsive: [{
+                responsive: [
+                    {
                         breakpoint: 1024,
                         settings: {
                             slidesToShow: 3,
@@ -206,7 +271,8 @@ export default {
                 slidesToShow: 5,
                 slidesToScroll: 5,
                 swipeToSlide: true,
-                responsive: [{
+                responsive: [
+                    {
                         breakpoint: 1024,
                         settings: {
                             slidesToShow: 2,
@@ -242,22 +308,18 @@ export default {
             this.ordenId = this.table.orden.id;
             setTimeout(() => this.calculateOrden(), 50);
         }
-        // if (!this.categories.some((c) => c.id == 0)) {
-        //   this.categories.unshift({
-        //     id: 0,
-        //     name: "todos",
-
-        //   });
-        // }
-        this.listFoods = this.foods.map(f => ({
-            ...f,
-            select: false
-        }));
+        this.listFoods = Array.isArray(this.foods)
+            ? this.foods.map(f => ({
+                  ...f,
+                  select: false
+              }))
+            : [];
         this.title = `Mesa N°${this.table.number}`;
+        this.$root.$on("productoRecibido", this.agregarProducto);
     },
     watch: {
         foods(newFoods, _) {
-            this.listFoods = newFoods;
+            this.listFoods = Array.isArray(newFoods) ? newFoods : [];
         }
     },
     mounted() {
@@ -272,7 +334,6 @@ export default {
                 return true;
             }
             return false;
-
         },
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
@@ -332,22 +393,39 @@ export default {
             }
         },
         addFood(index = 0, type = null) {
+            if (!Array.isArray(this.listFoods)) {
+                console.error("listFoods is not an array");
+                return;
+            }
             this.selectedFood = JSON.parse(
                 JSON.stringify(this.listFoods[index])
             );
-            if (!this.selectedFood) return;
+            console.log("Producto seleccionado en addFood:", this.selectedFood);
+            if (
+                !this.selectedFood ||
+                !this.selectedFood.description ||
+                !this.selectedFood.item
+            ) {
+                console.error(
+                    "Producto inválido seleccionado:",
+                    this.selectedFood
+                );
+                return;
+            }
             let foodFound = this.localOrden.filter(
                 f => f.id == this.selectedFood.id
             );
             if (foodFound.length != 0) {
                 let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
                 if (type) {
-                    // qty += Number(type.quantity_unit);
                     qty += 1;
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true && this.selectedFood.item.unit_type_id != "ZZ") {
+                if (
+                    this.configuration.sales_stock == true &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -356,9 +434,11 @@ export default {
             } else {
                 if (type) {
                     let qty = Number(type.quantity_unit);
-                    if (this.configuration.sales_stock == true && this.selectedFood.item.unit_type_id != "ZZ") {
+                    if (
+                        this.configuration.sales_stock == true &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
                         let stock = Number(this.selectedFood.item.stock);
-                        console.log(qty, " as ", stock, " sa");
                         if (qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
@@ -366,13 +446,14 @@ export default {
                     }
                 }
             }
-            (this.currentFood = {
+            this.currentFood = {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
                 observation: null,
                 price: this.selectedFood.price,
                 quantity: 1
-            }),
+            };
+            this.orden.push(this.currentFood); // Agregar a la lista de órdenes
             this.$emit(
                 "insertOrden",
                 this.currentFood,
@@ -383,10 +464,9 @@ export default {
                 title: this.currentFood.food.description.toLowerCase(),
                 iconClass: "el-icon-food",
                 position: "top-right",
-                message: "Agregado con èxito",
+                message: "Agregado con éxito",
                 position: "bottom-left"
             });
-            //this.orden.push(this.currentFood);
             this.currentFood = {
                 food: null,
                 observation: null,
@@ -395,8 +475,6 @@ export default {
             this.selectedFood = null;
             this.item = null;
             this.setFalse();
-
-            //this.$forceUpdate();
         },
         setFalse() {
             this.listFoods = this.listFoods.map(f => {
@@ -475,6 +553,43 @@ export default {
             this.$emit("update:showMenu", false);
             this.$emit("update:currentTable", null);
         },
+
+        agregarProducto(producto) {
+            if (!producto || !producto.food) {
+                console.error("Producto inválido recibido:", producto);
+                return;
+            }
+
+            const cleanProducto = producto.food;
+
+            console.log("Lista de productos antes de agregar:", this.listFoods);
+
+            if (!Array.isArray(this.listFoods)) {
+                console.error(
+                    "🚨 Error: listFoods es undefined o no es un array. Reinicializando..."
+                );
+                this.listFoods = [];
+            }
+
+            let productoIndex = this.listFoods.findIndex(
+                f => f.id === cleanProducto.id
+            );
+
+            if (productoIndex === -1) {
+                this.$set(this.listFoods, this.listFoods.length, cleanProducto);
+                productoIndex =
+                    this.listFoods.length > 0 ? this.listFoods.length - 1 : 0;
+            }
+
+            console.log(
+                "Lista de productos después de agregar:",
+                this.listFoods
+            );
+
+            this.$nextTick(() => {
+                this.addFood(productoIndex);
+            });
+        }
     }
 };
 </script>
