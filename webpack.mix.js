@@ -51,7 +51,7 @@ mix.webpackConfig({
 })
     // .sourceMaps()
     // .sourceMaps(false, "source-map")
-    .sourceMaps(mix.inProduction());
+    .sourceMaps(mix.inProduction()).disableNotifications();
     // .version();
 
 if (mix.inProduction()) {
