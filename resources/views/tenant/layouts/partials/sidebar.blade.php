@@ -375,12 +375,16 @@
                         </li>
                     @endif
 
-                    <li>
+                    {{-- <li>
                         <hr style="border: 1px solid #021427;">
                         <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">FUNCIONES ESPECIALES</span>
-                    </li>
+                    </li> --}}
 
                     @if (!$roleService->isArca())
+                        <li>
+                            <hr style="border: 1px solid #021427;">
+                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">FUNCIONES ESPECIALES</span>
+                        </li>
                         {{-- Productos con Garantía --}}
                         @if ($config->warranty_product)
                             <li>
@@ -513,6 +517,7 @@
                     </li>
                 </ul>
         </li> --}}
+
         {{-- Comprobante de Pagos Electrónicos --}}
         @if (!$roleService->isLogistic())
             <li>
@@ -526,7 +531,7 @@
                 <ul id="documents" class="collapse ">
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
                         <li>
-                            <span style="font-size: 1em; color: #104985; font-weight: bold;">COMPROBANTES ELECTRÓNICOS</span>
+                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">COMPROBANTES ELECTRÓNICOS</span>
                         </li>
                         {{-- Nuevo Comprobante --}}
                         {{-- @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isArca())
@@ -595,7 +600,7 @@
 
                         <li>
                             <hr style="border: 1px solid #021427;">
-                            <span style="font-size: 1em; color: #104985; font-weight: bold;">PROCESOS SUNAT</span>
+                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">PROCESOS SUNAT</span>
                         </li>
 
                         {{-- Detracciones --}}
