@@ -74,16 +74,27 @@ class HistorialController extends Controller
 
     public function generarPdf($vehiculo_id)
     {
-        $vehiculo = Vehiculo::with(['historial.servicesDetails', 'historial.historialItem'])
+        $vehiculo = Vehiculo::with(['historial.servicesDetails', 'historial.historialItem', 'tipo_vehiculo'])
             ->findOrFail($vehiculo_id);
 
         if ($vehiculo->historial->isEmpty()) {
             return "El vehículo no tiene historial registrado.";
         }
 
-        // Fetch customer name
-        $customer = DB::connection('tenant')->table('persons')->select('name')->where('id', $vehiculo->customer_id)->first();
+        // Fetch company details including logo
+        $company = DB::connection('tenant')->table('companies')->select('trade_name', 'number', 'logo')->first();
+        $company_logo_path = public_path('storage/uploads/logos/' . $company->logo);
+        $company_trade_name = $company->trade_name;
+        
+        $customer = DB::connection('tenant')->table('persons')->select('name', 'number', 'address', 'telephone')->where('id', $vehiculo->customer_id)->first();
         $vehiculo->customer_name = $customer->name;
+        $vehiculo->customer_number = $customer->number;
+        $vehiculo->customer_address = $customer->address;
+        $vehiculo->customer_telephone = $customer->telephone;
+
+        // Get vehicle type description
+        $tipo_vehiculo = DB::connection('tenant')->table('tipo_vehiculo')->select('description')->where('id', $vehiculo->tipo_vehiculo_id)->first();
+        $vehiculo->tipo_vehiculo_description = $tipo_vehiculo ? $tipo_vehiculo->description : '';
 
         // Fetch item details and personal name
         $vehiculo->historial->each(function ($historial) {
@@ -98,7 +109,8 @@ class HistorialController extends Controller
             $historial->personal_name = $personal->name;
         });
 
-        $pdf = Pdf::loadView('workshop::mecanico.vehicle_historial', compact('vehiculo'));
+        // Pass company logo path and trade name to the view
+        $pdf = Pdf::loadView('workshop::mecanico.vehicle_historial', compact('vehiculo', 'company_logo_path', 'company_trade_name'));
 
         return $pdf->stream("Historial_Vehiculo_{$vehiculo->id}.pdf");
     }

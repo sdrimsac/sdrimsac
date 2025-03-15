@@ -91,7 +91,7 @@
 
                         <th class="text-center">Descargas</th>
                         <!--<th class="text-center">Anulación</th>-->
-                    <tr>
+                    </tr>
                     <tr slot-scope="{ index, row }" :class="{'text-danger': (row.state_type_id === '11'),
                            'border border-secondary': (row.state_type_id === '01'),
                            'border border-warning': (row.state_type_id === '03'),

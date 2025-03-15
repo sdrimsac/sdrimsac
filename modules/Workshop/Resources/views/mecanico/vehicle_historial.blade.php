@@ -12,62 +12,147 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 4px;
+            page-break-inside: avoid;
+        }
+
+        table:first-of-type {
+            margin-top: 0;
         }
 
         th,
         td {
             border: 1px solid black;
-            padding: 8px;
+            padding: 1px;
             text-align: left;
         }
 
         th {
             background-color: #f2f2f2;
+            font-weight: bold;
         }
 
         .center {
             text-align: center;
         }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+        }
+
+        .header img {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .header h2 {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0;
+        }
+
+        .header h4 {
+            text-align: center;
+            margin: 0;
+            padding-top: 5px;
+        }
+
+        .h4 {
+            margin: 0;
+            padding: 40px;
+        }
+
+        @media print {
+            .page-break {
+                page-break-after: always;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <h2 class="center">Historial del Vehículo</h2>
+    <div class="header">
+        <h2>Historial del Vehículo</h2>
+        <img src="{{ $company_logo_path }}" alt="Company Logo" width="100" height="100">
+    </div>
     <table>
         <tr>
-            <th>Cliente</th>
-            <td>{{ $vehiculo->customer_name }}</td>
+            <td colspan="7" class="bold center">{{ $company_trade_name }}</td>
         </tr>
         <tr>
-            <th>Placa</th>
+            <td class="bold" colspan="3">FECHA</td>
+            <td colspan="4">{{ now()->format('Y-m-d') }}</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td colspan="4" class="bold center">INFORMACION DEL CLIENTE</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="bold">NOMBRE DEL CLIENTE</td>
+            <td colspan="2">{{ $vehiculo->customer_name }}</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="bold">DIRECCION</td>
+            <td colspan="2">{{ $vehiculo->customer_address }}</td>
+        </tr>
+        <tr>
+            <td class="bold">DNI</td>
+            <td>{{ $vehiculo->customer_number }}</td>
+            <td class="bold">CELULAR</td>
+            <td>{{ $vehiculo->customer_telephone }}</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="bold center" colspan="4">INFORMACION DEL VEHICULO AUTOMOTRIZ</td>
+        </tr>
+        <tr>
+            <td class="bold">PLACA</td>
             <td>{{ $vehiculo->placa }}</td>
+            <td class="bold">TIPO VEHICULO</td>
+            <td>{{ $vehiculo->tipo_vehiculo_description }}</td>
         </tr>
         <tr>
-            <th>Marca</th>
-            <td>{{ $vehiculo->marca }}</td>
+            <td colspan="2" class="bold">MARCA</td>
+            <td colspan="2">{{ $vehiculo->marca }}</td>
         </tr>
         <tr>
-            <th>Color</th>
+            <td class="bold">COLOR</td>
             <td>{{ $vehiculo->color }}</td>
-        </tr>
-        <tr>
-            <th>Serie</th>
+            <td class="bold">SERIE</td>
             <td>{{ $vehiculo->serie }}</td>
         </tr>
         <tr>
-            <th>Motor</th>
-            <td>{{ $vehiculo->motor }}</td>
+            <td colspan="2" class="bold">MOTOR</td>
+            <td colspan="2">{{ $vehiculo->motor }}</td>
         </tr>
     </table>
 
     @foreach ($vehiculo->historial ?? collect([]) as $historia)
-        <h3>Atención Fecha: {{ $historia->created_at->format('d/m/Y') }}</h3>
-
-        <h4>Servicios Realizados</h4>
-        <h5>Mecanico: {{ $historia->personal_name }}</h5>
+        <table>
+            <tr>
+                <td colspan="2" class="bold center">SERVICIOS REALIZADOS</td>
+            </tr>
+            <tr>
+                <td class="bold">Fecha de atencion</td>
+                <td>{{ $historia->created_at->format('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <td class="bold">MECANICO</td>
+                <td>{{ $historia->personal_name }}</td>
+            </tr>
+        </table>
         <table>
             <thead>
+                <tr>
+                    <td colspan="3" class="bold center">SERVICIOS</td>
+                </tr>
                 <tr>
                     <th>#</th>
                     <th>Nombre</th>
@@ -84,10 +169,11 @@
                 @endforeach
             </tbody>
         </table>
-
-        <h4>Productos:</h4>
         <table>
             <thead>
+                <tr>
+                    <td colspan="5" class="bold center">PRODUCTOS</td>
+                </tr>
                 <tr>
                     <th>#</th>
                     <th>Codigo Interno</th>
@@ -108,6 +194,26 @@
                 @endforeach
             </tbody>
         </table>
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="5" class="bold center">MOTIVO INGRESO</td>
+                    <td colspan="5" class="bold center">TRABAJO REALIZADO</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="5">{{ $historia->observacion }}</td>
+                    <td colspan="5">{{ $historia->motive }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <tr>
+                <td colspan="10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            </tr>
+        </table>
+        <div class="page-break"></div>
     @endforeach
 </body>
 

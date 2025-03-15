@@ -49,6 +49,7 @@
                                                 </label>
 
                                                 <el-input
+                                                    :disabled="true"
                                                     ref="internal_id"
                                                     v-model="form.internal_id"
                                                     dusk="internal_id"
@@ -111,7 +112,7 @@
                                             </div>
                                         </div>
                                         <!-- Código Origen -->
-                                        <div
+                                        <!-- <div
                                             class="col-12 col-lg-6 col-xl-4"
                                             v-if="configuration.origin"
                                         >
@@ -150,7 +151,7 @@
                                                     v-text="errors.origin[0]"
                                                 ></small>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <!-- Nombre y Servicio -->
                                         <div class="col-12">
                                             <div
@@ -216,7 +217,7 @@
                                         <template>
                                             <div class="row align-items-start">
                                                 <!-- Nombre Secundario -->
-                                                <div
+                                                <!-- <div
                                                     class="col-md-6 px-2"
                                                     v-if="
                                                         configuration.show_second_name_external_code
@@ -267,7 +268,7 @@
                                                             "
                                                         ></small>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                                 <!-- Almacenes -->
                                                 <div
@@ -301,7 +302,7 @@
                                                         </label>
                                                         <el-select
                                                             :disabled="
-                                                                allEstablishment
+                                                                true
                                                             "
                                                             @change="
                                                                 changeWarehouse
@@ -464,6 +465,7 @@
                                             >Afectación</label
                                         >
                                         <el-select
+                                            :disabled="true"
                                             v-model="
                                                 form.sale_affectation_igv_type_id
                                             "
@@ -500,6 +502,7 @@
                                             Moneda
                                         </label>
                                         <el-select
+                                            :disabled="true"
                                             v-model="form.currency_type_id"
                                             dusk="currency_type_id"
                                             class="uniform-input"
@@ -737,6 +740,7 @@
                                             >
                                         </label>
                                         <el-select
+                                            :disabled="true"
                                             v-model="form.unit_type_id"
                                             dusk="unit_type_id"
                                         >
@@ -845,7 +849,7 @@
                                 </div> -->
 
                                 <!-- Stock Mínimo -->
-                                <div
+                                <!-- <div
                                     class="col-12 col-lg-6 col-xl-3 px-2"
                                     v-if="form.unit_type_id != 'ZZ'"
                                 >
@@ -879,7 +883,7 @@
                                         >
                                         </small>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- Unidad de Medida -->
                                 <!-- <div class="col-12 col-lg-6 col-xl-3">
@@ -923,7 +927,7 @@
                         <div class="">
                             <div class="row">
                                 <!-- Cantidad Máxima -->
-                                <div
+                                <!-- <div
                                     class="col-12 col-lg-6 col-xl-3 px-2"
                                     v-if="
                                         form.unit_type_id != 'ZZ' &&
@@ -958,10 +962,10 @@
                                         >
                                         </el-input>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- Contenedor de Productos -->
-                                <div
+                                <!-- <div
                                     class="col-12 col-lg-6 col-xl-3 px-2"
                                     v-if="
                                         form.unit_type_id != 'ZZ' &&
@@ -997,10 +1001,10 @@
                                         >
                                         </el-input>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- Peso -->
-                                <div
+                                <!-- <div
                                     class="col-12 col-lg-6 col-xl-3 px-2"
                                     v-if="configuration.consolidated_quotations"
                                 >
@@ -1017,14 +1021,14 @@
                                         >
                                         </el-input>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
                         <div class="">
                             <div class="row">
                                 <!-- Columna 1 - Sujeto a Detracción y Se Fabrica -->
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
                                     <div
                                         class="form-group"
                                         v-if="configuration.detraction"
@@ -1057,13 +1061,13 @@
                                             </el-tooltip>
                                         </el-checkbox>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- Columna 2 - Maneja series, Maneja lotes, Talla y Color -->
                                 <div class="col-md-9">
                                     <div class="d-flex flex-wrap">
                                         <!-- Maneja Series -->
-                                        <div
+                                        <!-- <div
                                             class="col-12 col-lg-4 col-xl-3"
                                             v-if="configuration.series_enabled"
                                         >
@@ -1096,10 +1100,10 @@
                                                     <br />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- Maneja Lotes -->
-                                        <div
+                                        <!-- <div
                                             class="col-12 col-lg-4 col-xl-3"
                                             v-if="configuration.lots_enabled"
                                         >
@@ -1122,10 +1126,10 @@
                                                     <br />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- Maneja Color y Talla -->
-                                        <div
+                                        <!-- <div
                                             class="col-12 col-lg-4 col-xl-3"
                                             v-if="
                                                 configuration.color_size_enabled
@@ -1159,9 +1163,9 @@
                                                     </el-checkbox>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <!-- Columna de promoción -->
-                                        <div
+                                        <!-- <div
                                             class="col-xl-2 col-lg-4"
                                             v-if="configuration.promotions_sell"
                                         >
@@ -1227,14 +1231,14 @@
                                                     ></small>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div
                                             v-if="
                                                 configuration.warranty_product
                                             "
                                             class="col-12 col-lg-6 col-xl-3"
                                         >
-                                            <div
+                                            <!-- <div
                                                 v-if="form.unit_type_id != 'ZZ'"
                                                 class="col-md-3 center-el-checkbox"
                                             >
@@ -1251,8 +1255,8 @@
                                                     >
                                                     <br />
                                                 </div>
-                                            </div>
-                                            <div
+                                            </div> -->
+                                           <!--  <div
                                                 class="col-md-12"
                                                 v-if="
                                                     form.unit_type_id != 'ZZ' &&
@@ -1296,7 +1300,7 @@
                                                         "
                                                     ></small>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
