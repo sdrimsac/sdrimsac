@@ -778,6 +778,16 @@
                     <span class="label" style="font-size: 1em; color: #ffffff;">Reportes</span>
                 </a>
                 <ul id="reporte" class="collapse ">
+
+                    {{-- <ul id="contabilidad" class="collapse "> --}}
+                        <li>
+                            <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
+                                href="{{ route('tenant.account_exports') }}">
+                                <i class="icofont-file-excel"  style="font-size: 1.5em; color: #108514; margin-right: 10px;"></i> 
+                                <span style="font-size: 1em; color: #104985;">Reporte Contable</span>
+                            </a>
+                        </li>
+                    {{-- </ul> --}}
                     {{-- Reporte de Métodos de Pago --}}
                     @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago && $noIsArcaProduct))
                         <li>
@@ -1041,7 +1051,7 @@
         @endif
 
         {{-- Contabilidad --}}
-        @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
+        {{-- @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
             <li>
                 <a href="#contabilidad" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'account' ? true : false }}"
@@ -1061,7 +1071,7 @@
                     </li>
                 </ul>
             </li>
-        @endif
+        @endif --}}
         
         {{-- Colegios --}}
         @if ($config->college)
