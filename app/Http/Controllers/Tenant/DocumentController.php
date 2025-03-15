@@ -970,19 +970,6 @@ class DocumentController extends Controller
             return $exception->getResponse()->getBody();
         }
     }
-<<<<<<< Updated upstream
-=======
-
-    // Helper method to generate a temporary txt file
-    private function generateTxtFile($document)
-    {
-        $txtContent = "{$document->company->number}|{$document->document_type_id}|{$document->series}|{$document->number}|" . Carbon::parse($document->date_of_issue)->format('d/m/Y') . "|{$document->total}";
-        $filePath = storage_path('app/temp_data.txt');
-        Storage::put('temp_data.txt', $txtContent);
-        return new \Illuminate\Http\UploadedFile($filePath, 'temp_data.txt', 'text/plain', null, true);
-    }
->>>>>>> Stashed changes
-    
     public function create($id = null)
     {
         if (auth()->user()->type == 'integrator')
