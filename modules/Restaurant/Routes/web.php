@@ -314,6 +314,8 @@ Route::prefix('caja')->group(function () {
         Route::get('pos/series', 'PosController@series');
         Route::post('pos/orden_payment', 'PosController@payment');
         Route::get('pos/foods', 'PosController@foods');
+        //Route::get('pos/item/{id}', 'PosController@itemNew');
+        
         Route::get('boxes', 'BoxesController@index')->name('restaurant.boxes');
         Route::get('items_detail', [BoxesDetailController::class, 'items_detail']);
         Route::post('save_item', [BoxesDetailController::class, 'save_item']);
@@ -409,11 +411,13 @@ Route::prefix('caja')->group(function () {
             Route::get('pos/listtables', 'PosController@listtables');
             Route::get('pos/selecttabled/{idOrden}', 'PosController@selecttabled');
             Route::get('pos/foods', 'PosController@foods');
+            Route::get('pos/item/{id}', [PosController::class, 'itemNew']);
             Route::get('record/{id}', 'OrdenController@record');
             Route::get('record-worker/{id}', 'OrdenController@recordWorker');
 
             //ORDERS
             Route::post('send-orden', 'OrdenController@store');
+            Route::get('orden-new/{id}', 'OrdenController@order');
             Route::get('search_orden_document', 'PosController@search_orden_document');
 
             Route::post('cancel-orden', 'OrdenController@cancelOrden');

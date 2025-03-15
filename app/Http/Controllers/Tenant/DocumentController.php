@@ -434,9 +434,9 @@ class DocumentController extends Controller
 
             ->post($url, [
                 'tipo' => '2',
-                'custom_ruc' => '10787188465',
-                'j_username' => '78718846',
-                'j_password' => 'Jose0906',
+                'custom_ruc' => '20443618687',
+                'j_username' => '20568798',
+                'j_password' => 'Sdrimsac204436',
                 'state' => 'rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAADdAAEZXhlY3B0AAZwYXJhbXN0AEsqJiomL2NsLXRpLWl0bWVudS9NZW51SW50ZXJuZXQuaHRtJmI2NGQyNmE4YjVhZjA5MTkyM2IyM2I2NDA3YTFjMWRiNDFlNzMzYTZ0AANleGV0AAsxMS41LjEwLjEuMXg',
                 'originalUrl' => 'https://e-menu.sunat.gob.pe/cl-ti-itmenu/AutenticaMenuInternet.htm',
             ]);
@@ -932,11 +932,28 @@ class DocumentController extends Controller
                     }
                     $sales->state_type_id = $state_type;
                     $sales->save();
-
+                    
+                    try {
+                        // Call processTxt method
+                        $processTxtResponse = $this->processTxt();
+                        if (!$processTxtResponse['success']) {
+                            return [
+                                "success" => false,
+                                "message" => "Ocurrió un problema al enviar el archivo TXT"
+                            ];
+                        }
+                    } catch (\Exception $e) {
+                        return [
+                            "success" => false,
+                            "message" => "Ocurrió un problema al enviar el archivo TXT"
+                        ];
+                    }
+                    
                     return [
                         "success" => true,
                         "message" => $this->document_state[$data["comprobante_estado_codigo"]]
                     ];
+                    
                 } else {
                     return [
                         "success" => false,
@@ -953,6 +970,18 @@ class DocumentController extends Controller
             return $exception->getResponse()->getBody();
         }
     }
+<<<<<<< Updated upstream
+=======
+
+    // Helper method to generate a temporary txt file
+    private function generateTxtFile($document)
+    {
+        $txtContent = "{$document->company->number}|{$document->document_type_id}|{$document->series}|{$document->number}|" . Carbon::parse($document->date_of_issue)->format('d/m/Y') . "|{$document->total}";
+        $filePath = storage_path('app/temp_data.txt');
+        Storage::put('temp_data.txt', $txtContent);
+        return new \Illuminate\Http\UploadedFile($filePath, 'temp_data.txt', 'text/plain', null, true);
+    }
+>>>>>>> Stashed changes
     
     public function create($id = null)
     {

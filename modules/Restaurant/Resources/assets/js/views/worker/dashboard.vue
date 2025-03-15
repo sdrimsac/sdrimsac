@@ -31,6 +31,15 @@
                                     <i class="icofont icofont-dining-table"></i>
                                     Visualizar mesas
                                 </el-button>
+
+                                <el-button
+                                    v-if="configuration.chifa_china"
+                                    type="success"
+                                    @click="open"
+                                    style="padding: 12px 24px; border-radius: 25px; font-size: 16px;"
+                                >
+                                    Crear producto
+                                </el-button>
                             </div>
                         </div>
                     </h1>
@@ -75,17 +84,9 @@
                     class="col-12 col-sm-6 pt-2 pb-2"
                     v-if="show == 'create' && screenWidth > 678"
                 >
-                    <template>
-                        <span slot="label">
-                            <i class="fas fa-list"></i>
-                            <template v-if="optionsSelected == 0"
-                                >Buscar por Nombre del Producto</template
-                            >
-                            <template v-else
-                                >Buscar por Codigo Interno Producto</template
-                            >
-                        </span>
+                    <div class="d-flex align-items-center">
                         <el-input
+                            class="flex-grow-1 me-2"
                             v-model="item"
                             @focus="clearinput()"
                             @input="searchOrden()"
@@ -117,33 +118,58 @@
                                 @click="selectSearch(1)"
                             ></el-button>
                         </el-input>
-                    </template>
-                    <div v-if="configuration.chifa_china">
-                        <el-button @click="open">Crear producto</el-button>
                     </div>
                 </div>
                 <div
                     class="col-12 pt-2 pb-2"
                     v-if="show == 'create' && screenWidth > 678"
                 >
-                    <div class="categories-scroll">
-                        <div class="categories-wrapper">
-                            <div
-                                v-for="item in categories"
-                                :key="item.id"
-                                class="category-card"
-                                :class="{ active: category === item.id }"
-                                @click="select_category(item.id)"
-                            >
-                                <div class="category-circle">
-                                    <i class="fas fa-utensils"></i>
+                    <template v-if="configuration.chifa_china">
+                        <div class="categories-scroll">
+                            <div class="categories-wrapper">
+                                <div
+                                    v-for="item in categories"
+                                    :key="item.id"
+                                    class="category-card"
+                                    :class="{ active: category === item.id }"
+                                    @click="select_category(item.id)"
+                                >
+                                    <div class="category-circle">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <span class="category-name">{{
+                                        item.name
+                                    }}</span>
                                 </div>
-                                <span class="category-name">{{
-                                    item.name
-                                }}</span>
                             </div>
                         </div>
-                    </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            class="col-12 col-sm-6 pt-2 pb-2"
+                            v-if="show == 'create' && screenWidth > 678"
+                        >
+                            <template>
+                                <span slot="label">
+                                    <i class="fas fa-list"></i> Categoria de
+                                    Producto
+                                </span>
+                                <el-select
+                                    v-model="category"
+                                    filterable
+                                    placeholder="Selecionar aqui...."
+                                    @change="select_category(category)"
+                                >
+                                    <el-option
+                                        v-for="item in categories"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id"
+                                    ></el-option>
+                                </el-select>
+                            </template>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div
@@ -571,6 +597,74 @@ export default {
         }); */
     },
 
+    /* async created() {
+        await this.getFoods();
+        qz.security.setCertificatePromise((resolve, reject) => {
+            this.$http
+                .get("/api/qz/crt/override", {
+                    responseType: "text"
+                })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error.data);
+                });
+        });
+        qz.security.setSignaturePromise(toSign => {
+            return (resolve, reject) => {
+                this.$http
+                    .post("/api/qz/signing", {
+                        request: toSign
+                    })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            };
+        });
+        this.categories.unshift({
+            id: 0,
+            name: "TODOS LAS CATEGORIAS"
+        });
+        this.currentArea = this.user.area_id;
+        this.allAreas = [
+            ...this.areas.map(a => {
+                if (this.currentArea == a.id) {
+                    a.selected = true;
+                } else {
+                    a.selected = false;
+                }
+                return a;
+            }),
+            {
+                id: 0,
+                description: "Ver Ordenes",
+                selected: false
+            }
+        ];
+        let allAreas_all = _.orderBy(this.allAreas, ["id"], ["asc"]);
+        this.allAreas = allAreas_all;
+        // this.tables = this.tables_area;
+        //this.tables_row_select=this.tables_active
+        await this.getTables();
+        await this.userorden();
+        this.$eventHub.$on("reloadData", () => {
+            this.getTables(true);
+        });
+        this.$notify({
+            title: "Sistema de Punto de Venta",
+            iconClass: "icofont-waiter icofont-3x",
+            message: "Bienvenido " + this.user.name
+        });
+        this.$eventHub.$on("selectOrden", ({ ordenId, tableId }) => {
+            if (this.currentTable && this.currentTable.id === tableId) {
+                this.$refs.detailRef.selectOrden(ordenId);
+            }
+        });
+    }, */
     async created() {
         await this.getFoods();
         qz.security.setCertificatePromise((resolve, reject) => {
@@ -635,18 +729,24 @@ export default {
         });
     },
     methods: {
+        
         async fetchFood(productId) {
             try {
-                const response = await this.$http.get(`${this.resource}/ver/${productId}`);
-                console.log("Response data:", response.data);
+                const response = await this.$http.get(
+                    `${this.resource}/ver/${productId}`
+                );
+                //console.log("Response data:", response.data);
                 this.$root.$emit("productoRecibido", response.data);
             } catch (error) {
-                console.error("Error al obtener el producto del backend:", error);
+                console.error(
+                    "Error al obtener el producto del backend:",
+                    error
+                );
             }
         },
-        
+
         recibirProducto(data) {
-            console.log("Producto recibido:", data);
+            //console.log("Producto recibido:", data);
             this.fetchFood(data.id);
         },
         open() {
@@ -858,7 +958,7 @@ export default {
             this.focus();
         },
         select_category(id) {
-            this.category = id; // Update the selected category
+            this.category = id;
             this.focus();
             this.$refs.detailRef.filterCategory(id);
             this.searchOrden();
@@ -952,6 +1052,7 @@ export default {
             let total = prices.reduce((a, b) => a + b);
             return total;
         },
+
         async selectedTable(id = null, data = []) {
             let table = this.tables.find(t => t.id == id);
             console.log(table);
@@ -994,12 +1095,24 @@ export default {
             this.show = "create";
             // Actualizar usuarios al seleccionar mesa
             await this.userorden();
+            // Llamar a handleSelectOrden para seleccionar la única orden existente
+            this.handleSelectOrden();
             // this.focus();
             this.allAreas = this.allAreas.map(a => {
                 a.selected = false;
                 return a;
             });
         },
+        handleSelectOrden() {
+            if (this.currentTable.orden && this.currentTable.orden.length > 0) {
+                this.$nextTick(() => {
+                    this.$refs.detailRef.selectOrden(
+                        this.currentTable.orden[0].id
+                    );
+                });
+            }
+        },
+
         async sendOrdenToNewTable(orden_id, table_id) {
             try {
                 this.loading = true;

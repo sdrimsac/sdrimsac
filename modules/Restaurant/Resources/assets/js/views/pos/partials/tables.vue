@@ -326,18 +326,14 @@ export default {
                 !this.hasSelectedTableToChange &&
                 this.hasSelectedOrdenToChange
             ) {
-                // if (table.status_table_id == 2) {
-                //     this.$toast.warning("La mesa no esta libre");
-                //     return;
-                // } else {
-                //     this.sendOrdenToNewTable(this.ordenToChange, table);
-                //     return;
-                // }
-
                 this.sendOrdenToNewTable(this.ordenToChange, table);
             }
 
             if (this.addingOrden) {
+                if (table.status_table_id == 2) {
+                    this.$toast.warning("No se puede crear una nueva orden en una mesa ocupada");
+                    return;
+                }
                 this.$emit("creatingOrden", table.number, table.id);
                 this.close();
                 return;

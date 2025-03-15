@@ -16,7 +16,7 @@
                 <el-tabs tab-position="top" v-model="activeTab">
                     <el-tab-pane label="General" name="general">
                         <!-- Primer bloque de fila-->
-                        <div class="container">
+                        <div class="">
                             <div class="row">
                                 <!-- Apartado de Código  Nombre y Almacén-->
                                 <div class="col-9">
@@ -369,7 +369,7 @@
                             </div>
                         </div>
                         <!-- segundo bloque de fila-->
-                        <div class="container">
+                        <div class="">
                             <div class="row">
                                 <!-- Categoría -->
                                 <div class="col-12 col-lg-6 col-xl-3">
@@ -524,7 +524,7 @@
                             </div>
                         </div>
                         <!-- tercer bloque de fila-->
-                        <div class="container">
+                        <div class="">
                             <div class="row align-items-center">
                                 <!-- Afectación -->
                                 <!-- <div class="col-xl-3 col-lg-4 col-md-6 px-2">
@@ -758,7 +758,7 @@
                             </div>
                         </div>
                         <!-- cuarto bloque de fila-->
-                        <div class="container">
+                        <div class="">
                             <div class="row">
                                 <!-- Zona -->
                                 <!-- <div class="col-12 col-lg-6 col-xl-3 px-2">
@@ -920,7 +920,7 @@
                         </div>
 
                         <!-- quinto bloque de fila-->
-                        <div class="container">
+                        <div class="">
                             <div class="row">
                                 <!-- Cantidad Máxima -->
                                 <div
@@ -1021,7 +1021,7 @@
                             </div>
                         </div>
 
-                        <div class="container">
+                        <div class="">
                             <div class="row">
                                 <!-- Columna 1 - Sujeto a Detracción y Se Fabrica -->
                                 <div class="col-md-3">
@@ -1297,117 +1297,6 @@
                                                     ></small>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12"></div>
-                            <div class="row col-md-12">
-                                <!-- Atributos -->
-                                <div
-                                    v-if="attribute_types.length > 0"
-                                    class="col-12 col-lg-12 col-xl-12"
-                                >
-                                    <h6 class="separator-title">
-                                        Atributos
-                                        <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            content="Diferentes presentaciones para la venta del producto"
-                                            placement="top"
-                                        >
-                                            <i class="fas fa-info-circle"></i>
-                                        </el-tooltip>
-                                        <a
-                                            href="#"
-                                            class="control-label font-weight-bold text-info"
-                                            @click.prevent="clickAddAttribute"
-                                            >[+ Agregar]</a
-                                        >
-                                    </h6>
-
-                                    <div v-if="form.attributes.length > 0">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr
-                                                        slot="heading"
-                                                        class="bg-primary"
-                                                    >
-                                                        <th class="text-white">
-                                                            Tipo
-                                                        </th>
-                                                        <th class="text-white">
-                                                            Descripción
-                                                        </th>
-                                                        <th
-                                                            class="text-white"
-                                                        ></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr
-                                                        v-for="(row,
-                                                        index) in form.attributes"
-                                                        :key="index"
-                                                    >
-                                                        <td>
-                                                            <el-select
-                                                                v-model="
-                                                                    row.attribute_type_id
-                                                                "
-                                                                filterable
-                                                                @change="
-                                                                    changeAttributeType(
-                                                                        index
-                                                                    )
-                                                                "
-                                                            >
-                                                                <el-option
-                                                                    v-for="option in attribute_types"
-                                                                    :key="
-                                                                        option.id
-                                                                    "
-                                                                    :value="
-                                                                        option.id
-                                                                    "
-                                                                    :label="
-                                                                        option.description
-                                                                    "
-                                                                ></el-option>
-                                                            </el-select>
-                                                        </td>
-                                                        <td>
-                                                            <el-input
-                                                                v-model="
-                                                                    row.value
-                                                                "
-                                                            >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
-                                                        </td>
-                                                        <td>
-                                                            <button
-                                                                type="button"
-                                                                class="btn btn-danger"
-                                                                @click.prevent="
-                                                                    clickRemoveAttribute(
-                                                                        index
-                                                                    )
-                                                                "
-                                                            >
-                                                                x
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -3579,7 +3468,6 @@ export default {
                     );
             }
 
-            // Validar que cada almacén tenga stock definido
             if (!this.recordId) {
                 const invalidStock = this.form.item_warehouses.some(w => {
                     return w.stock === null || w.stock === undefined || w.stock < 0;
@@ -3604,20 +3492,18 @@ export default {
                 "🚀 ~ file: form.vue:2309 ~ submit ~ this.form:",
                 this.form
             );
-
-            // Preparar datos para enviar asegurándose que los arrays existan
             const formData = {
                 ...this.form,
                 warehouse_prices: Array.isArray(this.form.warehouse_prices) ? 
                     this.form.warehouse_prices.map(w => ({
                         warehouse_id: w.warehouse_id,
-                        price: Number(w.price || 0) // Asegurar que price tenga un valor numérico
+                        price: Number(w.price || 0) 
                     })) : [],
                     
                 item_warehouses: Array.isArray(this.form.item_warehouses) ? 
                     this.form.item_warehouses.map(w => ({
                         warehouse_id: w.warehouse_id,
-                        stock: Number(w.stock || 0) // Asegurar que stock tenga un valor numérico
+                        stock: Number(w.stock || 0)
                     })) : []
             };
 
@@ -3634,9 +3520,8 @@ export default {
                             this.$emit("addDataMozo", response.data.data);
                         } else {
                             this.$eventHub.$emit("reloadData");
-                            //console.log("🚀 ~ submit ~ response.data.data ver si hay algo aqui ", response.data.data);
+                           
                         }
-                        /* this.$root.$emit("add", response.data.data);  */// Emit the add event with the new product data
                         this.close();
                     } else {
                         this.$toast.error(response.data.message);

@@ -8,6 +8,7 @@
                         <div class="col-md-12 p-2">
                             <div
                                 class="card_profile"
+                                :data-id="o.id"
                                 :class="
                                     ordenSelectedId == o.id ? 'bg-active' : ''
                                 "
@@ -24,7 +25,6 @@
                                         <strong> Orden Nº{{ o.id }} </strong>
                                         <br />{{ o.ref }}
                                     </h3>
-                                    <!-- <p>{{ o.ref }}</p> -->
                                 </div>
                             </div>
                         </div>
@@ -390,27 +390,13 @@
                     @deleteFood="deleteFood"
                     @ordenDeleted="createOrden"
                     @listtables="clearTables"
+                    @selectNewOrden="handleSelectOrden"
                 >
                 </current-orden>
             </div>
         </div>
     </div>
 </template>
-<script></script>
-<style>
-::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-}
-::-webkit-scrollbar-thumb {
-    background-color: var(--primary);
-    border-radius: 5px;
-    cursor: move;
-}
-.custom-text-size {
-    font-size: 0.8em;
-}
-</style>
 <script>
 import ListFood from "./list_food.vue";
 import CurrentOrden from "./current_orden.vue";
@@ -426,7 +412,7 @@ export default {
         "foods",
         "configuration",
         "tables_row_select",
-        "changingOrden",
+        "changingOrden"
     ],
     async created() {
         this.ordens = this.table.orden;
@@ -438,11 +424,11 @@ export default {
                 this.mozos = response.data.mozos;
                 console.log("ver si esta llegando los mozos", this.mozos);
             } else {
-                throw new Error('Error al obtener datos');
+                throw new Error("Error al obtener datos");
             }
         } catch (error) {
-            console.error('Error:', error);
-            this.$toast.error('Error al cargar los mozos');
+            console.error("Error:", error);
+            this.$toast.error("Error al cargar los mozos");
         } finally {
             this.loading = false;
         }
@@ -499,6 +485,49 @@ export default {
         window.addEventListener("resize", this.handleResize);
     },
     methods: {
+        handleSelectOrden(id) {
+            
+            this.ordenNew(id);
+        },
+
+        async ordenNew(id) {
+            try {
+                console.log(`Fetching order with ID: ${id}`);
+                const response = await this.$http.get(`orden-new/${id}`);
+
+                const orden = response.data.orden; 
+
+                console.log("Orden recibida:", orden);
+
+                let exists = this.ordens.some(o => o.id == orden.id);
+                console.log("¿La orden ya existe?", exists);
+
+                if (!exists) {
+                    this.ordens = [...this.ordens, orden];
+                    console.log("Orden agregada:", orden);
+                } else {
+                    // Update the existing order with new items
+                    const existingOrder = this.ordens.find(o => o.id == orden.id);
+                    existingOrder.orden_items = orden.orden_items;
+                }
+
+                this.ordenSelectedId = orden.id;
+                this.ordensItems = [...orden.orden_items]; // Ensure reactivity
+                this.currentRef = orden.ref;
+                console.log("Orden seleccionada:", orden.id);
+
+                if (typeof this.selectOrden === "function") {
+                    this.selectOrden(orden.id);
+                    console.log("selectOrden ejecutado correctamente.");
+                } else {
+                    console.error("selectOrden no está definido.");
+                }
+            } catch (error) {
+                console.error("Error fetching order:", error);
+                this.$toast.error("Error al obtener la orden");
+            }
+        },
+
         formatedStockPresentation(
             {
                 max_quantity,
@@ -524,9 +553,12 @@ export default {
             return text;
         },
         clickCommand(type) {
+            console.log("clickCommand called with type:", type);
+            console.log("Current listFoods:", this.listFoods);
             let idxFood = this.listFoods.findIndex(
                 food => food.item.id == type.item_id
             );
+            console.log("Index found:", idxFood);
             if (idxFood >= 0) {
                 this.addFood(idxFood, type);
             }
@@ -539,6 +571,10 @@ export default {
             )}) - S/ ${price}`;
         },
         addFood(index = 0, type = null) {
+            if (!Array.isArray(this.foods)) {
+                console.error("foods is not an array");
+                return;
+            }
             this.selectedFood = JSON.parse(JSON.stringify(this.foods[index]));
 
             if (!this.selectedFood) return;
@@ -549,7 +585,6 @@ export default {
             if (foodFound.length != 0) {
                 let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
                 if (type) {
-                    // qty += Number(type.quantity_unit);
                     qty += 1;
                 } else {
                     qty += 1;
@@ -575,22 +610,21 @@ export default {
                     }
                 }
             }
-            (this.currentFood = {
+            this.currentFood = {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
                 observation: null,
                 price: this.selectedFood.price,
                 quantity: 1
-            }),
-                this.insertOrden(this.currentFood, this.selectedFood.id, type);
+            };
+            this.insertOrden(this.currentFood, this.selectedFood.id, type);
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 iconClass: "el-icon-food",
                 position: "top-right",
-                message: "Agregado con èxito",
+                message: "Agregado con éxito",
                 position: "bottom-left"
             });
-            //this.orden.push(this.currentFood);
             this.currentFood = {
                 food: null,
                 observation: null,
@@ -600,8 +634,17 @@ export default {
             this.item = null;
             this.setFalse();
 
-            //this.$forceUpdate();
+            // Actualizar la orden seleccionada
+            //this.updateSelectedOrden();
         },
+        /* updateSelectedOrden() {
+            let orden = this.ordens.find(o => o.id == this.ordenSelectedId);
+            if (orden) {
+                orden.orden_items = this.localOrden;
+                this.ordensItems = orden.orden_items;
+                this.$refs.ordenRef.calculateTotal();
+            }
+        }, */
         setFalse() {
             let f = this.foods.map(f => {
                 f.select = false;
@@ -666,7 +709,6 @@ export default {
             }
             return price;
         },
-        // aqui estaba el metodo insertOrden
         insertOrden(orden, food_id, type) {
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
             if (ordenAdded.length == 0 || this.divided_items) {
@@ -677,24 +719,20 @@ export default {
                 orden.type_id = type ? type.id : null;
                 orden.type_description = type ? type.description : null;
                 orden.type_quantity = type ? Number(type.quantity_unit) : 0;
-                //si es el primer registro del prod en la lista
                 if (this.configuration.divided_items) {
                     if (this.divided_items) {
                         orden.will_be_divided = true;
                     }
                 }
                 if (type) {
-                    // orden.quantity = Number(type.quantity_unit);
                     orden.quantity = 1;
                     orden.price = this.getDefaultPrice(type);
                 } else {
                     orden.price = orden.food.price;
                 }
-
                 this.localOrden.push(orden);
             } else {
                 if (type != null) {
-                    //si es, verificar si ya existe esa presentación en la lista
                     let indexFind = this.localOrden.findIndex(
                         orden => orden.type_id == type.id
                     );
@@ -721,10 +759,7 @@ export default {
                         }
                         this.localOrden.push(orden);
                     }
-
-                    //y si no agregarla como nueva
                 } else {
-                    //si es original, seguir agregando uno
                     let indexFind = this.localOrden.findIndex(
                         p => p.id == food_id && p.type_id == null
                     );
@@ -740,16 +775,8 @@ export default {
                         }
                     }
                 }
-
                 this.localOrden = [...this.localOrden];
             }
-            // let index_find = _.findIndex(this.localOrden, { id: fodd_id });
-            // if (index_find == -1) {
-            //     this.localOrden.push(orden);
-            // } else {
-            //     this.localOrden[index_find].quantity =
-            //         this.localOrden[index_find].quantity + 1;
-            // }
             this.$refs.ordenRef.calculateTotal();
         },
         show_orders() {
@@ -765,6 +792,7 @@ export default {
             this.$refs.list_foods.searchFood(value, optionsSelected);
         },
         selectOrden(id) {
+            console.log("selectOrden called with id:", id);
             if (this.changingOrden) {
                 this.$emit("changeOrdenEvent", id);
                 return;
@@ -784,3 +812,17 @@ export default {
     }
 };
 </script>
+<style>
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 5px;
+    cursor: move;
+}
+.custom-text-size {
+    font-size: 0.8em;
+}
+</style>

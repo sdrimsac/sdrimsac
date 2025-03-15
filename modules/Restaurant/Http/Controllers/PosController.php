@@ -161,6 +161,11 @@ class PosController extends Controller
         return $pdf->stream('pdf_file.pdf');
     }
 
+    public function itemNew($id){
+        $food = Food::find($id);
+        return compact('food');
+    }
+
     public function foods(Request $request)
     {
         $configuration = Configuration::first();

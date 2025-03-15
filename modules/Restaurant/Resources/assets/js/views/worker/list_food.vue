@@ -137,7 +137,7 @@
                                 </div>
                             </div>
                             <div
-                                v-if="data.types.length > 0"
+                                v-if="data.types && data.types.length > 0"
                                 class="d-flex justify-content-end"
                                 style="padding-right:5px;margin-top:5px;"
                             >
@@ -320,6 +320,11 @@ export default {
     watch: {
         foods(newFoods, _) {
             this.listFoods = Array.isArray(newFoods) ? newFoods : [];
+        },
+        listFoods(newVal) {
+            if (newVal === null) {
+                console.error("listFoods has become null");
+            }
         }
     },
     mounted() {
@@ -562,7 +567,7 @@ export default {
 
             const cleanProducto = producto.food;
 
-            console.log("Lista de productos antes de agregar:", this.listFoods);
+            //console.log("Lista de productos antes de agregar:", this.listFoods);
 
             if (!Array.isArray(this.listFoods)) {
                 console.error(
@@ -576,15 +581,13 @@ export default {
             );
 
             if (productoIndex === -1) {
-                this.$set(this.listFoods, this.listFoods.length, cleanProducto);
-                productoIndex =
-                    this.listFoods.length > 0 ? this.listFoods.length - 1 : 0;
-            }
+                //console.log("Antes de push:", this.listFoods);
 
-            console.log(
-                "Lista de productos después de agregar:",
-                this.listFoods
-            );
+                this.$set(this.listFoods, this.listFoods.length, cleanProducto);
+
+                //console.log("Después de push:", this.listFoods);
+                productoIndex = this.listFoods.length - 1;
+            }
 
             this.$nextTick(() => {
                 this.addFood(productoIndex);

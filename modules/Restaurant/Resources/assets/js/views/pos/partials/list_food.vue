@@ -83,8 +83,9 @@
                                                         index) in foods"
                                                         :key="index"
                                                         @click="
-                                                            (configuration.consolidated_quotations || configuration.direct_unit_type) &&
-                                                            data.types.length >
+                                                            (configuration.consolidated_quotations ||
+                                                                configuration.direct_unit_type) &&
+                                                            data.types && data.types.length >
                                                                 0
                                                                 ? clickCommand(
                                                                       data
@@ -260,9 +261,8 @@
                                                         >
                                                             <div
                                                                 v-if="
-                                                                    data.types
-                                                                        .length >
-                                                                        0
+                                                                    data.types && data.types.length > 0
+                                                                        
                                                                 "
                                                             >
                                                                 <el-dropdown
@@ -333,7 +333,8 @@
                                             .warehouses"
                                         :key="idx"
                                     >
-                                        <label class="text-white"
+                                        <label
+                                            class="text-white"
                                             v-if="
                                                 info.warehouse.id !=
                                                     establishmentId
@@ -382,13 +383,13 @@
                                 >
                                     <div
                                         @click="
-                                            (configuration.consolidated_quotations || configuration.direct_unit_type) &&
-                                            data.types.length > 0
+                                            (configuration.consolidated_quotations ||
+                                                configuration.direct_unit_type) &&
+                                            data.types && data.types.length > 0
                                                 ? clickCommand(data.types[0])
                                                 : addFood(index)
                                         "
                                     >
-                                
                                         <div>
                                             <span
                                                 :class="
@@ -492,7 +493,7 @@
                                                     class="time font-weight-light"
                                                 >
                                                     <span
-                                                        class="lead-font-weight-900" 
+                                                        class="lead-font-weight-900"
                                                         style="font-weigth: bold; font-family: 'Arial Black', Arial, sans-serif;"
                                                     >
                                                         {{
@@ -509,7 +510,7 @@
                                             <div></div>
                                         </div>
 
-                                        <div v-if="data.types.length > 0">
+                                        <div v-if="data.types && data.types.length > 0">
                                             <el-dropdown
                                                 @command="clickCommand"
                                             >
@@ -663,7 +664,7 @@
                                     v-for="(info, idx) in data.item.warehouses"
                                     :key="idx"
                                 >
-                                    <label 
+                                    <label
                                         class="text-white"
                                         v-if="
                                             info.warehouse.id != establishmentId
@@ -703,8 +704,9 @@
                             >
                                 <div
                                     @click="
-                                        (configuration.consolidated_quotations || configuration.direct_unit_type) &&
-                                        data.types.length > 0
+                                        (configuration.consolidated_quotations ||
+                                            configuration.direct_unit_type) &&
+                                        data.types && data.types.length > 0
                                             ? clickCommand(data.types[0])
                                             : addFood(index)
                                     "
@@ -819,7 +821,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div v-if="data.types.length > 0">
+                                    <div v-if="data.types && data.types.length > 0">
                                         <el-dropdown @command="clickCommand">
                                             <span class="el-dropdown-link">
                                                 Precios
@@ -1077,7 +1079,7 @@ export default {
             search: "Buscar por Codigo",
             currentImage: null,
             showImage: false,
-            listFoods: [],
+            listFoods: [], // Initialize listFoods as an empty array
             selectedFood: null,
             /* isAnalist: false, */
             allFalse: true,
@@ -1175,39 +1177,22 @@ export default {
         this.loadViewPreference();
         window.addEventListener("resize", this.handleResize);
 
+        if (!Array.isArray(this.listFoods)) {
+            this.listFoods = [];
+        }
+
         if (this.foods.length > 0) {
             this.loading = false;
         }
         Echo.channel("orden_list").listen(
             `.order-list-${this.configuration.socket_channel}`,
             e => {
-            let { order_item } = e;
-            this.listaOrden(order_item);
-            this.playSound("pedidos_listo.mp3");
+                let { order_item } = e;
+                this.listaOrden(order_item);
+                this.playSound("pedidos_listo.mp3");
             }
         );
     },
-    /* watch: {
-        cotizarConfirmado(newVal) {
-            this.localCotizarConfirmado = newVal;
-        },
-        cotizarConfirmado(newVal) {
-            console.log("cotizarConfirmado ha cambiado en ListFood:", newVal);
-            if (!newVal) {
-                this.configuration.sales_stock = true;
-                console.log("Sales stock restablecido a true");
-            }
-        },
-        configuration: {
-            handler(newConfig) {
-                console.log("Configuración actualizada:", newConfig);
-            },
-            deep: true
-        },
-        foods(__, _) {
-            this.updateListFoods();
-        }
-    }, */
     watch: {
         cotizarConfirmado(newVal) {
             // Actualiza el estado local
@@ -1230,12 +1215,22 @@ export default {
         },
         foods(__, _) {
             this.updateListFoods();
+        },
+        listFoods(newVal, oldVal) {
+            console.log("🔄 Cambio en listFoods:", oldVal, "➡️", newVal);
         }
     },
     created() {
         this.ordenItems = [];
         this.orden = [];
         this.updateListFoods();
+        if (!this.listFoods) {
+            this.$set(this, "listFoods", []);
+        }
+        this.$root.$on("itemnew", this.agregarItem);
+    },
+    beforeDestroy() {
+        this.$root.$off("itemnew", this.agregarItem);
     },
     computed: {
         madereraItms() {
@@ -1246,13 +1241,46 @@ export default {
         }
     },
     methods: {
+        agregarItem(producto) {
+            if (!producto || !producto.food) {
+                //console.error("❌ Producto inválido recibido:", producto);
+                return;
+            }
+
+            const cleanProducto = producto.food;
+
+            // 🔹 Verificar y asegurar que listFoods está definido ANTES de usarlo
+            if (!Array.isArray(this.listFoods)) {
+                console.warn("⚠️ listFoods está indefinido, inicializando...");
+                this.$set(this, "listFoods", []);
+            }
+
+            let productoIndex = this.listFoods.findIndex(
+                f => f.id === cleanProducto.id
+            );
+            //console.log("🔍 Buscando producto:", productoIndex);
+
+            if (productoIndex === -1) {
+                //console.log("Antes de push:", this.listFoods);
+
+                this.$set(this.listFoods, this.listFoods.length, cleanProducto);
+
+                //console.log("Después de push:", this.listFoods);
+                productoIndex = this.listFoods.length - 1;
+            }
+
+            this.$nextTick(() => {
+                this.addFood(productoIndex);
+            });
+        },
+
         listaOrden(order_item) {
             this.$notify({
-            title: "Orden Lista",
-            message: `La orden ${order_item.id} está lista para ser entregada. Pedido por: <span style="color: blue; text-transform: uppercase">${order_item.mozo_name}</span>`,
-            type: "success",
-            duration: 0,
-            dangerouslyUseHTMLString: true
+                title: "Orden Lista",
+                message: `La orden ${order_item.id} está lista para ser entregada. Pedido por: <span style="color: blue; text-transform: uppercase">${order_item.mozo_name}</span>`,
+                type: "success",
+                duration: 0,
+                dangerouslyUseHTMLString: true
             });
         },
         selectUnitType(unit_type) {
@@ -1325,7 +1353,13 @@ export default {
                 this.addFood(idxFood, type);
             }
         },
+
         updateListFoods() {
+            if (!Array.isArray(this.foods)) {
+                console.error("🚨 Error: foods is undefined or not an array.");
+                this.foods = [];
+            }
+
             this.listFoods = this.foods.map(f => {
                 f.price = Number(f.price).toFixed(2);
                 return {
@@ -1346,10 +1380,12 @@ export default {
                     this.foodWithTypes = food;
                     this.showDialogUnitType = true;
                 } else {
-
-                    if(this.configuration.direct_unit_type && food.item.item_unit_types.length > 0){
+                    if (
+                        this.configuration.direct_unit_type &&
+                        food.item.item_unit_types.length > 0
+                    ) {
                         this.clickCommand(food.item.item_unit_types[0]);
-                    }else{
+                    } else {
                         this.addFood(0);
                     }
                 }
@@ -1358,17 +1394,18 @@ export default {
                 this.addFood(0, null, true);
             }
 
-            if(this.configuration.color_size_enabled){
-                if ( this.listFoods.length == 1) {
+            if (this.configuration.color_size_enabled) {
+                if (this.listFoods.length == 1) {
                     let [food] = this.listFoods;
-                    let color_size = food.color_size.find(color => color.code == this.lastQuery);
-                    
-                    if(color_size){
+                    let color_size = food.color_size.find(
+                        color => color.code == this.lastQuery
+                    );
+
+                    if (color_size) {
                         color_size.quantity = 1;
                         this.addFood(0, null, true, null, [color_size]);
                     }
-                    
-                }                
+                }
             }
             if (this.quatity && this.listFoods.length == 1) {
                 this.addFood(0, null, true);
@@ -1739,7 +1776,10 @@ export default {
             this.selectedFood = null;
             this.item = null;
             //this.setFalse();
-            this.$emit("buscarnuevo");
+            if (!this.configuration.chifa_china) {
+                this.$emit("buscarnuevo"); 
+            }
+            //this.$emit("buscarnuevo");
             //this.$forceUpdate();
         },
         setFalse() {
@@ -1750,7 +1790,7 @@ export default {
             this.allFalse = true;
         },
         selectFood(index) {
-            //  this.$refs.description.$el.getElementsByTagName("input")[0].focus();
+            //this.$refs.description.$el.getElementsByTagName("input")[0].focus();
             if (this.listFoods[index].select) {
                 this.listFoods[index].select = false;
                 this.allFalse = true;
@@ -1833,7 +1873,7 @@ export default {
                 this.form.show_list = JSON.parse(savedPreference);
                 /* ; */
             }
-        }
+        },
     }
 };
 </script>

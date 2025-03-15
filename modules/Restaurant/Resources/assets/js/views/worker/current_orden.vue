@@ -50,8 +50,10 @@
             </template>
         </div>
         <div>
-            <template v-if="configuration &&  configuration.seller_mozo">
-                <label>Seleccione Mozo <span class="text-danger">*</span></label>
+            <template v-if="configuration && configuration.seller_mozo">
+                <label
+                    >Seleccione Mozo <span class="text-danger">*</span></label
+                >
                 <el-select
                     v-model="selectedMozo"
                     placeholder="Seleccione un mozo"
@@ -216,9 +218,11 @@
                                                         data-line="1"
                                                     >
                                                         {{
-                                                            ord_row.food && ord_row.food.description
+                                                            ord_row.food &&
+                                                            ord_row.food
+                                                                .description
                                                                 ? ord_row.food.description.toUpperCase()
-                                                                : ''
+                                                                : ""
                                                         }}
                                                     </div>
                                                 </div>
@@ -561,8 +565,8 @@
         >
             <div class="row mt-1">
                 <h6 class="fw-bold">
-                    Para poder eliminar la orden debe ingresar un
-                    motivo y su PIN de usuario.
+                    Para poder eliminar la orden debe ingresar un motivo y su
+                    PIN de usuario.
                 </h6>
             </div>
             <div class="row mt-1">
@@ -762,7 +766,8 @@ export default {
             currentOrden: null,
             form_ped: {},
             to_carry: false,
-            selectedMozo: null
+            selectedMozo: null,
+            localOrdenSelectedId: this.ordenSelectedId
         };
     },
     watch: {
@@ -771,6 +776,9 @@ export default {
         },
         selectedMozo(newValue) {
             this.$emit("mozo-selected", newValue);
+        },
+        ordenSelectedId(newVal) {
+            this.localOrdenSelectedId = newVal;
         }
     },
     mounted() {},
@@ -1118,14 +1126,13 @@ export default {
         },
         async sendOrden(pin = null) {
             if (this.configuration.seller_mozo && !this.selectedMozo) {
-                this.$toast.error('Debe seleccionar un mozo');
+                this.$toast.error("Debe seleccionar un mozo");
                 return;
             }
 
-            // Verificar que todos los items en localOrden tengan un id
             for (let item of this.localOrden) {
                 if (!item.id) {
-                    this.$toast.error('Uno o más productos no tienen ID');
+                    this.$toast.error("Uno o más productos no tienen ID");
                     return;
                 }
             }
@@ -1137,7 +1144,7 @@ export default {
                 printing: this.configuration.print_commands,
                 commands_fisico: null,
                 ref: this.referencia,
-                mozo_id: this.selectedMozo, // Add mozo_id at root level
+                mozo_id: this.selectedMozo,
                 orden: {
                     table_id: this.tableId,
                     status_orden_id: 1
@@ -1156,21 +1163,28 @@ export default {
                     form_submit
                 );
                 if (response.status == 200) {
-                    const { success, message } = response.data;
+                    const { success, message, ordenId } = response.data;
+                    console.log("ver datos en el data", response.data);
                     if (success) {
                         this.showDialogPing = false;
-                        const { ordenId } = response.data;
                         this.referenciaInput = null;
 
                         this.$toast.success(message);
-                        this.closeDialog(ordenId);
-                        // this.$emit("add", ordenId);
+                        this.localOrdenSelectedId = ordenId;
+                        this.$emit("update:ordenSelectedId", ordenId);
 
+                        
+                        this.closeDialog(ordenId);
+                        this.$nextTick(() => {
+                            this.$emit("selectNewOrden", ordenId);
+                            //this.selectTableByOrden(ordenId);
+                        });
                         // this.loading = false;
                     } else {
                         this.$toast.error(message);
                         // this.loading = false;
                     }
+                    //this.ordenNew(ordenId);
                 }
             } catch (e) {
                 this.$toast.error(e);
@@ -1178,6 +1192,20 @@ export default {
                 this.loading = false;
             }
         },
+
+        
+        /* selectOrden(ordenId) {
+            // Logic to select and render the order
+            this.ordenSelectedId = ordenId;
+            const selectedOrder = this.ordens.find(o => o.id === ordenId);
+            if (selectedOrder) {
+                this.ordensItems = selectedOrder.orden_items || [];
+                this.currentRef = selectedOrder.ref;
+                this.calculateTotal();
+                this.view_orders();
+            }
+        }, */
+        
         closeDialog(ordenId = null) {
             let ordenToAdd = [...this.localOrden];
             ordenToAdd = ordenToAdd.map(o => ({
@@ -1478,7 +1506,7 @@ export default {
         updateMozo(value) {
             // Optionally emit an event when mozo changes
             this.$emit("mozo-selected", value);
-        },
+        }
         /* addProductToOrder(product) {
             console.log("ver como llega el dato", product);
             this.localOrden.push(product);

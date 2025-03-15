@@ -336,6 +336,7 @@ export default {
             };
         });
     },
+    
     methods: {
         historial() {
             this.showDialogHistory_orden = true;
@@ -484,6 +485,9 @@ export default {
                 this.ordens = response.data.data.filter(
                     o => o.food.area_id == this.area_id
                 );
+                if (!this.listFoods || this.listFoods.length === 0) {
+                    console.warn('listFoods es indefinido o nulo');
+                }
             } catch (e) {
                 console.log(e);
             }
