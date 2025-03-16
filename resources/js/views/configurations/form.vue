@@ -2533,6 +2533,44 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div>
+                                                            <div
+                                                                class="col-md-2 mt-4"
+                                                            >
+                                                                <div
+                                                                    class="form-group"
+                                                                >
+                                                                    <label
+                                                                        class="control-label w-100"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-bell tab-icon"
+                                                                        ></i>
+                                                                        Ocultar Anular sunat
+                                                                    </label>
+
+                                                                    <el-switch
+                                                                        v-model="
+                                                                            form.anulate_sunat
+                                                                        "
+                                                                        active-text="Si"
+                                                                        inactive-text="No"
+                                                                        :active-color="
+                                                                            '#28a745'
+                                                                        "
+                                                                        :inactive-color="
+                                                                            '#6c757d'
+                                                                        "
+                                                                        @change="
+                                                                            submit(
+                                                                                'Quitar Anular Sunat',
+                                                                                form.anulate_sunat,
+                                                                                'configuration_establishments_numbers',
+                                                                                'fileIcon'
+                                                                            )
+                                                                        "
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 

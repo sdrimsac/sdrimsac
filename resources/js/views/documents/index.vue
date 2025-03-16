@@ -311,13 +311,14 @@
                                                     "
                                                 >
                                                     <a 
-                                                        
+                                                        :disabled="row.btn_delete_doc_type_03 || row.deleting"
                                                         type="button"
                                                         class="dropdown-item bg-info text-white"
                                                         @click.prevent="
-                                                            clickDeleteDocument(
-                                                                row.id
-                                                            )
+                                                            row.deleting = true;
+                                                            clickDeleteDocument(row.id).finally(() => {
+                                                                row.deleting = false;
+                                                            })
                                                         "
                                                         v-if="
                                                             row.btn_delete_doc_type_03 &&
@@ -348,7 +349,8 @@
                                                         "
                                                         >Volver a recrear
                                                     </a>
-                                                    <a
+                                                    <a  
+                                                        
                                                         type="button"
                                                         class="dropdown-item"
                                                         @click.prevent="
@@ -356,7 +358,9 @@
                                                         "
                                                         v-if="
                                                             row.btn_voided &&
-                                                                !isAccountant
+                                                                !isAccountant &&
+                                                                configuration.anulate_sunat
+
                                                         "
                                                         >Anular Sunat</a
                                                     >
@@ -1412,10 +1416,9 @@ export default {
         clickImportSecond() {
             this.showImportSecondDialog = true;
         },
-        clickDeleteDocument(document_id) {
-            this.destroy(
-                `/${this.resource}/delete_document/${document_id}`
-            ).then(() => this.$eventHub.$emit("reloadData"));
+        async clickDeleteDocument(document_id) {
+            await this.destroy(`/${this.resource}/delete_document/${document_id}`);
+            this.$eventHub.$emit("reloadData");
         },
         clickReportPayments() {
             this.showDialogReportPayment = true;

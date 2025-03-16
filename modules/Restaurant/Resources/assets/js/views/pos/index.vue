@@ -2197,6 +2197,7 @@ export default {
 
     data() {
         return {
+            showDialogStockMin: false,
             showDialog: false,
             recordId: null,
             lastQuery: null,
@@ -3074,6 +3075,12 @@ export default {
                     title: ["Reporte", "Diario Crédito"],
                     icon: "el-icon-connection",
                     visible: this.configuration.sale_note_credit_confirm
+                },
+                {
+                    id: 35,
+                    title: ["Stock Minimo"],
+                    icon: "el-icon-set-up",
+                    visible: true && !this.isSeller
                 }
 
                 // {
@@ -3691,6 +3698,9 @@ export default {
                     break;
                 case 103:
                     this.showEditProduct = true;
+                    break;
+                case 35:
+                    this.showDialogStockMin = true;
                     break;
                 default:
                     break;

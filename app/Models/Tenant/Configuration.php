@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'anulate_sunat',
         'search_new',
         'chifa_china',
         'conopy_kitchen',
@@ -306,6 +307,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'anulate_sunat' => 'boolean',
         'search_new' => 'boolean',
         'chifa_china' => 'boolean',
         'conopy_kitchen' => 'boolean',
@@ -555,6 +557,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'anulate_sunat' => (bool)$this->anulate_sunat,
             'search_new' => (bool)$this->search_new,
             'chifa_china' => (bool)$this->chifa_china,
             'conopy_kitchen' => (bool)$this->conopy_kitchen,
