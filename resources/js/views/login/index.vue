@@ -267,7 +267,11 @@ export default {
                     response.data.maintenance == true
                 ) {
                     route = "caja/worker/cleaner";
-                } else {
+                }
+                else if (response.data.estilista == true) {
+                    route = "caja/estilista/time-worker";
+                }
+                else {
                     if (this.company.soap_type_id != "03") {
                         route = "documents";
                     } else {

@@ -28,7 +28,7 @@
     <div class="calendar-grid">
       <div
         v-for="day in calendarDays"
-        :key="day.date"
+        :key="day.date.toISOString()"
         class="calendar-day"
         :class="{
           'disabled': !day.isCurrentMonth,
@@ -51,7 +51,7 @@ export default {
   props: {
     value: {
       type: Date,
-      default: null
+      default: () => new Date()
     }
   },
 
@@ -71,6 +71,10 @@ export default {
   computed: {
     currentYear() {
       return this.displayDate.getFullYear()
+    },
+
+    currentMonth() {
+      return this.displayDate.getMonth()
     },
 
     currentMonthName() {
@@ -143,6 +147,20 @@ export default {
     }
   },
 
+  watch: {
+    value: {
+      handler(newVal) {
+        if (newVal) {
+          this.currentDate = new Date(newVal);
+          this.selectedDate = new Date(newVal);
+          this.displayDate = new Date(newVal);
+          this.generateCalendarDays();
+        }
+      },
+      immediate: true
+    }
+  },
+
   methods: {
     isToday(date) {
       const today = new Date()
@@ -170,6 +188,10 @@ export default {
 
     nextMonth() {
       this.displayDate = new Date(this.displayDate.getFullYear(), this.displayDate.getMonth() + 1)
+    },
+
+    generateCalendarDays() {
+      // Implementation of generateCalendarDays method
     }
   }
 }

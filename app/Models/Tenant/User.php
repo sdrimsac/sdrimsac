@@ -109,6 +109,7 @@ class User extends Authenticatable
     public function getUserTypeArca(){
         return $this->arca_type;
     }
+
     static function getUserArca()
     {
         $worker_type_arca = WorkersType::where('description', 'ARCA')->first();

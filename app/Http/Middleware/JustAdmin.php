@@ -162,7 +162,11 @@ class JustAdmin
                     $redirect_to .= 'cleaner';
                 } else if ($description_type == 'MANTENIMIENTO') {
                     $redirect_to .= 'maintenance';
-                } else {
+                } 
+                else if ($description_type == 'ESTILISTA') {
+                    $redirect_to .= 'caja/estilista/time-worker';
+                }
+                else {
                     $redirect_to .= 'dashboard';
                 }
                 return redirect($redirect_to);

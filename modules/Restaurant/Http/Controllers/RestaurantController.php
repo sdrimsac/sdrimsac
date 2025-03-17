@@ -72,6 +72,22 @@ class RestaurantController extends Controller
     {
         return view('restaurant::configuration.workers_type');
     }
+    public function search_customer_by_id($id){
+            $person = Person::where('id', $id)->whereType('customers')->get()->transform(function($row){
+                return [
+                    'id' => $row->id,
+                    'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
+                    'name' => $row->name,
+                    'number' => $row->number,
+                    'identity_document_type_id' => $row->identity_document_type_id,
+                    'identity_document_type_code' => $row->identity_document_type->code,
+                    'seller_id' =>  $row->seller_id,
+                    'phone' => $row->telephone,
+                ];
+            });
+
+            return compact('person');
+    }
     public function search_customer(Request $request)
     {
         $configuration = Configuration::first();
@@ -281,6 +297,7 @@ class RestaurantController extends Controller
             $pos = false;
             $kitchen = false;
             $waiter = false;
+            $estilista = false;
             $cleaner = false;
             $maintenance = false;
             $collector = false;
@@ -299,7 +316,11 @@ class RestaurantController extends Controller
                 $logistic =  true;
             } else if (strtolower($user->worker_type->description) == "mantenimiento") {
                 $maintenance =  true;
-            } else {
+            } 
+            else if (strtolower($user->worker_type->description) == "estilista") {
+                $estilista = true;
+            }
+            else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
                 $billar = strripos(strtolower($user->area->description), "billar");
@@ -322,6 +343,7 @@ class RestaurantController extends Controller
             }
 
             $response = [
+                'estilista' => $estilista,
                 'mechanic' => $mechanic,
                 'area' => $area,
                 'series' => $series,

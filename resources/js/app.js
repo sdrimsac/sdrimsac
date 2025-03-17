@@ -272,6 +272,7 @@ axios.get("/commit/store").then(response => {
 // Vue.component('table-component', TableComponent);
 // Vue.component('table-column', TableColumn);
 
+
 // System
 
 Vue.component(
@@ -317,6 +318,8 @@ Vue.component(
     "system-configuration-apk-url",
     require("./views/system/configuration/apk-url.vue")
 );
+
+
 
 //emit document url
 Vue.component(
@@ -670,10 +673,16 @@ const app = new Vue({
             import(
                 "../../modules/Report/Resources/assets/js/views/cash/index.vue"
             ),
-        "tenant-madera-index": () =>
-            import(
-                "../../modules/Restaurant/Resources/assets/js/views/madera/index.vue"
-            ),
+            "tenant-madera-index": () =>
+                import(
+                    "../../modules/Restaurant/Resources/assets/js/views/madera/index.vue"
+                ),
+
+                "estilista-time-worker": () =>
+                    import(
+                        "../../modules/Restaurant/Resources/assets/js/views/estilista/index.vue"
+                    ),
+
 
         "tenant-series-configurations-index": () =>
             import(

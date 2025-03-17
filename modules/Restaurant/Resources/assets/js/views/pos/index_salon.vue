@@ -88,7 +88,17 @@
                                     </button>
                                     <button class="btn p-0" type="button" @click="showFormRegisterSalon = true">
                                         <span class="btn btn-primary "
-                                            >Citas</span
+                                            >Registrar</span
+                                        >
+                                    </button>
+                                    <button class="btn p-0" type="button" @click="showAppointmentsModal = true">
+                                        <span class="btn btn-success"
+                                            ><i class="fas fa-calendar-check mr-1"></i> Ver Citas</span
+                                        >
+                                    </button>
+                                    <button class="btn p-0" type="button" @click="showClientsAppointmentsModal = true">
+                                        <span class="btn btn-info"
+                                            ><i class="fas fa-users mr-1"></i> Clientes y Citas</span
                                         >
                                     </button>
                                     <template
@@ -1910,8 +1920,27 @@
             :showDialog.sync="showDialogWarranty"
             :fromPos="true"
         ></Warranty>
-        <salon-form-register :showDialog.sync="showFormRegisterSalon"></salon-form-register>
+        <salon-form-register 
+            :show-dialog.sync="showFormRegisterSalon"
+            @appointment-saved="refreshAppointments"
+            append-to-body
+        />
+        
+        <appointments-modal
+            :show-dialog.sync="showAppointmentsModal"
+            @appointment-updated="refreshAppointments"
+            append-to-body
+        />
+        
+        <clients-appointments-modal
+            :showDialog.sync="showClientsAppointmentsModal"
+            @appointment-updated="loadData"
+            append-to-body
+        />
     </div>
+    
+    <!-- Modal de citas -->
+
 </template>
 
 <style>
@@ -1993,8 +2022,9 @@ const ItemSet = () =>
 const ConsolidatedListModal = () =>
     import("./partials/consolidated_list_modal.vue");
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
-
+import AppointmentsModal from "./partials/appointments.vue";
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
+import ClientsAppointmentsModal from "./partials/clients_appointments.vue";
 const SalonFormRegister = () => import("./partials/salon_form_register.vue");
 const options = {
     text: "Loading ...",
@@ -2019,6 +2049,7 @@ export default {
         "areaId"
     ],
     components: {
+        ClientsAppointmentsModal,
         SalonFormRegister,
         Warranty,
         MonthSales,
@@ -2049,7 +2080,8 @@ export default {
         ListFoodMobiles,
         PromotionCanje,
         TablesRooms,
-        SaleNoteCreditCash
+        SaleNoteCreditCash,
+        AppointmentsModal
     },
     mixins: [functions, exchangeRate],
 
@@ -2236,7 +2268,9 @@ export default {
             },
             customer_unit_type_id: null,
             recomputeTrigger: 0,
-            lastDocument: null
+            lastDocument: null,
+            showAppointmentsModal: false,
+            showClientsAppointmentsModal: false
         };
     },
     beforeDestroy() {
@@ -6506,6 +6540,13 @@ export default {
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
+        },
+        refreshAppointments() {
+            // Este método se llamará cuando se actualice una cita
+            this.$message.success('Lista de citas actualizada');
+        },
+        loadData() {
+            this.refreshAppointments();
         }
     },
     beforeUnmount() {

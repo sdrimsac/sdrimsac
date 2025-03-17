@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\BoxesController;
 use Modules\Restaurant\Http\Controllers\BoxesDetailController;
 use Modules\Restaurant\Http\Controllers\CashController;
+use Modules\Restaurant\Http\Controllers\EstilistaController;
 use Modules\Restaurant\Http\Controllers\PosController;
 use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\OrdenController;
@@ -28,11 +29,78 @@ use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Restaurant\Http\Controllers\PromocionPorItemController;
 use Modules\Restaurant\Http\Controllers\TableMaintenanceController;
 use Modules\Restaurant\Http\Controllers\TableRoomController;
+use Modules\Restaurant\Http\Controllers\UserScheduleController;
+use Modules\Restaurant\Http\Controllers\UserScheduleDayController;
+use Modules\Restaurant\Http\Controllers\UserScheduleTimeSlotController;
+use Modules\Restaurant\Http\Controllers\UserScheduleExceptionController;
+use Modules\Restaurant\Http\Controllers\UserScheduleAppointmentController;
 use Modules\Restaurant\Http\Controllers\WorkerController;
 
 Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
     //Route::get('documents', 'OrdenController@printTicket');
+
+
+    Route::prefix('estilista')->group(function () {
+        Route::get('time-worker', [EstilistaController::class, 'index'])->name('estilista.worker.time');
+        Route::get('workers', [EstilistaController::class, 'workers'])->name('estilista.workers');
+        Route::post('schedule', [EstilistaController::class, 'schedule'])->name('estilista.schedule');
+
+        // Rutas para UserSchedule
+        Route::get('current-user', [UserScheduleController::class, 'getCurrentUser'])->name('estilista.current-user');
+        Route::get('schedules', [UserScheduleController::class, 'index'])->name('estilista.schedules.index');
+        Route::get('schedules/create', [UserScheduleController::class, 'create'])->name('estilista.schedules.create');
+        Route::post('schedules', [UserScheduleController::class, 'store'])->name('estilista.schedules.store');
+        Route::get('schedules/records', [UserScheduleController::class, 'records'])->name('estilista.schedules.records');
+        Route::post('schedules/create-default', [UserScheduleController::class, 'createDefault'])->name('estilista.schedules.create-default');        Route::get('schedules/{id}', [UserScheduleController::class, 'show'])->name('estilista.schedules.show');
+        Route::get('schedules/{id}/edit', [UserScheduleController::class, 'edit'])->name('estilista.schedules.edit');
+        Route::put('schedules/{id}', [UserScheduleController::class, 'update'])->name('estilista.schedules.update');
+        Route::delete('schedules/{id}', [UserScheduleController::class, 'destroy'])->name('estilista.schedules.destroy');
+    
+        
+        // Rutas para UserScheduleDay
+        Route::get('schedule-days/{scheduleId}', [UserScheduleDayController::class, 'index'])->name('estilista.schedule-days.index');
+        Route::post('schedule-days', [UserScheduleDayController::class, 'store'])->name('estilista.schedule-days.store');
+        Route::get('schedule-days/working-days/{userId}', [UserScheduleDayController::class, 'workingDays'])->name('estilista.schedule-days.working-days');
+
+        Route::get('schedule-days/{id}/edit', [UserScheduleDayController::class, 'edit'])->name('estilista.schedule-days.edit');
+        Route::put('schedule-days/{id}', [UserScheduleDayController::class, 'update'])->name('estilista.schedule-days.update');
+        Route::delete('schedule-days/{id}', [UserScheduleDayController::class, 'destroy'])->name('estilista.schedule-days.destroy');
+        Route::get('schedule-days/records/{scheduleId}', [UserScheduleDayController::class, 'records'])->name('estilista.schedule-days.records');
+        
+        // Rutas para UserScheduleTimeSlot
+        Route::get('time-slots/{dayId}', [UserScheduleTimeSlotController::class, 'index'])->name('estilista.time-slots.index');
+        Route::post('time-slots', [UserScheduleTimeSlotController::class, 'store'])->name('estilista.time-slots.store');
+        Route::get('time-slots/{id}/edit', [UserScheduleTimeSlotController::class, 'edit'])->name('estilista.time-slots.edit');
+        Route::put('time-slots/{id}', [UserScheduleTimeSlotController::class, 'update'])->name('estilista.time-slots.update');
+        Route::delete('time-slots/{id}', [UserScheduleTimeSlotController::class, 'destroy'])->name('estilista.time-slots.destroy');
+        Route::get('time-slots/records/{dayId}', [UserScheduleTimeSlotController::class, 'records'])->name('estilista.time-slots.records');
+        Route::get('time-slots/available/{userId}/{date}', [UserScheduleTimeSlotController::class, 'getAvailableSlots'])->name('estilista.time-slots.available');
+        
+        // Rutas para UserScheduleException
+        Route::get('exceptions/{userId}', [UserScheduleExceptionController::class, 'index'])->name('estilista.exceptions.index');
+        Route::post('exceptions', [UserScheduleExceptionController::class, 'store'])->name('estilista.exceptions.store');
+        Route::get('exceptions/{id}/edit', [UserScheduleExceptionController::class, 'edit'])->name('estilista.exceptions.edit');
+        Route::put('exceptions/{id}', [UserScheduleExceptionController::class, 'update'])->name('estilista.exceptions.update');
+        Route::delete('exceptions/{id}', [UserScheduleExceptionController::class, 'destroy'])->name('estilista.exceptions.destroy');
+        Route::get('exceptions/records/{userId}', [UserScheduleExceptionController::class, 'records'])->name('estilista.exceptions.records');
+        
+        // Rutas para UserScheduleAppointment
+        Route::get('appointments', [UserScheduleAppointmentController::class, 'index'])->name('estilista.appointments.index');
+        Route::get('appointments/create', [UserScheduleAppointmentController::class, 'create'])->name('estilista.appointments.create');
+        Route::post('appointments', [UserScheduleAppointmentController::class, 'store'])->name('estilista.appointments.store');
+        Route::get('appointments/records', [UserScheduleAppointmentController::class, 'records'])->name('estilista.appointments.records');
+        Route::get('appointments/clients', [UserScheduleAppointmentController::class, 'clients'])->name('estilista.appointments.clients');
+        Route::get('appointments/services', [UserScheduleAppointmentController::class, 'services'])->name('estilista.appointments.services');
+        Route::post('appointments/change-status/{id}', [UserScheduleAppointmentController::class, 'changeStatus'])->name('estilista.appointments.change-status');
+        Route::get('appointments/check-availability', [UserScheduleAppointmentController::class, 'checkAvailability'])->name('estilista.appointments.check-availability');
+        Route::get('appointments/{id}', [UserScheduleAppointmentController::class, 'show'])->name('estilista.appointments.show');
+        Route::get('appointments/{id}/edit', [UserScheduleAppointmentController::class, 'edit'])->name('estilista.appointments.edit');
+        Route::put('appointments/{id}', [UserScheduleAppointmentController::class, 'update'])->name('estilista.appointments.update');
+        Route::delete('appointments/{id}', [UserScheduleAppointmentController::class, 'destroy'])->name('estilista.appointments.destroy');
+        Route::get('appointments/by-day/{date}', [UserScheduleAppointmentController::class, 'getByDay'])->name('estilista.appointments.by-day');
+        Route::put('appointments/{id}/status', [UserScheduleAppointmentController::class, 'changeStatus'])->name('estilista.appointments.change-status');
+    });
     Route::post('/re-print', [RestaurantController::class, 'rePrint']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
@@ -322,6 +390,7 @@ Route::prefix('caja')->group(function () {
 
 
         Route::get('search_customers', [RestaurantController::class, 'search_customer']);
+        Route::get('search_customer_by_id/{id}', [RestaurantController::class, 'search_customer_by_id']);
     });
     //VISTA TRABAJADORES
 
