@@ -2,12 +2,12 @@
 <template>
     <div>
         <div class="card">
-            <div class="card-header bg-primary">
+            <!-- <div class="card-header bg-primary">
                 <h4 class="my-0 text-white">
                     <i class="fa fa-cogs"></i>
                     Configuraciones
                 </h4>
-            </div>
+            </div> -->
             <template>
                 <div id="app" class="custom-tabs">
                     <el-tabs v-model="activeTab" type="border-card">
@@ -118,13 +118,12 @@
                             <template #label>
                                 <div class="tab-label">
                                     <i class="fa fa-cogs tab-icon"></i>
-                                    <span class="tab-text"
-                                        >Configuración de Entorno</span
-                                    >
+                                    <span class="tab-text">Entorno</span>
                                 </div>
                             </template>
+
                             <div class="tab-content">
-                                <!-- Tabs anidados dentro del tab de "Configuracion de entorno" -->
+                                <!-- Tabs anidados dentro del tab de "Configuración de entorno" -->
                                 <el-tabs type="card" v-model="modes">
                                     <!-- panel Modos---- -->
                                     <el-tab-pane name="modes">
@@ -138,494 +137,247 @@
                                                 >
                                             </div>
                                         </template>
+                                        <div class="form-group text-center">
+                                            <label
+                                                class="control-label w-100 text-white bg-primary p-2"
+                                            >
+                                                Habilitar los Modos que
+                                                represente al Rubro de Negocio
+                                            </label>
+                                        </div>
+                                        
                                         <!-- Contenido filtrado -->
-                                        <div
-                                            class="nested-tab-content"
-                                            ref="modesTab"
-                                        >
+                                        <div class="nested-tab-content" ref="modesTab">
                                             <div class="container mt-4">
                                                 <div class="row">
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="salonIcon"
-                                                                    class="fas fa-cut tab-icon"
-                                                                ></i>
-                                                                Modo salón
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.mode_salon ? '#28a745' : '#6c757d' }">
+                                                                <i ref="salonIcon" class="fas fa-cut tab-icon fa-lg"></i>
+                                                                Entorno salón Spa
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.mode_salon
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Modo salón',
-                                                                            form.mode_salon,
-                                                                            'salonIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.mode_salon"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Modo salón', form.mode_salon, 'salonIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
                                                     <!-- Créditos en Nota de Venta y otros elementos -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="creditIcon"
-                                                                    class="fas fa-credit-card tab-icon"
-                                                                ></i>
-                                                                Crédito en Nota
-                                                                de Venta
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.credits ? '#28a745' : '#6c757d' }">
+                                                                <i ref="creditIcon" class="fas fa-credit-card tab-icon fa-lg"></i>
+                                                                Entorno Crédito
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.credits
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Crédito en Nota de Venta',
-                                                                            form.credits,
-                                                                            'creditIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.credits"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Crédito en Nota de Venta', form.credits, 'creditIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
 
                                                     <!-- Entorno Colegio -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="collegeIcon"
-                                                                    class="fas fa-school tab-icon"
-                                                                ></i>
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.college ? '#28a745' : '#6c757d' }">
+                                                                <i ref="collegeIcon" class="fas fa-school tab-icon fa-lg"></i>
                                                                 Entorno Colegio
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.college
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Colegio',
-                                                                            form.college,
-                                                                            'collegeIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.college"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Colegio', form.college, 'collegeIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
 
                                                     <!-- Entorno Restaurant -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="restaurantIcon"
-                                                                    class="fas fa-utensils tab-icon"
-                                                                ></i>
-                                                                Entorno
-                                                                Restaurant
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.restaurant ? '#28a745' : '#6c757d' }">
+                                                                <i ref="restaurantIcon" class="fas fa-utensils tab-icon fa-lg"></i>
+                                                                Entorno Restaurant
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.restaurant
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Restaurant',
-                                                                            form.restaurant,
-                                                                            'restaurantIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.restaurant"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Restaurant', form.restaurant, 'restaurantIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
 
                                                     <!-- Entorno Hotel -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="hotelIcon"
-                                                                    class="fas fa-hotel tab-icon"
-                                                                ></i>
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.hotels ? '#28a745' : '#6c757d' }">
+                                                                <i ref="hotelIcon" class="fas fa-hotel tab-icon fa-lg"></i>
                                                                 Entorno Hotel
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.hotels
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Hotel',
-                                                                            form.hotels,
-                                                                            'hotelIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.hotels"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Hotel', form.hotels, 'hotelIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
 
                                                     <!-- Entorno Internet -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="internetIcon"
-                                                                    class="fas fa-wifi tab-icon"
-                                                                ></i>
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.internet ? '#28a745' : '#6c757d' }">
+                                                                <i ref="internetIcon" class="fas fa-wifi tab-icon fa-lg"></i>
                                                                 Entorno Internet
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.internet
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Internet',
-                                                                            form.internet,
-                                                                            'internetIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.internet"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Internet', form.internet, 'internetIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
 
                                                     <!-- Entorno Peaje -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="tollIcon"
-                                                                    class="el-icon-tickets tab-icon"
-                                                                ></i>
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.toll ? '#28a745' : '#6c757d' }">
+                                                                <i ref="tollIcon" class="fas fa-ticket-alt tab-icon fa-lg"></i>
                                                                 Entorno Peaje
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.toll
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Peaje',
-                                                                            form.toll,
-                                                                            'tollIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.toll"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Peaje', form.toll, 'tollIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
 
                                                     <!-- Entorno Boticas & Hospital -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="healthIcon"
-                                                                    class="fas fa-pills tab-icon"
-                                                                ></i>
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.health_network ? '#28a745' : '#6c757d' }">
+                                                                <i ref="healthIcon" class="fas fa-pills tab-icon fa-lg"></i>
                                                                 Entorno Hospital
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.health_network
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Boticas & Hospital',
-                                                                            form.health_network,
-                                                                            'healthIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.health_network"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Boticas & Hospital', form.health_network, 'healthIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="healthIcon"
-                                                                    class="el-icon-baseball tab-icon"
-                                                                ></i>
+
+                                                    <!-- Entorno Billar -->
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.modo_billar ? '#28a745' : '#6c757d' }">
+                                                                <i ref="billiardIcon" class="icofont-billiard-ball tab-icon "></i>
                                                                 Entorno Billar
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.modo_billar
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno billar',
-                                                                            form.modo_billar,
-                                                                            'healthIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.modo_billar"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno billar', form.modo_billar, 'billiardIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="healthIcon"
-                                                                    class="el-icon-tree tab-icon"
-                                                                ></i>
+
+                                                    <!-- Entorno Maderera -->
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.maderera ? '#28a745' : '#6c757d' }">
+                                                                <i ref="woodIcon" class="fas fa-tree tab-icon fa-lg"></i>
                                                                 Entorno Maderera
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.maderera
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno maderera',
-                                                                            form.maderera,
-                                                                            'healthIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.maderera"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno maderera', form.maderera, 'woodIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="healthIcon"
-                                                                    class="el-icon-tree tab-icon"
-                                                                ></i>
-                                                                Entorno Mecanica
-                                                                y Repuestos
+
+                                                    <!-- Entorno Mecánica y Repuesto -->
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.workshop ? '#28a745' : '#6c757d' }">
+                                                                <i ref="workshopIcon" class="fas fa-tools tab-icon fa-lg"></i>
+                                                                Entorno Mecánica y Repuestos
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.workshop
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Mecanica Repuesto',
-                                                                            form.workshop,
-                                                                            'healthIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.workshop"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Mecanica Repuesto', form.workshop, 'workshopIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <!-- <i
-                                                                    ref="healthIcon"
-                                                                    class=""
-                                                                ></i> -->
-                                                                <i
-                                                                    class="fa fas fa-tooth"
-                                                                ></i>
-                                                                Entorno
-                                                                Odontología
+
+                                                    <!-- Entorno Odontología -->
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.odontologia ? '#28a745' : '#6c757d' }">
+                                                                <i ref="dentistIcon" class="fas fa-tooth tab-icon fa-lg"></i>
+                                                                Entorno Odontología
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.odontologia
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Odontología',
-                                                                            form.odontologia,
-                                                                            'healthIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.odontologia"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Odontología', form.odontologia, 'dentistIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <!-- <i
-                                                                    ref="healthIcon"
-                                                                    class=""
-                                                                ></i> -->
-                                                                <i
-                                                                    class="fa fas fa-tooth"
-                                                                ></i>
-                                                                Entorno Alquiler
-                                                                de Habitaciones
+
+                                                    <!-- Entorno Alquiler de Habitaciones -->
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="form-group text-left">
+                                                            <label class="control-label w-100" :style="{ color: form.mod_renta ? '#28a745' : '#6c757d' }">
+                                                                <i ref="rentalIcon" class="fas fa-home tab-icon fa-lg"></i>
+                                                                Entorno Alquiler de Habitaciones
                                                             </label>
                                                             <el-switch
-                                                                v-model="
-                                                                    form.mod_renta
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Entorno Modo Renta',
-                                                                            form.mod_renta,
-                                                                            'healthIcon'
-                                                                        )
-                                                                "
+                                                                v-model="form.mod_renta"
+                                                                active-text="SI"
+                                                                inactive-text="NO"
+                                                                :active-color="'#28a745'"
+                                                                :inactive-color="'#6c757d'"
+                                                                @change="() => submit('Entorno Modo Renta', form.mod_renta, 'rentalIcon')"
                                                             ></el-switch>
                                                         </div>
                                                     </div>
@@ -634,12 +386,12 @@
                                         </div>
                                     </el-tab-pane>
 
-                                    <!-- Modelo de Negocio -->
+                                    <!-- Panel Modelo de Negocio -->
                                     <el-tab-pane name="complementos">
                                         <template #label>
                                             <div class="tab-label">
                                                 <i
-                                                    class="el-icon-setting tab-icon fa-lg"
+                                                    class="el-icon-s-tools tab-icon"
                                                 ></i>
                                                 <span class="tab-text"
                                                     >Modelo de Negocio</span
@@ -650,709 +402,389 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <!-- Consolidado de cotizaciones -->
-                                                    <div
-                                                        class="col-md-3 mt-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="quotationIcon"
-                                                                    class="fas fa-file-invoice-dollar tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                distribuidora
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.consolidated_quotations
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Consolidade de cotizaciones',
-                                                                            form.consolidated_quotations,
-                                                                            'quotationIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                    <div class="col-md-3 mt-4" v-if="canSee">
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.consolidated_quotations ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="quotationIcon" class="fas fa-file-invoice-dollar tab-icon"></i>
+                                                                        Habilitar distribuidora
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.consolidated_quotations"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Consolidade de cotizaciones', form.consolidated_quotations, 'quotationIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- Habilitar Contabilidad -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="accountingIcon"
-                                                                    class="fas fa-calculator tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Contabilidad
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.accounting_mode
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Contabilidad',
-                                                                            form.accounting_mode,
-                                                                            'accountingIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.accounting_mode ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="accountingIcon" class="fas fa-calculator tab-icon"></i>
+                                                                        Habilitar Contabilidad
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.accounting_mode"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Contabilidad', form.accounting_mode, 'accountingIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Habilitar Manejo de Series -->
+                                                    <!-- Habilitar de Series -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="seriesIcon"
-                                                                    class="fas fa-barcode tab-icon"
-                                                                ></i>
-                                                                Habilitar Manejo
-                                                                de Series
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.series_enabled
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Series - Productos',
-                                                                            form.series_enabled,
-                                                                            'seriesIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.series_enabled ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="seriesIcon" class="fas fa-barcode tab-icon"></i>
+                                                                        Habilitar de Series
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.series_enabled"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Series - Productos', form.series_enabled, 'seriesIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Habilitar Manejo de Lotes -->
+                                                    <!-- Habilitar de Lotes -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="lotsIcon"
-                                                                    class="fas fa-boxes tab-icon"
-                                                                ></i>
-                                                                Habilitar Manejo
-                                                                de Lotes
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.lots_enabled
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Lotes - Productos',
-                                                                            form.lots_enabled,
-                                                                            'lotsIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.lots_enabled ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="lotsIcon" class="fas fa-boxes tab-icon"></i>
+                                                                        Habilitar de Lotes
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.lots_enabled"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Lotes - Productos', form.lots_enabled, 'lotsIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Habilitar Manejo de Color & Talla -->
+                                                    <!-- Habilitar de Color & Talla -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="colorSizeIcon"
-                                                                    class="fas fa-tshirt tab-icon"
-                                                                ></i>
-                                                                <i
-                                                                    class="fas fa-palette"
-                                                                ></i>
-                                                                Habilitar Manejo
-                                                                de Color & Talla
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.color_size_enabled
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Color & Talla - Productos',
-                                                                            form.color_size_enabled,
-                                                                            'colorSizeIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.color_size_enabled ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="colorSizeIcon" class="fas fa-tshirt tab-icon"></i>
+                                                                        <i class="fas fa-palette"></i>
+                                                                        Habilitar de Color & Talla
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.color_size_enabled"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Color & Talla - Productos', form.color_size_enabled, 'colorSizeIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Habilitar Manejo de Guías de Remisión -->
+                                                    <!-- Habilitar de Guías de Remisión -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="dispatchIcon"
-                                                                    class="fas fa-truck tab-icon"
-                                                                ></i>
-                                                                Habilitar Manejo
-                                                                de Guías de
-                                                                Remisión
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.dispatch
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Guías de Remisión',
-                                                                            form.dispatch,
-                                                                            'dispatchIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.dispatch ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="dispatchIcon" class="fas fa-truck tab-icon"></i>
+                                                                        Habilitar de Guías de Remisión
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.dispatch"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Guías de Remisión', form.dispatch, 'dispatchIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Habilitar Manejo de Cotización -->
+                                                    <!-- Habilitar de Cotización -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="quotationIcon"
-                                                                    class="fas fa-file-invoice-dollar tab-icon"
-                                                                ></i>
-                                                                Habilitar Manejo
-                                                                de Cotización
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.quotation
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Cotización',
-                                                                            form.quotation,
-                                                                            'quotationIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.quotation ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="quotationIcon" class="fas fa-file-invoice-dollar tab-icon"></i>
+                                                                        Habilitar de Cotización
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.quotation"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Cotización', form.quotation, 'quotationIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Habilitar Transformación de producto -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="transformIcon"
-                                                                    class="fas fa-exchange-alt tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Transformación
-                                                                de producto
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.transform_item
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Transformación de producto',
-                                                                            form.transform_item,
-                                                                            'transformIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.transform_item ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="transformIcon" class="fas fa-exchange-alt tab-icon"></i>
+                                                                        Habilitar Transformación de producto
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.transform_item"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Transformación de producto', form.transform_item, 'transformIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Habilitar Tratamiento comercial Producto -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="commercialTreatmentIcon"
-                                                                    class="fas fa-hand-holding-usd tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Tratamiento
-                                                                Comercial
-                                                                <el-tooltip
-                                                                    class="item"
-                                                                    effect="dark"
-                                                                    content="Trato comercial"
-                                                                    placement="top-start"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.commercial_treatment_items
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Tratamiento comercial Producto',
-                                                                            form.commercial_treatment_items,
-                                                                            'commercialTreatmentIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.commercial_treatment_items ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="commercialTreatmentIcon" class="fas fa-hand-holding-usd tab-icon"></i>
+                                                                        Habilitar Tratamiento Comercial
+                                                                        <el-tooltip class="item" effect="dark" content="Trato comercial" placement="top-start">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.commercial_treatment_items"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Tratamiento comercial Producto', form.commercial_treatment_items, 'commercialTreatmentIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- Habilitar Consignación -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="consignmentIcon"
-                                                                    class="fas fa-handshake tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Consignación
-                                                                <el-tooltip
-                                                                    content="Crear y liquidar consignaciones desde caja"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.consignment
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Consignación',
-                                                                            form.consignment,
-                                                                            'consignmentIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.consignment ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="consignmentIcon" class="fas fa-handshake tab-icon"></i>
+                                                                        Habilitar Consignación
+                                                                        <el-tooltip content="Crear y liquidar consignaciones desde caja">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.consignment"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Consignación', form.consignment, 'consignmentIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Producto penalidad - Consignación -->
                                                     <div class="col-md-3 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="penaltyProductIcon"
-                                                                    class="fas fa-exclamation-circle tab-icon"
-                                                                ></i>
-                                                                Producto
-                                                                Penalidad -
-                                                                Consignación
-                                                            </label>
-                                                            <div
-                                                                class="el-input el-input-group el-input-group--append"
-                                                            >
-                                                                <el-select
-                                                                    :disabled="
-                                                                        !form.consignment
-                                                                    "
-                                                                    @focus="
-                                                                        $event.target.select()
-                                                                    "
-                                                                    ref="producto"
-                                                                    v-model="
-                                                                        form.item_consignment_id
-                                                                    "
-                                                                    @change="
-                                                                        changeItem
-                                                                    "
-                                                                    filterable
-                                                                    remote
-                                                                    placeholder="Buscar..."
-                                                                    popper-class="el-select-items"
-                                                                    @visible-change="
-                                                                        focusTotalItem
-                                                                    "
-                                                                    :remote-method="
-                                                                        searchRemoteItems
-                                                                    "
-                                                                    :loading="
-                                                                        loading_search
-                                                                    "
-                                                                >
-                                                                    <el-option
-                                                                        v-for="option in items"
-                                                                        :key="
-                                                                            option.id
-                                                                        "
-                                                                        :value="
-                                                                            option.id
-                                                                        "
-                                                                        :label="
-                                                                            option.full_description ||
-                                                                                option.description
-                                                                        "
-                                                                    ></el-option>
-                                                                </el-select>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.item_consignment_id ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="penaltyProductIcon" class="fas fa-exclamation-circle tab-icon"></i>
+                                                                        Producto Penalidad - Consignación
+                                                                    </label>
+                                                                    <div class="el-input el-input-group el-input-group--append">
+                                                                        <el-select
+                                                                            :disabled="!form.consignment"
+                                                                            @focus="$event.target.select()"
+                                                                            ref="producto"
+                                                                            v-model="form.item_consignment_id"
+                                                                            @change="changeItem"
+                                                                            filterable
+                                                                            remote
+                                                                            placeholder="Buscar..."
+                                                                            popper-class="el-select-items"
+                                                                            @visible-change="focusTotalItem"
+                                                                            :remote-method="searchRemoteItems"
+                                                                            :loading="loading_search"
+                                                                        >
+                                                                            <el-option
+                                                                                v-for="option in items"
+                                                                                :key="option.id"
+                                                                                :value="option.id"
+                                                                                :label="option.full_description || option.description"
+                                                                            ></el-option>
+                                                                        </el-select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- Habilitar Promociones -->
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="promotionsIcon"
-                                                                    class="fas fa-tags tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Promociones
-                                                                <el-tooltip
-                                                                    class="item"
-                                                                    effect="dark"
-                                                                    content="Visualiza en CAJA y ADMINISTRADOR la función que permite acceder a una promoción, llegando a x items vendidos"
-                                                                    placement="top-start"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.promotions_sell
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Promociones',
-                                                                            form.promotions_sell,
-                                                                            'promotionsIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
-                                                            <el-input
-                                                                v-model="
-                                                                    form.promotions_cant_purchase
-                                                                "
-                                                                :disabled="
-                                                                    !form.promotions_sell
-                                                                "
-                                                                placeholder="Cantidad de ventas para acceder a la promoción"
-                                                                size="normal"
-                                                                class="mt-2"
-                                                                @blur="
-                                                                    submit(
-                                                                        'Cantidad de ventas para promoción',
-                                                                        form.promotions_cant_purchase,
-                                                                        'promotionsIcon'
-                                                                    )
-                                                                "
-                                                            ></el-input>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.promotions_sell ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="promotionsIcon" class="fas fa-tags tab-icon"></i>
+                                                                        Habilitar Promociones
+                                                                        <el-tooltip class="item" effect="dark" content="Visualiza en CAJA y ADMINISTRADOR la función que permite acceder a una promoción, llegando a x items vendidos" placement="top-start">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.promotions_sell"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Promociones', form.promotions_sell, 'promotionsIcon')"
+                                                                    ></el-switch>
+                                                                    <el-input
+                                                                        v-model="form.promotions_cant_purchase"
+                                                                        :disabled="!form.promotions_sell"
+                                                                        placeholder="Cantidad de ventas para acceder a la promoción"
+                                                                        size="normal"
+                                                                        class="mt-2"
+                                                                        @blur="submit('Cantidad de ventas para promoción', form.promotions_cant_purchase, 'promotionsIcon')"
+                                                                    ></el-input>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="promotionsIcon"
-                                                                    class="fas fa-tags tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Promociones
-                                                                Documento
-                                                                <el-tooltip
-                                                                    class="item"
-                                                                    effect="dark"
-                                                                    content="Por cada cierto total de compra el cliente adquiere un producto gratis"
-                                                                    placement="top-start"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.is_promotion_document
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Promociones Documento',
-                                                                            form.is_promotion_document,
-                                                                            'promotionsIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.is_promotion_document ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="promotionsIcon" class="fas fa-tags tab-icon"></i>
+                                                                        Habilitar Promociones Documento
+                                                                        <el-tooltip class="item" effect="dark" content="Por cada cierto total de compra el cliente adquiere un producto gratis" placement="top-start">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.is_promotion_document"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Promociones Documento', form.is_promotion_document, 'promotionsIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="promotionsIcon"
-                                                                    class="fas fa-tags tab-icon"
-                                                                ></i>
-                                                                Habilitar
-                                                                Promociones por
-                                                                puntos
-                                                                <el-tooltip
-                                                                    class="item"
-                                                                    effect="dark"
-                                                                    content="Por cada cierto total de compra el cliente adquiere un producto gratis"
-                                                                    placement="top-start"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.promotions_by_points
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Promociones por puntos',
-                                                                            form.promotions_by_points,
-                                                                            'promotionsIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.promotions_by_points ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="promotionsIcon" class="fas fa-tags tab-icon"></i>
+                                                                        Habilitar Promociones por puntos
+                                                                        <el-tooltip class="item" effect="dark" content="Por cada cierto total de compra el cliente adquiere un producto gratis" placement="top-start">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.promotions_by_points"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Promociones por puntos', form.promotions_by_points, 'promotionsIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 mb-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    ref="androidIcon"
-                                                                    class="fas fa-mobile-alt tab-icon"
-                                                                ></i>
-                                                                Habilitar modo
-                                                                Android
-                                                                <el-tooltip
-                                                                    class="item"
-                                                                    effect="dark"
-                                                                    content="Habilitar modo Android"
-                                                                    placement="top-start"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.android_configuration
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Android',
-                                                                            form.android_configuration,
-                                                                            'androidIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.android_configuration ? '#28a745' : '#6c757d' }">
+                                                                        <i ref="androidIcon" class="fas fa-mobile-alt tab-icon"></i>
+                                                                        Habilitar modo Android
+                                                                        <el-tooltip class="item" effect="dark" content="Habilitar modo Android" placement="top-start">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.android_configuration"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Android', form.android_configuration, 'androidIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-md-3 mb-4"
-                                                        v-if="canSee"
-                                                    >
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <!-- <i
-                                                                    ref="androidIcon"
-                                                                    class="fas fa-mobile-alt tab-icon"
-                                                                ></i> -->
-                                                                Habilitar
-                                                                Catalogo
-                                                                <el-tooltip
-                                                                    class="item"
-                                                                    effect="dark"
-                                                                    content="Habilitar Catalogo para poder generar el catalogo"
-                                                                    placement="top-start"
-                                                                >
-                                                                    <i
-                                                                        class="fa fa-info-circle"
-                                                                    ></i>
-                                                                </el-tooltip>
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.catalog
-                                                                "
-                                                                active-text="HABILITADO"
-                                                                inactive-text="DESHABILITADO"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    () =>
-                                                                        submit(
-                                                                            'Habilitar Catalogo',
-                                                                            form.catalog,
-                                                                            'androidIcon'
-                                                                        )
-                                                                "
-                                                            ></el-switch>
+                                                    <div class="col-md-3 mb-4" v-if="canSee">
+                                                        <div class="card h-100">
+                                                            <div class="card-body d-flex flex-column">
+                                                                <div class="form-group text-left flex-grow-1">
+                                                                    <label class="control-label w-100" :style="{ color: form.catalog ? '#28a745' : '#6c757d' }">
+                                                                        <!-- <i ref="androidIcon" class="fas fa-mobile-alt tab-icon"></i> -->
+                                                                        Habilitar Catalogo
+                                                                        <el-tooltip class="item" effect="dark" content="Habilitar Catalogo para poder generar el catalogo" placement="top-start">
+                                                                            <i class="fa fa-info-circle"></i>
+                                                                        </el-tooltip>
+                                                                    </label>
+                                                                    <el-switch
+                                                                        v-model="form.catalog"
+                                                                        active-text="SI"
+                                                                        inactive-text="NO"
+                                                                        :active-color="'#28a745'"
+                                                                        :inactive-color="'#6c757d'"
+                                                                        @change="() => submit('Habilitar Catalogo', form.catalog, 'androidIcon')"
+                                                                    ></el-switch>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2545,7 +1977,9 @@
                                                                         <i
                                                                             class="fas fa-bell tab-icon"
                                                                         ></i>
-                                                                        Ocultar Anular sunat
+                                                                        Ocultar
+                                                                        Anular
+                                                                        sunat
                                                                     </label>
 
                                                                     <el-switch
@@ -10948,10 +10382,12 @@
                                                                     class="fas fa-print fa-lg"
                                                                     style="margin-right: 10px;"
                                                                 ></i>
-                                                                Comanda de Cocina en Caja 
+                                                                Comanda de
+                                                                Cocina en Caja
                                                             </label>
                                                             <el-switch
-                                                                v-model=" form.conopy_kitchen
+                                                                v-model="
+                                                                    form.conopy_kitchen
                                                                 "
                                                                 active-text="Si"
                                                                 inactive-text="No"
@@ -10981,10 +10417,12 @@
                                                                     class="fas fa-print fa-lg"
                                                                     style="margin-right: 10px;"
                                                                 ></i>
-                                                                Crear productos en mozo
+                                                                Crear productos
+                                                                en mozo
                                                             </label>
                                                             <el-switch
-                                                                v-model=" form.chifa_china
+                                                                v-model="
+                                                                    form.chifa_china
                                                                 "
                                                                 active-text="Si"
                                                                 inactive-text="No"
@@ -11014,10 +10452,12 @@
                                                                     class="fas fa-print fa-lg"
                                                                     style="margin-right: 10px;"
                                                                 ></i>
-                                                                Activar buscador en caja
+                                                                Activar buscador
+                                                                en caja
                                                             </label>
                                                             <el-switch
-                                                                v-model=" form.search_new
+                                                                v-model="
+                                                                    form.search_new
                                                                 "
                                                                 active-text="Si"
                                                                 inactive-text="No"

@@ -35,7 +35,7 @@
             @endif
 
             {{-- Boton de Mantenimiento --}}
-            <li>
+            <li class="">
   
                 <a href="#restaurantComponents" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'category' ? true : false }}{{ $path[0] === 'item-sets' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers' ? true : false }}  {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? true : false }}"
@@ -51,8 +51,8 @@
                             <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
                                 href="{{ route('tenant.sale_note_credit_penalty.index') }}">
                                 <i class="icofont-users-alt-1"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Penalidades - Notas de Venta
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Penalidades - Notas de Venta
                                     Crédito</span>
                             </a>
                         </li>
@@ -64,12 +64,9 @@
                             <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
                                 href="{{ route('restaurant.workers') }}">
                                 <i class="icofont-users-alt-1"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Usuarios</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span >Usuarios</span>
                             </a>
-                        </li>
-                        <li>
-                            <hr style="border: 1px solid #021427;">
                         </li>
                     @endif
 
@@ -79,8 +76,8 @@
                             <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
                                 href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
                                 <i class="icofont-business-man"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Clientes</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span >Clientes</span>
                             </a>
                         </li>
                     @endif
@@ -91,8 +88,8 @@
                             <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
                                 href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
                                 <i class="icofont-business-man"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Proveedores</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Proveedores</span>
                             </a>
                         </li>
                     @endif
@@ -103,8 +100,8 @@
                             <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.sellers.index') }}">
                                 <i class="icofont-id-card"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Vendedores</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Vendedores</span>
                             </a>
                         </li>
                     @endif
@@ -118,8 +115,8 @@
                         <li>
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.bank_accounts.index') }}">
-                                <i class="icofont-bank" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Cuentas Bancarias</span>
+                                <i class="icofont-bank" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Cuentas Bancarias</span>
                             </a>
                         </li>
                     @endif
@@ -130,8 +127,8 @@
                             <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.banks.index') }}">
                                 <i class="icofont-bank-alt"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Bancos</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Bancos</span>
                             </a>
                         </li>
                     @endif
@@ -145,8 +142,8 @@
                             <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.items.index') }}">
                                 <i class="icofont-soft-drinks"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Productos</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Productos</span>
                             </a>
                         </li>
                     @endif
@@ -159,8 +156,8 @@
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.commercial_treatment.index') }}">
                                 <i class="fas fa-layer-group"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Tratamiento Comercial</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Tratamiento Comercial</span>
                             </a>
                         </li>
                     @endif
@@ -170,8 +167,8 @@
                             <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
                                 href="{{ route('tenant.principal_categories.index') }}">
                                 <i class="fas fa-layer-group"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Categorías Principales</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Categorías Principales</span>
                             </a>
                         </li>
                     @endif
@@ -182,8 +179,8 @@
                             <a class="{{ $path[0] === 'category' ? 'active' : '' }}"
                                 href="{{ route('tenant.categories.index') }}">
                                 <i class="icofont-chart-flow"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Categorías</span>
+                                    style="font-size: 1.5em; margin-right: 10px;"></i>
+                                <span style="font-size: 1em;">Categorías</span>
                             </a>
                         </li>
                     @endif
@@ -193,8 +190,8 @@
                         <li>
                             <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
                                 href="{{ route('tenant.brands.index') }}">
-                                <i class="icofont-xing" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Marcas</span>
+                                <i class="icofont-xing" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Marcas</span>
                             </a>
                         </li>
                     @endif
@@ -205,8 +202,8 @@
                             <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.attribute_types.index') }}">
                                 <i class="fa fa-newspaper"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Atributos</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Atributos</span>
                             </a>
                         </li>
                     @endif
@@ -217,8 +214,8 @@
                             <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.unit_types.index') }}">
                                 <i class="fa fa-solid fa-ruler"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Unidades de Medida</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Unidades de Medida</span>
                             </a>
                         </li>
                     @endif
@@ -229,8 +226,8 @@
                             <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
                                 href="{{ route('transactions.index') }}">
                                 <i class="icofont-exchange"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Tipo de
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Tipo de
                                     transacciones - Inventario</span>
                             </a>
                         </li>
@@ -257,16 +254,16 @@
                             <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.purchases.index') }}">
                                 <i class="icofont-list"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Lista de Compras</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Lista de Compras</span>
                             </a>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
                                 href="{{ route('tenant.purchases.create') }}">
                                 <i class="icofont-credit-card"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Nueva Compras</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Nueva Compras</span>
                             </a>
                         </li>
                     </ul>
@@ -288,8 +285,8 @@
                             <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.items.index') }}">
                                 <i class="icofont-listing-box"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Productos</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Productos</span>
                             </a>
                         </li>
                     @endif
@@ -300,8 +297,8 @@
                             <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.item_sets.index') }}">
                                 <i class="icofont-gift"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Productos
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Productos
                                     Compuestos</span>
                             </a>
                         </li>
@@ -313,8 +310,8 @@
                             <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
                                 href="{{ route('tenant.productos.index') }}">
                                 <i class="icofont-inbox"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Ingreso y Salida de
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Ingreso y Salida de
                                     Productos</span>
                             </a>
                         </li>
@@ -327,8 +324,8 @@
                                 <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.manufactured.index') }}">
                                     <i class="icofont-exchange"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Transformación de
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Transformación de
                                         Productos</span>
                                 </a>
                         @endif
@@ -343,8 +340,8 @@
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.dispatches.index') }}">
                                 <i class="icofont-file-document"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Guías de
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Guías de
                                     Remisión</span>
                             </a>
                         </li>
@@ -360,16 +357,16 @@
                             <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('transfers.index') }}">
                                 <i class="icofont-truck-loaded"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Traslados</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Traslados</span>
                             </a>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('transfers_place.index') }}">
                                 <i class="icofont-truck"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Traslados por
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Traslados por
                                     Aceptar</span>
                             </a>
                         </li>
@@ -377,13 +374,13 @@
 
                     {{-- <li>
                         <hr style="border: 1px solid #021427;">
-                        <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">FUNCIONES ESPECIALES</span>
+                        <span class="label" style="font-size: 1em;  font-weight: bold;">FUNCIONES ESPECIALES</span>
                     </li> --}}
 
                     @if (!$roleService->isArca())
                         <li>
                             <hr style="border: 1px solid #021427;">
-                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">FUNCIONES ESPECIALES</span>
+                            <span class="label" style="font-size: 1em;  font-weight: bold;">FUNCIONES ESPECIALES</span>
                         </li>
                         {{-- Productos con Garantía --}}
                         @if ($config->warranty_product)
@@ -391,8 +388,8 @@
                                 <a class="{{ $path[0] === 'warranty' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('tenant.warranty.index') }}">
                                     <i class="icofont-shield"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Productos Con
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Productos Con
                                         Garantía</span>
                                 </a>
                             </li>
@@ -403,8 +400,8 @@
                                 <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('itemlots') }}">
                                     <i class="icofont-barcode"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Series de
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Series de
                                         Productos</span>
                                 </a>
                             </li>
@@ -415,8 +412,8 @@
                                 <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('lotes') }}">
                                     <i class="icofont-box"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Lotes de
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Lotes de
                                         Productos</span>
                                 </a>
                             </li>
@@ -427,8 +424,8 @@
                                 <a class="{{ $path[0] === 'item-color-size' ? 'active' : '' }}"
                                     href="{{ route('tenant.item_color_size.index') }}">
                                     <i class="icofont-paint"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Color &
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Color &
                                         Tallas</span>
                                 </a>
                             </li>
@@ -438,8 +435,8 @@
                             <li>
                                 <a href="{{ route('tenant.promotions_document.index') }}">
                                     <i class="icofont-sale-discount"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">
                                         @if ($config->is_promotion_document)
                                             Promoción por Documentos
                                         @else
@@ -452,7 +449,7 @@
 
                         <li>
                             <hr style="border: 1px solid #021427;">
-                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">COMPLEMENTOS</span>
+                            <span class="label" style="font-size: 1em;  font-weight: bold;">COMPLEMENTOS</span>
                         </li>
 
                         
@@ -464,8 +461,8 @@
                                 <a class="{{ $path[0] === 'tenant' && $path[1] === 'productos' ? 'active' : '' }}"
                                     href="{{ route('tenant.productos.index') }}">
                                     <i class="icofont-price"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Listado de Política
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Listado de Política
                                         de Precios</span>
                                 </a>
                             </li>
@@ -477,8 +474,8 @@
                                 <a class="{{ $path[0] === 'catalog' ? 'active' : '' }}"
                                     href="{{ route('tenant.catalog.index') }}">
                                     <i class="icofont-book"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Crear
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Crear
                                         Catálogo</span>
                                 </a>
                             </li>
@@ -490,8 +487,8 @@
                                 <a class="{{ $path[0] === 'etiqueta' ? 'active' : '' }}"
                                     href="{{ route('etiquetas.index') }}">
                                     <i class="icofont-label"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Etiquetas</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Etiquetas</span>
                                 </a>
                             </li>
                         @endif
@@ -531,7 +528,7 @@
                 <ul id="documents" class="collapse ">
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
                         <li>
-                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">COMPROBANTES ELECTRÓNICOS</span>
+                            <span class="label" style="font-size: 1em;  font-weight: bold;">COMPROBANTES ELECTRÓNICOS</span>
                         </li>
                         {{-- Nuevo Comprobante --}}
                         {{-- @if (!$roleService->isAccountant($user->worker_type_id) && !$roleService->isArca())
@@ -539,8 +536,8 @@
                                 <a class="{{ $path[0] === 'documents' && $path[1] === 'create' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.create') }}">
                                     <i class="icofont-document-folder"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span style="font-size: 1em; color: #104985;">Nuevo comprobante</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span style="font-size: 1em; ">Nuevo comprobante</span>
                                 </a>
                             </li>
                         @endif --}}
@@ -553,8 +550,8 @@
                                 <a class="{{ $path[0] === 'documents' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.index') }}">
                                     <i class="icofont-list"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span style="font-size: 1em; color: #104985;">Boletas y Facturas</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span style="font-size: 1em; ">Boletas y Facturas</span>
                                 </a>
                             </li>
                         @endif
@@ -566,8 +563,8 @@
                             <a class="{{ $path[0] === 'sale-notes' ? 'active' : '' }}"
                                 href="{{ route('tenant.sale_notes.index') }}">
                                 <i class="icofont-document-folder"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Nota de Venta</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Nota de Venta</span>
                             </a>
                         </li>
                     @endif
@@ -578,8 +575,8 @@
                             <a class="{{ $path[0] === 'documents' && $path[1] == 'note_other' ? 'active' : '' }}"
                                 href="{{ route('tenant.documents.note_other') }}">
                                 <i class="icofont-document-folder"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Nota Crédito/Débito - Otros</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Nota Crédito/Débito - Otros</span>
                             </a>
                         </li>
                     @endif
@@ -590,8 +587,8 @@
                             <a class="{{ $path[0] === 'quotations' ? 'active' : '' }}"
                                 href="{{ route('tenant.quotations.index') }}">
                                 <i class="icofont-dollar"
-                                    style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Cotizaciones</span>
+                                    style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Cotizaciones</span>
                             </a>
                         </li>
                     @endif
@@ -600,7 +597,7 @@
 
                         <li>
                             <hr style="border: 1px solid #021427;">
-                            <span class="label" style="font-size: 1em; color: #104985; font-weight: bold;">PROCESOS SUNAT</span>
+                            <span class="label" style="font-size: 1em;  font-weight: bold;">PROCESOS SUNAT</span>
                         </li>
 
                         {{-- Detracciones --}}
@@ -609,8 +606,8 @@
                                 <a class="{{ $path[0] === 'documents_detraction' ? 'active' : '' }}"
                                     href="{{ route('tenant.detractions.index') }}">
                                     <i class="icofont-list"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span style="font-size: 1em; color: #104985;">Detracciones</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span style="font-size: 1em; ">Detracciones</span>
                                 </a>
                             </li>
                         @endif
@@ -621,8 +618,8 @@
                                 <a class="{{ $path[0] === 'documents' && $path[1] === 'not-sent' ? 'active' : '' }}"
                                     href="{{ route('tenant.documents.not_sent') }}">
                                     <i class="icofont-send-mail"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span style="font-size: 1em; color: #104985;">No Enviados Sunat</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span style="font-size: 1em; ">No Enviados Sunat</span>
                                 </a>
                             </li>
                         @endif
@@ -637,8 +634,8 @@
                                 <a class="{{ $path[0] === 'summaries' ? 'active' : '' }}"
                                     href="{{ route('tenant.summaries.index') }}">
                                     <i class="icofont-prescription"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span style="font-size: 1em; color: #104985;">Resumenes Sunat</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span style="font-size: 1em; ">Resumenes Sunat</span>
                                 </a>
                             </li>
                         @endif
@@ -649,8 +646,8 @@
                                 <a class="{{ $path[0] === 'voided' ? 'active' : '' }}"
                                     href="{{ route('tenant.voided.index') }}">
                                     <i class="icofont-delete-alt"
-                                        style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span style="font-size: 1em; color: #104985;">Anulados Sunat</span>
+                                        style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span style="font-size: 1em; ">Anulados Sunat</span>
                                 </a>
                             </li>
                         @endif
@@ -675,24 +672,24 @@
                             <li>
                                 <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
                                     href="{{ route('hotels.reports.rooms') }}">
-                                    <i class="icofont-hotel" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Reporte de Habitaciones</span>
+                                    <i class="icofont-hotel" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Reporte de Habitaciones</span>
                                 </a>
                             </li>
                         @endif
                         <li>
                             <a href="/cash/main_cash"
                                 class="{{ $path[0] === 'cash' && $path[1] == 'main_cash' ? 'active' : '' }}">
-                                <i class="icofont-bank" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Caja Principal</span>
+                                <i class="icofont-bank" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Caja Principal</span>
                             </a>
                         </li>
                         @if ($user->type == 'superadmin' || $config->credit_list)
                             <li>
                                 <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
                                     href="{{ route('tenant.credit_list.index') }}">
-                                    <i class="icofont-list" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Lista de Créditos</span>
+                                    <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Lista de Créditos</span>
                                 </a>
                             </li>
                         @endif
@@ -706,12 +703,12 @@
                     <li>
                         @if ($cash)
                             <a href="/incomes" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
-                                <i class="icofont-money" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Ingresos</span>
+                                <i class="icofont-money" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Ingresos</span>
                             </a>
                         @else
                             <a href="/report_closed_cash">
-                                <i class="icofont-money" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
+                                <i class="icofont-money" style="font-size: 1.5em;  margin-right: 10px;"></i>
                                 <span class="label text-danger" style="font-size: 1em; color: #f80303;">
                                     Ingresos - Abrir Caja
                                 </span>
@@ -721,12 +718,12 @@
                     <li>
                         @if ($cash)
                             <a href="/expenses" class="{{ $path[0] === 'expenses' ? 'active' : '' }}">
-                                <i class="icofont-calculator" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Gastos</span>
+                                <i class="icofont-calculator" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Gastos</span>
                             </a>
                         @else
                             <a href="/report_closed_cash">
-                                <i class="icofont-calculator" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
+                                <i class="icofont-calculator" style="font-size: 1.5em;  margin-right: 10px;"></i>
                                 <span class="label text-danger" style="font-size: 1em; color: #ea0d0d;">
                                     Gastos - Abrir Caja
                                 </span>
@@ -739,8 +736,8 @@
                     @if ($user->type == 'superadmin' || $config->reporte_caja)
                         <li>
                             <a class="{{ $path[0] === 'boxes' ? 'active' : '' }}" href="{{ route('boxes') }}">
-                                <i class="icofont-file-document" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de Caja</span>
+                                <i class="icofont-file-document" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Caja</span>
                             </a>
                         </li>
                     @endif
@@ -748,8 +745,8 @@
                         <li>
                             <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
                                 href="{{ route('reports.cash_closes.index') }}">
-                                <i class="icofont-close-circled" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de Cierre de Caja</span>
+                                <i class="icofont-close-circled" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Cierre de Caja</span>
                             </a>
                         </li>
                     @endif
@@ -758,8 +755,8 @@
                         <li>
                             <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
                                 href="{{ route('tenant.reportincomebox.global_index') }}">
-                                <i class="icofont-globe" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte Globalizado</span>
+                                <i class="icofont-globe" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte Globalizado</span>
                             </a>
                         </li>
                     @endif
@@ -784,7 +781,7 @@
                             <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
                                 href="{{ route('tenant.account_exports') }}">
                                 <i class="icofont-file-excel"  style="font-size: 1.5em; color: #108514; margin-right: 10px;"></i> 
-                                <span style="font-size: 1em; color: #104985;">Reporte Contable</span>
+                                <span style="font-size: 1em; ">Reporte Contable</span>
                             </a>
                         </li>
                     {{-- </ul> --}}
@@ -793,8 +790,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                                 href="{{ route('reports.methods.index') }}">
-                                <i class="icofont-credit-card" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de Métodos de Pago</span>
+                                <i class="icofont-credit-card" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Métodos de Pago</span>
                             </a>
                         </li>
                     @endif
@@ -803,8 +800,8 @@
                         <li>
                             <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
                                 href="{{ route('hotels.reports.rooms') }}">
-                                <i class="icofont-hotel" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de habitaciones</span>
+                                <i class="icofont-hotel" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de habitaciones</span>
                             </a>
                         </li>
                     @endif
@@ -814,8 +811,8 @@
                         <li>
                             <a class="{{ $path[0] === 'health-global' ? 'active' : '' }}"
                                 href="{{ route('tenant.health_global.index') }}">
-                                <i class="icofont-heart-beat" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte Global de Salud</span>
+                                <i class="icofont-heart-beat" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte Global de Salud</span>
                             </a>
                         </li>
                     @endif
@@ -825,8 +822,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
                                 href="{{ route('reports.consignment.index') }}">
-                                <i class="icofont-handshake-deal" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de Consignaciones</span>
+                                <i class="icofont-handshake-deal" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Consignaciones</span>
                             </a>
                         </li>
                     @endif
@@ -836,8 +833,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'promotions' ? 'active' : '' }}"
                                 href="{{ route('reports.promotions.index') }}">
-                                <i class="icofont-sale-discount" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte Promociones</span>
+                                <i class="icofont-sale-discount" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte Promociones</span>
                             </a>
                         </li>
                     @endif
@@ -848,21 +845,21 @@
                     @if ($user->type == 'superadmin' || ($config->credits && !$roleService->isLogistic()))
                         <li>
                             <hr style="border: 1px solid #021427;">
-                            <span class="label" style="font-size: 1em; color: #104985; text-align: center; font-weight: bold;">Créditos</span>
+                            <span class="label" style="font-size: 1em;  text-align: center; font-weight: bold;">Créditos</span>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
                                 href="{{ route('reports.credits.index') }}">
-                                <i class="icofont-money-bag" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de Créditos</span>
+                                <i class="icofont-money-bag" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Créditos</span>
                             </a>
                         </li>
                         @if ($user->type == 'superadmin' || ($config->diary && !$roleService->isLogistic()))
                             <li>
                                 <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'daily_credit' ? 'active' : '' }}"
                                     href="{{ route('reports.credits.daily_index') }}">
-                                    <i class="icofont-calendar" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Reporte Diario - Crédito</span>
+                                    <i class="icofont-calendar" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Reporte Diario - Crédito</span>
                                 </a>
                             </li>
                         @endif
@@ -870,8 +867,8 @@
                             <li>
                                 <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'consolidated' ? 'active' : '' }}"
                                     href="{{ route('tenant.sale_notes.consolidated') }}">
-                                    <i class="icofont-home" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Consolidado de Créditos</span>
+                                    <i class="icofont-home" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Consolidado de Créditos</span>
                                 </a>
                             </li>
                         @endif
@@ -879,8 +876,8 @@
                             <li>
                                 <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
                                     href="{{ route('reports.credits.credit_index') }}">
-                                    <i class="icofont-cash-on-delivery" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Ganancias Hogar / Efectivo</span>
+                                    <i class="icofont-cash-on-delivery" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Ganancias Hogar / Efectivo</span>
                                 </a>
                             </li>
                         @endif
@@ -889,7 +886,7 @@
 
                     <li>
                         <hr style="border: 1px solid #021427;">
-                        <span class="label" style="font-size: 1em; color: #104985; text-align: center; font-weight: bold;">Productos</span>
+                        <span class="label" style="font-size: 1em;  text-align: center; font-weight: bold;">Productos</span>
                     </li>
                     {{-- Reporte de Ganancias --}}
                     @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm && !$roleService->isLogistic())
@@ -897,8 +894,8 @@
                             <li>
                                 <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                                     href="{{ route('reports.cash.index') }}">
-                                    <i class="icofont-chart-line" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; color: #104985;">Reporte de Ganancias</span>
+                                    <i class="icofont-chart-line" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Reporte de Ganancias</span>
                                 </a>
                             </li>
                         @endif
@@ -909,8 +906,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
                                 href="{{ route('reports.valued.index') }}">
-                                <i class="icofont-dollar" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Stock Valorizado de Productos</span>
+                                <i class="icofont-dollar" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Stock Valorizado de Productos</span>
                             </a>
                         </li>
                     @endif
@@ -919,8 +916,8 @@
                         <li>
                             <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
                                 href="{{ route('reports.products-clients.index') }}">
-                                <i class="icofont-box" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">R. productos</span>
+                                <i class="icofont-box" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">R. productos</span>
                             </a>
                         </li>
                     @endif
@@ -928,8 +925,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
                                 href="{{ route('reports.stockmin.index') }}">
-                                <i class="icofont-box" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Stock Minimo</span>
+                                <i class="icofont-box" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Stock Minimo</span>
                             </a>
                         </li>
                     @endif
@@ -937,8 +934,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                                 href="{{ route('reports.inventory.index') }}">
-                                <i class="icofont-box" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Stock Producto</span>
+                                <i class="icofont-box" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Stock Producto</span>
                             </a>
                         </li>
                     @endif
@@ -946,8 +943,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
                                 href="{{ route('reports.kardex.index') }}">
-                                <i class="icofont-chart-bar-graph" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Kardex</span>
+                                <i class="icofont-chart-bar-graph" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Kardex</span>
                             </a>
                         </li>
                     @endif
@@ -956,8 +953,8 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
                                 href="{{ route('reports.series.index') }}">
-                                <i class="icofont-barcode" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Venta de Series</span>
+                                <i class="icofont-barcode" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Venta de Series</span>
                             </a>
                         </li>
                     @endif
@@ -966,8 +963,8 @@
                         <li>
                             <a class="{{ $path[0] === 'madera' ? 'active' : '' }}"
                                 href="{{ route('tenant.madera.index') }}">
-                                <i class="icofont-tree" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Reporte de Madera</span>
+                                <i class="icofont-tree" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte de Madera</span>
                             </a>
                         </li>
                     @endif
@@ -977,23 +974,23 @@
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
                                 href="{{ route('tenant.credit_list.index') }}">
-                                <i class="icofont-list" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Lista de crédito</span>
+                                <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Lista de crédito</span>
                             </a>
                         </li>
                     @endif
                    
                     <li>
                         <hr style="border: 1px solid #021427;">
-                        <span class="label" style="font-size: 1em; color: #104985; text-align: center; font-weight: bold;">Comprobantes</span>
+                        <span class="label" style="font-size: 1em;  text-align: center; font-weight: bold;">Comprobantes</span>
                     </li>
                     
                     @if ($user->type == 'superadmin' || $config->productos_vendidos)
                         <li>
                             <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
                                 href="{{ route('tenant.ventas.index') }}">
-                                <i class="icofont-list" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Productos Vendidos Boletas Y Facturas</span>
+                                <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Productos Vendidos Boletas Y Facturas</span>
                             </a>
                         </li>
                     @endif
@@ -1001,16 +998,16 @@
                         <li>
                             <a class="{{ $path[0] === 'notaventa' ? 'active' : '' }}"
                                 href="{{ route('tenant.notaventa.index') }}">
-                                <i class="icofont-list" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; color: #104985;">Productos Vendidos Nota de Venta</span>
+                                <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Productos Vendidos Nota de Venta</span>
                             </a>
                         </li>
                     @endif
                     <li>
                         <a class="{{ $path[0] === 'purchases' ? 'active' : '' }}"
                             href="{{ route('tenant.shopping.index') }}">
-                            <i class="icofont-shopping-cart" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span class="label" style="font-size: 1em; color: #104985;">Productos Comprados</span>
+                            <i class="icofont-shopping-cart" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span class="label" style="font-size: 1em; ">Productos Comprados</span>
                         </a>
                     </li>
                     
@@ -1033,15 +1030,15 @@
                     <li>
                         <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('caja.cash_transfer') }}">
-                            <i class="icofont-list" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i> 
-                            <span style="font-size: 1em; color: #104985;">Traslados (Desembolso de Efectivo S/)</span>
+                            <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i> 
+                            <span style="font-size: 1em; ">Traslados (Desembolso de Efectivo S/)</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
                             href="{{ route('caja.cash_transfer_report') }}">
-                            <i class="icofont-credit-card" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;"> Reporte de Traslados</span>
+                            <i class="icofont-credit-card" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; "> Reporte de Traslados</span>
                            
                         </a>
                     </li>
@@ -1066,7 +1063,7 @@
                         <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
                             href="{{ route('tenant.account_exports') }}">
                             <i class="icofont-file-excel"  style="font-size: 2em; color: #108514; margin-right: 10px;"></i> 
-                            <span style="font-size: 1em; color: #104985;">Exportar formatos</span>
+                            <span style="font-size: 1em; ">Exportar formatos</span>
                         </a>
                     </li>
                 </ul>
@@ -1088,57 +1085,57 @@
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'students' ? 'active' : '' }}"
                             href="{{ route('college.students.index') }}">
-                            <i class="icofont-people" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Estudiantes</span>
+                            <i class="icofont-people" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Estudiantes</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'classrooms' ? 'active' : '' }}"
                             href="{{ route('college.classrooms.index') }}">
-                            <i class="icofont-black-board" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Salones</span>
+                            <i class="icofont-black-board" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Salones</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'persons' ? 'active' : '' }}"
                             href="{{ route('college.persons.index') }}">
-                            <i class="icofont-group-students" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Padres/Hijos</span>
+                            <i class="icofont-group-students" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Padres/Hijos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'plans' ? 'active' : '' }}"
                             href="{{ route('college.plans.index') }}">
-                            <i class="icofont-files-stack" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Planes</span>
+                            <i class="icofont-files-stack" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Planes</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'periods' ? 'active' : '' }}"
                             href="{{ route('college.periods.index') }}">
-                            <i class="icofont-ui-timer" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Periodos</span>
+                            <i class="icofont-ui-timer" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Periodos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'penalties' ? 'active' : '' }}"
                             href="{{ route('college.penalties.index') }}">
-                            <i class="icofont-exclamation-tringle" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Penalidades</span>
+                            <i class="icofont-exclamation-tringle" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Penalidades</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'levels' ? 'active' : '' }}"
                             href="{{ route('college.levels.index') }}">
-                            <i class="icofont-certificate-alt-1" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Niveles/Grados/Secciones/Turnos</span>
+                            <i class="icofont-certificate-alt-1" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Niveles/Grados/Secciones/Turnos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'listsuplies' ? 'active' : '' }}"
                             href="{{ route('college.listsuplies.index') }}">
-                            <i class="fa fa-pencil-ruler" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Almacén de Utiles</span>
+                            <i class="fa fa-pencil-ruler" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Almacén de Utiles</span>
                         </a>
                     </li>
                 </ul>
@@ -1160,15 +1157,15 @@
                     <li>
                         <a class="{{ $path[0] === 'internet' && $path[1] === 'planes' ? 'active' : '' }}"
                             href="{{ route('tenant.internet.planes') }}">
-                            <i class="icofont-wifi" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Planes / Conceptos</span>
+                            <i class="icofont-wifi" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Planes / Conceptos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'internet' && $path[1] === 'workersadmin' ? 'active' : '' }}"
                             href="{{ route('tenant.internet.workersadmin') }}">
-                            <i class="icofont-worker" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Trabajadores</span>
+                            <i class="icofont-worker" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Trabajadores</span>
                         </a>
                     </li>
                 </ul>
@@ -1191,43 +1188,43 @@
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
                             href="{{ route('restaurant.tables') }}">
-                            <i class="icofont-dining-table" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Mesas</span>
+                            <i class="icofont-dining-table" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Mesas</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}"
                             href="{{ route('restaurant.status_orden') }}">
-                            <i class="icofont-read-book" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Estados de pedidos</span>
+                            <i class="icofont-read-book" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Estados de pedidos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
                             href="{{ route('restaurant.status_table') }}">
-                            <i class="icofont-ui-settings" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Estados de mesas</span>
+                            <i class="icofont-ui-settings" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Estados de mesas</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'observations' ? 'active' : '' }}"
                             href="{{ route('restaurant.observations') }}">
-                            <i class="icofont-comment" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Observaciones</span>
+                            <i class="icofont-comment" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Observaciones</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'receta' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.receta.index') }}">
-                            <i class="icofont-book" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Receta</span>
+                            <i class="icofont-book" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Receta</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'mozo' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.mozo.index') }}">
-                            <i class="icofont-waiter" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Mozo vendedores</span>
+                            <i class="icofont-waiter" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Mozo vendedores</span>
                         </a>
                     </li>
                 </ul>
@@ -1250,8 +1247,8 @@
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
                             href="{{ route('restaurant.rooms') }}">
-                            <i class="fas fa-bed" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Habitaciones</span>
+                            <i class="fas fa-bed" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Habitaciones</span>
 
                             
                         </a>
@@ -1274,15 +1271,15 @@
                     <li>
                         <a class="{{ $path[0] === 'billar' && $path[1] === 'billar' ? 'active' : '' }}"
                             href="{{ route('billar.billar') }}">
-                            <i class="icofont-billiard-ball" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Mesas Billar</span>
+                            <i class="icofont-billiard-ball" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Mesas Billar</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'billar' && $path[1] === 'tarifa' ? 'active' : '' }}"
                             href="{{ route('tenant.billar.tarifa') }}">
-                            <i class="icofont-price" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Tarifas Por Tiempo</span>
+                            <i class="icofont-price" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Tarifas Por Tiempo</span>
                         </a>
                     </li>
                 </ul>
@@ -1304,36 +1301,36 @@
                     <li>
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.mecanico') }}">
-                            <i class="icofont-worker" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Personal Mecánica</span>
+                            <i class="icofont-worker" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Personal Mecánica</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.vehiculo') }}">
-                            <i class="icofont-car-alt-1" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Vehiculos</span>
+                            <i class="icofont-car-alt-1" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Vehiculos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.tipo') }}">
-                            <i class="icofont-car" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Tipos Vehiculos</span>
+                            <i class="icofont-car" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Tipos Vehiculos</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.servicesdetails') }}">
-                            <i class="icofont-tools" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Servicios Mecanica</span>
+                            <i class="icofont-tools" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Servicios Mecanica</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'workshop' && $path[1] === 'workshop' ? 'active' : '' }}"
                             href="{{ route('tenant.workshop.exportar') }}">
-                            <i class="icofont-file-document" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Reporte Mecanica</span>
+                            <i class="icofont-file-document" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Reporte Mecanica</span>
                         </a>
                     </li>
                 </ul>
@@ -1355,22 +1352,22 @@
                     <li>
                         <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
                             href="{{ route('tenant.dental.specialties') }}">
-                            <i class="icofont-tooth" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Especialidades</span>
+                            <i class="icofont-tooth" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Especialidades</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
                             href="{{ route('tenant.dental.tariffs') }}">
-                            <i class="icofont-money" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Tarifas</span>
+                            <i class="icofont-money" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Tarifas</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'dental' && $path[1] === 'dental' ? 'active' : '' }}"
                             href="{{ route('tenant.dental.medic') }}">
-                            <i class="icofont-doctor" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Medicos</span>
+                            <i class="icofont-doctor" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Medicos</span>
                         </a>
                     </li>
                 </ul>
@@ -1395,8 +1392,8 @@
                         <li>
                             <a class="{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}"
                                 href="{{ route('tenant.companies.create') }}">
-                                <i class="icofont-building-alt" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Empresa</span>
+                                <i class="icofont-building-alt" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Empresa</span>
                             </a>
                         </li>
                     @endif
@@ -1405,16 +1402,16 @@
                     <li>
                         <a class="{{ $path[0] === 'advanced' ? 'active' : '' }}"
                             href="{{ route('tenant.advanced.index') }}">
-                            <i class="icofont-ui-settings" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                            <span style="font-size: 1em; color: #104985;">Personalización Avanzada</span>
+                            <i class="icofont-ui-settings" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Personalización Avanzada</span>
                         </a>
                     </li>
                     {{-- @if ($config->download_all_files) --}}
                         <li>
                             <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
                                 href="{{ route('tenant.download_files.index') }}">
-                                <i class="icofont-download" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Descargar Archivos CPE</span>
+                                <i class="icofont-download" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Descargar Archivos CPE</span>
                             </a>
                         </li>
                     {{-- @endif --}}
@@ -1422,52 +1419,52 @@
                         <li>
                             <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
                                 href="{{ route('tenant.tasks.index') }}">
-                                <i class="icofont-tasks-alt" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Tareas Programadas SUNAT</span>
+                                <i class="icofont-tasks-alt" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Tareas Programadas SUNAT</span>
                             </a>
                         </li>
 
                         <li>
                             <a class="{{ $path[1] === 'pdf_templates' ? 'active' : '' }}"
                                 href="{{ route('tenant.advanced.pdf_templates') }}">
-                                <i class="icofont-file-pdf" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Plantillas CPE</span>
+                                <i class="icofont-file-pdf" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Plantillas CPE</span>
                             </a>
                         </li>
 
                         <li>
                             <a class="{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
                                 href="{{ route('tenant.series_configurations.index') }}">
-                                <i class="icofont-numbered" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Numeración Serie de Documentos</span>
+                                <i class="icofont-numbered" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Numeración Serie de Documentos</span>
                             </a>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
                                 href="{{ route('restaurant.workers') }}">
-                                <i class="icofont-users-alt-1" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Usuarios</span>
+                                <i class="icofont-users-alt-1" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Usuarios</span>
                             </a>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'caja' && $path[1] === 'workers-type' ? 'active' : '' }}"
                                 href="{{ route('restaurant.workers_type') }}">
-                                <i class="icofont-company" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Tipos de Usuario</span>
+                                <i class="icofont-company" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Tipos de Usuario</span>
                             </a>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}"
                                 href="{{ route('restaurant.areas') }}">
-                                <i class="icofont-billboard" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Áreas de Trabajo</span>
+                                <i class="icofont-billboard" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Áreas de Trabajo</span>
                             </a>
                         </li>
                         <li>
                             <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
                                 href="{{ route('tenant.items.check_stock') }}">
-                                <i class="icofont-search-stock" style="font-size: 1.5em; color: #104985; margin-right: 10px;"></i>
-                                <span style="font-size: 1em; color: #104985;">Herramientas de Prueba</span>
+                                <i class="icofont-search-stock" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Herramientas de Prueba</span>
                             </a>
                         </li>
                     @endif

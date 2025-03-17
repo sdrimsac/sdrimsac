@@ -56,12 +56,10 @@
     <div id="root">
         <div id="nav" class="nav-container d-flex">
             <div class="nav-content d-flex">
-                <!-- Logo Start -->
+                <!-- Logo Start nav admin-->
                 <div class="fix-logo">
                     <div class="logo position-relative ">
                         <div class="img">
-                            {{-- @if (isset($vc_establishment->logo))
-                <img  src="{{ asset('storage/uploads/logos/'.$vc_establishment->logo) }}"/> --}}
 
                             @if ($vc_company->logo)
                                 <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}" />
@@ -598,6 +596,13 @@
             padding-right: 0px !important;
             padding-left: 0px !important;
         }
+        
+        /* Estilo general para el <li> */
+
+
+
+
+
     </style>
     <!-- Search Modal End -->
 
