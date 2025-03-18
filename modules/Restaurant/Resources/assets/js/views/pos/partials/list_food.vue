@@ -1169,7 +1169,8 @@ export default {
                     }
                 ]
             },
-            screenWidth: 0
+            screenWidth: 0,
+            stockData: {}, // Store stock updates by food_id
         };
     },
     mounted() {
@@ -1241,15 +1242,14 @@ export default {
         }
     },
     methods: {
+ 
         agregarItem(producto) {
             if (!producto || !producto.food) {
-                //console.error("❌ Producto inválido recibido:", producto);
                 return;
             }
 
             const cleanProducto = producto.food;
 
-            // 🔹 Verificar y asegurar que listFoods está definido ANTES de usarlo
             if (!Array.isArray(this.listFoods)) {
                 console.warn("⚠️ listFoods está indefinido, inicializando...");
                 this.$set(this, "listFoods", []);
@@ -1258,14 +1258,11 @@ export default {
             let productoIndex = this.listFoods.findIndex(
                 f => f.id === cleanProducto.id
             );
-            //console.log("🔍 Buscando producto:", productoIndex);
 
             if (productoIndex === -1) {
-                //console.log("Antes de push:", this.listFoods);
 
                 this.$set(this.listFoods, this.listFoods.length, cleanProducto);
 
-                //console.log("Después de push:", this.listFoods);
                 productoIndex = this.listFoods.length - 1;
             }
 
@@ -1527,13 +1524,38 @@ export default {
             categoria = null,
             color_size = []
         ) {
+            /* const selectedFood = this.listFoods[index];
+            const foodId = selectedFood.id; */
+
+            // Validate stock availability from socket data
+            /* const remainingStock = this.stockData[foodId];
+            if (remainingStock !== undefined && remainingStock <= 0) {
+                this.$showSAlert(
+                    "Stock insuficiente",
+                    "Este producto ya no está disponible para la venta.",
+                    "error"
+                );
+                return;
+            } */
+
+            //const productId = this.listFoods[index].id; // Get the product ID
+            //const validationResponse = await this.validateAdd(productId);
+
+            /* if (!validationResponse.success) {
+                this.$notify({
+                    title: 'Error',
+                    message: validationResponse.message,
+                    type: 'error'
+                });
+                return;
+            } */
+
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",
                     "Debe seleccionar un cliente",
                     "error"
                 );
-
                 return;
             }
             let quotation_stock = localStorage.getItem("quotation_stock") || 0;
@@ -1544,7 +1566,6 @@ export default {
                 !this.configuration.box_orden &&
                 this.configuration.restaurant
             ) {
-                /* this.$toast.error("No puede agregar productos a esta orden."); */
                 this.$showSAlert(
                     "ORDEN",
                     "No puede agregar productos a esta orden.",
@@ -1556,9 +1577,7 @@ export default {
                 JSON.stringify(this.listFoods[index])
             );
             if (!this.selectedFood) return;
-            /* if (this.selectedFood.category === 'MADERERA'){
 
-            } */
             let { categoria_madera_item } = this.selectedFood;
             if (
                 this.configuration.maderera &&
@@ -1606,9 +1625,6 @@ export default {
                     !quotation_stock &&
                     this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
-                    /* this.$toast.warning("Stock insuficiente"); */
-                    /* this.$showSAlert("STOCK", "Stock insuficiente ", "warning");
-                    return; */
                     swal.fire({
                         title: "Stock insuficiente",
                         text: "Stock insuficiente. ¿Desea cotizar?",
@@ -1648,10 +1664,6 @@ export default {
                 }
             }
 
-            // let foodFound = this.localOrden.filter(
-            //     f => f.id == this.selectedFood.id
-            // );
-
             if (foodFound.length != 0) {
                 let { item } = this.selectedFood;
                 if (item.lots_enabled) {
@@ -1679,12 +1691,12 @@ export default {
                 let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
 
                 if (type) {
-                    // qty += Number(type.quantity_unit);
-
                     qty += 1;
                 } else {
                     qty += 1;
                 }
+
+                // Validate stock again before adding
                 if (
                     this.configuration.sales_stock == true &&
                     this.selectedFood.item.is_set == 0 &&
@@ -1692,8 +1704,7 @@ export default {
                     this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
-                        /* this.$toast.warning("Limite de stock alcanzado"); */
-                        this.$$showSAlert(
+                        this.$showSAlert(
                             "LIMITE",
                             "Limite de stock alcanzado",
                             "warning"
@@ -1712,7 +1723,6 @@ export default {
                     ) {
                         let stock = Number(this.selectedFood.item.stock);
                         if (qty > stock) {
-                            /* this.$toast.warning("Limite de stock alcanzado"); */
                             this.$showSAlert(
                                 "LIMITE",
                                 "Limite de stock alcanzado",
@@ -1738,7 +1748,6 @@ export default {
                 food: this.selectedFood,
                 observation: null,
                 price: this.selectedFood.price,
-                // quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
                 quantity: setQuantity
             };
 
@@ -1759,7 +1768,6 @@ export default {
                     "warming"
                 );
             }
-            /* if (this.configuration.restaurant == true){ */
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,
@@ -1775,12 +1783,9 @@ export default {
             };
             this.selectedFood = null;
             this.item = null;
-            //this.setFalse();
             if (!this.configuration.chifa_china) {
                 this.$emit("buscarnuevo"); 
             }
-            //this.$emit("buscarnuevo");
-            //this.$forceUpdate();
         },
         setFalse() {
             this.listFoods = this.listFoods.map(f => {

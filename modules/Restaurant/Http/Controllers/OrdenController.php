@@ -45,6 +45,7 @@ use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
+use Modules\Restaurant\Events\StockRealEvent;
 
 class OrdenController extends Controller
 {
@@ -542,9 +543,9 @@ class OrdenController extends Controller
         $current_cash = Cash::whereNull('time_closed')
             ->where('state', 1)
             ->whereHas('user', function ($query) {
-            $query->whereHas('area', function ($q) {
-                $q->where('description', 'like', '%CAJ%');
-            });
+                $query->whereHas('area', function ($q) {
+                    $q->where('description', 'like', '%CAJ%');
+                });
             })
             ->latest()
             ->first();
@@ -751,7 +752,6 @@ class OrdenController extends Controller
 
     public function store(Request $request)
     {
-        //dump($request->all());
         try {
             $user = null;
             $ref = $request->ref;
@@ -775,6 +775,61 @@ class OrdenController extends Controller
                 }
             } else {
                 $user = User::find(auth()->id());
+            }
+
+            if ($configuration->sales_stock) {
+                foreach ($request->items as $item) {
+                    $food = Food::find($item['food']['id']);
+
+                    $is_service = false;
+                    if ($food->item && $food->item->unit_type_id === 'ZZ') {
+                        $is_service = true;
+                    }
+
+                    if ($is_service) {
+                        continue;
+                    }
+
+                    $warehouse = Warehouse::find($food->item->warehouse_id);
+
+                    $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
+                        ->where('warehouse_id', $warehouse->id)
+                        ->first();
+
+                    $pending_orders = OrdenItem::whereHas('orden', function ($query) {
+                        $query->where('status_orden_id', '<>', 4)
+                            ->where('status_orden_id', '<>', 5);
+                    })
+                        ->where('food_id', $food->id)
+                        ->sum('quantity');
+
+                    $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
+                    $ordered_quantity = $item['quantity'];
+
+                    $real_available = $available_stock - $pending_orders;
+
+                    // Emitir evento con información de stock actualizada
+                    /* event(new StockRealEvent([
+                        'type' => 'stock_update',
+                        'data' => [
+                            'item_id' => $food->item_id,
+                            'food_id' => $food->id,
+                            'current_stock' => $available_stock,
+                            'pending_orders' => $pending_orders,
+                            'available_stock' => $real_available,
+                            'ordered_quantity' => $ordered_quantity,
+                            'remaining_stock' => $real_available - $ordered_quantity
+                        ]
+                    ], 'stock')); */
+
+                    if ($ordered_quantity > $real_available) {
+                        return [
+                            'success' => false,
+                            'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles. 
+                                        ({$pending_orders} unidades en pedidos pendientes)"
+                        ];
+                    }
+                }
             }
 
             // Optimizar la búsqueda de orden
@@ -865,7 +920,7 @@ class OrdenController extends Controller
             /* ----------------------------- */
             $orden_items_ids = [];
             $orden_items_ids_for_kitchen = [];
-            
+
             $orden_items = collect($items)->map(function ($item) use ($orden, $user_id) {
                 return [
                     'food_id' => $item['food']['id'],
@@ -1024,6 +1079,76 @@ class OrdenController extends Controller
             ];
         }
     }
+
+    //para valdiar stock al agregar items a la orden en caja
+
+    /* public function getRealStock($id) 
+    {
+        // Buscar el producto
+        $food = Food::find($id);
+        if (!$food || !$food->item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Producto no encontrado.'
+            ]);
+        }
+
+        // Si es un servicio (unit_type_id = ZZ), retornar éxito sin mensaje
+        if ($food->item->unit_type_id === 'ZZ') {
+            return response()->json([
+                'success' => true,
+                'food_id' => $id,
+                'is_service' => true
+            ]);
+        }
+
+        // Buscar el almacén del producto 
+        $warehouse = Warehouse::find($food->item->warehouse_id);
+        if (!$warehouse) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Almacén no encontrado.'
+            ]);
+        }
+
+        // Obtener stock disponible en el almacén
+        $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
+            ->where('warehouse_id', $warehouse->id)
+            ->first();
+        $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+        $pending_orders = OrdenItem::whereHas('orden', function ($query) {
+            $query->where('status_orden_id', '<>', 4)
+                ->where('status_orden_id', '<>', 5);
+        })
+            ->where('food_id', $food->id)
+            ->sum('quantity');
+
+        // Calcular el stock real disponible
+        $real_available = $available_stock - $pending_orders;
+
+        // Validar stock disponible
+        if ($real_available <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => "El producto {$food->description} no tiene stock disponible. Hay {$pending_orders} unidades en pedidos pendientes.",
+                'food_id' => $id,
+                'available_stock' => $available_stock,
+                'reserved_stock' => $pending_orders,
+                'real_available' => 0
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Stock disponible: {$real_available} unidades",
+            'food_id' => $id,
+            'available_stock' => $available_stock,
+            'reserved_stock' => $pending_orders,
+            'real_available' => $real_available
+        ]);
+    }
+ */
 
     function get_item_service()
     {

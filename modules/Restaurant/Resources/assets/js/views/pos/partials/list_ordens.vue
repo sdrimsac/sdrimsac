@@ -4429,9 +4429,8 @@ export default {
         },
         async sendOrden() {
             if (this.localOrden.length == 0 && !this.variation) {
-                /* this.$toast.warning("Orden sin productos"); */
                 this.$showSAlert(
-                    "ALERTA",
+                    "ALERTA", 
                     "No Tienes Productos Para Cobrar",
                     "warning"
                 );
@@ -4445,28 +4444,37 @@ export default {
 
             this.ordenLoading = true;
             try {
-                const responses = await this.$http.post(
-                    "/caja/worker/send-orden",
-                    {
-                        id: this.clientTableData.orden_id,
-                        ref: this.clientTableData.ref,
-                        items: this.localOrden,
-                        caja: true,
-                        printing: true,
-                        saleDirect: false,
-                        orden
-                    }
-                );
-                let ordenId = responses.data.id;
-                this.ordenLoading = false;
-                if (responses.status != 200) {
-                    this.$toast.warning("Ocurrió un error");
+                const responses = await this.$http.post("/caja/worker/send-orden", {
+                    id: this.clientTableData.orden_id,
+                    ref: this.clientTableData.ref,
+                    items: this.localOrden,
+                    caja: true,
+                    printing: true,
+                    saleDirect: false,
+                    orden
+                });
 
+                // Check success property from response
+                if (!responses.data.success) {
+                    // Show error message from server
+                    this.$showSAlert("ALERTA", responses.data.message, "error");
+                    //this.$toast.error(responses.data.message);
+                    this.ordenLoading = false;
                     return;
                 }
+
+                let ordenId = responses.data.id;
+                this.ordenLoading = false;
+                
+                if (responses.status != 200) {
+                    this.$toast.warning("Ocurrió un error");
+                    return;
+                }
+
                 this.to_carry = false;
                 this.$emit("cancelOrden");
                 this.$emit("update:isCreatingOrden", false);
+                
                 let msg = "";
                 if (this.clientTableData.orden_id) {
                     msg = `Se agregaron los pedidos a la orden ${ordenId}`;
@@ -4474,10 +4482,15 @@ export default {
                     msg = `La orden ${ordenId} fue creada.`;
                 }
                 this.$toast.success(msg);
+
             } catch (e) {
                 this.ordenLoading = false;
-                //no jala el clientdata tble - ref // lo guarda con el id mesa caja
-                this.$toast.error("Ocurrió un error");
+                if (e.response && e.response.data) {
+                    // Show error message from server if available
+                    this.$toast.error(e.response.data.message);
+                } else {
+                    this.$toast.error("Ocurrió un error");
+                }
             }
         },
         directSale() {

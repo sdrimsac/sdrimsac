@@ -4936,6 +4936,19 @@ export default {
                         "/caja/worker/send-orden",
                         this.orden_items
                     );
+                    if (!responses.data.success) {
+                        // Mostrar mensaje de error del servidor
+                        this.$showSAlert(
+                            "ALERTA",
+                            responses.data.message,
+                            "error"
+                        );
+                        this.ordenLoading = false;
+                        this.loading_submit = false;
+                        this.button_payment = false;
+                        this.$emit("update:is_payment", false);
+                        return; 
+                    }
                     ordenId = responses.data.id;
                     if (responses.status != 200) {
                         return;
@@ -4980,7 +4993,7 @@ export default {
                     this.operation_number = null;
                     if (response.data.success == true) {
                         let document_id = 0;
-                        
+
                         if (form.document_type_id === "80") {
                             this.number = response.data.data.number;
                             document_id = response.data.data.id;

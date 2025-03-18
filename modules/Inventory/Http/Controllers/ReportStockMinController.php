@@ -52,12 +52,37 @@ class ReportStockMinController extends Controller
             ->paginate(10);
         }
 
-        
-
-        
-        
         return $records;
     }
+
+    public function recordsMin (Request $request){
+        $description = $request->values;
+        
+        if($description == 'campoVacio'){
+            $records= Item::select('items.id', 'items.description','item_warehouse.stock', 'items.stock_min',  'warehouses.description as almacen'  ,'items.has_orden_compra')
+            ->join('item_warehouse', 'item_warehouse.item_id','=', 'items.id')
+            ->join('warehouses', 'warehouses.id','=', 'item_warehouse.warehouse_id')
+            ->whereRaw('item_warehouse.stock <= items.stock_min' )
+            ->where('items.has_orden_compra', '=', 0)
+            ->orderBy('almacen', 'desc')
+            ->orderBy('stock', 'desc')
+            ->paginate(10);
+        }else{
+            $records= Item::select('items.id', 'items.description','item_warehouse.stock', 'items.stock_min',  'warehouses.description as almacen'  ,'items.has_orden_compra')
+            ->join('item_warehouse', 'item_warehouse.item_id','=', 'items.id')
+            ->join('warehouses', 'warehouses.id','=', 'item_warehouse.warehouse_id')
+            ->whereRaw('item_warehouse.stock <= items.stock_min' )
+            ->where('items.has_orden_compra', '=', 0)
+            ->whereRaw('items.description like "%'.$description.'%"')
+            ->orderBy('almacen', 'desc')
+            ->orderBy('stock', 'desc')
+            ->paginate(10);
+        }
+
+        return $records;
+    }
+
+
 
     public function recordsProveedor(Request $request){
 

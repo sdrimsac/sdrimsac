@@ -161,10 +161,12 @@ class PosController extends Controller
         return $pdf->stream('pdf_file.pdf');
     }
 
-    public function itemNew($id){
+    public function itemNew($id)
+    {
         $food = Food::find($id);
         return compact('food');
     }
+
 
     public function foods(Request $request)
     {
@@ -658,8 +660,8 @@ class PosController extends Controller
         $gruop = Group::all();
         //buscar productos del establecimiento, y preguntar
         $sellers = Seller::where('establishment_id', $user->establishment_id)
-                ->where('active', 1)
-                ->get();
+            ->where('active', 1)
+            ->get();
         $category = Category::all();
         $subcategory = Subcategory::all();
         $company = Company::first();

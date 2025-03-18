@@ -486,6 +486,7 @@ Route::prefix('caja')->group(function () {
 
             //ORDERS
             Route::post('send-orden', 'OrdenController@store');
+            //Route::get('send-verificate/{id}', 'OrdenController@getRealStock');
             Route::get('orden-new/{id}', 'OrdenController@order');
             Route::get('search_orden_document', 'PosController@search_orden_document');
 

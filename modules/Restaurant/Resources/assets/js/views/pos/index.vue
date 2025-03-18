@@ -1956,6 +1956,10 @@
             :external="true"
             @addDataMozo="recibirItem"
         ></Pos-form>
+        <Stock-min
+            :showDialog.sync="showDialogStockMin"
+            :fromPos="true"
+        ></Stock-min>
     </div>
 </template>
 
@@ -2120,6 +2124,7 @@ import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
+import StockMin from "./partials/stock_min.vue";
 
 const options = {
     text: "Loading ...",
@@ -2161,6 +2166,7 @@ export default {
         }
     },
     components: {
+        StockMin,
         PosForm,
         Warranty,
         MonthSales,

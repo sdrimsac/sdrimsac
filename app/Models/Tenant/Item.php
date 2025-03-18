@@ -17,7 +17,7 @@ use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Food;
 use App\Traits\RegisterMovementTrait;
 use Illuminate\Http\Request;
-
+use Modules\Restaurant\Models\OrdenItem;
 
 /* use Illuminate\Http\Request; */
 

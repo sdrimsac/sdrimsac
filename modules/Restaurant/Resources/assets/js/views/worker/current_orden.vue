@@ -716,6 +716,7 @@
 import Pinform from "./paid.vue";
 import ObservationForm from "../partials/observation_form.vue";
 import swal from "sweetalert2";
+import Swal from "sweetalert2";
 export default {
     props: [
         "localOrden",
@@ -1169,7 +1170,8 @@ export default {
                         this.showDialogPing = false;
                         this.referenciaInput = null;
 
-                        this.$toast.success(message);
+                        //this.$toast.success(message);
+                        this.$showSAlert(message, "success");
                         this.localOrdenSelectedId = ordenId;
                         this.$emit("update:ordenSelectedId", ordenId);
 
@@ -1181,7 +1183,16 @@ export default {
                         });
                         // this.loading = false;
                     } else {
-                        this.$toast.error(message);
+                        //this.$toast.error(message);
+                        /* this.$showSAlert("ALERTA", message, "error", {
+                            confirmButtonText: 'OK'
+                        }); */
+                        Swal.fire({
+                            title: "ALERTA",
+                            text: message,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
                         // this.loading = false;
                     }
                     //this.ordenNew(ordenId);
