@@ -1096,7 +1096,10 @@ export default {
             // Actualizar usuarios al seleccionar mesa
             await this.userorden();
             // Llamar a handleSelectOrden para seleccionar la única orden existente
-            this.handleSelectOrden();
+            if (this.configuration.order_mozo === true) {
+                this.handleSelectOrden(); 
+            }
+            
             // this.focus();
             this.allAreas = this.allAreas.map(a => {
                 a.selected = false;

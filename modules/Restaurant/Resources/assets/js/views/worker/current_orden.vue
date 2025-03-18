@@ -1175,12 +1175,13 @@ export default {
                         this.localOrdenSelectedId = ordenId;
                         this.$emit("update:ordenSelectedId", ordenId);
 
-                        
                         this.closeDialog(ordenId);
-                        this.$nextTick(() => {
-                            this.$emit("selectNewOrden", ordenId);
-                            //this.selectTableByOrden(ordenId);
-                        });
+                        if (this.configuration.order_mozo) {
+                            this.$nextTick(() => {
+                                this.$emit("selectNewOrden", ordenId);
+                            });
+                        }
+
                         // this.loading = false;
                     } else {
                         //this.$toast.error(message);
@@ -1204,7 +1205,6 @@ export default {
             }
         },
 
-        
         /* selectOrden(ordenId) {
             // Logic to select and render the order
             this.ordenSelectedId = ordenId;
@@ -1216,7 +1216,7 @@ export default {
                 this.view_orders();
             }
         }, */
-        
+
         closeDialog(ordenId = null) {
             let ordenToAdd = [...this.localOrden];
             ordenToAdd = ordenToAdd.map(o => ({

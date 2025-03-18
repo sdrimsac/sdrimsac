@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'order_mozo' => (bool) $this->order_mozo,
             'anulate_sunat' => (bool) $this->anulate_sunat,
             'search_new' => (bool) $this->search_new,
             'chifa_china' => (bool) $this->chifa_china,
@@ -296,7 +297,6 @@ class ConfigurationResource extends JsonResource
             'consignment' => (bool) $this->consignment,
             'afectation_optional' => (bool) $this->affectation_optional,
             'affectation_optional_id' => $this->affectation_optional_id,
-
         ];
     }
 }

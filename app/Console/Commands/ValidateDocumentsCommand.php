@@ -108,92 +108,87 @@ class ValidateDocumentsCommand extends Command
             // $Config = Config::first();
             $company = Company::first();
             ///////////////////////////////////////////////////////////////////////////
-           // $date_start="01-".date('m')."-";
-           $month = date('m');
-           $year = date('Y');
-           $day = date("d", mktime(0,0,0, $month+1, 0, $year));
-           $date_start= date('Y-m-d', mktime(0,0,0, $month, 1, $year));
-           $date_end=date('Y-m-d', mktime(0,0,0, $month, $day, $year));
-            $records =  Document::whereIn('state_type_id',['01','03','07','09','11'])->orderBy('id');
+            // $date_start="01-".date('m')."-";
+            $month = date('m');
+            $year = date('Y');
+            $day = date("d", mktime(0, 0, 0, $month + 1, 0, $year));
+            $date_start = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year));
+            $date_end = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
+            $records =  Document::whereIn('state_type_id', ['01', '03', '07', '09', '11'])->orderBy('id');
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $correlativo=0;
-            $conteo=0;
-            $contenido="";
-            $num_cpe=0;
-          //
-            $cantidad_rows=$records->count();
-            if($num_cpe==$cantidad_rows){
-                return[
-                    "success"=>false,
-                    "message"=>"No hay comprobantes para validar"
+            $correlativo = 0;
+            $conteo = 0;
+            $contenido = "";
+            $num_cpe = 0;
+            //
+            $cantidad_rows = $records->count();
+            if ($num_cpe == $cantidad_rows) {
+                return [
+                    "success" => false,
+                    "message" => "No hay comprobantes para validar"
                 ];
-            }else{
-            foreach ($records->get() as $row){
-                $num_cpe++;
-                if($num_cpe==$cantidad_rows){
-                    break;
-                }else{
-                    $conteo= $conteo+1;
-                    $contenido .= $company->number."|";
-                    $contenido .= $row->document_type_id."|";
-                    $contenido .= $row->series."|";
-                    $contenido .= intval($row->number)."|";
-                    $contenido .= substr($row->date_of_issue,8,2)."/".substr($row->date_of_issue,5,2)."/".substr($row->date_of_issue,0,4)."|";
-                    $contenido .= $row->total."\n";
-                    if($conteo==250){ //CANTIDAD_TXT=250
-                        Storage::disk('public')->put("txt/".$correlativo."_".$company->number."_validarcpe.txt", $contenido);
-                        $correlativo++;
-                        $conteo=-1;
-                        $contenido="";
-                     }
-                     Storage::disk('public')->put("txt/".$correlativo."_".$company->number."_validarcpe.txt", $contenido);
-                     $success=true;
+            } else {
+                foreach ($records->get() as $row) {
+                    $num_cpe++;
+                    if ($num_cpe == $cantidad_rows) {
+                        break;
+                    } else {
+                        $conteo = $conteo + 1;
+                        $contenido .= $company->number . "|";
+                        $contenido .= $row->document_type_id . "|";
+                        $contenido .= $row->series . "|";
+                        $contenido .= intval($row->number) . "|";
+                        $contenido .= substr($row->date_of_issue, 8, 2) . "/" . substr($row->date_of_issue, 5, 2) . "/" . substr($row->date_of_issue, 0, 4) . "|";
+                        $contenido .= $row->total . "\n";
+                        if ($conteo == 250) { //CANTIDAD_TXT=250
+                            Storage::disk('public')->put("txt/" . $correlativo . "_" . $company->number . "_validarcpe.txt", $contenido);
+                            $correlativo++;
+                            $conteo = -1;
+                            $contenido = "";
+                        }
+                        Storage::disk('public')->put("txt/" . $correlativo . "_" . $company->number . "_validarcpe.txt", $contenido);
+                        $success = true;
+                    }
                 }
             }
-        }
 
-                reValidate:
-                $service = new ServiceData();
-                for ($i=0; $i <= $correlativo; $i++) {
-                $filename=$i."_".$company->number."_validarcpe.txt";
-                $file=public_path("storage/txt/{$filename}") ;
+            reValidate:
+            $service = new ServiceData();
+            for ($i = 0; $i <= $correlativo; $i++) {
+                $filename = $i . "_" . $company->number . "_validarcpe.txt";
+                $file = public_path("storage/txt/{$filename}");
                 $res = $service->validar_cpe($filename);
 
-                $data_response=json_decode($res,true);
+                $data_response = json_decode($res, true);
 
-                if (array_key_exists('data',json_decode($res,true))) {
-                    $res =json_decode($res);
-                    $data=$res->data;
-                 foreach ($data as $key => $value) {
-                    // Log::info('End Ubigeo: '.$this->document_state[$value->EstadoCodComprobante]);
-                    $sale_find=Document::where('series',$value->Serie)->where('number',$value->Numero)->where('document_type_id',$value->TipoComprobante)->first();
-                    $sales=Document::findOrFail($sale_find->id);
-                    if($value->EstadoComprobante=="NO EXISTE"){
-                        $state_type_id="01";
-                    }else{
+                if (array_key_exists('data', json_decode($res, true))) {
+                    $res = json_decode($res);
+                    $data = $res->data;
+                    foreach ($data as $key => $value) {
+                        // Log::info('End Ubigeo: '.$this->document_state[$value->EstadoCodComprobante]);
+                        $sale_find = Document::where('series', $value->Serie)->where('number', $value->Numero)->where('document_type_id', $value->TipoComprobante)->first();
+                        $sales = Document::findOrFail($sale_find->id);
+                        if ($value->EstadoComprobante == "NO EXISTE") {
+                            $state_type_id = "01";
+                        } else {
 
-                        $state_type=StateType::where('description', 'like', "%{$this->document_state[$value->EstadoCodComprobante]}%")->first();
-                        $state_type_id=$state_type->id;
+                            $state_type = StateType::where('description', 'like', "%{$this->document_state[$value->EstadoCodComprobante]}%")->first();
+                            $state_type_id = $state_type->id;
+                        }
+                        $sales->state_type_id = $state_type_id;
+                        $sales->save();
                     }
-                    $sales->state_type_id=$state_type_id;
-                    $sales->save();
-                  }
-
-                 }else{
+                } else {
                     goto reValidate;
-
                 }
-                }
-
-            ///////////////////////////////////////////////////////////////////////////
-            } catch (\Exception  $e) {
-                $this->info($e->getMessage());
-                $this->info($e->getLine());
-               // return response()->json($e->getMessage());
-                //return $e->getMessage();
             }
 
-
-
-}
+            ///////////////////////////////////////////////////////////////////////////
+        } catch (\Exception  $e) {
+            $this->info($e->getMessage());
+            $this->info($e->getLine());
+            // return response()->json($e->getMessage());
+            //return $e->getMessage();
+        }
+    }
 }

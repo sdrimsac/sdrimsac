@@ -321,6 +321,20 @@
                         class=""
                         @click.prevent="clickSendPaymentsMessages()"
                     >
+                     Tareas Programados
+                    </el-button>
+                </el-tooltip>
+                <el-tooltip
+                    class="item"
+                    content="Enviar mensajes de cobro a los clientes"
+                    effect="dark"
+                    placement="top-start"
+                >
+                    <el-button
+                        type="secondary"
+                        class=""
+                        @click.prevent="clickSendPaymentsMessages()"
+                    >
                         <i class="fab fa-whatsapp fa-lg"></i>
                         <i class="fas fa-bell fa-lg"></i>
                     </el-button>

@@ -330,7 +330,7 @@ export default {
             }
 
             if (this.addingOrden) {
-                if (table.status_table_id == 2) {
+                if (this.configuration.order_mozo && table.status_table_id == 2) {
                     this.$toast.warning("No se puede crear una nueva orden en una mesa ocupada");
                     return;
                 }
