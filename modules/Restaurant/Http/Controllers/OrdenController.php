@@ -777,60 +777,60 @@ class OrdenController extends Controller
                 $user = User::find(auth()->id());
             }
 
-            if ($configuration->sales_stock) {
-                foreach ($request->items as $item) {
-                    $food = Food::find($item['food']['id']);
+            // if ($configuration->sales_stock) {
+            //     foreach ($request->items as $item) {
+            //         $food = Food::find($item['food']['id']);
 
-                    $is_service = false;
-                    if ($food->item && $food->item->unit_type_id === 'ZZ') {
-                        $is_service = true;
-                    }
+            //         $is_service = false;
+            //         if ($food->item && $food->item->unit_type_id === 'ZZ') {
+            //             $is_service = true;
+            //         }
 
-                    if ($is_service) {
-                        continue;
-                    }
+            //         if ($is_service) {
+            //             continue;
+            //         }
 
-                    $warehouse = Warehouse::find($food->item->warehouse_id);
+            //         $warehouse = Warehouse::find($food->item->warehouse_id);
 
-                    $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
-                        ->where('warehouse_id', $warehouse->id)
-                        ->first();
+            //         $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
+            //             ->where('warehouse_id', $warehouse->id)
+            //             ->first();
 
-                    $pending_orders = OrdenItem::whereHas('orden', function ($query) {
-                        $query->where('status_orden_id', '<>', 4)
-                            ->where('status_orden_id', '<>', 5);
-                    })
-                        ->where('food_id', $food->id)
-                        ->sum('quantity');
+            //         $pending_orders = OrdenItem::whereHas('orden', function ($query) {
+            //             $query->where('status_orden_id', '<>', 4)
+            //                 ->where('status_orden_id', '<>', 5);
+            //         })
+            //             ->where('food_id', $food->id)
+            //             ->sum('quantity');
 
-                    $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
-                    $ordered_quantity = $item['quantity'];
+            //         $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
+            //         $ordered_quantity = $item['quantity'];
 
-                    $real_available = $available_stock - $pending_orders;
+            //         $real_available = $available_stock - $pending_orders;
 
-                    // Emitir evento con información de stock actualizada
-                    /* event(new StockRealEvent([
-                        'type' => 'stock_update',
-                        'data' => [
-                            'item_id' => $food->item_id,
-                            'food_id' => $food->id,
-                            'current_stock' => $available_stock,
-                            'pending_orders' => $pending_orders,
-                            'available_stock' => $real_available,
-                            'ordered_quantity' => $ordered_quantity,
-                            'remaining_stock' => $real_available - $ordered_quantity
-                        ]
-                    ], 'stock')); */
+            //         // Emitir evento con información de stock actualizada
+            //         /* event(new StockRealEvent([
+            //             'type' => 'stock_update',
+            //             'data' => [
+            //                 'item_id' => $food->item_id,
+            //                 'food_id' => $food->id,
+            //                 'current_stock' => $available_stock,
+            //                 'pending_orders' => $pending_orders,
+            //                 'available_stock' => $real_available,
+            //                 'ordered_quantity' => $ordered_quantity,
+            //                 'remaining_stock' => $real_available - $ordered_quantity
+            //             ]
+            //         ], 'stock')); */
 
-                    if ($ordered_quantity > $real_available) {
-                        return [
-                            'success' => false,
-                            'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles. 
-                                        ({$pending_orders} unidades en pedidos pendientes)"
-                        ];
-                    }
-                }
-            }
+            //         if ($ordered_quantity > $real_available) {
+            //             return [
+            //                 'success' => false,
+            //                 'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles. 
+            //                             ({$pending_orders} unidades en pedidos pendientes)"
+            //             ];
+            //         }
+            //     }
+            // }
 
             // Optimizar la búsqueda de orden
             $id = null;
