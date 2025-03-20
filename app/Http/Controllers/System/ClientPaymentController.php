@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Hyn\Tenancy\Environment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,8 @@ class ClientPaymentController extends Controller
 {
     protected $client;
 
-    public function messages(Request $request, $client_payment_id){
+    public function messages(Request $request, $client_payment_id)
+    {
         $client_payment = ClientPayment::find($client_payment_id);
         $client_payment->message_client_before_end = $request->message_client_before_end;
         $client_payment->message_client_after_end = $request->message_client_after_end;
@@ -34,15 +36,15 @@ class ClientPaymentController extends Controller
             'message' => 'Mensaje enviado con éxito'
         ];
     }
-    public function sendVideo($video, $number = null,$to_group = false)
+    public function sendVideo($video, $number = null, $to_group = false)
     {
         $web_whatsapp = config('app.web_whatsapp');
-        if($to_group){
+        if ($to_group) {
             $url = "https://" . $web_whatsapp . '/api/send-file-by-name';
-        }else{
+        } else {
             $url = "https://" . $web_whatsapp . '/api/send-media';
         }
-        
+
         $video = str_replace('/storage/', '', $video);
         $video_path = Storage::disk('public')->path($video);
         if (!file_exists($video_path)) {
@@ -51,7 +53,7 @@ class ClientPaymentController extends Controller
                 "path" => $video_path
             ];
         }
-        
+
         $content_file = file_get_contents($video_path);
         $extension = pathinfo($video, PATHINFO_EXTENSION);
 
@@ -65,7 +67,7 @@ class ClientPaymentController extends Controller
         try {
             $name_number = "number";
             $content_number = "51" . $number;
-            if($to_group){
+            if ($to_group) {
                 $name_number = "chatName";
                 $content_number = $number;
             }
@@ -74,7 +76,7 @@ class ClientPaymentController extends Controller
                     [
                         'name'     => $name_number,
                         'contents' => $content_number
-                        ],
+                    ],
 
                     [
                         'name'     => 'sender',
@@ -98,12 +100,53 @@ class ClientPaymentController extends Controller
             ];
         }
     }
-    public function sendMessage($message, $number,$to_group = false)
+
+    /* public function executeprograms()
+    {
+        dump('Ejecutando programas...');
+        $comands = [
+            'App\Console\Commands\SummarySendCommand',
+            'App\Console\Commands\SummaryQueryCommand',
+            'App\Console\Commands\SendAllSunatCommand',
+            'App\Console\Commands\ValidateDocumentsCommand',
+            'App\Console\Commands\CheckDispatch',
+        ];
+
+        foreach ($comands as $comand) {
+            Artisan::call($comand);
+        }
+        dump('Programas ejecutados correctamente');
+
+        return response()->json(['message' => 'Todas las tareas han sido ejecutadas correctamente']);
+    } */
+
+    public function executeprograms()
+    {
+        //dump('Ejecutando programas...');
+
+        $comands = [
+            'summary:send',
+            'summary:query',
+            'send:all-sunat',
+            'validate:documents',
+            'check:dispatch',
+        ];
+
+        foreach ($comands as $comand) {
+            Artisan::call($comand);
+        }
+
+        //dump('Programas ejecutados correctamente');
+
+        return response()->json(['message' => 'Todas las tareas han sido ejecutadas correctamente']);
+    }
+
+    public function sendMessage($message, $number, $to_group = false)
     {
         $web_whatsapp = config('app.web_whatsapp');
-        if($to_group){
+        if ($to_group) {
             $url = "https://" . $web_whatsapp . "/api/send-message-by-name";
-        }else{
+        } else {
             $url = "https://" . $web_whatsapp . "/api/send-message";
         }
 
@@ -111,7 +154,7 @@ class ClientPaymentController extends Controller
         $message = str_replace('<br>', "\n", $message);
         $name_number = "number";
         $content_number = "51" . $number;
-        if($to_group){
+        if ($to_group) {
             $name_number = "chatName";
             $content_number = $number;
         }
@@ -149,13 +192,13 @@ class ClientPaymentController extends Controller
         $payments = ClientPayment::where('state', 0)->get();
         foreach ($payments as $payment) {
             $payment_date = Carbon::parse($payment->date_of_payment);
-            $diff_days = $now->diffInDays($payment_date,false);
-            if($diff_days > 6) {
+            $diff_days = $now->diffInDays($payment_date, false);
+            if ($diff_days > 6) {
                 continue;
             }
-            if($isLastDayOfMonth){
+            if ($isLastDayOfMonth) {
                 $payment->send_message_after_end();
-            }else{
+            } else {
 
                 $payment->send_message_before_end();
             }
@@ -345,12 +388,12 @@ class ClientPaymentController extends Controller
         ];
     }
 
-    public function sendWhatsappMessage(Request $request, $client_payment_id) 
+    public function sendWhatsappMessage(Request $request, $client_payment_id)
     {
         try {
             $configuration = Configuration::first();
             $client_payment = ClientPayment::find($client_payment_id);
-            
+
             if (!$client_payment) {
                 return [
                     'success' => false,
@@ -379,30 +422,29 @@ class ClientPaymentController extends Controller
             $to_group = $client->sent_to_group;
             $number = $client->phone;
             $group_whatsapp = $client->group_whatsapp;
-            if($to_group && $group_whatsapp){
+            if ($to_group && $group_whatsapp) {
                 $number = $group_whatsapp;
-            }else{
+            } else {
                 $to_group = false;
             }
             // Enviar el mensaje por WhatsApp
-            $response_success_message = $this->sendMessage($request->message, $number,$to_group);
-            if($url_video){
-                $response_success_video = $this->sendVideo($url_video, $number,$to_group);
+            $response_success_message = $this->sendMessage($request->message, $number, $to_group);
+            if ($url_video) {
+                $response_success_video = $this->sendVideo($url_video, $number, $to_group);
             }
             $message_response = "El mensaje se envió ";
             $message_response .= $response_success_message['success'] ? "correctamente" : "con error";
-            
-            if($url_video) {
+
+            if ($url_video) {
                 sleep(rand(1, 3));
                 $message_response .= " y el video se envió ";
                 $message_response .= isset($response_success_video) ? "correctamente" : "con error";
             }
-            
+
             return [
                 'success' => true,
                 'message' => $message_response
             ];
-
         } catch (\Exception $e) {
             return [
                 'success' => false,

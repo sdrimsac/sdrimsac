@@ -33,7 +33,7 @@
                                 </el-button>
 
                                 <el-button
-                                    v-if="configuration.chifa_china"
+                                    v-if="configuration.chifa_china && show == 'create' && currentTable"
                                     type="success"
                                     @click="open"
                                     style="padding: 12px 24px; border-radius: 25px; font-size: 16px;"

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'comand_big',
         'order_mozo',
         'anulate_sunat',
         'search_new',
@@ -308,6 +309,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'comand_big' => 'boolean',
         'order_mozo' => 'boolean',
         'anulate_sunat' => 'boolean',
         'search_new' => 'boolean',
@@ -559,6 +561,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'comand_big' => (bool)$this->comand_big,
             'order_mozo' => (bool)$this->order_mozo,
             'anulate_sunat' => (bool)$this->anulate_sunat,
             'search_new' => (bool)$this->search_new,

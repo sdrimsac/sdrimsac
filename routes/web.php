@@ -76,8 +76,6 @@ if ($hostname) {
             Route::post('users/cambiar_contrasena', [App\Http\Controllers\Tenant\UserController::class, 'cambiarContrasena'])->name('cambiar_contrasena');
 
 
-
-
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
 
@@ -305,6 +303,8 @@ if ($hostname) {
 
                 Route::get('tasks', [App\Http\Controllers\Tenant\TaskController::class, 'index'])->name('tenant.tasks.index')->middleware('just.admin');
                 Route::post('tasks/commands', [App\Http\Controllers\Tenant\TaskController::class, 'listsCommand']);
+
+                Route::post('tasks/programan', [App\Http\Controllers\Tenant\TaskController::class, 'executePrograms']);
                 Route::post('tasks/tables', [App\Http\Controllers\Tenant\TaskController::class, 'tables']);
                 Route::post('tasks', [App\Http\Controllers\Tenant\TaskController::class, 'store']);
                 Route::delete('tasks/{task}', [App\Http\Controllers\Tenant\TaskController::class, 'destroy']);
@@ -1193,6 +1193,7 @@ if ($hostname) {
             });
             Route::get('dashboard', 'System\HomeController@index')->name('system.dashboard');
             Route::get('restart-whatsapp', 'System\HomeController@restartWhatsapp');
+            Route::get('restart-programs', 'System\ClientPaymentController@executeprograms');
             Route::post('logos', 'System\UserController@setLogo');
             Route::post('monitor', 'System\MonitorController@index')->name('system.monitor.index');
             //Clients
@@ -1241,10 +1242,15 @@ if ($hostname) {
             Route::post('client_payments/cancel_payment_client', 'System\ClientPaymentController@cancel_payment_client');
             Route::post('client_payments/messages/{client_payment_id}', 'System\ClientPaymentController@messages');
             Route::get('client_payments/send_payments_messages', 'System\ClientPaymentController@sendPaymentsMessages');
+            // para el reset
+            Route::get('program/reset', 'System\ClientPaymentController@sendReset');
+
             Route::get('client_account_status/records/{client_id}', 'System\AccountStatusController@records');
             Route::get('client_account_status/client/{client_id}', 'System\AccountStatusController@client');
             Route::get('client_account_status/tables', 'System\AccountStatusController@tables');
             Route::post('client_payments/send_whatsapp/{id}', [App\Http\Controllers\System\ClientPaymentController::class, 'sendWhatsappMessage']);
+
+            Route::post('tasks/programan', [App\Http\Controllers\Tenant\TaskController::class, 'executePrograms']);
 
             //Planes
             Route::get('plans', 'System\PlanController@index')->name('system.plans.index');

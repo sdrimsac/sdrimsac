@@ -1454,6 +1454,20 @@ class DocumentController extends Controller
             Orden::where('document_id', $document_id)->update(["document_id" => null]);
         }
 
+        // Validacion para no registrar documentos con el mismo numero y serie
+        $existingDocument = Document::where('series', $request->series)
+            ->where('number', $request->number)
+            ->where('document_type_id', $request->document_type_id)
+            ->where('state_type_id', '!=', '11')
+            ->first();
+
+        if ($existingDocument) {
+            return [
+                'success' => false,
+                'message' => 'El número de documento ya existe para la serie y tipo de documento proporcionados.'
+            ];
+        }
+
         try {
             $configuration = Configuration::first();
 

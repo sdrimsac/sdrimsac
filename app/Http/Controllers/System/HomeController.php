@@ -36,8 +36,6 @@ class HomeController extends Controller
             $pm2Process->run();
             
             
-            
-
             if (!$pm2Process->isSuccessful()) {
                 return response()->json([
                     'status' => 'error',

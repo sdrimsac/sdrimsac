@@ -777,60 +777,56 @@ class OrdenController extends Controller
                 $user = User::find(auth()->id());
             }
 
-            // if ($configuration->sales_stock) {
-            //     foreach ($request->items as $item) {
-            //         $food = Food::find($item['food']['id']);
+            if ($configuration->sales_stock) {
+                // Get the warehouse associated with the authenticated user's establishment
+                $user = auth()->user();
+                $user_warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
 
-            //         $is_service = false;
-            //         if ($food->item && $food->item->unit_type_id === 'ZZ') {
-            //             $is_service = true;
-            //         }
+                if (!$user_warehouse) {
+                    return [
+                        'success' => false,
+                        'message' => 'No se encontró un almacén asociado al establecimiento del usuario.'
+                    ];
+                }
 
-            //         if ($is_service) {
-            //             continue;
-            //         }
+                foreach ($request->items as $item) {
+                    $food = Food::find($item['food']['id']);
 
-            //         $warehouse = Warehouse::find($food->item->warehouse_id);
+                    $is_service = false;
+                    if ($food->item && $food->item->unit_type_id === 'ZZ') {
+                        $is_service = true;
+                    }
 
-            //         $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
-            //             ->where('warehouse_id', $warehouse->id)
-            //             ->first();
+                    if ($is_service) {
+                        continue;
+                    }
 
-            //         $pending_orders = OrdenItem::whereHas('orden', function ($query) {
-            //             $query->where('status_orden_id', '<>', 4)
-            //                 ->where('status_orden_id', '<>', 5);
-            //         })
-            //             ->where('food_id', $food->id)
-            //             ->sum('quantity');
+                    // Validate stock for the user's warehouse
+                    $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
+                        ->where('warehouse_id', $user_warehouse->id)
+                        ->first();
 
-            //         $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
-            //         $ordered_quantity = $item['quantity'];
+                    $pending_orders = OrdenItem::whereHas('orden', function ($query) {
+                        $query->where('status_orden_id', '<>', 4)
+                            ->where('status_orden_id', '<>', 5);
+                    })
+                        ->where('food_id', $food->id)
+                        ->sum('quantity');
 
-            //         $real_available = $available_stock - $pending_orders;
+                    $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
+                    $ordered_quantity = $item['quantity'];
 
-            //         // Emitir evento con información de stock actualizada
-            //         /* event(new StockRealEvent([
-            //             'type' => 'stock_update',
-            //             'data' => [
-            //                 'item_id' => $food->item_id,
-            //                 'food_id' => $food->id,
-            //                 'current_stock' => $available_stock,
-            //                 'pending_orders' => $pending_orders,
-            //                 'available_stock' => $real_available,
-            //                 'ordered_quantity' => $ordered_quantity,
-            //                 'remaining_stock' => $real_available - $ordered_quantity
-            //             ]
-            //         ], 'stock')); */
+                    $real_available = $available_stock - $pending_orders;
 
-            //         if ($ordered_quantity > $real_available) {
-            //             return [
-            //                 'success' => false,
-            //                 'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles. 
-            //                             ({$pending_orders} unidades en pedidos pendientes)"
-            //             ];
-            //         }
-            //     }
-            // }
+                    if ($ordered_quantity > $real_available) {
+                        return [
+                            'success' => false,
+                            'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles en el almacén {$user_warehouse->description}. 
+                                        ({$pending_orders} unidades en pedidos pendientes)"
+                        ];
+                    }
+                }
+            }
 
             // Optimizar la búsqueda de orden
             $id = null;

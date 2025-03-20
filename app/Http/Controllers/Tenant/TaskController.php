@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tenant\Task;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 
 class TaskController extends Controller
 {
@@ -52,6 +53,23 @@ class TaskController extends Controller
                 'class' => "{$this->path}{$name}"
             ];
         });
+    }
+
+    public function executePrograms()
+    {
+        $commands = [
+            'summary:send',
+            'summary:query',
+            'send:all-sunat',
+            'validate:documents',
+            'check:dispatch',
+        ];
+
+        foreach ($commands as $command) {
+            Artisan::call($command);
+        }
+
+        return response()->json(['message' => 'Todas las tareas han sido ejecutadas correctamente']);
     }
     
     /**

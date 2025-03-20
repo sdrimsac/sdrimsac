@@ -1988,7 +1988,6 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    padding: 10px 0;
 }
 
 .categories-wrapper {
@@ -3082,12 +3081,12 @@ export default {
                     icon: "el-icon-connection",
                     visible: this.configuration.sale_note_credit_confirm
                 },
-                {
+                /* {
                     id: 35,
                     title: ["Stock Minimo"],
                     icon: "el-icon-set-up",
                     visible: true && !this.isSeller
-                }
+                } */
 
                 // {
                 //     title: ["Configuración"],

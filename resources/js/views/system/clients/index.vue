@@ -310,18 +310,19 @@
                 </h4>
             </div>
             <div class="data-table-visible-columns">
+                <!-- botone para las tareas programados -->
                 <el-tooltip
                     class="item"
-                    content="Enviar mensajes de cobro a los clientes"
+                    content="Eviar toda las tareas programadas mnaualmente"
                     effect="dark"
                     placement="top-start"
                 >
                     <el-button
                         type="secondary"
                         class=""
-                        @click.prevent="clickSendPaymentsMessages()"
+                        @click.prevent="clickResetProgramn()"
                     >
-                     Tareas Programados
+                        Tareas Programados
                     </el-button>
                 </el-tooltip>
                 <el-tooltip
@@ -390,9 +391,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource"
-                    ref="dataTable"
-                    >
+                    <data-table :resource="resource" ref="dataTable">
                         <tr slot="heading" class="bg-secondary">
                             <th class="text-center border text-white">#</th>
                             <th class="text-white text-center border">
@@ -1004,8 +1003,26 @@ export default {
                 .then(response => {
                     this.$message.success(response.data.message);
                     this.loading = false;
-                }).catch(error => {
+                })
+                .catch(error => {
                     this.loading = false;
+                });
+        },
+        /* peticon para las tareas programanados hacia el servidor*/
+        clickResetProgramn() {
+            this.loading = true;
+            this.$http
+                .post(`tasks/programan`)
+                .then(response => {
+                    this.$message.success(response.data.message);
+                    this.loading = false;
+                })
+                .catch(error => {
+                    this.loading = false;
+                    console.error("Error ejecutando tareas:", error);
+                    this.$message.error(
+                        "Hubo un error al ejecutar las tareas."
+                    );
                 });
         },
         getAffectationTenant() {

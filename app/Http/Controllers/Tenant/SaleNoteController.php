@@ -1320,6 +1320,15 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
         try {
+            // Validacion para que no se dupliquen documentos en la BD
+            $existingSaleNote = SaleNote::where('number', $request->number)->first();
+            if ($existingSaleNote) {
+                return [
+                    'success' => false,
+                    'message' => 'Nota de Venta ya generado con ese Mumero',
+                ];
+            }
+
             // SaleNote::where('currency_type_id', 'USD')->update(['currency_type_id' => 'PEN']);
             $configuration = Configuration::first();
             DB::connection('tenant')->transaction(function () use ($request, $configuration) {
