@@ -794,38 +794,31 @@ class OrdenController extends Controller
                     $food = Food::find($item['food']['id']);
 
                     // Skip validation for services
-                    $is_service = false;
                     if ($food->item && $food->item->unit_type_id === 'ZZ') {
-                        $is_service = true;
-                    }
-
-                    if ($is_service) {
                         continue; 
                     }
 
-                    // Check stock only in establishment's warehouse
-                    $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
-                        ->where('warehouse_id', $establishment_warehouse->id)
-                        ->first();
-
-                    // Get pending orders quantity
-                    $pending_orders = OrdenItem::whereHas('orden', function ($query) {
-                        $query->where('status_orden_id', '<>', 4)
-                            ->where('status_orden_id', '<>', 5);
-                    })
-                        ->where('food_id', $food->id)
-                        ->sum('quantity');
-
-                    $available_stock = $item_warehouse ? $item_warehouse->stock : 0;
-                    $ordered_quantity = $item['quantity'];
-
-                    $real_available = $available_stock - $pending_orders;
-
-                    if ($ordered_quantity > $real_available) {
+                    // Check if item exists and is active
+                    if (!$food->item || !$food->item->active) {
                         return [
                             'success' => false,
-                            'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles en el almacén {$establishment_warehouse->description}. 
-                                        ({$pending_orders} unidades en pedidos pendientes)"
+                            'message' => "El producto {$food->description} está desactivado y no puede ser vendido"
+                        ];
+                    }
+
+                    // Get stock from item_warehouse
+                    $warehouse_stock = ItemWarehouse::where([
+                        'item_id' => $food->item_id, 
+                        'warehouse_id' => $establishment_warehouse->id,
+                        'active' => 1
+                    ])->value('stock') ?? 0;
+
+                    $ordered_quantity = $item['quantity'];
+
+                    if ($ordered_quantity > $warehouse_stock) {
+                        return [
+                            'success' => false,
+                            'message' => "El producto {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}"
                         ];
                     }
                 }
