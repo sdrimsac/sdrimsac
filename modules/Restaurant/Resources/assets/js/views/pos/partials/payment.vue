@@ -605,6 +605,20 @@
                                     <!-- Fila 2: Checkboxes alineados al lado derecho -->
                                     <div class="d-flex justify-content-end">
                                         <el-checkbox
+                                            v-model="discountTotal"
+                                            @change="reCalculateTotal"
+                                            class="is-success text-success"
+                                            style="transform: scale(0.8); margin-right: 10px;"
+                                        >
+                                            {{
+                                                discountTotal
+                                                    ? "del total"
+                                                    : "a la base"
+                                            }}
+                                        </el-checkbox>
+                                    </div>
+                                    <!-- <div class="d-flex justify-content-end">
+                                        <el-checkbox
                                             v-if="
                                                 configuration.affectation_igv_type_id ==
                                                     '10'
@@ -620,7 +634,7 @@
                                                     : "a la base"
                                             }}
                                         </el-checkbox>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
 
@@ -2415,10 +2429,7 @@ export default {
             }
         },
 
-        inputDiscountAmount() {
-            // Aquí la lógica de procesamiento del descuento
-            console.log("Procesando el descuento:", this.discount_amount);
-        },
+        
 
         reCalculateTotal() {
             // ...existing code...
@@ -3869,10 +3880,105 @@ export default {
             return total_exonerated;
         },
         // para calcular el descuento global que se puede aplicar a toda la venta
+        /* discountGlobal() {
+            // this.form.total = this.form.total_value;
+            let global_discount = parseFloat(this.discount_amount);
+            let total = parseFloat(this.form.total);
+            if (global_discount > total) {
+                this.discount_amount = 0;
+                this.$forceUpdate();
+                return this.$toast.error(
+                    "El descuento no puede ser mayor al total"
+                );
+            }
+            // let total_value = parseFloat(this.form.total_value);
+            let new_total = total - global_discount;
+            let factor = _.round(global_discount / total, 4);
+            this.form.discounts = [
+                {
+                    discount_type_id: "03",
+                    description:
+                        "Descuentos globales que no afectan la base imponible del IGV/IVAP",
+                    factor,
+                    amount: global_discount,
+                    base: total
+                }
+            ];
+            this.form.total_discount = global_discount;
+            if (this.discountTotal) {
+                this.form.total = new_total;
+            } else {
+                let global_discount_amount = global_discount;
+                let global_discount_amount_without_rounding = global_discount;
+                let { discount_with_base_variant } = this.configuration;
+                console.log("ver si paso pro aqui", discount_with_base_variant);
+                if (discount_with_base_variant) {
+                    console.log("paso por aqui");
+                    global_discount_amount = Number(
+                        (global_discount / 1.18).toFixed(2)
+                    );
+                    global_discount_amount_without_rounding =
+                        global_discount / 1.18;
+                }
+                let factor = _.round(global_discount_amount / base, 4);
+                this.form.discounts = [
+                    {
+                        discount_type_id: "02",
+                        description:
+                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                        factor,
+                        amount: global_discount_amount,
+                        base
+                    }
+                ];
+
+                let new_base = this.form.total_value_without_rounding;
+
+                this.form.total_taxed = _.round(
+                    new_base - global_discount_amount_without_rounding,
+                    2
+                );
+                let total_taxed_without_rounding =
+                    new_base - global_discount_amount_without_rounding;
+                this.form.total_value = this.form.total_taxed;
+                if (this.configuration.affectation_igv_type_id == "10") {
+                    this.form.total_igv = _.round(
+                        total_taxed_without_rounding *
+                            (this.percentage_igv / 100),
+                        2
+                    );
+                } else {
+                    this.form.total_igv = 0;
+                }
+
+                //impuestos (isc + igv + icbper)
+                this.form.total_taxes = _.round(
+                    this.form.total_igv +
+                        this.form.total_isc +
+                        this.form.total_plastic_bag_taxes,
+                    2
+                );
+                this.form.total = _.round(
+                    this.form.total_taxed + this.form.total_taxes,
+                    2
+                );
+                this.form.subtotal = this.form.total;
+            }
+            // para calcular descuentos
+            if (
+                this.configuration.sale_note_credit_cash &&
+                this.form.document_type_id == "80"
+            ) {
+            } else {
+                this.form.enter_amount = this.form.total;
+                this.enterAmount();
+            }
+        }, */
         discountGlobal() {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
+            let base = parseFloat(this.form.total_value);
             if (global_discount > total) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
@@ -3951,7 +4057,6 @@ export default {
                 );
                 this.form.subtotal = this.form.total;
             }
-            // para calcular descuentos
             if (
                 this.configuration.sale_note_credit_cash &&
                 this.form.document_type_id == "80"

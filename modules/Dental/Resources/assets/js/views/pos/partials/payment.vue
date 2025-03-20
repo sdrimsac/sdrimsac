@@ -460,13 +460,6 @@
                                 class="control-label fs-4 fw-bold text-success mb-0"
                                 >Descuento S/</label
                             >
-                            <!-- <input
-                                type="number"
-                                class="form-control w-25 text-right ml-2"
-                                v-model="discount_amount"
-                                @change="inputDiscountAmount"
-                                style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
-              />-->
                             <input
                                 type="number"
                                 class="form-control w-25 text-right ml-2"
