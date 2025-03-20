@@ -777,35 +777,38 @@ class OrdenController extends Controller
                 $user = User::find(auth()->id());
             }
 
-            if ($configuration->sales_stock) {
-                // Get the warehouse associated with the authenticated user's establishment
+            if ($configuration->sales_stock) { 
                 $user = auth()->user();
-                $user_warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
+                
+                // Get the warehouse based on user's establishment_id
+                $establishment_warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
 
-                if (!$user_warehouse) {
+                if (!$establishment_warehouse) {
                     return [
                         'success' => false,
-                        'message' => 'No se encontró un almacén asociado al establecimiento del usuario.'
+                        'message' => 'No existe un almacén para su establecimiento. Contacte al administrador.'
                     ];
                 }
 
                 foreach ($request->items as $item) {
                     $food = Food::find($item['food']['id']);
 
+                    // Skip validation for services
                     $is_service = false;
                     if ($food->item && $food->item->unit_type_id === 'ZZ') {
                         $is_service = true;
                     }
 
                     if ($is_service) {
-                        continue;
+                        continue; 
                     }
 
-                    // Validate stock for the user's warehouse
+                    // Check stock only in establishment's warehouse
                     $item_warehouse = ItemWarehouse::where('item_id', $food->item_id)
-                        ->where('warehouse_id', $user_warehouse->id)
+                        ->where('warehouse_id', $establishment_warehouse->id)
                         ->first();
 
+                    // Get pending orders quantity
                     $pending_orders = OrdenItem::whereHas('orden', function ($query) {
                         $query->where('status_orden_id', '<>', 4)
                             ->where('status_orden_id', '<>', 5);
@@ -821,7 +824,7 @@ class OrdenController extends Controller
                     if ($ordered_quantity > $real_available) {
                         return [
                             'success' => false,
-                            'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles en el almacén {$user_warehouse->description}. 
+                            'message' => "El producto {$food->description} tiene {$real_available} unidades disponibles en el almacén {$establishment_warehouse->description}. 
                                         ({$pending_orders} unidades en pedidos pendientes)"
                         ];
                     }
