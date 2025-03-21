@@ -16,38 +16,41 @@ class TaskController extends Controller
      * @var array
      */
     private $exclude = ['.', '..', 'TenantCommand.php'];
-    
+
     /**
      * Path
      * @var string
      */
     private $path = "App\Console\Commands\\";
-    
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         return view('tenant.task.index');
     }
-    
+
     /**
      * Tables
      * @return \Illuminate\Http\Response
      */
-    public function tables() {
-            return Task::all();
+    public function tables()
+    {
+        return Task::all();
     }
-    
+
     /**
      * Lists Command
      * @return \Illuminate\Http\Response
      */
-    public function listsCommand() {
-        return collect(array_diff(scandir(app_path('Console/Commands')), $this->exclude))->map(function($fileCommand) {
+    public function listsCommand()
+    {
+        return collect(array_diff(scandir(app_path('Console/Commands')), $this->exclude))->map(function ($fileCommand) {
             $name = explode('.', $fileCommand)[0];
-            
+
             return [
                 'name' => $name,
                 'class' => "{$this->path}{$name}"
@@ -58,55 +61,67 @@ class TaskController extends Controller
     public function executePrograms()
     {
         $commands = [
+            'sunat:validate-all',
             'summary:send',
             'summary:query',
-            'send:all-sunat',
+            'online:send-all',
             'validate:documents',
-            'check:dispatch',
+            'check:dispatches',
         ];
 
+        $executed = [];
         foreach ($commands as $command) {
-            Artisan::call($command);
+            Artisan::call('tenancy:run', [
+                'run' => $command 
+            ]);
+            $executed[] = $command;
         }
 
-        return response()->json(['message' => 'Todas las tareas han sido ejecutadas correctamente']);
+        return response()->json([
+            'message' => 'Todas las tareas han sido ejecutadas correctamente',
+            'commands' => $executed,
+        ]);
     }
-    
+
+
+
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\TaskRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TaskRequest $request) {
+    public function store(TaskRequest $request)
+    {
         try {
             $task = Task::create([
                 'class' => $request->class,
                 'execution_time' => Carbon::parse($request->execution_time)->format('H:i:s'),
             ]);
-            
+
             return [
                 'success' => true,
                 'message' => 'Se registró la tarea con éxito.'
             ];
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return [
                 'success' => false,
                 'message' => $e->getMessage()
             ];
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task) {
+    public function destroy(Task $task)
+    {
         $task->delete();
-        
+
         return [
             'success' => true,
             'message' => 'Se eliminó la tarea con éxito.'

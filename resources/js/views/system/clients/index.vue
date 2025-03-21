@@ -320,7 +320,9 @@
                     <el-button
                         type="secondary"
                         class=""
-                        @click.prevent="clickResetProgramn()"
+                        :loading="buttonLoading"
+                        :disabled="buttonLoading"
+                        @click.prevent="clickResetProgramn"
                     >
                         Tareas Programados
                     </el-button>
@@ -971,7 +973,8 @@ export default {
                 ]
             },
             showDialogDelete: false,
-            record: {}
+            record: {},
+            buttonLoading: false, // Add a new state for the button
         };
     },
     async mounted() {
@@ -1009,21 +1012,17 @@ export default {
                 });
         },
         /* peticon para las tareas programanados hacia el servidor*/
-        clickResetProgramn() {
-            this.loading = true;
-            this.$http
-                .post(`tasks/programan`)
-                .then(response => {
-                    this.$message.success(response.data.message);
-                    this.loading = false;
-                })
-                .catch(error => {
-                    this.loading = false;
-                    console.error("Error ejecutando tareas:", error);
-                    this.$message.error(
-                        "Hubo un error al ejecutar las tareas."
-                    );
-                });
+        async clickResetProgramn() {
+            this.buttonLoading = true; // Set button loading state
+            try {
+                const response = await this.$http.post(`tasks/programan`);
+                this.$message.success(response.data.message);
+            } catch (error) {
+                console.error("Error ejecutando tareas:", error);
+                this.$message.error("Hubo un error al ejecutar las tareas.");
+            } finally {
+                this.buttonLoading = false; // Reset button loading state
+            }
         },
         getAffectationTenant() {
             this.$http

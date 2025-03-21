@@ -101,46 +101,6 @@ class ClientPaymentController extends Controller
         }
     }
 
-    /* public function executeprograms()
-    {
-        dump('Ejecutando programas...');
-        $comands = [
-            'App\Console\Commands\SummarySendCommand',
-            'App\Console\Commands\SummaryQueryCommand',
-            'App\Console\Commands\SendAllSunatCommand',
-            'App\Console\Commands\ValidateDocumentsCommand',
-            'App\Console\Commands\CheckDispatch',
-        ];
-
-        foreach ($comands as $comand) {
-            Artisan::call($comand);
-        }
-        dump('Programas ejecutados correctamente');
-
-        return response()->json(['message' => 'Todas las tareas han sido ejecutadas correctamente']);
-    } */
-
-    public function executeprograms()
-    {
-        //dump('Ejecutando programas...');
-
-        $comands = [
-            'summary:send',
-            'summary:query',
-            'send:all-sunat',
-            'validate:documents',
-            'check:dispatch',
-        ];
-
-        foreach ($comands as $comand) {
-            Artisan::call($comand);
-        }
-
-        //dump('Programas ejecutados correctamente');
-
-        return response()->json(['message' => 'Todas las tareas han sido ejecutadas correctamente']);
-    }
-
     public function sendMessage($message, $number, $to_group = false)
     {
         $web_whatsapp = config('app.web_whatsapp');
