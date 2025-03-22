@@ -1320,12 +1320,19 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
         try {
-            // Validacion para que no se dupliquen documentos en la BD
-            $existingSaleNote = SaleNote::where('number', $request->number)->first();
-            if ($existingSaleNote) {
+            // Validar si el número ya existe, excluyendo el registro actual en caso de edición
+            $existingDocument = SaleNote::where('series', $request->series)
+                ->where('number', $request->number)
+                ->where('state_type_id', '!=', '11')
+                ->when($request->id, function ($query) use ($request) {
+                    return $query->where('id', '!=', $request->id);
+                })
+                ->first();
+
+            if ($existingDocument) {
                 return [
                     'success' => false,
-                    'message' => 'Nota de Venta ya generado con ese Mumero',
+                    'message' => 'El número de nota de venta ya existe para la serie y tipo de documento proporcionados.'
                 ];
             }
 
@@ -2389,22 +2396,23 @@ class SaleNoteController extends Controller
             $company = Company::first();
             $user = User::findOrFail($sale->user_id);
             $establishment = Establishment::find($user->establishment_id);
-            $recibo = PDf::loadView(
-                'tenant.schedule.hogar_schedule',
-                [
-                    'days' => $days,
-                    'tasa' => $tasa,
-                    'quote' => $quote,
-                    'init_date' => $init_date,
-                    'end_date' => $end_date,
-                    'data' => $data,
-                    'sale' => $sale,
-                    'company' => $company,
-                    'establishment' => $establishment,
-                    'page' => $page
-                ]
-            );
-            return $recibo->setPaper('a5', 'portrait')->stream();
+            // return view('tenant.schedule.hogar_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
+            $recibo = PDf::loadView('tenant.schedule.hogar_schedule', [
+                'page' => $page,
+                'data' => $data,
+                'sale' => $sale,
+                'company' => $company,
+                'establishment' => $establishment
+            ]);
+            $altura = 250;
+
+            if (count($data) == 26) {
+                $altura += (count($data)) * count($data) + 200;
+            } else {
+                $altura += 25 * count($data) + 150;
+            }
+
+            return $recibo->setPaper('a4', 'landscape')->stream();
         } else {
             return view("tenant.schedule.notfound");
         }
@@ -2852,7 +2860,7 @@ class SaleNoteController extends Controller
             'message' => ($sale_note->enabled_concurrency) ? 'Recurrencia activada' : 'Recurrencia desactivada'
         ];
     }
-     // para anular nota de venta interno
+    // para anular nota de venta interno
     public function anulate(Request $request, $id)
     {
 
