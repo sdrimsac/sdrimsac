@@ -19,8 +19,8 @@ class JustAdmin
     public function handle($request, Closure $next)
     {
         $config = Configuration::first();
-        $user = $request->user(); //user name id woker_type_id
-        $path = $request->path(); //wpos/worker/dashboard
+        $user = $request->user(); 
+        $path = $request->path(); 
         $type = $user->type;
         $isAccountant = false;
         $isLogistic = false;
@@ -81,7 +81,8 @@ class JustAdmin
             "reports/kardex",
             "documents_ventas",
             "nota_venta",
-            "productos"
+            "productos",
+            "receta"
         ];
         $worker_type = WorkersType::find($user->worker_type_id);
         // $redirect_to = "";
