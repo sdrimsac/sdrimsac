@@ -2060,7 +2060,7 @@ class SaleNoteController extends Controller
             $this->saveItemWarranty($this->sale_note, $request->items);
             $this->dumpWithTime("checkTotalAndSendMessage");
             $this->checkTotalAndSendMessage($this->sale_note);
-            //$this->checkDuplicateAndSendMessage($this->sale_note);
+            $this->checkDuplicateAndSendMessage($this->sale_note);
             return [
                 'success' => true,
                 'data' => [

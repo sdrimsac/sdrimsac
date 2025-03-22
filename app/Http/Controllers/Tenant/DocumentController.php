@@ -1879,7 +1879,7 @@ class DocumentController extends Controller
             $this->saveItemWarranty($document, $request->items);
             DB::connection('tenant')->commit();
             $this->checkTotalAndSendMessage($document);
-            //$this->checkDuplicateAndSendMessage($document);
+            $this->checkDuplicateAndSendMessage($document);
             return [
                 'success' => true,
                 'data' => [
