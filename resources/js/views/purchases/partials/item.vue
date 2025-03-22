@@ -135,7 +135,8 @@
                 <div class="col-md-2 text-center">
                     <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="!form.item_id">
                         <div class="">
-                            <label class="control-label"><i class="fas fa-warehouse"></i>
+                            <label class="control-label">
+                                <i class="fas fa-warehouse"></i>
                                 Stock</label>
                             <span>{{
                                     parseFloat(selectedProductStock).toFixed(2)
@@ -817,6 +818,7 @@ export default {
             this.color_size = [];
             this.lotsGroup = [];
             this.lot_code = null;
+            this.selectedProductStock = 0; // Reset stock to 0 when form is initialized
         },
         // initializeFields() {
         //     this.form.affectation_igv_type_id = this.affectation_igv_types[0].id
@@ -937,39 +939,44 @@ export default {
             this.form.item = _.find(this.items, {
                 id: this.form.item_id
             });
+
             if (changing_name) {
                 this.changing_name = true;
-                this.input_barcode = this.form.item.full_description;
+                this.input_barcode = this.form.item ? this.form.item.full_description : "";
                 this.changing_name = false;
             }
 
-            this.form.unit_price = this.form.item.purchase_unit_price;
-            this.form.sale_unit_price = this.form.item.sale_unit_price;
-            this.form.affectation_igv_type_id = this.form.item.purchase_affectation_igv_type_id;
-            this.form.item_unit_types = _.find(this.items, {
-                id: this.form.item_id
-            }).item_unit_types;
-            // agregado para mostrar stock de producto en la vista iten
-            if (
-                this.form.item.warehouses &&
-                this.form.item.warehouses.length > 0
-            ) {
-                this.selectedProductStock = this.form.item.warehouses.reduce(
-                    (acc, warehouse) => acc + warehouse.stock,
-                    0
-                );
+            if (this.form.item) {
+                this.form.unit_price = this.form.item.purchase_unit_price;
+                this.form.sale_unit_price = this.form.item.sale_unit_price;
+                this.form.affectation_igv_type_id = this.form.item.purchase_affectation_igv_type_id;
+                this.form.item_unit_types = this.form.item.item_unit_types;
+
+                // Update stock based on the selected product
+                if (this.form.item.warehouses && this.form.item.warehouses.length > 0) {
+                    this.selectedProductStock = this.form.item.warehouses.reduce(
+                        (acc, warehouse) => acc + warehouse.stock,
+                        0
+                    );
+                } else {
+                    this.selectedProductStock = 0;
+                }
             } else {
-                this.selectedProductStock = "Stock no disponible";
+                this.selectedProductStock = 0; // Reset stock to 0 if no product is selected
             }
         },
         async clickAddItem() {
+            if (!this.form.item_id || !this.form.item) {
+                return this.$showSAlert(
+                    "Alerta",
+                    "Debe seleccionar un producto para poder agregar.",
+                    "error"
+                );
+            }
             this.insertTotalPrice = false;
 
             // Validation for color and size
             if (this.form.item.has_color_size && this.color_size.length === 0) {
-                // return this.$toast.error(
-                //     "Debe agregar al menos un color y talla para poder realizar la compra."
-                // );
                 return this.$showSAlert(
                     "Alerta",
                     "Debe agregar al menos un color y talla para poder realizar la Compra",

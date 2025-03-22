@@ -64,7 +64,7 @@
           >
             <el-checkbox v-model="search.credit" @change="getRecords">A cuenta</el-checkbox>
           </div>
-          <div  class="col-md-2" v-if="typeUser == 'superadmin'">
+          <div class="col-md-2" v-if="typeUser === 'superadmin'">
             <el-button
               class="submit"
               type="success"
@@ -161,6 +161,8 @@ export default {
     }
   }, */
   async mounted() {
+    console.log("Type of user in DataTablePersons:", this.typeUser); // Debugging
+    console.log("Type of user:", this.typeUser); // Debugging: Check if the correct value is passed
     /* this.typeUser = "superadmin"; */
     console.log("El tipo de usuario es:", this.typeUser);
     let column_resource = _.split(this.resource, "/");

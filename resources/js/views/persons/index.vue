@@ -27,7 +27,7 @@
             </div>
             <div class="card-body">
 
-                <data-table :resource="resource + `/${this.type}`">
+                <data-table :resource="resource + `/${this.type}`" :type-user="typeUser">
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
                         <th class="text-white">Nombre</th>

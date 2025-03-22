@@ -63,7 +63,8 @@ class PersonController extends Controller
     {
         $is_arca = (new RoleService)->isArca();
         $api_service_token = config('configuration.api_service_token');
-        return view('tenant.persons.index', compact('type', 'api_service_token', 'is_arca'));
+        $user_type = auth()->user()->type; // Ensure this retrieves the correct user type
+        return view('tenant.persons.index', compact('type', 'api_service_token', 'is_arca', 'user_type'));
     }
 
     public function upload(Request $request)

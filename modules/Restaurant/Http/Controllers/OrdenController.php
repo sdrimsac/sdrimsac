@@ -793,13 +793,21 @@ class OrdenController extends Controller
                 foreach ($request->items as $item) {
                     $food = Food::find($item['food']['id']);
 
-                    // Skip validation for services
-                    if ($food->item && $food->item->unit_type_id === 'ZZ') {
-                        continue; 
+                    // Check if item exists 
+                    if (!$food->item) {
+                        return [
+                            'success' => false,
+                            'message' => "El producto {$food->description} no tiene un item asociado"
+                        ];
                     }
 
-                    // Check if item exists and is active
-                    if (!$food->item || !$food->item->active) {
+                    // Skip stock validation for services (type ZZ)
+                    if ($food->item->unit_type_id === 'ZZ') {
+                        continue;
+                    }
+
+                    // Check if item is active
+                    if (!$food->item->active) {
                         return [
                             'success' => false,
                             'message' => "El producto {$food->description} está desactivado y no puede ser vendido"

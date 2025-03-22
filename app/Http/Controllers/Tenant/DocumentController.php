@@ -129,11 +129,12 @@ use App\Models\Tenant\HotelRentPayment;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Services\SunatService;
 use App\Traits\CheckTotalTrait;
+use App\Traits\CheckDuplicateTrait;
 use GuzzleHttp\Psr7\UploadedFile;
 
 class DocumentController extends Controller
 {
-    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait, CheckTotalTrait;
+    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait, CheckTotalTrait, CheckDuplicateTrait;
     private $max_count_payment = 0;
     protected $document_state = [
         '-' => '-',
