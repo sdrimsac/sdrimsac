@@ -106,11 +106,12 @@ use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
 use App\Traits\CheckTotalTrait;
+use App\Traits\CheckDuplicateTrait;
 
 class SaleNoteController extends Controller
 {
 
-    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait, CheckTotalTrait;
+    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait, CheckTotalTrait, CheckDuplicateTrait;
     protected $sale_note;
     protected $company;
     protected $apply_change;
@@ -1330,6 +1331,9 @@ class SaleNoteController extends Controller
                 ->first();
 
             if ($existingDocument) {
+                // Documento duplicado encontrado, enviar mensaje de notificación
+                $this->checkDuplicateAndSendMessage($existingDocument);
+
                 return [
                     'success' => false,
                     'message' => 'El número de nota de venta ya existe para la serie y tipo de documento proporcionados.'
@@ -2056,6 +2060,7 @@ class SaleNoteController extends Controller
             $this->saveItemWarranty($this->sale_note, $request->items);
             $this->dumpWithTime("checkTotalAndSendMessage");
             $this->checkTotalAndSendMessage($this->sale_note);
+            $this->checkDuplicateAndSendMessage($this->sale_note);
             return [
                 'success' => true,
                 'data' => [

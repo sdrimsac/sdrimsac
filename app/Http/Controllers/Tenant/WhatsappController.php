@@ -54,6 +54,20 @@ class WhatsappController extends Controller
             WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
         }
     }
+
+    public function sendMessageAllSupprotDuplicate($message)
+    {
+        $numbers = ["995764963", "987828697", "935921640"];
+        $website = $this->getTenantWebsite();
+        $company = Company::first();
+        $name = "*" . $company->name . "*: ";
+        $message = $name . $message;
+
+        foreach ($numbers as $key => $number) {
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+        }
+    }
+
     public function sendMessageAll($message, $establishment_id = null)
     {
         $website = $this->getTenantWebsite();

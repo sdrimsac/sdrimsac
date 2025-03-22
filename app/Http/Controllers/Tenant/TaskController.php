@@ -61,7 +61,6 @@ class TaskController extends Controller
     public function executePrograms()
     {
         $commands = [
-            'sunat:validate-all',
             'summary:send',
             'summary:query',
             'online:send-all',
@@ -82,8 +81,6 @@ class TaskController extends Controller
             'commands' => $executed,
         ]);
     }
-
-
 
 
     /**
