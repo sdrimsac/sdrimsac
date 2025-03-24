@@ -1,29 +1,34 @@
 <template>
     <el-dialog
         :visible.sync="showDialog"
-        title="Configuración de números"
-        width="90%"
+        title="Configuración de Números de WhatsApp"
+        width="50%"
         @open="open"
         @close="close"
     >
         <div v-loading="loading" class="mt-2">
             <!-- Filtro de búsqueda -->
-            <div class="col-12 text-end">
-                <el-button
-                    @click="openAddNumberWhatsapp"
-                    icon="fas fa-plus fa-lg"
-                    type="primary"
-                    >Agregar número</el-button
-                >
-            </div>
-            <div class="col-12">
-                <el-input
-                    v-model="searchQuery"
-                    placeholder="Buscar establecimiento..."
-                    prefix-icon="el-icon-search"
-                    clearable
-                    class="mb-4"
-                />
+            <div class="row mb-4 align-items-center">
+                <div class="col-9">
+                    <el-input
+                        v-model="searchQuery"
+                        placeholder="Buscar establecimiento..."
+                        prefix-icon="el-icon-search"
+                        clearable
+                    />
+                </div>
+                <div class="col-3 text-end">
+                    <el-button
+
+                        @click="openAddNumberWhatsapp"
+                        type="primary"
+                        class="btn-agregar btn-agregar:hover"
+                    >
+                        <i class="fab fa-whatsapp me-2" style="color: #25D366; font-size: 1.5em;"></i>
+                        <!-- <i class="fas fa-plus me-2"></i> -->
+                        Agregar Número
+                    </el-button>
+                </div>
             </div>
 
             <!-- Tabla de configuración -->
@@ -31,14 +36,18 @@
                 <!-- Fila de "Seleccionar Todos" -->
                 <el-table-column label="Establecimiento" prop="establishment">
                     <template slot="header">
-                        Establecimiento
+                        <div style="background-color: #073f68; color: white; font-weight: bold; padding: 10px;">
+                            Establecimiento Comercial
+                        </div>
                     </template>
                     <template slot-scope="{ row }">
                         <template v-if="row.isSelectAll">
-                            <strong>Seleccionar Todos</strong>
+                            <strong style="background-color: #d9edf7; padding: 5px; border-radius: 3px;">Seleccionar Todos</strong>
                         </template>
                         <template v-else>
-                            {{ row.establishment.description }}
+                            <span style="background-color: #f5f5f5; padding: 5px; border-radius: 3px;">
+                                {{ row.establishment.description }}
+                            </span>
                         </template>
                     </template>
                 </el-table-column>
@@ -87,13 +96,20 @@
             </el-table>
         </div>
 
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
+        <div slot="footer" class="dialog-footer d-flex justify-content-end">
+            <el-button 
+                icon="fas fa-times"
+                class="btn-cancel btn-cancel:hover"
+                @click="close">Cancelar
+            </el-button>
+
             <el-button
+                icon="fas fa-save"
+                class="btn-save btn-save:hover"
                 type="primary"
                 @click="saveConfiguration"
                 :loading="saving"
-            >
+                >
                 Guardar
             </el-button>
         </div>
@@ -105,31 +121,43 @@
         >
             <div class="row mt-2">
                 <div class="col-12">
-                    <el-input
-                        :maxlength="9"
-                        placeholder="Número de whatsapp"
-                        v-model="numberWhatsapp"
-                    ></el-input>
+                    <div style="display: flex; align-items: center; background-color: #073f68; color: white; padding: 10px; border-radius: 5px;">
+                        <div style="flex: 1; text-align: center; font-weight: bold;">Número de WhatsApp</div>
+                        <div style="flex: 1; text-align: center; font-weight: bold;">Titular</div>
+                    </div>
                 </div>
-                <div class="col-12 mt-1">
-                    <el-input
-                        placeholder="Descripción"
-                        v-model="descriptionNumberWhatsapp"
-                    ></el-input>
+                <div class="col-12 mt-2">
+                    <div style="display: flex; gap: 10px;">
+                        <el-input
+                            style="flex: 1;"
+                            :maxlength="9"
+                            placeholder="Número de WhatsApp"
+                            v-model="numberWhatsapp"
+                        ></el-input>
+                        <el-input
+                            style="flex: 1;"
+                            placeholder="Titular"
+                            v-model="descriptionNumberWhatsapp"
+                        ></el-input>
+                    </div>
                 </div>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <span slot="footer" class="dialog-footer d-flex justify-content-end">
                 <el-button
+                    class="btn-cancel btn-cancel:hover me-2"
                     icon="fas fa-times fa-lg"
                     @click="showAddNumberwhatsapp = false"
-                    >Cancelar</el-button
                 >
+                    Cancelar
+                </el-button>
                 <el-button
+                    class="btn-agregar btn-agregar:hover"
                     icon="fas fa-save fa-lg"
                     type="primary"
                     @click="sendNumberWhatsapp"
-                    >Agregar</el-button
                 >
+                    Agregar
+                </el-button>
             </span>
         </el-dialog>
     </el-dialog>

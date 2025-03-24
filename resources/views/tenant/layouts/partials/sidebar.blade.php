@@ -501,7 +501,7 @@
                 <ul id="documents" class="collapse ">
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
                         <li>
-                            <span class="label" style="font-size: 1em;  font-weight: bold;">COMPROBANTES
+                            <span class="label" style="font-size: 0.9em;  font-weight: bold;">COMPROBANTES
                                 ELECTRÓNICOS</span>
                         </li>
                         {{-- Nuevo Comprobante --}}
