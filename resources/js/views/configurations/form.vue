@@ -3935,6 +3935,32 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="col-md-3 mt-4">
+                                                                <div class="card h-100">
+                                                                    <div class="card-body d-flex flex-column">
+                                                                        <div class="form-group text-left flex-grow-1">
+                                                                            <label class="control-label w-100">
+                                                                                <i class="fas fa-id-card fa-lg"></i>
+                                                                                Mostrar Opcion de Poder regularizar stock de productos 
+                                                                            </label>
+                                                                            <el-switch
+                                                                                v-model="form.kardex_regularizate"
+                                                                                active-text="Si"
+                                                                                inactive-text="No"
+                                                                                :active-color="'#28a745'"
+                                                                                :inactive-color="'#6c757d'"
+                                                                                @change="submit(
+                                                                                    'regularizacion stock de productos',
+                                                                                    form.kardex_regularizate,
+                                                                                    'user_edit',
+                                                                                    'idCardIcon'
+                                                                                )"
+                                                                            ></el-switch>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                            
 
                                                         </div>

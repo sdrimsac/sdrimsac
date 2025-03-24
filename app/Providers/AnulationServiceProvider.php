@@ -33,22 +33,26 @@ class AnulationServiceProvider extends ServiceProvider
             if($document['document_type_id'] == '01' || $document['document_type_id'] == '03'){
 
                 if($document['state_type_id'] == 11){
-
-                    foreach ($document['items'] as $detail) {
-
-                        // $item = Item::find($detail['item_id']);
-                        // $item->stock = $item->stock + $detail['quantity'];
-                        // $item->save();
-
-                        $this->updateStock($detail['item_id'], $detail['quantity'], false);
-
-                        $this->saveKardex('sale', $detail['item_id'], $document['id'], -$detail['quantity'],'document');
-
+                    
+                    $has_sale_note = $document->sale_note_id != null;
+                    
+                    // If document was NOT created from a sale note, process normally
+                    if (!$has_sale_note) {
+                        foreach ($document['items'] as $detail) {
+                            // Update stock in Item model
+                            $item = Item::find($detail['item_id']);
+                            $item->stock = $item->stock + $detail['quantity'];
+                            $item->save();
+                            
+                            // Also update in Kardex 
+                            $this->updateStock($detail['item_id'], $detail['quantity'], false);
+                            $this->saveKardex('sale', $detail['item_id'], $document['id'], -$detail['quantity'],'document');
+                        }
                     }
-
+                    // If has_sale_note is true, we don't process anything as the stock
+                    // will be managed when the sale note is processed
                 }
             }
-
 
         });
 

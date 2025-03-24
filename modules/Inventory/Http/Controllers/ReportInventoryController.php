@@ -16,6 +16,9 @@ use Modules\Inventory\Exports\InventoryExport;
 use Modules\Inventory\Http\Resources\InventoryCollection;
 use Mpdf\Mpdf;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
+use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Configuration as TenantConfiguration;
+
 class ReportInventoryController extends Controller
 {
     use StorageDocument;
@@ -83,8 +86,9 @@ class ReportInventoryController extends Controller
      */
     public function tables(){
         $warehouses = Warehouse::select('id', 'description')->get();
-         $categories = CategoryItem::orderBy('name','asc')->get();
-        return compact('warehouses','categories');
+        $categories = CategoryItem::orderBy('name','asc')->get();
+        $configuration = Configuration::first();
+        return compact('warehouses','categories', 'configuration');
     }
     public function search(Request $request) {
   

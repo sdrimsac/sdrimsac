@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'kardex_regularizate',
         'comand_big',
         'order_mozo',
         'anulate_sunat',
@@ -309,6 +310,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'kardex_regularizate' => 'boolean',
         'comand_big' => 'boolean',
         'order_mozo' => 'boolean',
         'anulate_sunat' => 'boolean',
@@ -561,6 +563,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'kardex_regularizate' => (bool)$this->kardex_regularizate,
             'comand_big' => (bool)$this->comand_big,
             'order_mozo' => (bool)$this->order_mozo,
             'anulate_sunat' => (bool)$this->anulate_sunat,

@@ -43,7 +43,10 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                         $lots = isset($detail['item']->lots) ? $detail['item']->lots : [];
 
                         foreach ($lots as $lot) {
-                            ItemLot::find($lot->id)->update(["has_sale" => 0]);
+                            $has_sale_note = $document->sale_note_id != null;
+                            if (!$has_sale_note) {
+                                ItemLot::find($lot->id)->update(["has_sale" => 0]);
+                            }
                         }
                         $quantity = $detail['quantity'];
                         if (isset($detail['item']->has_unit_type)) {
@@ -59,8 +62,12 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                         $presentationQuantity = (!empty($detail['item']->presentation)) ? $detail['item']->presentation->quantity_unit : 1;
 
                         $this->createInventoryKardex($document, $detail['item_id'], $detail['quantity'] * $presentationQuantity,  $warehouse_id ?? $warehouse->id);
-                        $this->updateStock($detail['item_id'], $detail['quantity'] * $presentationQuantity, $warehouse_id ?? $warehouse->id);
-                        $this->updateDataLots($detail);
+                        $has_sale_note = $document->sale_note_id != null;
+                        if (!$has_sale_note) {
+                            $this->updateStock($detail['item_id'], $detail['quantity'] * $presentationQuantity, $warehouse_id ?? $warehouse->id);
+                            $this->updateDataLots($detail);
+                        }
+                        
                     }
 
                     $this->voidedWasDeductedPrepayment($document);
@@ -88,7 +95,6 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                 }
             }
         }
-
     }
 
     private function voided_order_note(){

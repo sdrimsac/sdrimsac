@@ -49,7 +49,7 @@
                         <th class="text-white text-left">Almacén</th>
                         <th class="text-white text-center">Stock</th>
                         <th class="text-white text-center"
-                        v-if="typeUser == 'superadmin'"
+                        v-if="configuration.kardex_regularizate"
                         >Stock real</th>
                     </tr>
                     <tr slot-scope="{ index, row }">
@@ -96,7 +96,7 @@
                         <td class="text-left">{{ row.warehouse_description }}</td>
                         <td class="text-center">{{ parseFloat(row.stock).toFixed(2) }}</td>
                         <td class="text-center"
-                        v-if="typeUser == 'superadmin'"
+                        v-if="configuration.kardex_regularizate"
                         >
                             <div class="flex">
                                 <el-input :disabled="row.series_enabled || row.has_color_size" size="mini" class="w-50" type="number" v-model="row.realStock" :min="1" :precision="2" @keypress="onlyAllowNumbers" controls-position="right">
@@ -149,7 +149,10 @@ export default {
             isModalVisible: false,
             loading:false,
             typeTransaction: null,
-            warehouses: []
+            warehouses: [],
+            configuration: {}, // Added configuration object initialization
+            categories: [],
+            items: []
         };
         
     },
@@ -159,6 +162,7 @@ async mounted() {
                 this.warehouses = response.data.warehouses;
                 this.categories = response.data.categories;
                 this.items = response.data.items;
+                this.configuration = response.data.configuration;
             });
     /* 
         await this.getRecords()*/

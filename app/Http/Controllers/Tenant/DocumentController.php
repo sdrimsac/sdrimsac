@@ -2997,6 +2997,13 @@ class DocumentController extends Controller
             $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
+                
+                // Show warning message if document was created from sale note
+                $from_sale_note = false;
+                if($record->sale_note_id) {
+                    $from_sale_note = true;
+                }
+
                 $orden_id = $record->orden_id;
                 $establishment_id = $record->establishment_id;
                 $date_of_issue = $record->date_of_issue;
@@ -3005,35 +3012,21 @@ class DocumentController extends Controller
                 $date_now->setTime(0, 0, 0);
                 $two_days_ago = $date_now->copy()->subDays(2);
                 $same_date = $issued_date >= $two_days_ago && $issued_date <= $date_now;
-                //si issued_date es mayor al dia de hoy
+                
                 if ($issued_date > $date_now) {
                     $same_date = true;
                 }
+                
                 if ($same_date) {
                     $this->deleteAllPayments($record->payments);
                     $record->state_type_id = "11";
                     $items = $record->items;
-                    // foreach ($items as $it) {
-                    //     $lots = $it->item->lots;
-                    //     foreach ($lots as $lot) {
-                    //         ItemLot::find($lot->id)->update(["has_sale" => 0]);
-                    //     }
-                    //     $quantity = $it->quantity;
-                    //     if (isset($it->item->has_unit_type)) {
-                    //         $unit_type = ItemUnitType::where('item_id', $it->item_id)
-                    //             ->where('description', $it->item->has_unit_type)->first();
-                    //         if ($unit_type) {
 
-                    //             $quantity = $quantity * $unit_type->quantity_unit;
-                    //         }
-                    //     }
-
-                    // }
                     Box::where('document_id', $document_id)->delete();
                     $desc = "App\Models\Tenant\Document";
-                    // InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
                     $record->internal_voided = true;
                     $record->save();
+                    
                     if ($orden_id) {
                         $orden = Orden::find($orden_id);
 
@@ -3043,6 +3036,7 @@ class DocumentController extends Controller
                             $orden->save();
                         }
                     }
+                    
                     $configuration = Configuration::first();
                     if ($configuration->college) {
                         $payments = CollegePayment::where('document_id', $document_id)->get();
@@ -3061,17 +3055,36 @@ class DocumentController extends Controller
                             }
                         }
                     }
-                    return true;
+
+                    $message = 'Documento anulado con éxito';
+                    if($from_sale_note) {
+                        $message .= '. Nota: Este documento fue creado a partir de una nota de venta el cual para no afecta stock para que afecte el stock debe anular el documento original.';
+                    }
+
+                    return [
+                        'success' => true,
+                        'message' => $message,
+                        'from_sale_note' => $from_sale_note
+                    ];
                 }
-                return false;
+                return [
+                    'success' => false, 
+                    'message' => 'El documento no se puede eliminar, debido a que tiene mas de dos días de emitido. ' . $date_now,
+                    'from_sale_note' => false
+                ];
             });
+
             return [
-                'success' => $deleted,
-                'message' => $deleted ? 'Documento anulado con exito ' : 'El documento no se puede eliminar, debido a que tiene mas de dos días de emitido. ' . $date_now
+                'success' => $deleted['success'],
+                'message' => $deleted['message'],
+                'from_sale_note' => $deleted['from_sale_note'] ?? false
             ];
+
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el Documento'];
+            return ($e->getCode() == '23000') ? 
+                ['success' => false, 'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] : 
+                ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el Documento'];
         }
     }
 
