@@ -43,8 +43,10 @@ use Modules\Restaurant\Models\Observation;
 use App\Events\MessageEvent;
 use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\ItemSet;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
+use Illuminate\Support\Str;
 use Modules\Restaurant\Events\StockRealEvent;
 
 class OrdenController extends Controller
@@ -777,7 +779,7 @@ class OrdenController extends Controller
                 $user = User::find(auth()->id());
             }
 
-            if ($configuration->sales_stock) { 
+            /* if ($configuration->sales_stock) { 
                 $user = auth()->user();
                 
                 // Get the warehouse based on user's establishment_id
@@ -806,7 +808,6 @@ class OrdenController extends Controller
                         continue;
                     }
 
-                    // Check if item is active
                     if (!$food->item->active) {
                         return [
                             'success' => false,
@@ -828,6 +829,88 @@ class OrdenController extends Controller
                             'success' => false,
                             'message' => "El producto {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}"
                         ];
+                    }
+                }
+            } */
+
+            if ($configuration->sales_stock) {
+                $user = auth()->user();
+
+                // Obtener el almacén del usuario según su establecimiento
+                $establishment_warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
+
+                if (!$establishment_warehouse) {
+                    return [
+                        'success' => false,
+                        'message' => 'No existe un almacén para su establecimiento. Contacte al administrador.'
+                    ];
+                }
+
+                foreach ($request->items as $item) {
+                    $food = Food::find($item['food']['id']);
+
+                    // Validar que el producto tenga un item asociado
+                    if (!$food->item) {
+                        return [
+                            'success' => false,
+                            'message' => "El producto {$food->description} no tiene un item asociado"
+                        ];
+                    }
+
+                    // Saltar validación de stock para servicios (type ZZ)
+                    if ($food->item->unit_type_id === 'ZZ') {
+                        continue;
+                    }
+
+                    // Validar que el producto esté activo
+                    if (!$food->item->active) {
+                        return [
+                            'success' => false,
+                            'message' => "El producto {$food->description} está desactivado y no puede ser vendido"
+                        ];
+                    }
+
+                    // Verificar si el código interno comienza con "PACK000" o "PLAT000" (es una receta)
+                    if (Str::startsWith($food->item->internal_id, ['PACK000', 'PLAT000'])) {
+                        // Obtener los productos individuales que componen la receta
+                        $item_set = ItemSet::where('item_id', $food->item_id)->get();
+
+                        foreach ($item_set as $row) {
+                            $ingredient = Item::find($row->individual_item_id);
+
+                            // Obtener el stock del ingrediente en el almacén del usuario
+                            $warehouse_stock = ItemWarehouse::where([
+                                'item_id' => $ingredient->id,
+                                'warehouse_id' => $establishment_warehouse->id,
+                                'active' => 1
+                            ])->value('stock') ?? 0;
+
+                            // Calcular la cantidad requerida del ingrediente
+                            $required_quantity = floatval($row->quantity) * floatval($item['quantity']);
+
+                            if ($required_quantity > $warehouse_stock) {
+                                return [
+                                    'success' => false,
+                                    'message' => "El ingrediente {$ingredient->description} de la receta {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}, y se requieren {$required_quantity}"
+                                ];
+                            }
+                        }
+                    } else {
+                        // Si NO es una receta, verificar stock normal del producto
+                        $warehouse_stock = ItemWarehouse::where([
+                            'item_id' => $food->item_id,
+                            'warehouse_id' => $establishment_warehouse->id,
+                            'active' => 1
+                        ])->value('stock') ?? 0;
+
+                        $ordered_quantity = $item['quantity'];
+
+                        if ($ordered_quantity > $warehouse_stock) {
+                            return [
+                                'success' => false,
+                                'message' => "El producto {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}"
+                            ];
+                        }
                     }
                 }
             }
