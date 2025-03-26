@@ -779,60 +779,6 @@ class OrdenController extends Controller
                 $user = User::find(auth()->id());
             }
 
-            /* if ($configuration->sales_stock) { 
-                $user = auth()->user();
-                
-                // Get the warehouse based on user's establishment_id
-                $establishment_warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
-
-                if (!$establishment_warehouse) {
-                    return [
-                        'success' => false,
-                        'message' => 'No existe un almacén para su establecimiento. Contacte al administrador.'
-                    ];
-                }
-
-                foreach ($request->items as $item) {
-                    $food = Food::find($item['food']['id']);
-
-                    // Check if item exists 
-                    if (!$food->item) {
-                        return [
-                            'success' => false,
-                            'message' => "El producto {$food->description} no tiene un item asociado"
-                        ];
-                    }
-
-                    // Skip stock validation for services (type ZZ)
-                    if ($food->item->unit_type_id === 'ZZ') {
-                        continue;
-                    }
-
-                    if (!$food->item->active) {
-                        return [
-                            'success' => false,
-                            'message' => "El producto {$food->description} está desactivado y no puede ser vendido"
-                        ];
-                    }
-
-                    // Get stock from item_warehouse
-                    $warehouse_stock = ItemWarehouse::where([
-                        'item_id' => $food->item_id, 
-                        'warehouse_id' => $establishment_warehouse->id,
-                        'active' => 1
-                    ])->value('stock') ?? 0;
-
-                    $ordered_quantity = $item['quantity'];
-
-                    if ($ordered_quantity > $warehouse_stock) {
-                        return [
-                            'success' => false,
-                            'message' => "El producto {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}"
-                        ];
-                    }
-                }
-            } */
-
             if ($configuration->sales_stock) {
                 $user = auth()->user();
 

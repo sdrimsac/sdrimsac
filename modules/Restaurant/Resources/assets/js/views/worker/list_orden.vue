@@ -198,6 +198,16 @@
                                                     {{ orden.observations }}
                                                     </h1>
                                                 </div>
+                                                <div class="stats w-100 row ">
+                                                    <h3
+                                                        style="font-weight: bold; color: green"
+                                                    >
+                                                    </h3>
+                                                    <h1 style="font-weight: bold;">
+                                                    
+                                                    {{ orden.zone_name }}
+                                                    </h1>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -265,8 +275,10 @@ export default {
                     // Asegurarse de que mozo_name esté disponible
                     const orderItem = {
                         ...e.order_item,
-                        mozo_name: e.order_item.mozo_name || '-'
+                        mozo_name: e.order_item.mozo_name || '-',
+                        zone_name: e.order_item.zone_name || '-'
                     };
+                    
                     this.ordens = [...this.ordens, orderItem];
                     this.play();
                 }

@@ -21,11 +21,7 @@
                                 </a>
                                 <el-button
                                     v-if="show != 'tables'"
-                                    @click="
-                                        selectOption = 1;
-                                        tables_row_select = null;
-                                        show = 'tables';
-                                    "
+                                    @click="returnToTablesView"
                                     class="fw-bold"
                                 >
                                     <i class="icofont icofont-dining-table"></i>
@@ -33,7 +29,11 @@
                                 </el-button>
 
                                 <el-button
-                                    v-if="configuration.chifa_china && show == 'create' && currentTable"
+                                    v-if="
+                                        configuration.chifa_china &&
+                                            show == 'create' &&
+                                            currentTable
+                                    "
                                     type="success"
                                     @click="open"
                                     style="padding: 12px 24px; border-radius: 25px; font-size: 16px;"
@@ -61,21 +61,12 @@
                                         <a
                                             href="javascript:void(0)"
                                             class="text-danger font-weight-bold"
-                                            @click="
-                                                selectOption = 1;
-                                                tables_row_select = null;
-                                                show = 'tables';
-                                            "
+                                            @click="returnToTablesView"
                                         >
                                             Mesa N°{{ currentTable.number }}
                                         </a>
                                     </h1>
                                 </li>
-                                <!-- <li class="breadcrumb-item">
-                                <a href="javascript:void(0)" class="text-info font-weight-bold" @click="createOrden()">
-                                    Nueva Orden
-                                </a>
-                </li>-->
                             </template>
                         </ul>
                     </nav>
@@ -203,46 +194,31 @@
                 </button>
             </div>
         </div>
-        <!-- <div class="row p-2" v-show="show == 'tables'">
-            <div class="d-flex flex-wrap justify-content-center">
-                <div
-                    :class="[
-                        data.enabled == false
-                            ? 'btn-light'
-                            : data.status_table.id == 1
-                            ? 'btn-primary'
-                            : 'btn-danger'
-                    ]"
-                    class="col-xl-2 col-md-4 col-4 btn m-1 d-flex flex-column justify-content-center align-items-center"
-                    style="max-height: 200px; max-width: 300px;"
-                    v-for="(data, index) in tables"
-                    :key="index"
-                    @click="selectedTable(data.id, data)"
-                >
-                    <strong class="h3 text-white">{{
-                        data.is_room ? "Habitación" : "Mesa"
-                    }}</strong>
-                    <i class="icofont-dining-table icofont-4x"></i>
-
-                    <span class="h2 text-white">{{ data.full_name }}</span>
-                    <span
-                        :class="
-                            `${
-                                data.enabled == false
-                                    ? 'text-light'
-                                    : data.status_table.id == 1
-                                    ? 'text-white'
-                                    : 'text-black'
-                            }`
-                        "
-                        >{{ data.status_table.description }}</span
-                    >
-                    <span>USUARIO: CAJA </span>
-                </div>
-            </div>
-        </div> -->
 
         <div class="row p-2" v-show="show == 'tables'">
+            <!-- Add zones section here, only dependent on show === 'tables' -->
+            <div class="col-12 mb-3">
+                <div class="zones-scroll">
+                    <div class="zones-wrapper">
+                        <button
+                            v-for="(zone, idx) in zones"
+                            :key="idx"
+                            type="button"
+                            class="zone-btn"
+                            :class="[
+                                'btn',
+                                zone_id == zone.id
+                                    ? 'btn-primary text-Success'
+                                    : 'btn-primary'
+                            ]"
+                            @click="filterZones(zone.id)"
+                        >
+                            ZONA {{ zone.name }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <div
                 class="col-6 col-md-4 col-xl-2 p-1"
                 v-for="(data, index) in tables"
@@ -431,6 +407,66 @@
 .categories-scroll::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+/* stilos de zona */
+.zones-scroll {
+    width: 100%;
+    overflow-x: auto;
+    padding: 15px 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+.zones-wrapper {
+    display: flex;
+    gap: 12px;
+    padding: 0 15px;
+    min-width: min-content;
+}
+
+.zone-btn {
+    min-width: 120px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 25px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.zone-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom scrollbar styling */
+.zones-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.zones-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.zones-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.zones-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .zone-btn {
+        min-width: 100px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .zones-wrapper {
+        gap: 8px;
+    }
+}
 </style>
 
 <script>
@@ -466,6 +502,7 @@ export default {
     ],
     data() {
         return {
+            zone_id: null,
             showDialog: false,
             recordId: null,
             audio: HTMLAudioElement,
@@ -479,6 +516,7 @@ export default {
             isDisabling: false,
             screenWidth: 0,
             allFoods: [],
+            zones: [],
             listFoods: [],
             pagination: {},
             foods: [],
@@ -498,6 +536,7 @@ export default {
             loading: false,
             category: 0,
             tables: [],
+            all_tables: [], // Add this line to store all tables
             printerDefault: null,
             currentArea: null,
             allAreas: [],
@@ -729,7 +768,49 @@ export default {
         });
     },
     methods: {
-        
+        filterZones(zone_id) {
+            /* console.log("Filtering zone:", zone_id);
+            console.log("All tables:", this.all_tables); */
+
+            if (this.zone_id === zone_id) {
+                // If clicking the same zone, deselect it and show all tables
+                this.zone_id = null;
+                this.tables = this.all_tables;
+                /* console.log("Deselected zone, showing all tables:", this.tables.length); */
+                return;
+            }
+
+            this.zone_id = zone_id;
+
+            // Filter tables by zone_id
+            if (this.all_tables && this.all_tables.length > 0) {
+                // Check if tables have zone_id property
+                const hasZoneId = this.all_tables.some(
+                    table => table.zone_id !== undefined
+                );
+                /* console.log("Tables have zone_id property:", hasZoneId); */
+
+                if (hasZoneId) {
+                    this.tables = this.all_tables.filter(table => {
+                        return table.zone_id == zone_id;
+                    });
+                } else {
+                    // If tables don't have zone_id property, try to look for a different property
+                    /*  console.log("Looking for alternative zone property"); */
+                    const sampleTable = this.all_tables[0];
+                    /* console.log("Sample table properties:", Object.keys(sampleTable)); */
+
+                    // Try to find any property that could be related to zones
+                    this.tables = this.all_tables;
+                }
+
+                /*  console.log(`Filtered tables for zone ${zone_id}:`, this.tables.length); */
+            } else {
+                console.log("No tables available to filter");
+                this.tables = [];
+            }
+        },
+
         async fetchFood(productId) {
             try {
                 const response = await this.$http.get(
@@ -849,6 +930,7 @@ export default {
         },
         changeOrdenEvent(id) {
             this.hasSelectedOrdenToChange = true;
+            this.currentTable = null; // Reset currentTable when changing table
             this.show = "tables";
             this.ordenToChange = id;
         },
@@ -1072,6 +1154,13 @@ export default {
                 await this.getTables();
                 return;
             }
+            if (this.zone_id) {
+                // If a zone is already selected, filter by that zone
+                this.filterZones(this.zone_id);
+            } else {
+                // Otherwise show all tables
+                this.tables = this.all_tables;
+            }
 
             if (
                 this.changingOrden &&
@@ -1097,9 +1186,9 @@ export default {
             await this.userorden();
             // Llamar a handleSelectOrden para seleccionar la única orden existente
             if (this.configuration.order_mozo === true) {
-                this.handleSelectOrden(); 
+                this.handleSelectOrden();
             }
-            
+
             // this.focus();
             this.allAreas = this.allAreas.map(a => {
                 a.selected = false;
@@ -1167,8 +1256,28 @@ export default {
                 ]);
 
                 if (tablesResponse.status == 200) {
-                    const { data } = tablesResponse.data;
+                    const { data, zones } = tablesResponse.data;
+                    /* console.log("Tables from API:", data);
+                    console.log("Zones from API:", zones); */
+
+                    // Check if zone_id exists in tables
+                    /* if (data.length > 0) {
+                        console.log("Sample table properties:", Object.keys(data[0]));
+                        console.log("Sample table zone_id:", data[0].zone_id);
+                    } */
+
+                    this.all_tables = data; // Store all tables here
                     this.tables = data;
+                    this.zones = zones;
+
+                    // If zone filter is active, apply it
+                    if (this.zone_id) {
+                        this.tables = this.all_tables.filter(table => {
+                            return table.zone_id == this.zone_id;
+                        });
+                        /* console.log(`Reapplied zone filter for zone ${this.zone_id}, found ${this.tables.length} tables`); */
+                    }
+
                     if (!change) {
                         this.show = "tables";
                     }
@@ -1183,6 +1292,12 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+        returnToTablesView() {
+            this.selectOption = 1;
+            this.tables_row_select = null; // Then reset currentTable
+            this.currentTable = null; // Important: reset currentTable to null
+            this.show = 'tables';
         }
     }
 };

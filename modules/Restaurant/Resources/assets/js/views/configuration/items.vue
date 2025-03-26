@@ -46,7 +46,6 @@
                         v-if="resource == 'caja/rooms' && !isRenta"
                         class="custom-button"
                         @click.prevent="clickSeeInsumos"
-                    
                     >
                         <i class="fas fa-boxes"></i>
                         <span>Insumos</span>
@@ -103,6 +102,16 @@
                         <span>Pisos</span>
                     </el-button>
                     <!-- Contact Button Start -->
+                    <el-button
+                        v-if="resource == 'caja/tables'"
+                        type="primary"
+                        class="custom-button"
+                        href="javascript:void(0)"
+                        @click.prevent="clickZones()"
+                    >
+                        <i class="fas fa-plus-circle"></i>
+                        <span>ZONAS</span>
+                    </el-button>
                     <el-button
                         type="primary"
                         class="custom-button"
@@ -195,7 +204,7 @@
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td
-                            :class="row.active ? '' : 'text-danger'"
+                                :class="row.active ? '' : 'text-danger'"
                                 v-if="
                                     type != 'caja/tables' &&
                                         type != 'caja/rooms'
@@ -336,6 +345,7 @@
                     :types="types"
                     :showDialog.sync="showDialog"
                     :areas="areas"
+                    :zones="zones"
                     :type="type"
                     :configurations.sync="configurations"
                     :recordId.sync="recordId"
@@ -357,6 +367,10 @@
                     :showDialog.sync="showItems"
                     :type="typeItem"
                 ></items-rooms>
+                <items-tables
+                    :showDialog.sync="showItemsTables"
+                    :type="typeItem"
+                ></items-tables>
                 <promotions :showDialog.sync="showPromotions"></promotions>
                 <insumos :showDialog.sync="showInsumos"></insumos>.
 
@@ -403,6 +417,7 @@ import CreateForm from "./form.vue";
 
 import CreateFormMassive from "./formTableMassive.vue";
 import ItemsRooms from "./items_rooms.vue";
+import ItemsTables from "./items_tables.vue";
 import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
@@ -417,19 +432,22 @@ export default {
         Promotions,
         Insumos,
         Penalities,
-        WhatsappRent
+        WhatsappRent,
+        ItemsTables
     },
     data() {
         return {
             showWhatsapp: false,
             showInsumos: false,
             showItems: false,
+            showItemsTables: false,
             showDialog: false,
             showDialogMassive: false,
             resource: this.type,
             recordId: null,
             areas: [],
             statusTable: [],
+            zones: [],
             ascending: false,
             sortColumn: "",
             search: {
@@ -462,28 +480,28 @@ export default {
         });
     },
     computed: {
-        isRenta(){
+        isRenta() {
             console.log(this.configurations);
             return this.configurations.mod_renta;
         }
     },
     methods: {
-        clickSeeWhatsapp(){
+        clickSeeWhatsapp() {
             this.showWhatsapp = true;
         },
-        clickSeePenalities(){
+        clickSeePenalities() {
             this.showPenalities = true;
         },
-        clickRemove(id){
+        clickRemove(id) {
             this.$confirm("¿Desea eliminar la observación?", "Eliminar", {
                 confirmButtonText: "Eliminar",
 
                 cancelButtonText: "Cancelar",
                 type: "warning"
             }).then(() => {
-                this.$http.get(`/${this.resource}/remove/${id}`).then(() =>
-                    this.$eventHub.$emit("reloadData")
-                );
+                this.$http
+                    .get(`/${this.resource}/remove/${id}`)
+                    .then(() => this.$eventHub.$emit("reloadData"));
             });
         },
         clickSeeInsumos() {
@@ -504,6 +522,11 @@ export default {
             this.typeItem = "floors";
             this.showItems = true;
         },
+        clickZones() {
+            this.typeItem = "zones";
+            this.showItemsTables = true;
+        },
+
         clickCreateMassive() {
             this.showDialogMassive = true;
         },
@@ -531,6 +554,10 @@ export default {
             //}
         },
         async getTables() {
+            this.$http.get(`/caja/tables/tables-zone`).then(response => {
+                let { zones } = response.data;
+                this.zones = zones;
+            });
             this.$http
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {
@@ -543,7 +570,6 @@ export default {
                 )
                 .then(response => {
                     this.statusTable = response.data.data;
-          ;
                 });
             this.$http.get(`/caja/rooms/types`).then(response => {
                 this.types = response.data.data;
@@ -576,6 +602,7 @@ export default {
         clickCreate(recordId = null) {
             this.recordId = recordId;
             this.showDialog = true;
+            this.getTables();
             /* if (this.type === "caja/rooms") {
         this.getTables();
       } else {

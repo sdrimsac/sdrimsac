@@ -85,7 +85,8 @@
                                                         @click="
                                                             (configuration.consolidated_quotations ||
                                                                 configuration.direct_unit_type) &&
-                                                            data.types && data.types.length >
+                                                            data.types &&
+                                                            data.types.length >
                                                                 0
                                                                 ? clickCommand(
                                                                       data
@@ -261,8 +262,11 @@
                                                         >
                                                             <div
                                                                 v-if="
-                                                                    data.types && data.types.length > 0
-                                                                        
+                                                                    data.types &&
+                                                                        data
+                                                                            .types
+                                                                            .length >
+                                                                            0
                                                                 "
                                                             >
                                                                 <el-dropdown
@@ -385,7 +389,8 @@
                                         @click="
                                             (configuration.consolidated_quotations ||
                                                 configuration.direct_unit_type) &&
-                                            data.types && data.types.length > 0
+                                            data.types &&
+                                            data.types.length > 0
                                                 ? clickCommand(data.types[0])
                                                 : addFood(index)
                                         "
@@ -510,7 +515,12 @@
                                             <div></div>
                                         </div>
 
-                                        <div v-if="data.types && data.types.length > 0">
+                                        <div
+                                            v-if="
+                                                data.types &&
+                                                    data.types.length > 0
+                                            "
+                                        >
                                             <el-dropdown
                                                 @command="clickCommand"
                                             >
@@ -706,7 +716,8 @@
                                     @click="
                                         (configuration.consolidated_quotations ||
                                             configuration.direct_unit_type) &&
-                                        data.types && data.types.length > 0
+                                        data.types &&
+                                        data.types.length > 0
                                             ? clickCommand(data.types[0])
                                             : addFood(index)
                                     "
@@ -821,7 +832,11 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div v-if="data.types && data.types.length > 0">
+                                    <div
+                                        v-if="
+                                            data.types && data.types.length > 0
+                                        "
+                                    >
                                         <el-dropdown @command="clickCommand">
                                             <span class="el-dropdown-link">
                                                 Precios
@@ -929,15 +944,29 @@
                                                     </el-button>
                                                 </el-row>
                                             </span>
+                                            <span
+                                                v-if="configuration.zones_workers"
+                                                class="col-2 button-container"
+                                            >
+                                                <el-row>
+                                                    <el-button
+                                                        size="mini"
+                                                        class="bg-primary"
+                                                        round
+                                                        @click.prevent="
+                                                            clickFoodsImages(
+                                                                data.id
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="el-icon-view text-white"
+                                                        ></i>
+                                                    </el-button>
+                                                </el-row>
+                                            </span>
                                         </div>
                                     </template>
-                                    <!-- <template v-else>
-                                        <span
-                                            class="badge rounded-pill bg-danger m-l-0"
-                                            style="text-align: center !important"
-                                            >Agotado</span
-                                        >
-                                    </template> -->
                                     <template v-else>
                                         <div
                                             class="text-center"
@@ -953,6 +982,32 @@
                                             />
                                         </div>
                                     </template>
+                                </div>
+                               
+                                <div v-else>
+                                    <div 
+                                    v-if="configuration.zones_workers"
+                                    class="row justify-content-end" 
+                                    style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;">
+                                        <span class="col-2 button-container">
+                                            <el-row>
+                                                <el-button
+                                                    size="mini"
+                                                    class="bg-primary"
+                                                    round
+                                                    @click.prevent="
+                                                        clickFoodsImages(
+                                                            data.id
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="el-icon-view text-white"
+                                                    ></i>
+                                                </el-button>
+                                            </el-row>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </el-tooltip>
@@ -982,6 +1037,11 @@
             :config="config"
             :user="user"
         ></warehouses-detail>
+        <images-food
+            :showDialog.sync="showImagesFoods"
+            :item="currentItem"
+            :config="config"
+        ></images-food>
         <modal-unit-type-id
             @selectUnitType="selectUnitType"
             :showDialog.sync="showDialogUnitType"
@@ -1025,9 +1085,15 @@
 import WarehousesDetail from "./warehouses.vue";
 import UnitTypeModal from "./unit_type_modal.vue";
 import ModalUnitTypeId from "./modal_unit_type_id.vue";
+import ImagesFood from "./images_food.vue";
 import swal from "sweetalert2";
 export default {
-    components: { WarehousesDetail, UnitTypeModal, ModalUnitTypeId },
+    components: {
+        WarehousesDetail,
+        UnitTypeModal,
+        ModalUnitTypeId,
+        ImagesFood
+    },
     props: [
         "lastQuery",
         "cotizarConfirmado",
@@ -1063,6 +1129,7 @@ export default {
             hasSerie: false,
             user: false,
             config: {},
+            showImagesFoods: false,
             showWarehousesDetail: false,
             warehousesDetail: [],
             form: {
@@ -1170,7 +1237,7 @@ export default {
                 ]
             },
             screenWidth: 0,
-            stockData: {}, // Store stock updates by food_id
+            stockData: {} // Store stock updates by food_id
         };
     },
     mounted() {
@@ -1242,7 +1309,6 @@ export default {
         }
     },
     methods: {
- 
         agregarItem(producto) {
             if (!producto || !producto.food) {
                 return;
@@ -1260,7 +1326,6 @@ export default {
             );
 
             if (productoIndex === -1) {
-
                 this.$set(this.listFoods, this.listFoods.length, cleanProducto);
 
                 productoIndex = this.listFoods.length - 1;
@@ -1300,6 +1365,19 @@ export default {
             this.warehousesDetail = warehouses;
             this.unit_type = unit_type;
             this.showWarehousesDetail = true;
+        },
+
+        clickFoodsImages(id) {
+            this.itemId = id;
+            // Find the food item by id and pass it with its full data
+            const foodItem = this.foods.find(food => food.id === id);
+            if (foodItem) {
+                this.currentItem = {
+                    ...foodItem,
+                    description: foodItem.description // Ensure description is included
+                };
+            }
+            this.showImagesFoods = true;
         },
 
         isExpired(date) {
@@ -1784,7 +1862,7 @@ export default {
             this.selectedFood = null;
             this.item = null;
             if (!this.configuration.chifa_china) {
-                this.$emit("buscarnuevo"); 
+                this.$emit("buscarnuevo");
             }
         },
         setFalse() {
@@ -1878,7 +1956,7 @@ export default {
                 this.form.show_list = JSON.parse(savedPreference);
                 /* ; */
             }
-        },
+        }
     }
 };
 </script>

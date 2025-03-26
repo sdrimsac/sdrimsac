@@ -224,6 +224,7 @@ class PrintEventJob implements ShouldBroadcast
             'typeuser' => $current_user->type,
             'user_id' => $user->id,
             'area_id' => $area_id,
+            'zone_id' => $zone_id,
             'user_establishment_id' => $user_establishment_id,
             'user_establishment_id_printer' => $user_establishment_id_printer,
         );

@@ -356,6 +356,11 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/check', 'TableController@check');
         Route::get('tables/records', 'TableController@records');
         Route::get('tables/tables', 'TableController@get_tables');
+        Route::get('tables/tables-zone', 'TableController@tables_zones');
+
+        Route::post('tables/store/{type}', 'TableController@store_zone');
+
+        Route::delete('tables/delete/{type}/{id}', 'TableController@deleteItemZone');
         Route::get('tables/orden/{id}', 'TableController@get_ordens');
         Route::get('tables/UserTable', 'TableController@UserTable');
         Route::get('tables/record/{id}', 'TableController@record');

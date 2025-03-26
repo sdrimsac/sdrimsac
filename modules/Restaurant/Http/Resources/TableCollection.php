@@ -46,6 +46,8 @@ class TableCollection extends ResourceCollection
                 'full_name'       => $row->getTableFullName(),
                 'is_room'       => $row->is_room,
                 'has_billar'    => $row->has_billar,
+                'zone'          => $row->zone,
+                'zone_id'       => $row->zone_id,
             ];
         });
     }

@@ -282,6 +282,34 @@
                         <div class="col-md-4">
                             <div
                                 class="form-group"
+                                :class="{ 'has-danger': errors.zone_id }"
+                            >
+                                <label class="control-label">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    Ubicación de
+                                    {{
+                                        //type == "caja/tables" ? "mesa" : "habitación"
+                                        getLabelText(type)
+                                    }}
+                                </label>
+                                <el-select v-model="form.zone_id">
+                                    <el-option
+                                        v-for="(data, index) in zones"
+                                        :key="index"
+                                        :label="data.name"
+                                        :value="data.id"
+                                    ></el-option>
+                                </el-select>
+                                <small
+                                    class="text-danger"
+                                    v-if="errors.zone_id"
+                                    v-text="errors.zone_id[0]"
+                                ></small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div
+                                class="form-group"
                                 :class="{
                                     'has-danger': errors.establishment_id
                                 }"
@@ -581,6 +609,7 @@ export default {
         "types",
         "type",
         "areas",
+        "zones",
         "statusTable",
         "configurations",
         "establishments"
@@ -604,6 +633,7 @@ export default {
             all_services: [],
             floors: [],
             all_towers: [],
+            all_zones: [],
             towers: [],
             tower_id: null,
             detailsArray: [],
@@ -750,7 +780,8 @@ export default {
                 price: 0,
                 month_price: 0,
                 floor_id: null,
-                images: []
+                images: [],
+                zone_id: null,
             };
 
             let [establishment] = this.establishments;

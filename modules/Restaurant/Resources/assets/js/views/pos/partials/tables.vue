@@ -52,6 +52,24 @@
                     Cerrar
                 </button>
             </div>
+            <div class="d-flex justify-content-center p-2">
+                <button
+                    v-for="(zone, idx) in zones"
+                    :key="idx"
+                    type="button"
+                    style="margin-left:15px;"
+                    :class="
+                        `btn ${
+                            zone_id == zone.id
+                                ? 'btn-primary text-Success'
+                                : 'btn-primary'
+                        }`
+                    "
+                    @click="filterZones(zone.id)"
+                >
+                    ZONA {{ zone.name }}
+                </button>
+            </div>
             <div
                 v-if="tables.length > 0"
                 class="d-flex flex-wrap justify-content-center"
@@ -69,8 +87,20 @@
                     <span class="h2 text-white">{{ table.number }}</span>
                     <div class="user-info text-center">
                         <template v-if="getUserByTable(table.id)">
-                            <span class="h5 mb-0" :class="getUserByTable(table.id).usuario === 'CAJA' ? 'text-white' : 'text-white'">
-                                {{ getUserByTable(table.id).usuario.substring(0, 25) }}
+                            <span
+                                class="h5 mb-0"
+                                :class="
+                                    getUserByTable(table.id).usuario === 'CAJA'
+                                        ? 'text-white'
+                                        : 'text-white'
+                                "
+                            >
+                                {{
+                                    getUserByTable(table.id).usuario.substring(
+                                        0,
+                                        25
+                                    )
+                                }}
                             </span>
                         </template>
                         <template v-else>
@@ -129,6 +159,8 @@ export default {
             loading: false,
             resource: "/caja/tables/tables",
             tables: [],
+            all_tables: [],
+            zones: [],
             showOrdens: false,
             ordensSaved: [],
             top: "rounded-top",
@@ -138,15 +170,33 @@ export default {
             hasSelectedTableToChange: false,
             hasSelectedOrdenToChange: false,
             ordenToChange: null,
-            ordenes: [], // Agregamos esta nueva propiedad
+            ordenes: [],
             isDisabling: false,
-            userOrders: []
+            userOrders: [],
+            zone_id: null,
         };
     },
     async mounted() {
         this.userOrders = await this.userorden();
     },
     methods: {
+        filterZones(zone_id) {
+            // If same zone is clicked, show all tables
+            if (this.zone_id === zone_id) {
+                this.zone_id = null;
+                this.tables = this.all_tables;
+                return;
+            }
+            
+            this.zone_id = zone_id;
+            if (this.all_tables && this.all_tables.length > 0) {
+                this.tables = this.all_tables.filter(table => {
+                    return table.zone_id == zone_id;
+                });
+            } else {
+                this.tables = []; // Ensure we have an empty array if all_tables is not populated
+            }
+        },
         async userorden() {
             try {
                 const response = await this.$http.get(`/caja/tables/UserTable`);
@@ -164,7 +214,7 @@ export default {
                 return null;
             }
             const numericTableId = Number(tableId);
-            
+
             const foundUser = this.userOrders.find(order => {
                 return Number(order.table_id) === numericTableId;
             });
@@ -174,18 +224,20 @@ export default {
 
         getUserTypeClass(tableId) {
             const user = this.getUserByTable(tableId);
-            if (!user) return 'text-white';
-            return user.name.toUpperCase() === 'CAJA' ? 'text-warning' : 'text-info';
+            if (!user) return "text-white";
+            return user.name.toUpperCase() === "CAJA"
+                ? "text-warning"
+                : "text-info";
         },
 
         getTableClass(table) {
             return table.enabled == false
-                ? 'btn-light'
+                ? "btn-light"
                 : table.status_table_id == 1
-                ? 'btn-primary'
+                ? "btn-primary"
                 : table.status_table_id == 2
-                ? 'btn-danger'
-                : 'btn-warning';
+                ? "btn-danger"
+                : "btn-warning";
         },
         async disabledTable(id) {
             try {
@@ -330,8 +382,13 @@ export default {
             }
 
             if (this.addingOrden) {
-                if (this.configuration.order_mozo && table.status_table_id == 2) {
-                    this.$toast.warning("No se puede crear una nueva orden en una mesa ocupada");
+                if (
+                    this.configuration.order_mozo &&
+                    table.status_table_id == 2
+                ) {
+                    this.$toast.warning(
+                        "No se puede crear una nueva orden en una mesa ocupada"
+                    );
                     return;
                 }
                 this.$emit("creatingOrden", table.number, table.id);
@@ -381,20 +438,30 @@ export default {
                 console.log("Respuesta del servidor:", response.data);
 
                 if (response.status == 200) {
-                    const { tables, ordenes } = response.data;
+                    const { tables, ordenes, zones } = response.data;
                     console.log("Órdenes recibidas:", ordenes);
                     this.ordenes = ordenes;
+                    this.zones = zones;
 
                     let { show_caja_table } = this.configuration;
                     if (!show_caja_table) {
-                        this.tables = tables.filter(
+                        this.all_tables = tables.filter(
                             f => f.number.toLowerCase() != "caja"
                         );
                     } else {
-                        this.tables = tables;
+                        this.all_tables = tables;
                     }
-                    // this.tables = tables;
-                    this.hasTableOcuped = tables.some(
+                    
+                    // By default, show all tables
+                    if (this.zone_id) {
+                        // If a zone is already selected, filter by that zone
+                        this.filterZones(this.zone_id);
+                    } else {
+                        // Otherwise show all tables
+                        this.tables = this.all_tables;
+                    }
+                    
+                    this.hasTableOcuped = this.all_tables.some(
                         s => s.status_table_id == 2
                     );
                 } else {
@@ -427,7 +494,7 @@ export default {
 
 <style scoped>
 .user-info {
-    background: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.1);
     padding: 5px 10px;
     border-radius: 4px;
     margin-top: 5px;
@@ -439,6 +506,6 @@ export default {
     color: #17a2b8 !important;
 }
 .text-white-50 {
-    color: rgba(255,255,255,0.5) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
 }
 </style>

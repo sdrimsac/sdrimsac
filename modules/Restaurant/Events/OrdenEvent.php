@@ -29,7 +29,7 @@ class OrdenEvent implements ShouldBroadcast
     public $order_item;
     public function __construct($id)
     {
-        $orden = OrdenItem::with(['user:id,name', 'food', 'orden.table', 'orden.mozo'])
+        $orden = OrdenItem::with(['user:id,name', 'food', 'orden.table', 'orden.mozo', 'orden.table.zone'])
             ->findOrFail($id);
         
         $this->order_item = [
@@ -42,7 +42,8 @@ class OrdenEvent implements ShouldBroadcast
             'food' => $orden->food,
             'table' => $orden->orden->table,
             'observations' => $orden->observations,
-            'mozo_name' => $orden->orden->mozo->name ?? null
+            'mozo_name' => $orden->orden->mozo->name ?? null,
+            'zone_name' => $orden->orden->table->zone->name ?? null
         ];
     }
 

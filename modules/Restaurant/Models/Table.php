@@ -33,7 +33,8 @@ class Table extends ModelTenant
         'establishment_id',
         'price',
         'description',
-        'has_billar'
+        'has_billar',
+        'zone_id',
     ];
     protected $casts = [
         'has_frigobar' => 'boolean',
@@ -176,6 +177,10 @@ class Table extends ModelTenant
     public function area()
     {
         return $this->belongsTo(Area::class);
+    }
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class);
     }
     public function status_table()
     {

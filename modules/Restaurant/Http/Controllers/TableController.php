@@ -15,6 +15,7 @@ use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use App\Events\MessageEvent;
 use Modules\Restaurant\Models\TableType;
+use Modules\Restaurant\Models\Zone;
 
 class TableController extends Controller
 {
@@ -149,10 +150,12 @@ class TableController extends Controller
 
         $tables = new TableCollection($query
             ->get());
+        $zones = Zone::where('active', true)->get();
 
         return [
             'success' => true,
-            'data' => $tables
+            'data' => $tables,
+            'zones' => $zones
         ];
     }
     public function get_tables()
@@ -162,10 +165,58 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
-        $tables = Table::where('is_room', false)->where('has_billar', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
-            ->get();
+        $tables = Table::where('is_room', false)->where('has_billar', false)->where('establishment_id', 
+        $establishment_id)->orWhereNull('establishment_id')->get();
+        $zones = Zone::where('active', true)->get();
+        return compact('tables', 'zones');
+    }
 
-        return compact('tables');
+    public function tables_zones(Request $request)
+    {
+        $configuration = Configuration::first();
+        $zones = Zone::where('active', true)->get();
+        return compact(
+            'zones',
+        );
+    }
+
+    public function store_zone(Request $request, $type)
+    {
+        $model = null;
+        switch ($type) {
+            case 'zones':
+                $model = new Zone;
+                break;
+            default:
+                $model = new Zone;
+                break;
+        }
+        $id = $request->input('id');
+        $model = $model->firstOrNew(['id' => $id]);
+        $model->fill($request->all());
+        $model->save();
+        return [
+            'success' => true,
+            'message' => ($id) ? 'Registro actualizado con éxito' : 'Registro creado con éxito'
+        ];
+    }
+
+    public function deleteItemZone($type, $id)
+    {
+        $model = null;
+        switch ($type) {
+            case 'zones':
+                $model = Zone::find($id);
+                break;
+            default:
+                $model = Zone::find($id);
+                break;
+        }
+        $model->delete();
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado con éxito'
+        ];
     }
 
     public function UserTable()
