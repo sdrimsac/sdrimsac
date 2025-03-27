@@ -842,7 +842,6 @@ class OrdenController extends Controller
                             }
                         }
                     } else {
-                        // Si NO es una receta, verificar stock normal del producto
                         $warehouse_stock = ItemWarehouse::where([
                             'item_id' => $food->item_id,
                             'warehouse_id' => $establishment_warehouse->id,

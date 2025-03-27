@@ -954,8 +954,7 @@
             </tr>
         </table>
         @if (!empty($datosSeries))
-
-            <table style="margin-top: 10px;"> {{-- visualizacion de ventas por series  --}}
+            <table style="margin-top: 10px;">
                 <tr>
                     <td width="50%" style="vertical-align: top">
                         <div>
@@ -1754,6 +1753,7 @@
 
             </div>
         @endif
+        
         @if ($configuration->report_cash_methods)
             @if ($all_methods_info && count($all_methods_info) > 0)
                 <div style="text-align:center;">

@@ -984,10 +984,10 @@ export default {
             return false;
         },
         sumar_orden(index) {
-            if (this.validStock(this.localOrden[index])) {
+            /* if (this.validStock(this.localOrden[index])) {
                 this.$toast.warning("Limite de stock alcanzado");
                 return;
-            }
+            } */
             let localOrden_quantity = this.localOrden;
             if (this.localOrden[index].type_id) {
                 // localOrden_quantity[index].quantity =

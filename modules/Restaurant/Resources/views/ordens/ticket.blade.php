@@ -290,6 +290,10 @@
 
                             {{ $date }}</td>
                     </tr>
+                    {{-- <tr>
+                        <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
+                            {{ $ordenes->mesa->zone_name }}</td>
+                    </tr> --}}
                 @endif
                 @if (!$to_kitchen)
                     <tr>
@@ -322,7 +326,10 @@
 
                             {{ $date }}</td>
                     </tr>
-
+                    <tr>
+                        <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
+                            {{ $ordenes->mesa->zone_name }}</td>
+                    </tr>
                 @endif
                 @if ($is_restaurant && $configuration->seller_mozo)
                     <tr>

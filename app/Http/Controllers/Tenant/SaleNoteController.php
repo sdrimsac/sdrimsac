@@ -1322,27 +1322,27 @@ class SaleNoteController extends Controller
     {
         try {
             // Validar si el número ya existe, excluyendo el registro actual en caso de edición
-            $existingDocument = SaleNote::where('series', $request->series)
-                ->where('number', $request->number)
-                ->where('state_type_id', '!=', '11')
-                ->when($request->id, function ($query) use ($request) {
-                    return $query->where('id', '!=', $request->id);
-                })
-                ->first();
-
-            if ($existingDocument) {
-                // Documento duplicado encontrado, enviar mensaje de notificación
-                $this->checkDuplicateAndSendMessage($existingDocument);
-
-                return [
-                    'success' => false,
-                    'message' => 'El número de nota de venta ya existe para la serie y tipo de documento proporcionados.'
-                ];
-            }
 
             // SaleNote::where('currency_type_id', 'USD')->update(['currency_type_id' => 'PEN']);
             $configuration = Configuration::first();
             DB::connection('tenant')->transaction(function () use ($request, $configuration) {
+
+                $existingDocument = SaleNote::where('series', $request->series)
+                    ->where('number', $request->number)
+                    ->where('state_type_id', '!=', '11')
+                    ->when($request->id, function ($query) use ($request) {
+                        return $query->where('id', '!=', $request->id);
+                    })
+                    ->first();
+
+                if ($existingDocument) {
+                    $this->checkDuplicateAndSendMessage($existingDocument);
+
+                    return [
+                        'success' => false,
+                        'message' => 'El número de nota de venta ya existe para la serie y tipo de documento proporcionados.'
+                    ];
+                }
 
                 $vehiculo_id = Functions::valueKeyInArray($request->all(), "vehiculo_id", null);
                 $this->dumpWithTime("vehiculo_id");
