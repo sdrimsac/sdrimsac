@@ -349,7 +349,7 @@
             <td>
                 <strong>DIRECCION:</strong>
                 @if ($sale->customer->address)
-                    {{ $sale->customer->address }} 
+                    {{ $sale->customer->address }}
                 @else
                     _________________________________________________________________
                 @endif
@@ -646,8 +646,31 @@
                                             {{ number_format($data[$idx]['amount'], 2) }}
                                         </td>
                                         <td class="celda_sm"></td>
-                                        <td class="celda_sm"></td>
-                                        <td class="celda_sm"></td>
+                                        <td class="celda_sm">
+                                            {{ number_format($data[$idx]['penalty_amount'], 2) }}
+                                        </td>
+                                        <td class="celda_sm">
+                                            @if ($data[$idx]['paid'])
+                                                @php
+                                                    $date_payment = null;
+                                                    $sale_note_payment = \App\Models\Tenant\SaleNotePayment::where(
+                                                        'payment_id',
+                                                        $data[$idx]['id'],
+                                                    )->first();
+                                                    if ($sale_note_payment) {
+                                                        $date_payment = $sale_note_payment->date_of_payment;
+                                                    }
+                                                @endphp
+                                                <strong style="font-size: 10px !important;">X</strong>
+                                                @if ($date_payment)
+                                                    <br>
+                                                    <strong
+                                                        style="font-size: 10px !important;">{{ \Carbon\Carbon::parse($date_payment)->format('d/m/y') }}</strong>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        {{-- <td class="celda_sm"></td>
+                                        <td class="celda_sm"></td> --}}
                                     </tr>
                                 @else
                                     <tr>
@@ -682,4 +705,5 @@
         </tr>
     </table>
 </body>
+
 </html>
