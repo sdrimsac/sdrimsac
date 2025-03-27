@@ -1322,6 +1322,47 @@ class SaleNoteController extends Controller
     {
         try {
             // Validar si el número ya existe, excluyendo el registro actual en caso de edición
+            $series = $request->series;
+            $number = $request->number;
+            $date_of_issue = $request->date_of_issue;
+            $time_of_issue = date('H:i:s');
+            $total = $request->total;
+            $customer_id = $request->customer_id;
+
+            // Buscar duplicados exactos considerando series, number, fecha, hora y total
+            $existingDocument = SaleNote::where('series', $series)
+                ->where('number', $number)
+                ->where('state_type_id', '!=', '11') // No considerar anulados
+                ->when($request->id, function ($query) use ($request) {
+                    return $query->where('id', '!=', $request->id); // Excluir el registro actual en edición
+                })
+                ->first();
+
+            if ($existingDocument) {
+                return [
+                    'success' => false,
+                    'message' => 'Ya existe una nota de venta con la misma serie y número.'
+                ];
+            }
+
+            // Validación adicional para detectar posibles duplicados por cliente, total y fecha
+            $possibleDuplicate = SaleNote::where('date_of_issue', $date_of_issue)
+                ->where('customer_id', $customer_id)
+                ->where('total', $total)
+                ->whereRaw("TIME(created_at) >= DATE_SUB('$time_of_issue', INTERVAL 10 SECOND)")
+                ->whereRaw("TIME(created_at) <= DATE_ADD('$time_of_issue', INTERVAL 10 SECOND)")
+                ->where('state_type_id', '!=', '11')
+                ->when($request->id, function ($query) use ($request) {
+                    return $query->where('id', '!=', $request->id);
+                })
+                ->first();
+
+            if ($possibleDuplicate) {
+                return [
+                    'success' => false,
+                    'message' => 'Se detectó un posible duplicado. Ya existe una nota de venta con los mismos datos hace unos segundos.'
+                ];
+            }
 
             // SaleNote::where('currency_type_id', 'USD')->update(['currency_type_id' => 'PEN']);
             $configuration = Configuration::first();
@@ -2096,6 +2137,7 @@ class SaleNoteController extends Controller
             ];
         }
     }
+
     private function saveItemWarranty($sale_note, $items)
     {
         foreach ($items as $item) {
@@ -2855,9 +2897,6 @@ class SaleNoteController extends Controller
             'success' => true
         ];
     }
-
-
-
 
     public function enabledConcurrency(Request $request)
     {
