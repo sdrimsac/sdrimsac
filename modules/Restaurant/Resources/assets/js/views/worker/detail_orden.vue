@@ -671,10 +671,17 @@ export default {
                 internalId.startsWith("PACK000") ||
                 internalId.startsWith("PLAT000")
             ) {
-                qty = 99999; // Se fuerza a un número alto para que no valide stock
+                qty = 99999; // Permitir agregar muchas unidades
             }
 
-            if (this.configuration.sales_stock === true) {
+            // Solo validar stock si NO es PACK000 o PLAT000
+            if (
+                this.configuration.sales_stock === true &&
+                !(
+                    internalId.startsWith("PACK000") ||
+                    internalId.startsWith("PLAT000")
+                )
+            ) {
                 let stock = Number(this.selectedFood.item.stock);
 
                 if (qty > stock) {

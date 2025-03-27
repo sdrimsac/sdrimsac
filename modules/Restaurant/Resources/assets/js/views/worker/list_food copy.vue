@@ -422,7 +422,7 @@ export default {
                     this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
-                        this.$toast.warning("Limite de stock alcanzado");
+                        this.$toast.warning("Limite de stock alcanzado gggg");
                         return;
                     }
                 }
@@ -436,7 +436,7 @@ export default {
                         let stock = Number(this.selectedFood.item.stock);
                         console.log(qty, " as ", stock, " sa");
                         if (qty > stock) {
-                            this.$toast.warning("Limite de stock alcanzado");
+                            this.$toast.warning("Limite de stock alcanzado ttttt");
                             return;
                         }
                     }

@@ -528,7 +528,7 @@ export default {
             ) {
                 let stock = Number(this.selectedFood.item.stock);
                 if (qty > stock) {
-                    this.$toast.warning("Límite de stock alcanzado");
+                    this.$toast.warning("Límite de stock alcanzado qqqq");
                     return;
                 }
             }
