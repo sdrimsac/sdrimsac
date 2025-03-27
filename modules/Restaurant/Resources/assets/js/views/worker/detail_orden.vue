@@ -486,7 +486,6 @@ export default {
     },
     methods: {
         handleSelectOrden(id) {
-            
             this.ordenNew(id);
         },
 
@@ -495,7 +494,7 @@ export default {
                 console.log(`Fetching order with ID: ${id}`);
                 const response = await this.$http.get(`orden-new/${id}`);
 
-                const orden = response.data.orden; 
+                const orden = response.data.orden;
 
                 console.log("Orden recibida:", orden);
 
@@ -507,7 +506,9 @@ export default {
                     console.log("Orden agregada:", orden);
                 } else {
                     // Update the existing order with new items
-                    const existingOrder = this.ordens.find(o => o.id == orden.id);
+                    const existingOrder = this.ordens.find(
+                        o => o.id == orden.id
+                    );
                     existingOrder.orden_items = orden.orden_items;
                 }
 
@@ -570,7 +571,7 @@ export default {
                 type.quantity_unit
             )}) - S/ ${price}`;
         },
-        addFood(index = 0, type = null) {
+        /* addFood(index = 0, type = null) {
             if (!Array.isArray(this.foods)) {
                 console.error("foods is not an array");
                 return;
@@ -638,7 +639,7 @@ export default {
 
             // Actualizar la orden seleccionada
             //this.updateSelectedOrden();
-        },
+        }, */
         /* updateSelectedOrden() {
             let orden = this.ordens.find(o => o.id == this.ordenSelectedId);
             if (orden) {
@@ -647,6 +648,68 @@ export default {
                 this.$refs.ordenRef.calculateTotal();
             }
         }, */
+        addFood(index = 0, type = null) {
+            if (!Array.isArray(this.foods)) {
+                console.error("foods is not an array");
+                return;
+            }
+
+            this.selectedFood = JSON.parse(JSON.stringify(this.foods[index]));
+
+            if (!this.selectedFood) return;
+
+            let unidadMedida = this.selectedFood.item.unit_type_id;
+            let internalId = this.selectedFood.item.internal_id;
+            let foodFound = this.localOrden.filter(
+                f => f.id == this.selectedFood.id
+            );
+
+            let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
+
+            if (
+                unidadMedida === "ZZ" ||
+                internalId.startsWith("PACK000") ||
+                internalId.startsWith("PLAT000")
+            ) {
+                qty = 99999; // Se fuerza a un número alto para que no valide stock
+            }
+
+            if (this.configuration.sales_stock === true) {
+                let stock = Number(this.selectedFood.item.stock);
+
+                if (qty > stock) {
+                    this.$toast.warning("Limite de stock alcanzado");
+                    return;
+                }
+            }
+
+            this.currentFood = {
+                id: this.selectedFood.id,
+                food: this.selectedFood,
+                observation: null,
+                price: this.selectedFood.price,
+                quantity: 1
+            };
+
+            this.insertOrden(this.currentFood, this.selectedFood.id, type);
+            this.$notify({
+                title: this.currentFood.food.description.toLowerCase(),
+                iconClass: "el-icon-food",
+                position: "top-right",
+                message: "Agregado con éxito",
+                position: "bottom-left"
+            });
+
+            this.currentFood = {
+                food: null,
+                observation: null,
+                quantity: 0
+            };
+            this.selectedFood = null;
+            this.item = null;
+            this.setFalse();
+        },
+
         setFalse() {
             let f = this.foods.map(f => {
                 f.select = false;
