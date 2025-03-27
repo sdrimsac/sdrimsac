@@ -578,6 +578,8 @@ export default {
             this.selectedFood = JSON.parse(JSON.stringify(this.foods[index]));
 
             if (!this.selectedFood) return;
+
+            let unidadMedida = this.selectedFood.item.unit_type_id;
             let foodFound = this.localOrden.filter(
                 f => f.id == this.selectedFood.id
             );
@@ -591,7 +593,7 @@ export default {
                 }
                 if (
                     this.configuration.sales_stock == true &&
-                    this.selectedFood.item.unit_type_id != "ZZ"
+                    this.selectedFood.item.unit_type_id != "ZZ" && unidadMedida !== "ZZ"
                 ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
@@ -601,7 +603,7 @@ export default {
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true) {
+                    if (this.configuration.sales_stock == true && unidadMedida !== "ZZ") {
                         let stock = Number(this.selectedFood.item.stock);
                         if (qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");

@@ -290,10 +290,10 @@
 
                             {{ $date }}</td>
                     </tr>
-                    {{-- <tr>
+                    <tr>
                         <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
                             {{ $ordenes->mesa->zone_name }}</td>
-                    </tr> --}}
+                    </tr>
                 @endif
                 @if (!$to_kitchen)
                     <tr>
