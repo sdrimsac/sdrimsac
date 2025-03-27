@@ -2407,7 +2407,12 @@ class SaleNoteController extends Controller
                 'data' => $data,
                 'sale' => $sale,
                 'company' => $company,
-                'establishment' => $establishment
+                'establishment' => $establishment,
+                'tasa' => $tasa,
+                'quote' => $quote,
+                'days' => $days,
+                'init_date' => $init_date,
+                'end_date' => $end_date
             ]);
             $altura = 250;
 
@@ -2418,6 +2423,7 @@ class SaleNoteController extends Controller
             }
 
             return $recibo->setPaper('a4', 'landscape')->stream();
+            //return $recibo->setPaper([0, 0, 794, $altura], 'landscape')->stream();
         } else {
             return view("tenant.schedule.notfound");
         }
