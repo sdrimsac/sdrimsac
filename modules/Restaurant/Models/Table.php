@@ -180,7 +180,7 @@ class Table extends ModelTenant
     }
     public function zone()
     {
-        return $this->belongsTo(Zone::class);
+        return $this->belongsTo(Zone::class, 'zone_id');
     }
     public function status_table()
     {
@@ -190,22 +190,65 @@ class Table extends ModelTenant
     {
         $number = $this->number;
         $floor = $this->floor;
-        if (!$floor) return $number;
+        if (!$floor) {
+            // If no floor, show number and zone (if available)
+            if ($this->zone) {
+                return "$number - {$this->zone->name}";
+            }
+            return $number;
+        }
+        
         $tower = $floor->tower;
-        if (!$tower) return $number;
+        if (!$tower) {
+            // If no tower, show number and zone (if available)
+            if ($this->zone) {
+                return "$number - {$this->zone->name}";
+            }
+            return $number;
+        }
+        
         $tower = $tower->name;
+        
+        $name = "$number - $floor->name";
+        
+        // Add zone information if available
+        if ($this->zone) {
+            $name .= " ({$this->zone->name})";
+        }
 
-        return "$number - $floor->name";
+        return $name;
     }
+    
     public  function getTableFullName()
     {
         $number = $this->number;
         $floor = $this->floor;
-        if (!$floor) return $number;
+        if (!$floor) {
+            // If no floor, show number and zone (if available)
+            if ($this->zone) {
+                return "$number - {$this->zone->name}";
+            }
+            return $number;
+        }
+        
         $tower = $floor->tower;
-        if (!$tower) return $number;
+        if (!$tower) {
+            // If no tower, show number and zone (if available)
+            if ($this->zone) {
+                return "$number - {$this->zone->name}";
+            }
+            return $number;
+        }
+        
         $tower = $tower->name;
+        
+        $name = "$number - $tower";
+        
+        // Add zone information if available
+        if ($this->zone) {
+            $name .= " ({$this->zone->name})";
+        }
 
-        return "$number - $tower";
+        return $name;
     }
 }

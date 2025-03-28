@@ -152,7 +152,8 @@ class OrdenController extends Controller
         $area_id = $request->area_id;
         $mozo_id = $request->mozo_id;
         $area_desc = null;
-        $mozo_name = null;
+        $mozo_name = $request->mozo_name ?? null;
+        $zone_name = $request->zone_name ?? null;
         //   $to_kitchen = true; en true no es pa cocina
         $to_kitchen = false;
         if ($precuenta) {
@@ -183,6 +184,15 @@ class OrdenController extends Controller
                 "message" => "Nº Pedido no existe..."
             ];
         }
+
+        // Obtener zone_name si no está establecido y la orden existe
+        if (!$zone_name && $ordenes && $ordenes->table_id) {
+            $table = Table::find($ordenes->table_id);
+            if ($table && $table->zone) {
+                $zone_name = $table->zone->name;
+            }
+        }
+
         $ordenItem = OrdenItem::where('orden_id', $ordenes->id)->first();
         $user = User::findOrFail($ordenItem->user_id);
         $establishment = Establishment::where('id', $user->establishment_id)->first();
@@ -283,7 +293,9 @@ class OrdenController extends Controller
                 'show_unit_ticket',
                 'ordenes',
                 'orden_items',
-                'mozo_name' // Asegurarnos que mozo_name está incluido aquí
+                'mozo_name',
+                'zone_name',
+                // Asegurarnos que mozo_name está incluido aquí
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
@@ -632,9 +644,31 @@ class OrdenController extends Controller
         $user = auth()->user();
         $printer = null;
 
+        // Optimizamos cómo obtenemos mozo_name y zone_name
         $mozo_name = null;
-        if ($orden && $orden->mozo_id) {
-            $mozo_name = $this->getMozoName($orden->mozo_id);
+        $zone_name = null;
+        
+        if ($orden) {
+            // Obtenemos el nombre del mozo
+            if ($orden->mozo_id) {
+                $mozo = DB::connection('tenant')
+                    ->table('seller_mozo')
+                    ->where('id', $orden->mozo_id)
+                    ->first();
+                $mozo_name = $mozo ? $mozo->name : null;
+            }
+            
+            // Obtenemos el nombre de la zona directamente de la relación table->zone
+            if ($orden->table_id) {
+                $zone = DB::connection('tenant')
+                    ->table('tables as t')
+                    ->join('zones as z', 't.zone_id', '=', 'z.id')
+                    ->where('t.id', $orden->table_id)
+                    ->select('z.name')
+                    ->first();
+                    
+                $zone_name = $zone ? $zone->name : null;
+            }
         }
 
         if (!$to_kitchen) {
@@ -650,7 +684,6 @@ class OrdenController extends Controller
             $area_id = $area_pos_id;
         }
 
-
         if ($area != null) {
             $printer = $area->printer;
         }
@@ -669,14 +702,9 @@ class OrdenController extends Controller
                 $ids_string = join("_", $orden_items);
             }
 
-            // Obtener el nombre del mozo
-            $mozo_name = null;
-            if ($orden->mozo_id) {
-                $mozo_name = $this->getMozoName($orden->mozo_id);
-            }
-
-            // Agregar el nombre del mozo al objeto orden
+            // Asignamos los valores al objeto orden
             $orden->mozo_name = $mozo_name;
+            $orden->zone_name = $zone_name;
 
             event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items, false, $precuenta));
             return [
@@ -685,7 +713,7 @@ class OrdenController extends Controller
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}"
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}&zone_name={$zone_name}"
             ];
         }
     }
@@ -697,10 +725,34 @@ class OrdenController extends Controller
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $user = auth()->user();
         $printer = null;
+
+        // Optimizamos la obtención del nombre del mozo y la zona
         $mozo_name = null;
-        if ($orden && $orden->mozo_id) {
-            $mozo_name = $this->getMozoName($orden->mozo_id);
+        $zone_name = null;
+        
+        if ($orden) {
+            // Obtenemos el nombre del mozo
+            if ($orden->mozo_id) {
+                $mozo = DB::connection('tenant')
+                    ->table('seller_mozo')
+                    ->where('id', $orden->mozo_id)
+                    ->first();
+                $mozo_name = $mozo ? $mozo->name : null;
+            }
+            
+            // Obtenemos el nombre de la zona directamente mediante una consulta JOIN
+            if ($orden->table_id) {
+                $zone = DB::connection('tenant')
+                    ->table('tables as t')
+                    ->join('zones as z', 't.zone_id', '=', 'z.id')
+                    ->where('t.id', $orden->table_id)
+                    ->select('z.name')
+                    ->first();
+                    
+                $zone_name = $zone ? $zone->name : null;
+            }
         }
+
         if (!$to_kitchen) {
             $area_id = $user->area_id;
             $area = Area::find($area_id);
@@ -727,14 +779,9 @@ class OrdenController extends Controller
                 $ids_string = join("_", $orden_items);
             }
 
-            // Obtener el nombre del mozo
-            $mozo_name = null;
-            if ($orden->mozo_id) {
-                $mozo_name = $this->getMozoName($orden->mozo_id);
-            }
-
-            // Agregar el nombre del mozo al objeto orden
+            // Asignamos los valores al objeto orden
             $orden->mozo_name = $mozo_name;
+            $orden->zone_name = $zone_name;
 
             return [
                 'success' => true,
@@ -742,7 +789,7 @@ class OrdenController extends Controller
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}"
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}&zone_name={$zone_name}"
             ];
         }
     }
@@ -1364,16 +1411,14 @@ class OrdenController extends Controller
             'message' => 'Orden finalizada'
         ];
     }
-
     public function tables()
     {
         $areas = Area::all();
 
         return compact('areas');
     }
-
     // Método auxiliar para obtener el nombre del mozo
-    private function getMozoName($mozo_id)
+    /* private function getMozoName($mozo_id)
     {
         if (!$mozo_id) return null;
 
@@ -1385,4 +1430,28 @@ class OrdenController extends Controller
 
         return $mozo ? $mozo->name : null;
     }
+    private function getZoneNameFromTable($table_id)
+    {
+        if (!$table_id) {
+            return null;
+        }
+
+        try {
+            $table = Table::find($table_id);
+
+            if (!$table || !$table->zone_id) {
+                return null;
+            }
+
+            $zone = DB::connection('tenant')
+                ->table('zones')
+                ->where('id', $table->zone_id)
+                ->first();
+
+            return $zone ? $zone->name : null;
+        } catch (\Exception $e) {
+            \Log::error('Error getting zone name from table: ' . $e->getMessage());
+            return null;
+        }
+    } */
 }

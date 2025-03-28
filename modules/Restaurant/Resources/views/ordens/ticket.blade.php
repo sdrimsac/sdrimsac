@@ -219,7 +219,7 @@
 
     .header_title1 {
 
-        font-size: 10px !important;
+        font-size: 12px !important;
     }
 
     .under_line {
@@ -239,6 +239,16 @@
     .large-text {
         font-size: 16px !important;
         /* Adjust the size as needed */
+    }
+    
+    /* Updating styles for "Para llevar" section with darker background */
+    .para-llevar-header {
+        background-color: #777777 !important; /* Darker gray background */
+        color: #000000 !important; /* Keep text black for readability */
+        font-weight: bold;
+        -webkit-print-color-adjust: exact !important; /* For Chrome */
+        color-adjust: exact !important; /* Standard */
+        print-color-adjust: exact !important; /* Firefox */
     }
 </style>
 
@@ -291,8 +301,11 @@
                             {{ $date }}</td>
                     </tr>
                     <tr>
-                        <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
-                            {{ $ordenes->mesa->zone_name }}</td>
+                        <td colspan="4" colspan="4" class="text-center header_title1" valign="top">
+                            @if (isset($zone_name) && $zone_name)
+                                <strong>ZONA: {{ $zone_name }}</strong>
+                            @endif
+                        </td>
                     </tr>
                 @endif
                 @if (!$to_kitchen)
@@ -328,7 +341,10 @@
                     </tr>
                     <tr>
                         <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
-                            {{ $ordenes->mesa->zone_name }}</td>
+                            @if (isset($zone_name) && $zone_name)
+                                <strong>ZONA: {{ $zone_name }}</strong>
+                            @endif
+                        </td>
                     </tr>
                 @endif
                 @if ($is_restaurant && $configuration->seller_mozo)
@@ -496,7 +512,7 @@
                         @endif
                     @endforeach
                     @if (count($to_carry) != 0)
-                        <tr>
+                        <tr class="para-llevar-header">
                             <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
                         </tr>
                         @foreach ($to_carry as $row_carry)
@@ -612,8 +628,12 @@
             <!-- Encabezados de Producto -->
             @if (!$precuenta)
                 @if (count($to_carry) != 0)
-                    <tr>
+                    {{-- <tr>
                         <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
+                    </tr> --}}
+                    <tr class="para-llevar-header">
+                        <th class="encabezado text-center header_title2" colspan="4" style="color: rgb(12, 12, 12);">Para
+                            llevar </th>
                     </tr>
                 @endif
             @endif
@@ -710,93 +730,97 @@
         <table border="0" style="border:0px solid;width:75%">
             <!-- Header rows stay the same -->
             <tr>
-            <td colspan="4" class="header_title text-center" style="font-size: 24px !important;"
-                valign="top">
-                <strong>MESA {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}</strong>
-            </td>
+                <td colspan="4" class="header_title text-center" style="font-size: 24px !important;"
+                    valign="top">
+                    <strong>MESA {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}</strong>
+                </td>
             </tr>
 
             <tr>
-            <td colspan="4" class="header_title0 text-center" valign="top">
-                @if ($precuenta)
-                <strong>PRECUENTA</strong><br>
-                @endif
-                <strong>ORDEN NRO. {{ $orden }}</strong>
-            </td>
-            </tr>
-            @if ($area_desc)
-            <tr>
-                <td colspan="4" class="header_title0 text-center  under_line" style="font-size: 18px !important;" valign="top">
-                <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                <td colspan="4" class="header_title0 text-center" valign="top">
+                    @if ($precuenta)
+                        <strong>PRECUENTA</strong><br>
+                    @endif
+                    <strong>ORDEN NRO. {{ $orden }}</strong>
                 </td>
             </tr>
+            @if ($area_desc)
+                <tr>
+                    <td colspan="4" class="header_title0 text-center  under_line"
+                        style="font-size: 18px !important;" valign="top">
+                        <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                    </td>
+                </tr>
             @endif
             <tr>
-            <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
-                {{ $date }}</td>
+                <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
+                    {{ $date }}</td>
             </tr>
 
             <!-- Table headers with conditional widths -->
             <tr>
-            <td width="10%" class="cell_number encabezado" style="font-size: 18px !important;">
-                <strong>#</strong>
-            </td>
-            @if ($to_kitchen)
-                <!-- Kitchen view with price columns -->
-                <td width="60%" class="encabezado text-center" style="font-size: 18px !important;">
-                <strong>PRODUCTO</strong>
+                <td width="10%" class="cell_number encabezado" style="font-size: 18px !important;">
+                    <strong>#</strong>
                 </td>
-                <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
-                <strong>IMP.</strong>
-                </td>
-                <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
-                <strong>SUB.</strong>
-                </td>
-            @else
-                <!-- Comanda view with wider product column -->
-                <td width="90%" colspan="3" class="encabezado text-center" style="font-size: 18px !important;">
-                <strong>PRODUCTO</strong>
-                </td>
-            @endif
+                @if ($to_kitchen)
+                    <!-- Kitchen view with price columns -->
+                    <td width="60%" class="encabezado text-center" style="font-size: 18px !important;">
+                        <strong>PRODUCTO</strong>
+                    </td>
+                    <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
+                        <strong>IMP.</strong>
+                    </td>
+                    <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
+                        <strong>SUB.</strong>
+                    </td>
+                @else
+                    <!-- Comanda view with wider product column -->
+                    <td width="90%" colspan="3" class="encabezado text-center"
+                        style="font-size: 18px !important;">
+                        <strong>PRODUCTO</strong>
+                    </td>
+                @endif
             </tr>
 
             <!-- Table content with conditional widths -->
             <tbody>
-            @foreach ($orden_items as $row)
-                <tr>
-                <td width="10%" class="text-center" style="font-size: 16px !important;">
-                    {{ $row->quantity }}
-                </td>
-                @if ($to_kitchen)
-                    <!-- Kitchen view layout -->
-                    <td width="60%" class="celda_left header_title2 border-bottom" style="font-size: 16px !important;">
-                @else
-                    <!-- Comanda view layout -->
-                    <td width="90%" colspan="3" class="celda_left header_title2 border-bottom" style="font-size: 18px !important;">
-                @endif
-                    <strong>
-                    {{ strtoupper($row->desc_unit) }}
-                    @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                        / {{ strtoupper($row->food->item->second_name) }}
-                    @endif
-                    </strong>
-                    @if ($row->observations != '-')
-                    <br>
-                    <strong style="font-size: 14px !important;">
-                        Obs: {{ e($row->observations) }}
-                    </strong>
-                    @endif
-                </td>
-                @if ($to_kitchen)
-                    <td width="15%" class="celda_center" style="font-size: 16px !important;">
-                    {{ number_format($row->price, 2) }}
-                    </td>
-                    <td width="15%" class="celda_center" style="font-size: 16px !important;">
-                    {{ number_format($row->price * $row->quantity, 2) }}
-                    </td>
-                @endif
-                </tr>
-            @endforeach
+                @foreach ($orden_items as $row)
+                    <tr>
+                        <td width="10%" class="text-center" style="font-size: 16px !important;">
+                            {{ $row->quantity }}
+                        </td>
+                        @if ($to_kitchen)
+                            <!-- Kitchen view layout -->
+                            <td width="60%" class="celda_left header_title2 border-bottom"
+                                style="font-size: 16px !important;">
+                            @else
+                                <!-- Comanda view layout -->
+                            <td width="90%" colspan="3" class="celda_left header_title2 border-bottom"
+                                style="font-size: 18px !important;">
+                        @endif
+                        <strong>
+                            {{ strtoupper($row->desc_unit) }}
+                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
+                                / {{ strtoupper($row->food->item->second_name) }}
+                            @endif
+                        </strong>
+                        @if ($row->observations != '-')
+                            <br>
+                            <strong style="font-size: 14px !important;">
+                                Obs: {{ e($row->observations) }}
+                            </strong>
+                        @endif
+                        </td>
+                        @if ($to_kitchen)
+                            <td width="15%" class="celda_center" style="font-size: 16px !important;">
+                                {{ number_format($row->price, 2) }}
+                            </td>
+                            <td width="15%" class="celda_center" style="font-size: 16px !important;">
+                                {{ number_format($row->price * $row->quantity, 2) }}
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
             </tbody>
         </table>
 
