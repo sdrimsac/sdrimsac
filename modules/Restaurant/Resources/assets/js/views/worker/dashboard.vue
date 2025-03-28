@@ -271,7 +271,6 @@
     </ListOrden>-->
         <template v-if="currentTable && show == 'create'">
             <detail-orden
-                :divided_items.sync="divided_items"
                 @changeOrdenEvent="changeOrdenEvent"
                 :changingOrden.sync="changingOrden"
                 ref="detailRef"
@@ -507,7 +506,6 @@ export default {
             recordId: null,
             audio: HTMLAudioElement,
             tableUsers: [],
-            divided_items: false,
             ordenToChange: null,
             hasSelectedTableToChange: false,
             hasSelectedOrdenToChange: false,

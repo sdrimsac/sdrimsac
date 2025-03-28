@@ -61,6 +61,7 @@ class ItemResource extends JsonResource
             'commercial_treatments' => $commercial_treatments,
             'has_warranty' => (bool) $this->has_warranty,
             'month_day' => $this->month_day,
+            'init_report' => (bool) $this->init_report,
             'has_color_size' => (bool) $this->has_color_size,
             'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,

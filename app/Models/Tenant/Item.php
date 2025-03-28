@@ -26,6 +26,7 @@ class Item extends ModelTenant
     use RegisterMovementTrait;
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
+        'init_report',
         'warranty_end_date',
         'points_value',
         'weight',
@@ -209,6 +210,7 @@ class Item extends ModelTenant
             });
         }
         $data = [
+            'init_report' => $this->init_report,
             'month_day' => $this->month_day,
             'points_value' => $this->points_value,
             'weight' => $this->weight,

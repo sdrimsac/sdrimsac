@@ -234,7 +234,7 @@ import HistoryOrden from "./history_orden.vue";
 import History_orden from "./history_orden.vue";
 
 export default {
-    props: ["configuration", "area_id", "divided_items"],
+    props: ["configuration", "area_id"],
     components: {
         VueResponsiveImage,
         HistoryOrden

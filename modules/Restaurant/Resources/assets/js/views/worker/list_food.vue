@@ -191,7 +191,8 @@ export default {
         "showMenu",
         "categories",
         "foods",
-        "configuration"
+        "configuration",
+        "divided_items"  // Add this prop to receive divided_items setting
     ],
     components: {
         ViewImage
@@ -231,7 +232,6 @@ export default {
                 slidesToShow: 3,
                 slidesToScroll: 3,
                 swipeToSlide: true,
-                speed: 500,
                 responsive: [
                     {
                         breakpoint: 1024,
@@ -349,6 +349,7 @@ export default {
                 // this.$toast.error(
                 //     "Politica de precio sin total: Tomando precio unitario.."
                 // );
+                price = Number(type.total);
             } else {
                 price = Number(type.total);
             }
@@ -374,6 +375,7 @@ export default {
         },
         deleteOrden(id) {
             this.ordenItems = this.ordenItems.filter(o => o.id != id);
+            // this.$refs.ordenRef.calculateTotal();
         },
         calculateOrden() {
             // this.$refs.ordenRef.calculateTotal();
@@ -381,7 +383,6 @@ export default {
         selectSearch(value) {
             this.optionsSelected = value;
         },
-
         deleteFood(idx) {
             this.orden.splice(idx, 1);
         },
@@ -397,94 +398,6 @@ export default {
                 });
             }
         },
-        /* addFood(index = 0, type = null) {
-            if (!Array.isArray(this.listFoods)) {
-            console.error("listFoods is not an array");
-            return;
-            }
-            this.selectedFood = JSON.parse(
-            JSON.stringify(this.listFoods[index])
-            );
-            console.log("Producto seleccionado en addFood:", this.selectedFood);
-            if (
-            !this.selectedFood ||
-            !this.selectedFood.description ||
-            !this.selectedFood.item
-            ) {
-            console.error(
-                "Producto inválido seleccionado:",
-                this.selectedFood
-            );
-            return;
-            }
-            let foodFound = this.localOrden.filter(
-            f => f.id == this.selectedFood.id
-            );
-            if (foodFound.length != 0) {
-            let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
-            if (type) {
-                qty += 1;
-            } else {
-                qty += 1;
-            }
-            if (
-                this.configuration.sales_stock == true &&
-                this.selectedFood.item.unit_type_id !== "ZZ" && 
-                this.selectedFood.item.internal_id !== "PACK000" && 
-                this.selectedFood.item.internal_id !== "PLAT000"
-            ) {
-                if (qty > Number(this.selectedFood.item.stock)) {
-                this.$toast.warning("Limite de stock alcanzado");
-                return;
-                }
-            }
-            } else {
-            if (type) {
-                let qty = Number(type.quantity_unit);
-                if (
-                this.configuration.sales_stock == true &&
-                this.selectedFood.item.unit_type_id !== "ZZ" &&
-                this.selectedFood.item.internal_id !== "PACK000" && 
-                this.selectedFood.item.internal_id !== "PLAT000"
-                ) {
-                let stock = Number(this.selectedFood.item.stock);
-                if (qty > stock) {
-                    this.$toast.warning("Limite de stock alcanzado");
-                    return;
-                }
-                }
-            }
-            }
-            this.currentFood = {
-            id: this.selectedFood.id,
-            food: this.selectedFood,
-            observation: null,
-            price: this.selectedFood.price,
-            quantity: 1
-            };
-            this.orden.push(this.currentFood);
-            this.$emit(
-            "insertOrden",
-            this.currentFood,
-            this.selectedFood.id,
-            type
-            );
-            this.$notify({
-            title: this.currentFood.food.description.toLowerCase(),
-            iconClass: "el-icon-food",
-            position: "top-right",
-            message: "Agregado con éxito",
-            position: "bottom-left"
-            });
-            this.currentFood = {
-            food: null,
-            observation: null,
-            quantity: 0
-            };
-            this.selectedFood = null;
-            this.item = null;
-            this.setFalse();
-        }, */
         addFood(index = 0, type = null) {
             if (!Array.isArray(this.listFoods)) {
                 console.error("listFoods is not an array");
@@ -508,51 +421,49 @@ export default {
                 return;
             }
 
-            let foodFound = this.localOrden.find(
-                f => f.id == this.selectedFood.id
-            );
-            let qty = foodFound ? Number(foodFound.quantity) + 1 : 1;
-
             let unidadMedida = this.selectedFood.item.unit_type_id;
             let internalId = this.selectedFood.item.internal_id;
             let isPackOrRecipe =
-                internalId.startsWith("PACK000") ||
-                internalId.startsWith("PLAT000");
+                internalId?.startsWith("PACK000") ||
+                internalId?.startsWith("PLAT000");
             let isService = unidadMedida === "ZZ";
 
-            // ✅ Si no es un PACK000, PLAT000 o un servicio (ZZ), validamos stock
-            if (
-                !isService &&
-                !isPackOrRecipe &&
-                this.configuration.sales_stock === true
-            ) {
-                let stock = Number(this.selectedFood.item.stock);
-                if (qty > stock) {
-                    this.$toast.warning("Límite de stock alcanzado qqqq");
-                    return;
+            // Skip stock validation if divided_items is true or it's a special product type
+            if (!this.divided_items && !isService && !isPackOrRecipe) {
+                let foodFound = this.localOrden.filter(
+                    f => f.id == this.selectedFood.id
+                );
+                let qty = foodFound.length 
+                    ? foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1 
+                    : 1;
+
+                // Validate stock only for regular products
+                if (this.configuration.sales_stock === true) {
+                    let stock = Number(this.selectedFood.item.stock);
+                    if (qty > stock) {
+                        this.$toast.warning("Límite de stock alcanzado");
+                        return;
+                    }
                 }
             }
 
-            // ✅ Si el producto ya está en la orden, solo incrementamos la cantidad
-            if (foodFound) {
-                foodFound.quantity++;
-            } else {
-                this.currentFood = {
-                    id: this.selectedFood.id,
-                    food: this.selectedFood,
-                    observation: null,
-                    price: this.selectedFood.price,
-                    quantity: 1
-                };
-                this.orden.push(this.currentFood);
-                this.$emit(
-                    "insertOrden",
-                    this.currentFood,
-                    this.selectedFood.id,
-                    type
-                );
-            }
-
+            this.currentFood = {
+                id: this.selectedFood.id,
+                food: this.selectedFood,
+                observation: null,
+                price: this.selectedFood.price,
+                quantity: 1,
+                will_be_divided: this.divided_items // Mark as divided if needed
+            };
+            
+            this.orden.push(this.currentFood);
+            this.$emit(
+                "insertOrden",
+                this.currentFood,
+                this.selectedFood.id,
+                type
+            );
+            
             this.$notify({
                 title: this.selectedFood.description.toLowerCase(),
                 iconClass: "el-icon-food",
@@ -570,7 +481,6 @@ export default {
             this.item = null;
             this.setFalse();
         },
-
         setFalse() {
             this.listFoods = this.listFoods.map(f => {
                 f.select = false;
@@ -579,14 +489,12 @@ export default {
             this.allFalse = true;
         },
         selectFood(index) {
-            //  this.$refs.description.$el.getElementsByTagName("input")[0].focus();
             if (this.listFoods[index].select) {
                 this.listFoods[index].select = false;
                 this.allFalse = true;
                 this.selectedFood = null;
                 return;
             }
-
             !this.allFalse && this.setFalse();
             this.listFoods[index].select = true;
             this.selectedFood = this.listFoods[index];
@@ -626,7 +534,6 @@ export default {
             this.orden = [];
             if (this.table.orden.length != 0) {
                 this.ordenItems = this.table.orden.orden_items;
-
                 // this.activeName = "orden";
                 this.ordenId = this.table.orden.id;
                 setTimeout(() => this.calculateOrden(), 50);
@@ -648,33 +555,26 @@ export default {
             this.$emit("update:showMenu", false);
             this.$emit("update:currentTable", null);
         },
-
         agregarProducto(producto) {
             if (!producto || !producto.food) {
                 console.error("Producto inválido recibido:", producto);
                 return;
             }
-
             const cleanProducto = producto.food;
-
             //console.log("Lista de productos antes de agregar:", this.listFoods);
-
             if (!Array.isArray(this.listFoods)) {
                 console.error(
                     "🚨 Error: listFoods es undefined o no es un array. Reinicializando..."
                 );
                 this.listFoods = [];
             }
-
             let productoIndex = this.listFoods.findIndex(
                 f => f.id === cleanProducto.id
             );
 
             if (productoIndex === -1) {
                 //console.log("Antes de push:", this.listFoods);
-
                 this.$set(this.listFoods, this.listFoods.length, cleanProducto);
-
                 //console.log("Después de push:", this.listFoods);
                 productoIndex = this.listFoods.length - 1;
             }

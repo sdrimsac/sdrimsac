@@ -732,6 +732,7 @@ export default {
     async created() {
         this.referenciaInput = this.referencia;
         this.mozos = this.mozos || [];
+        this.readDividedItemsLocalStorage();
         await this.getTags();
         //this.$root.$on("addProductToOrder", this.addProductToOrder);
     },

@@ -49,6 +49,7 @@
                     :showMenu.sync="showMenu"
                     :localOrden.sync="localOrden"
                     :foods.sync="foods"
+                    :divided_items="divided_items"
                     @changePage="changePage"
                 ></list-food>
             </div>
@@ -571,83 +572,6 @@ export default {
                 type.quantity_unit
             )}) - S/ ${price}`;
         },
-        /* addFood(index = 0, type = null) {
-            if (!Array.isArray(this.foods)) {
-                console.error("foods is not an array");
-                return;
-            }
-            this.selectedFood = JSON.parse(JSON.stringify(this.foods[index]));
-
-            if (!this.selectedFood) return;
-
-            let unidadMedida = this.selectedFood.item.unit_type_id;
-            let foodFound = this.localOrden.filter(
-                f => f.id == this.selectedFood.id
-            );
-
-            if (foodFound.length != 0) {
-                let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
-                if (type) {
-                    qty += 1;
-                } else {
-                    qty += 1;
-                }
-                if (
-                    this.configuration.sales_stock == true &&
-                    this.selectedFood.item.unit_type_id != "ZZ" && unidadMedida !== "ZZ"
-                ) {
-                    if (qty > Number(this.selectedFood.item.stock)) {
-                        this.$toast.warning("Limite de stock alcanzado");
-                        return;
-                    }
-                }
-            } else {
-                if (type) {
-                    let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true && unidadMedida !== "ZZ") {
-                        let stock = Number(this.selectedFood.item.stock);
-                        if (qty > stock) {
-                            this.$toast.warning("Limite de stock alcanzado");
-                            return;
-                        }
-                    }
-                }
-            }
-            this.currentFood = {
-                id: this.selectedFood.id,
-                food: this.selectedFood,
-                observation: null,
-                price: this.selectedFood.price,
-                quantity: 1
-            };
-            this.insertOrden(this.currentFood, this.selectedFood.id, type);
-            this.$notify({
-                title: this.currentFood.food.description.toLowerCase(),
-                iconClass: "el-icon-food",
-                position: "top-right",
-                message: "Agregado con éxito",
-                position: "bottom-left"
-            });
-            this.currentFood = {
-                food: null,
-                observation: null,
-                quantity: 0
-            };
-            this.selectedFood = null;
-            this.item = null;
-            this.setFalse();
-
-            // Actualizar la orden seleccionada
-            //this.updateSelectedOrden();
-        }, */
-        /* updateSelectedOrden() {
-            let orden = this.ordens.find(o => o.id == this.ordenSelectedId);
-            if (orden) {
-                orden.orden_items = this.localOrden;
-                this.ordensItems = orden.orden_items;
-                this.$refs.ordenRef.calculateTotal();
-            }
-        }, */
         addFood(index = 0, type = null) {
             if (!Array.isArray(this.foods)) {
                 console.error("foods is not an array");
@@ -664,29 +588,32 @@ export default {
                 f => f.id == this.selectedFood.id
             );
 
-            let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
+            // Always create a new item if divided_items is true, regardless of stock validation
+            if (!this.divided_items) {
+                let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
 
-            if (
-                unidadMedida === "ZZ" ||
-                internalId.startsWith("PACK000") ||
-                internalId.startsWith("PLAT000")
-            ) {
-                qty = 99999; // Permitir agregar muchas unidades
-            }
-
-            // Solo validar stock si NO es PACK000 o PLAT000
-            if (
-                this.configuration.sales_stock === true &&
-                !(
+                if (
+                    unidadMedida === "ZZ" ||
                     internalId.startsWith("PACK000") ||
                     internalId.startsWith("PLAT000")
-                )
-            ) {
-                let stock = Number(this.selectedFood.item.stock);
+                ) {
+                    qty = 99999; // Permitir agregar muchas unidades
+                }
 
-                if (qty > stock) {
-                    this.$toast.warning("Limite de stock alcanzado");
-                    return;
+                // Solo validar stock si NO es PACK000 o PLAT000
+                if (
+                    this.configuration.sales_stock === true &&
+                    !(
+                        internalId.startsWith("PACK000") ||
+                        internalId.startsWith("PLAT000")
+                    )
+                ) {
+                    let stock = Number(this.selectedFood.item.stock);
+
+                    if (qty > stock) {
+                        this.$toast.warning("Limite de stock alcanzado");
+                        return;
+                    }
                 }
             }
 
@@ -791,16 +718,17 @@ export default {
                 orden.type_id = type ? type.id : null;
                 orden.type_description = type ? type.description : null;
                 orden.type_quantity = type ? Number(type.quantity_unit) : 0;
-                if (this.configuration.divided_items) {
-                    if (this.divided_items) {
-                        orden.will_be_divided = true;
-                    }
-                }
+                
                 if (type) {
                     orden.quantity = 1;
                     orden.price = this.getDefaultPrice(type);
                 } else {
                     orden.price = orden.food.price;
+                }
+                if (this.configuration.divided_items) {
+                    if (this.divided_items) {
+                        orden.will_be_divided = true;
+                    }
                 }
                 this.localOrden.push(orden);
             } else {
@@ -840,11 +768,6 @@ export default {
                             Number(this.localOrden[indexFind].quantity) + 1;
                     } else {
                         this.localOrden.push(orden);
-                    }
-                    if (this.configuration.divided_items) {
-                        if (this.divided_items) {
-                            orden.will_be_divided = true;
-                        }
                     }
                 }
                 this.localOrden = [...this.localOrden];

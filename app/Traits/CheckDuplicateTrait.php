@@ -19,15 +19,6 @@ trait CheckDuplicateTrait
      * @param  \App\Models\Tenant\Document $document  
      * @return int
      */
-    /* public function checkDuplicateAndSendMessage($document) {
-        $documentTypeDescription = $document->document_type->description;
-        $serie = $document->series;
-        $number = $document->number;
-        $date_of_issue = Carbon::parse($document->date_of_issue)->format('d/m/Y');
-
-        $message = "El documento {$documentTypeDescription} {$serie}-{$number} de fecha {$date_of_issue} se ha duplicado.";
-        (new WhatsappController)->sendMessageAllSupprotDuplicate($message);
-    } */
     public function checkDuplicateAndSendMessage($document)
     {
         $documentTypeDescription = $document->document_type->description;
@@ -36,7 +27,6 @@ trait CheckDuplicateTrait
         $total = $document->total;
         $date_of_issue = Carbon::parse($document->date_of_issue)->format('d/m/Y');
 
-        // Check if it's a sale note (NV prefix) or regular document (B or F prefix)
         $seriePrefix = substr($serie, 0, 2);
         
         if ($seriePrefix === 'NV') {
@@ -47,7 +37,6 @@ trait CheckDuplicateTrait
                 ->where('id', '!=', $document->id)
                 ->first();
         } else {
-            // Search in documents table for B or F series
             $duplicate = Document::where('series', $serie)
                 ->where('number', $number)
                 ->where('total', $total)

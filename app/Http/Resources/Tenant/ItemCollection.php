@@ -63,6 +63,7 @@ class ItemCollection extends ResourceCollection
                 //row es una instancia de Item
 
                 'last_register' => $this->get_last_document($row),
+                'init_report' => $row->init_report,
                 'has_warranty' => $row->has_warranty,
                 'month_day' => $row->month_day,
                 'has_color_size' => (bool)$row->has_color_size,
