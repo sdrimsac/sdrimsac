@@ -240,7 +240,7 @@
                         {{ data.is_room ? "Habitación" : "Mesa" }}
                     </strong>
                     <i class="icofont-dining-table icofont-4x"></i>
-                    <span class="h2 text-white">{{ data.full_name }}</span>
+                    <span class="h2 text-white">{{ data.number }}</span>
                     <span
                         :class="
                             data.enabled == false

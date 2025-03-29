@@ -592,24 +592,16 @@ export default {
             if (!this.divided_items) {
                 let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
 
+                // Skip stock validation for ZZ, PACK000, or PLAT000
                 if (
                     unidadMedida === "ZZ" ||
                     internalId.startsWith("PACK000") ||
                     internalId.startsWith("PLAT000")
                 ) {
-                    qty = 99999; // Permitir agregar muchas unidades
-                }
-
-                // Solo validar stock si NO es PACK000 o PLAT000
-                if (
-                    this.configuration.sales_stock === true &&
-                    !(
-                        internalId.startsWith("PACK000") ||
-                        internalId.startsWith("PLAT000")
-                    )
-                ) {
+                    // Allow unlimited quantity
+                } else if (this.configuration.sales_stock === true) {
+                    // Validate stock for other items
                     let stock = Number(this.selectedFood.item.stock);
-
                     if (qty > stock) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
