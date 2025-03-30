@@ -90,6 +90,7 @@
                             Caja
                         </el-button>
                         <el-button
+                           v-if="configuration.re_printer"
                             type="primary"
                             class="btn btn-sm"
                             @click="printTicket"

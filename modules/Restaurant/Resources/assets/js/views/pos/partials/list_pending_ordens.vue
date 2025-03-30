@@ -85,6 +85,7 @@
                                 ></el-button>
                             </el-tooltip>
                             <el-button
+                                v-if="configuration.re_printer"
                                 type="primary"
                                 icon="el-icon-printer"
                                 @click="printTicket(ord.id)"
@@ -159,7 +160,7 @@
 <script>
 import queryString from "query-string";
 export default {
-    props: ["showPendingOrdens", "areas"],
+    props: ["showPendingOrdens", "areas", "configuration"],
     data() {
         return {
             form: {

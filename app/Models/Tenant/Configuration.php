@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
-        'name_comand',
+        're_printer',
+        'nane_comand',
         'zones_workers',
         'kardex_regularizate',
         'comand_big',
@@ -312,7 +313,8 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
-        'name_comand' => 'boolean',
+        're_printer' => 'boolean',
+        'nane_comand' => 'boolean',
         'zones_workers' => 'boolean',
         'kardex_regularizate' => 'boolean',
         'comand_big' => 'boolean',
@@ -567,7 +569,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
-            'name_comand' => (bool)$this->name_comand,
+            're_printer' => (bool)$this->re_printer,
+            'nane_comand' => (bool)$this->nane_comand,
             'zones_workers' => (bool)$this->zones_workers,
             'kardex_regularizate' => (bool)$this->kardex_regularizate,
             'comand_big' => (bool)$this->comand_big,

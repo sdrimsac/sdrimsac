@@ -271,9 +271,9 @@
             @if ($to_kitchen)
             
             @if ($is_restaurant)
-            @if ($configuration->name_comand)
+            @if ($configuration->nane_comand)
             <tr>
-                <td colspan="4" class="header_title text-center " valign="top">
+                <td colspan="4" class="header_title text-center encabezado" valign="top">
                     <strong>PRECUENTA</strong></td>
             </tr>
             @endif
@@ -322,16 +322,16 @@
             </tr>
             @endif
             @if (!$to_kitchen)
-            @if ($configuration->name_comand)
+            @if ($configuration->nane_comand)
             <tr>
-                <td colspan="4" class="header_title text-center " valign="top">
+                <td colspan="4" class="header_title text-center encabezado" valign="top">
                     <strong>COMANDA</strong>
                 </td>
             </tr>
             @endif
             <tr>
                 <td colspan="4" class="header_title text-center " valign="top">
-                    <strong>NRO. MESA  AA{{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
+                    <strong>NRO. MESA  {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
                     </strong>
                 </td>
             </tr>

@@ -2530,6 +2530,7 @@
         <table-ordens-pending
             :areas="areas"
             :showPendingOrdens.sync="showPendingOrdens"
+            :configuration="configuration"
         ></table-ordens-pending>
         <cash-form
             v-if="showDialogCash"
