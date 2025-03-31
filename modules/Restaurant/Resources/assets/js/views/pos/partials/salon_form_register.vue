@@ -44,36 +44,47 @@
                 <div class="col-3">
                     <label class="form-label">Categoría</label>
                     <el-select
-                        v-model="form.category"
+                        v-model="form.category_id"
                         placeholder="Seleccione Categoría"
                         class="w-100"
+                        filterable
+                        @change="getServices"
                     >
-                        <el-option label="Cabello" value="cabello"></el-option>
+                        <el-option
+                            v-for="category in categories"
+                            :key="category.id"
+                            :label="category.name"
+                            :value="category.id"
+                        ></el-option>
                     </el-select>
                 </div>
                 <div class="col-3">
                     <label class="form-label">Servicio</label>
                     <el-select
-                        v-model="form.service"
+                        v-model="form.item_id"
                         placeholder="Seleccione Servicio"
                         class="w-100"
+                        :disabled="loading"
+                        @change="setService"
                     >
                         <el-option
-                            label="Cambio de Look"
-                            value="look"
+                            v-for="service in services"
+                            :key="service.id"
+                            :label="service.name"
+                            :value="service.id"
                         ></el-option>
                     </el-select>
                 </div>
                 <div class="col-3">
                     <label class="form-label">Estilista</label>
                     <el-select
-                        v-model="form.stylist"
+                        v-model="form.user_id"
                         placeholder="Seleccione Estilista"
                         class="w-100"
                         @change="getStylistSchedule"
                     >
                         <el-option
-                            v-for="user in users"
+                            v-for="user in users_has_services"
                             :key="user.id"
                             :label="user.name"
                             :value="user.id"
@@ -169,7 +180,7 @@
                             <p class="mt-2">Cargando horarios disponibles...</p>
                         </div>
 
-                        <div v-else-if="!form.stylist || !selectedDate" class="alert alert-info">
+                        <div v-else-if="!form.user_id || !selectedDate" class="alert alert-info">
                             Seleccione un estilista y una fecha para ver los horarios disponibles.
                         </div>
 
@@ -253,6 +264,10 @@ import moment from "moment";
 
 export default {
     props: {
+        categories: {
+            type: Array,
+            default: []
+        },
         showDialog: {
             type: Boolean,
             required: true
@@ -276,6 +291,8 @@ export default {
             },
             loading: false,
             saving: false,
+            services: [],
+            users_has_services: [],
             selectedDate: new Date(),
             selectedTimeSlot: null,
             selectedTimeSlotData: null,
@@ -291,7 +308,10 @@ export default {
                 stylist: null,
                 client: null,
                 whatsapp: null,
-                observations: null
+                observations: null,
+                user_id: null,
+                item_id: null,
+                category_id: null,
             },
             monthsSpanish: {
                 January: "Enero",
@@ -333,16 +353,33 @@ export default {
             )}`;
         },
         formattedSelectedDate() {
-            return this.selectedDate
-                ? moment(this.selectedDate).format("D [de] MMMM")
+            let monthsSpanish = {
+                "January": "Enero",
+                "February": "Febrero", 
+                "March": "Marzo",
+                "April": "Abril",
+                "May": "Mayo",
+                "June": "Junio",
+                "July": "Julio",
+                "August": "Agosto",
+                "September": "Septiembre",
+                "October": "Octubre",
+                "November": "Noviembre",
+                "December": "Diciembre"
+            };
+
+            let dateString = this.selectedDate
+                ? moment(this.selectedDate).format("D [de] ") + monthsSpanish[moment(this.selectedDate).format("MMMM")]
                 : "";
+                
+            return dateString;
         },
         estimatedEndTime() {
             return "45 min";
         },
         canSave() {
             return (
-                this.form.stylist &&
+                this.form.user_id &&
                 this.form.client &&
                 this.selectedTimeSlotData &&
                 this.selectedTimeSlotData.available
@@ -360,6 +397,45 @@ export default {
         }
     },
     methods: {
+        setService() {
+            if(!this.form.item_id) return;
+            let item = this.services.find(service => service.id === this.form.item_id);
+            if(item){
+                let users_id = item.users_id;
+                this.users_has_services = this.users.filter(user => users_id.includes(user.id));    
+                if(this.users_has_services.length > 0){
+                    this.form.user_id = this.users_has_services[0].id;
+                    this.getStylistSchedule();
+                }
+            }
+        },
+        initService() {
+            this.form.item_id = null;
+            this.form.start_time = null;
+            this.form.end_time = null;
+            this.form.duration = null;
+            this.form.notes = null;
+            this.form.user_id = null;
+            
+        },
+        async getServices() {
+            this.initService();
+            if(!this.form.category_id) return;  
+            this.loading = true;
+            const response = await this.$http.get(`/caja/estilista/get-services/${this.form.category_id}`);
+            this.services = response.data;
+            if(this.services.length > 0){
+                this.form.item_id = this.services[0].id;
+                let users_id = this.services[0].users_id;
+                this.users_has_services = this.users.filter(user => users_id.includes(user.id));
+                if(this.users_has_services.length > 0){
+                    this.form.user_id = this.users_has_services[0].id;
+                    this.getStylistSchedule();
+                }
+            }
+            this.loading = false;
+        },
+    
         async keyupCustomer(e) {
             //buscar
             if (this.time) {
@@ -395,7 +471,7 @@ export default {
         },
     
         async getStylistSchedule() {
-            if (!this.form.stylist || !this.selectedDate) {
+            if (!this.form.user_id || !this.selectedDate) {
                 this.availableTimeSlots = [];
                 return;
             }
@@ -407,7 +483,7 @@ export default {
             try {
                 const formattedDate = moment(this.selectedDate).format("YYYY-MM-DD");
                 const response = await this.$http.get(
-                    `/caja/estilista/time-slots/available/${this.form.stylist}/${formattedDate}`
+                    `/caja/estilista/time-slots/available/${this.form.user_id}/${formattedDate}`
                 );
                 
                 if (response.data.success) {
@@ -475,7 +551,7 @@ export default {
         },
         async saveAppointment() {
             // Validaciones
-            if (!this.form.stylist) {
+            if (!this.form.user_id) {
                 this.$message.warning("Por favor seleccione un estilista");
                 return;
             }
@@ -494,7 +570,7 @@ export default {
                 const formattedDate = moment(this.selectedDate).format("YYYY-MM-DD");
                 
                 const appointmentData = {
-                    user_id: this.form.stylist,
+                    user_id: this.form.user_id,
                     client_id: this.form.client || this.selectedClient.id,
                     appointment_date: formattedDate,
                     start_time: this.selectedTimeSlotData.start,
@@ -551,7 +627,7 @@ export default {
                     
                     // Cargar los datos de la cita en el formulario
                     this.form.client = appointment.client_id;
-                    this.form.stylist = appointment.user_id;
+                    this.form.user_id = appointment.user_id;
                     this.form.service = appointment.service_id;
                     
                     // Establecer la fecha y forzar la re-renderización del calendario

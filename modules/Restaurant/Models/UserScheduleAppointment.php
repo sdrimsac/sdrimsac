@@ -11,6 +11,7 @@ use Carbon\Carbon;
 class UserScheduleAppointment extends TenantModel
 {
     protected $fillable = [
+        'orden_id',
         'user_id',
         'client_id',
         'appointment_date',
@@ -110,6 +111,14 @@ class UserScheduleAppointment extends TenantModel
     }
 
     /**
+     * Verificar si la cita está en atención
+     */
+    public function isInProgress()
+    {
+        return $this->status === 'in_progress';
+    }
+
+    /**
      * Verificar disponibilidad para una nueva cita
      */
     public static function checkAvailability($userId, $date, $startTime, $endTime, $excludeAppointmentId = null)
@@ -147,5 +156,24 @@ class UserScheduleAppointment extends TenantModel
             ->where('appointment_date', $date)
             ->orderBy('start_time')
             ->get();
+    }
+
+    /**
+     * Obtener el texto del estado en español
+     */
+    public static function getStatusText($status)
+    {
+        return [
+            'scheduled' => 'Programada',
+            'completed' => 'Completada',
+            'cancelled' => 'Cancelada',
+            'no_show' => 'No asistió',
+            'in_progress' => 'En atención'
+        ][$status] ?? $status;
+    }
+
+    public function products()
+    {
+        return $this->hasMany(AppointmentProduct::class, 'appointment_id');
     }
 } 

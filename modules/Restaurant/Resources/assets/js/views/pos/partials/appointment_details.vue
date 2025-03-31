@@ -41,6 +41,12 @@
             <div class="row mt-4" v-if="appointment.status === 'scheduled'">
                 <div class="col-12 d-flex justify-content-end">
                     <button 
+                        class="btn btn-primary mr-2" 
+                        @click="changeStatus('in_progress')"
+                    >
+                        <i class="fas fa-play mr-1"></i> Iniciar Atención
+                    </button>
+                    <button 
                         class="btn btn-success mr-2" 
                         @click="changeStatus('completed')"
                     >
@@ -57,6 +63,22 @@
                         @click="changeStatus('no_show')"
                     >
                         <i class="fas fa-user-slash mr-1"></i> No Asistió
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-4" v-if="appointment.status === 'in_progress'">
+                <div class="col-12 d-flex justify-content-end">
+                    <button 
+                        class="btn btn-info mr-2" 
+                        @click="addProducts"
+                    >
+                        <i class="fas fa-cart-plus mr-1"></i> Agregar Productos
+                    </button>
+                    <button 
+                        class="btn btn-success mr-2" 
+                        @click="changeStatus('completed')"
+                    >
+                        <i class="fas fa-check mr-1"></i> Finalizar Atención
                     </button>
                 </div>
             </div>
@@ -88,7 +110,8 @@ export default {
                 'scheduled': 'Programada',
                 'completed': 'Completada',
                 'cancelled': 'Cancelada',
-                'no_show': 'No asistió'
+                'no_show': 'No asistió',
+                'in_progress': 'En atención'
             };
             
             return statusMap[status] || status;
@@ -98,7 +121,8 @@ export default {
                 'scheduled': 'badge badge-primary',
                 'completed': 'badge badge-success',
                 'cancelled': 'badge badge-danger',
-                'no_show': 'badge badge-warning'
+                'no_show': 'badge badge-warning',
+                'in_progress': 'badge badge-info'
             };
             
             return classMap[status] || 'badge badge-secondary';
@@ -126,6 +150,9 @@ export default {
         },
         closeDialog() {
             this.$emit('update:showDialog', false);
+        },
+        addProducts() {
+            this.$emit('add-products', this.appointment);
         }
     }
 };
@@ -164,6 +191,11 @@ export default {
 
 .badge-secondary {
     background-color: #6c757d;
+    color: white;
+}
+
+.badge-info {
+    background-color: #17a2b8;
     color: white;
 }
 </style> 

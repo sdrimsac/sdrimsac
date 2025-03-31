@@ -1029,6 +1029,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            :currentAppointment.sync="currentAppointment"
                             :divided_items.sync="divided_items"
                             @searchFoodByCustomerUnitTypeId="
                                 searchFoodByCustomerUnitTypeId
@@ -1924,11 +1925,14 @@
             :show-dialog.sync="showFormRegisterSalon"
             @appointment-saved="refreshAppointments"
             append-to-body
+            :categories.sync="categories"
         />
         
         <appointments-modal
             :show-dialog.sync="showAppointmentsModal"
             @appointment-updated="refreshAppointments"
+            :categories="categories"
+            @addProductToAppointment="addProductToAppointment"
             append-to-body
         />
         
@@ -1936,6 +1940,7 @@
             :showDialog.sync="showClientsAppointmentsModal"
             @appointment-updated="loadData"
             append-to-body
+            :categories="categories"
         />
     </div>
     
@@ -1983,7 +1988,7 @@ const Warranty = () => import("./partials/warranty.vue");
 const QuotationListModal = () => import("./partials/quotation_list_modal.vue");
 const DispatchModal = () => import("./partials/dispatch_modal.vue");
 
-const PaymentForm = () => import("./partials/payment.vue");
+const PaymentForm = () => import("./partials/payment_salon.vue");
 const ItemForm = () =>
     import("../../../../../../../resources/js/views/items/form.vue");
 const PersonForm = () =>
@@ -2004,7 +2009,7 @@ const PromotionCanje = () =>
         "./partials/promotionscanje.vue"
     );
 const EditProduct = () => import("./partials/edit_product.vue");
-const ListOrden = () => import("./partials/list_ordens.vue");
+const ListOrden = () => import("./partials/list_ordens_salon.vue");
 const ListFoodMobiles = () => import("./partials/list_food_mobiles.vue");
 const College = () => import("./partials/college.vue");
 const CreditsList = () => import("./partials/credits_list.vue");
@@ -2087,6 +2092,7 @@ export default {
 
     data() {
         return {
+            currentAppointment: null,
             showFormRegisterSalon:false,
             categoriesToShow: [],
             lastQuery: null,
@@ -2428,6 +2434,18 @@ export default {
         }
     },
     methods: {
+        async addProductToAppointment(appointment) {
+            this.currentAppointment = appointment;
+            console.log("appointment", appointment);
+            if (appointment.orden_id) {
+                const data = await this.getOrdenById(appointment.orden_id);
+                this.sendOrdens(data.orden);
+            }
+        },
+        async getOrdenById(id) {
+            const response = await this.$http.get(`/caja/worker/orden-new/${id}`);
+            return response.data;
+        },
         async printFileWithRawBT(fileUrl) {
             try {
                 const response = await fetch(fileUrl);
@@ -3383,7 +3401,7 @@ export default {
                 this.quotationId = orden.quotation_id;
                 this.cotIdentifier = orden.cot;
             }
-            if (orden.mesa != undefined && orden.id != undefined) {
+            if (orden.id != undefined) {
                 this.clientTableData = {
                     table: orden.mesa.number,
                     ref: orden.ref ?? "-",
@@ -3543,6 +3561,7 @@ export default {
             this.showDialogViewItems = true;
         },
         cancelOrden() {
+            this.currentAppointment = null;
             this.clientSaleNoteNumber = null;
             this.clientSaleNoteDiscount = 0;
             this.isConsignment = false;
@@ -3666,6 +3685,7 @@ export default {
         },
         async paymentsOrden(form, variationItem = []) {
             this.orden_items = form;
+            this.clientSaleNoteNumber = form.clientSaleNoteNumber;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
             this.form.offert = form.offert;
@@ -5884,10 +5904,7 @@ export default {
                 this.sellers = response.data.sellers;
                 this.users = response.data.users;
                 this.categoriesToShow = response.data.categories_to_show;
-                /* console.log(
-                    "🚀 ~ awaitthis.$http.get ~ this.users:",
-                    this.users
-                ); */
+        
                 this.tablesClean = response.data.tablesClean;
                 this.tablesClean = this.tablesClean.map(t => ({
                     ...t,
@@ -5949,13 +5966,7 @@ export default {
                 /* ; */ this.currency_types.length > 0
                     ? this.currency_types[0].id
                     : null;
-                this.renderCategories(response.data.categories);
-                this.renderBrands(response.data.brands);
-                // this.currency_type = _.find(this.currency_types, {'id': this.form.currency_type_id})
-                // this.changeCurrencyType();
-                // this.filterItems();
-                // this.changeDateOfIssue();
-                // this.changeExchangeRate();
+        
                 this.config = response.data.config;
                 let area = this.areas.find(a => a.id == this.area_id);
                 if (area.description == "HOTEL") {
@@ -5972,16 +5983,7 @@ export default {
         getColor(i) {
             return this.colors[i % this.colors.length];
         },
-        renderCategories(source) {
-            const contex = this;
-            this.categories = source.map((obj, index) => {
-                return {
-                    id: obj.id,
-                    name: obj.name,
-                    color: contex.getColor(index)
-                };
-            });
-        },
+        
         renderBrands(source) {
             const contex = this;
             this.brands = source.map((obj, index) => {

@@ -9,6 +9,9 @@ use Modules\Restaurant\Models\UserScheduleAppointment;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Person;
 use Carbon\Carbon;
+use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\OrdenItem;
+use Modules\Restaurant\Models\Table;
 
 class UserScheduleAppointmentController extends Controller
 {
@@ -86,7 +89,7 @@ class UserScheduleAppointmentController extends Controller
     public function show($id)
     {
         $appointment = UserScheduleAppointment::with(['user', 'client', 'service'])->findOrFail($id);
-        
+
         return [
             'success' => true,
             'data' => $appointment
@@ -116,13 +119,15 @@ class UserScheduleAppointmentController extends Controller
         ]);
 
         $appointment = UserScheduleAppointment::findOrFail($id);
-        
+
         // Verificar disponibilidad solo si cambiaron la fecha, hora o estilista
-        if ($appointment->user_id != $request->user_id || 
-            $appointment->appointment_date != $request->appointment_date || 
-            $appointment->start_time != $request->start_time || 
-            $appointment->end_time != $request->end_time) {
-            
+        if (
+            $appointment->user_id != $request->user_id ||
+            $appointment->appointment_date != $request->appointment_date ||
+            $appointment->start_time != $request->start_time ||
+            $appointment->end_time != $request->end_time
+        ) {
+
             $isAvailable = UserScheduleAppointment::checkAvailability(
                 $request->user_id,
                 $request->appointment_date,
@@ -202,30 +207,30 @@ class UserScheduleAppointmentController extends Controller
     {
         $term = $request->term;
         $query = Person::where('type', 'customers');
-        
+
         if ($term) {
-            $query->where(function($q) use ($term) {
+            $query->where(function ($q) use ($term) {
                 $q->where('name', 'like', '%' . $term . '%')
-                  ->orWhere('telephone', 'like', '%' . $term . '%')
-                  ->orWhere('email', 'like', '%' . $term . '%');
+                    ->orWhere('telephone', 'like', '%' . $term . '%')
+                    ->orWhere('email', 'like', '%' . $term . '%');
             });
         }
 
         $clients = $query->limit(20)->get();
-        
+
         // Obtener los IDs de los clientes para hacer una consulta eficiente
         $clientIds = $clients->pluck('id')->toArray();
-        
+
         // Obtener todas las citas para estos clientes en una sola consulta
         $appointments = UserScheduleAppointment::whereIn('client_id', $clientIds)
             ->select('client_id', 'status')
             ->get()
             ->groupBy('client_id');
-        
+
         // Transformar los datos y agregar los conteos
         $result = $clients->map(function ($client) use ($appointments) {
             $clientAppointments = $appointments->get($client->id, collect([]));
-            
+
             return [
                 'id' => $client->id,
                 'name' => $client->name,
@@ -292,18 +297,61 @@ class UserScheduleAppointmentController extends Controller
     public function changeStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:scheduled,completed,cancelled,no_show'
+            'status' => 'required|in:scheduled,in_progress,completed,cancelled,no_show'
         ]);
 
         $appointment = UserScheduleAppointment::findOrFail($id);
         $appointment->status = $request->status;
+
         $appointment->save();
+
+        if ($request->status == 'in_progress') {
+            $this->createOrden($appointment);
+        }
 
         return [
             'success' => true,
             'message' => 'Estado de la cita actualizado con éxito',
             'data' => $appointment
         ];
+    }
+
+    function createOrden($appointment)
+    {
+        $item = Item::find($appointment->service_id);
+        $establishment_id = auth()->user()->establishment_id;
+        $table = Table::firstOrCreate(
+            [
+                'number' => 'caja',
+                'establishment_id' => $establishment_id
+            ],
+            [
+                'area_id' => auth()->user()->area_id,
+                'status_table_id' => 2
+            ]
+        );
+        $orden = Orden::create([
+            'table_id' => $table->id,
+            'status_orden_id' => 1,
+        ]);
+        $items = [
+            'food_id' => $item->food->id,
+            'observations' =>  '-',
+            'quantity' => 1,
+            'price' => $item->sale_unit_price,
+            'user_id' => auth()->user()->id,
+            'orden_id' => $orden->id,
+            'to_carry' => 0,
+            'status_orden_id' => 1,
+            'date' => Carbon::today(),
+            'time' => date('H:i:s'),
+            'area_id' => $item->food->area_id
+        ];
+
+        OrdenItem::insert($items);
+
+        $appointment->orden_id = $orden->id;
+        $appointment->save();
     }
 
     public function checkAvailability(Request $request)
@@ -329,5 +377,31 @@ class UserScheduleAppointmentController extends Controller
             'available' => $isAvailable,
             'message' => $isAvailable ? 'Horario disponible' : 'Horario no disponible'
         ];
+    }
+
+    public function addProducts(Request $request, $id)
+    {
+        try {
+            $appointment = UserScheduleAppointment::findOrFail($id);
+
+            foreach ($request->products as $product) {
+                $appointment->products()->create([
+                    'item_id' => $product['item_id'],
+                    'quantity' => $product['quantity'],
+                    'unit_price' => $product['unit_price'],
+                    'total' => $product['total']
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Productos agregados correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al agregar productos: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

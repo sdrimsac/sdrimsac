@@ -155,6 +155,22 @@
                                                     >
                                                         <i class="fas fa-user-slash"></i>
                                                     </button>
+                                                    <button 
+                                                        class="btn btn-sm btn-info" 
+                                                        @click="addProducts(appointment)"
+                                                        title="Agregar productos"
+                                                        v-if="appointment.status === 'in_progress'"
+                                                    >
+                                                        <i class="fas fa-cart-plus"></i>
+                                                    </button>
+                                                    <button 
+                                                        class="btn btn-sm btn-primary" 
+                                                        @click="changeStatus(appointment, 'in_progress')"
+                                                        title="Iniciar atención"
+                                                        v-if="appointment.status === 'scheduled'"
+                                                    >
+                                                        <i class="fas fa-play"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -326,7 +342,8 @@ export default {
                 'scheduled': 'Programada',
                 'completed': 'Completada',
                 'cancelled': 'Cancelada',
-                'no_show': 'No asistió'
+                'no_show': 'No asistió',
+                'in_progress': 'En atención'
             };
             
             return statusMap[status] || status;
@@ -336,7 +353,8 @@ export default {
                 'scheduled': 'badge badge-primary',
                 'completed': 'badge badge-success',
                 'cancelled': 'badge badge-danger',
-                'no_show': 'badge badge-warning'
+                'no_show': 'badge badge-warning',
+                'in_progress': 'badge badge-info'
             };
             
             return classMap[status] || 'badge badge-secondary';
@@ -363,6 +381,10 @@ export default {
                 appointmentId: data.appointmentId,
                 newStatus: data.newStatus
             });
+        },
+        addProducts(appointment) {
+            // Aquí emitiremos un evento para manejar la adición de productos
+            this.$emit('add-products', appointment);
         }
     }
 };
@@ -401,6 +423,11 @@ export default {
 
 .badge-secondary {
     background-color: #6c757d;
+    color: white;
+}
+
+.badge-info {
+    background-color: #17a2b8;
     color: white;
 }
 </style> 

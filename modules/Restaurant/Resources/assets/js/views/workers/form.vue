@@ -319,6 +319,16 @@
                             <!-- <small class="form-control-feedback" v-if="errors.series" v-text="errors.series[0]"></small> -->
                         </div>
                     </div>
+                    <div class="col-md-4"
+                    v-if="isEstilista"
+                    >
+                    
+                        <label for="product"
+                            >Ver/Editar servicios
+                            
+                        </label>
+                        <el-button type="primary" @click="openUserItems">Ver/Editar servicios</el-button>
+                    </div>
                     <div
                         class="row"
                         v-if="configuration.commercial_treatment_items"
@@ -368,6 +378,9 @@
                     </div>
                 </div>
             </div>
+            <user-items :showDialog.sync="showUserItems" :userId="recordId"
+            @saveItems="saveItems"
+            ></user-items>
 
             <!-- Botones -->
             <div
@@ -397,8 +410,12 @@
 <script>
 import Swal from "sweetalert2";
 import { serviceNumber } from "../../../../../../../resources/js/mixins/functions";
+import UserItems from "./user_items.vue";
 export default {
     mixins: [serviceNumber],
+    components: {
+        UserItems
+    },
     props: [
         "showDialog",
         "recordId",
@@ -433,11 +450,19 @@ export default {
             resource: "workers",
             headers: headers_token,
             image_url: null,
-            commercial_treatment_users: []
+            commercial_treatment_users: [],
+            showUserItems: false
         };
     },
     created() {
         this.initForm();
+    },
+    computed: {
+        isEstilista() {
+            let workerType = this.workersType.find(type => type.id === this.form.worker_type_id);
+            if(!workerType) return false;
+            return workerType.description === 'ESTILISTA';
+        }
     },
     /* watch: {
         "form.worker_type_id"(newVal, oldVal) {
@@ -491,6 +516,12 @@ export default {
         }
     },
     methods: {
+        saveItems(items){
+            this.form.user_items = items;
+        },
+        openUserItems(){
+            this.showUserItems = true;
+        },
         onSuccess(response, file, fileList) {
             if (response.success) {
                 this.form.image = response.data.filename;

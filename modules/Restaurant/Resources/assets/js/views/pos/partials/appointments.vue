@@ -62,6 +62,7 @@
                                 class="w-100"
                             >
                                 <el-option label="Programada" value="scheduled"></el-option>
+                                <el-option label="En progreso" value="in_progress"></el-option>
                                 <el-option label="Completada" value="completed"></el-option>
                                 <el-option label="Cancelada" value="cancelled"></el-option>
                                 <el-option label="No asistió" value="no_show"></el-option>
@@ -168,6 +169,25 @@
                                                         >
                                                             <i class="fas fa-user-slash"></i>
                                                         </button>
+                                                        <button 
+                                                            class="btn btn-sm btn-info" 
+                                                            @click="changeStatus(appointment, 'in_progress')"
+                                                            title="Marcar como en progreso"
+                                                            v-if="appointment.status === 'scheduled'"
+                                                        >
+                                                            <i class="fas fa-play"></i>
+                                                        </button>
+                                                        <el-tooltip content="Añadir producto a la cita" placement="top">
+                                                            <button 
+                                                            class="btn btn-sm btn-info" 
+                                                            title="Marcar como en progreso"
+                                                            v-if="appointment.status === 'in_progress'"
+                                                            @click="addProductToAppointment(appointment)"
+                                                        >
+                                                            <i class="fas fa-shopping-cart"></i>
+                                                        </button>
+                                                        </el-tooltip>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -186,6 +206,7 @@
                 :preselectedClient="selectedClientForAppointment"
                 :appointmentId.sync="selectedAppointmentId"
                 @appointment-saved="onAppointmentSaved"
+                :categories="categories"
             ></salon-form-register>
         </el-dialog>
         
@@ -205,6 +226,10 @@ import AppointmentDetails from './appointment_details.vue';
 
 export default {
     props: {
+        categories: {
+            type: Array,
+            default: []
+        },
         showDialog: {
             type: Boolean,
             required: true
@@ -271,6 +296,11 @@ export default {
         }
     },
     methods: {
+        async addProductToAppointment(appointment) {
+            console.log("en el modal de citas", appointment);
+            this.$emit('addProductToAppointment', appointment);
+            this.closeDialog();
+        },
         async loadStylists() {
             try {
                 const response = await this.$http.get('/caja/estilista/workers');
@@ -345,6 +375,7 @@ export default {
         getStatusText(status) {
             const statusMap = {
                 'scheduled': 'Programada',
+                'in_progress': 'En atención',
                 'completed': 'Completada',
                 'cancelled': 'Cancelada',
                 'no_show': 'No asistió'
@@ -355,6 +386,7 @@ export default {
         getStatusBadgeClass(status) {
             const classMap = {
                 'scheduled': 'badge badge-primary',
+                'in_progress': 'badge badge-info',
                 'completed': 'badge badge-success',
                 'cancelled': 'badge badge-danger',
                 'no_show': 'badge badge-warning'

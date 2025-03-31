@@ -337,9 +337,17 @@ class WorkerController extends Controller
         $temp_path = $request->input('temp_path');
 
         $user = User::firstOrNew(['id' => $id]);
+        $user->user_items()->delete();
         UserSerie::where('user_id', $id)->delete();
         //establishment_id
+        $user_items = $request->input('user_items');
         $establishment_id = $user->establishment_id; //1
+
+        if ($user_items) {
+            foreach ($user_items as $item) {
+                $user->user_items()->create(['item_id' => $item['id']]);
+            }
+        }
         if ($serie_id) {
 
             $serie = Series::where('id', $serie_id)->first();

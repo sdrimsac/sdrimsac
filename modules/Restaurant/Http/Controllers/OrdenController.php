@@ -48,6 +48,7 @@ use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Support\Str;
 use Modules\Restaurant\Events\StockRealEvent;
+use Modules\Restaurant\Models\UserScheduleAppointment;
 
 class OrdenController extends Controller
 {
@@ -798,7 +799,7 @@ class OrdenController extends Controller
         $orden = Orden::find($id);
         return compact('orden');
     }
-
+    
     public function store(Request $request)
     {
         try {
@@ -1114,6 +1115,11 @@ class OrdenController extends Controller
             // if ($isFromBox == false && $print_box) {
             //     event(new PrintEvent($orden->id, "0", true, $user->area_id, $orden_items_ids));
             // }
+            if($request->appointment_id){
+                $appointment = UserScheduleAppointment::find($request->appointment_id);
+                $appointment->orden_id = $orden->id;
+                $appointment->save();
+            }
 
             $id = strval($orden->id);
             $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
