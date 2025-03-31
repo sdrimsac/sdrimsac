@@ -20,7 +20,7 @@
                     {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
                 </button>
                 <button
-                    v-if="hasTableOcuped && !configuration.order_mozo"
+                    v-if="hasTableOcuped && configuration.edit_mesa"
                     type="button"
                     :class="
                         `btn ${changingOrden ? 'btn-warning' : 'btn-primary'}`

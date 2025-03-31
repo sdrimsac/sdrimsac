@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'edit_mesa' => (bool) $this->edit_mesa,
             're_printer' => (bool) $this->re_printer,
             'nane_comand' => (bool) $this->nane_comand,
             'zones_workers' => (bool) $this->zones_workers,

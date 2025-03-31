@@ -12273,6 +12273,40 @@
                                                             ></el-switch>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-2 mt-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label w-100"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-print fa-lg"
+                                                                    style="margin-right: 10px;"
+                                                                ></i>
+                                                                Ocultar la opcion de cambiar mesa en caja
+                                                            </label>
+                                                            <el-switch
+                                                                v-model="
+                                                                    form.edit_mesa
+                                                                "
+                                                                active-text="Si"
+                                                                inactive-text="No"
+                                                                :active-color="
+                                                                    '#28a745'
+                                                                "
+                                                                :inactive-color="
+                                                                    '#6c757d'
+                                                                "
+                                                                @change="
+                                                                    submit(
+                                                                        'Buscar en caja',
+                                                                        form.edit_mesa,
+                                                                        'search_new',
+                                                                        'printIcon'
+                                                                    )
+                                                                "
+                                                            ></el-switch>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div
