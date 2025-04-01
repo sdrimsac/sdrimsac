@@ -1305,51 +1305,74 @@ class OrdenController extends Controller
                 ->where('id', $id)
                 ->update([
                     'status_orden_id' => 5,
+                    'reason' => $reason,
                 ]);
 
             $orden = Orden::find($id);
 
-            $items = OrdenItem::where('orden_id', $id)->get();
+            // Get items grouped by area_id
+            $items_by_area = OrdenItem::where('orden_id', $id)
+                ->get()
+                ->groupBy('area_id');
+
             $items_message = [];
-            $orden_items_ids = $items->pluck('id')->toArray();
+            $print_data = [];
 
-            // Get mozo and zone info for printing
-            $mozo_name = null;
-            if ($orden->mozo_id) {
-                $mozo = DB::connection('tenant')
-                    ->table('seller_mozo')
-                    ->where('id', $orden->mozo_id)
-                    ->first();
-                $mozo_name = $mozo ? $mozo->name : null;
-            }
-
-            $zone_name = null;
-            if ($orden->table_id) {
-                $zone = DB::connection('tenant')
-                    ->table('tables as t')
-                    ->join('zones as z', 't.zone_id', '=', 'z.id')
-                    ->where('t.id', $orden->table_id)
-                    ->select('z.name')
-                    ->first();
-                $zone_name = $zone ? $zone->name : null;
-            }
-
-            // Get printer settings
-            $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
-
-            if (!$to_kitchen) {
-                $area_id = $user->area_id;
+            // Process items for each area
+            foreach ($items_by_area as $area_id => $items) {
+                $orden_items_ids = $items->pluck('id')->toArray();
                 $area = Area::find($area_id);
-            } else {
-                $area = Area::where('description', 'like', '%COCIN%')->first();
-                $area_id = $area ? $area->id : null;
+                
+                // Get printer for this area
+                $printer = $area ? $area->printer : null;
+                if (!$printer) {
+                    $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
+                    $printer = $establishment->printer;
+                }
+
+                // Get mozo and zone info for printing
+                $mozo_name = null;
+                if ($orden->mozo_id) {
+                    $mozo = DB::connection('tenant')
+                        ->table('seller_mozo')
+                        ->where('id', $orden->mozo_id)
+                        ->first();
+                    $mozo_name = $mozo ? $mozo->name : null;
+                }
+
+                $zone_name = null;
+                if ($orden->table_id) {
+                    $zone = DB::connection('tenant')
+                        ->table('tables as t')
+                        ->join('zones as z', 't.zone_id', '=', 'z.id')
+                        ->where('t.id', $orden->table_id)
+                        ->select('z.name')
+                        ->first();
+                    $zone_name = $zone ? $zone->name : null;
+                }
+
+                $ids_string = implode("_", $orden_items_ids);
+                
+                // Trigger print event for this area
+                event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items_ids, true));
+
+                $print_data[] = [
+                    'area_id' => $area_id,
+                    'printer' => $printer,
+                    'print_url' => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}" .
+                        "&precuenta=false&mozo_name={$mozo_name}&zone_name={$zone_name}&cancelled=true"
+                ];
             }
 
-            $printer = $area ? $area->printer : $establishment->printer;
+            // Update status and process items
+            OrdenItem::where('orden_id', $id)->update(['status_orden_id' => 5]);
 
-            // Print cancelled order ticket first 
-            $ids_string = implode("_", $orden_items_ids);
-            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items_ids, true));
+            foreach ($items_by_area as $items) {
+                foreach ($items as $item) {
+                    $items_message[] = $item->info_item();
+                    event(new OrdenCancelEvent($item->id));
+                }
+            }
 
             // Send WhatsApp notification if enabled
             if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
@@ -1358,15 +1381,6 @@ class OrdenController extends Controller
                 } catch (Exception $e) {
                     //\Log::error('WhatsApp notification error: ' . $e->getMessage());
                 }
-            }
-
-            // Mark items as cancelled (status 5) in batch
-            OrdenItem::where('orden_id', $id)->update(['status_orden_id' => 5]);
-
-            // Now update each item individually for any additional processing needed 
-            foreach ($items as $item) {
-                $items_message[] = $item->info_item();
-                event(new OrdenCancelEvent($item->id));
             }
 
             // Update table status if needed
@@ -1383,28 +1397,28 @@ class OrdenController extends Controller
                 }
             }
 
-            // Log diagnostics for debugging
             Log::info("Orden {$id} cancelada. Status después de cancelación: {$orden->status_orden_id}");
 
             event(new OrdenPendingEvent(-1));
 
+            $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
+
             return [
                 'success' => true,
                 'message' => 'Orden cancelada con éxito.',
-                'print' => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}" .
-                    "&precuenta=false&mozo_name={$mozo_name}&zone_name={$zone_name}&cancelled=true",
+                'print_data' => $print_data,
                 'data' => $orden,
-                'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
             ];
+
         } else {
+            // Original code for when image_comand is false
             $id = $request->id;
             $reason = $request->reason;
             $user = auth()->user();
             $pin = $request->pin;
             if ($configuration->pin_orden_delete) {
-
                 if ($user->pin != $pin) {
                     return [
                         'success' => false,
@@ -1415,7 +1429,6 @@ class OrdenController extends Controller
             $items = OrdenItem::where('orden_id', $id)->get();
             $items_message = [];
             foreach ($items as $item) {
-                //cancelar orden
                 $items_message[] = $item->info_item();
                 $item->delete();
                 event(new OrdenCancelEvent($item->id));
@@ -1424,7 +1437,6 @@ class OrdenController extends Controller
             if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
                 try {
                     (new WhatsappController)->sendMessageAll($orden->info_to_message($items_message, $reason));
-                    // (new WhatsappController)->sendMessage($orden->info_to_message($items_message, $reason));
                 } catch (Exception $e) {
                     return [
                         'success' => false,
