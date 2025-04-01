@@ -181,15 +181,12 @@ class OrdenController extends Controller
             }
         }
         $ordenes = Orden::where('id', $request->id)->first();
-        
-        // If the order is not found or already marked as cancelled, check the cancelled flag
+
         if ($ordenes == null) {
-            // For cancelled orders that were already deleted from the database
             if ($es_anulacion) {
-                // Create a temporary order object for rendering
                 $ordenes = new Orden();
                 $ordenes->id = $request->id;
-                $ordenes->status_orden_id = 5; // Mark explicitly as cancelled
+                $ordenes->status_orden_id = 5;
             } else {
                 return [
                     "success" => false,
@@ -211,7 +208,7 @@ class OrdenController extends Controller
 
         // Find the first ordenItem for user and establishment data
         $ordenItem = OrdenItem::where('orden_id', $request->id)->first();
-        
+
         // For cancelled orders that have already been deleted
         if (!$ordenItem && $es_anulacion) {
             // Get the authenticated user as fallback
@@ -225,7 +222,7 @@ class OrdenController extends Controller
             $user = auth()->user();
             $establishment = Establishment::where('id', $user->establishment_id)->first();
         }
-        
+
         //
 
         $ordens = OrdenItem::where('orden_id', $orden);
@@ -248,7 +245,7 @@ class OrdenController extends Controller
         $users = [];
         $date = null;
         $orden_item_length = 0;
-        
+
         // Process order items
         foreach ($orden_items as $ord_itm) {
             if ($date == null) {
@@ -290,12 +287,12 @@ class OrdenController extends Controller
         } else {
             $height = $height + ($ordens->count() * 30);
         }
-        
+
         // Add extra height for cancellation text
         if ($es_anulacion) {
             $height += 50; // Add more space for the cancellation notice
         }
-        
+
         if ($configuration->text_comanda) {
             $height += 100;
         }
@@ -1276,132 +1273,178 @@ class OrdenController extends Controller
     public function cancelOrden(Request $request)
     {
         $configuration = Configuration::first();
-        $id = $request->id;
-        $reason = $request->reason;
-        $user = auth()->user(); 
-        $pin = $request->pin;
-        $printer = null;
-        $precuenta = $request->precuenta ?? false;
-        $to_kitchen = $request->to_kitchen;
+        if ($configuration->image_comand) {
+            $id = $request->id;
+            $reason = $request->reason;
+            $user = auth()->user();
+            $pin = $request->pin;
+            $printer = null;
+            $precuenta = $request->precuenta ?? false;
+            $to_kitchen = $request->to_kitchen;
 
-        // Validate PIN if required
-        if ($configuration->pin_orden_delete) {
-            if ($user->pin != $pin) {
+            // Validate PIN if required
+            if ($configuration->pin_orden_delete) {
+                if ($user->pin != $pin) {
+                    return [
+                        'success' => false,
+                        'message' => 'Pin incorrecto'
+                    ];
+                }
+            }
+
+            // Get order and items
+            $orden = Orden::find($id);
+            if (!$orden) {
                 return [
                     'success' => false,
-                    'message' => 'Pin incorrecto'
+                    'message' => 'Orden no encontrada'
                 ];
             }
-        }
 
-        // Get order and items
-        $orden = Orden::find($id);
-        if (!$orden) {
-            return [
-                'success' => false,
-                'message' => 'Orden no encontrada'
-            ];
-        }
+            // Explicitly update the order status in the database first, to ensure it gets updated
+            DB::connection('tenant')->table('ordens')
+                ->where('id', $id)
+                ->update([
+                    'status_orden_id' => 5,
+                ]);
 
-        // Explicitly update the order status in the database first, to ensure it gets updated
-        DB::connection('tenant')->table('ordens')
-            ->where('id', $id)
-            ->update([
-                'status_orden_id' => 5,
-            ]);
-        
-        // Refresh the order from the database to ensure we have updated data
-        $orden = Orden::find($id);
+            // Refresh the order from the database to ensure we have updated data
+            $orden = Orden::find($id);
 
-        $items = OrdenItem::where('orden_id', $id)->get();
-        $items_message = [];
-        $orden_items_ids = $items->pluck('id')->toArray();
+            $items = OrdenItem::where('orden_id', $id)->get();
+            $items_message = [];
+            $orden_items_ids = $items->pluck('id')->toArray();
 
-        // Get mozo and zone info for printing
-        $mozo_name = null;
-        if ($orden->mozo_id) {
-            $mozo = DB::connection('tenant')
-                ->table('seller_mozo')
-                ->where('id', $orden->mozo_id)
-                ->first();
-            $mozo_name = $mozo ? $mozo->name : null;
-        }
-
-        $zone_name = null;
-        if ($orden->table_id) {
-            $zone = DB::connection('tenant')
-                ->table('tables as t')
-                ->join('zones as z', 't.zone_id', '=', 'z.id')
-                ->where('t.id', $orden->table_id)
-                ->select('z.name')
-                ->first();
-            $zone_name = $zone ? $zone->name : null;
-        }
-
-        // Get printer settings
-        $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
-
-        if (!$to_kitchen) {
-            $area_id = $user->area_id;
-            $area = Area::find($area_id);
-        } else {
-            $area = Area::where('description', 'like', '%COCIN%')->first();
-            $area_id = $area ? $area->id : null;
-        }
-
-        $printer = $area ? $area->printer : $establishment->printer;
-
-        // Print cancelled order ticket first 
-        $ids_string = implode("_", $orden_items_ids);
-        event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items_ids, true));
-
-        // Send WhatsApp notification if enabled
-        if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
-            try {
-                (new WhatsappController)->sendMessageAll($orden->info_to_message($items_message, $reason));
-            } catch (Exception $e) {
-                //\Log::error('WhatsApp notification error: ' . $e->getMessage());
+            // Get mozo and zone info for printing
+            $mozo_name = null;
+            if ($orden->mozo_id) {
+                $mozo = DB::connection('tenant')
+                    ->table('seller_mozo')
+                    ->where('id', $orden->mozo_id)
+                    ->first();
+                $mozo_name = $mozo ? $mozo->name : null;
             }
-        }
 
-        // Mark items as cancelled (status 5) in batch
-        OrdenItem::where('orden_id', $id)->update(['status_orden_id' => 5]);
-        
-        // Now update each item individually for any additional processing needed 
-        foreach ($items as $item) {
-            $items_message[] = $item->info_item();
-            event(new OrdenCancelEvent($item->id));
-        }
+            $zone_name = null;
+            if ($orden->table_id) {
+                $zone = DB::connection('tenant')
+                    ->table('tables as t')
+                    ->join('zones as z', 't.zone_id', '=', 'z.id')
+                    ->where('t.id', $orden->table_id)
+                    ->select('z.name')
+                    ->first();
+                $zone_name = $zone ? $zone->name : null;
+            }
 
-        // Update table status if needed
-        $table_id = $orden->table_id;
-        if ($table_id) {
-            $remaining_orders = Orden::where('status_orden_id', '!=', 5)
-                ->where('table_id', $table_id)
-                ->count();
+            // Get printer settings
+            $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
 
-            if ($remaining_orders == 0) {
+            if (!$to_kitchen) {
+                $area_id = $user->area_id;
+                $area = Area::find($area_id);
+            } else {
+                $area = Area::where('description', 'like', '%COCIN%')->first();
+                $area_id = $area ? $area->id : null;
+            }
+
+            $printer = $area ? $area->printer : $establishment->printer;
+
+            // Print cancelled order ticket first 
+            $ids_string = implode("_", $orden_items_ids);
+            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items_ids, true));
+
+            // Send WhatsApp notification if enabled
+            if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
+                try {
+                    (new WhatsappController)->sendMessageAll($orden->info_to_message($items_message, $reason));
+                } catch (Exception $e) {
+                    //\Log::error('WhatsApp notification error: ' . $e->getMessage());
+                }
+            }
+
+            // Mark items as cancelled (status 5) in batch
+            OrdenItem::where('orden_id', $id)->update(['status_orden_id' => 5]);
+
+            // Now update each item individually for any additional processing needed 
+            foreach ($items as $item) {
+                $items_message[] = $item->info_item();
+                event(new OrdenCancelEvent($item->id));
+            }
+
+            // Update table status if needed
+            $table_id = $orden->table_id;
+            if ($table_id) {
+                $remaining_orders = Orden::where('status_orden_id', '!=', 5)
+                    ->where('table_id', $table_id)
+                    ->count();
+
+                if ($remaining_orders == 0) {
+                    $table = Table::find($table_id);
+                    $table->status_table_id = 1;
+                    $table->save();
+                }
+            }
+
+            // Log diagnostics for debugging
+            Log::info("Orden {$id} cancelada. Status después de cancelación: {$orden->status_orden_id}");
+
+            event(new OrdenPendingEvent(-1));
+
+            return [
+                'success' => true,
+                'message' => 'Orden cancelada con éxito.',
+                'print' => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}" .
+                    "&precuenta=false&mozo_name={$mozo_name}&zone_name={$zone_name}&cancelled=true",
+                'data' => $orden,
+                'printer' => $printer,
+                'direct_printing' => (bool) $establishment->direct_printing,
+                'printer_serve' => $establishment->printer_serve,
+            ];
+        } else {
+            $id = $request->id;
+            $reason = $request->reason;
+            $user = auth()->user();
+            $pin = $request->pin;
+            if ($configuration->pin_orden_delete) {
+
+                if ($user->pin != $pin) {
+                    return [
+                        'success' => false,
+                        'message' => 'Pin incorrecto'
+                    ];
+                }
+            }
+            $items = OrdenItem::where('orden_id', $id)->get();
+            $items_message = [];
+            foreach ($items as $item) {
+                //cancelar orden
+                $items_message[] = $item->info_item();
+                $item->delete();
+                event(new OrdenCancelEvent($item->id));
+            }
+            $orden = Orden::find($id);
+            if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
+                try {
+                    (new WhatsappController)->sendMessageAll($orden->info_to_message($items_message, $reason));
+                    // (new WhatsappController)->sendMessage($orden->info_to_message($items_message, $reason));
+                } catch (Exception $e) {
+                    return [
+                        'success' => false,
+                        'message' => 'Error al enviar mensaje de whatsapp'
+                    ];
+                }
+            }
+            $orden->delete();
+            $table_id = $orden->table_id;
+            $ordens = Orden::where('status_orden_id', 1)->where('table_id', $table_id)->count();
+            if ($ordens == 0) {
                 $table = Table::find($table_id);
                 $table->status_table_id = 1;
                 $table->save();
             }
+            event(new OrdenPendingEvent(-1));
+            return ['success' => true, 'message' => 'Orden cancelada con éxito.'];
         }
-
-        // Log diagnostics for debugging
-        Log::info("Orden {$id} cancelada. Status después de cancelación: {$orden->status_orden_id}");
-
-        event(new OrdenPendingEvent(-1));
-
-        return [
-            'success' => true,
-            'message' => 'Orden cancelada con éxito.',
-            'print' => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}" .
-                "&precuenta=false&mozo_name={$mozo_name}&zone_name={$zone_name}&cancelled=true",
-            'data' => $orden,
-            'printer' => $printer,
-            'direct_printing' => (bool) $establishment->direct_printing,
-            'printer_serve' => $establishment->printer_serve,
-        ];
     }
 
     public function destroyorden($id)
