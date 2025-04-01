@@ -1398,52 +1398,6 @@ class BoxesController extends Controller
         ];
     }
 
-    /* function get_ordens_anulate($cash_id)
-    {
-        // Obtener detalles de la caja para obtener la fecha y hora de apertura
-        $cash = Cash::find($cash_id);
-        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
-        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
-
-        // Obtener órdenes anuladas directamente con usuario
-        $cancelled_orders = Orden::with('orden_items.food', 'orden_items.user')
-            ->where('status_orden_id', 5)
-            ->whereDate('created_at', $date_opening)
-            ->whereTime('created_at', '>=', $time_opening)
-            ->get()
-            ->map(function ($order) {
-                $items = $order->orden_items->map(function ($item) {
-                    return [
-                        'quantity' => $item->quantity,
-                        'product' => $item->food->description ?? 'Sin descripción',
-                        'price' => $item->price,
-                        'user' => $item->user->name ?? 'Usuario desconocido'
-                    ];
-                });
-
-                // Calcular el total de la orden
-                $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
-                $total_quantity = $items->sum('quantity');
-
-                return [
-                    'order_number' => $order->id,
-                    'date' => $order->created_at->format('Y-m-d'),
-                    'time' => $order->created_at->format('H:i:s'),
-                    'items' => $items,
-                    'total_amount' => $total_amount,
-                    'reason' => $order->observation ?? 'No especificado',
-                    'total_items' => $total_quantity
-                ];
-            });
-
-        return [
-            'cash_id' => $cash_id,
-            'date_opening' => $date_opening,
-            'time_opening' => $time_opening,
-            'cancelled_orders' => $cancelled_orders
-        ];
-    } */
-
     function get_ordens_anulate($cash_id)
     {
         // Obtener detalles de la caja para obtener la fecha y hora de apertura y cierre
@@ -1487,7 +1441,7 @@ class BoxesController extends Controller
                 'time' => $order->created_at->format('H:i:s'),
                 'items' => $items,
                 'total_amount' => $total_amount,
-                'reason' => $order->observation ?? 'No especificado',
+                'reason' => $order->reason ?? 'No especificado',
                 'total_items' => $total_quantity
             ];
         });
