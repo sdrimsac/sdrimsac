@@ -1301,14 +1301,12 @@ class OrdenController extends Controller
                 ];
             }
 
-            // Explicitly update the order status in the database first, to ensure it gets updated
             DB::connection('tenant')->table('ordens')
                 ->where('id', $id)
                 ->update([
                     'status_orden_id' => 5,
                 ]);
 
-            // Refresh the order from the database to ensure we have updated data
             $orden = Orden::find($id);
 
             $items = OrdenItem::where('orden_id', $id)->get();

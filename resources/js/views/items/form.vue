@@ -1275,9 +1275,7 @@
                                             >
                                                 <div class="form-group">
                                                     <el-checkbox
-                                                        :disabled="
-                                                            recordId != null
-                                                        "
+                                                        
                                                         v-model="
                                                             form.init_report
                                                         "
