@@ -429,6 +429,7 @@
                 <items-form
                     :showDialog.sync="showDialog"
                     :recordId.sync="recordId"
+                    :typeUser.sync="typeUser"
                 ></items-form>
                 <sale-offert
                     :showDialog.sync="showSaleOffertDialog"

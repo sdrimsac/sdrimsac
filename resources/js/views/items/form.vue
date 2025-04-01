@@ -1270,7 +1270,7 @@
                                             class="col-12 col-lg-4 col-xl-3"
                                         >
                                             <div
-                                                v-if="form.unit_type_id != 'ZZ'"
+                                                v-if="form.unit_type_id != 'ZZ' && typeUser === 'superadmin'"
                                                 class="col-md-4 center-el-checkbox"
                                             >
                                                 <div class="form-group">
@@ -2665,7 +2665,7 @@ import LotsForm from "./partials/lots.vue";
 import ColorSize from "./partials/color_size.vue";
 
 export default {
-    props: ["showDialog", "recordId", "external", "worker"],
+    props: ["showDialog", "recordId", "external", "worker", "typeUser"],
     components: {
         LotsForm,
         ColorSize
