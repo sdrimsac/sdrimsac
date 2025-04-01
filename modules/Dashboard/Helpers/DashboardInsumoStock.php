@@ -20,9 +20,7 @@ class DashboardInsumoStock
             $query->whereNotIsSet()
               ->where('status', true)
               ->where('unit_type_id', '!=', 'ZZ')
-              ->whereHas('category', function($q) {
-                  $q->where('name', 'INSUMOS');
-              });
+              ->where('init_report', 1);
         })
         ->with(['item', 'cash_registers' => function($query) {
             $query->whereHas('cash', function($q) {

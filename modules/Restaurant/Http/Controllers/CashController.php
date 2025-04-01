@@ -1180,11 +1180,11 @@ class CashController extends Controller
         if ($configuration->documents_user) {
             $documents->where('user_id', $user->id);
         }
-        
+
         if ($company->soap_type_id != '01') {
             $documents->where('soap_type_id', $company->soap_type_id);
         }
-        
+
         if ($hasSeriesAssigned) {
             $documents->whereIn('user_id', $seriesIds);
         }
@@ -2306,6 +2306,9 @@ class CashController extends Controller
         //</Preparamos la cadena de texto que guardanermos en el parametro 'reference_number) >
 
         $cash->save();
+        $this->inserStock($cash->id);
+        // aqui llamo a una funcion de otro controlador para registrar el stock del producto 
+        // $this->registerStock($request->input('id'), $request->input('beginning_balance'));
         //crea un mensaje con el nombre del usuario y el monto con el cual está abriendo caja
         $user = User::find($cash->user_id);
         $name = $user->name;
@@ -2342,6 +2345,28 @@ class CashController extends Controller
             'user_id' => 'Usuario',
             'date_opening' => 'Fecha de apertura',
         ];
+    }
+    private function inserStock($cash_id)
+    {
+        $products = Item::where('init_report', true)->get();
+
+        foreach ($products as $product) {
+
+            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $product->id)
+                ->select('stock')
+                ->first();
+
+            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+            DB::connection('tenant')->table('cash_init_stock')->insert([
+                'cash_id' => $cash_id,
+                'item_id' => $product->id,
+                'initial_stock' => $current_stock,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
     }
     public function records_principal_excel(Request $request)
     {

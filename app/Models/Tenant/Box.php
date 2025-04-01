@@ -184,6 +184,11 @@ class Box extends ModelTenant
         return $this->belongsTo(SaleNote::class);
     } */
 
+    public function init_stock()
+    {
+        return $this->hasMany(CashInitReport::class, 'cash_id', 'id');
+    }
+
     public function cash()
     {
         return $this->belongsTo(Cash::class);

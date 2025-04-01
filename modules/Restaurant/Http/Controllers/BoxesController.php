@@ -1337,6 +1337,173 @@ class BoxesController extends Controller
         return $all;
     }
 
+    function get_stock_report($cash_id)
+    {
+        $cash = Cash::find($cash_id);
+
+        $product = Item::where('init_report', true)->get();
+
+        $report_init = [];
+
+        foreach ($product as $item) {
+            $init_stock = DB::connection('tenant')->table('cash_init_stock')
+                ->where('cash_id', $cash_id)
+                ->where('item_id', $item->id)
+                ->first();
+            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $item->id)
+                ->select('stock')
+                ->first();
+
+            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+            if ($init_stock) {
+                $document_items = DB::connection('tenant')
+                    ->table('document_items')
+                    ->join('documents', 'documents.id', '=', 'document_items.document_id')
+                    ->where('documents.cash_id', $cash_id)
+                    ->where('document_items.item_id', $item->id)
+                    ->where('documents.state_type_id', '!=', '11')
+                    ->sum('document_items.quantity');
+
+                $sale_note_items = DB::connection('tenant')
+                    ->table('sale_note_items')
+                    ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
+                    ->where('sale_notes.cash_id', $cash_id)
+                    ->where('sale_note_items.item_id', $item->id)
+                    ->where('sale_notes.state_type_id', '!=', '11')
+                    ->sum('sale_note_items.quantity');
+
+                $sold_quantity = $document_items + $sale_note_items;
+
+                $theoretical_stock = $init_stock->initial_stock - $sold_quantity;
+
+                $report_init[] = [
+                    'item_id' => $item->id,
+                    'name' => $item->description,
+                    'initial_stock' => $init_stock->initial_stock,
+                    /* 'sold_quantity' => $sold_quantity, */
+                    /* 'theoretical_stock' => $theoretical_stock, */
+                    'actual_stock' => $current_stock,
+                    'difference' => abs($current_stock - $theoretical_stock),
+                    'opening_date' => $cash->date_opening,
+                    'closing_date' => $cash->date_closed
+                ];
+            }
+        }
+
+        return [
+            'cash_id' => $cash_id,
+            'product' => $report_init
+        ];
+    }
+
+    /* function get_ordens_anulate($cash_id)
+    {
+        // Obtener detalles de la caja para obtener la fecha y hora de apertura
+        $cash = Cash::find($cash_id);
+        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
+        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
+
+        // Obtener órdenes anuladas directamente con usuario
+        $cancelled_orders = Orden::with('orden_items.food', 'orden_items.user')
+            ->where('status_orden_id', 5)
+            ->whereDate('created_at', $date_opening)
+            ->whereTime('created_at', '>=', $time_opening)
+            ->get()
+            ->map(function ($order) {
+                $items = $order->orden_items->map(function ($item) {
+                    return [
+                        'quantity' => $item->quantity,
+                        'product' => $item->food->description ?? 'Sin descripción',
+                        'price' => $item->price,
+                        'user' => $item->user->name ?? 'Usuario desconocido'
+                    ];
+                });
+
+                // Calcular el total de la orden
+                $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
+                $total_quantity = $items->sum('quantity');
+
+                return [
+                    'order_number' => $order->id,
+                    'date' => $order->created_at->format('Y-m-d'),
+                    'time' => $order->created_at->format('H:i:s'),
+                    'items' => $items,
+                    'total_amount' => $total_amount,
+                    'reason' => $order->observation ?? 'No especificado',
+                    'total_items' => $total_quantity
+                ];
+            });
+
+        return [
+            'cash_id' => $cash_id,
+            'date_opening' => $date_opening,
+            'time_opening' => $time_opening,
+            'cancelled_orders' => $cancelled_orders
+        ];
+    } */
+
+    function get_ordens_anulate($cash_id)
+    {
+        // Obtener detalles de la caja para obtener la fecha y hora de apertura y cierre
+        $cash = Cash::find($cash_id);
+        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
+        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
+
+        // Si la caja está cerrada, usar fecha y hora de cierre
+        $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
+        $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
+
+        // Obtener órdenes anuladas dentro del rango de la caja
+        $query = Orden::with('orden_items.food', 'orden_items.user')
+            ->where('status_orden_id', 5)
+            ->whereDate('created_at', '>=', $date_opening)
+            ->whereTime('created_at', '>=', $time_opening);
+
+        // Si la caja tiene fecha de cierre, filtrar hasta esa fecha y hora
+        if ($date_closed && $time_closed) {
+            $query->whereDate('created_at', '<=', $date_closed)
+                ->whereTime('created_at', '<=', $time_closed);
+        }
+
+        $cancelled_orders = $query->get()->map(function ($order) {
+            $items = $order->orden_items->map(function ($item) {
+                return [
+                    'quantity' => $item->quantity,
+                    'product' => $item->food->description ?? 'Sin descripción',
+                    'price' => $item->price,
+                    'user' => $item->user->name ?? 'Usuario desconocido'
+                ];
+            });
+
+            // Calcular el total de la orden
+            $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
+            $total_quantity = $items->sum('quantity');
+
+            return [
+                'order_number' => $order->id,
+                'date' => $order->created_at->format('Y-m-d'),
+                'time' => $order->created_at->format('H:i:s'),
+                'items' => $items,
+                'total_amount' => $total_amount,
+                'reason' => $order->observation ?? 'No especificado',
+                'total_items' => $total_quantity
+            ];
+        });
+
+        return [
+            'cash_id' => $cash_id,
+            'date_opening' => $date_opening,
+            'time_opening' => $time_opening,
+            'date_closed' => $date_closed,
+            'time_closed' => $time_closed,
+            'cancelled_orders' => $cancelled_orders
+        ];
+    }
+
+
+
     public function save_info_pharmacy(Request $request, $cash_id)
     {
         $data = $request->data;
@@ -1881,6 +2048,8 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
+        $stock_init_report = $this->get_stock_report($cash_id);
+        $order_anulate_comand = $this->get_ordens_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
@@ -2357,6 +2526,8 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
+                "stock_init_report",
+                "order_anulate_comand",
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
@@ -2433,6 +2604,8 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
+        $stock_init_report = $this->get_stock_report($cash_id);
+        $order_anulate_comand = $this->get_ordens_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
@@ -2909,6 +3082,8 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
+                "stock_init_report",
+                "order_anulate_comand",
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
@@ -3345,9 +3520,19 @@ class BoxesController extends Controller
 
         // 3. Simplify method calculation
         $all_methods = [
-            'TARJETA: IZYPAY', 'TARJETA: NIUBIZ', 'Transferencia', 'Deposito Bancario',
-            'Tarjeta', 'TARJETA: OPENPAY', 'Yape', 'PLIN', 'Culqui', 'BBVA', 'BCP',
-            'BCO NACION', 'Scotiabank',
+            'TARJETA: IZYPAY',
+            'TARJETA: NIUBIZ',
+            'Transferencia',
+            'Deposito Bancario',
+            'Tarjeta',
+            'TARJETA: OPENPAY',
+            'Yape',
+            'PLIN',
+            'Culqui',
+            'BBVA',
+            'BCP',
+            'BCO NACION',
+            'Scotiabank',
         ];
 
         $methods = $sales->groupBy('method')->map(function ($group) {

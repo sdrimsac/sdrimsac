@@ -192,6 +192,10 @@
             font-size: 18px !important;
         }
 
+        .f19 {
+            font-size: 10px !important;
+        }
+
         .left {
             text-align: left !important;
         }
@@ -1750,10 +1754,9 @@
                         </tbody>
                     </table>
                 @endforeach
-
             </div>
         @endif
-        
+
         @if ($configuration->report_cash_methods)
             @if ($all_methods_info && count($all_methods_info) > 0)
                 <div style="text-align:center;">
@@ -1817,8 +1820,113 @@
                 </div>
             @endif
         @endif
-    </div>
+        @if (count($stock_init_report['product']) > 0)
+            {{-- @dd($stock_init_report['product']) --}}
+            <div style="text-align:center;">
+                <table class="border">
+                    <thead>
+                        <tr>
+                            <th colspan="5" class="text-center">
+                                <h3 style="font-size: 18px !important;">STOCK DE PRODUCTOS</h3>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span class="f19">CÓDIGO</span>
+                            </th>
+                            <th>
+                                <span class="f19">PRODUCTO</span>
+                            </th>
+                            <th>
+                                <span class="f19">STOCK INICIAL</span>
+                            </th>
+                            <th>
+                                <span class="f19">CANTIDAD VENDIDO</span>
+                            </th>
+                            <th>
+                                <span class="f19">STOCK ACTUAL</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($stock_init_report['product'] as $product)
+                            <tr>
+                                <td class="f19 center">
+                                    {{ $product['item_id'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19">
+                                    {{ $product['name'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right">
+                                    {{ number_format($product['initial_stock'], 2) ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right" style="color: red;">
+                                    {{ number_format($product['difference'], 2) ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right">
+                                    {{ number_format($product['actual_stock'], 2) ?? 'N/A' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+        @if (count($order_anulate_comand['cancelled_orders']) > 0)
+        {{-- @dd($order_anulate_comand['cancelled_orders']) --}}
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    ORDENES DE PEDIDO ANULADOS
+                </span>
 
+                <table class="border">
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="left">
+                                <span class="f12">
+                                    ORDENES DE PEDIDO ANULADOS
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th><span class="f12">N° ORDEN Y HORA</span></th>
+                            <th><span class="f12">CANTIDAD</span></th>
+                            <th><span class="f12">PRODUCTO</span></th>
+                            <th><span class="f12">MONTO</span></th>
+                            <th><span class="f12">USUARIO</span></th>
+                            <th><span class="f12">MOTIVO</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($order_anulate_comand['cancelled_orders'] as $a_item)
+                            @foreach ($a_item['items'] as $product)
+                                <tr>
+                                    <td class="f12 center">
+                                        {{ $a_item['order_number'] }} - {{ $a_item['time'] }}
+                                    </td>
+                                    <td class="f12 center">
+                                        {{ number_format( $product['quantity'], 2 ) }}
+                                    </td>
+                                    <td class="f12">
+                                        {{ $product['product'] }}
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format($product['price'], 2) }}
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ $product['user'] ?? 'Usuario desconocido' }}
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ $a_item['reason'] }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </div>
 </body>
 
 

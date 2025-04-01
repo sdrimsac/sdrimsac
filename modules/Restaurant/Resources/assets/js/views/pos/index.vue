@@ -294,7 +294,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-4 p-2" v-if="configuration.search_new">|
+                                        <div class="col-12 col-lg-4 p-2" v-if="configuration.search_new">
                                             <h2
                                                 class="font-weight-bold custom-text-size"
                                             >

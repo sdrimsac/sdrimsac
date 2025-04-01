@@ -3255,6 +3255,7 @@ export default {
                 quality: null,
                 origin: null,
                 month_day: null,
+                init_report: null,
                 warehouse_prices: [], // Para precios por almacén
                 item_warehouses: []  // Para stock por almacén
             };

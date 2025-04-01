@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'image_comand',
         'edit_mesa',
         're_printer',
         'nane_comand',
@@ -314,6 +315,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'image_comand' => 'boolean',
         'edit_mesa' => 'boolean',
         're_printer' => 'boolean',
         'nane_comand' => 'boolean',
@@ -571,6 +573,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'image_comand' => (bool) $this->image_comand,
             'edit_mesa' => (bool)$this->edit_mesa,
             're_printer' => (bool)$this->re_printer,
             'nane_comand' => (bool)$this->nane_comand,

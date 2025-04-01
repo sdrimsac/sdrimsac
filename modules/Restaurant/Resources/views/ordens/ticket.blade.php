@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 @php
-// $configuration = App\Models\Tenant\Configuration::getPublicConfig();
+    // $configuration = App\Models\Tenant\Configuration::getPublicConfig();
 @endphp
 
 <head>
@@ -255,313 +255,353 @@
         print-color-adjust: exact !important;
         /* Firefox */
     }
+
+    /* Estilos para la marca de agua */
+    /* .watermark-container {
+        position: relative;
+        min-height: 100%;
+        overflow: visible;
+    } */
+
+    /* .watermark {
+        position: fixed;
+        top: 0%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    } */
+
+    .watermark img {
+        /* opacity: 0.3; */
+        transform: rotate(7deg);
+        max-width: 70%;
+        max-height: 70%;
+        /* margin-top: 50px; */
+    }
+
+    #register {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
 </style>
 
 <body>
     @php
-    $precuenta = isset($precuenta) ? (bool) $precuenta : false;
-    $configuration = App\Models\Tenant\Configuration::first();
+        $precuenta = isset($precuenta) ? (bool) $precuenta : false;
+        $configuration = App\Models\Tenant\Configuration::first();
     @endphp
 
     @if ($configuration->imprimir_comanda_cocina)
-    {{-- Content for imprimir_comanda_cocina --}}
+        {{-- Content for imprimir_comanda_cocina --}}
+        @if ($es_anulacion === true)
+            <div class="watermark">
+                <img src="{{ asset('status_images/anulado.png') }}" alt="Anulado" />
+            </div>
+        @endif
     <div id="register">
         <table border="0" style="border:0px solid;width:75%">
 
             @if ($to_kitchen)
-            
-            @if ($is_restaurant)
-            @if ($configuration->nane_comand)
-            <tr>
-                <td colspan="4" class="header_title text-center encabezado" valign="top">
-                    <strong>PRECUENTA</strong></td>
-            </tr>
-            @endif
-            <tr>
-                <td colspan="4" class="header_title text-center " valign="top">
-                    <strong>NRO. MESA
-                        {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
-                    </strong>
-                </td>
-            </tr>
-            @if ($configuration->reference_ticket && $ordenes->ref)
-            <tr>
-                <td colspan="4" class="header_title text-center " valign="top">
-                    <strong>{{ $ordenes->ref }}</strong>
-                </td>
-            </tr>
-            @endif
-            @endif
-            <tr>
-                <td colspan="4" class="header_title0 text-center" valign="top">
-                    @if ($precuenta)
-                    <strong>PRECUENTA</strong><br>
-                    @endif
-                    <strong>ORDEN NRO. {{ $orden }}</strong>
-                </td>
-            </tr>
-            @if ($area_desc)
-            <tr>
-                <td colspan="4" class="header_title0 text-center  under_line" valign="top">
-                    <strong>AREA: {{ strtoupper($area_desc) }} </strong>
-                </td>
-            </tr>
-            @endif
-            <tr>
-                <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
 
-                    {{ $date }}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" colspan="4" class="text-center header_title1" valign="top">
-                    @if (isset($zone_name) && $zone_name)
-                    <strong>ZONA: {{ $zone_name }}</strong>
+                @if ($is_restaurant)
+                    @if ($configuration->nane_comand)
+                        <tr>
+                            <td colspan="4" class="header_title text-center encabezado" valign="top">
+                                <strong>PRECUENTA</strong>
+                            </td>
+                        </tr>
                     @endif
-                </td>
-            </tr>
+                    <tr>
+                        <td colspan="4" class="header_title text-center " valign="top">
+                            <strong>NRO. MESA
+                                {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
+                            </strong>
+                        </td>
+                    </tr>
+                    @if ($configuration->reference_ticket && $ordenes->ref)
+                        <tr>
+                            <td colspan="4" class="header_title text-center " valign="top">
+                                <strong>{{ $ordenes->ref }}</strong>
+                            </td>
+                        </tr>
+                    @endif
+                @endif
+                <tr>
+                    <td colspan="4" class="header_title0 text-center" valign="top">
+                        @if ($precuenta)
+                            <strong>PRECUENTA</strong><br>
+                        @endif
+                        <strong>ORDEN NRO. {{ $orden }}</strong>
+                    </td>
+                </tr>
+                @if ($area_desc)
+                    <tr>
+                        <td colspan="4" class="header_title0 text-center  under_line" valign="top">
+                            <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                        </td>
+                    </tr>
+                @endif
+                <tr>
+                    <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
+
+                        {{ $date }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" colspan="4" class="text-center header_title1" valign="top">
+                        @if (isset($zone_name) && $zone_name)
+                            <strong>ZONA: {{ $zone_name }}</strong>
+                        @endif
+                    </td>
+                </tr>
             @endif
             @if (!$to_kitchen)
-            @if ($configuration->nane_comand)
-            <tr>
-                <td colspan="4" class="header_title text-center encabezado" valign="top">
-                    <strong>COMANDA</strong>
-                </td>
-            </tr>
-            @endif
-            <tr>
-                <td colspan="4" class="header_title text-center " valign="top">
-                    <strong>NRO. MESA  {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
-                    </strong>
-                </td>
-            </tr>
-            @if ($configuration->reference_ticket && $ordenes->ref)
-            <tr>
-                <td colspan="4" class="header_title text-center " valign="top">
-                    <strong>{{ $ordenes->ref }}</strong>
-                </td>
-            </tr>
-            @endif
-            <tr>
-                <td colspan="4" class="header_title0 text-center" valign="top">
-                    <strong>ORDEN NRO. {{ $orden }}</strong>
-                </td>
-            </tr>
-            @if ($area_desc)
-            <tr>
-                <td colspan="4" class="header_title0 text-center under_line" valign="top">
-                    <strong>AREA: {{ strtoupper($area_desc) }} </strong>
-                </td>
-            </tr>
-            @endif
-            <tr>
-                <td colspan="4" colspan="4" class="header_title1 text-center" valign="top">
+                @if ($configuration->nane_comand)
+                    <tr>
+                        <td colspan="4" class="header_title text-center encabezado" valign="top">
+                            <strong>COMANDA</strong>
+                        </td>
+                    </tr>
+                @endif
+                <tr>
+                    <td colspan="4" class="header_title text-center " valign="top">
+                        <strong>NRO. MESA {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
+                        </strong>
+                    </td>
+                </tr>
+                @if ($configuration->reference_ticket && $ordenes->ref)
+                    <tr>
+                        <td colspan="4" class="header_title text-center " valign="top">
+                            <strong>{{ $ordenes->ref }}</strong>
+                        </td>
+                    </tr>
+                @endif
+                <tr>
+                    <td colspan="4" class="header_title0 text-center" valign="top">
+                        <strong>ORDEN NRO. {{ $orden }}</strong>
+                    </td>
+                </tr>
+                @if ($area_desc)
+                    <tr>
+                        <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                            <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                        </td>
+                    </tr>
+                @endif
+                <tr>
+                    <td colspan="4" colspan="4" class="header_title1 text-center" valign="top">
 
-                    {{ $date }}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
-                    @if (isset($zone_name) && $zone_name)
-                    <strong>ZONA: {{ $zone_name }}</strong>
-                    @endif
-                </td>
-            </tr>
+                        {{ $date }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
+                        @if (isset($zone_name) && $zone_name)
+                            <strong>ZONA: {{ $zone_name }}</strong>
+                        @endif
+                    </td>
+                </tr>
             @endif
             @if ($is_restaurant && $configuration->seller_mozo)
-            <tr>
-                <td colspan="4" class="header_title1 text-center" valign="top">
-                    @if (isset($mozo_name) && $mozo_name)
-                    {{ $mozo_name }}
-                    @endif
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="header_title1 text-center" valign="top">
+                        @if (isset($mozo_name) && $mozo_name)
+                            {{ $mozo_name }}
+                        @endif
+                    </td>
+                </tr>
             @endif
             @if ($is_restaurant)
-            <tr>
-                <td colspan="4" class="header_title1 text-center" valign="top">
-                    USUARIO: {{ join(', ', $users) }} </strong>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="header_title1 text-center" valign="top">
+                        USUARIO: {{ join(', ', $users) }} </strong>
+                    </td>
+                </tr>
             @endif
             <tr>
                 <td colspan="1" class=" cell_number encabezado header_title2">
                     <strong>#</strong>
                 </td>
                 @if ($to_kitchen)
-                <td class="encabezado header_title2 text-center">
-                    <strong>PRODUCTO</strong>
-                </td>
-                <td class="encabezado header_title2 text-center">
-                    <strong>IMP.</strong>
-                </td>
-                <td class="encabezado header_title2 text-center">
-                    <strong>SUB.</strong>
-                </td>
+                    <td class="encabezado header_title2 text-center">
+                        <strong>PRODUCTO</strong>
+                    </td>
+                    <td class="encabezado header_title2 text-center">
+                        <strong>IMP.</strong>
+                    </td>
+                    <td class="encabezado header_title2 text-center">
+                        <strong>SUB.</strong>
+                    </td>
                 @else
-                <td colspan="3" class="encabezado  text-center header_title2">
-                    <strong>PRODUCTO</strong>
-                </td>
+                    <td colspan="3" class="encabezado  text-center header_title2">
+                        <strong>PRODUCTO</strong>
+                    </td>
                 @endif
             </tr>
 
             @if ($to_kitchen)
-            <tbody>
-                <?php
-                $total = 0;
-                ?>
-                @foreach ($orden_items as $row)
-                <?php
-                $total = $total + $row->price * $row->quantity;
-                ?>
-                <tr>
-                    <td class="text-center header_title2">
-                        @if ($show_unit_ticket && isset($row->qty_unit))
-                        {{ $row->quantity, 2 }}
-                    </td>
-                    @else
-                    {{ $row->quantity }}</td>
+                <tbody>
+                    <?php
+                    $total = 0;
+                    ?>
+                    @foreach ($orden_items as $row)
+                        <?php
+                        $total = $total + $row->price * $row->quantity;
+                        ?>
+                        <tr>
+                            <td class="text-center header_title2">
+                                @if ($show_unit_ticket && isset($row->qty_unit))
+                                    {{ $row->quantity, 2 }}
+                            </td>
+                        @else
+                            {{ $row->quantity }}</td>
                     @endif
                     <td class="celda_left header_title2 border-bottom">
                         <strong>
                             {{ strtoupper($row->desc_unit) }}
                             @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                            / {{ strtoupper($row->food->item->second_name) }}
+                                / {{ strtoupper($row->food->item->second_name) }}
                             @endif
                         </strong>
                         @if ($row->observations != '-')
-                        <br>
-                        <strong>
-                            @if ($configuration->observations_separate)
-                            @php
-                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
-                            @endphp
-                            @foreach ($observations as $index => $observation)
-                            {{ strtoupper($row->desc_unit) }} OBSERVACIÓN {{ $index + 1 }}:
-                            {{ e(trim($observation)) }}
-                            {{-- Obs{{ $index + 1 }}: {{ e($observation) }} --}}<br>
-                            @endforeach
-                            @else
-                            Obs: {{ e($row->observations) }}
-                            @endif
-                        </strong>
+                            <br>
+                            <strong>
+                                @if ($configuration->observations_separate)
+                                    @php
+                                        $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                    @endphp
+                                    @foreach ($observations as $index => $observation)
+                                        {{ strtoupper($row->desc_unit) }} OBSERVACIÓN {{ $index + 1 }}:
+                                        {{ e(trim($observation)) }}
+                                        {{-- Obs{{ $index + 1 }}: {{ e($observation) }} --}}<br>
+                                    @endforeach
+                                @else
+                                    Obs: {{ e($row->observations) }}
+                                @endif
+                            </strong>
                         @endif
 
                     </td>
                     <td class="celda_center description_preparacion">
                         @if ($show_unit_ticket && isset($row->price_unit))
-                        {{ number_format($row->price, 2) }}
+                            {{ number_format($row->price, 2) }}
                         @else
-                        {{ number_format($row->price, 2) }}
+                            {{ number_format($row->price, 2) }}
                         @endif
                     </td>
                     @php
-                    $total_price = $row->price * $row->quantity;
+                        $total_price = $row->price * $row->quantity;
                     @endphp
                     <td class="celda_center description_preparacion">{{ number_format($total_price, 2) }}</td>
-                </tr>
-                @endforeach
-                <tr>
-                    <th class="encabezado description_preparacion" colspan="3" style="text-align: right">Total S/
-                    </th>
-                    <th class="encabezado description_preparacion">{{ number_format($total, 2) }}</th>
-                </tr>
+                    </tr>
+            @endforeach
+            <tr>
+                <th class="encabezado description_preparacion" colspan="3" style="text-align: right">Total S/
+                </th>
+                <th class="encabezado description_preparacion">{{ number_format($total, 2) }}</th>
+            </tr>
             </tbody>
-            @else
+        @else
             <tbody>
                 <?php
                 $total = 0;
                 ?>
                 @foreach ($orden_items as $row)
-                <?php
-                $total = $total + $row->price * $row->quantity;
-                ?>
-                @if (!$row->to_carry)
-                @php
-                $observations = explode('/', $row->observations);
-                $totalObservations = count($observations);
-                $quantityPerObservation = $row->quantity / $totalObservations;
-                @endphp
+                    <?php
+                    $total = $total + $row->price * $row->quantity;
+                    ?>
+                    @if (!$row->to_carry)
+                        @php
+                            $observations = explode('/', $row->observations);
+                            $totalObservations = count($observations);
+                            $quantityPerObservation = $row->quantity / $totalObservations;
+                        @endphp
 
-                @if ($configuration->observations_separate)
-                @foreach ($observations as $index => $observation)
-                <tr>
-                    <td class="celda_center header_title2">{{ 1 }}</td>
-                    <!-- Siempre muestra 1 por cada observación -->
-                    <td colspan="3" class="celda_left header_title2 border-bottom">
-                        <strong>
-                            {{ strtoupper($row->desc_unit) }}
-                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                            / {{ strtoupper($row->food->item->second_name) }}
-                            @endif
-                        </strong>
-                        <br>
-                        <strong>
-                            Obs: {{ e(trim($observation)) }}
-                        </strong>
-                    </td>
-                </tr>
-                @endforeach
-                @else
-                <tr>
-                    <td class="celda_center header_title2">{{ $row->quantity }}</td>
-                    <td colspan="3" class="celda_left header_title2 border-bottom">
-                        <strong>
-                            {{ strtoupper($row->desc_unit) }}
-                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                            / {{ strtoupper($row->food->item->second_name) }}
-                            @endif
-                        </strong>
-                        @if ($row->observations != '-')
-                        <br>
-                        <strong>
-                            @if ($configuration->observations_separate)
-                            @php
-                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
-                            @endphp
+                        @if ($configuration->observations_separate)
                             @foreach ($observations as $index => $observation)
-                            Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                <tr>
+                                    <td class="celda_center header_title2">{{ 1 }}</td>
+                                    <!-- Siempre muestra 1 por cada observación -->
+                                    <td colspan="3" class="celda_left header_title2 border-bottom">
+                                        <strong>
+                                            {{ strtoupper($row->desc_unit) }}
+                                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
+                                                / {{ strtoupper($row->food->item->second_name) }}
+                                            @endif
+                                        </strong>
+                                        <br>
+                                        <strong>
+                                            Obs: {{ e(trim($observation)) }}
+                                        </strong>
+                                    </td>
+                                </tr>
                             @endforeach
-                            @else
-                            Obs: {{ e($row->observations) }}
-                            @endif
-                        </strong>
+                        @else
+                            <tr>
+                                <td class="celda_center header_title2">{{ $row->quantity }}</td>
+                                <td colspan="3" class="celda_left header_title2 border-bottom">
+                                    <strong>
+                                        {{ strtoupper($row->desc_unit) }}
+                                        @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
+                                            / {{ strtoupper($row->food->item->second_name) }}
+                                        @endif
+                                    </strong>
+                                    @if ($row->observations != '-')
+                                        <br>
+                                        <strong>
+                                            @if ($configuration->observations_separate)
+                                                @php
+                                                    $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                                @endphp
+                                                @foreach ($observations as $index => $observation)
+                                                    Obs{{ $index + 1 }}: {{ e($observation) }}<br>
+                                                @endforeach
+                                            @else
+                                                Obs: {{ e($row->observations) }}
+                                            @endif
+                                        </strong>
+                                    @endif
+                                </td>
+                            </tr>
                         @endif
-                    </td>
-                </tr>
-                @endif
-                @endif
+                    @endif
                 @endforeach
                 @if (count($to_carry) != 0)
-                <tr class="para-llevar-header">
-                    <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
-                </tr>
-                @foreach ($to_carry as $row_carry)
-                <tr>
-                    <td class="celda_center header_title2">{{ $row_carry->quantity }}</td>
-                    <td colspan="3" class="celda_left header_title2 border-bottom">
-                        <strong>
-                            {{ strtoupper($row_carry->desc_unit) }}
-                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                            / {{ strtoupper($row->food->item->second_name) }}
-                            @endif
-                        </strong>
-                        @if ($row_carry->observations != '-')
-                        <br>
-                        <strong>Obs: {{ $row_carry->observations }}</strong>
-                        @endif
+                    <tr class="para-llevar-header">
+                        <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
+                    </tr>
+                    @foreach ($to_carry as $row_carry)
+                        <tr>
+                            <td class="celda_center header_title2">{{ $row_carry->quantity }}</td>
+                            <td colspan="3" class="celda_left header_title2 border-bottom">
+                                <strong>
+                                    {{ strtoupper($row_carry->desc_unit) }}
+                                    @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
+                                        / {{ strtoupper($row->food->item->second_name) }}
+                                    @endif
+                                </strong>
+                                @if ($row_carry->observations != '-')
+                                    <br>
+                                    <strong>Obs: {{ $row_carry->observations }}</strong>
+                                @endif
 
 
-                    </td>
+                            </td>
 
-                </tr>
-                @endforeach
+                        </tr>
+                    @endforeach
                 @endif
                 @if ($to_kitchen)
-                <tr>
-                    <th class="encabezado" colspan="3" style="text-align: right">Total S/ </th>
-                    <th class="encabezado">{{ number_format($total, 2) }}</th>
-                </tr>
+                    <tr>
+                        <th class="encabezado" colspan="3" style="text-align: right">Total S/ </th>
+                        <th class="encabezado">{{ number_format($total, 2) }}</th>
+                    </tr>
                 @endif
             </tbody>
             @endif
@@ -569,22 +609,22 @@
         </table>
         <br>
         @if ($to_kitchen && $configuration->text_comanda)
-        <div class="text-center" style="width:75%">
-            @if ($configuration->text_one)
-            <label class="header_title0 bold">
-                {{ mb_strtoupper($configuration->text_one) }}
-            </label>
-            <br>
-            @endif
-            @if ($configuration->text_two)
-            <label class="header_title0 bold">
-                {{ mb_strtoupper($configuration->text_two) }}
-            </label>
-            @endif
-        </div>
+            <div class="text-center" style="width:75%">
+                @if ($configuration->text_one)
+                    <label class="header_title0 bold">
+                        {{ mb_strtoupper($configuration->text_one) }}
+                    </label>
+                    <br>
+                @endif
+                @if ($configuration->text_two)
+                    <label class="header_title0 bold">
+                        {{ mb_strtoupper($configuration->text_two) }}
+                    </label>
+                @endif
+            </div>
         @endif
     </div>
-    @elseif ($configuration->imprimir_precuenta_comanda)
+@elseif ($configuration->imprimir_precuenta_comanda)
     {{-- Content for imprimir_precuenta_comanda --}}
     <div id="register">
         <table border="0" style="border:0px solid;width:75%">
@@ -597,30 +637,30 @@
             </tr>
 
             @if ($configuration->reference_ticket && $ordenes->ref && !$precuenta)
-            <tr>
+                <tr>
 
-                <td colspan="4" class="header_title text-center" valign="top">
-                    <strong>{{ $ordenes->ref }}</strong>
-                </td>
+                    <td colspan="4" class="header_title text-center" valign="top">
+                        <strong>{{ $ordenes->ref }}</strong>
+                    </td>
 
-            </tr>
+                </tr>
             @endif
 
             <tr>
                 <td colspan="4" class="header_title0 text-center" valign="top">
                     @if ($precuenta)
-                    <strong>PRECUENTA</strong><br>
+                        <strong>PRECUENTA</strong><br>
                     @endif
                     <strong>ORDEN NRO. {{ $orden }}</strong>
                 </td>
             </tr>
 
             @if ($area_desc)
-            <tr>
-                <td colspan="4" class="header_title0 text-center  under_line" valign="top">
-                    <strong>AREA: {{ strtoupper($area_desc) }} </strong>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="header_title0 text-center  under_line" valign="top">
+                        <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                    </td>
+                </tr>
             @endif
             <tr>
                 <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
@@ -630,34 +670,35 @@
             </tr>
 
             @if ($is_restaurant && $configuration->seller_mozo)
-            <tr>
-                <td colspan="4" class="header_title1 text-center" valign="top">
-                    @if (isset($mozo_name) && $mozo_name)
-                    {{ $mozo_name }}
-                    @endif
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="header_title1 text-center" valign="top">
+                        @if (isset($mozo_name) && $mozo_name)
+                            {{ $mozo_name }}
+                        @endif
+                    </td>
+                </tr>
             @endif
 
             @if ($is_restaurant)
-            <tr>
-                <td colspan="4" class="header_title1 text-center" valign="top">
-                    USUARIO: {{ join(', ', $users) }}
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="header_title1 text-center" valign="top">
+                        USUARIO: {{ join(', ', $users) }}
+                    </td>
+                </tr>
             @endif
 
             <!-- Encabezados de Producto -->
             @if (!$precuenta)
-            @if (count($to_carry) != 0)
-            {{-- <tr>
+                @if (count($to_carry) != 0)
+                    {{-- <tr>
                         <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
                     </tr> --}}
-            <tr class="para-llevar-header">
-                <th class="encabezado text-center header_title2" colspan="4" style="color: rgb(12, 12, 12);">Para
-                    llevar </th>
-            </tr>
-            @endif
+                    <tr class="para-llevar-header">
+                        <th class="encabezado text-center header_title2" colspan="4"
+                            style="color: rgb(12, 12, 12);">Para
+                            llevar </th>
+                    </tr>
+                @endif
             @endif
             <tr>
                 <td colspan="1" class="cell_number encabezado header_title2">
@@ -677,53 +718,53 @@
             <!-- Detalles de la Orden -->
             <tbody>
                 @php
-                $total = 0;
+                    $total = 0;
                 @endphp
                 @foreach ($orden_items as $row)
-                @php
-                $total += $row->price * $row->quantity;
-                $total_price = $row->price * $row->quantity;
-                @endphp
-                <tr>
-                    <td class="text-center header_title2">
-                        @if ($show_unit_ticket && isset($row->qty_unit))
-                        {{ $row->quantity, 2 }}
-                        @else
-                        {{ $row->quantity }}
-                        @endif
-                    </td>
-                    <td class="celda_left header_title2 border-bottom">
-                        <strong>
-                            {{ strtoupper($row->desc_unit) }}
-                            @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                            / {{ strtoupper($row->food->item->second_name) }}
-                            @endif
-                        </strong>
-                        @if ($row->observations != '-')
-                        <br>
-                        <strong>
-                            @if ($configuration->observations_separate)
-                            @php
-                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
-                            @endphp
-                            @foreach ($observations as $index => $observation)
-                            {{ strtoupper($row->desc_unit) }} OBSERVACIÓN {{ $index + 1 }}:
-                            {{ e(trim($observation)) }}
-                            {{-- Obs{{ $index + 1 }}: {{ e($observation) }} --}}<br>
-                            @endforeach
+                    @php
+                        $total += $row->price * $row->quantity;
+                        $total_price = $row->price * $row->quantity;
+                    @endphp
+                    <tr>
+                        <td class="text-center header_title2">
+                            @if ($show_unit_ticket && isset($row->qty_unit))
+                                {{ $row->quantity, 2 }}
                             @else
-                            Obs: {{ e($row->observations) }}
+                                {{ $row->quantity }}
                             @endif
-                        </strong>
-                        @endif
-                    </td>
-                    <td class="celda_center description_preparacion">
-                        {{ number_format($row->price, 2) }}
-                    </td>
-                    <td class="celda_center description_preparacion">
-                        {{ number_format($total_price, 2) }}
-                    </td>
-                </tr>
+                        </td>
+                        <td class="celda_left header_title2 border-bottom">
+                            <strong>
+                                {{ strtoupper($row->desc_unit) }}
+                                @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
+                                    / {{ strtoupper($row->food->item->second_name) }}
+                                @endif
+                            </strong>
+                            @if ($row->observations != '-')
+                                <br>
+                                <strong>
+                                    @if ($configuration->observations_separate)
+                                        @php
+                                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                        @endphp
+                                        @foreach ($observations as $index => $observation)
+                                            {{ strtoupper($row->desc_unit) }} OBSERVACIÓN {{ $index + 1 }}:
+                                            {{ e(trim($observation)) }}
+                                            {{-- Obs{{ $index + 1 }}: {{ e($observation) }} --}}<br>
+                                        @endforeach
+                                    @else
+                                        Obs: {{ e($row->observations) }}
+                                    @endif
+                                </strong>
+                            @endif
+                        </td>
+                        <td class="celda_center description_preparacion">
+                            {{ number_format($row->price, 2) }}
+                        </td>
+                        <td class="celda_center description_preparacion">
+                            {{ number_format($total_price, 2) }}
+                        </td>
+                    </tr>
                 @endforeach
                 <tr>
                     <th class="encabezado description_preparacion" colspan="3" style="text-align: right">Total
@@ -736,17 +777,17 @@
 
         <!-- Texto adicional si es para la cocina -->
         @if ($to_kitchen && $configuration->text_comanda)
-        <div class="text-center" style="width:75%">
-            @if ($configuration->text_one)
-            <label class="header_title0 bold">{{ mb_strtoupper($configuration->text_one) }}</label><br>
-            @endif
-            @if ($configuration->text_two)
-            <label class="header_title0 bold">{{ mb_strtoupper($configuration->text_two) }}</label>
-            @endif
-        </div>
+            <div class="text-center" style="width:75%">
+                @if ($configuration->text_one)
+                    <label class="header_title0 bold">{{ mb_strtoupper($configuration->text_one) }}</label><br>
+                @endif
+                @if ($configuration->text_two)
+                    <label class="header_title0 bold">{{ mb_strtoupper($configuration->text_two) }}</label>
+                @endif
+            </div>
         @endif
     </div>
-    @elseif ($configuration->comand_big)
+@elseif ($configuration->comand_big)
     {{-- Content for comand_big --}}
     <div id="register" class="large-text">
         <table border="0" style="border:0px solid;width:75%">
@@ -761,18 +802,18 @@
             <tr>
                 <td colspan="4" class="header_title0 text-center" valign="top">
                     @if ($precuenta)
-                    <strong>PRECUENTA</strong><br>
+                        <strong>PRECUENTA</strong><br>
                     @endif
                     <strong>ORDEN NRO. {{ $orden }}</strong>
                 </td>
             </tr>
             @if ($area_desc)
-            <tr>
-                <td colspan="4" class="header_title0 text-center  under_line"
-                    style="font-size: 18px !important;" valign="top">
-                    <strong>AREA: {{ strtoupper($area_desc) }} </strong>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="header_title0 text-center  under_line"
+                        style="font-size: 18px !important;" valign="top">
+                        <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                    </td>
+                </tr>
             @endif
             <tr>
                 <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
@@ -786,85 +827,85 @@
                     <strong>#</strong>
                 </td>
                 @if ($to_kitchen)
-                <!-- Kitchen view with price columns -->
-                <td width="60%" class="encabezado text-center" style="font-size: 18px !important;">
-                    <strong>PRODUCTO</strong>
-                </td>
-                <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
-                    <strong>IMP.</strong>
-                </td>
-                <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
-                    <strong>SUB.</strong>
-                </td>
+                    <!-- Kitchen view with price columns -->
+                    <td width="60%" class="encabezado text-center" style="font-size: 18px !important;">
+                        <strong>PRODUCTO</strong>
+                    </td>
+                    <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
+                        <strong>IMP.</strong>
+                    </td>
+                    <td width="15%" class="encabezado text-center" style="font-size: 18px !important;">
+                        <strong>SUB.</strong>
+                    </td>
                 @else
-                <!-- Comanda view with wider product column -->
-                <td width="90%" colspan="3" class="encabezado text-center"
-                    style="font-size: 18px !important;">
-                    <strong>PRODUCTO</strong>
-                </td>
+                    <!-- Comanda view with wider product column -->
+                    <td width="90%" colspan="3" class="encabezado text-center"
+                        style="font-size: 18px !important;">
+                        <strong>PRODUCTO</strong>
+                    </td>
                 @endif
             </tr>
 
             <!-- Table content with conditional widths -->
             <tbody>
                 @foreach ($orden_items as $row)
-                <tr>
-                    <td width="10%" class="text-center" style="font-size: 16px !important;">
-                        {{ $row->quantity }}
-                    </td>
-                    @if ($to_kitchen)
-                    <!-- Kitchen view layout -->
-                    <td width="60%" class="celda_left header_title2 border-bottom"
-                        style="font-size: 16px !important;">
-                        @else
-                        <!-- Comanda view layout -->
-                    <td width="90%" colspan="3" class="celda_left header_title2 border-bottom"
-                        style="font-size: 18px !important;">
+                    <tr>
+                        <td width="10%" class="text-center" style="font-size: 16px !important;">
+                            {{ $row->quantity }}
+                        </td>
+                        @if ($to_kitchen)
+                            <!-- Kitchen view layout -->
+                            <td width="60%" class="celda_left header_title2 border-bottom"
+                                style="font-size: 16px !important;">
+                            @else
+                                <!-- Comanda view layout -->
+                            <td width="90%" colspan="3" class="celda_left header_title2 border-bottom"
+                                style="font-size: 18px !important;">
                         @endif
                         <strong>
                             {{ strtoupper($row->desc_unit) }}
                             @if ($row->food->item->second_name && $configuration->show_second_name_external_code)
-                            / {{ strtoupper($row->food->item->second_name) }}
+                                / {{ strtoupper($row->food->item->second_name) }}
                             @endif
                         </strong>
                         @if ($row->observations != '-')
-                        <br>
-                        <strong style="font-size: 14px !important;">
-                            Obs: {{ e($row->observations) }}
-                        </strong>
+                            <br>
+                            <strong style="font-size: 14px !important;">
+                                Obs: {{ e($row->observations) }}
+                            </strong>
                         @endif
-                    </td>
-                    @if ($to_kitchen)
-                    <td width="15%" class="celda_center" style="font-size: 16px !important;">
-                        {{ number_format($row->price, 2) }}
-                    </td>
-                    <td width="15%" class="celda_center" style="font-size: 16px !important;">
-                        {{ number_format($row->price * $row->quantity, 2) }}
-                    </td>
-                    @endif
-                </tr>
+                        </td>
+                        @if ($to_kitchen)
+                            <td width="15%" class="celda_center" style="font-size: 16px !important;">
+                                {{ number_format($row->price, 2) }}
+                            </td>
+                            <td width="15%" class="celda_center" style="font-size: 16px !important;">
+                                {{ number_format($row->price * $row->quantity, 2) }}
+                            </td>
+                        @endif
+                    </tr>
                 @endforeach
             </tbody>
         </table>
 
         <!-- Make footer text larger -->
         @if ($to_kitchen && $configuration->text_comanda)
-        <div class="text-center" style="width:75%">
-            @if ($configuration->text_one)
-            <label class="header_title0 bold" style="font-size: 18px !important;">
-                {{ mb_strtoupper($configuration->text_one) }}
-            </label>
-            <br>
-            @endif
-            @if ($configuration->text_two)
-            <label class="header_title0 bold" style="font-size: 18px !important;">
-                {{ mb_strtoupper($configuration->text_two) }}
-            </label>
-            @endif
-        </div>
+            <div class="text-center" style="width:75%">
+                @if ($configuration->text_one)
+                    <label class="header_title0 bold" style="font-size: 18px !important;">
+                        {{ mb_strtoupper($configuration->text_one) }}
+                    </label>
+                    <br>
+                @endif
+                @if ($configuration->text_two)
+                    <label class="header_title0 bold" style="font-size: 18px !important;">
+                        {{ mb_strtoupper($configuration->text_two) }}
+                    </label>
+                @endif
+            </div>
         @endif
     </div>
-    @else
+@else
     {{-- Optional: Handle the case where none of the conditions are true --}}
     <div>
         <p>No configuration is enabled.</p>
