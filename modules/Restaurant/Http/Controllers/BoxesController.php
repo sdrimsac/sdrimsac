@@ -1337,65 +1337,6 @@ class BoxesController extends Controller
         return $all;
     }
 
-    /* function get_stock_report($cash_id)
-    {
-        $cash = Cash::find($cash_id);
-
-        $product = Item::where('init_report', true)->get();
-
-        $report_init = [];
-
-        foreach ($product as $item) {
-            $init_stock = DB::connection('tenant')->table('cash_init_stock')
-                ->where('cash_id', $cash_id)
-                ->where('item_id', $item->id)
-                ->first();
-            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
-                ->where('item_id', $item->id)
-                ->select('stock')
-                ->first();
-
-            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
-
-            if ($init_stock) {
-                $document_items = DB::connection('tenant')
-                    ->table('document_items')
-                    ->join('documents', 'documents.id', '=', 'document_items.document_id')
-                    ->where('documents.cash_id', $cash_id)
-                    ->where('document_items.item_id', $item->id)
-                    ->where('documents.state_type_id', '!=', '11')
-                    ->sum('document_items.quantity');
-
-                $sale_note_items = DB::connection('tenant')
-                    ->table('sale_note_items')
-                    ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
-                    ->where('sale_notes.cash_id', $cash_id)
-                    ->where('sale_note_items.item_id', $item->id)
-                    ->where('sale_notes.state_type_id', '!=', '11')
-                    ->sum('sale_note_items.quantity');
-
-                $sold_quantity = $document_items + $sale_note_items;
-
-                $theoretical_stock = $init_stock->initial_stock - $sold_quantity;
-
-                $report_init[] = [
-                    'item_id' => $item->id,
-                    'name' => $item->description,
-                    'initial_stock' => $init_stock->initial_stock,
-                    'actual_stock' => $current_stock,
-                    'difference' => abs($current_stock - $theoretical_stock),
-                    'opening_date' => $cash->date_opening,
-                    'closing_date' => $cash->date_closed
-                ];
-            }
-        }
-
-        return [
-            'cash_id' => $cash_id,
-            'product' => $report_init
-        ];
-    } */
-
     function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
@@ -1442,8 +1383,10 @@ class BoxesController extends Controller
                 $difference = abs($current_stock - $theoretical_stock);
 
                 // Verificar si el producto es un POLLO o POLLO INSUMO
-                $isChicken = stripos($item->description, 'POLLO') !== false && stripos($item->description, 'INSUMO') === false;
-                $isChickenInsumo = stripos($item->description, 'POLLO INSUMO') !== false;
+                //$isChicken = stripos($item->description, 'POLLO') !== false;
+                $isChicken = (preg_match('/\bPOLLO\b/', strtoupper($item->description)) === 1)
+             && (stripos($item->description, 'POLLO INSUMO') === false);
+                $isChickenInsumo = stripos($item->unit_type_id, 'KG') !== false;
 
                 // Ajustar la representación del stock según el tipo de producto
                 if ($isChicken) {
@@ -1547,8 +1490,40 @@ class BoxesController extends Controller
         return implode(' | ', $result);
     }
 
-
     function formatDifference($difference)
+    {
+        $wholeChickens = floor($difference);
+        $remaining = $difference - $wholeChickens;
+
+        $fractions = [
+            '1/2' => 0.500,
+            '1/4' => 0.250,
+            '1/8' => 0.125,
+        ];
+
+        $fractionText = [];
+
+        foreach ($fractions as $label => $value) {
+            if ($remaining >= $value) {
+                $fractionText[] = $label;
+                $remaining -= $value;
+            }
+        }
+
+        $result = [];
+
+        if ($wholeChickens > 0) {
+            $result[] = $wholeChickens . ' ' . ($wholeChickens > 1 ? '' : '');
+        }
+
+        if (!empty($fractionText)) {
+            $result[] = implode(' | ', $fractionText) . ' ';
+        }
+
+        return implode(' | ', $result);
+    }
+
+    /* function formatDifference($difference)
     {
         $fractions = [
             '1'   => 1.000,
@@ -1579,7 +1554,7 @@ class BoxesController extends Controller
             }
         }
         return !empty($fractionText) ? implode(' | ', $fractionText) . ' ' : '0';
-    }
+    } */
 
     function get_ordens_anulate($cash_id)
     {
