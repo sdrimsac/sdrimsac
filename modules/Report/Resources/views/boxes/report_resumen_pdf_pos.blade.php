@@ -1821,7 +1821,7 @@
             @endif
         @endif
         @if (count($stock_init_report['product']) > 0)
-            {{-- @dd($stock_init_report['product']) --}}
+        {{-- @dd($stock_init_report['product']) --}}
             <div style="text-align:center;">
                 <table class="border">
                     <thead>
@@ -1858,13 +1858,14 @@
                                     {{ $product['name'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ number_format($product['initial_stock'], 2) ?? 'N/A' }}
+                                    {{ $product['initial_stock'] ?? 'N/A' }}     
                                 </td>
+
                                 <td class="f19 right" style="color: red;">
-                                    {{ number_format($product['difference'], 2) ?? 'N/A' }}
+                                    {{ $product['difference'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ number_format($product['actual_stock'], 2) ?? 'N/A' }}
+                                    {{ $product['actual_stock'] ?? 'N/A' }}
                                 </td>
                             </tr>
                         @endforeach
@@ -1872,6 +1873,134 @@
                 </table>
             </div>
         @endif
+       {{--  @if (count($stock_init_report['product']) > 0)
+            <div style="text-align:center;">
+                <table class="border">
+                    <thead>
+                        <tr>
+                            <th colspan="5" class="text-center">
+                                <h3 style="font-size: 18px !important;">STOCK DE PRODUCTOS</h3>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th><span class="f19">CÓDIGO</span></th>
+                            <th><span class="f19">PRODUCTO</span></th>
+                            <th><span class="f19">STOCK INICIAL</span></th>
+                            <th><span class="f19">CANTIDAD VENDIDO</span></th>
+                            <th><span class="f19">STOCK ACTUAL</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($stock_init_report['product'] as $product)
+                            @php
+                                $isChicken = str_contains(strtoupper($product['name']), 'POLLO');
+                            @endphp
+                            <tr>
+                                <td class="f19 center">
+                                    {{ $product['item_id'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19">
+                                    {{ $product['name'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right">
+                                    @php
+                                        $stock = $product['initial_stock'];
+                                        $whole = floor($stock);
+                                        $fraction = $stock - $whole;
+
+                                        $fractions = [
+                                            0.5 => '1/2',
+                                            0.25 => '1/4',
+                                            0.125 => '1/8',
+                                        ];
+
+                                        $fractionText =
+                                            $isChicken && isset($fractions[$fraction]) ? $fractions[$fraction] : '';
+                                    @endphp
+
+                                    @if ($whole > 0)
+                                        {{ $whole }} {{ $product['name'] }}
+                                    @endif
+
+                                    @if ($isChicken && $fractionText)
+                                        {{ $whole > 0 ? ' | ' : '' }} {{ $fractionText }} {{ $product['name'] }}
+                                    @endif
+
+                                    @if (!$isChicken || ($whole == 0 && !$fractionText))
+                                        {{ number_format($stock, 3) ?? 'N/A' }}
+                                    @endif
+                                </td>
+                                <td class="f19 right" style="color: red;">
+                                    @php
+                                        $difference = $product['difference'];
+                                        $whole = floor($difference);
+                                        $fraction = $difference - $whole;
+
+                                        $fractions = [
+                                            0.500 => '1/2 Pollo',
+                                            0.250 => '1/4 Pollo',
+                                            0.125 => '1/8 Pollo',
+                                        ];
+
+                                        $fractionText = '';
+
+                                        if ($isChicken) {
+                                            foreach ($fractions as $key => $label) {
+                                                if ($fraction >= $key) {
+                                                    $fractionText .= ($fractionText ? ' | ' : '') . $label;
+                                                    $fraction -= $key;
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if ($whole > 0)
+                                        {{ $whole }} Pollos
+                                    @endif
+
+                                    @if ($isChicken && $fractionText)
+                                        {{ $whole > 0 ? ' | ' : '' }} {{ $fractionText }}
+                                    @endif
+
+                                    @if (!$isChicken || ($whole == 0 && !$fractionText))
+                                        {{ number_format($difference, 3) ?? 'N/A' }}
+                                    @endif
+                                </td>
+                                <td class="f19 right">
+                                    @php
+                                        $stock = $product['actual_stock'];
+                                        $whole = floor($stock);
+                                        $fraction = $stock - $whole;
+
+                                        $fractions = [
+                                            0.5 => '1/2',
+                                            0.25 => '1/4',
+                                            0.125 => '1/8',
+                                        ];
+
+                                        $fractionText =
+                                            $isChicken && isset($fractions[$fraction]) ? $fractions[$fraction] : '';
+                                    @endphp
+
+                                    @if ($whole > 0)
+                                        {{ $whole }} {{ $product['name'] }}
+                                    @endif
+
+                                    @if ($isChicken && $fractionText)
+                                        {{ $whole > 0 ? ' | ' : '' }} {{ $fractionText }} {{ $product['name'] }}
+                                    @endif
+
+                                    @if (!$isChicken || ($whole == 0 && !$fractionText))
+                                        {{ number_format($stock, 3) ?? 'N/A' }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif --}}
+
         @if ($configuration->image_comand)
             @if (count($order_anulate_comand['cancelled_orders']) > 0)
                 {{-- @dd($order_anulate_comand['cancelled_orders']) --}}

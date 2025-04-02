@@ -1337,7 +1337,7 @@ class BoxesController extends Controller
         return $all;
     }
 
-    function get_stock_report($cash_id)
+    /* function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
 
@@ -1382,8 +1382,6 @@ class BoxesController extends Controller
                     'item_id' => $item->id,
                     'name' => $item->description,
                     'initial_stock' => $init_stock->initial_stock,
-                    /* 'sold_quantity' => $sold_quantity, */
-                    /* 'theoretical_stock' => $theoretical_stock, */
                     'actual_stock' => $current_stock,
                     'difference' => abs($current_stock - $theoretical_stock),
                     'opening_date' => $cash->date_opening,
@@ -1396,26 +1394,244 @@ class BoxesController extends Controller
             'cash_id' => $cash_id,
             'product' => $report_init
         ];
+    } */
+
+    function get_stock_report($cash_id)
+    {
+        $cash = Cash::find($cash_id);
+        $product = Item::where('init_report', true)->get();
+
+        $report_init = [];
+
+        foreach ($product as $item) {
+            $init_stock = DB::connection('tenant')->table('cash_init_stock')
+                ->where('cash_id', $cash_id)
+                ->where('item_id', $item->id)
+                ->first();
+
+            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $item->id)
+                ->select('stock')
+                ->first();
+
+            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+            if ($init_stock) {
+                $document_items = DB::connection('tenant')
+                    ->table('document_items')
+                    ->join('documents', 'documents.id', '=', 'document_items.document_id')
+                    ->where('documents.cash_id', $cash_id)
+                    ->where('document_items.item_id', $item->id)
+                    ->where('documents.state_type_id', '!=', '11')
+                    ->sum('document_items.quantity');
+
+                $sale_note_items = DB::connection('tenant')
+                    ->table('sale_note_items')
+                    ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
+                    ->where('sale_notes.cash_id', $cash_id)
+                    ->where('sale_note_items.item_id', $item->id)
+                    ->where('sale_notes.state_type_id', '!=', '11')
+                    ->sum('sale_note_items.quantity');
+
+                $sold_quantity = $document_items + $sale_note_items;
+                $sold_quantity = is_numeric($sold_quantity) ? (float)$sold_quantity : 0.000;
+                $initial_stock = $init_stock->initial_stock;
+                $initial_stock = is_numeric($initial_stock) ? (float)$initial_stock : 0.000;
+                $theoretical_stock = $initial_stock - $sold_quantity;
+                $current_stock = is_numeric($current_stock) ? (float)$current_stock : 0.000;
+                $difference = abs($current_stock - $theoretical_stock);
+                dump($initial_stock);
+
+                // Verificar si el producto es un POLLO o POLLO INSUMO
+                $isChicken = stripos($item->description, 'POLLO') !== false && stripos($item->description, 'INSUMO') === false;
+                $isChickenInsumo = stripos($item->description, 'POLLO INSUMO') !== false;
+
+                // Ajustar la representación del stock según el tipo de producto
+                if ($isChicken) {
+                    $formatted_initial_stock = $this->formatInitial($init_stock->initial_stock);
+                    /* $formatted_sold_quantity = $this->formatChickenStock($sold_quantity); */
+                    $formatted_actual_stock = $this->formatChickenStock($current_stock);
+                    $formatted_difference = $this->formatDifference($difference);
+                } elseif ($isChickenInsumo) {
+                    $formatted_initial_stock = number_format($init_stock->initial_stock * 1000, 0) . " g";
+                    /* $formatted_sold_quantity = number_format($sold_quantity * 1000, 0) . " g"; */
+                    $formatted_actual_stock = number_format($current_stock * 1000, 0) . " g";
+                    $formatted_difference = number_format($difference * 1000, 0) . " g";
+                } else {
+                    $formatted_initial_stock = number_format($init_stock->initial_stock, 3);
+                    /* $formatted_sold_quantity = number_format($sold_quantity, 3); */
+                    $formatted_actual_stock = number_format($current_stock, 3);
+                    $formatted_difference = number_format($difference, 3);
+                }
+
+                $report_init[] = [
+                    'item_id' => $item->id,
+                    'name' => $item->description,
+                    'initial_stock' => $formatted_initial_stock,
+                    /* 'sold_quantity' => $formatted_sold_quantity, */
+                    'actual_stock' => $formatted_actual_stock,
+                    'difference' => $formatted_difference,
+                    'opening_date' => $cash->date_opening,
+                    'closing_date' => $cash->date_closed
+                ];
+            }
+        }
+
+        return [
+            'cash_id' => $cash_id,
+            'product' => $report_init
+        ];
     }
+    function formatInitial($stock)
+    {
+        $wholeChickens = floor($stock);
+        $remaining = $stock - $wholeChickens;
+
+        $fractions = [
+            '1/2' => 0.500,
+            '1/4' => 0.250,
+            '1/8' => 0.125,
+        ];
+
+        $fractionText = [];
+
+        foreach ($fractions as $label => $value) {
+            if ($remaining >= $value) {
+                $fractionText[] = $label;
+                $remaining -= $value;
+            }
+        }
+
+        $result = [];
+
+        if ($wholeChickens > 0) {
+            $result[] = $wholeChickens . ' Pollo' . ($wholeChickens > 1 ? 's' : '');
+        }
+
+        if (!empty($fractionText)) {
+            $result[] = implode(' | ', $fractionText) . ' Pollo';
+        }
+
+        return implode(' | ', $result);
+    }
+
+    function formatChickenStock($stock)
+    {
+        $wholeChickens = floor($stock);
+        $remaining = $stock - $wholeChickens;
+
+        $fractions = [
+            '1/2' => 0.500,
+            '1/4' => 0.250,
+            '1/8' => 0.125,
+        ];
+
+        $fractionText = [];
+
+        foreach ($fractions as $label => $value) {
+            if ($remaining >= $value) {
+                $fractionText[] = $label;
+                $remaining -= $value;
+            }
+        }
+
+        $result = [];
+
+        if ($wholeChickens > 0) {
+            $result[] = $wholeChickens . ' Pollo' . ($wholeChickens > 1 ? 's' : '');
+        }
+
+        if (!empty($fractionText)) {
+            $result[] = implode(' | ', $fractionText) . ' Pollo';
+        }
+
+        return implode(' | ', $result);
+    }
+
+
+    function formatDifference($difference)
+    {
+        $fractions = [
+            '1'   => 1.000,
+            '1/2' => 0.500,
+            '1/4' => 0.250,
+            '1/8' => 0.125,
+        ];
+
+        arsort($fractions);
+
+        $fractionText = [];
+        $tolerance = 0.001;
+
+        foreach ($fractions as $label => $value) {
+
+            $count = intval(($difference + $tolerance) / $value);
+            if ($count > 0) {
+
+                for ($i = 0; $i < $count; $i++) {
+                    $fractionText[] = $label;
+                }
+
+                $difference -= $count * $value;
+            }
+
+            if ($difference < $tolerance) {
+                break;
+            }
+        }
+        return !empty($fractionText) ? implode(' | ', $fractionText) . ' Pollo' : '0 Pollo';
+    }
+    /* function stockPollo($initial_stock)
+    {
+        $whole = floor($initial_stock);
+        $fraction = $initial_stock - $whole;
+
+        $tolerance = 0.001;
+
+        $fractions = [
+            0.500 => '1/2',
+            0.250 => '1/4',
+            0.125 => '1/8',
+        ];
+
+        $fractionText = [];
+
+        foreach ($fractions as $value => $label) {
+            if ($fraction >= $value - $tolerance) {
+                $fractionText[] = $label;
+                $fraction -= $value;
+            }
+        }
+
+        if ($fraction < $tolerance) {
+            $fraction = 0;
+        }
+
+        if ($whole > 0 && !empty($fractionText)) {
+            return "{$whole} Pollos | " . implode(' | ', $fractionText) . " Pollo";
+        } elseif ($whole > 0) {
+            return "{$whole} Pollos";
+        } elseif (!empty($fractionText)) {
+            return implode(' | ', $fractionText) . " Pollo";
+        } else {
+            return '0 Pollos';
+        }
+    } */
 
     function get_ordens_anulate($cash_id)
     {
-        // Obtener detalles de la caja para obtener la fecha y hora de apertura y cierre
         $cash = Cash::find($cash_id);
         $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
         $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
 
-        // Si la caja está cerrada, usar fecha y hora de cierre
         $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
         $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
 
-        // Obtener órdenes anuladas dentro del rango de la caja
         $query = Orden::with('orden_items.food', 'orden_items.user')
             ->where('status_orden_id', 5)
             ->whereDate('created_at', '>=', $date_opening)
             ->whereTime('created_at', '>=', $time_opening);
 
-        // Si la caja tiene fecha de cierre, filtrar hasta esa fecha y hora
         if ($date_closed && $time_closed) {
             $query->whereDate('created_at', '<=', $date_closed)
                 ->whereTime('created_at', '<=', $time_closed);
@@ -1431,7 +1647,6 @@ class BoxesController extends Controller
                 ];
             });
 
-            // Calcular el total de la orden
             $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
             $total_quantity = $items->sum('quantity');
 
