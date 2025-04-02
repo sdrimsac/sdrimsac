@@ -1440,7 +1440,6 @@ class BoxesController extends Controller
                 $theoretical_stock = $initial_stock - $sold_quantity;
                 $current_stock = is_numeric($current_stock) ? (float)$current_stock : 0.000;
                 $difference = abs($current_stock - $theoretical_stock);
-                dump($initial_stock);
 
                 // Verificar si el producto es un POLLO o POLLO INSUMO
                 $isChicken = stripos($item->description, 'POLLO') !== false && stripos($item->description, 'INSUMO') === false;
@@ -1505,11 +1504,11 @@ class BoxesController extends Controller
         $result = [];
 
         if ($wholeChickens > 0) {
-            $result[] = $wholeChickens . ' Pollo' . ($wholeChickens > 1 ? 's' : '');
+            $result[] = $wholeChickens . ' ' . ($wholeChickens > 1 ? ' ' : '');
         }
 
         if (!empty($fractionText)) {
-            $result[] = implode(' | ', $fractionText) . ' Pollo';
+            $result[] = implode(' | ', $fractionText) . ' ';
         }
 
         return implode(' | ', $result);
@@ -1538,11 +1537,11 @@ class BoxesController extends Controller
         $result = [];
 
         if ($wholeChickens > 0) {
-            $result[] = $wholeChickens . ' Pollo' . ($wholeChickens > 1 ? 's' : '');
+            $result[] = $wholeChickens . ' ' . ($wholeChickens > 1 ? '' : '');
         }
 
         if (!empty($fractionText)) {
-            $result[] = implode(' | ', $fractionText) . ' Pollo';
+            $result[] = implode(' | ', $fractionText) . ' ';
         }
 
         return implode(' | ', $result);
@@ -1579,44 +1578,8 @@ class BoxesController extends Controller
                 break;
             }
         }
-        return !empty($fractionText) ? implode(' | ', $fractionText) . ' Pollo' : '0 Pollo';
+        return !empty($fractionText) ? implode(' | ', $fractionText) . ' ' : '0';
     }
-    /* function stockPollo($initial_stock)
-    {
-        $whole = floor($initial_stock);
-        $fraction = $initial_stock - $whole;
-
-        $tolerance = 0.001;
-
-        $fractions = [
-            0.500 => '1/2',
-            0.250 => '1/4',
-            0.125 => '1/8',
-        ];
-
-        $fractionText = [];
-
-        foreach ($fractions as $value => $label) {
-            if ($fraction >= $value - $tolerance) {
-                $fractionText[] = $label;
-                $fraction -= $value;
-            }
-        }
-
-        if ($fraction < $tolerance) {
-            $fraction = 0;
-        }
-
-        if ($whole > 0 && !empty($fractionText)) {
-            return "{$whole} Pollos | " . implode(' | ', $fractionText) . " Pollo";
-        } elseif ($whole > 0) {
-            return "{$whole} Pollos";
-        } elseif (!empty($fractionText)) {
-            return implode(' | ', $fractionText) . " Pollo";
-        } else {
-            return '0 Pollos';
-        }
-    } */
 
     function get_ordens_anulate($cash_id)
     {
