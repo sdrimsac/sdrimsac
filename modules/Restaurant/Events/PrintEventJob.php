@@ -229,7 +229,6 @@ class PrintEventJob implements ShouldBroadcast
             'user_establishment_id_printer' => $user_establishment_id_printer,
         );
         $this->data = $data;
-        //dump($this->data);
 
         // Log::info(json_encode($this->data));
     }

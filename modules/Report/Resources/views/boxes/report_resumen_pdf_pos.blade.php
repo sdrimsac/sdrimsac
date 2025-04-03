@@ -1821,7 +1821,7 @@
             @endif
         @endif
         @if (count($stock_init_report['product']) > 0)
-        {{-- @dd($stock_init_report['product']) --}}
+            {{-- @dd($stock_init_report['product']) --}}
             <div style="text-align:center;">
                 <table class="border">
                     <thead>
@@ -1858,7 +1858,7 @@
                                     {{ $product['name'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ $product['initial_stock'] ?? 'N/A' }}     
+                                    {{ $product['initial_stock'] ?? 'N/A' }}
                                 </td>
 
                                 <td class="f19 right" style="color: red;">
@@ -1873,7 +1873,7 @@
                 </table>
             </div>
         @endif
-       {{--  @if (count($stock_init_report['product']) > 0)
+        {{--  @if (count($stock_init_report['product']) > 0)
             <div style="text-align:center;">
                 <table class="border">
                     <thead>
@@ -2002,8 +2002,8 @@
         @endif --}}
 
         @if ($configuration->image_comand)
-            @if (count($order_anulate_comand['cancelled_orders']) > 0)
-                {{-- @dd($order_anulate_comand['cancelled_orders']) --}}
+            {{-- @if (count($order_anulate_comand['cancelled_orders']) > 0)
+               
                 <div style="text-align:center;">
                     <span style="font-size: 18px !important;">
                         ORDENES DE PEDIDO ANULADOS
@@ -2029,6 +2029,60 @@
                         </thead>
                         <tbody>
                             @foreach ($order_anulate_comand['cancelled_orders'] as $a_item)
+                                @foreach ($a_item['items'] as $product)
+                                    <tr>
+                                        <td class="f12 center">
+                                            {{ $a_item['order_number'] }} - {{ $a_item['time'] }}
+                                        </td>
+                                        <td class="f12 center">
+                                            {{ number_format($product['quantity'], 2) }}
+                                        </td>
+                                        <td class="f12">
+                                            {{ $product['product'] }}
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ number_format($product['price'], 2) }}
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ $product['user'] ?? 'Usuario desconocido' }}
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ $a_item['reason'] }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif --}}
+            @if (count($order_anulate_items['cancelado_orders']) > 0)
+                {{-- @dd($order_anulate_items['cancelado_orders']) --}}
+                <div style="text-align:center;">
+                    <span style="font-size: 18px !important;">
+                        ORDENES DE PEDIDO ANULADOS
+                    </span>
+
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="6" class="left">
+                                    <span class="f12">
+                                        ORDENES DE PEDIDO ANULADOS
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th><span class="f12">N° ORDEN Y HORA</span></th>
+                                <th><span class="f12">CANTIDAD</span></th>
+                                <th><span class="f12">PRODUCTO</span></th>
+                                <th><span class="f12">MONTO</span></th>
+                                <th><span class="f12">USUARIO</span></th>
+                                <th><span class="f12">MOTIVO</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order_anulate_items['cancelado_orders'] as $a_item)
                                 @foreach ($a_item['items'] as $product)
                                     <tr>
                                         <td class="f12 center">

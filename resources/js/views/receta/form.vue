@@ -184,12 +184,13 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ row.full_description }}</td>
                                     <td class="text-center">
-                                        {{ parseFloat(row.quantity).toFixed(2) }}
+                                        
                                         {{ row.unit_type_description }}
                                     </td>
 
                                     <td class="text-right">
-                                        {{ row.quantity }}
+                                        <!-- {{ row.quantity }} -->
+                                        {{ parseFloat(row.quantity).toFixed(3) }}
                                         {{ row.unit_type_description }}
                                     </td>
 

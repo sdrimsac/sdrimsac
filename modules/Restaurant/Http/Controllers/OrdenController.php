@@ -155,22 +155,19 @@ class OrdenController extends Controller
         $area_desc = null;
         $mozo_name = $request->mozo_name ?? null;
         $zone_name = $request->zone_name ?? null;
-        // Check if the request explicitly indicates this is a cancelled order
         $es_anulacion = $request->cancelled ?? false;
-        //   $to_kitchen = true; en true no es pa cocina
+        $es_anulacion_item = $request->cancel_orden_item;
+        /* dump($es_anulacion_item); */
         $to_kitchen = false;
         if ($precuenta) {
             $to_kitchen = true;
         }
+
         if ($area_id) {
             $area = Area::find($area_id);
             if ($area) {
                 $area_desc = $area->description;
                 $desc = strtoupper($area_desc);
-                // Log::info('area_desc: '.$desc);
-                // if (!str_contains($desc, "CAJA")) {
-                //     $to_kitchen = false;
-                // }
             }
         }
 
@@ -182,23 +179,35 @@ class OrdenController extends Controller
         }
         $ordenes = Orden::where('id', $request->id)->first();
 
-        if ($ordenes == null) {
-            if ($es_anulacion) {
-                $ordenes = new Orden();
-                $ordenes->id = $request->id;
-                $ordenes->status_orden_id = 5;
-            } else {
-                return [
-                    "success" => false,
-                    "message" => "Nº Pedido no existe..."
-                ];
-            }
-        } else {
-            // If we have the order, check if it's cancelled
-            $es_anulacion = $es_anulacion || $ordenes->status_orden_id == 5;
+        $all_orden_items = [];
+        if ($ordenes) {
+            $all_orden_items = OrdenItem::where('orden_id', $ordenes->id)
+            ->pluck('id')
+            ->toArray();
         }
 
-        // Obtener zone_name si no está establecido y la orden existe
+        $requested_items = explode("_", $request->ids);
+
+        $is_partial_cancellation = !empty($all_orden_items) && 
+            count(array_diff($all_orden_items, $requested_items)) > 0;
+
+        if ($ordenes == null) {
+            if ($es_anulacion) {
+            $ordenes = new Orden();
+            $ordenes->id = $request->id;
+            $ordenes->status_orden_id = 5;
+            } else {
+            return [
+                "success" => false,
+                "message" => "Nº Pedido no existe..."
+            ];
+            }
+        } else {
+            // Set cancellation flags
+            $es_anulacion = $es_anulacion || $ordenes->status_orden_id == 5;
+            $es_anulacion_item = $is_partial_cancellation;
+        }
+
         if (!$zone_name && $ordenes && $ordenes->table_id) {
             $table = Table::find($ordenes->table_id);
             if ($table && $table->zone) {
@@ -206,29 +215,23 @@ class OrdenController extends Controller
             }
         }
 
-        // Find the first ordenItem for user and establishment data
         $ordenItem = OrdenItem::where('orden_id', $request->id)->first();
 
-        // For cancelled orders that have already been deleted
         if (!$ordenItem && $es_anulacion) {
-            // Get the authenticated user as fallback
+
             $user = auth()->user();
             $establishment = Establishment::where('id', $user->establishment_id)->first();
         } else if ($ordenItem) {
             $user = User::findOrFail($ordenItem->user_id);
             $establishment = Establishment::where('id', $user->establishment_id)->first();
         } else {
-            // Default to authenticated user if no items found
+
             $user = auth()->user();
             $establishment = Establishment::where('id', $user->establishment_id)->first();
         }
 
-        //
-
         $ordens = OrdenItem::where('orden_id', $orden);
-        // if ($to_kitchen) {
-        // }
-        // $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get();
+
         $diff_ordens = [];
         $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get()->groupBy(function ($elemento) use (&$diff_ordens) {
             $diff_ordens[] = $elemento->orden_id;
@@ -287,17 +290,13 @@ class OrdenController extends Controller
         } else {
             $height = $height + ($ordens->count() * 30);
         }
-
-        // Add extra height for cancellation text
         if ($es_anulacion) {
-            $height += 50; // Add more space for the cancellation notice
+            $height += 50;
         }
 
         if ($configuration->text_comanda) {
             $height += 100;
         }
-        // 
-
         $mozo_name = $request->mozo_name ?? null;
         if (!$mozo_name && $ordenes && $ordenes->mozo_id) {
             $mozo = DB::connection('tenant')
@@ -328,7 +327,8 @@ class OrdenController extends Controller
                 'orden_items',
                 'mozo_name',
                 'zone_name',
-                'es_anulacion' // Passing the cancellation flag to the view
+                'es_anulacion',
+                'es_anulacion_item',
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
@@ -1322,7 +1322,7 @@ class OrdenController extends Controller
             foreach ($items_by_area as $area_id => $items) {
                 $orden_items_ids = $items->pluck('id')->toArray();
                 $area = Area::find($area_id);
-                
+
                 // Get printer for this area
                 $printer = $area ? $area->printer : null;
                 if (!$printer) {
@@ -1352,7 +1352,7 @@ class OrdenController extends Controller
                 }
 
                 $ids_string = implode("_", $orden_items_ids);
-                
+
                 // Trigger print event for this area
                 event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items_ids, true));
 
@@ -1360,7 +1360,7 @@ class OrdenController extends Controller
                     'area_id' => $area_id,
                     'printer' => $printer,
                     'print_url' => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}" .
-                        "&precuenta=false&mozo_name={$mozo_name}&zone_name={$zone_name}&cancelled=true"
+                        "&precuenta=false&mozo_name={$mozo_name}&zone_name={$zone_name}"
                 ];
             }
 
@@ -1397,8 +1397,6 @@ class OrdenController extends Controller
                 }
             }
 
-            Log::info("Orden {$id} cancelada. Status después de cancelación: {$orden->status_orden_id}");
-
             event(new OrdenPendingEvent(-1));
 
             $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -1411,7 +1409,6 @@ class OrdenController extends Controller
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
             ];
-
         } else {
             // Original code for when image_comand is false
             $id = $request->id;

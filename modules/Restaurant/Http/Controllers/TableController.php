@@ -133,11 +133,10 @@ class TableController extends Controller
             $query->where('establishment_id', $establishment_table_id)
                 ->where(function ($q) {
                     $q->where(function ($query) {
-                        $query->where('is_room', 1)->where('has_billar', 1)->where('status_table_id', 2);
+                        $query->where('is_room', 1)->where('status_table_id', 2);
                     })
                         ->orWhere(function ($query) {
                             $query->where('is_room', 0);
-                            $query->where('has_billar', 0);
                         });
                 });
         } else {
@@ -260,8 +259,11 @@ class TableController extends Controller
 
     public function get_ordens($id)
     {
-        $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)
+        $ordens = Orden::where('table_id', $id)
             ->where('status_orden_id', '<>', 5)
+            ->with(['orden_items' => function($query) {
+                $query->where('status_orden_id', '<>', 5);
+            }])
             ->get();
 
         return compact('ordens');

@@ -51,8 +51,8 @@
                             <el-input-number
                                 class="w-100"
                                 v-model="form.quantity"
-                                :min="0.01"
-                                :precision="2"
+                                :min="0.001"
+                                :precision="3"
                                 @keypress="onlyAllowNumbers"
                                 controls-position="right"
                             ></el-input-number>
