@@ -142,24 +142,28 @@
                                 ></small>
                             </div>
                         </div>
+                        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                            
+                            
 
-                        <div class="col-md-12 text-end">
-                            <el-button
-                                class="submit"
-                                type="primary"
-                                @click.prevent="getRecords2"
-                                :loading="loading_submit"
-                                icon="el-icon-check"
-                                >Validar documentos</el-button
-                            >
-                            <el-button
-                                class="submit"
-                                type="danger"
-                                @click.prevent="close"
-                                icon="el-icon-delete"
-                                >Cerrar
-                            </el-button>
+                                <el-button
+                                    class="btn-agregar btn-agregar:hover"
+                                    @click.prevent="getRecords2"
+                                    :loading="loading_submit"
+                                    icon="el-icon-check fa-lg"
+                                    >
+                                    <span>Validar</span>
+                                    </el-button
+                                >
+                                <el-button
+                                    class="btn-cancel btn-cancel:hover"
+                                    @click.prevent="close"
+                                    icon="fas fa-times fa-lg"
+                                    >Salir
+                                </el-button>
+                        
                         </div>
+                        
                     </div>
                 </div>
             </form>
@@ -192,7 +196,7 @@ export default {
             all_series: [],
             series: [],
             see_more: false,
-            titleDialog: "Validar Comprobantes Electronicos",
+            titleDialog: "Validar Comprobantes Electrónicos",
             loading_text: "Validando documentos electrónicos...",
             acumulado: 0,
             pickerOptionsDates: {

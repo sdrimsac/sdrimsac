@@ -1,3 +1,4 @@
+<!-- Imprimir Acciones  CPE  -->
 <template>
     <el-dialog
         v-loading="loading_print"
@@ -33,55 +34,62 @@
                 </el-alert>
             </div>
 
-            <div
-                class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-            >
-                <button
-                    type="button"
-                    class="btn btn-lg btn-info waves-effect waves-light"
-                    @click="clickPrint('a4')"
-                >
-                    <i class="fa fa-file-alt"></i>
-                </button>
-                <p>Imprimir A4</p>
-            </div>
-            <div
-                class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-            >
-                <button
-                    type="button"
-                    class="btn btn-lg btn-info waves-effect waves-light"
-                    @click="clickPrint('a5')"
-                >
-                    <i class="fa fa-receipt"></i>
-                </button>
-                <p>Imprimir A5</p>
-            </div>
-            <div
-                class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-            >
-                <button
-                    type="button"
-                    class="btn btn-lg btn-info waves-effect waves-light"
-                    @click="clickPrint('ticket')"
-                >
-                    <i class="fa fa-receipt"></i>
-                </button>
-                <p>Imprimir Ticket 80MM</p>
+            <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>Seleccione Formato a Reimprimir</span>
+                    </div>
+                    <div class="row justify-content-center">
+                        <!-- Boton Imprimir A4 -->
+                        <div class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3">
+                            <button
+                                type="button"
+                                class="btn_imprimir"
+                                @click="clickPrint('a4')"
+                            >
+                                <i class="fa fa-file-alt fa-2x"></i> A4
+                            </button>
+                        </div>
+
+                        <!-- Boton Imprimir A5 -->
+                        <div class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3">
+                            <button
+                                type="button"
+                                class="btn_imprimir"
+                                @click="clickPrint('a5')"
+                            >
+                                <i class="fa fa-file fa-2x"></i> A5
+                            </button>
+                        </div>
+
+                        <!-- Boton Imprimir Ticket 80mm -->
+                        <div class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3">
+                            <button
+                                type="button"
+                                class="btn_imprimir"
+                                @click="clickPrint('ticket')"
+                            >
+                                <i class="fa fa-receipt fa-2x"></i> 80mm
+                            </button>
+                        </div>
+
+                        <div
+                            class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
+                        >
+                            <button
+                                type="button"
+                                class="btn_imprimir"
+                                @click="clickPrint('ticket_50')"
+                            >
+                                <i class="fa fa-receipt fa-2x"></i>50mm
+                            </button>
+                            
+                        </div>
+
+                    </div>
+                </el-card>
             </div>
 
-            <div
-                class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-            >
-                <button
-                    type="button"
-                    class="btn btn-lg btn-info waves-effect waves-light"
-                    @click="clickPrint('ticket_50')"
-                >
-                    <i class="fa fa-receipt"></i>
-                </button>
-                <p>Imprimir Ticket 50MM</p>
-            </div>
 
             <div
                 class="col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold mt-3"
@@ -91,7 +99,7 @@
                     :href="`${this.form.image_detraction}`"
                     download
                     class="text-center font-weight-bold "
-                    >Descargar constancia de pago - detracción</a
+                    >Descargar Constancia de Pago - Detracción</a
                 >
             </div>
         </div>
@@ -109,66 +117,89 @@
         </div> -->
         <div class="row mt-3">
             <div class="col-md-12">
-                <el-input v-model="form.customer_email">
-                    <el-button
-                        slot="append"
-                        icon="el-icon-message"
-                        @click="clickSendEmail"
-                        :loading="loading"
-                        >Enviar</el-button
-                    >
-                    <i slot="prefix" class="el-icon-edit-outline"></i
-                ></el-input>
-                <small
-                    class="form-control-feedback"
-                    v-if="errors.customer_email"
-                    v-text="errors.customer_email[0]"
-                ></small>
+            <el-input 
+                v-model="form.customer_email" 
+                placeholder="Ingrese Correo Electrónico - tucorreo@gmail.com"
+            >
+                <el-button
+                slot="append"
+                @click="clickSendEmail"
+                :loading="loading"
+                style="color: navy; font-size: 18px;"
+                >
+                <i class="el-icon-message" style="font-size: 24px; color: navy;"></i> Enviar
+                </el-button>
+                <i slot="prefix" class="el-icon-edit-outline"></i>
+            </el-input>
+            <small
+                class="form-control-feedback"
+                v-if="errors.customer_email"
+                v-text="errors.customer_email[0]"
+            ></small>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-12">
-                <el-input v-model="form.customer_telephone">
-                    <template slot="prepend">+51</template>
-                    <el-button slot="append" @click="clickSendWhatsapp"
-                        >Enviar
-                        <el-tooltip
-                            class="item"
-                            effect="dark"
-                            content="Es necesario tener aperturado Whatsapp web"
-                            placement="top-start"
-                        >
-                            <i class="fab fa-whatsapp"></i>
-                        </el-tooltip>
-                    </el-button>
-                    <i slot="prefix" class="el-icon-edit-outline"></i
-                ></el-input>
-                <small
-                    class="form-control-feedback"
-                    v-if="errors.customer_telephone"
-                    v-text="errors.customer_telephone[0]"
-                ></small>
+            <el-input v-model="form.customer_telephone" placeholder="Ingrese Número de WhatsApp" style="color: navy;">
+                <template slot="prepend">
+                <span style="color: navy; font-weight: bold;">+51</span>
+                </template>
+                <el-button slot="append" @click="clickSendWhatsapp" style="color: green; font-size: 18px; font-weight: bold;">
+                Enviar
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="Es necesario tener aperturado Whatsapp web"
+                    placement="top-start"
+                >
+                    <i class="fab fa-whatsapp" style="font-size: 24px; color: green;"></i>
+                </el-tooltip>
+                </el-button>
+                <i slot="prefix" class="el-icon-edit-outline"></i>
+            </el-input>
+            <small
+                class="form-control-feedback"
+                v-if="errors.customer_telephone"
+                v-text="errors.customer_telephone[0]"
+            ></small>
             </div>
         </div>
-        <!-- <div class="row m-t-10" >
-            <div class="col-md-12 text-center">
-                <button type="button" class="btn waves-effect waves-light btn-outline-primary"
-                        @click.prevent="clickConsultCdr(form.id)">Consultar CDR</button>
-            </div>
-        </div> -->
-        <span slot="footer" class="dialog-footer">
+        <br>
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
             <template v-if="showClose">
-                <el-button @click="clickClose">Cerrar</el-button>
+                 <!-- Consultar CDR -->
+                <button type="button" 
+                        class="btn-save btn-save:hover"
+                        icon="fas fa-file-alt fa-lg"
+                        @click.prevent="clickConsultCdr(form.id)"
+                        style="float: right;">
+                        Consultar CDR
+                </button>
+                <el-button
+                    class="btn-cancel btn-cancel:hover"
+                    icon="fas fa-times fa-lg"
+                    @click="clickClose"
+                    style="float: right;"
+                >
+                    <span>Salir</span>
+                </el-button>
+                
             </template>
+            
             <template v-else>
                 <el-button class="list" @click="clickFinalize"
-                    >Ir al listado</el-button
+                    >Listado CPE</el-button
                 >
                 <el-button type="primary" @click="clickNewDocument"
-                    >Nuevo comprobante</el-button
+                    >Nuevo CPE</el-button
                 >
             </template>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            
         </span>
+        
     </el-dialog>
 </template>
 
@@ -385,7 +416,7 @@ export default {
                 .then(response => {
                     this.form = response.data.data;
 
-                    this.titleDialog = "Comprobante: " + this.form.number;
+                    this.titleDialog = "CPE : " + this.form.number;
                     this.loading_print = false;
                     // }
                     if (this.generatDispatch)

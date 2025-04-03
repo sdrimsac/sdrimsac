@@ -12985,7 +12985,7 @@ width: 181px;
 
 /* --- Contenido de los tabs --- */
 .el-tabs__content {
-  padding: 5px; /* Espaciado interno */
+  /* padding: 5px; Espaciado interno */
   font-family: 'Montserrat', sans-serif; /* Fuente moderna */
   color: #073f68; /* Texto azul */
   background-color: #e4dccf; /* Fondo igual al diálogo */
@@ -13075,7 +13075,7 @@ width: 181px;
 
 /* --- Contenido de los tabs --- */
 .el-tabs__content {
-  padding: 20px; /* Espaciado interno */
+  /* padding: 20px; */
   font-family: 'Montserrat', sans-serif; /* Fuente moderna */
   color: #000; /* Texto negro */
   background-color: #e4dccf; /* Fondo igual al diálogo */
@@ -13087,7 +13087,7 @@ width: 181px;
 .el-tab-pane {
   background-color: #e4dccf; /* Fondo igual al diálogo */
   color: #000; /* Letras azules */
-  padding: 10px 20px; /* Espaciado interno */
+  padding: 5px; /* Espaciado interno */
   transition: background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves */
 }
 
@@ -13353,6 +13353,7 @@ h5 {
   color: #b1b1b1 !important; /* Texto gris (plomo) */
 }
 
+
 .btn-agregar {
   background-color: #073f68 !important; /* Azul */
   border: none !important;
@@ -13377,13 +13378,13 @@ h5 {
 
 /* botones de titulo de modal */
 .btn_titulos_modal {
-  background: #1e5a85; /* Color inicial del botón */
-  color: #514c4c; /* Texto blanco */
+  background: #808080; /* Color gris para el fondo */
+  color: white; /* Texto blanco */
   font-size: 1.5rem; /* Tamaño de fuente */
-  font-weight: bold;
+  font-weight: normal; /* Quitar negrita */
   padding: 16px 40px; /* Espaciado interno */
-  border-radius: 12px; /* Bordes redondeados */
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25); /* Sombra */
+  border-radius: 5px; /* Bordes redondeados con 5px */
+  box-shadow: 0 5px 12px rgba(255, 255, 255, 0.25); /* Sombra */
   transition: all 0.3s ease; /* Transición suave */
   display: flex;
   align-items: center; /* Alineación vertical */
@@ -13393,8 +13394,9 @@ h5 {
   text-align: center; /* Asegurar centrado del contenido */
   cursor: pointer;
 }
+
 .btn_titulos_modal span {
-  color: #514c4c; /* Texto negro */
+  color: #ffffff; /* Texto blanco */
   font-size: 1.5rem; /* Ajusta el tamaño si es necesario */
   font-weight: bold; /* Mantén el texto en negrita */
 }
@@ -13415,7 +13417,7 @@ h5 {
 .btn_titulos_modal i {
   color: #514c4c; /* Texto blanco */
   
-  font-size: 2rem; /* Tamaño del ícono */
+  font-size: 1rem; /* Tamaño del ícono */
   transition: transform 0.3s ease; /* Transición para el efecto */
 }
 
@@ -13426,7 +13428,7 @@ h5 {
 
 /* Estilo del texto */
 .btn_titulos_modal span {
-  color: #fff; /* Texto blanco */
+  color: #ffffff; /* Texto blanco */
   font-size: 1.5rem; /* Tamaño grande para el texto */
 }
 
@@ -13435,31 +13437,133 @@ h5 {
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); /* Brillo en el texto */
 }
 
+/* Estilos generales para los botones */
+.btn_imprimir {
+  background-color: #28a745 !important; /* Verde como fondo sólido */
+  color: #fff !important; /* Texto blanco */
+  font-size: 1.25rem !important; /* Tamaño de la fuente más uniforme */
+  font-weight: bold !important;
+  padding: 10px 20px !important; /* Ajuste en el padding para reducir el tamaño */
+  border-radius: 12px !important; /* Bordes redondeados */
+  border: 2px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco con opacidad */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Sombra más ligera */
+  transition: all 0.3s ease !important; /* Transición suave */
+  display: flex !important;
+  align-items: center !important; /* Centra verticalmente contenido */
+  justify-content: center !important; /* Centra horizontalmente contenido */
+  gap: 0.75rem !important; /* Espacio entre ícono y texto */
+  width: auto !important;    /* Asegura que el botón se ajuste */
+  min-width: 180px !important;
+  height: 55px !important; /* Ajusta la altura del botón para que sea más pequeño */
+}
 
+/* Hover para los botones */
+.btn_imprimir:hover {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.85), rgba(72, 201, 176, 0.85)) !important; /* Gradiente con verde y verde brillante */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento leve */
+  border-color: rgba(255, 255, 255, 0.5) !important; /* Aumenta la visibilidad del borde en hover */
+}
 
+/* Estilo para el ícono dentro del botón */
+.btn_imprimir i {
+  color: white !important; /* Cambiar color del ícono a blanco */
+  font-size: 1.5rem !important; /* Ajustar el tamaño del ícono */
+}
 
-/* Botón personalizado para "Buscar" */
-.btn_buscar {
-  background: linear-gradient(135deg, #4e54c8, #8f94fb); /* Gradiente dinámico */
-  color: #fff;
-  font-size: 1.25rem;
+/* Estilos adicionales para ordenar los botones (si es necesario) */
+.btn_imprimir_container {
+  display: flex !important;
+  flex-direction: column !important; /* Si los botones deben estar apilados */
+  align-items: center !important;
+  gap: 10px !important; /* Espacio entre los botones */
+  margin: 10px !important; /* Margen para separar de otros elementos */
+}
+
+/* Botón en estado activo */
+.btn_imprimir:active {
+  transform: scale(1); /* Tamaño normal cuando se hace clic */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+}
+
+/* Ícono del botón */
+.btn_imprimir .icon-style {
+  font-size: 1.2rem; /* Tamaño reducido del ícono */
+  color: #ffe400; /* Color llamativo para el ícono */
+  transition: transform 0.3s ease, color 0.3s ease; /* Transición de movimiento y color */
+}
+
+/* Hover para el ícono */
+.btn_imprimir:hover .icon-style {
+  transform: rotate(20deg); /* Efecto de rotación leve del ícono */
+  color: #ffeb3b; /* Color más brillante */
+}
+
+/* Texto del botón */
+.btn_imprimir .label-style {
+  font-size: 1.25rem; /* Tamaño del texto del botón */
   font-weight: bold;
-  padding: 12px 25px;
-  border-radius: 10px; /* Bordes ligeramente redondeados */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* Sombra elegante */
-  transition: all 0.3s ease; /* Transición suave */
-  display: flex;
-  align-items: center; /* Centra verticalmente contenido */
-  justify-content: center; /* Centra horizontalmente contenido */
-  gap: 0.5rem; /* Espacio entre ícono y texto */
+  line-height: 1; /* Centra verticalmente el texto */
+  color: #fff; /* Color blanco */
 }
 
-/* Hover para el botón */
-.btn_buscar:hover {
-  background: linear-gradient(135deg, #8f94fb, #4e54c8); /* Invertir gradiente */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35); /* Sombra más intensa */
-  transform: scale(1.05); /* Efecto de agrandamiento */
+/* Botón deshabilitado */
+.btn_imprimir[disabled] {
+  background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
 }
+
+
+
+/* Estilos generales para los botones */
+.btn_buscar {
+  /* background: linear-gradient(135deg, rgba(0, 51, 102, 0.85), rgba(0, 123, 255, 0.85)) !important; */
+   /* Gradiente con azul marino y azul brillante */
+  background-color: #003366 !important; /* Azul marino como fondo sólido */
+  color: #fff !important; /* Texto blanco */
+  font-size: 1.25rem !important; /* Tamaño de la fuente más uniforme */
+  font-weight: bold !important;
+  padding: 10px 20px !important; /* Ajuste en el padding para reducir el tamaño */
+  border-radius: 12px !important; /* Bordes redondeados */
+  border: 2px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco con opacidad */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Sombra más ligera */
+  transition: all 0.3s ease !important; /* Transición suave */
+  display: flex !important;
+  align-items: center !important; /* Centra verticalmente contenido */
+  justify-content: center !important; /* Centra horizontalmente contenido */
+  gap: 0.75rem !important; /* Espacio entre ícono y texto */
+  width: auto !important; /* Asegura que el botón se ajuste */
+  /* min-width: 180px !important; */
+   /* Establece un tamaño mínimo uniforme para todos los botones */
+  height: 45px !important; /* Ajusta la altura del botón para que sea más pequeño */
+}
+
+/* Hover para los botones */
+.btn_buscar:hover {
+  background: linear-gradient(135deg, rgba(0, 51, 102, 0.85), rgba(0, 123, 255, 0.85)) !important; /* Invertir gradiente con opacidad */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento leve */
+  border-color: rgba(255, 255, 255, 0.5) !important; /* Aumenta la visibilidad del borde en hover */
+}
+
+/* Estilo para el ícono dentro del botón */
+.btn_buscar i {
+  color: white !important; /* Cambiar color del ícono a blanco */
+  font-size: 1.5rem !important; /* Ajustar el tamaño del ícono */
+}
+
+/* Estilos adicionales para ordenar los botones (si es necesario) */
+.btn_buscar_container {
+  display: flex !important;
+  flex-direction: column !important; /* Si los botones deben estar apilados */
+  align-items: center !important;
+  gap: 10px !important; /* Espacio entre los botones */
+  margin: 10px !important; /* Margen para separar de otros elementos */
+}
+
+
 
 /* Botón en estado activo */
 .btn_buscar:active {
@@ -13473,6 +13577,9 @@ h5 {
   color: #ffe400; /* Color llamativo para el ícono */
   transition: transform 0.3s ease, color 0.3s ease; /* Transición de movimiento y color */
 }
+
+
+
 
 /* Hover para el ícono */
 .btn_buscar:hover .icon-style {
@@ -13495,6 +13602,10 @@ h5 {
   box-shadow: none !important;
   cursor: not-allowed;
 }
+
+
+
+
 /* Títulos de los inputs en negrita */
 .control-label {
   font-weight: bold;

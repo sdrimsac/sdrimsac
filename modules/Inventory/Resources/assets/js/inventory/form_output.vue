@@ -4,6 +4,7 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        :close-on-click-modal="false"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -198,16 +199,37 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"
-                    >Cancelar</el-button
+                <div
+                    class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
                 >
-                <el-button
+                    <!-- Botón Cancelar -->
+                    <el-button
+                        class="btn-cancel btn-cancel:hover"
+                        icon="fas fa-times fa-lg"
+                        @click.prevent="close()"
+                    >
+                        <span>Cancelar</span>
+                    </el-button>
+                    <!-- Botón Guardar -->
+                    <el-button
+                        class="btn-save btn-save:hover"
+                        icon="fas fa-save fa-lg"
+                        type="primary"
+                        native-type="submit"
+                        :loading="loading_submit"
+                    >
+                        <span>Aceptar</span>
+                    </el-button>
+                </div>
+                
+      
+                <!-- <el-button
                     type="primary"
                     icon="fas fa-save fa-lg"
                     native-type="submit"
                     :loading="loading_submit"
                     >Aceptar</el-button
-                >
+                > -->
             </div>
         </form>
 

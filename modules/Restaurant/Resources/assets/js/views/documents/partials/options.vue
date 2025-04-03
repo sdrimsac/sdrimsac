@@ -299,7 +299,7 @@ export default {
                 .get(`/${this.resource}/record/${this.recordId}`)
                 .then(response => {
                     this.form = response.data.data;
-                    this.titleDialog = "Comprobante: " + this.form.number;
+                    this.titleDialog = "Comprobante:" + this.form.number;
                     this.loading_print = false;
                     // }
                     if (this.generatDispatch)

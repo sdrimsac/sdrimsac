@@ -1,41 +1,21 @@
+<!-- LIstado de Productos Transformados -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>{{ title }}</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">{{ title }}</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">Transformados</span>
-                            </li>
-                        </ol>
-                    </div>
-                    <!-- <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </button>
-                    </div> -->
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid p-l-0 p-r-0">
+
             <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white"><i class="fas fa-retweet"></i> Listado de {{ title }}</h4>
-                </div>
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                <h4
+                    class="my-0 text-white d-flex align-items-center"
+                    style="font-size: 1.5rem; font-weight: bold;"
+                >
+                    <i
+                        class="fas fa-retweet"
+                        style="font-size: 2rem; margin-right: 0.5rem;"
+                    ></i>
+                  Listado de Productos Transformados
+                </h4>
+            </div>
                 <div class="card-body">
                     <data-table :resource="resource" @clickReport="clickReport">
                         <tr slot="heading" class="bg-primary">

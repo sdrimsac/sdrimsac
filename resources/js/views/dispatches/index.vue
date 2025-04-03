@@ -1,43 +1,33 @@
 <!-- Modulo de guias de remisión -->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Guias</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Guias de remisión</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        
         <div class="card mb-0">
-            <div class="card-header bg-primary rounded-top">
-                <h4 class="my-0  text-white">
-                    <i class="fas fa-file-alt"></i>
+            <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                <h4
+                    class="my-0 text-white d-flex align-items-center"
+                    style="font-size: 1.5rem; font-weight: bold;"
+                >
+                    <i
+                        class="fas fa-file-alt"
+                        style="font-size: 2rem; margin-right: 0.5rem;"
+                    ></i>
                     Listado de Guias de Remisión
                 </h4>
             </div>
+
             <div class="data-table-visible-columns">
-                            <el-button  type="Primary"
-                                        class=""
-                                        v-if=" typeUser == 'admin' || typeUser == 'superadmin'"
-                                        @click.prevent="clickNuevo()">
-                                <i class="icofont-plus-circle"></i>
-                                <span>Nuevo</span>
-                            </el-button>
+                <el-button
+                    type="primary"
+                    class="btn_titulos_modal"
+                    style="margin-right: 5px;"
+                    v-if=" typeUser == 'admin' || typeUser == 'superadmin'"
+                    @click.prevent="clickNuevo()">
+                
+                    <i class="fas fa-plus-circle"></i>
+                    Nuevo
+                </el-button>
             </div> 
+
             <div class="card-body">
                 
                 <data-table :resource="resource">

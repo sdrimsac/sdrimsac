@@ -19,10 +19,10 @@
                     </h4>
                 </div>
 
-                <div class="data-table-visible-columns">
+                <div class="data-table-visible-columns d-flex align-items-center">
                     <el-button
                         type="primary"
-                        class="btn_titulos_modal"
+                        class="btn_buscar"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickSaleOffert()"
@@ -33,7 +33,7 @@
                     </el-button>
                     <el-button
                         type="primary"
-                        class="btn_titulos_modal"
+                        class="btn_buscar"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickBonus()"
@@ -44,7 +44,7 @@
                     </el-button>
                     <el-button
                         type="primary"
-                        class="btn_titulos_modal"
+                        class="btn_buscar"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickCreate()"
@@ -52,73 +52,74 @@
                         <i class="fa fa-plus"></i>
                         Nuevo
                     </el-button>
-
-                    <button
-                        class="btn btn-icon btn-icon-only btn-outline-light align-top float-end"
-                        style="margin-right: 5px;"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        aria-haspopup="true"
-                    >
-                        <i data-cs-icon="more-horizontal"></i>
-                    </button>
-                    <div
-                        class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
-                        v-if="typeUser === 'admin' || typeUser === 'superadmin'"
-                    >
-                        <a
-                            class="dropdown-item text-success"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImport()"
+                    <div class="dropdown">
+                        <button
+                            class="btn_buscar"
+                            style="margin-right: 5px;"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-haspopup="true"
                         >
-                            <i class="fa fa-upload me-2"></i> Importar Productos
-                        </a>
-                        <a
-                            v-if="config.quantity_prices"
-                            class="dropdown-item text-warning"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImportListPriceRange()"
+                            <i data-cs-icon="more-horizontal"></i>
+                        </button>
+                        <div
+                            class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
+                            v-if="typeUser === 'admin' || typeUser === 'superadmin'"
                         >
-                            <i class="fa fa-upload me-2"></i> Importar Precios
-                            por rango de cantidad
-                        </a>
-                        <a
-                            class="dropdown-item text-primary"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImportListPrice()"
-                        >
-                            <i class="fa fa-upload me-2"></i> Importar Política
-                            de Precios
-                        </a>
-                        <a
-                            v-if="config.quantity_prices"
-                            class="dropdown-item text-dark"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImportListPriceUnitType()"
-                        >
-                            <i class="fa fa-upload me-2"></i> Importar Precios
-                            por rango de cantidad en política de precio
-                        </a>
-                        <a
-                            class="dropdown-item text-danger"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImportStockProducto()"
-                        >
-                            <i class="fa fa-upload me-2"></i> Importar Stock de
-                            Producto
-                        </a>
-                        <a
-                            class="dropdown-item"
-                            href="javascript:void(0)"
-                            @click.prevent="clickImportPointsValue()"
-                            style="color:orange"
-                        >
-                            <i class="fa fa-upload"></i> Valor de puntos
-                        </a>
+                            <a
+                                class="dropdown-item text-success"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImport()"
+                            >
+                                <i class="fa fa-upload me-2"></i> Importar Productos
+                            </a>
+                            <a
+                                v-if="config.quantity_prices"
+                                class="dropdown-item text-warning"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImportListPriceRange()"
+                            >
+                                <i class="fa fa-upload me-2"></i> Importar Precios
+                                por rango de cantidad
+                            </a>
+                            <a
+                                class="dropdown-item text-primary"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImportListPrice()"
+                            >
+                                <i class="fa fa-upload me-2"></i> Importar Política
+                                de Precios
+                            </a>
+                            <a
+                                v-if="config.quantity_prices"
+                                class="dropdown-item text-dark"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImportListPriceUnitType()"
+                            >
+                                <i class="fa fa-upload me-2"></i> Importar Precios
+                                por rango de cantidad en política de precio
+                            </a>
+                            <a
+                                class="dropdown-item text-danger"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImportStockProducto()"
+                            >
+                                <i class="fa fa-upload me-2"></i> Importar Stock de
+                                Producto
+                            </a>
+                            <a
+                                class="dropdown-item"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImportPointsValue()"
+                                style="color:orange"
+                            >
+                                <i class="fa fa-upload"></i> Valor de puntos
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="data-table-visible-columns"></div>
+                
                 <div class="card-body">
                     <data-table
                         :typeUser="typeUser"

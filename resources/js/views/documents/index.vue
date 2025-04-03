@@ -1,122 +1,123 @@
 <!-- Listado de Comprobante de Pago -->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Comprobantes</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Facturas - Boletas</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <template v-if="configuration.health_network">
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                                @click.prevent="clickDocumentSalud()"
-                            >
-                                <i class="icofont-plus-circle"></i>
-                                <span>Documentos farmacia</span>
-                            </button>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Container-fluid starts-->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card mb-0">
-                        <div class="card-header bg-primary rounded-top">
-                            <h4 class="my-0  text-white">
-                                <i class="fas fa-file-alt"></i>
-                                Listado de Comprobante de Pago (Boletas y
-                                Facturas)
+                        <div
+                            class="card-header bg-primary d-flex align-items-center"
+                            style="padding: 15px;"
+                        >
+                            <h4
+                                class="my-0 text-white d-flex align-items-center"
+                                style="font-size: 1.5rem; font-weight: bold;"
+                            >
+                                <i
+                                    class="fas fa-file-invoice-dollar"
+                                    style="font-size: 2rem; margin-right: 0.5rem;"
+                                ></i>
+                                Boletas y Facturas
                             </h4>
                         </div>
+
+                        <!-- Botones  del Titulo -->
                         <div class="data-table-visible-columns">
-                            <el-button
-                                type="primary"
-                                class=""
-                                href="javascript:void(0)"
-                                @click.prevent="clickNuevo()"
-                            >
-                                <i class="fas fa-file-alt fa-lg"></i>
-                                <i class="fa fa-plus"></i>
-                                Nuevo Comprobante
-                            </el-button>
-                            <el-button
-                                type="button"
-                                class="btn btn-primary btn-icon btn-icon-only"
-                                data-bs-offset="0,3"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                data-submenu
-                            >
-                                <i data-cs-icon="more-horizontal"></i>
-                            </el-button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <button
-                                    class="dropdown-item"
+                            <div class="d-flex align-items-center">
+                                <el-button
                                     type="button"
-                                    @click.prevent="clickResume()"
+                                    class="btn_buscar"
+                                    style="margin-right: 5px;"
+                                    href="javascript:void(0)"
+                                    @click.prevent="clickNuevo()"
                                 >
-                                    Generar resumen
-                                </button>
-                                <button
-                                    class="dropdown-item"
+                                    <i
+                                        class="fas fa-file-alt fa-lg icon-style"
+                                    ></i>
+                                    Nuevo CPE
+                                </el-button>
+
+                                <el-button
                                     type="button"
-                                    @click.prevent="checkResume()"
+                                    class="btn_buscar"
+                                    v-if="configuration.health_network"
+                                    style="margin-right: 5px;"
+                                    @click.prevent="clickDocumentSalud()"
                                 >
-                                    Consultar resumen
-                                </button>
-                                <button
-                                    class="dropdown-item"
+                                    <i class="fas fa-user-nurse icon-style"></i>
+                                    <span>CPE Farmacia</span>
+                                </el-button>
+
+                                <el-button
                                     type="button"
-                                    @click.prevent="clickValidate()"
+                                    class="btn_buscar"
+                                    data-bs-offset="0,3"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    data-submenu
                                 >
-                                    Validar CPE
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="
-                                        clickDownloadReportPagos('excel')
-                                    "
-                                >
-                                    Reporte de Pagos
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickImport()"
-                                    v-if="import_documents == true"
-                                >
-                                    Importar Formato 1
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickImportSecond()"
-                                    v-if="import_documents_second == true"
-                                >
-                                    Importar Formato 2
-                                </button>
+                                    <i data-cs-icon="more-horizontal"></i>
+                                </el-button>
+
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <button
+                                        class="dropdown-item text-primary"
+                                        type="button"
+                                        @click.prevent="clickResume()"
+                                    >
+                                        <i class="fas fa-file-alt"></i> Generar
+                                        Resumen
+                                    </button>
+                                    <button
+                                        class="dropdown-item text-success"
+                                        type="button"
+                                        @click.prevent="checkResume()"
+                                    >
+                                        <i class="fas fa-search"></i> Consultar
+                                        Resumen
+                                    </button>
+                                    <button
+                                        class="dropdown-item text-warning"
+                                        type="button"
+                                        @click.prevent="clickValidate()"
+                                    >
+                                        <i class="fas fa-check-circle"></i>
+                                        Validar CPE
+                                    </button>
+                                    <button
+                                        class="dropdown-item text-info"
+                                        type="button"
+                                        @click.prevent="
+                                            clickDownloadReportPagos('excel')
+                                        "
+                                    >
+                                        <i class="fas fa-file-excel"></i>
+                                        Reporte de Pagos (Créditos)
+                                    </button>
+
+                                    <!-- POR REVISAR -->
+                                    <!-- <button
+                                        class="dropdown-item text-danger"
+                                        type="button"
+                                        @click.prevent="clickImport()"
+                                        v-if="import_documents == true"
+                                    >
+                                        <i class="fas fa-upload"></i> Importar Formato 1
+                                    </button>
+                                    <button
+                                        class="dropdown-item text-secondary"
+                                        type="button"
+                                        @click.prevent="clickImportSecond()"
+                                        v-if="import_documents_second == true"
+                                    >
+                                        <i class="fas fa-upload"></i> Importar Formato 2
+                                    </button> -->
+                                </div>
                             </div>
                         </div>
+
                         <div class="data-table-visible-columns">
                             <el-dropdown
                                 v-if="columns.length"
@@ -134,23 +135,20 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
+
                         <div class="card-body">
                             <data-table
                                 :resource="resource"
                                 class="table-striped"
                             >
-                                <tr slot="heading" class="bg-primary">
+                                <tr slot="heading" class="bg-primary rounded">
+                                    <th class="text-white rounded-start">#</th>
                                     <th
-                                        class="text-white text-left"
+                                        class="text-white text-left "
                                         v-if="typeUser != 'integrator'"
                                     >
                                         Acciones
                                     </th>
-                                    <th class="text-white">#</th>
-                                    <th class="text-white text-center">
-                                        Actividad
-                                    </th>
-                                    <!-- <th class="text-white">D. E. USUARIO</th> -->
                                     <th
                                         class="text-white"
                                         v-if="columns.user_name.visible"
@@ -166,30 +164,49 @@
                                     >
                                         Fecha Vencimiento
                                     </th>
-                                    <th class="text-white">Cliente</th>
-                                    <th class="text-white">Número</th>
+                                    <th class="text-white ">
+                                        <span>Cliente / Empresa</span>
+                                        <br />
+                                        <span>Serie y Némro de CPE </span>
+                                    </th>
+                                    <!-- <th class="text-white">CPE Número</th> -->
                                     <th
-                                        class="text-white"
+                                        class="text-white text-center"
                                         v-if="columns.sale_note.visible"
                                     >
-                                        N. V.
+                                        <span>Nota de</span>
+                                        <br />
+                                        <span>Venta</span>
                                     </th>
                                     <th
                                         class="text-white"
                                         v-if="columns.dispatch.visible"
                                     >
-                                        G. R.
+                                        <span>Guía de</span>
+                                        <br />
+                                        <span>Remisión</span>
                                     </th>
                                     <th
                                         class="text-white"
                                         v-if="columns.notes.visible"
                                     >
-                                        Notas C/D
+                                        <span>Nota de</span>
+                                        <br />
+                                        <span>Crédito</span>
                                     </th>
-                                    <th class="text-white">Estado</th>
-                                    <th class="text-white"
-                                    v-if="typeUser == 'superadmin'"
-                                    >Estado Sunat</th>
+                                    <th class="text-white text-center">
+                                        <img
+                                            src="status_images/sunat.png"
+                                            alt="Estado Sunat"
+                                            style="width:70px; height: 40px; margin-left: 5px;"
+                                        />
+                                    </th>
+                                    <th
+                                        class="text-white"
+                                        v-if="typeUser == 'superadmin'"
+                                    >
+                                        Estado Sire
+                                    </th>
                                     <th class="text-white text-center">
                                         Moneda
                                     </th>
@@ -223,30 +240,26 @@
                                     >
                                         T.Gravado
                                     </th>
-                                    <th
-                                        class="text-white text-left"
-                                        
-                                    >
-                                        T.Igv
-                                    </th>
+                                    <th class="text-white text-left">IGV</th>
                                     <th class="text-white text-center">
-                                        Saldo
+                                        <span>Saldo</span>
+                                        <br />
+                                        <span>Pendiente</span>
                                     </th>
-                                    <!-- <th
-                                        class="text-center"
-                                        v-if="columns.boxes.visible"
-                                    >
-                                        Metodo de pago
-                                    </th> -->
                                     <th class="text-white text-left">Total</th>
-
-                                    <th class="text-white text-center">Pago</th>
-
                                     <th class="text-white text-center">
-                                        Descargas
+                                        Estado
                                     </th>
-                                    <!--<th class="text-center">Anulación</th>-->
+                                    <th
+                                        class="text-white text-center rounded-end"
+                                        style="text-align: center; font-size: 1.5rem;"
+                                    >
+                                        <i class="fas fa-download"></i>
+                                    </th>
                                 </tr>
+                                <tr
+                                    style="height: 10px; background-color: white;"
+                                ></tr>
 
                                 <tr></tr>
                                 <tr
@@ -270,6 +283,17 @@
                                             row.state_type_id === '13'
                                     }"
                                 >
+                                    <!-- Index -->
+                                    <td
+                                        :class="{
+                                            'text-dark':
+                                                row.state_type_id === '11'
+                                        }"
+                                    >
+                                        {{ index }}
+                                    </td>
+
+                                    <!-- Menú de Acciones -->
                                     <td
                                         :class="{
                                             'text-dark':
@@ -301,8 +325,8 @@
                                                 >
                                             </button>
                                             <div
-                                                class="dropdown-menu dropdown-menu-end"
-                                                style=""
+                                                class="dropdown-menu dropdown-menu-end px-3"
+                                                style="background-color: #4a4a4a;"
                                             >
                                                 <template
                                                     v-if="
@@ -310,184 +334,316 @@
                                                             '11'
                                                     "
                                                 >
-                                                    <a 
-                                                        :disabled="row.btn_delete_doc_type_03 || row.deleting"
-                                                        type="button"
-                                                        class="dropdown-item bg-info text-white"
-                                                        @click.prevent="
-                                                            row.deleting = true;
-                                                            clickDeleteDocument(row.id).finally(() => {
-                                                                row.deleting = false;
-                                                            })
-                                                        "
-                                                        v-if="
-                                                            row.btn_delete_doc_type_03 &&
-                                                                !isAccountant &&
-                                                                configuration.internal_voided
-                                                        "
-                                                        >Anulado Interno
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickChangeToRegisteredStatus(
-                                                                row.id
-                                                            )
-                                                        "
-                                                        v-if="
-                                                            row.btn_change_to_registered_status
-                                                        "
-                                                        >Cambiar a estado
-                                                        registrado
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickReStore(row.id)
-                                                        "
-                                                        >Volver a recrear
-                                                    </a>
-                                                    <a  
-                                                        
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickVoided(row.id)
-                                                        "
-                                                        v-if="
-                                                            row.btn_voided &&
-                                                                !isAccountant &&
-                                                                configuration.anulate_sunat
+                                                    <div
+                                                        class="d-flex flex-column gap-2"
+                                                    >
+                                                        <!-- Anulado Interno -->
+                                                        <button
+                                                            :disabled="
+                                                                row.btn_delete_doc_type_03 ||
+                                                                    row.deleting
+                                                            "
+                                                            type="button"
+                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                row.deleting = true;
+                                                                clickDeleteDocument(
+                                                                    row.id
+                                                                ).finally(
+                                                                    () => {
+                                                                        row.deleting = false;
+                                                                    }
+                                                                );
+                                                            "
+                                                            v-if="
+                                                                row.btn_delete_doc_type_03 &&
+                                                                    !isAccountant &&
+                                                                    configuration.internal_voided
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-ban me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Anulado
+                                                                Interno</span
+                                                            >
+                                                        </button>
 
-                                                        "
-                                                        >Anular Sunat</a
-                                                    >
-                                                    <a
-                                                        :href="
-                                                            `/dispatches/create_new/document/${row.id}`
-                                                        "
-                                                        class="dropdown-item"
-                                                        v-if="
-                                                            (row.btn_guide &&
-                                                                typeUser ==
-                                                                    'admin') ||
-                                                                typeUser ==
-                                                                    'superadmin'
-                                                        "
-                                                    >
-                                                        Guía
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        :href="
-                                                            `/${resource}/note/${row.id}`
-                                                        "
-                                                        class="dropdown-item"
-                                                        v-if="
-                                                            row.btn_note &&
-                                                                !isAccountant
-                                                        "
-                                                        >Nota de Credito</a
-                                                    >
+                                                        <!-- Cambiar a estado registrado -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-warning text-dark rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickChangeToRegisteredStatus(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                            v-if="
+                                                                row.btn_change_to_registered_status
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-sync-alt me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Cambiar a
+                                                                estado
+                                                                registrado</span
+                                                            >
+                                                        </button>
 
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickEdit(row.id)
-                                                        "
-                                                        v-if="
-                                                            (row.state_type_id ===
-                                                                '01' ||
-                                                                row.state_type_id ===
-                                                                    '14') &&
-                                                                !isAccountant
-                                                        "
-                                                        >Modificar
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        v-if="
-                                                            !(
-                                                                row.state_type_id ==
-                                                                    '13' &&
-                                                                row.document_type_id ==
-                                                                    '03'
-                                                            )
-                                                        "
-                                                        @click.prevent="
-                                                            clickValidarCpe(
-                                                                row.id
-                                                            )
-                                                        "
-                                                        >Validar CPE
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickResend(row.id)
-                                                        "
-                                                        v-if="
-                                                            row.btn_resend &&
-                                                                !isClient &&
-                                                                row.document_type_id !=
-                                                                    '03'
-                                                        "
-                                                    >
-                                                        Reenviar
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickSendOnline(
-                                                                row.id
-                                                            )
-                                                        "
-                                                        v-if="
-                                                            isClient &&
-                                                                !row.send_server
-                                                        "
-                                                    >
-                                                        Enviar Servidor
-                                                    </a>
-                                                    <a
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickCheckOnline(
-                                                                row.id
-                                                            )
-                                                        "
-                                                        v-if="
-                                                            isClient &&
-                                                                row.send_server &&
+                                                        <!-- Volver a recrear -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-secondary text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickReStore(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-redo me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Volver a
+                                                                Recrear</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Anular Sunat -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-danger text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickVoided(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                            v-if="
+                                                                row.btn_voided &&
+                                                                    !isAccountant &&
+                                                                    configuration.anulate_sunat
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-times-circle me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Anular
+                                                                Sunat</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Guia de Remisión -->
+                                                        <a
+                                                            :href="
+                                                                `/dispatches/create_new/document/${row.id}`
+                                                            "
+                                                            class="btn btn-primary text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            v-if="
+                                                                (row.btn_guide &&
+                                                                    typeUser ==
+                                                                        'admin') ||
+                                                                    typeUser ==
+                                                                        'superadmin'
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-truck me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Guía de
+                                                                Remisión</span
+                                                            >
+                                                        </a>
+
+                                                        <!-- Nota de Credito -->
+                                                        <a
+                                                            type="button"
+                                                            :href="
+                                                                `/${resource}/note/${row.id}`
+                                                            "
+                                                            class="btn btn-light text-dark rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px; background-color: #d2b48c;"
+                                                            v-if="
+                                                                row.btn_note &&
+                                                                    !isAccountant
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-sticky-note me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Nota de Crédito
+                                                                CPE</span
+                                                            >
+                                                        </a>
+
+                                                        <!-- Modificar CPE -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickEdit(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                            v-if="
                                                                 (row.state_type_id ===
                                                                     '01' ||
                                                                     row.state_type_id ===
-                                                                        '03')
-                                                        "
-                                                    >
-                                                        Consultar Servidor
-                                                    </a>
-                                                    <a
-                                                        v-if="row.is_credit"
-                                                        type="button"
-                                                        class="dropdown-item"
-                                                        @click.prevent="
-                                                            clickPayment(row.id)
-                                                        "
-                                                        >Pagos</a
-                                                    >
+                                                                        '14') &&
+                                                                    !isAccountant
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-edit me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Modificar
+                                                                CPE</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Validar CPE -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-warning text-dark rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            v-if="
+                                                                !(
+                                                                    row.state_type_id ==
+                                                                        '13' &&
+                                                                    row.document_type_id ==
+                                                                        '03'
+                                                                )
+                                                            "
+                                                            @click.prevent="
+                                                                clickValidarCpe(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-check-circle me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Validar
+                                                                CPE</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Reenviar CPE -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-primary text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickResend(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                            v-if="
+                                                                row.btn_resend &&
+                                                                    !isClient &&
+                                                                    row.document_type_id !=
+                                                                        '03'
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-paper-plane me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Reenviar</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Enviar Servidor -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-success text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickSendOnline(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                            v-if="
+                                                                isClient &&
+                                                                    !row.send_server
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-server me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Enviar
+                                                                Servidor</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Consultar Servidor -->
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickCheckOnline(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                            v-if="
+                                                                isClient &&
+                                                                    row.send_server &&
+                                                                    (row.state_type_id ===
+                                                                        '01' ||
+                                                                        row.state_type_id ===
+                                                                            '03')
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-search me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Consultar
+                                                                Servidor</span
+                                                            >
+                                                        </button>
+
+                                                        <!-- Pagos CPE -->
+                                                        <button
+                                                            v-if="row.is_credit"
+                                                            type="button"
+                                                            class="btn btn-secondary text-white rounded w-100 d-flex align-items-center"
+                                                            style="height: 40px;"
+                                                            @click.prevent="
+                                                                clickPayment(
+                                                                    row.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-money-bill-wave me-2"
+                                                            ></i>
+                                                            <span
+                                                                >Pagos CPE</span
+                                                            >
+                                                        </button>
+                                                    </div>
                                                 </template>
 
-                                                <a
+                                                <button
                                                     type="button"
-                                                    class="dropdown-item"
+                                                    class="btn btn-success text-white rounded w-100 mt-2 d-flex align-items-center"
+                                                    style="height: 40px;"
                                                     @click.prevent="
                                                         clickOptions(
                                                             row.id,
@@ -495,20 +651,16 @@
                                                         )
                                                     "
                                                 >
-                                                    Imprimir
-                                                </a>
+                                                    <i
+                                                        class="fas fa-print me-2"
+                                                    ></i>
+                                                    <span>Imprimir</span>
+                                                </button>
                                             </div>
                                         </div>
                                     </td>
-                                    <td
-                                        :class="{
-                                            'text-dark':
-                                                row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ index }}
-                                    </td>
-                                    <td> 
+
+                                    <!-- <td> 
                                         <el-button 
                                             type="primary" 
                                             @click="clickView(row.id)"
@@ -516,7 +668,7 @@
                                          >
                                             Ver Movimiento
                                         </el-button>
-                                    </td>
+                                    </td> -->
                                     <!-- <td class="text-center">
                                         <div
                                             v-if="
@@ -554,12 +706,14 @@
                                                             .date_time
                                                     )
                                                 }} -->
-                                                <!-- {{
+                                    <!-- {{
                                                     row.last_register.created_at
                                                 }}
                                             </span> -->
-                                        <!-- </div>
+                                    <!-- </div>
                                     </td> -->
+
+                                    <!-- Usuario y  Area de trabajo -->
                                     <td
                                         :class="{
                                             'text-dark':
@@ -567,11 +721,33 @@
                                         }"
                                         v-if="columns.user_name.visible"
                                     >
-                                        {{ row.user_name }}
-                                        <br /><small
-                                            v-text="row.user_email"
-                                        ></small>
+                                        <template
+                                            v-if="row.user_name.includes(' - ')"
+                                        >
+                                            <span>{{
+                                                row.user_name.split(" - ")[0]
+                                            }}</span>
+                                            <br />
+                                            <span>{{
+                                                row.user_name.split(" - ")[1]
+                                            }}</span>
+                                            <br />
+                                            <small class="text-muted">{{
+                                                row.establishment_name
+                                            }}</small>
+                                        </template>
+                                        <template v-else>
+                                            {{ row.user_name }}
+                                            <br />
+                                            <small class="text-muted">{{
+                                                row.establishment_name
+                                            }}</small>
+                                        </template>
+                                        <br />
+                                        <!-- <small v-text="row.user_email"></small> -->
                                     </td>
+
+                                    <!-- Fecha de Emisión -->
                                     <td
                                         class="text-center"
                                         :class="{
@@ -583,6 +759,7 @@
                                         <br />
                                         {{ row.time_of_issue }}
                                     </td>
+
                                     <td
                                         class="text-center"
                                         v-if="columns.date_of_due.visible"
@@ -593,23 +770,75 @@
                                     >
                                         {{ row.date_of_due }}
                                     </td>
+
+                                    <!-- Ruc/Dni-Cliente-Documento-Numero de documento -->
                                     <td
                                         :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
                                         }"
                                     >
-                                        {{ row.customer_name }}<br /><small
-                                            class="badge bg-dark"
+                                        <span
+                                            class="font-weight-bold"
+                                            style="font-weight: bold; font-size: 0.8rem; background-color: #333; color: #fff; padding: 2px 5px; border-radius: 3px;"
                                             v-text="row.customer_number"
+                                        >
+                                        </span>
+                                        <br />
+                                        <template
+                                            v-if="row.customer_name.length > 35"
+                                        >
+                                            {{
+                                                row.customer_name.substring(
+                                                    0,
+                                                    row.customer_name.lastIndexOf(
+                                                        " ",
+                                                        35
+                                                    )
+                                                )
+                                            }}
+                                            <br />
+                                            {{
+                                                row.customer_name.substring(
+                                                    row.customer_name.lastIndexOf(
+                                                        " ",
+                                                        35
+                                                    ) + 1
+                                                )
+                                            }}
+                                        </template>
+                                        <template v-else>
+                                            {{ row.customer_name }}
+                                        </template>
+                                        <br />
+                                        <div style="margin-bottom: 10px;"></div>
+                                        <small
+                                            class="badge bg-success"
+                                            style="border-radius: 2px; font-size: 0.9rem;"
+                                            v-text="
+                                                row.document_type_description
+                                            "
+                                        ></small>
+                                        <br />
+                                        <span
+                                            style="font-weight: bold; color: navy; font-size: 0.9rem;"
+                                        >
+                                            {{ row.number }}
+                                        </span>
+                                        <br />
+                                        <small
+                                            class="badge bg-dark"
+                                            style="border-radius: 3px;"
+                                            v-if="row.affected_document"
+                                            v-text="row.affected_document"
                                         ></small>
                                     </td>
-                                    <td
+                                    <!-- <td
                                         :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
                                         }"
-                                    >
+                                     >
                                         {{ row.number }}<br />
                                         <small
                                             class="badge bg-dark"
@@ -623,27 +852,37 @@
                                             v-if="row.affected_document"
                                             v-text="row.affected_document"
                                         ></small>
-                                    </td>
+                                    </td> -->
+
+                                    <!-- Vinculación con Notas de Venta -->
                                     <td v-if="columns.sale_note.visible">
                                         <div
                                             v-for="(row,
                                             index) in row.sale_note_related"
                                             :key="index"
                                         >
-                                            <small class="d-block">{{
-                                                row.number
-                                            }}</small>
+                                            <small
+                                                class="d-block"
+                                                style="color: brown; font-weight: bold; font-size: 0.9rem;"
+                                            >
+                                                {{ row.number }}
+                                            </small>
                                         </div>
                                     </td>
+
+                                    <!-- Vinculacion con Guia de Remision -->
                                     <td v-if="columns.dispatch.visible">
                                         <div
                                             v-for="(row,
                                             index) in row.dispatches"
                                             :key="index"
                                         >
-                                            <small class="d-block">{{
-                                                row.description
-                                            }}</small>
+                                            <small
+                                                class="d-block"
+                                                style="color: navy; font-weight: bold; font-size: 0.9rem;"
+                                            >
+                                                {{ row.description }}
+                                            </small>
                                         </div>
                                     </td>
                                     <td
@@ -666,10 +905,10 @@
                                     </td>
 
                                     <!-- <td>
-                            {{ row.document_type_id == '07' ?  row.number : ''}}
-                        </td> -->
+                                        {{ row.document_type_id == '07' ?  row.number : ''}}
+                                    </td> -->
 
-                                    <td>
+                                    <td class="text-center">
                                         <el-tooltip
                                             v-if="tooltip(row, false)"
                                             class="item"
@@ -704,6 +943,7 @@
                                                         row.state_type_id ===
                                                         '09'
                                                 }"
+                                                style="font-size: 0.8rem; padding: 5px 10px; border-radius: 3px;"
                                             >
                                                 {{ row.state_type_description }}
                                             </span>
@@ -727,6 +967,7 @@
                                                 'bg-dark':
                                                     row.state_type_id === '09'
                                             }"
+                                            style="font-size: 0.8rem; padding: 5px 10px; border-radius: 3px;"
                                         >
                                             <template
                                                 v-if="row.state_type_id == '11'"
@@ -736,7 +977,9 @@
                                                 >
                                                     Anulado Interno
                                                 </span>
-                                                <span v-else> Anulado Sunat</span>
+                                                <span v-else>
+                                                    Anulado Sunat</span
+                                                >
                                             </template>
                                             <template v-else>
                                                 {{ row.state_type_description }}
@@ -764,9 +1007,7 @@
                                         </template>
                                     </td>
 
-                                    <td
-                                        v-if="typeUser == 'superadmin'"
-                                    >
+                                    <td v-if="typeUser == 'superadmin'">
                                         {{ row.state_sunat }}
                                     </td>
                                     <td
@@ -810,6 +1051,7 @@
                                     >
                                         {{ row.total_unaffected }}
                                     </td>
+
                                     <td
                                         :class="{
                                             'text-dark':
@@ -830,21 +1072,35 @@
                                     >
                                         {{ row.total_taxed }}
                                     </td>
+
+                                    <!-- Total IGV -->
                                     <td
                                         :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
                                         }"
                                         class="text-left"
-                                    
                                     >
                                         {{ row.total_igv }}
                                     </td>
-                                    <td class="text-warning text-center">
-                                        <span v-if="row.remain > 0">
-                                            {{ row.remain.toFixed(2) }}
+                                    <!-- Saldo Pendiente -->
+                                    <td
+                                        :class="{
+                                            'text-warning text-center':
+                                                row.remain > 0,
+                                            'text-primary text-center':
+                                                row.remain === 0
+                                        }"
+                                    >
+                                        <span>
+                                            {{
+                                                row.remain > 0
+                                                    ? row.remain.toFixed(2)
+                                                    : "0.00"
+                                            }}
                                         </span>
                                     </td>
+
                                     <!-- <td v-if="columns.boxes.visible">
                                         <div
                                             class="justify-content-center d-flex flex-column"
@@ -863,6 +1119,8 @@
                                             </el-tag>
                                         </div>
                                     </td> -->
+
+                                    <!-- Monto Total CPE -->
                                     <td
                                         :class="{
                                             'text-dark':
@@ -872,64 +1130,30 @@
                                     >
                                         {{ row.total }}
                                     </td>
+
+                                    <!-- Estado  del Documento -->
                                     <template>
                                         <td class="text-center">
                                             <span
                                                 v-if="row.remain == 0"
-                                                class="badge rounded-pill bg-success text-white"
+                                                class="badge bg-success text-white"
+                                                style="font-size: 0.8rem; padding: 5px 10px;"
                                             >
                                                 Pagado
                                             </span>
                                             <span
                                                 v-else
-                                                class="badge rounded-pill bg-warning text-white"
+                                                class="badge bg-warning text-white"
+                                                style="font-size: 0.8rem; padding: 5px 10px;"
                                             >
                                                 Pendiente
                                             </span>
                                         </td>
                                     </template>
 
-                                    <!-- <td
-                                        :class="{
-                                            'text-dark':
-                                                row.state_type_id === '11'
-                                        }"
-                                        class="text-center"
-                                    >
-                                        <button
-                                            type="button"
-                                            style="min-width: 41px"
-                                            class="btn btn-sm btn-primary hover-outline"
-                                            @click.prevent="
-                                                clickDownload(row.download_xml)
-                                            "
-                                            v-if="row.has_xml"
-                                        >
-                                            XML
-                                        </button>
-                                        <button
-                                            type="button"
-                                            style="min-width: 41px"
-                                            class="btn btn-sm btn-primary hover-outline"
-                                            @click.prevent="
-                                                clickDownload(row.download_pdf)
-                                            "
-                                            v-if="row.has_pdf"
-                                        >
-                                            PDF
-                                        </button>
-                                        <button
-                                            type="button"
-                                            style="min-width: 41px"
-                                            class="btn btn-sm btn-primary hover-outline"
-                                            @click.prevent="
-                                                clickDownload(row.download_cdr)
-                                            "
-                                            v-if="row.has_cdr"
-                                        >
-                                            CDR
-                                        </button>
-                                    </td> -->
+                                    
+
+                                    <!-- Descargas  -->
                                     <td
                                         :class="{
                                             'text-dark':
@@ -938,80 +1162,58 @@
                                         class="text-left"
                                         v-if="typeUser != 'integrator'"
                                     >
-                                        <div
-                                            class="dropdown-as-select d-inline-block"
-                                            data-childselector="span"
+                                        <template
+                                            v-if="row.state_type_id != '11'"
                                         >
-                                            <button
-                                                class="btn p-0"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            >
-                                                <span
-                                                    class="btn btn-primary dropdown-toggle"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    data-bs-delay="0"
-                                                    title=""
-                                                    data-bs-original-title="Item Count"
-                                                    aria-label="Item Count"
-                                                    >Descargas</span
-                                                >
-                                            </button>
-                                            <div
-                                                class="dropdown-menu dropdown-menu-end"
-                                                style=""
-                                            >
-                                                <template
-                                                    v-if="
-                                                        row.state_type_id !=
-                                                            '11'
+                                            <!-- Descargar Archivos -->
+                                            <div class="d-flex flex-column">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-success hover-outline w-100 my-1"
+                                                    @click.prevent="
+                                                        clickDownload(
+                                                            row.download_xml
+                                                        )
                                                     "
+                                                    v-if="row.has_xml"
                                                 >
-                                                    <button
-                                                        type="button"
-                                                        style="min-width: 41px"
-                                                        class="btn btn-sm btn-success hover-outline w-100"
-                                                        @click.prevent="
-                                                            clickDownload(
-                                                                row.download_xml
-                                                            )
-                                                        "
-                                                        v-if="row.has_xml"
-                                                    >
-                                                        XML
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        style="min-width: 41px"
-                                                        class="btn btn-sm btn-danger hover-outline w-100"
-                                                        @click.prevent="
-                                                            clickDownload(
-                                                                row.download_pdf
-                                                            )
-                                                        "
-                                                        v-if="row.has_pdf"
-                                                    >
-                                                        PDF
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        style="min-width: 41px"
-                                                        class="btn btn-sm btn-info hover-outline w-100 "
-                                                        @click.prevent="
-                                                            clickDownload(
-                                                                row.download_cdr
-                                                            )
-                                                        "
-                                                        v-if="row.has_cdr"
-                                                    >
-                                                        CDR
-                                                    </button>
-                                                </template>
+                                                    <i
+                                                        class="fas fa-download"
+                                                    ></i>
+                                                    XML
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-danger hover-outline w-100 my-1"
+                                                    @click.prevent="
+                                                        clickDownload(
+                                                            row.download_pdf
+                                                        )
+                                                    "
+                                                    v-if="row.has_pdf"
+                                                >
+                                                    <i
+                                                        class="fas fa-download"
+                                                    ></i>
+                                                    PDF
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-info hover-outline w-100 my-1"
+                                                    @click.prevent="
+                                                        clickDownload(
+                                                            row.download_cdr
+                                                        )
+                                                    "
+                                                    v-if="row.has_cdr"
+                                                >
+                                                    <i
+                                                        class="fas fa-download"
+                                                    ></i>
+                                                    CDR
+                                                </button>
                                             </div>
-                                        </div>
+                                        </template>
                                     </td>
                                 </tr>
                             </data-table>
@@ -1417,7 +1619,9 @@ export default {
             this.showImportSecondDialog = true;
         },
         async clickDeleteDocument(document_id) {
-            await this.destroy(`/${this.resource}/delete_document/${document_id}`);
+            await this.destroy(
+                `/${this.resource}/delete_document/${document_id}`
+            );
             this.$eventHub.$emit("reloadData");
         },
         clickReportPayments() {

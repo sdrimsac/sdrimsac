@@ -1,3 +1,4 @@
+<!-- Crear Transformación de Producto -->
 <template>
     <el-dialog
         :title="titleDialog"
@@ -57,12 +58,12 @@
                                 class="col-md-2 col-lg-2 col-12 d-flex align-items-end"
                             >
                                 <el-button
-                                    class="w-100"
+                                    class="btn-agregar btn-agregar:hover"
                                     type="primary"
                                     @click.prevent="addItem"
                                     icon="fas fa-plus-circle fa-lg"
                                 >
-                                    Agregar
+                                    Agregar Prducto(s)
                                 </el-button>
                             </div>
                         </div>
@@ -96,22 +97,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions text-end pt-2 pb-2">
+                    <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                       
+                    </div>
+                    <div class="form-footer d-flex justify-content-end gap-3 mt-4">
+                        <!-- Cancelar -->
                         <el-button
+                            class="btn-cancel btn-cancel:hover"
                             icon="fas fa-times fa-lg"
                             @click.prevent="close()"
                         >
-                            Cancelar
+                            <span>Cancelar</span>
                         </el-button>
+
                         <el-button
+                            class="btn-save btn-save:hover"
+                            icon="fas fa-random fa-lg"
                             type="primary"
                             native-type="submit"
                             :loading="loading_submit"
                         >
-                            <i class="fas fa-random fa-lg"></i>
-                            Transformar</el-button
-                        >
+                            <span>Transformar</span>
+                        </el-button>
                     </div>
+
                 </div>
             </div>
         </form>

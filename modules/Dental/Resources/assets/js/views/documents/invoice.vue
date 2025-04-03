@@ -5,7 +5,7 @@
         :element-loading-text="text_loader"
     >
         <div class="card-header bg-primary rounded-top">
-            <h6 class="my-0  text-white">Comprobantesxd de Pago</h6>
+            <h6 class="my-0  text-white">Comprobantes de Pago</h6>
         </div>
         <div class="card-body">
             <div class="invoice" v-if="company != null">

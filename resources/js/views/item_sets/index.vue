@@ -1,55 +1,32 @@
 <template>
     <div>
-        <!-- <div class="page-header pr-0">
-            <h2><a href="/dashboard"><i class="fas fa-tachometer-alt"></i></a></h2>
-            <ol class="breadcrumbs">
-                <li class="active"><span>Productos</span></li>
-            </ol>
-            <div class="right-wrapper pull-right">
-                <div class="btn-group flex-wrap">
-                    <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-upload"></i> Importar <span class="caret"></span></button>
-                    <div class="dropdown-menu" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 42px, 0px);">
-                        <a class="dropdown-item text-1" href="#" @click.prevent="clickImportSet()">1. Productos compuestos</a>
-                        <a class="dropdown-item text-1" href="#" @click.prevent="clickImportSetIndividual()">2. Detalle productos compuestos</a>
-                    </div>
-                </div>
-                <template>
-                     <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
-                </template>
-            </div>
-        </div> -->
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Productos</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Lista de Productos</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
         <div class="card mb-0">
-            <div class="card-header bg-primary">
-                <h4 class="my-0 text-white">
-                    <i class="fas fa-boxes"></i>
-                    Listado de Productos compuestos</h4>
+            <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                <h4
+                    class="my-0 text-white d-flex align-items-center"
+                    style="font-size: 1.5rem; font-weight: bold;"
+                >
+                    <i
+                        class="fas fa-boxes"
+                        style="font-size: 2rem; margin-right: 0.5rem;"
+                    ></i>
+                  Productos Compuestos o Recetas
+                </h4>
             </div>
+            
+
             <div class="data-table-visible-columns">
-                            <el-button type="primary" class="" href="javascript:void(0)" @click.prevent="clickCreate()">
-                                <i class="fas fa-plus-circle"></i>
-                                Nuevo
-                            </el-button>
-                    </div> 
+                <el-button
+                    type="primary"
+                    class="btn_titulos_modal"
+                    style="margin-right: 5px;"
+                    href="javascript:void(0)"
+                    @click.prevent="clickCreate()"
+                >
+                    <i class="fas fa-plus-circle"></i>
+                    Nuevo
+                </el-button>
+            </div> 
             <div class="card-body">
                 <data-table ref="datatable" :resource="resource">
                     <tr slot="heading" class="bg-primary">

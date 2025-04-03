@@ -15,7 +15,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
                         >
-                            <label class="control-label"> Producto</label>
+                            <label class="control-label">
+                                <i class="fas fa-box"></i> Producto
+                            </label>
                             <el-select
                                 v-model="form.item_id"
                                 class="w-100"
@@ -48,13 +50,15 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.quantity }"
                         >
-                            <label class="control-label">Cantidad</label>
+                            <label class="control-label">
+                                <i class="fas fa-sort-numeric-up"></i> Cantidad
+                            </label>
                             <el-input v-model="form.quantity">
                                 <i
                                     slot="prefix"
                                     class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
+                                ></i>
+                            </el-input>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.quantity"
@@ -67,7 +71,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.warehouse_id }"
                         >
-                            <label class="control-label">Almacén</label>
+                            <label class="control-label">
+                                <i class="fas fa-warehouse"></i> Almacén
+                            </label>
                             <el-select
                                 v-model="form.warehouse_id"
                                 filterable
@@ -96,15 +102,14 @@
                             :class="{ 'has-danger': errors.lot_code }"
                         >
                             <label class="control-label">
-                                Código lote
+                                <i class="fas fa-barcode"></i> Código lote
                             </label>
                             <el-input v-model="form.lot_code">
-                                <!-- <el-button slot="append" icon="el-icon-edit-outline"  @click.prevent="clickLotcode"></el-button> -->
                                 <i
                                     slot="prefix"
                                     class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
+                                ></i>
+                            </el-input>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.lot_code"
@@ -118,9 +123,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.date_of_due }"
                         >
-                            <label class="control-label"
-                                >Fec. Vencimiento</label
-                            >
+                            <label class="control-label">
+                                <i class="fas fa-calendar-alt"></i> Fec. Vencimiento
+                            </label>
                             <el-date-picker
                                 v-model="form.date_of_due"
                                 type="date"
@@ -140,26 +145,26 @@
                         class="col-md-4"
                         v-if="form.warehouse_id && form.series_enabled"
                     >
-                        <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
                         <a
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickLotcode"
-                            >[&#10004; Ingresar series]</a
                         >
+                            <i class="fas fa-list-ol"></i> [&#10004; Ingresar series]
+                        </a>
                     </div>
                     <div
                         style="padding-top: 3%"
                         class="col-md-4"
                         v-if="form.warehouse_id && form.has_color_size"
                     >
-                        <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
                         <a
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickColorSize"
-                            >[&#10004; Ingresar Color & Talla]</a
                         >
+                            <i class="fas fa-palette"></i> [&#10004; Ingresar Color & Talla]
+                        </a>
                     </div>
                     <div class="col-md-8">
                         <div
@@ -168,7 +173,9 @@
                                 'has-danger': errors.inventory_transaction_id
                             }"
                         >
-                            <label class="control-label">Motivo traslado</label>
+                            <label class="control-label">
+                                <i class="fas fa-exchange-alt"></i> Motivo traslado
+                            </label>
                             <el-select
                                 v-model="form.inventory_transaction_id"
                                 filterable
@@ -189,7 +196,9 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label>Stock en almacenes</label>
+                            <label>
+                                <i class="fas fa-boxes"></i> Stock en almacenes
+                            </label>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -215,15 +224,30 @@
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+
+            <div
+                class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+            >
+                <!-- Botón Cancelar -->
                 <el-button
+                    class="btn-cancel btn-cancel:hover"
+                    icon="fas fa-times fa-lg"
+                    @click.prevent="close()"
+                >
+                    <span>Cancelar</span>
+                </el-button>
+                <!-- Botón Guardar -->
+                <el-button
+                    class="btn-save btn-save:hover"
+                    icon="fas fa-save fa-lg"
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"
-                    >Aceptar</el-button
                 >
+                    <span>Aceptar</span>
+                </el-button>
             </div>
+
         </form>
 
         <input-lots-form
