@@ -820,11 +820,42 @@
                     </td>
                 </tr>
             @endif
+
             <tr>
                 <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
                     {{ $date }}
                 </td>
             </tr>
+            @if ($is_restaurant && $configuration->seller_mozo)
+                <tr>
+                    <td colspan="4" class="header_title1 text-center" valign="top">
+                        @if (isset($mozo_name) && $mozo_name)
+                            {{ $mozo_name }}
+                        @endif
+                    </td>
+                </tr>
+            @endif
+
+            @if ($is_restaurant)
+                <tr>
+                    <td colspan="4" class="header_title1 text-center" valign="top">
+                        USUARIO: {{ join(', ', $users) }}
+                    </td>
+                </tr>
+            @endif
+
+            @if (!$precuenta)
+                @if (count($to_carry) != 0)
+                    {{-- <tr>
+                        <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
+                    </tr> --}}
+                    <tr class="para-llevar-header">
+                        <th class="encabezado text-center header_title2" colspan="4"
+                            style="color: rgb(12, 12, 12);">Para
+                            llevar </th>
+                    </tr>
+                @endif
+            @endif
 
             <!-- Table headers with conditional widths -->
             <tr>
