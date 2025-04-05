@@ -182,13 +182,13 @@ class OrdenController extends Controller
         $all_orden_items = [];
         if ($ordenes) {
             $all_orden_items = OrdenItem::where('orden_id', $ordenes->id)
-            ->pluck('id')
-            ->toArray();
+                ->pluck('id')
+                ->toArray();
         }
 
         $requested_items = explode("_", $request->ids);
 
-        $is_partial_cancellation = !empty($all_orden_items) && 
+        $is_partial_cancellation = !empty($all_orden_items) &&
             count(array_diff($all_orden_items, $requested_items)) > 0;
 
         /* if ($ordenes == null) {
@@ -220,20 +220,22 @@ class OrdenController extends Controller
                 ];
             }
         } else {
-            // Verificamos si todos los ítems enviados están anulados
             $orden_items_obj = OrdenItem::whereIn('id', $requested_items)->get();
-        
-            // Si no hay ítems o no están todos anulados, no es anulación total
-            $all_items_cancelled = $orden_items_obj->count() > 0 && $orden_items_obj->every(function ($item) {
-                return $item->status_orden_id == 5; // Asegúrate de que este campo sea el correcto
-            });
-        
-            if ($ordenes->status_orden_id == 5 || $all_items_cancelled) {
-                $es_anulacion = true;
-                $es_anulacion_item = false;
+
+            $all_items_cancelled = $orden_items_obj->count() > 0 &&
+                $orden_items_obj->every(fn($item) => $item->status_orden_id == 5);
+
+            $some_items_cancelled = $orden_items_obj->contains(fn($item) => $item->status_orden_id == 5);
+
+            // Verifica si la orden completa fue anulada
+            $orden_cancelled = $ordenes->status_orden_id == 5;
+
+            if ($orden_cancelled || $all_items_cancelled) {
+                $es_anulacion = true;         // se muestra sello de anulado para toda la orden
+                $es_anulacion_item = false;   // no se necesita mostrarlo por ítem
             } else {
                 $es_anulacion = false;
-                $es_anulacion_item = $is_partial_cancellation;
+                $es_anulacion_item = $some_items_cancelled; // si al menos uno está anulado, mostrarlo por ítem
             }
         }
 
