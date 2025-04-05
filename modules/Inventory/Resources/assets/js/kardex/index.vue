@@ -33,7 +33,7 @@
                             <td>{{row.date_of_issue}}</td>
                             <td>{{row.input}}</td>
                             <td>{{row.output}}</td>
-                            <td>{{Number(row.balance).toFixed(3)}}</td>
+                            <td>{{row.balance}}</td>
                         </tr>
 
                     </data-table>
