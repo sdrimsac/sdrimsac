@@ -1337,7 +1337,7 @@ class BoxesController extends Controller
         return $all;
     }
 
-    function get_stock_report($cash_id)
+    /* function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
         $product = Item::where('init_report', true)->get();
@@ -1391,17 +1391,17 @@ class BoxesController extends Controller
                 // Ajustar la representación del stock según el tipo de producto
                 if ($isChicken) {
                     $formatted_initial_stock = $this->formatInitial($init_stock->initial_stock);
-                    /* $formatted_sold_quantity = $this->formatChickenStock($sold_quantity); */
+                   
                     $formatted_actual_stock = $this->formatChickenStock($current_stock);
                     $formatted_difference = $this->formatDifference($difference);
                 } elseif ($isChickenInsumo) {
                     $formatted_initial_stock = number_format($init_stock->initial_stock * 1000, 0) . " gr.";
-                    /* $formatted_sold_quantity = number_format($sold_quantity * 1000, 0) . " g"; */
+                    
                     $formatted_actual_stock = number_format($current_stock * 1000, 0) . " gr.";
                     $formatted_difference = number_format($difference * 1000, 0) . " gr.";
                 } else {
                     $formatted_initial_stock = number_format($init_stock->initial_stock, 3);
-                    /* $formatted_sold_quantity = number_format($sold_quantity, 3); */
+                   
                     $formatted_actual_stock = number_format($current_stock, 3);
                     $formatted_difference = number_format($difference, 3);
                 }
@@ -1410,7 +1410,6 @@ class BoxesController extends Controller
                     'item_id' => $item->id,
                     'name' => $item->description,
                     'initial_stock' => $formatted_initial_stock,
-                    /* 'sold_quantity' => $formatted_sold_quantity, */
                     'actual_stock' => $formatted_actual_stock,
                     'difference' => $formatted_difference,
                     'opening_date' => $cash->date_opening,
@@ -1423,8 +1422,8 @@ class BoxesController extends Controller
             'cash_id' => $cash_id,
             'product' => $report_init
         ];
-    }
-    function formatInitial($stock)
+    } */
+    /* function formatInitial($stock)
     {
         $wholeChickens = floor($stock);
         $remaining = $stock - $wholeChickens;
@@ -1455,9 +1454,9 @@ class BoxesController extends Controller
         }
 
         return implode(' | ', $result);
-    }
+    } */
 
-    function formatChickenStock($stock)
+    /* function formatChickenStock($stock)
     {
         $wholeChickens = floor($stock);
         $remaining = $stock - $wholeChickens;
@@ -1488,9 +1487,9 @@ class BoxesController extends Controller
         }
 
         return implode(' | ', $result);
-    }
+    } */
 
-    function formatDifference($difference)
+    /* function formatDifference($difference)
     {
         $wholeChickens = floor($difference);
         $remaining = $difference - $wholeChickens;
@@ -1521,7 +1520,7 @@ class BoxesController extends Controller
         }
 
         return implode(' | ', $result);
-    }
+    } */
 
     /* function get_ordens_anulate($cash_id)
     {
@@ -1630,7 +1629,7 @@ class BoxesController extends Controller
         ];
     } */
 
-    function get_orden_item_anulate($cash_id)
+    /* function get_orden_item_anulate($cash_id)
     {
         $cash = Cash::find($cash_id);
         $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
@@ -1688,7 +1687,7 @@ class BoxesController extends Controller
             'time_closed' => $time_closed,
             'cancelado_orders' => $cancelado_orders
         ];
-    }
+    } */
 
 
     public function save_info_pharmacy(Request $request, $cash_id)
@@ -2235,9 +2234,9 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
-        $stock_init_report = $this->get_stock_report($cash_id);
+        /* $stock_init_report = $this->get_stock_report($cash_id); */
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
-        $order_anulate_items = $this->get_orden_item_anulate($cash_id);
+        /* $order_anulate_items = $this->get_orden_item_anulate($cash_id); */
         $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
@@ -2714,9 +2713,9 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
-                "stock_init_report",
+               /*  "stock_init_report", */
                 /* "order_anulate_comand", */
-                "order_anulate_items",
+                /* "order_anulate_items", */
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
@@ -2793,9 +2792,9 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
-        $stock_init_report = $this->get_stock_report($cash_id);
+        /* $stock_init_report = $this->get_stock_report($cash_id); */
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
-        $order_anulate_items = $this->get_orden_item_anulate($cash_id);
+        /* $order_anulate_items = $this->get_orden_item_anulate($cash_id); */
         $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
@@ -3272,9 +3271,9 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
-                "stock_init_report",
+                /* "stock_init_report", */
                 /* "order_anulate_comand", */
-                "order_anulate_items",
+                /* "order_anulate_items", */
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
