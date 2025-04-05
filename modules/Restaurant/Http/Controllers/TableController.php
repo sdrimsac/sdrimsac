@@ -257,31 +257,21 @@ class TableController extends Controller
         }
     }
 
-    /* public function get_ordens($id)
-    {
-        $ordens = Orden::where('table_id', $id)
-            ->where('status_orden_id', '<>', 5)
-            ->with(['orden_items' => function($query) {
-                $query->where('status_orden_id', '<>', 5);
-            }])
-            ->get();
-
-        return compact('ordens');
-    } */
-    /* public function get_ordens($id)
-    {
-        ini_set('memory_limit', '3500M');
-        $ordens = Orden::where('table_id', $id)
-            ->where('status_orden_id', '<>', 5)
-            ->with(['orden_items' => function($query) {
-                $query->where('status_orden_id', '<>', 5);
-            }])
-            ->get();
-
-        return compact('ordens');
-    } */
-
     public function get_ordens($id)
+    {
+        
+        ini_set('memory_limit', '500M');
+        $ordens = Orden::where('table_id', $id)
+            ->where('status_orden_id', '<>', 4)
+            ->with(['orden_items' => function($query) {
+                $query->where('status_orden_id', '<>', 5);
+            }])
+            ->get();
+
+        return compact('ordens');
+    }
+
+    /* public function get_ordens($id)
     {
         ini_set('memory_limit', '500M');
         $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)
@@ -289,7 +279,7 @@ class TableController extends Controller
             ->get();
 
         return compact('ordens');
-    }
+    } */
     public function records()
     {
         ini_set('memory_limit', '3500M');
