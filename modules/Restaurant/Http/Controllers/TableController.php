@@ -268,7 +268,7 @@ class TableController extends Controller
 
         return compact('ordens');
     } */
-    public function get_ordens($id)
+    /* public function get_ordens($id)
     {
         ini_set('memory_limit', '3500M');
         $ordens = Orden::where('table_id', $id)
@@ -276,6 +276,16 @@ class TableController extends Controller
             ->with(['orden_items' => function($query) {
                 $query->where('status_orden_id', '<>', 5);
             }])
+            ->get();
+
+        return compact('ordens');
+    } */
+
+    public function get_ordens($id)
+    {
+        ini_set('memory_limit', '500M');
+        $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)
+            ->where('status_orden_id', '<>', 5)
             ->get();
 
         return compact('ordens');
