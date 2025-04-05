@@ -257,6 +257,17 @@ class TableController extends Controller
         }
     }
 
+    /* public function get_ordens($id)
+    {
+        $ordens = Orden::where('table_id', $id)
+            ->where('status_orden_id', '<>', 5)
+            ->with(['orden_items' => function($query) {
+                $query->where('status_orden_id', '<>', 5);
+            }])
+            ->get();
+
+        return compact('ordens');
+    } */
     public function get_ordens($id)
     {
         $ordens = Orden::where('table_id', $id)
