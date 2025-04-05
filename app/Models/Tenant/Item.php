@@ -100,7 +100,7 @@ class Item extends ModelTenant
     }*/
     public function getBarcodeAttribute($value)
     {
-        return (string) $value; // Asegura que siempre devuelva una cadena
+        return (string) $value;
     }
     public function getCurrentItemWarehouse($warehouse_id)
     {
@@ -616,7 +616,7 @@ class Item extends ModelTenant
 
     public function sets()
     {
-        return $this->hasMany(ItemSet::class);
+        return $this->hasMany(ItemSet::class, 'item_id');
     }
 
     public function brand()

@@ -191,7 +191,7 @@ class OrdenController extends Controller
         $is_partial_cancellation = !empty($all_orden_items) && 
             count(array_diff($all_orden_items, $requested_items)) > 0;
 
-        if ($ordenes == null) {
+        /* if ($ordenes == null) {
             if ($es_anulacion) {
             $ordenes = new Orden();
             $ordenes->id = $request->id;
@@ -206,6 +206,35 @@ class OrdenController extends Controller
             // Set cancellation flags
             $es_anulacion = $es_anulacion || $ordenes->status_orden_id == 5;
             $es_anulacion_item = $is_partial_cancellation;
+        } */
+
+        if ($ordenes == null) {
+            if ($es_anulacion) {
+                $ordenes = new Orden();
+                $ordenes->id = $request->id;
+                $ordenes->status_orden_id = 5;
+            } else {
+                return [
+                    "success" => false,
+                    "message" => "Nº Pedido no existe..."
+                ];
+            }
+        } else {
+            // Verificamos si todos los ítems enviados están anulados
+            $orden_items_obj = OrdenItem::whereIn('id', $requested_items)->get();
+        
+            // Si no hay ítems o no están todos anulados, no es anulación total
+            $all_items_cancelled = $orden_items_obj->count() > 0 && $orden_items_obj->every(function ($item) {
+                return $item->status_orden_id == 5; // Asegúrate de que este campo sea el correcto
+            });
+        
+            if ($ordenes->status_orden_id == 5 || $all_items_cancelled) {
+                $es_anulacion = true;
+                $es_anulacion_item = false;
+            } else {
+                $es_anulacion = false;
+                $es_anulacion_item = $is_partial_cancellation;
+            }
         }
 
         if (!$zone_name && $ordenes && $ordenes->table_id) {

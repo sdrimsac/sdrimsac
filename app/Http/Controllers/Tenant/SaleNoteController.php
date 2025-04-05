@@ -2911,7 +2911,7 @@ class SaleNoteController extends Controller
         ];
     }
     // para anular nota de venta interno
-    public function anulate(Request $request, $id)
+    /* public function anulate(Request $request, $id)
     {
 
         DB::connection('tenant')->transaction(function () use ($id, $request) {
@@ -2980,7 +2980,125 @@ class SaleNoteController extends Controller
             'success' => true,
             'message' => 'N. Venta anulada con éxito'
         ];
+    } */
+
+    public function anulate(Request $request, $id)
+    {
+
+        DB::connection('tenant')->transaction(function () use ($id, $request) {
+
+            $obj =  SaleNote::find($id);
+            $obj->state_type_id = 11;
+            $obj->save();
+            Box::where('sale_note_id', $obj->id)->delete();
+            $establishment = Establishment::where('id', $obj->establishment_id)->first();
+
+            $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
+
+            foreach ($obj->items as $item) {
+
+                // Procesamiento de lotes (igual que antes)
+                $lots = isset($item->item->lots) ? $item->item->lots : [];
+                $quantity = $item->quantity;
+
+                foreach ($lots as $lot) {
+                    ItemLot::find($lot->id)->update(["has_sale" => 0]);
+                }
+
+                // Ajustar cantidad por unidad de medida
+                if (isset($item->item->from_unit_type_id)) {
+                    $unit_type = ItemUnitType::where('id', $item->item->from_unit_type_id)->first();
+                    if ($unit_type) {
+                        $quantity *= $unit_type->quantity_unit;
+                    }
+                }
+
+                // 📦 Stock del ítem principal (el "plato")
+                $wr = ItemWarehouse::where([
+                    ['item_id', $item->item_id],
+                    ['warehouse_id', $item->warehouse_id ?? $warehouse->id]
+                ])->first();
+
+                $it = Item::find($item->item_id);
+
+                $item->sale_note->inventory_kardex()->create([
+                    'date_of_issue' => date('Y-m-d'),
+                    'item_id' => $item->item_id,
+                    'warehouse_id' => $wr->warehouse_id,
+                    'quantity' => $quantity,
+                    'user_id' => auth()->user()->id ?? null,
+                ]);
+
+                if ($it) {
+                    $it->stock += $quantity;
+                    $it->save();
+                }
+
+                if ($wr) {
+                    $wr->stock += $quantity;
+                    $wr->save();
+                }
+
+                // 🔄 Revertir stock de insumos si el ítem es un set
+                $set_items = DB::connection('tenant')->table('item_sets')
+                    ->where('item_id', $item->item_id)
+                    ->get();
+
+                foreach ($set_items as $set_item) {
+                    $total_quantity = $set_item->quantity * $item->quantity;
+
+                    $set_wr = ItemWarehouse::where([
+                        ['item_id', $set_item->individual_item_id],
+                        ['warehouse_id', $item->warehouse_id ?? $warehouse->id]
+                    ])->first();
+
+                    $set_item_model = Item::find($set_item->individual_item_id);
+
+                    $item->sale_note->inventory_kardex()->create([
+                        'date_of_issue' => date('Y-m-d'),
+                        'item_id' => $set_item->individual_item_id,
+                        'warehouse_id' => $set_wr->warehouse_id ?? $warehouse->id,
+                        'quantity' => $total_quantity,
+                        'user_id' => auth()->user()->id ?? null,
+                    ]);
+
+                    if ($set_item_model) {
+                        $set_item_model->stock += $total_quantity;
+                        $set_item_model->save();
+                    }
+
+                    if ($set_wr) {
+                        $set_wr->stock += $total_quantity;
+                        $set_wr->save();
+                    }
+                }
+
+                // habilitar series/lotes
+                $this->voidedLots($item);
+
+                // Anulación de crédito (igual que antes)
+                $is_credit = count($obj->credit_payments) > 0;
+                if ($is_credit) {
+                    $reason_to_void = $request->reason_to_void;
+                    $sale_note_credit = SaleNoteCredit::where('sale_note_id', $id)->first();
+                    $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
+                    $obj->status = 'R';
+                    $obj->save();
+                    $sale_note_credit->save();
+                    $user_name = auth()->user()->name;
+                    $message_base = "El crédito de la nota de venta N° " . $obj->series . "-" . $obj->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
+                    (new WhatsappController)->sendMessageAll($message_base);
+                }
+            }
+        });
+
+        return [
+            'success' => true,
+            'message' => 'N. Venta anulada con éxito'
+        ];
     }
+
+
 
     public function updateBox($id, $Payments, $method_payment, $total_payment)
     {
