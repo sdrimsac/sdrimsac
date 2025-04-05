@@ -1337,7 +1337,7 @@ class BoxesController extends Controller
         return $all;
     }
 
-    /* function get_stock_report($cash_id)
+    function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
         $product = Item::where('init_report', true)->get();
@@ -1391,17 +1391,17 @@ class BoxesController extends Controller
                 // Ajustar la representación del stock según el tipo de producto
                 if ($isChicken) {
                     $formatted_initial_stock = $this->formatInitial($init_stock->initial_stock);
-                   
+                    /* $formatted_sold_quantity = $this->formatChickenStock($sold_quantity); */
                     $formatted_actual_stock = $this->formatChickenStock($current_stock);
                     $formatted_difference = $this->formatDifference($difference);
                 } elseif ($isChickenInsumo) {
                     $formatted_initial_stock = number_format($init_stock->initial_stock * 1000, 0) . " gr.";
-                    
+                    /* $formatted_sold_quantity = number_format($sold_quantity * 1000, 0) . " g"; */
                     $formatted_actual_stock = number_format($current_stock * 1000, 0) . " gr.";
                     $formatted_difference = number_format($difference * 1000, 0) . " gr.";
                 } else {
                     $formatted_initial_stock = number_format($init_stock->initial_stock, 3);
-                   
+                    /* $formatted_sold_quantity = number_format($sold_quantity, 3); */
                     $formatted_actual_stock = number_format($current_stock, 3);
                     $formatted_difference = number_format($difference, 3);
                 }
@@ -1410,6 +1410,7 @@ class BoxesController extends Controller
                     'item_id' => $item->id,
                     'name' => $item->description,
                     'initial_stock' => $formatted_initial_stock,
+                    /* 'sold_quantity' => $formatted_sold_quantity, */
                     'actual_stock' => $formatted_actual_stock,
                     'difference' => $formatted_difference,
                     'opening_date' => $cash->date_opening,
@@ -1422,8 +1423,8 @@ class BoxesController extends Controller
             'cash_id' => $cash_id,
             'product' => $report_init
         ];
-    } */
-    /* function formatInitial($stock)
+    }
+    function formatInitial($stock)
     {
         $wholeChickens = floor($stock);
         $remaining = $stock - $wholeChickens;
@@ -1454,9 +1455,9 @@ class BoxesController extends Controller
         }
 
         return implode(' | ', $result);
-    } */
+    }
 
-    /* function formatChickenStock($stock)
+    function formatChickenStock($stock)
     {
         $wholeChickens = floor($stock);
         $remaining = $stock - $wholeChickens;
@@ -1487,9 +1488,9 @@ class BoxesController extends Controller
         }
 
         return implode(' | ', $result);
-    } */
+    }
 
-    /* function formatDifference($difference)
+    function formatDifference($difference)
     {
         $wholeChickens = floor($difference);
         $remaining = $difference - $wholeChickens;
@@ -1520,7 +1521,7 @@ class BoxesController extends Controller
         }
 
         return implode(' | ', $result);
-    } */
+    }
 
     /* function get_ordens_anulate($cash_id)
     {
@@ -1575,7 +1576,7 @@ class BoxesController extends Controller
         ];
     } */
 
-    /* function get_orden_item_anulate($cash_id)
+    function get_orden_item_anulate($cash_id)
     {
         $cash = Cash::find($cash_id);
         $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
@@ -1584,8 +1585,9 @@ class BoxesController extends Controller
         $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
         $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
 
+        // Ajustamos la consulta para que traiga todas las órdenes anuladas de todas las áreas
         $query = Orden::with(['orden_items' => function ($q) {
-            $q->where('status_orden_id', 5);
+            $q->where('status_orden_id', 5);  // Filtrar solo los orden_items con status_orden_id == 5
         }, 'orden_items.food', 'orden_items.user'])
             ->whereDate('created_at', '>=', $date_opening)
             ->whereTime('created_at', '>=', $time_opening);
@@ -1595,7 +1597,9 @@ class BoxesController extends Controller
                 ->whereTime('created_at', '<=', $time_closed);
         }
 
+        // Obtén todas las órdenes anuladas sin importar el área
         $cancelado_orders = $query->get()->map(function ($order) {
+            // Verificar si al menos un orden_item tiene status_orden_id == 5
             $items = $order->orden_items->map(function ($item) {
                 return [
                     'quantity' => $item->quantity,
@@ -1605,61 +1609,7 @@ class BoxesController extends Controller
                 ];
             });
 
-            $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
-            $total_quantity = $items->sum('quantity');
-
-            return [
-                'order_number' => $order->id,
-                'date' => $order->created_at->format('Y-m-d'),
-                'time' => $order->created_at->format('H:i:s'),
-                'items' => $items,
-                'total_amount' => $total_amount,
-                'reason' => $order->reason ?? 'No especificado',
-                'total_items' => $total_quantity
-            ];
-        });
-
-        return [
-            'cash_id' => $cash_id,
-            'date_opening' => $date_opening,
-            'time_opening' => $time_opening,
-            'date_closed' => $date_closed,
-            'time_closed' => $time_closed,
-            'cancelado_orders' => $cancelado_orders
-        ];
-    } */
-
-    /* function get_orden_item_anulate($cash_id)
-    {
-        $cash = Cash::find($cash_id);
-        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
-        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
-
-        $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
-        $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
-
-        $query = Orden::with(['orden_items' => function ($q) {
-            $q->where('status_orden_id', 5);
-        }, 'orden_items.food', 'orden_items.user'])
-            ->whereDate('created_at', '>=', $date_opening)
-            ->whereTime('created_at', '>=', $time_opening);
-
-        if ($date_closed && $time_closed) {
-            $query->whereDate('created_at', '<=', $date_closed)
-                ->whereTime('created_at', '<=', $time_closed);
-        }
-
-        $cancelado_orders = $query->get()->map(function ($order) {
-        
-            $items = $order->orden_items->map(function ($item) {
-                return [
-                    'quantity' => $item->quantity,
-                    'product' => $item->food->description ?? 'Sin descripción',
-                    'price' => $item->price,
-                    'user' => $item->user->name ?? 'Usuario desconocido'
-                ];
-            });
-
+            // Si algún item tiene status_orden_id == 5, la orden debe marcarse como anulada
             $is_anulated = $order->orden_items->contains(function ($item) {
                 return $item->status_orden_id == 5;
             });
@@ -1675,7 +1625,7 @@ class BoxesController extends Controller
                 'total_amount' => $total_amount,
                 'reason' => $order->reason ?? 'No especificado',
                 'total_items' => $total_quantity,
-                'is_anulated' => $is_anulated 
+                'is_anulated' => $is_anulated  // Agregamos el estado de si la orden está anulada
             ];
         });
 
@@ -1687,7 +1637,8 @@ class BoxesController extends Controller
             'time_closed' => $time_closed,
             'cancelado_orders' => $cancelado_orders
         ];
-    } */
+    }
+
 
 
     public function save_info_pharmacy(Request $request, $cash_id)
@@ -2234,9 +2185,9 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
-        /* $stock_init_report = $this->get_stock_report($cash_id); */
+        $stock_init_report = $this->get_stock_report($cash_id);
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
-        /* $order_anulate_items = $this->get_orden_item_anulate($cash_id); */
+        $order_anulate_items = $this->get_orden_item_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
@@ -2713,9 +2664,9 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
-               /*  "stock_init_report", */
+                "stock_init_report",
                 /* "order_anulate_comand", */
-                /* "order_anulate_items", */
+                "order_anulate_items",
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
@@ -2792,9 +2743,9 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
-        /* $stock_init_report = $this->get_stock_report($cash_id); */
+        $stock_init_report = $this->get_stock_report($cash_id);
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
-        /* $order_anulate_items = $this->get_orden_item_anulate($cash_id); */
+        $order_anulate_items = $this->get_orden_item_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
@@ -3271,9 +3222,9 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
-                /* "stock_init_report", */
+                "stock_init_report",
                 /* "order_anulate_comand", */
-                /* "order_anulate_items", */
+                "order_anulate_items",
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
