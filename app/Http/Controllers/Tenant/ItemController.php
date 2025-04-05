@@ -1299,6 +1299,7 @@ class ItemController extends Controller
     {
         try {
             DB::connection('tenant')->beginTransaction();
+          
             
             $all_establishment = $request->all_establishment;
             $id = $request->input('id');

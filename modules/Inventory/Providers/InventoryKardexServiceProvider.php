@@ -17,8 +17,7 @@ use Modules\Order\Models\OrderNote;
 //use Modules\Order\Models\OrderNoteItem;
 use Modules\Item\Models\ItemLotsGroup;
 use Modules\Item\Models\ItemLot;
-
-
+use Modules\Order\Models\OrderNoteItem;
 
 class InventoryKardexServiceProvider extends ServiceProvider
 {

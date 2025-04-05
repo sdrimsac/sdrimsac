@@ -3480,9 +3480,9 @@ export default {
                 quality: null,
                 origin: null,
                 month_day: null,
-                init_report: null,
-                warehouse_prices: [], // Para precios por almacén
-                item_warehouses: [] // Para stock por almacén
+                init_report: 0,
+                warehouse_prices: [],
+                item_warehouses: []
             };
             this.show_has_igv = true;
             this.enabled_percentage_of_profit = false;

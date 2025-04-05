@@ -192,7 +192,6 @@ class ReportKardexController extends Controller
      */
     public function pdf(Request $request)
     {
-       
         $balance = 0;
         $max_quantity = $request->max_quantity ? ($request->max_quantity == "true" ? true : false) : false;
         $company = Company::first();

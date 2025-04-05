@@ -1,23 +1,5 @@
 <template>
     <div>
-        <!-- <div class="page-header pr-0">
-            <h2><a href="/dashboard"><i class="fas fa-tachometer-alt"></i></a></h2>
-            <ol class="breadcrumbs">
-                <li class="active"><span>Productos</span></li>
-            </ol>
-            <div class="right-wrapper pull-right">
-                <div class="btn-group flex-wrap">
-                    <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-upload"></i> Importar <span class="caret"></span></button>
-                    <div class="dropdown-menu" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 42px, 0px);">
-                        <a class="dropdown-item text-1" href="#" @click.prevent="clickImportSet()">1. Productos compuestos</a>
-                        <a class="dropdown-item text-1" href="#" @click.prevent="clickImportSetIndividual()">2. Detalle productos compuestos</a>
-                    </div>
-                </div>
-                <template>
-                     <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
-                </template>
-            </div>
-        </div> -->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="page-header">
                 <div class="row">

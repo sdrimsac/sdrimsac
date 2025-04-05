@@ -1069,6 +1069,13 @@ if ($hostname) {
                 Route::post('receta/visible_store', [App\Http\Controllers\Tenant\RecetaController::class, 'visibleStore']);
                 Route::get('receta/item/tables', [App\Http\Controllers\Tenant\RecetaController::class, 'item_tables']);
 
+                //para el reporte de los platos vendidos
+                Route::get('foods', [App\Http\Controllers\Tenant\FoodsController::class, 'index'])->name('tenant.foods.index')->middleware('just.admin');
+                Route::get('foods/columns', [App\Http\Controllers\Tenant\FoodsController::class, 'columns']);
+                Route::get('foods/records', [App\Http\Controllers\Tenant\FoodsController::class, 'records']);
+                Route::get('foods/tables', [App\Http\Controllers\Tenant\FoodsController::class, 'tables']);
+                Route::get('foods/record/{item}', [App\Http\Controllers\Tenant\FoodsController::class, 'record']);
+
                 //personas o clientes 
                 Route::get('person-types/columns', [App\Http\Controllers\Tenant\PersonTypeController::class, 'columns']);
                 Route::get('person-types', [App\Http\Controllers\Tenant\PersonTypeController::class, 'index'])->name('tenant.person_types.index')->middleware('just.admin');

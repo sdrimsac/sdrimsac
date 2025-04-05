@@ -196,7 +196,7 @@
                                     </th>
                                     <th class="text-white text-center">
                                         <img
-                                            src="status_images/sunat.png"
+                                            src="status_images/Sunat.png"
                                             alt="Estado Sunat"
                                             style="width:70px; height: 40px; margin-left: 5px;"
                                         />
@@ -340,7 +340,6 @@
                                                         <!-- Anulado Interno -->
                                                         <button
                                                             :disabled="
-                                                                row.btn_delete_doc_type_03 ||
                                                                     row.deleting
                                                             "
                                                             type="button"
@@ -357,7 +356,6 @@
                                                                 );
                                                             "
                                                             v-if="
-                                                                row.btn_delete_doc_type_03 &&
                                                                     !isAccountant &&
                                                                     configuration.internal_voided
                                                             "
@@ -370,6 +368,34 @@
                                                                 Interno</span
                                                             >
                                                         </button>
+                                                        <!-- <a
+                                                            :disabled="
+                                                                row.btn_delete_doc_type_03 ||
+                                                                    row.deleting
+                                                            "
+                                                            type="button"
+                                                            class="dropdown-item bg-info text-white rounded w-100"
+                                                            @click.prevent="
+                                                                row.deleting = true;
+                                                                clickDeleteDocument(
+                                                                    row.id
+                                                                ).finally(
+                                                                    () => {
+                                                                        row.deleting = false;
+                                                                    }
+                                                                );
+                                                            "
+                                                            v-if="
+                                                                row.btn_delete_doc_type_03 &&
+                                                                    !isAccountant &&
+                                                                    configuration.internal_voided
+                                                            "
+                                                            >
+                                                            <i
+                                                                class="fas fa-ban me-2"
+                                                            ></i>
+                                                             Anulado Interno
+                                                        </a> -->
 
                                                         <!-- Cambiar a estado registrado -->
                                                         <button
@@ -1150,8 +1176,6 @@
                                             </span>
                                         </td>
                                     </template>
-
-                                    
 
                                     <!-- Descargas  -->
                                     <td
