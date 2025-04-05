@@ -1576,7 +1576,7 @@ class BoxesController extends Controller
         ];
     } */
 
-    function get_orden_item_anulate($cash_id)
+    /* function get_orden_item_anulate($cash_id)
     {
         $cash = Cash::find($cash_id);
         $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
@@ -1617,6 +1617,66 @@ class BoxesController extends Controller
                 'total_amount' => $total_amount,
                 'reason' => $order->reason ?? 'No especificado',
                 'total_items' => $total_quantity
+            ];
+        });
+
+        return [
+            'cash_id' => $cash_id,
+            'date_opening' => $date_opening,
+            'time_opening' => $time_opening,
+            'date_closed' => $date_closed,
+            'time_closed' => $time_closed,
+            'cancelado_orders' => $cancelado_orders
+        ];
+    } */
+
+    function get_orden_item_anulate($cash_id)
+    {
+        $cash = Cash::find($cash_id);
+        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
+        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
+
+        $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
+        $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
+
+        $query = Orden::with(['orden_items' => function ($q) {
+            $q->where('status_orden_id', 5);
+        }, 'orden_items.food', 'orden_items.user'])
+            ->whereDate('created_at', '>=', $date_opening)
+            ->whereTime('created_at', '>=', $time_opening);
+
+        if ($date_closed && $time_closed) {
+            $query->whereDate('created_at', '<=', $date_closed)
+                ->whereTime('created_at', '<=', $time_closed);
+        }
+
+        $cancelado_orders = $query->get()->map(function ($order) {
+        
+            $items = $order->orden_items->map(function ($item) {
+                return [
+                    'quantity' => $item->quantity,
+                    'product' => $item->food->description ?? 'Sin descripción',
+                    'price' => $item->price,
+                    'user' => $item->user->name ?? 'Usuario desconocido'
+                ];
+            });
+
+            $is_anulated = $order->orden_items->contains(function ($item) {
+                return $item->status_orden_id == 5;
+            });
+
+            $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
+            $total_quantity = $items->sum('quantity');
+
+            return [
+                'order_number' => $order->id,
+                'date' => $order->created_at->format('Y-m-d'),
+                'time' => $order->created_at->format('H:i:s'),
+                'items' => $items,
+                'total_amount' => $total_amount,
+                'reason' => $order->reason ?? 'No especificado',
+                'total_items' => $total_quantity,
+                'is_anulated' => $is_anulated 
             ];
         });
 
