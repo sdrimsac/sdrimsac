@@ -289,6 +289,7 @@
         max-width: 70%;
         max-height: 70%;
     }
+
     .comanda img {
         max-width: 100%;
         max-height: 100%;
@@ -321,7 +322,17 @@
         @endif
         @if (isset($area_desc) && strtoupper($area_desc) === 'MENAJE')
             <div class="menaje">
-            <img src="{{ asset('status_images/menaje.png') }}" alt="menaje" />
+                <img src="{{ asset('status_images/menaje.png') }}" alt="menaje" />
+            </div>
+        @endif
+        @if (!$to_kitchen && $configuration->nane_comand && !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE'))
+            <div class="menaje">
+                <img src="{{ asset('status_images/comanda.png') }}" alt="comanda" />
+            </div>
+        @endif
+        @if ($to_kitchen && $configuration->nane_comand)
+            <div class="menaje">
+                <img src="{{ asset('status_images/precuenta.png') }}" alt="precuenta" />
             </div>
         @endif
         <div id="register">
@@ -330,13 +341,13 @@
                 @if ($to_kitchen)
 
                     @if ($is_restaurant)
-                        @if ($configuration->nane_comand)
+                        {{-- @if ($configuration->nane_comand)
                             <tr>
                                 <td colspan="4" class="header_title text-center encabezado" valign="top">
                                     <strong>PRECUENTA</strong>
                                 </td>
                             </tr>
-                        @endif
+                        @endif --}}
                         <tr>
                             <td colspan="4" class="header_title text-center " valign="top">
                                 <strong>NRO. MESA
@@ -382,13 +393,13 @@
                     </tr>
                 @endif
                 @if (!$to_kitchen)
-                    @if ($configuration->nane_comand && !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE'))
+                    {{-- @if ($configuration->nane_comand && !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE'))
                         <tr>
                             <td colspan="4" class="header_title text-center encabezado" valign="top">
                                 <strong>COMANDA</strong>
                             </td>
                         </tr>
-                    @endif
+                    @endif --}}
                     <tr>
                         <td colspan="4" class="header_title text-center " valign="top">
                             <strong>NRO. MESA {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
